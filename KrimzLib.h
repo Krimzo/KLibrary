@@ -169,6 +169,26 @@ namespace kl {
 				consoleScreenBufferInfo.srWindow.Bottom - consoleScreenBufferInfo.srWindow.Top + 1
 			};
 		}
+
+		// Changes the console size
+		static void SetSize(int width, int height) {
+			SMALL_RECT consoleRect = { 0, 0, width - 1, height - 1 };
+			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)width, (short)height });
+			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
+		}
+
+		// Changes the console font size
+		static void SetFont(int width, int height, std::wstring fontName) {
+			CONSOLE_FONT_INFOEX cfi;
+			cfi.cbSize = sizeof(cfi);
+			cfi.nFont = 0;
+			cfi.dwFontSize.X = width;
+			cfi.dwFontSize.Y = height;
+			cfi.FontFamily = FF_DONTCARE;
+			cfi.FontWeight = FW_NORMAL;
+			wcscpy_s(cfi.FaceName, fontName.c_str());
+			SetCurrentConsoleFontEx(stdConsoleHandle, FALSE, &cfi);
+		}
 		
 		// Enables RGB support for the console
 		static void EnableRGB() {
@@ -300,8 +320,6 @@ namespace kl {
 		std::function<void(void)> EngineStart = []() {};
 		std::function<void(char)> EngineInput = [](char input) {};
 		std::function<void(void)> EngineUpdate = []() {};
-		// Buffers
-		std::string frameBuffer = "";
 		// Engine properties
 		double deltaTime = 0;
 
@@ -319,7 +337,6 @@ namespace kl {
 		// Starts the engine
 		void Start() {
 			engineOn = true;
-			console::HideCursor();
 			EngineLoop();
 		}
 
@@ -329,12 +346,47 @@ namespace kl {
 		}
 
 	private:
+		// Buffers
+		std::string frameBuffer = "";
+		std::string backgroundBuffer = "";
+		std::vector<double> depthBuffer;
+		std::vector<double> shadowBuffer;
 		// Private variables
 		bool engineOn = false;
+		int frameWidth = 0;
+		int frameHeight = 0;
+		size_t pixelCount = 0;
+
+		// Creates a background template
+		void BuildBackground() {
+			const char* pixelTemplate = "\x1b[48;2;000;000;000m ";
+			for (size_t i = 0; i < pixelCount; i++) {
+				memcpy(&backgroundBuffer[i * 20], pixelTemplate, 20);
+			}
+		}
 
 		// Update buffers sizes if the consol size changes
 		void CheckConsoleSize() {
+			// Getting current console window size
+			size consoleSize = console::GetSize();
+			if (consoleSize.width != frameWidth || consoleSize.height != frameHeight) {
+				// Updating engine properties
+				frameWidth = consoleSize.width;
+				frameHeight = consoleSize.height;
 
+				// Resizing engine buffers
+				pixelCount = size_t(frameWidth) * size_t(frameHeight);
+				frameBuffer.resize(pixelCount * 20);
+				backgroundBuffer.resize(pixelCount * 20);
+				depthBuffer.resize(pixelCount);
+				shadowBuffer.resize(pixelCount);
+				
+				// Building new background buffer
+				BuildBackground();
+
+				// Hiding the console cursor
+				kl::console::HideCursor();
+			}
 		}
 
 		// Computing object physics 
@@ -342,13 +394,31 @@ namespace kl {
 
 		}
 
+		// Clears all engine buffers
+		void ClearBuffers() {
+			memcpy(&frameBuffer[0], &backgroundBuffer[0], pixelCount * 20);
+			memset(&depthBuffer[0], 0, pixelCount * sizeof(double));
+			memset(&shadowBuffer[0], 0, pixelCount * sizeof(double));
+		}
+
 		// Rendering objects to the screen
 		void ObjectRender() {
 
 		}
 
+		// Displays the frame to the screen
+		void RenderFrame() {
+			console::MoveCursor(0, 0);
+			std::cout << frameBuffer;
+		}
+
 		// Engine game loop
 		void EngineLoop() {
+			// Console setup
+			console::HideCursor();
+			console::SetFont(4, 4, L"Lucida Console");
+			console::SetSize(200, 200);
+
 			// One call before engine start
 			EngineStart();
 			
@@ -358,7 +428,7 @@ namespace kl {
 				CheckConsoleSize();
 
 				/* Game input */
-				EngineInput(kl::console::GetInput());
+				EngineInput(console::GetInput());
 
 				/* Game logic */
 				EngineUpdate();
@@ -367,9 +437,9 @@ namespace kl {
 				ObjectPhysics();
 
 				/* Rendering */
+				ClearBuffers();
 				ObjectRender();
-				console::MoveCursor(0, 0);
-				std::cout << frameBuffer;
+				RenderFrame();
 
 				/* Calculating frame time */
 				deltaTime = time::GetElapsed();
@@ -377,6 +447,12 @@ namespace kl {
 				/* Updating the title */
 				console::SetTitle(std::to_string((int)(1 / deltaTime)));
 			}
+
+			// Console reset
+			console::ShowCursor();
+			console::SetFont(8, 16, L"Consolas");
+			console::SetSize(120, 30);
+			console::SetTitle(":)");
 		}
 	};
 
