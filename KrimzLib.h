@@ -1,10 +1,12 @@
 #pragma once
 #include <iostream>
-#include <cmath>
+#include <string>
 #include <thread>
 #include <vector>
 #include <functional>
 #include <windows.h>
+#include <conio.h>
+
 
 /* Main namespace */
 namespace kl {
@@ -22,18 +24,61 @@ namespace kl {
 
 	/* Constants */
 	namespace constant {
-		color colorBlack = { 0, 0, 0 };
-		color colorWhite = { 255, 255, 255 };
-		color colorRed = { 255, 0, 0 };
-		color colorGreen = { 0, 255, 0 };
-		color colorBlue = { 0, 0, 255 };
+		const double pi = 3.141592653589f;
+		const double toRadians = pi / 180.0f;
+		const double toDegrees = 180.0f / pi;
+		const color colorBlack = { 0, 0, 0 };
+		const color colorWhite = { 200, 200, 200 };
+		const color colorGray = { 70, 70, 70 };
+		const color colorRed = { 200, 0, 0 };
+		const color colorGreen = { 0, 200, 0 };
+		const color colorBlue = { 0, 0, 200 };
+		const color colorCyan = { 32, 178, 170 };
+		const color colorPurple = { 200, 0, 200 };
+		const color colorYellow = { 200, 200, 0 };
+		const color colorOrange = { 255, 140, 0 };
+		const color colorMagenta = { 153, 0, 153 };
+		const color colorCrimson = { 102, 0, 0 };
+		const color colorSnow = { 255, 255, 255 };
+		const color colorSapphire = { 0, 103, 165 };
+		const color colorWheat = { 245, 222, 179 };
+	}
+
+	/* Miscellaneous stuff */
+	namespace misc {
+		// Parallel for loop
+		void ParallelFor(int startInclusive, int endExclusive, int threadCount, std::function<void(int)> loopBody) {
+			// Thread storage
+			std::vector<std::thread> cpuThreads(threadCount);
+			int countPerThread = (endExclusive - startInclusive) / threadCount;
+
+			// Thread creation
+			for (int i = 0; i < threadCount; i++) {
+				int loopStart = countPerThread * i + startInclusive;
+				int loopEnd = (i == threadCount - 1) ? endExclusive : (loopStart + countPerThread);
+				cpuThreads[i] = std::thread([&](int start, int end) {for (int i = start; i < end; i++) { loopBody(i); }}, loopStart, loopEnd);
+			}
+
+			// Waiting for the threads to finish
+			for (int i = 0; i < threadCount; i++) {
+				cpuThreads[i].join();
+			}
+		}
 	}
 
 	/* Console stuff */
 	class console {
 	public:
+		// Sets the console title
+		static void SetTitle(std::string text) {
+			SetConsoleTitleA(text.c_str());
+		}
+
 		// Sets the console cursor position
-		static void SetCursorPosition(COORD position) {
+		static void MoveCursor(short x, short y) {
+			SetConsoleCursorPosition(stdConsoleHandle, { x, y });
+		}
+		static void MoveCursor(COORD position) {
 			SetConsoleCursorPosition(stdConsoleHandle, position);
 		}
 
@@ -74,6 +119,15 @@ namespace kl {
 			printf("\x1b[38;2;%d;%d;%dm%s", textColor.r, textColor.g, textColor.b, text.c_str());
 		}
 
+		// Returns a pressed key
+		static char GetInput() {
+			char input = 0;
+			while (_kbhit()) {
+				input = _getch();
+			}
+			return input;
+		}
+
 	private:
 		static HANDLE stdConsoleHandle;
 		static bool rgbEnabled;
@@ -83,25 +137,92 @@ namespace kl {
 	bool console::rgbEnabled = false;
 	DWORD console::lastConsoleMode = 0;
 
-	/* Miscellaneous stuff */
-	namespace misc {
-		// Parallel for loop
-		void ParallelFor(int startInclusive, int endExclusive, int threadCount, std::function<void(int)> loopBody) {
-			// Thread storage
-			std::vector<std::thread> cpuThreads(threadCount);
-			int countPerThread = (endExclusive - startInclusive) / threadCount;
+	class time {
+	public:
+		// Initialise needed time functions
+		static void Init() {
+			QueryPerformanceFrequency(&counterLast);
+			PCFrequency = double(counterLast.QuadPart);
+		}
 
-			// Thread creation
-			for (int i = 0; i < threadCount; i++) {
-				int loopStart = countPerThread * i + startInclusive;
-				int loopEnd = (i == threadCount - 1) ? endExclusive : (loopStart + countPerThread);
-				cpuThreads[i] = std::thread([&](int start, int end) {for (int i = start; i < end; i++) { loopBody(i); }}, loopStart, loopEnd);
-			}
+		// Returns a time since the the last GetElapsed call
+		static double GetElapsed() {
+			LARGE_INTEGER counterNow;
+			QueryPerformanceCounter(&counterNow);
+			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
+			counterLast = counterNow;
+			return time;
+		}
 
-			// Waiting for the threads to finish
-			for (int i = 0; i < threadCount; i++) {
-				cpuThreads[i].join();
+	private:
+		static LARGE_INTEGER counterLast;
+		static double PCFrequency;
+	};
+	LARGE_INTEGER time::counterLast = {};
+	double time::PCFrequency = 0;
+
+	/* My game engine stuff */
+	class engine {
+	public:
+		// Public variables
+		double deltaTime = 0;
+
+		// Engine constructor and destructor
+		engine() {
+
+		}
+		~engine() {
+			
+		}
+		void Delete() {
+			this->~engine();
+		}
+
+		// Starts the engine
+		void Start() {
+			engineOn = true;
+			EngineLoop();
+		}
+
+		// Stops the engine
+		void Stop() {
+			engineOn = false;
+		}
+
+	private:
+		// Private variables
+		bool engineOn = false;
+
+		// Engine game loop
+		void EngineLoop() {
+			// Needed for time calculations
+			while (engineOn) {
+				/* Game input */
+				//EngineInput();
+
+				/* Game logic */
+				//EngineUpdate();
+
+				/* Applying physics */
+				//ObjectPhysics();
+
+				/* Rendering */
+				//ObjectRender();
+				//StretchDIBits(engineHDC, 0, 0, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight, &frameBuffer[0], &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+				Sleep(14);
+
+				/* Calculating frame time */
+				deltaTime = time::GetElapsed();
+
+				/* Updating the title */
+				console::SetTitle(std::to_string((int)(1 / deltaTime)));
 			}
 		}
+	};
+
+	/* Class initialiser */
+	void Init() {
+		console::EnableRGB();
+		time::Init();
 	}
 }
