@@ -170,10 +170,15 @@ namespace kl {
 			};
 		}
 
+		// Changes the console buffer size
+		static void SetBufferSize(int width, int height) {
+			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)width, (short)height });
+		}
+
 		// Changes the console size
 		static void SetSize(int width, int height) {
-			SMALL_RECT consoleRect = { 0, 0, (short)width - 1, (short)height - 1 };
-			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)width, (short)height });
+			SetBufferSize(width, height);
+			SMALL_RECT consoleRect = { 0, 0, (short)width - 1, (short)height - 1 };	
 			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
 		}
 
