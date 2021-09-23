@@ -172,7 +172,7 @@ namespace kl {
 
 		// Changes the console size
 		static void SetSize(int width, int height) {
-			SMALL_RECT consoleRect = { 0, 0, width - 1, height - 1 };
+			SMALL_RECT consoleRect = { 0, 0, (short)width - 1, (short)height - 1 };
 			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)width, (short)height });
 			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
 		}
@@ -214,11 +214,17 @@ namespace kl {
 		}
 
 		// Prints RGB text
+		static void Print(std::string text, byte r = 255, byte g = 255, byte b = 255) {
+			printf("\x1b[38;2;%d;%d;%dm%s", r, g, b, text.c_str());
+		}
 		static void Print(std::string text, color textColor = constant::colorWhite) {
 			printf("\x1b[38;2;%d;%d;%dm%s", textColor.r, textColor.g, textColor.b, text.c_str());
 		}
 
 		// Prints RGB block
+		static void PrintBlock(byte r, byte g, byte b) {
+			printf("\x1b[48;2;%d;%d;%dm ", r, g, b);
+		}
 		static void PrintBlock(color blockColor) {
 			printf("\x1b[48;2;%d;%d;%dm ", blockColor.r, blockColor.g, blockColor.b);
 		}
@@ -272,7 +278,7 @@ namespace kl {
 	class file {
 	public:
 		// Returns a pixel array from the given image
-		// You have to include "Gdiplus.lib" if you want to use this function
+		// You have to link "Gdiplus.lib" if you want to use this function
 		static bitmap GetPixels(std::wstring imagePath) {
 			// Loads image file
 			ULONG_PTR gdiplusToken;
@@ -359,7 +365,7 @@ namespace kl {
 
 		// Creates a background template
 		void BuildBackground() {
-			const char* pixelTemplate = "\x1b[48;2;000;000;000m ";
+			const char* pixelTemplate = "\x1b[48;2;005;005;005m ";
 			for (size_t i = 0; i < pixelCount; i++) {
 				memcpy(&backgroundBuffer[i * 20], pixelTemplate, 20);
 			}
