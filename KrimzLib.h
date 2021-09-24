@@ -43,6 +43,10 @@ namespace kl {
 
 	/* Constants */
 	namespace constant {
+		// Ints
+		const int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+		const int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+
 		// Doubles
 		const double pi = 3.141592653589f;
 		const double toRadians = pi / 180.0f;
@@ -329,67 +333,69 @@ namespace kl {
 	public:
 		// Public window properties
 		HINSTANCE hInstance = GetModuleHandleW(NULL);
-		LPCWSTR windowName;
-		HWND windowHWND;
-		HDC windowHDC;
+		LPCWSTR name;
+		HWND hwnd;
+		HDC hdc;
 
-		window(int width, int height, const wchar_t* name, bool resizeable = true) {
+		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true) {
 			// Start a new window thread
 			bool windowCreated = false;
 			std::thread windowThread([&]() {
 				// Define windowapi window class
-				windowName = name;
+				name = windowName;
 				WNDCLASS windowClass = {};
 				windowClass.lpfnWndProc = WindowProc;
 				windowClass.hInstance = hInstance;
-				windowClass.lpszClassName = windowName;
+				windowClass.lpszClassName = name;
 				RegisterClassW(&windowClass);
 
 				// Create window
-				windowHWND = CreateWindowExW(0, windowName, windowName, resizeable ? WS_OVERLAPPEDWINDOW : WS_SYSMENU, 0, 0, width, height, 0, 0, hInstance, 0);
-				if (!windowHWND) { exit(69); }
-				ShowWindow(windowHWND, SW_SHOW);
-				windowHDC = GetDC(windowHWND);
+				DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+				RECT adjustedWindowSize = { 0, 0, windowWidth, windowHeight };
+				AdjustWindowRectEx(&adjustedWindowSize, windowStyle, NULL, NULL);
+				windowWidth = (adjustedWindowSize.right - adjustedWindowSize.left);
+				windowHeight = (adjustedWindowSize.bottom - adjustedWindowSize.top);
+				hwnd = CreateWindowExW(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
+				if (!hwnd) { exit(69); }
+				ShowWindow(hwnd, SW_SHOW);
+				hdc = GetDC(hwnd);
 				windowCreated = true;
 
 				// Window message loop
-				while (GetMessageW(&windowMessage, windowHWND, 0, 0) > 0 && windowRunning) {
+				while (GetMessageW(&windowMessage, hwnd, 0, 0) > 0) {
 					TranslateMessage(&windowMessage);
 					DispatchMessageW(&windowMessage);
 				}
 
-				// Destroying the window
-				DestroyWindow(windowHWND);
-				UnregisterClassW(windowName, hInstance);
-				windowDestroyed = true;
+				// Destroying window and winapi class
+				DestroyWindow(hwnd);
+				UnregisterClassW(name, hInstance);
 			});
 			windowThread.detach();
 			while (!windowCreated);
 		}
 		~window() {
-			windowRunning = false;
-			while (!windowDestroyed);
+			SendMessageW(hwnd, WM_CLOSE, 0, 0);
 		}
 
-		// Destroys the window
-		void Destroy() {
-			this->~window();
+		// Sets the window title
+		void SetTitle(std::string text) {
+			SetWindowTextA(hwnd, text.c_str());
 		}
 
 	private:
 		// Private window properties
-		bool windowRunning = true;
-		bool windowDestroyed = false;
 		MSG windowMessage = {};
 
 		// Handling window messages
 		static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
 			switch (message) {
-			case WM_CLOSE:
-				PostQuitMessage(69);
+			case WM_CHAR:
 				break;
-			}
-			return DefWindowProcW(window, message, wParam, lParam);
+
+			default:
+				return DefWindowProcW(window, message, wParam, lParam);
+			}	
 		}
 	};
 
@@ -410,9 +416,6 @@ namespace kl {
 		}
 		~engine() {
 			
-		}
-		void Delete() {
-			this->~engine();
 		}
 
 		// Starts the engine
