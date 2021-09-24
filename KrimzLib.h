@@ -30,6 +30,10 @@ namespace kl {
 		int width;
 		int height;
 	};
+	struct ivec2 {
+		int x;
+		int y;
+	};
 	struct vec2 {
 		double x;
 		double y;
@@ -332,11 +336,15 @@ namespace kl {
 	class window {
 	public:
 		// Public window properties
-		HINSTANCE hInstance = GetModuleHandleW(NULL);
 		LPCWSTR name;
 		HWND hwnd;
 		HDC hdc;
+		WPARAM pressedKey;
+		bool lmbDown = false;
+		bool rmbDown = false;
+		ivec2 mousePosition = {};
 
+		// Window constructor and destructor
 		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true) {
 			// Start a new window thread
 			bool windowCreated = false;
@@ -344,7 +352,7 @@ namespace kl {
 				// Define windowapi window class
 				name = windowName;
 				WNDCLASS windowClass = {};
-				windowClass.lpfnWndProc = WindowProc;
+				windowClass.lpfnWndProc = DefWindowProcW;
 				windowClass.hInstance = hInstance;
 				windowClass.lpszClassName = name;
 				RegisterClassW(&windowClass);
@@ -363,8 +371,39 @@ namespace kl {
 
 				// Window message loop
 				while (GetMessageW(&windowMessage, hwnd, 0, 0) > 0) {
-					TranslateMessage(&windowMessage);
+					// Handling window messages
 					DispatchMessageW(&windowMessage);
+					switch (windowMessage.message) {
+					case WM_KEYDOWN:
+						pressedKey = windowMessage.wParam;
+						break;
+
+					case WM_KEYUP:
+						pressedKey = 0;
+						break;
+
+					case WM_LBUTTONDOWN:
+						lmbDown = true;
+						break;
+
+					case WM_LBUTTONUP:
+						lmbDown = false;
+						break;
+
+					case WM_RBUTTONDOWN:
+						rmbDown = true;
+						break;
+
+					case WM_RBUTTONUP:
+						rmbDown = false;
+						break;
+					}
+
+					// Getting mouse coordinates in client area
+					POINT mouseCoords;
+					GetCursorPos(&mouseCoords);
+					ScreenToClient(hwnd, &mouseCoords);
+					mousePosition = { mouseCoords.x, mouseCoords.y };
 				}
 
 				// Destroying window and winapi class
@@ -385,18 +424,8 @@ namespace kl {
 
 	private:
 		// Private window properties
+		HINSTANCE hInstance = GetModuleHandleW(NULL);
 		MSG windowMessage = {};
-
-		// Handling window messages
-		static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
-			switch (message) {
-			case WM_CHAR:
-				break;
-
-			default:
-				return DefWindowProcW(window, message, wParam, lParam);
-			}	
-		}
 	};
 
 
