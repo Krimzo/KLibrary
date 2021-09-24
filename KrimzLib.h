@@ -7,7 +7,8 @@
 #include <conio.h>
 #include <windows.h>
 #include <gdiplus.h>
-
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 /* Main namespace */
 namespace kl {
@@ -15,25 +16,31 @@ namespace kl {
 	// Colors/Bitmaps
 	typedef unsigned char byte;
 	struct color {
-		byte r;
-		byte g;
-		byte b;
+		byte r = 0;
+		byte g = 0;
+		byte b = 0;
+		byte a = 255;
 	};
 	struct bitmap {
-		int width = 0;
-		int height = 0;
+		size_t width = 0;
+		size_t height = 0;
 		std::vector<color> pixels;
+
+		// Constructor
+		bitmap(int bitmapWidth, int bitmapHeight) {
+			width = bitmapWidth;
+			height = bitmapHeight;
+			pixels.resize(width * height);
+		}
+
+		// Fils the bitmap with solid color
+		void FillSolid(color solidColor) {
+			std::fill(pixels.begin(), pixels.end(), solidColor);
+		}
 	};
 
 	// Size/Vectors
-	struct size {
-		int width;
-		int height;
-	};
-	struct ivec2 {
-		int x;
-		int y;
-	};
+	typedef POINT ivec2;
 	struct vec2 {
 		double x;
 		double y;
@@ -42,6 +49,10 @@ namespace kl {
 		double x;
 		double y;
 		double z;
+	};
+	struct size {
+		size_t width;
+		size_t height;
 	};
 
 
@@ -161,10 +172,10 @@ namespace kl {
 		}
 
 		// Sets the console cursor position
-		static void MoveCursor(short x, short y) {
+		static void SetCursorPos(short x, short y) {
 			SetConsoleCursorPosition(stdConsoleHandle, { x, y });
 		}
-		static void MoveCursor(COORD position) {
+		static void SetCursorPos(COORD position) {
 			SetConsoleCursorPosition(stdConsoleHandle, position);
 		}
 
@@ -173,8 +184,8 @@ namespace kl {
 			CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo;
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &consoleScreenBufferInfo);
 			return {
-				consoleScreenBufferInfo.srWindow.Right - consoleScreenBufferInfo.srWindow.Left + 1,
-				consoleScreenBufferInfo.srWindow.Bottom - consoleScreenBufferInfo.srWindow.Top + 1
+				size_t(consoleScreenBufferInfo.srWindow.Right - size_t(consoleScreenBufferInfo.srWindow.Left) + 1),
+				size_t(consoleScreenBufferInfo.srWindow.Bottom - size_t(consoleScreenBufferInfo.srWindow.Top) + 1)
 			};
 		}
 
@@ -227,9 +238,6 @@ namespace kl {
 		}
 
 		// Prints RGB text
-		static void Print(std::string text, byte r = 255, byte g = 255, byte b = 255) {
-			printf("\x1b[38;2;%d;%d;%dm%s", r, g, b, text.c_str());
-		}
 		static void Print(std::string text, color textColor = constant::colorWhite) {
 			printf("\x1b[38;2;%d;%d;%dm%s", textColor.r, textColor.g, textColor.b, text.c_str());
 		}
@@ -272,7 +280,6 @@ namespace kl {
 
 		// Returns a time since the the last GetElapsed call
 		static double GetElapsed() {
-			LARGE_INTEGER counterNow;
 			QueryPerformanceCounter(&counterNow);
 			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
 			counterLast = counterNow;
@@ -280,9 +287,11 @@ namespace kl {
 		}
 
 	private:
+		static LARGE_INTEGER counterNow;
 		static LARGE_INTEGER counterLast;
 		static double PCFrequency;
 	};
+	LARGE_INTEGER time::counterNow = {};
 	LARGE_INTEGER time::counterLast = {};
 	double time::PCFrequency = 0;
 
@@ -308,9 +317,7 @@ namespace kl {
 			}
 
 			// Saves data
-			bitmap image;
-			image.width = loadedBitmap->GetWidth();
-			image.height = loadedBitmap->GetHeight();
+			bitmap image(loadedBitmap->GetWidth(), loadedBitmap->GetHeight());
 			for (int y = 0; y < image.height; y++) {
 				for (int x = 0; x < image.width; x++) {
 					Gdiplus::Color tempPixel;
@@ -339,10 +346,10 @@ namespace kl {
 		LPCWSTR name;
 		HWND hwnd;
 		HDC hdc;
-		WPARAM pressedKey;
+		WPARAM keyDown;
 		bool lmbDown = false;
 		bool rmbDown = false;
-		ivec2 mousePosition = {};
+		ivec2 mousePos = {};
 
 		// Window constructor and destructor
 		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true) {
@@ -370,16 +377,17 @@ namespace kl {
 				windowCreated = true;
 
 				// Window message loop
+				ivec2 tempMouseCoords = {};
 				while (GetMessageW(&windowMessage, hwnd, 0, 0) > 0) {
 					// Handling window messages
 					DispatchMessageW(&windowMessage);
 					switch (windowMessage.message) {
 					case WM_KEYDOWN:
-						pressedKey = windowMessage.wParam;
+						keyDown = windowMessage.wParam;
 						break;
 
 					case WM_KEYUP:
-						pressedKey = 0;
+						keyDown = 0;
 						break;
 
 					case WM_LBUTTONDOWN:
@@ -397,13 +405,13 @@ namespace kl {
 					case WM_RBUTTONUP:
 						rmbDown = false;
 						break;
-					}
 
-					// Getting mouse coordinates in client area
-					POINT mouseCoords;
-					GetCursorPos(&mouseCoords);
-					ScreenToClient(hwnd, &mouseCoords);
-					mousePosition = { mouseCoords.x, mouseCoords.y };
+					case WM_MOUSEMOVE:
+						GetCursorPos(&tempMouseCoords);
+						ScreenToClient(hwnd, &tempMouseCoords);
+						mousePos = tempMouseCoords;
+						break;
+					}
 				}
 
 				// Destroying window and winapi class
@@ -420,6 +428,16 @@ namespace kl {
 		// Sets the window title
 		void SetTitle(std::string text) {
 			SetWindowTextA(hwnd, text.c_str());
+		}
+
+		// Sets the pixels of the window
+		void DisplayBitmap(bitmap& toDraw) {
+			HBITMAP tempMap = CreateBitmap(toDraw.width, toDraw.height, 1, 32, &toDraw.pixels[0]);
+			HDC tempHdc = CreateCompatibleDC(hdc);
+			SelectObject(tempHdc, tempMap);
+			BitBlt(hdc, 0, 0, toDraw.width, toDraw.height, tempHdc, 0, 0, SRCCOPY);
+			DeleteObject(tempMap);
+			DeleteDC(tempHdc);
 		}
 
 	private:
@@ -521,7 +539,7 @@ namespace kl {
 
 		// Displays the frame to the screen
 		void RenderFrame() {
-			console::MoveCursor(0, 0);
+			console::SetCursorPos(0, 0);
 			std::cout << frameBuffer;
 		}
 
