@@ -296,7 +296,7 @@ namespace kl {
 			if (lastBitmapStatus) {
 				std::wcout << "Couldn't load image \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
 				char iHateWarnings = getchar();
-				exit(-1);
+				exit(69);
 			}
 
 			// Saves data
@@ -321,6 +321,76 @@ namespace kl {
 
 	private:
 
+	};
+
+
+	/* WIN32 stuff */
+	class window {
+	public:
+		// Public window properties
+		HINSTANCE hInstance = GetModuleHandleW(NULL);
+		LPCWSTR windowName;
+		HWND windowHWND;
+		HDC windowHDC;
+
+		window(int width, int height, const wchar_t* name, bool resizeable = true) {
+			// Start a new window thread
+			bool windowCreated = false;
+			std::thread windowThread([&]() {
+				// Define windowapi window class
+				windowName = name;
+				WNDCLASS windowClass = {};
+				windowClass.lpfnWndProc = WindowProc;
+				windowClass.hInstance = hInstance;
+				windowClass.lpszClassName = windowName;
+				RegisterClassW(&windowClass);
+
+				// Create window
+				windowHWND = CreateWindowExW(0, windowName, windowName, resizeable ? WS_OVERLAPPEDWINDOW : WS_SYSMENU, 0, 0, width, height, 0, 0, hInstance, 0);
+				if (!windowHWND) { exit(69); }
+				ShowWindow(windowHWND, SW_SHOW);
+				windowHDC = GetDC(windowHWND);
+				windowCreated = true;
+
+				// Window message loop
+				while (GetMessageW(&windowMessage, windowHWND, 0, 0) > 0 && windowRunning) {
+					TranslateMessage(&windowMessage);
+					DispatchMessageW(&windowMessage);
+				}
+
+				// Destroying the window
+				DestroyWindow(windowHWND);
+				UnregisterClassW(windowName, hInstance);
+				windowDestroyed = true;
+			});
+			windowThread.detach();
+			while (!windowCreated);
+		}
+		~window() {
+			windowRunning = false;
+			while (!windowDestroyed);
+		}
+
+		// Destroys the window
+		void Destroy() {
+			this->~window();
+		}
+
+	private:
+		// Private window properties
+		bool windowRunning = true;
+		bool windowDestroyed = false;
+		MSG windowMessage = {};
+
+		// Handling window messages
+		static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
+			switch (message) {
+			case WM_CLOSE:
+				PostQuitMessage(69);
+				break;
+			}
+			return DefWindowProcW(window, message, wParam, lParam);
+		}
 	};
 
 
@@ -463,7 +533,8 @@ namespace kl {
 			console::ShowCursor();
 			console::SetFont(8, 16, L"Consolas");
 			console::SetSize(120, 30);
-			console::SetTitle(":)");
+			console::SetTitle("Engine off");
+			system("cls");
 		}
 	};
 
