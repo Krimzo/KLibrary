@@ -453,21 +453,28 @@ namespace kl {
 	/* WIN32 stuff */
 	class window {
 	public:
-		// Public window properties
+		// Winapi properties
 		LPCWSTR name = NULL;
 		HWND hwnd = NULL;
 		HDC hdc = NULL;
-		HGLRC hglrc = NULL;
+		
+		// Input properties
 		WPARAM keyDown = 0;
 		bool lmbDown = false;
 		bool rmbDown = false;
 		point mousePos = {};
+
+		// OpenGL properties
+		HGLRC hglrc = NULL;
+		std::function<void(void)> OpenGLStart = []() {};
+		std::function<void(void)> OpenGLUpdate = []() {};
 
 		// Window constructor and destructor
 		// You need to link "opengl32.lib" if you want to use OpenGL
 		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false) {
 			// Start a new window thread
 			bool windowCreated = false;
+			bool mainThreadOut = false;
 			std::thread windowThread([&]() {
 				// Define windowapi window class
 				name = windowName;
@@ -489,13 +496,14 @@ namespace kl {
 				ShowWindow(hwnd, SW_SHOW);
 				hdc = GetDC(hwnd);
 				windowCreated = true;
+				while (!mainThreadOut);
 
 				// Bitmapinfo setup
 				bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
 				bitmapInfo.bmiHeader.biPlanes = 1;
 				bitmapInfo.bmiHeader.biBitCount = 32;
 				bitmapInfo.bmiHeader.biCompression = BI_RGB;
-
+				
 				// OpenGL setup
 				if (useOpenGL) {
 					PIXELFORMATDESCRIPTOR pfd = {
@@ -527,39 +535,20 @@ namespace kl {
 				}
 
 				// Window message loop
-				while (GetMessageW(&windowMessage, hwnd, 0, 0) > 0) {
-					switch (windowMessage.message) {
-					case WM_KEYDOWN:
-						keyDown = windowMessage.wParam;
-						break;
-						
-					case WM_KEYUP:
-						keyDown = 0;
-						break;
-
-					case WM_LBUTTONDOWN:
-						lmbDown = true;
-						break;
-
-					case WM_LBUTTONUP:
-						lmbDown = false;
-						break;
-
-					case WM_RBUTTONDOWN:
-						rmbDown = true;
-						break;
-
-					case WM_RBUTTONUP:
-						rmbDown = false;
-						break;
-
-					case WM_MOUSEMOVE:
-						mousePos = { GET_X_LPARAM(windowMessage.lParam),  GET_Y_LPARAM(windowMessage.lParam) };
-						break;
-
-					default:
-						DispatchMessageW(&windowMessage);
-						break;
+				if (useOpenGL) {
+					OpenGLStart();
+					int messageStatus = 1;
+					while (messageStatus > 0) {
+						if (PeekMessageW(&windowMessage, hwnd, 0, 0, PM_NOREMOVE)) {
+							messageStatus = GetMessageW(&windowMessage, hwnd, 0, 0);
+							HandleMessage();
+						}
+						OpenGLUpdate();
+					}
+				}
+				else {
+					while (GetMessageW(&windowMessage, hwnd, 0, 0) > 0) {
+						HandleMessage();
 					}
 				}
 
@@ -571,12 +560,15 @@ namespace kl {
 				ReleaseDC(hwnd, hdc);
 				DestroyWindow(hwnd);
 				UnregisterClassW(name, hInstance);
+				windowDestroyed = true;
 			});
 			windowThread.detach();
 			while (!windowCreated);
+			mainThreadOut = true;
 		}
 		~window() {
-			SendMessageW(hwnd, WM_CLOSE, 0, 0);
+			PostMessageW(hwnd, WM_CLOSE, 0, 0);
+			while (!windowDestroyed);
 		}
 
 		// Sets the window title
@@ -600,8 +592,46 @@ namespace kl {
 	private:
 		// Private window properties
 		HINSTANCE hInstance = GetModuleHandleW(NULL);
-		MSG windowMessage = {};
 		BITMAPINFO bitmapInfo = {};
+		MSG windowMessage = {};
+		bool windowDestroyed = false;
+
+		// Handles the windows message
+		void HandleMessage() {
+			switch (windowMessage.message) {
+			case WM_KEYDOWN:
+				keyDown = windowMessage.wParam;
+				break;
+
+			case WM_KEYUP:
+				keyDown = 0;
+				break;
+
+			case WM_LBUTTONDOWN:
+				lmbDown = true;
+				break;
+
+			case WM_LBUTTONUP:
+				lmbDown = false;
+				break;
+
+			case WM_RBUTTONDOWN:
+				rmbDown = true;
+				break;
+
+			case WM_RBUTTONUP:
+				rmbDown = false;
+				break;
+
+			case WM_MOUSEMOVE:
+				mousePos = { GET_X_LPARAM(windowMessage.lParam),  GET_Y_LPARAM(windowMessage.lParam) };
+				break;
+
+			default:
+				DispatchMessageW(&windowMessage);
+				break;
+			}
+		}
 	};
 
 
