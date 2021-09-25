@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <thread>
 #include <functional>
@@ -16,14 +18,8 @@ namespace kl {
 	// Vectors/Size
 	typedef POINT point;
 	struct vec2 {
-		double x;
-		double y;
-
-		// Constructor
-		vec2 (double x = 0, double y = 0) {
-			this->x = x;
-			this->y = y;
-		}
+		double x = 0;
+		double y = 0;
 
 		// Prints the vector to the console
 		void Print() {
@@ -49,16 +45,9 @@ namespace kl {
 		}
 	};
 	struct vec3 {
-		double x;
-		double y;
-		double z;
-
-		// Constructor
-		vec3 (double x = 0, double y = 0, double z = 0) {
-			this->x = x;
-			this->y = y;
-			this->z = z;
-		}
+		double x = 0;
+		double y = 0;
+		double z = 0;
 
 		// Prints the vector to the console
 		void Print() {
@@ -85,14 +74,8 @@ namespace kl {
 		}
 	};
 	struct size {
-		int width;
-		int height;
-
-		// Constructor
-		size (int width, int height) {
-			this->width = width;
-			this->height = height;
-		}
+		int width = 0;
+		int height = 0;
 
 		// Returns the area
 		int Area() {
@@ -102,95 +85,22 @@ namespace kl {
 	// Colors/Bitmaps
 	typedef unsigned char byte;
 	struct color {
-		byte r;
-		byte g;
-		byte b;
-		byte a;
-
-		// Constructor
-		color(byte r = 0, byte g = 0, byte b = 0, byte a = 255) {
-			this->r = r;
-			this->g = g;
-			this->b = b;
-			this->a = a;
-		}
+		byte r = 0;
+		byte g = 0;
+		byte b = 0;
+		byte a = 255;
 	};
 	struct bitmap {
-		int width = 0;
-		int height = 0;
+		int width;
+		int height;
 		std::vector<color> pixels;
 
 		// Constructor
-		bitmap(int bitmapWidth, int bitmapHeight) {
-			width = bitmapWidth;
-			height = bitmapHeight;
+		bitmap(int width, int height) {
+			this->width = width;
+			this->height = height;
 			pixels.resize(size_t(width) * size_t(height));
-		}
-		// You have to link "Gdiplus.lib" if you want to use this constructor
-		bitmap(std::wstring imagePath) {
-			// Loads image file
-			ULONG_PTR gdiplusToken;
-			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-			Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-			Gdiplus::Bitmap* loadedBitmap = Gdiplus::Bitmap::FromFile(imagePath.c_str());
-
-			// Checks load status
-			int lastBitmapStatus = loadedBitmap->GetLastStatus();
-			if (lastBitmapStatus) {
-				std::wcout << "Couldn't load image \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
-				char iHateWarnings = getchar();
-				exit(69);
-			}
-
-			// Saves data
-			width = loadedBitmap->GetWidth();
-			height = loadedBitmap->GetHeight();
-			pixels.resize(size_t(width) * size_t(height));
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					Gdiplus::Color tempPixel;
-					loadedBitmap->GetPixel(x, y, &tempPixel);
-					pixels[y * size_t(width) + x] = { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB() };
-				}
-			}
-
-			// Clears memory
-			delete loadedBitmap;
-			Gdiplus::GdiplusShutdown(gdiplusToken);
-		}
-
-		// You have to link "Gdiplus.lib" if you want to use this constructor
-		void FromFile(std::wstring imagePath) {
-			// Loads image file
-			ULONG_PTR gdiplusToken;
-			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-			Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-			Gdiplus::Bitmap* loadedBitmap = Gdiplus::Bitmap::FromFile(imagePath.c_str());
-
-			// Checks load status
-			int lastBitmapStatus = loadedBitmap->GetLastStatus();
-			if (lastBitmapStatus) {
-				std::wcout << "Couldn't load image \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
-				char iHateWarnings = getchar();
-				exit(69);
-			}
-
-			// Saves data
-			width = loadedBitmap->GetWidth();
-			height = loadedBitmap->GetHeight();
-			pixels.resize(size_t(width) * size_t(height));
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					Gdiplus::Color tempPixel;
-					loadedBitmap->GetPixel(x, y, &tempPixel);
-					pixels[y * size_t(width) + x] = { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB() };
-				}
-			}
-
-			// Clears memory
-			delete loadedBitmap;
-			Gdiplus::GdiplusShutdown(gdiplusToken);
-		}
+		}		
 
 		// Fils the bitmap with solid color
 		void FillSolid(color color) {
@@ -239,7 +149,7 @@ namespace kl {
 	/* Miscellaneous stuff */
 	class misc {
 	public:
-		// Parallel for loop
+		// Multithreaded for loop
 		static void ParallelFor(int startInclusive, int endExclusive, int threadCount, std::function<void(int)> loopBody) {
 			// Thread storage
 			std::vector<std::thread> cpuThreads(threadCount);
@@ -326,7 +236,68 @@ namespace kl {
 	/* File stuff */
 	class file {
 	public:
+		// Returns a string from a given text file
+		static std::string GetText(std::string file) {
+			std::stringstream textBuffer;
+			std::ifstream fileStream(file);
+			if (fileStream.is_open()) {
+				textBuffer << fileStream.rdbuf();
+			}
+			else {
+				std::cout << "Couldn't load text file \"" << file << "\"" << std::endl;
+				char iHateWarnings = getchar();
+				exit(69);
+			}
+			fileStream.close();
+			return textBuffer.str();
+		}
 
+		// Returns a byte vector from a given file
+		static std::vector<byte> GetBytes(std::string file) {
+			std::ifstream fileStream(file);
+			fileStream.seekg(0, std::ios::end);
+			size_t fileLen = fileStream.tellg();
+			fileStream.seekg(0, std::ios::beg);
+			std::vector<byte> tempByteVector(fileLen);
+			fileStream.read((char*)&tempByteVector[0], fileLen);
+			fileStream.close();
+			return tempByteVector;
+		}
+
+		// Returns a bitmap from the given image file
+		// You have to link "Gdiplus.lib" if you want to use this function
+		static bitmap GetPixels(std::wstring imagePath) {
+			// Loads image file
+			ULONG_PTR gdiplusToken;
+			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+			Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+			Gdiplus::Bitmap* loadedBitmap = Gdiplus::Bitmap::FromFile(imagePath.c_str());
+
+			// Checks load status
+			int lastBitmapStatus = loadedBitmap->GetLastStatus();
+			if (lastBitmapStatus) {
+				std::wcout << "Couldn't load image file \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
+				char iHateWarnings = getchar();
+				exit(69);
+			}
+
+			// Saves data
+			bitmap tempBitmap(loadedBitmap->GetWidth(), loadedBitmap->GetHeight());
+			for (int y = 0; y < tempBitmap.height; y++) {
+				for (int x = 0; x < tempBitmap.width; x++) {
+					Gdiplus::Color tempPixel;
+					loadedBitmap->GetPixel(x, y, &tempPixel);
+					tempBitmap.pixels[y * size_t(tempBitmap.width) + x] = { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB() };
+				}
+			}
+
+			// Clears memory
+			delete loadedBitmap;
+			Gdiplus::GdiplusShutdown(gdiplusToken);
+
+			// Return created bitmap
+			return tempBitmap;
+		}
 	};
 
 
@@ -576,7 +547,7 @@ namespace kl {
 	};
 
 
-	/* My game engine stuff */
+	/* Game engine stuff */
 	class engine {
 	public:
 		// Outside functions that user defines
