@@ -8,6 +8,7 @@
 #include <functional>
 #include <conio.h>
 #include <windows.h>
+#include <windowsx.h>
 #include <gdiplus.h>	// You need to link "gdiplus.lib"
 #include <gl/GL.h>		// You need to link "opengl32.lib"
 #include <gl/GLU.h>		// You need to link "opengl32.lib"
@@ -526,15 +527,12 @@ namespace kl {
 				}
 
 				// Window message loop
-				point tempMouseCoords = {};
 				while (GetMessageW(&windowMessage, hwnd, 0, 0) > 0) {
-					// Handling window messages
-					DispatchMessageW(&windowMessage);
 					switch (windowMessage.message) {
 					case WM_KEYDOWN:
 						keyDown = windowMessage.wParam;
 						break;
-
+						
 					case WM_KEYUP:
 						keyDown = 0;
 						break;
@@ -556,9 +554,11 @@ namespace kl {
 						break;
 
 					case WM_MOUSEMOVE:
-						GetCursorPos(&tempMouseCoords);
-						ScreenToClient(hwnd, &tempMouseCoords);
-						mousePos = tempMouseCoords;
+						mousePos = { GET_X_LPARAM(windowMessage.lParam),  GET_Y_LPARAM(windowMessage.lParam) };
+						break;
+
+					default:
+						DispatchMessageW(&windowMessage);
 						break;
 					}
 				}
