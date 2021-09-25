@@ -12,6 +12,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+
 /* Main namespace */
 namespace kl {
 	/* Typedefs and structs */
@@ -428,6 +429,14 @@ namespace kl {
 				input = _getch();
 			}
 			return input;
+		}
+
+		// Waits until the wanted key is pressed
+		static void WaitFor(char toWaitFor, bool printMessage = false) {
+			if (printMessage) {
+				std::cout << "Waiting for '" << toWaitFor << "'";
+			}
+			while (_getch() != toWaitFor);
 		}
 
 	private:
