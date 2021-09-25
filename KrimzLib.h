@@ -12,47 +12,197 @@
 
 /* Main namespace */
 namespace kl {
-	/* Structs and typedefs */
+	/* Typedefs and structs */
+	// Vectors/Size
+	typedef POINT point;
+	struct vec2 {
+		double x;
+		double y;
+
+		// Constructor
+		vec2 (double x = 0, double y = 0) {
+			this->x = x;
+			this->y = y;
+		}
+
+		// Prints the vector to the console
+		void Print() {
+			std::cout << "x: " << x << " y: " << y;
+		}
+
+		// Returns the vectors lenght
+		double Lenght() {
+			return sqrt(x * x + y * y);
+		}
+
+		// Normalizes a vector
+		void Normalize() {
+			double vecLen = this->Lenght();
+			x /= vecLen;
+			y /= vecLen;
+		}
+
+		// Retruns a normalized vector
+		vec2 Normalized() {
+			double vecLen = this->Lenght();
+			return { x / vecLen, y / vecLen };
+		}
+	};
+	struct vec3 {
+		double x;
+		double y;
+		double z;
+
+		// Constructor
+		vec3 (double x = 0, double y = 0, double z = 0) {
+			this->x = x;
+			this->y = y;
+			this->z = z;
+		}
+
+		// Prints the vector to the console
+		void Print() {
+			std::cout << "x: " << x << " y: " << y << " z: " << z;
+		}
+
+		// Returns the vectors lenght
+		double Lenght() {
+			return sqrt(x * x + y * y + z * z);
+		}
+
+		// Normalizes a vector
+		void Normalize() {
+			double vecLen = this->Lenght();
+			x /= vecLen;
+			y /= vecLen;
+			z /= vecLen;
+		}
+
+		// Retruns a normalized vector
+		vec3 Normalized() {
+			double vecLen = this->Lenght();
+			return { x / vecLen, y / vecLen, z / vecLen };
+		}
+	};
+	struct size {
+		int width;
+		int height;
+
+		// Constructor
+		size (int width, int height) {
+			this->width = width;
+			this->height = height;
+		}
+
+		// Returns the area
+		int Area() {
+			return width * height;
+		}
+	};
 	// Colors/Bitmaps
 	typedef unsigned char byte;
 	struct color {
-		byte r = 0;
-		byte g = 0;
-		byte b = 0;
-		byte a = 255;
+		byte r;
+		byte g;
+		byte b;
+		byte a;
+
+		// Constructor
+		color(byte r = 0, byte g = 0, byte b = 0, byte a = 255) {
+			this->r = r;
+			this->g = g;
+			this->b = b;
+			this->a = a;
+		}
 	};
 	struct bitmap {
-		size_t width = 0;
-		size_t height = 0;
+		int width = 0;
+		int height = 0;
 		std::vector<color> pixels;
 
 		// Constructor
 		bitmap(int bitmapWidth, int bitmapHeight) {
 			width = bitmapWidth;
 			height = bitmapHeight;
-			pixels.resize(width * height);
+			pixels.resize(size_t(width) * size_t(height));
+		}
+		// You have to link "Gdiplus.lib" if you want to use this constructor
+		bitmap(std::wstring imagePath) {
+			// Loads image file
+			ULONG_PTR gdiplusToken;
+			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+			Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+			Gdiplus::Bitmap* loadedBitmap = Gdiplus::Bitmap::FromFile(imagePath.c_str());
+
+			// Checks load status
+			int lastBitmapStatus = loadedBitmap->GetLastStatus();
+			if (lastBitmapStatus) {
+				std::wcout << "Couldn't load image \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
+				char iHateWarnings = getchar();
+				exit(69);
+			}
+
+			// Saves data
+			width = loadedBitmap->GetWidth();
+			height = loadedBitmap->GetHeight();
+			pixels.resize(size_t(width) * size_t(height));
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					Gdiplus::Color tempPixel;
+					loadedBitmap->GetPixel(x, y, &tempPixel);
+					pixels[y * size_t(width) + x] = { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB() };
+				}
+			}
+
+			// Clears memory
+			delete loadedBitmap;
+			Gdiplus::GdiplusShutdown(gdiplusToken);
+		}
+
+		// You have to link "Gdiplus.lib" if you want to use this constructor
+		void FromFile(std::wstring imagePath) {
+			// Loads image file
+			ULONG_PTR gdiplusToken;
+			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+			Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+			Gdiplus::Bitmap* loadedBitmap = Gdiplus::Bitmap::FromFile(imagePath.c_str());
+
+			// Checks load status
+			int lastBitmapStatus = loadedBitmap->GetLastStatus();
+			if (lastBitmapStatus) {
+				std::wcout << "Couldn't load image \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
+				char iHateWarnings = getchar();
+				exit(69);
+			}
+
+			// Saves data
+			width = loadedBitmap->GetWidth();
+			height = loadedBitmap->GetHeight();
+			pixels.resize(size_t(width) * size_t(height));
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					Gdiplus::Color tempPixel;
+					loadedBitmap->GetPixel(x, y, &tempPixel);
+					pixels[y * size_t(width) + x] = { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB() };
+				}
+			}
+
+			// Clears memory
+			delete loadedBitmap;
+			Gdiplus::GdiplusShutdown(gdiplusToken);
 		}
 
 		// Fils the bitmap with solid color
-		void FillSolid(color solidColor) {
-			std::fill(pixels.begin(), pixels.end(), solidColor);
+		void FillSolid(color color) {
+			std::fill(pixels.begin(), pixels.end(), color);
 		}
-	};
 
-	// Size/Vectors
-	typedef POINT ivec2;
-	struct vec2 {
-		double x;
-		double y;
-	};
-	struct vec3 {
-		double x;
-		double y;
-		double z;
-	};
-	struct size {
-		size_t width;
-		size_t height;
+		// Sets the pixel color
+		void SetPixel(int x, int y, color color) {
+			if (x >= 0 && x < width && y >= 0 && y < height) {
+				pixels[y * size_t(width) + x] = color;
+			}
+		}
 	};
 
 
@@ -107,33 +257,34 @@ namespace kl {
 				cpuThreads[i].join();
 			}
 		}
+	};
 
-	private:
+
+	/* Random stuff */
+	class random {
+	public:
+		// Sets the seed for random number generation
+		static void SetSeed() {
+			srand((unsigned)std::time(NULL));
+		}
+		
+		// Returns a random integer
+		static int GetInt(int startInclusive, int endExclusive) {
+			return rand() % (endExclusive - startInclusive) + startInclusive;
+		}
+		
+		// Fills a vector with random integers
+		static void FillVector(std::vector<int>& vectorToFill, int startInclusive, int endExclusive) {
+			for (int i = 0; i < vectorToFill.size(); i++) {
+				vectorToFill[i] = GetInt(startInclusive, endExclusive);
+			}
+		}
 	};
 
 
 	/* Math stuff */
 	class math {
 	public:
-		/* Vector math */
-		// Returns a given vector lenght
-		static double VectorLenght(vec3 vec) {
-			return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-		}
-		static double VectorLenght(vec2 vec) {
-			return sqrt(vec.x * vec.x + vec.y * vec.y);
-		}
-
-		// Returns a normalized vector
-		static vec3 VectorNormalize(vec3 vec) {
-			double vecLen = VectorLenght(vec);
-			return { vec.x / vecLen, vec.y / vecLen, vec.z / vecLen };
-		}
-		static vec2 VectorNormalize(vec2 vec) {
-			double vecLen = VectorLenght(vec);
-			return { vec.x / vecLen, vec.y / vecLen };
-		}
-
 		// Returns a dot product of 2 given vectors
 		static double VectorDotProd(vec3 a, vec3 b) {
 			return a.x * b.x + a.y * b.y + a.z * b.z;
@@ -142,8 +293,40 @@ namespace kl {
 		static vec3 VectorCrossProd(vec3 a, vec3 b) {
 			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
 		}
+	};
+
+
+	/* Time stuff */
+	class time {
+	public:
+		// Loads the current pc frequency
+		static void LoadPCFrequency() {
+			QueryPerformanceFrequency(&counterLast);
+			PCFrequency = double(counterLast.QuadPart);
+		}
+
+		// Returns a time since the the last GetElapsed call
+		static double GetElapsed() {
+			QueryPerformanceCounter(&counterNow);
+			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
+			counterLast = counterNow;
+			return time;
+		}
 
 	private:
+		static LARGE_INTEGER counterNow;
+		static LARGE_INTEGER counterLast;
+		static double PCFrequency;
+	};
+	LARGE_INTEGER time::counterNow = {};
+	LARGE_INTEGER time::counterLast = {};
+	double time::PCFrequency = 0;
+
+
+	/* File stuff */
+	class file {
+	public:
+
 	};
 
 
@@ -184,8 +367,8 @@ namespace kl {
 			CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo;
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &consoleScreenBufferInfo);
 			return {
-				size_t(consoleScreenBufferInfo.srWindow.Right - size_t(consoleScreenBufferInfo.srWindow.Left) + 1),
-				size_t(consoleScreenBufferInfo.srWindow.Bottom - size_t(consoleScreenBufferInfo.srWindow.Top) + 1)
+				int(consoleScreenBufferInfo.srWindow.Right) - int(consoleScreenBufferInfo.srWindow.Left) + 1,
+				int(consoleScreenBufferInfo.srWindow.Bottom) - int(consoleScreenBufferInfo.srWindow.Top) + 1
 			};
 		}
 
@@ -238,8 +421,14 @@ namespace kl {
 		}
 
 		// Prints RGB text
-		static void Print(std::string text, color textColor = constant::colorWhite) {
-			printf("\x1b[38;2;%d;%d;%dm%s", textColor.r, textColor.g, textColor.b, text.c_str());
+		static void Print(std::string data, color textColor = constant::colorWhite) {
+			printf("\x1b[38;2;%d;%d;%dm%s", textColor.r, textColor.g, textColor.b, data.c_str());
+		}
+		static void Print(int data, color textColor = constant::colorWhite) {
+			printf("\x1b[38;2;%d;%d;%dm%d", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Print(double data, color textColor = constant::colorWhite) {
+			printf("\x1b[38;2;%d;%d;%dm%lf", textColor.r, textColor.g, textColor.b, data);
 		}
 
 		// Prints RGB block
@@ -269,76 +458,6 @@ namespace kl {
 	DWORD console::lastConsoleMode = 0;
 
 
-	/* Time stuff */
-	class time {
-	public:
-		// Loads the current pc frequency
-		static void LoadPCFrequency() {
-			QueryPerformanceFrequency(&counterLast);
-			PCFrequency = double(counterLast.QuadPart);
-		}
-
-		// Returns a time since the the last GetElapsed call
-		static double GetElapsed() {
-			QueryPerformanceCounter(&counterNow);
-			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
-			counterLast = counterNow;
-			return time;
-		}
-
-	private:
-		static LARGE_INTEGER counterNow;
-		static LARGE_INTEGER counterLast;
-		static double PCFrequency;
-	};
-	LARGE_INTEGER time::counterNow = {};
-	LARGE_INTEGER time::counterLast = {};
-	double time::PCFrequency = 0;
-
-
-	/* File stuff */
-	class file {
-	public:
-		// Returns a pixel array from the given image
-		// You have to link "Gdiplus.lib" if you want to use this function
-		static bitmap GetPixels(std::wstring imagePath) {
-			// Loads image file
-			ULONG_PTR gdiplusToken;
-			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-			Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-			Gdiplus::Bitmap* loadedBitmap = Gdiplus::Bitmap::FromFile(imagePath.c_str());
-
-			// Checks load status
-			int lastBitmapStatus = loadedBitmap->GetLastStatus();
-			if (lastBitmapStatus) {
-				std::wcout << "Couldn't load image \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
-				char iHateWarnings = getchar();
-				exit(69);
-			}
-
-			// Saves data
-			bitmap image(loadedBitmap->GetWidth(), loadedBitmap->GetHeight());
-			for (int y = 0; y < image.height; y++) {
-				for (int x = 0; x < image.width; x++) {
-					Gdiplus::Color tempPixel;
-					loadedBitmap->GetPixel(x, y, &tempPixel);
-					image.pixels.push_back({ tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB() });
-				}
-			}
-
-			// Clears memory
-			delete loadedBitmap;
-			Gdiplus::GdiplusShutdown(gdiplusToken);
-
-			// Returns pixel array
-			return image;
-		}
-
-	private:
-
-	};
-
-
 	/* WIN32 stuff */
 	class window {
 	public:
@@ -349,7 +468,7 @@ namespace kl {
 		WPARAM keyDown;
 		bool lmbDown = false;
 		bool rmbDown = false;
-		ivec2 mousePos = {};
+		point mousePos = {};
 
 		// Window constructor and destructor
 		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true) {
@@ -376,8 +495,14 @@ namespace kl {
 				hdc = GetDC(hwnd);
 				windowCreated = true;
 
+				// Bitmapinfo setup
+				bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
+				bitmapInfo.bmiHeader.biPlanes = 1;
+				bitmapInfo.bmiHeader.biBitCount = 32;
+				bitmapInfo.bmiHeader.biCompression = BI_RGB;
+
 				// Window message loop
-				ivec2 tempMouseCoords = {};
+				point tempMouseCoords = {};
 				while (GetMessageW(&windowMessage, hwnd, 0, 0) > 0) {
 					// Handling window messages
 					DispatchMessageW(&windowMessage);
@@ -426,24 +551,28 @@ namespace kl {
 		}
 
 		// Sets the window title
-		void SetTitle(std::string text) {
-			SetWindowTextA(hwnd, text.c_str());
+		void SetTitle(std::string data) {
+			SetWindowTextA(hwnd, data.c_str());
+		}
+		void SetTitle(int data) {
+			SetWindowTextA(hwnd, std::to_string(data).c_str());
+		}
+		void SetTitle(double data) {
+			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
 
 		// Sets the pixels of the window
-		void DisplayBitmap(bitmap& toDraw) {
-			HBITMAP tempMap = CreateBitmap(toDraw.width, toDraw.height, 1, 32, &toDraw.pixels[0]);
-			HDC tempHdc = CreateCompatibleDC(hdc);
-			SelectObject(tempHdc, tempMap);
-			BitBlt(hdc, 0, 0, toDraw.width, toDraw.height, tempHdc, 0, 0, SRCCOPY);
-			DeleteObject(tempMap);
-			DeleteDC(tempHdc);
+		void DisplayBitmap(bitmap& toDraw, point position = { 0, 0 }) {
+			bitmapInfo.bmiHeader.biWidth = toDraw.width;
+			bitmapInfo.bmiHeader.biHeight = toDraw.height;
+			StretchDIBits(hdc, position.x, (toDraw.height - 1) + position.y, toDraw.width, -toDraw.height, 0, 0, toDraw.width, toDraw.height, &toDraw.pixels[0], &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
 
 	private:
 		// Private window properties
 		HINSTANCE hInstance = GetModuleHandleW(NULL);
 		MSG windowMessage = {};
+		BITMAPINFO bitmapInfo = {};
 	};
 
 
@@ -591,6 +720,7 @@ namespace kl {
 
 	/* Library initialiser */
 	void Init() {
+		random::SetSeed();
 		console::EnableRGB();
 		time::LoadPCFrequency();
 	}
