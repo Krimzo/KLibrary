@@ -8,9 +8,9 @@
 #include <functional>
 #include <conio.h>
 #include <windows.h>
-#include <gdiplus.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include <gdiplus.h>	// You need to link "gdiplus.lib"
+#include <gl/GL.h>		// You need to link "opengl32.lib"
+#include <gl/GLU.h>		// You need to link "opengl32.lib"
 
 
 /* Main namespace */
@@ -117,7 +117,7 @@ namespace kl {
 	};
 	// Files
 	struct filedata {
-		std::string name;
+		std::wstring name;
 		std::vector<byte> bytes;
 	};
 
@@ -243,14 +243,14 @@ namespace kl {
 	class file {
 	public:
 		// Returns a string from a given text file
-		static std::string GetText(std::string fileName) {
+		static std::string GetText(std::wstring fileName) {
 			std::stringstream textBuffer;
 			std::ifstream fileStream(fileName);
 			if (fileStream.is_open()) {
 				textBuffer << fileStream.rdbuf();
 			}
 			else {
-				std::cout << "Couldn't load text file \"" << fileName << "\"" << std::endl;
+				std::wcout << "Couldn't load text file \"" << fileName << "\"" << std::endl;
 				char iHateWarnings = getchar();
 				exit(69);
 			}
@@ -259,11 +259,11 @@ namespace kl {
 		}
 
 		// Returns a filedata from a given file
-		static filedata GetBytes(std::string fileName) {
+		static filedata GetBytes(std::wstring fileName) {
 			filedata tempFileData = { fileName };
 			std::ifstream fileStream(fileName, std::ios::binary);
 			if (!fileStream.is_open()) {
-				std::cout << "Couldn't load file \"" << fileName << "\"" << std::endl;
+				std::wcout << "Couldn't load file \"" << fileName << "\"" << std::endl;
 				char iHateWarnings = getchar();
 				exit(69);
 			}
@@ -277,7 +277,7 @@ namespace kl {
 		}
 
 		// Returns a bitmap from the given image file
-		// You have to link "Gdiplus.lib" if you want to use this function
+		// You have to link "gdiplus.lib" if you want to use this function
 		static bitmap GetPixels(std::wstring imagePath) {
 			// Loads image file
 			ULONG_PTR gdiplusToken;
@@ -453,16 +453,18 @@ namespace kl {
 	class window {
 	public:
 		// Public window properties
-		LPCWSTR name;
-		HWND hwnd;
-		HDC hdc;
-		WPARAM keyDown;
+		LPCWSTR name = NULL;
+		HWND hwnd = NULL;
+		HDC hdc = NULL;
+		HGLRC hglrc = NULL;
+		WPARAM keyDown = 0;
 		bool lmbDown = false;
 		bool rmbDown = false;
 		point mousePos = {};
 
 		// Window constructor and destructor
-		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true) {
+		// You need to link "opengl32.lib" if you want to use OpenGL
+		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false) {
 			// Start a new window thread
 			bool windowCreated = false;
 			std::thread windowThread([&]() {
@@ -472,6 +474,7 @@ namespace kl {
 				windowClass.lpfnWndProc = DefWindowProcW;
 				windowClass.hInstance = hInstance;
 				windowClass.lpszClassName = name;
+				windowClass.style = CS_OWNDC;
 				RegisterClassW(&windowClass);
 
 				// Create window
@@ -491,6 +494,36 @@ namespace kl {
 				bitmapInfo.bmiHeader.biPlanes = 1;
 				bitmapInfo.bmiHeader.biBitCount = 32;
 				bitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+				// OpenGL setup
+				if (useOpenGL) {
+					PIXELFORMATDESCRIPTOR pfd = {
+					sizeof(PIXELFORMATDESCRIPTOR),
+					1,
+					PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    // Flags
+					PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
+					32,                   // Colordepth of the framebuffer.
+					0, 0, 0, 0, 0, 0,
+					0,
+					0,
+					0,
+					0, 0, 0, 0,
+					24,                   // Number of bits for the depthbuffer
+					8,                    // Number of bits for the stencilbuffer
+					0,                    // Number of Aux buffers in the framebuffer.
+					PFD_MAIN_PLANE,
+					0,
+					0, 0, 0
+					};
+					int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+					if (!pixelFormat) { exit(69); }
+					SetPixelFormat(hdc, pixelFormat, &pfd);
+					hglrc = wglCreateContext(hdc);
+					wglMakeCurrent(hdc, hglrc);
+					RECT clientArea = {};
+					GetClientRect(hwnd, &clientArea);
+					glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
+				}
 
 				// Window message loop
 				point tempMouseCoords = {};
@@ -530,7 +563,12 @@ namespace kl {
 					}
 				}
 
-				// Destroying window and winapi class
+				// Memory release
+				if (useOpenGL) {
+					wglMakeCurrent(hdc, NULL);
+					wglDeleteContext(hglrc);
+				}
+				ReleaseDC(hwnd, hdc);
 				DestroyWindow(hwnd);
 				UnregisterClassW(name, hInstance);
 			});
