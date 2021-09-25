@@ -121,6 +121,33 @@ namespace kl {
 		std::wstring name;
 		std::vector<byte> bytes;
 	};
+	// Graphics/OpenGL
+	struct colorf {
+		float r = 0;
+		float g = 0;
+		float b = 0;
+		float a = 1;
+
+		// Constructor
+		colorf(color color) {
+			r = color.r / 255.0f;
+			g = color.g / 255.0f;
+			b = color.b / 255.0f;
+			a = color.a / 255.0f;
+		}
+	};
+	struct vertex {
+		double x = 0;
+		double y = 0;
+		double z = 0;
+		double u = 0;
+		double v = 0;
+		double w = 0;
+		colorf color = colorf({ 0, 0, 0, 255 });
+	};
+	struct triangle {
+		vertex vertices[3] = {};
+	};
 
 
 	/* Constants */
@@ -135,21 +162,21 @@ namespace kl {
 		const double toDegrees = 180.0f / pi;
 
 		// Colors
-		const color colorBlack = { 0, 0, 0 };
-		const color colorWhite = { 200, 200, 200 };
-		const color colorGray = { 70, 70, 70 };
-		const color colorRed = { 200, 0, 0 };
-		const color colorGreen = { 0, 200, 0 };
-		const color colorBlue = { 0, 0, 200 };
-		const color colorCyan = { 32, 178, 170 };
-		const color colorPurple = { 200, 0, 200 };
-		const color colorYellow = { 200, 200, 0 };
-		const color colorOrange = { 255, 140, 0 };
-		const color colorMagenta = { 153, 0, 153 };
-		const color colorCrimson = { 102, 0, 0 };
-		const color colorSnow = { 255, 255, 255 };
-		const color colorSapphire = { 0, 103, 165 };
-		const color colorWheat = { 245, 222, 179 };
+		const color colorBlack = { 0, 0, 0, 255 };
+		const color colorWhite = { 200, 200, 200, 255 };
+		const color colorGray = { 70, 70, 70, 255 };
+		const color colorRed = { 200, 0, 0, 255 };
+		const color colorGreen = { 0, 200, 0, 255 };
+		const color colorBlue = { 0, 0, 200, 255 };
+		const color colorCyan = { 32, 178, 170, 255 };
+		const color colorPurple = { 200, 0, 200, 255 };
+		const color colorYellow = { 200, 200, 0, 255 };
+		const color colorOrange = { 255, 140, 0, 255 };
+		const color colorMagenta = { 153, 0, 153, 255 };
+		const color colorCrimson = { 102, 0, 0, 255 };
+		const color colorSnow = { 255, 255, 255, 255 };
+		const color colorSapphire = { 0, 103, 165, 255 };
+		const color colorWheat = { 245, 222, 179, 255 };
 	}
 
 
@@ -300,7 +327,7 @@ namespace kl {
 				for (int x = 0; x < tempBitmap.width; x++) {
 					Gdiplus::Color tempPixel;
 					loadedBitmap->GetPixel(x, y, &tempPixel);
-					tempBitmap.pixels[y * size_t(tempBitmap.width) + x] = { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB() };
+					tempBitmap.pixels[y * size_t(tempBitmap.width) + x] = { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), 255 };
 				}
 			}
 
@@ -450,6 +477,31 @@ namespace kl {
 	DWORD console::lastConsoleMode = 0;
 
 
+	/* OpenGL stuff */
+	class opengl {
+	public:
+		// Set the whole screen to a given color
+		static void ClearScren(color color = { 0, 0, 0, 255 }) {
+			glClearColor(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+		}
+
+		// Draws a triangle on the screen
+		static void DrawTriangle(triangle tr) {
+			glBegin(GL_TRIANGLES);
+			for (int i = 0; i < 3; i++) {
+				glColor3f(tr.vertices[i].color.r, tr.vertices[i].color.g, tr.vertices[i].color.b);
+				glVertex3f(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
+			}
+			glEnd();
+		}
+
+		// Flips the front and back hdc buffers
+		static void FlipBuffers(HDC hdc) {
+			SwapBuffers(hdc);
+		}
+	};
+
 	/* WIN32 stuff */
 	class window {
 	public:
@@ -503,7 +555,7 @@ namespace kl {
 				bitmapInfo.bmiHeader.biPlanes = 1;
 				bitmapInfo.bmiHeader.biBitCount = 32;
 				bitmapInfo.bmiHeader.biCompression = BI_RGB;
-				
+
 				// OpenGL setup
 				if (useOpenGL) {
 					PIXELFORMATDESCRIPTOR pfd = {
@@ -567,8 +619,10 @@ namespace kl {
 			mainThreadOut = true;
 		}
 		~window() {
-			PostMessageW(hwnd, WM_CLOSE, 0, 0);
-			while (!windowDestroyed);
+			if (!windowDestroyed) {
+				PostMessageW(hwnd, WM_CLOSE, 0, 0);
+				while (!windowDestroyed);
+			}
 		}
 
 		// Sets the window title
