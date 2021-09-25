@@ -114,6 +114,11 @@ namespace kl {
 			}
 		}
 	};
+	// Files
+	struct filedata {
+		std::string name;
+		std::vector<byte> bytes;
+	};
 
 
 	/* Constants */
@@ -237,14 +242,14 @@ namespace kl {
 	class file {
 	public:
 		// Returns a string from a given text file
-		static std::string GetText(std::string file) {
+		static std::string GetText(std::string fileName) {
 			std::stringstream textBuffer;
-			std::ifstream fileStream(file);
+			std::ifstream fileStream(fileName);
 			if (fileStream.is_open()) {
 				textBuffer << fileStream.rdbuf();
 			}
 			else {
-				std::cout << "Couldn't load text file \"" << file << "\"" << std::endl;
+				std::cout << "Couldn't load text file \"" << fileName << "\"" << std::endl;
 				char iHateWarnings = getchar();
 				exit(69);
 			}
@@ -252,16 +257,22 @@ namespace kl {
 			return textBuffer.str();
 		}
 
-		// Returns a byte vector from a given file
-		static std::vector<byte> GetBytes(std::string file) {
-			std::ifstream fileStream(file);
+		// Returns a filedata from a given file
+		static filedata GetBytes(std::string fileName) {
+			filedata tempFileData = { fileName };
+			std::ifstream fileStream(fileName, std::ios::binary);
+			if (!fileStream.is_open()) {
+				std::cout << "Couldn't load file \"" << fileName << "\"" << std::endl;
+				char iHateWarnings = getchar();
+				exit(69);
+			}
 			fileStream.seekg(0, std::ios::end);
 			size_t fileLen = fileStream.tellg();
 			fileStream.seekg(0, std::ios::beg);
-			std::vector<byte> tempByteVector(fileLen);
-			fileStream.read((char*)&tempByteVector[0], fileLen);
+			tempFileData.bytes.resize(fileLen);
+			fileStream.read((char*)&tempFileData.bytes[0], fileLen);
 			fileStream.close();
-			return tempByteVector;
+			return tempFileData;
 		}
 
 		// Returns a bitmap from the given image file
