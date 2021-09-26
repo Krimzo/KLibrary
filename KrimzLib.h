@@ -93,28 +93,58 @@ namespace kl {
 		byte a = 255;
 	};
 	struct bitmap {
-		int width = 0;
-		int height = 0;
-		std::vector<color> pixels;
-
+	public:
 		// Constructor
 		bitmap(int width, int height) {
 			this->width = width;
 			this->height = height;
-			pixels.resize(size_t(width) * size_t(height));
-		}		
-
-		// Fils the bitmap with solid color
-		void FillSolid(color color) {
-			std::fill(pixels.begin(), pixels.end(), color);
+			pixels.resize(size_t(this->width) * size_t(this->height));
+		}
+		
+		// Getters
+		int GetWidth() {
+			return this->width;
+		}
+		int GetHeight() {
+			return this->height;
+		}
+		int GetSize() {
+			return pixels.size();
+		}
+		color GetPixel(int x, int y) {
+			if (x >= 0 && x < width && y >= 0 && y < height) {
+				return pixels[y * size_t(width) + x];
+			}
+			return { 0, 0, 0, 0 };
+		}
+		color* GetPixelData() {
+			return &this->pixels[0];
 		}
 
-		// Sets the pixel color
+		// Setters
+		void SetWidth(int width) {
+			this->width = width;
+			pixels.resize(size_t(this->width) * size_t(this->height));
+		}
+		void SetHeight(int height) {
+			this->height = height;
+			pixels.resize(size_t(this->width) * size_t(this->height));
+		}
 		void SetPixel(int x, int y, color color) {
 			if (x >= 0 && x < width && y >= 0 && y < height) {
 				pixels[y * size_t(width) + x] = color;
 			}
 		}
+
+		// Fils the bitmap with solid color
+		void FillSolid(color color) {
+			std::fill(pixels.begin(), pixels.end(), color);
+		}
+	
+	private:
+		int width = 0;
+		int height = 0;
+		std::vector<color> pixels;
 	};
 	// Files
 	struct filedata {
@@ -330,11 +360,11 @@ namespace kl {
 
 			// Saves data
 			bitmap tempBitmap(loadedBitmap->GetWidth(), loadedBitmap->GetHeight());
-			for (int y = 0; y < tempBitmap.height; y++) {
-				for (int x = 0; x < tempBitmap.width; x++) {
+			for (int y = 0; y < tempBitmap.GetHeight(); y++) {
+				for (int x = 0; x < tempBitmap.GetWidth(); x++) {
 					Gdiplus::Color tempPixel;
 					loadedBitmap->GetPixel(x, y, &tempPixel);
-					tempBitmap.pixels[y * size_t(tempBitmap.width) + x] = { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), 255 };
+					tempBitmap.SetPixel(x, y, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), 255 });
 				}
 			}
 
@@ -518,19 +548,13 @@ namespace kl {
 	/* WIN32 stuff */
 	class window {
 	public:
-		// Winapi properties
-		LPCWSTR name = NULL;
-		HWND hwnd = NULL;
-		HDC hdc = NULL;
-		
 		// Input properties
-		WPARAM keyDown = 0;
-		bool lmbDown = false;
-		bool rmbDown = false;
-		point mousePos = {};
+		WPARAM KEY = 0;
+		bool LMB = false;
+		bool RMB = false;
+		point MOUSE = {};
 
-		// OpenGL properties
-		HGLRC hglrc = NULL;
+		// OpenGL calls
 		std::function<void(void)> OpenGLStart = []() {};
 		std::function<void(void)> OpenGLUpdate = []() {};
 
@@ -541,11 +565,10 @@ namespace kl {
 				// Start a new window thread
 				std::thread windowThread([&]() {
 					// Define windowapi window class
-					name = windowName;
 					WNDCLASS windowClass = {};
 					windowClass.lpfnWndProc = DefWindowProc;
 					windowClass.hInstance = hInstance;
-					windowClass.lpszClassName = name;
+					windowClass.lpszClassName = windowName;
 					windowClass.style = CS_OWNDC;
 					RegisterClass(&windowClass);
 
@@ -555,7 +578,7 @@ namespace kl {
 					AdjustWindowRectEx(&adjustedWindowSize, windowStyle, NULL, NULL);
 					windowWidth = (adjustedWindowSize.right - adjustedWindowSize.left);
 					windowHeight = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-					hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
+					hwnd = CreateWindowEx(NULL, windowName, windowName, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
 					if (!hwnd) { exit(69); }
 					ShowWindow(hwnd, SW_SHOW);
 					hdc = GetDC(hwnd);
@@ -619,8 +642,11 @@ namespace kl {
 						wglMakeCurrent(NULL, NULL);
 						ReleaseDC(hwnd, hdc);
 						wglDeleteContext(hglrc);
+						hglrc = NULL;
 					}
-					UnregisterClass(name, hInstance);
+					UnregisterClass(windowName, hInstance);
+					hdc = NULL;
+					hwnd = NULL;
 					windowCreated = false;
 				});
 				windowThread.detach();
@@ -638,6 +664,17 @@ namespace kl {
 			this->Delete();
 		}
 
+		// Getters
+		HWND GetHWND() {
+			return this->hwnd;
+		}
+		HDC GetHDC() {
+			return this->hdc;
+		}
+		HGLRC GetHGLRC() {
+			return this->hglrc;
+		}
+
 		// Sets the window title
 		void SetTitle(std::string data) {
 			SetWindowTextA(hwnd, data.c_str());
@@ -651,47 +688,52 @@ namespace kl {
 
 		// Sets the pixels of the window
 		void DisplayBitmap(bitmap& toDraw, point position = { 0, 0 }) {
-			bitmapInfo.bmiHeader.biWidth = toDraw.width;
-			bitmapInfo.bmiHeader.biHeight = toDraw.height;
-			StretchDIBits(hdc, position.x, (toDraw.height - 1) + position.y, toDraw.width, -toDraw.height, 0, 0, toDraw.width, toDraw.height, &toDraw.pixels[0], &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			bitmapInfo.bmiHeader.biWidth = toDraw.GetWidth();
+			bitmapInfo.bmiHeader.biHeight = toDraw.GetHeight();
+			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
 
 	private:
-		// Private window properties
+		// Winapi properties
 		HINSTANCE hInstance = GetModuleHandle(NULL);
+		HWND hwnd = NULL;
+		HDC hdc = NULL;
 		BITMAPINFO bitmapInfo = {};
 		MSG windowMessage = {};
 		bool windowCreated = false;
+
+		// OpenGL properties
+		HGLRC hglrc = NULL;
 
 		// Handles the windows message
 		void HandleMessage() {
 			switch (windowMessage.message) {
 			case WM_KEYDOWN:
-				keyDown = windowMessage.wParam;
+				KEY = windowMessage.wParam;
 				break;
 
 			case WM_KEYUP:
-				keyDown = 0;
+				KEY = 0;
 				break;
 
 			case WM_LBUTTONDOWN:
-				lmbDown = true;
+				LMB = true;
 				break;
 
 			case WM_LBUTTONUP:
-				lmbDown = false;
+				LMB = false;
 				break;
 
 			case WM_RBUTTONDOWN:
-				rmbDown = true;
+				RMB = true;
 				break;
 
 			case WM_RBUTTONUP:
-				rmbDown = false;
+				RMB = false;
 				break;
 
 			case WM_MOUSEMOVE:
-				mousePos = { GET_X_LPARAM(windowMessage.lParam),  GET_Y_LPARAM(windowMessage.lParam) };
+				MOUSE = { GET_X_LPARAM(windowMessage.lParam),  GET_Y_LPARAM(windowMessage.lParam) };
 				break;
 
 			default:
