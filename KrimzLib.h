@@ -469,7 +469,12 @@ namespace kl {
 		// Waits until the wanted key is pressed
 		static void WaitFor(char toWaitFor, bool printMessage = false) {
 			if (printMessage) {
-				std::cout << "Waiting for '" << toWaitFor << "'";
+				if (toWaitFor > 31 && toWaitFor < 127) {
+					printf("Waiting for '%c'\n", toWaitFor);
+				}
+				else {
+					printf("Waiting for '%d'\n", toWaitFor);
+				}
 			}
 			while (_getch() != toWaitFor);
 		}
@@ -555,7 +560,6 @@ namespace kl {
 					ShowWindow(hwnd, SW_SHOW);
 					hdc = GetDC(hwnd);
 					windowCreated = true;
-					while (!mainThreadOut);
 
 					// Bitmapinfo setup
 					bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
@@ -596,13 +600,16 @@ namespace kl {
 					// Window message loop
 					if (useOpenGL) {
 						OpenGLStart();
-						while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
-							HandleMessage();
+						while (IsWindow(hwnd)) {
+							while (PeekMessage(&windowMessage, hwnd, 0, 0, PM_REMOVE)) {
+								HandleMessage();
+							}
 							OpenGLUpdate();
 						}
 					}
 					else {
-						while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
+						while (IsWindow(hwnd)) {
+							GetMessage(&windowMessage, hwnd, 0, 0);
 							HandleMessage();
 						}
 					}
@@ -613,25 +620,18 @@ namespace kl {
 						ReleaseDC(hwnd, hdc);
 						wglDeleteContext(hglrc);
 					}
-					DestroyWindow(hwnd);
 					UnregisterClass(name, hInstance);
-					windowDeleted = true;
+					windowCreated = false;
 				});
 				windowThread.detach();
 				while (!windowCreated);
-				mainThreadOut = true;
 			}
 		}
 		void Delete() {
 			if (windowCreated) {
 				// Wait until window/thread gets destroyed
 				PostMessage(hwnd, WM_CLOSE, 0, 0);
-				while (!windowDeleted);
-
-				// Resetting properties
-				windowCreated = false;
-				mainThreadOut = false;
-				windowDeleted = false;
+				while (windowCreated);
 			}
 		}
 		~window() {
@@ -658,12 +658,10 @@ namespace kl {
 
 	private:
 		// Private window properties
-		HINSTANCE hInstance = GetModuleHandleW(NULL);
+		HINSTANCE hInstance = GetModuleHandle(NULL);
 		BITMAPINFO bitmapInfo = {};
 		MSG windowMessage = {};
 		bool windowCreated = false;
-		bool mainThreadOut = false;
-		bool windowDeleted = false;
 
 		// Handles the windows message
 		void HandleMessage() {
@@ -697,7 +695,7 @@ namespace kl {
 				break;
 
 			default:
-				DispatchMessageW(&windowMessage);
+				DispatchMessage(&windowMessage);
 				break;
 			}
 		}
