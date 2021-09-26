@@ -93,8 +93,8 @@ namespace kl {
 		byte a = 255;
 	};
 	struct bitmap {
-		int width;
-		int height;
+		int width = 0;
+		int height = 0;
 		std::vector<color> pixels;
 
 		// Constructor
@@ -127,23 +127,15 @@ namespace kl {
 		float g = 0;
 		float b = 0;
 		float a = 1;
-
-		// Constructor
-		colorf(color color) {
-			r = color.r / 255.0f;
-			g = color.g / 255.0f;
-			b = color.b / 255.0f;
-			a = color.a / 255.0f;
-		}
 	};
 	struct vertex {
-		double x = 0;
-		double y = 0;
-		double z = 0;
-		double u = 0;
-		double v = 0;
-		double w = 0;
-		colorf color = colorf({ 0, 0, 0, 255 });
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		float u = 0;
+		float v = 0;
+		float w = 0;
+		colorf color = {};
 	};
 	struct triangle {
 		vertex vertices[3] = {};
@@ -163,20 +155,35 @@ namespace kl {
 
 		// Colors
 		const color colorBlack = { 0, 0, 0, 255 };
+		const colorf colorfBlack = { 0.00f, 0.00f, 0.00f, 1.00f };
 		const color colorWhite = { 200, 200, 200, 255 };
+		const colorf colorfWhite = { 0.78f, 0.78f, 0.78f, 1.00f };
 		const color colorGray = { 70, 70, 70, 255 };
+		const colorf colorfGray = { 0.27f, 0.27f, 0.27f, 1.00f };
 		const color colorRed = { 200, 0, 0, 255 };
+		const colorf colorfRed = { 0.78f, 0.00f, 0.00f, 1.00f };
 		const color colorGreen = { 0, 200, 0, 255 };
+		const colorf colorfGreen = { 0.00f, 0.78f, 0.00f, 1.00f };
 		const color colorBlue = { 0, 0, 200, 255 };
+		const colorf colorfBlue = { 0.00f, 0.00f, 0.78f, 1.00f };
 		const color colorCyan = { 32, 178, 170, 255 };
+		const colorf colorfCyan = { 0.13f, 0.70f, 0.67f, 1.00f };
 		const color colorPurple = { 200, 0, 200, 255 };
+		const colorf colorfPurple = { 0.78f, 0.00f, 0.78f, 1.00f };
 		const color colorYellow = { 200, 200, 0, 255 };
+		const colorf colorfYellow = { 0.78f, 0.78f, 0.00f, 1.00f };
 		const color colorOrange = { 255, 140, 0, 255 };
+		const colorf colorfOrange = { 1.00f, 0.55f, 0.00f, 1.00f };
 		const color colorMagenta = { 153, 0, 153, 255 };
+		const colorf colorfMagenta = { 0.60f, 0.00f, 0.60f, 1.00f };
 		const color colorCrimson = { 102, 0, 0, 255 };
+		const colorf colorfCrimson = { 0.40f, 0.00f, 0.00f, 1.00f };
 		const color colorSnow = { 255, 255, 255, 255 };
+		const colorf colorfSnow = { 1.00f, 1.00f, 1.00f, 1.00f };
 		const color colorSapphire = { 0, 103, 165, 255 };
+		const colorf colorfSapphire = { 0.00f, 0.40f, 0.65f, 1.00f };
 		const color colorWheat = { 245, 222, 179, 255 };
+		const colorf colorfWheat = { 0.96f, 0.87f, 0.70f, 1.00f };
 	}
 
 
@@ -481,8 +488,8 @@ namespace kl {
 	class opengl {
 	public:
 		// Set the whole screen to a given color
-		static void ClearScren(color color = { 0, 0, 0, 255 }) {
-			glClearColor(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+		static void ClearScreen(colorf color = { 0, 0, 0, 1 }) {
+			glClearColor(color.r, color.g, color.b, color.a);
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
@@ -525,17 +532,15 @@ namespace kl {
 		// You need to link "opengl32.lib" if you want to use OpenGL
 		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false) {
 			// Start a new window thread
-			bool windowCreated = false;
-			bool mainThreadOut = false;
 			std::thread windowThread([&]() {
 				// Define windowapi window class
 				name = windowName;
 				WNDCLASS windowClass = {};
-				windowClass.lpfnWndProc = DefWindowProcW;
+				windowClass.lpfnWndProc = DefWindowProc;
 				windowClass.hInstance = hInstance;
 				windowClass.lpszClassName = name;
 				windowClass.style = CS_OWNDC;
-				RegisterClassW(&windowClass);
+				RegisterClass(&windowClass);
 
 				// Create window
 				DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
@@ -543,7 +548,7 @@ namespace kl {
 				AdjustWindowRectEx(&adjustedWindowSize, windowStyle, NULL, NULL);
 				windowWidth = (adjustedWindowSize.right - adjustedWindowSize.left);
 				windowHeight = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-				hwnd = CreateWindowExW(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
+				hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
 				if (!hwnd) { exit(69); }
 				ShowWindow(hwnd, SW_SHOW);
 				hdc = GetDC(hwnd);
@@ -589,20 +594,18 @@ namespace kl {
 				// Window message loop
 				if (useOpenGL) {
 					OpenGLStart();
-					int messageStatus = 1;
-					while (messageStatus > 0) {
-						if (PeekMessageW(&windowMessage, hwnd, 0, 0, PM_NOREMOVE)) {
-							messageStatus = GetMessageW(&windowMessage, hwnd, 0, 0);
-							HandleMessage();
-						}
+					while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
+						HandleMessage();
 						OpenGLUpdate();
 					}
 				}
 				else {
-					while (GetMessageW(&windowMessage, hwnd, 0, 0) > 0) {
+					while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
 						HandleMessage();
 					}
 				}
+				
+				std::cout << "ITS HERE";
 
 				// Memory release
 				if (useOpenGL) {
@@ -611,7 +614,7 @@ namespace kl {
 				}
 				ReleaseDC(hwnd, hdc);
 				DestroyWindow(hwnd);
-				UnregisterClassW(name, hInstance);
+				UnregisterClass(name, hInstance);
 				windowDestroyed = true;
 			});
 			windowThread.detach();
@@ -620,7 +623,7 @@ namespace kl {
 		}
 		~window() {
 			if (!windowDestroyed) {
-				PostMessageW(hwnd, WM_CLOSE, 0, 0);
+				PostMessage(hwnd, WM_CLOSE, 0, 0);
 				while (!windowDestroyed);
 			}
 		}
@@ -648,6 +651,8 @@ namespace kl {
 		HINSTANCE hInstance = GetModuleHandleW(NULL);
 		BITMAPINFO bitmapInfo = {};
 		MSG windowMessage = {};
+		bool windowCreated = false;
+		bool mainThreadOut = false;
 		bool windowDestroyed = false;
 
 		// Handles the windows message
