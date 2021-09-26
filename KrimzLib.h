@@ -509,6 +509,7 @@ namespace kl {
 		}
 	};
 
+
 	/* WIN32 stuff */
 	class window {
 	public:
@@ -528,104 +529,114 @@ namespace kl {
 		std::function<void(void)> OpenGLStart = []() {};
 		std::function<void(void)> OpenGLUpdate = []() {};
 
-		// Window constructor and destructor
+		// Window creation and deletion
 		// You need to link "opengl32.lib" if you want to use OpenGL
-		window(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false) {
-			// Start a new window thread
-			std::thread windowThread([&]() {
-				// Define windowapi window class
-				name = windowName;
-				WNDCLASS windowClass = {};
-				windowClass.lpfnWndProc = DefWindowProc;
-				windowClass.hInstance = hInstance;
-				windowClass.lpszClassName = name;
-				windowClass.style = CS_OWNDC;
-				RegisterClass(&windowClass);
+		void New(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false) {
+			if (!windowCreated) {
+				// Start a new window thread
+				std::thread windowThread([&]() {
+					// Define windowapi window class
+					name = windowName;
+					WNDCLASS windowClass = {};
+					windowClass.lpfnWndProc = DefWindowProc;
+					windowClass.hInstance = hInstance;
+					windowClass.lpszClassName = name;
+					windowClass.style = CS_OWNDC;
+					RegisterClass(&windowClass);
 
-				// Create window
-				DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
-				RECT adjustedWindowSize = { 0, 0, windowWidth, windowHeight };
-				AdjustWindowRectEx(&adjustedWindowSize, windowStyle, NULL, NULL);
-				windowWidth = (adjustedWindowSize.right - adjustedWindowSize.left);
-				windowHeight = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-				hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
-				if (!hwnd) { exit(69); }
-				ShowWindow(hwnd, SW_SHOW);
-				hdc = GetDC(hwnd);
-				windowCreated = true;
-				while (!mainThreadOut);
+					// Create window
+					DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+					RECT adjustedWindowSize = { 0, 0, windowWidth, windowHeight };
+					AdjustWindowRectEx(&adjustedWindowSize, windowStyle, NULL, NULL);
+					windowWidth = (adjustedWindowSize.right - adjustedWindowSize.left);
+					windowHeight = (adjustedWindowSize.bottom - adjustedWindowSize.top);
+					hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
+					if (!hwnd) { exit(69); }
+					ShowWindow(hwnd, SW_SHOW);
+					hdc = GetDC(hwnd);
+					windowCreated = true;
+					while (!mainThreadOut);
 
-				// Bitmapinfo setup
-				bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
-				bitmapInfo.bmiHeader.biPlanes = 1;
-				bitmapInfo.bmiHeader.biBitCount = 32;
-				bitmapInfo.bmiHeader.biCompression = BI_RGB;
+					// Bitmapinfo setup
+					bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
+					bitmapInfo.bmiHeader.biPlanes = 1;
+					bitmapInfo.bmiHeader.biBitCount = 32;
+					bitmapInfo.bmiHeader.biCompression = BI_RGB;
 
-				// OpenGL setup
-				if (useOpenGL) {
-					PIXELFORMATDESCRIPTOR pfd = {
-					sizeof(PIXELFORMATDESCRIPTOR),
-					1,
-					PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    // Flags
-					PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
-					32,                   // Colordepth of the framebuffer.
-					0, 0, 0, 0, 0, 0,
-					0,
-					0,
-					0,
-					0, 0, 0, 0,
-					24,                   // Number of bits for the depthbuffer
-					8,                    // Number of bits for the stencilbuffer
-					0,                    // Number of Aux buffers in the framebuffer.
-					PFD_MAIN_PLANE,
-					0,
-					0, 0, 0
-					};
-					int pixelFormat = ChoosePixelFormat(hdc, &pfd);
-					if (!pixelFormat) { exit(69); }
-					SetPixelFormat(hdc, pixelFormat, &pfd);
-					hglrc = wglCreateContext(hdc);
-					wglMakeCurrent(hdc, hglrc);
-					RECT clientArea = {};
-					GetClientRect(hwnd, &clientArea);
-					glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
-				}
-
-				// Window message loop
-				if (useOpenGL) {
-					OpenGLStart();
-					while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
-						HandleMessage();
-						OpenGLUpdate();
+					// OpenGL setup
+					if (useOpenGL) {
+						PIXELFORMATDESCRIPTOR pfd = {
+						sizeof(PIXELFORMATDESCRIPTOR),
+						1,
+						PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    // Flags
+						PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
+						32,                   // Colordepth of the framebuffer.
+						0, 0, 0, 0, 0, 0,
+						0,
+						0,
+						0,
+						0, 0, 0, 0,
+						24,                   // Number of bits for the depthbuffer
+						8,                    // Number of bits for the stencilbuffer
+						0,                    // Number of Aux buffers in the framebuffer.
+						PFD_MAIN_PLANE,
+						0,
+						0, 0, 0
+						};
+						int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+						if (!pixelFormat) { exit(69); }
+						SetPixelFormat(hdc, pixelFormat, &pfd);
+						hglrc = wglCreateContext(hdc);
+						wglMakeCurrent(hdc, hglrc);
+						RECT clientArea = {};
+						GetClientRect(hwnd, &clientArea);
+						glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
 					}
-				}
-				else {
-					while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
-						HandleMessage();
-					}
-				}
-				
-				std::cout << "ITS HERE";
 
-				// Memory release
-				if (useOpenGL) {
-					wglMakeCurrent(hdc, NULL);
-					wglDeleteContext(hglrc);
-				}
-				ReleaseDC(hwnd, hdc);
-				DestroyWindow(hwnd);
-				UnregisterClass(name, hInstance);
-				windowDestroyed = true;
-			});
-			windowThread.detach();
-			while (!windowCreated);
-			mainThreadOut = true;
+					// Window message loop
+					
+					if (useOpenGL) {
+						OpenGLStart();
+						while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
+							HandleMessage();
+							OpenGLUpdate();
+						}
+					}
+					else {
+						while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
+							HandleMessage();
+						}
+					}
+
+					// Memory release
+					if (useOpenGL) {
+						wglMakeCurrent(hdc, NULL);
+						wglDeleteContext(hglrc);
+					}
+					ReleaseDC(hwnd, hdc);
+					DestroyWindow(hwnd);
+					UnregisterClass(name, hInstance);
+					windowDeleted = true;
+				});
+				windowThread.detach();
+				while (!windowCreated);
+				mainThreadOut = true;
+			}
+		}
+		void Delete() {
+			if (windowCreated && !windowDeleted) {
+				// Wait until window/thread gets destroyed
+				PostMessage(hwnd, WM_CLOSE, 0, 0);
+				while (!windowDeleted);
+
+				// Resetting properties
+				windowCreated = false;
+				mainThreadOut = false;
+				windowDeleted = false;
+			}
 		}
 		~window() {
-			if (!windowDestroyed) {
-				PostMessage(hwnd, WM_CLOSE, 0, 0);
-				while (!windowDestroyed);
-			}
+			this->Delete();
 		}
 
 		// Sets the window title
@@ -653,7 +664,7 @@ namespace kl {
 		MSG windowMessage = {};
 		bool windowCreated = false;
 		bool mainThreadOut = false;
-		bool windowDestroyed = false;
+		bool windowDeleted = false;
 
 		// Handles the windows message
 		void HandleMessage() {
@@ -714,13 +725,13 @@ namespace kl {
 
 		// Starts the engine
 		void Start() {
-			engineOn = true;
+			engineRunning = true;
 			EngineLoop();
 		}
 
 		// Stops the engine
 		void Stop() {
-			engineOn = false;
+			engineRunning = false;
 		}
 
 	private:
@@ -730,7 +741,7 @@ namespace kl {
 		std::vector<double> depthBuffer;
 		std::vector<double> shadowBuffer;
 		// Private variables
-		bool engineOn = false;
+		bool engineRunning = false;
 		int frameWidth = 0;
 		int frameHeight = 0;
 		size_t pixelCount = 0;
@@ -801,7 +812,7 @@ namespace kl {
 			EngineStart();
 			
 			// Needed for time calculations
-			while (engineOn) {
+			while (engineRunning) {
 				/* Update console size */
 				CheckConsoleSize();
 
