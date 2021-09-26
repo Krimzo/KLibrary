@@ -594,7 +594,6 @@ namespace kl {
 					}
 
 					// Window message loop
-					
 					if (useOpenGL) {
 						OpenGLStart();
 						while (GetMessage(&windowMessage, hwnd, 0, 0) > 0) {
@@ -610,10 +609,10 @@ namespace kl {
 
 					// Memory release
 					if (useOpenGL) {
-						wglMakeCurrent(hdc, NULL);
+						wglMakeCurrent(NULL, NULL);
+						ReleaseDC(hwnd, hdc);
 						wglDeleteContext(hglrc);
 					}
-					ReleaseDC(hwnd, hdc);
 					DestroyWindow(hwnd);
 					UnregisterClass(name, hInstance);
 					windowDeleted = true;
@@ -624,7 +623,7 @@ namespace kl {
 			}
 		}
 		void Delete() {
-			if (windowCreated && !windowDeleted) {
+			if (windowCreated) {
 				// Wait until window/thread gets destroyed
 				PostMessage(hwnd, WM_CLOSE, 0, 0);
 				while (!windowDeleted);
