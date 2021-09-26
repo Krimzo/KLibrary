@@ -217,26 +217,16 @@ namespace kl {
 	}
 
 
-	/* Miscellaneous stuff */
-	class misc {
+	/* Math stuff */
+	class math {
 	public:
-		// Multithreaded for loop
-		static void ParallelFor(int startInclusive, int endExclusive, int threadCount, std::function<void(int)> loopBody) {
-			// Thread storage
-			std::vector<std::thread> cpuThreads(threadCount);
-			int countPerThread = (endExclusive - startInclusive) / threadCount;
-
-			// Thread creation
-			for (int i = 0; i < threadCount; i++) {
-				int loopStart = countPerThread * i + startInclusive;
-				int loopEnd = (i == threadCount - 1) ? endExclusive : (loopStart + countPerThread);
-				cpuThreads[i] = std::thread([&](int start, int end) {for (int i = start; i < end; i++) { loopBody(i); }}, loopStart, loopEnd);
-			}
-
-			// Waiting for the threads to finish
-			for (int i = 0; i < threadCount; i++) {
-				cpuThreads[i].join();
-			}
+		// Returns a dot product of 2 given vectors
+		static double VectorDotProd(vec3 a, vec3 b) {
+			return a.x * b.x + a.y * b.y + a.z * b.z;
+		}
+		// Returns a cross product of 2 given vectors
+		static vec3 VectorCrossProd(vec3 a, vec3 b) {
+			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
 		}
 	};
 
@@ -259,20 +249,6 @@ namespace kl {
 			for (int i = 0; i < vectorToFill.size(); i++) {
 				vectorToFill[i] = GetInt(startInclusive, endExclusive);
 			}
-		}
-	};
-
-
-	/* Math stuff */
-	class math {
-	public:
-		// Returns a dot product of 2 given vectors
-		static double VectorDotProd(vec3 a, vec3 b) {
-			return a.x * b.x + a.y * b.y + a.z * b.z;
-		}
-		// Returns a cross product of 2 given vectors
-		static vec3 VectorCrossProd(vec3 a, vec3 b) {
-			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
 		}
 	};
 
@@ -374,6 +350,30 @@ namespace kl {
 
 			// Return created bitmap
 			return tempBitmap;
+		}
+	};
+
+
+	/* Thread stuff */
+	class thread {
+	public:
+		// Multithreaded for loop
+		static void ParallelFor(int startInclusive, int endExclusive, int threadCount, std::function<void(int)> loopBody) {
+			// Thread storage
+			std::vector<std::thread> cpuThreads(threadCount);
+			int countPerThread = (endExclusive - startInclusive) / threadCount;
+
+			// Thread creation
+			for (int i = 0; i < threadCount; i++) {
+				int loopStart = countPerThread * i + startInclusive;
+				int loopEnd = (i == threadCount - 1) ? endExclusive : (loopStart + countPerThread);
+				cpuThreads[i] = std::thread([&](int start, int end) {for (int i = start; i < end; i++) { loopBody(i); }}, loopStart, loopEnd);
+			}
+
+			// Waiting for the threads to finish
+			for (int i = 0; i < threadCount; i++) {
+				cpuThreads[i].join();
+			}
 		}
 	};
 
@@ -747,20 +747,13 @@ namespace kl {
 	/* Game engine stuff */
 	class engine {
 	public:
+		// Engine properties
+		double deltaTime = 0;
+
 		// Outside functions that user defines
 		std::function<void(void)> EngineStart = []() {};
 		std::function<void(char)> EngineInput = [](char input) {};
 		std::function<void(void)> EngineUpdate = []() {};
-		// Engine properties
-		double deltaTime = 0;
-
-		// Engine constructor and destructor
-		engine() {
-
-		}
-		~engine() {
-			
-		}
 
 		// Starts the engine
 		void Start() {
@@ -774,59 +767,12 @@ namespace kl {
 		}
 
 	private:
-		// Buffers
-		std::string frameBuffer = "";
-		std::string backgroundBuffer = "";
-		std::vector<double> depthBuffer;
-		std::vector<double> shadowBuffer;
 		// Private variables
 		bool engineRunning = false;
-		int frameWidth = 0;
-		int frameHeight = 0;
-		size_t pixelCount = 0;
-
-		// Creates a background template
-		void BuildBackground() {
-			const char* pixelTemplate = "\x1b[48;2;005;005;005m ";
-			for (size_t i = 0; i < pixelCount; i++) {
-				memcpy(&backgroundBuffer[i * 20], pixelTemplate, 20);
-			}
-		}
-
-		// Update buffers sizes if the consol size changes
-		void CheckConsoleSize() {
-			// Getting current console window size
-			size consoleSize = console::GetSize();
-			if (consoleSize.width != frameWidth || consoleSize.height != frameHeight) {
-				// Updating engine properties
-				frameWidth = consoleSize.width;
-				frameHeight = consoleSize.height;
-
-				// Resizing engine buffers
-				pixelCount = size_t(frameWidth) * size_t(frameHeight);
-				frameBuffer.resize(pixelCount * 20);
-				backgroundBuffer.resize(pixelCount * 20);
-				depthBuffer.resize(pixelCount);
-				shadowBuffer.resize(pixelCount);
-				
-				// Building new background buffer
-				BuildBackground();
-
-				// Hiding the console cursor
-				kl::console::HideCursor();
-			}
-		}
 
 		// Computing object physics 
 		void ObjectPhysics() {
 
-		}
-
-		// Clears all engine buffers
-		void ClearBuffers() {
-			memcpy(&frameBuffer[0], &backgroundBuffer[0], pixelCount * 20);
-			memset(&depthBuffer[0], 0, pixelCount * sizeof(double));
-			memset(&shadowBuffer[0], 0, pixelCount * sizeof(double));
 		}
 
 		// Rendering objects to the screen
@@ -834,29 +780,15 @@ namespace kl {
 
 		}
 
-		// Displays the frame to the screen
-		void RenderFrame() {
-			console::SetCursorPos(0, 0);
-			std::cout << frameBuffer;
-		}
-
 		// Engine game loop
 		void EngineLoop() {
-			// Console setup
-			console::HideCursor();
-			console::SetFont(4, 4, L"Lucida Console");
-			console::SetSize(200, 200);
-
 			// One call before engine start
 			EngineStart();
 			
 			// Needed for time calculations
 			while (engineRunning) {
-				/* Update console size */
-				CheckConsoleSize();
-
 				/* Game input */
-				EngineInput(console::GetInput());
+				EngineInput("placeholder"[0]);
 
 				/* Game logic */
 				EngineUpdate();
@@ -865,23 +797,14 @@ namespace kl {
 				ObjectPhysics();
 
 				/* Rendering */
-				ClearBuffers();
 				ObjectRender();
-				RenderFrame();
 
 				/* Calculating frame time */
 				deltaTime = time::GetElapsed();
 
 				/* Updating the title */
-				console::SetTitle(std::to_string((int)(1 / deltaTime)));
+				// window.SetTitle(int(1 / deltaTime));
 			}
-
-			// Console reset
-			console::ShowCursor();
-			console::SetFont(8, 16, L"Consolas");
-			console::SetSize(120, 30);
-			console::SetTitle("Engine off");
-			system("cls");
 		}
 	};
 
