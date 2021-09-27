@@ -5,7 +5,7 @@
 #include <string>
 #include <windows.h>
 #include <windowsx.h>
-#include <gl/GL.h>
+#include "KrimzLib/dep/glad/glad.h"
 #include "KrimzLib/types.h"
 #include "KrimzLib/constants.h"
 
@@ -80,6 +80,7 @@ namespace kl {
 						SetPixelFormat(hdc, pixelFormat, &pfd);
 						hglrc = wglCreateContext(hdc);
 						wglMakeCurrent(hdc, hglrc);
+						gladLoadGL();		// Loads modern OpenGL functions
 						RECT clientArea = {};
 						GetClientRect(hwnd, &clientArea);
 						glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
