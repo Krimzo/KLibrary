@@ -2,8 +2,8 @@
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
-#include "KrimzLib/KrimzTypes.h"
-#include "KrimzLib/KrimzConstants.h"
+#include "KrimzLib/types.h"
+#include "KrimzLib/constants.h"
 
 
 namespace kl {

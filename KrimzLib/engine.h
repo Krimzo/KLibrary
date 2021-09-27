@@ -1,6 +1,6 @@
 #pragma once
 #include <functional>
-#include "KrimzLib/KrimzTime.h"
+#include "KrimzLib/time.h"
 
 
 namespace kl {

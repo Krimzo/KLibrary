@@ -1,5 +1,5 @@
 #pragma once
-#include "KrimzLib/KrimzTypes.h"
+#include "KrimzLib/types.h"
 
 
 namespace kl {

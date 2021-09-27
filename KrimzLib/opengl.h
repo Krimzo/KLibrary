@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include "KrimzLib/KrimzTypes.h"
+#include "KrimzLib/types.h"
 
 
 namespace kl {
