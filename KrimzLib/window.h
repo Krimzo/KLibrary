@@ -22,6 +22,7 @@ namespace kl {
 		// OpenGL calls
 		std::function<void(void)> OpenGLStart = []() {};
 		std::function<void(void)> OpenGLUpdate = []() {};
+		std::function<void(void)> OpenGLEnd = []() {};
 
 		// Window creation and deletion
 		// You need to link "opengl32.lib" if you want to use OpenGL
@@ -105,6 +106,7 @@ namespace kl {
 
 					// Memory release
 					if (useOpenGL) {
+						OpenGLEnd();
 						wglMakeCurrent(NULL, NULL);
 						ReleaseDC(hwnd, hdc);
 						wglDeleteContext(hglrc);
@@ -114,7 +116,7 @@ namespace kl {
 					hdc = NULL;
 					hwnd = NULL;
 					windowCreated = false;
-					});
+				});
 				windowThread.detach();
 				while (!windowCreated);
 			}

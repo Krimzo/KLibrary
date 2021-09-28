@@ -143,6 +143,7 @@ namespace kl {
 	};
 
 	/* Graphics/OpenGL */
+	typedef unsigned int id;
 	struct colorf {
 		float r = 0;
 		float g = 0;
