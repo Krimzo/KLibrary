@@ -8,6 +8,7 @@
 #include "KrimzLib/thread.h"
 #include "KrimzLib/console.h"
 #include "KrimzLib/opengl.h"
+#include "KrimzLib/opencl.h"
 #include "KrimzLib/window.h"
 #include "KrimzLib/engine.h"
 

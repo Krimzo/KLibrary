@@ -86,7 +86,7 @@ GLAPI int gladLoadGL(void);
 
 GLAPI int gladLoadGLLoader(GLADloadproc);
 
-#include "KrimzLib/dep/KHR/khrplatform.h"
+#include "KrimzLib/dep/OpenGL/KHR/khrplatform.h"
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
 typedef unsigned int GLbitfield;

@@ -207,7 +207,7 @@ namespace kl {
 	};
 
 
-	/* ----- OpenGL ----- */
+	/* ----- OpenGL/OpenCL ----- */
 	typedef unsigned int id, index;
 
 	struct colorf {

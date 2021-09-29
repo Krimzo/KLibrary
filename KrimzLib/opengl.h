@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 #include <windows.h>
-#include "KrimzLib/dep/glad/glad.h"
+#include "KrimzLib/dep/OpenGL/glad/glad.h"
 #include "KrimzLib/types.h"
 
 // Debug
