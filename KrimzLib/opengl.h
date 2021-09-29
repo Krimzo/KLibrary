@@ -38,7 +38,7 @@ namespace kl {
 			kl::id vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
 			kl::id fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
-			// Attaching the shaders to the GPU
+			// Attaching the shaders to the program
 			glAttachShader(program, vs);
 			glAttachShader(program, fs);
 			glLinkProgram(program);
@@ -55,6 +55,30 @@ namespace kl {
 		// Deletes the given shader program
 		static void DeleteProgram(kl::id program) {
 			glDeleteProgram(program);
+		}
+
+		// Parses multiple shaders from a single file
+		static shaderpackage ShadersFromFile(std::wstring filepath) {
+			std::istringstream iss(kl::file::GetText(filepath));
+
+			std::string line;
+			std::stringstream ss[2];
+			shadertype type = shadertype::NONE;
+			while (getline(iss, line)) {
+				if (line.find("#shader") != std::string::npos) {
+					if (line.find("vertex") != std::string::npos) {
+						type = shadertype::VERTEX;
+					}
+					else if (line.find("fragment") != std::string::npos) {
+						type = shadertype::FRAGMENT;
+					}
+				}
+				else {
+					ss[(int)type] << line << '\n';
+				}
+			}
+
+			return { ss[0].str(), ss[1].str() };
 		}
 
 	private:

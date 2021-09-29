@@ -5,15 +5,42 @@
 
 
 namespace kl {
-	/* Vectors/Size */
+	/* ----- Vectors/Size ----- */
 	typedef POINT point;
+
 	struct vec2 {
 		double x = 0;
 		double y = 0;
 
+		// Operator overloading
+		vec2 operator + (vec2 obj) {
+			return { x + obj.x, y + obj.y };
+		}
+		vec2 operator - (vec2 obj) {
+			return { x - obj.x, y - obj.y };
+		}
+		vec2 operator * (int obj) {
+			return { x * obj, y * obj };
+		}
+		vec2 operator * (double obj) {
+			return { x * obj, y * obj };
+		}
+		vec2 operator / (int obj) {
+			return { x / obj, y / obj };
+		}
+		vec2 operator / (double obj) {
+			return { x / obj, y / obj };
+		}
+		bool operator == (vec2 obj) {
+			return (x == obj.x && y == obj.y);
+		}
+		bool operator != (vec2 obj) {
+			return (x != obj.x || y != obj.y);
+		}
+
 		// Prints the vector to the console
 		void Print() {
-			std::cout << "x: " << x << " y: " << y;
+			std::cout << "x: " << x << " y: " << y << '\n';
 		}
 
 		// Returns the vectors lenght
@@ -34,14 +61,41 @@ namespace kl {
 			return { x / vecLen, y / vecLen };
 		}
 	};
+
 	struct vec3 {
 		double x = 0;
 		double y = 0;
 		double z = 0;
 
+		// Operator overloading
+		vec3 operator + (vec3 obj) {
+			return { x + obj.x, y + obj.y, z + obj.z };
+		}
+		vec3 operator - (vec3 obj) {
+			return { x - obj.x, y - obj.y, z - obj.z };
+		}
+		vec3 operator * (int obj) {
+			return { x * obj, y * obj, z * obj };
+		}
+		vec3 operator * (double obj) {
+			return { x * obj, y * obj, z * obj };
+		}
+		vec3 operator / (int obj) {
+			return { x / obj, y / obj, z / obj };
+		}
+		vec3 operator / (double obj) {
+			return { x / obj, y / obj, z / obj };
+		}
+		bool operator == (vec3 obj) {
+			return (x == obj.x && y == obj.y && z == obj.z);
+		}
+		bool operator != (vec3 obj) {
+			return (x != obj.x || y != obj.y || z != obj.z);
+		}
+
 		// Prints the vector to the console
 		void Print() {
-			std::cout << "x: " << x << " y: " << y << " z: " << z;
+			std::cout << "x: " << x << " y: " << y << " z: " << z << '\n';
 		}
 
 		// Returns the vectors lenght
@@ -63,6 +117,7 @@ namespace kl {
 			return { x / vecLen, y / vecLen, z / vecLen };
 		}
 	};
+
 	struct size {
 		int width = 0;
 		int height = 0;
@@ -73,14 +128,22 @@ namespace kl {
 		}
 	};
 
-	/* Colors/Bitmaps */
+
+	/* ----- Colors/Bitmaps ----- */
 	typedef unsigned char byte;
+
 	struct color {
 		byte r = 0;
 		byte g = 0;
 		byte b = 0;
 		byte a = 255;
+
+		// Prints the color to the console
+		void Print() {
+			std::cout << "r: " << r << " g: " << g << " b: " << b << " a: " << a << '\n';
+		}
 	};
+
 	struct bitmap {
 	public:
 		// Constructor
@@ -136,20 +199,45 @@ namespace kl {
 		std::vector<color> pixels;
 	};
 
-	/* Files */
+
+	/* ----- Files ----- */
 	struct filedata {
 		std::wstring name;
 		std::vector<byte> bytes;
 	};
 
-	/* Graphics/OpenGL */
-	typedef unsigned int id;
+
+	/* ----- OpenGL ----- */
+	typedef unsigned int id, index;
+
 	struct colorf {
 		float r = 0;
 		float g = 0;
 		float b = 0;
 		float a = 1;
+
+		// Returns a byte type color
+		color ToByte() {
+			return { byte(r * 255), byte(g * 255), byte(b * 255), byte(a * 255) };
+		}
+
+		// Prints the color to the console
+		void Print() {
+			std::cout << "r: " << r << " g: " << g << " b: " << b << " a: " << a << '\n';
+		}
 	};
+
+	enum class shadertype {
+		NONE = -1, VERTEX = 0, FRAGMENT = 1
+	};
+
+	struct shaderpackage {
+		std::string vertex;
+		std::string fragment;
+	};
+
+
+	/* ----- Game Engine ----- */
 	struct vertex {
 		float x = 0;
 		float y = 0;
@@ -158,6 +246,7 @@ namespace kl {
 		float v = 0;
 		colorf color = {};
 	};
+
 	struct triangle {
 		vertex vertices[3] = {};
 	};
