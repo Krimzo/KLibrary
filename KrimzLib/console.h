@@ -97,22 +97,22 @@ namespace kl {
 		}
 
 		// Prints RGB text
-		static void Print(std::string data, color textColor = constant::colorWhite) {
-			printf("\x1b[38;2;%d;%d;%dm%s", textColor.r, textColor.g, textColor.b, data.c_str());
+		static void Print(std::string data, color textColor = constant::colorWhite, bool newLine = false) {
+			printf("\033[38;2;%d;%d;%dm%s%c\033[0m", textColor.r, textColor.g, textColor.b, data.c_str(), newLine ? '\n' : '\0');
 		}
-		static void Print(int data, color textColor = constant::colorWhite) {
-			printf("\x1b[38;2;%d;%d;%dm%d", textColor.r, textColor.g, textColor.b, data);
+		static void Print(int data, color textColor = constant::colorWhite, bool newLine = false) {
+			printf("\033[38;2;%d;%d;%dm%d%c\033[0m", textColor.r, textColor.g, textColor.b, data, newLine ? '\n' : '\0');
 		}
-		static void Print(double data, color textColor = constant::colorWhite) {
-			printf("\x1b[38;2;%d;%d;%dm%lf", textColor.r, textColor.g, textColor.b, data);
+		static void Print(double data, color textColor = constant::colorWhite, bool newLine = false) {
+			printf("\033[38;2;%d;%d;%dm%lf%c\033[0m", textColor.r, textColor.g, textColor.b, data, newLine ? '\n' : '\0');
 		}
 
 		// Prints RGB block
 		static void PrintBlock(byte r, byte g, byte b) {
-			printf("\x1b[48;2;%d;%d;%dm ", r, g, b);
+			printf("\033[48;2;%d;%d;%dm \033[0m", r, g, b);
 		}
 		static void PrintBlock(color blockColor) {
-			printf("\x1b[48;2;%d;%d;%dm ", blockColor.r, blockColor.g, blockColor.b);
+			printf("\033[48;2;%d;%d;%dm \033[0m", blockColor.r, blockColor.g, blockColor.b);
 		}
 
 		// Returns a pressed key

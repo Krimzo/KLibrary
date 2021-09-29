@@ -1,8 +1,12 @@
 #pragma once
+#include <functional>
 #include <windows.h>
 #include "KrimzLib/dep/glad/glad.h"
 #include "KrimzLib/types.h"
 
+// Debug
+#define ASSERT(x) if (x) __debugbreak();
+#define GLCheckError(x) kl::opengl::debug::ClearErrors(); x; ASSERT(kl::opengl::debug::CheckError(__FILE__, __LINE__))
 
 namespace kl {
 	class opengl {
@@ -18,7 +22,21 @@ namespace kl {
 				}
 				glEnd();
 			}
-		};		
+
+			// Clears the OpenGL error buffer
+			static void ClearErrors() {
+				while (glGetError());
+			}
+
+			// Prints OpenGL from the error buffer
+			static bool CheckError(const char* file, int line) {
+				if (GLenum error = glGetError()) {
+					printf("[OpenGL Error] (0x%x) in file \"%s\" at line %d\n", error, file, line);
+					return true;
+				}
+				return false;
+			}
+		};
 
 		// Set the whole screen to a given color
 		static void ClearScreen(colorf color = { 0, 0, 0, 1 }) {
