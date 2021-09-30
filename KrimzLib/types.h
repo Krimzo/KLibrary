@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <windows.h>
+#include "KrimzLib/incl/OpenCL/cl.hpp"
 
 
 namespace kl {
@@ -209,6 +210,8 @@ namespace kl {
 
 	/* ----- OpenGL/OpenCL ----- */
 	typedef unsigned int id, index;
+	typedef void* cpumem;
+	typedef cl_mem gpumem;
 
 	struct colorf {
 		float r = 0;

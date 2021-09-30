@@ -173,7 +173,7 @@
 #include <OpenCL/opencl.h>
 #include <libkern/OSAtomic.h>
 #else
-#include <GL/gl.h>
+#include "KrimzLib/incl/OpenGL/glad.h"
 #include "KrimzLib/incl/OpenCL/opencl.h"
 #endif // !__APPLE__
 

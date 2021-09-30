@@ -14,9 +14,11 @@
 
 
 namespace kl {
-	void Init() {
+	// Lbrary intialiser
+	void InitLib() {
 		random::SetSeed();
 		console::EnableRGB();
 		time::LoadPCFrequency();
+		opencl::Init();
 	}
 }

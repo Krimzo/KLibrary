@@ -3,6 +3,7 @@
 
 
 namespace kl {
+	// Library constants
 	namespace constant {
 		// Ints
 		const int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
