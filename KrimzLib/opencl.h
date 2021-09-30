@@ -1,6 +1,6 @@
 #pragma once
 #include "KrimzLib/types.h"
-//#include "KrimzLib/dep/OpenCL/cl.h"
+#include "KrimzLib/incl/OpenCL/cl.hpp"
 
 
 namespace kl {

@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "KrimzLib/dep/OpenGL/glad/glad.h"
+#include "KrimzLib/incl/OpenGL/glad.h"
 
 static void* get_proc(const char *namez);
 

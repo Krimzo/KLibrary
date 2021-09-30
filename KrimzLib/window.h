@@ -5,7 +5,7 @@
 #include <string>
 #include <windows.h>
 #include <windowsx.h>
-#include "KrimzLib/dep/OpenGL/glad/glad.h"
+#include "KrimzLib/incl/OpenGL/glad.h"
 #include "KrimzLib/types.h"
 #include "KrimzLib/constants.h"
 
