@@ -215,11 +215,11 @@ namespace kl {
 	typedef cl_program clprogram;
 	typedef cl_kernel clkernel;
 
-	struct colorf {
-		float r = 0;
-		float g = 0;
-		float b = 0;
-		float a = 1;
+	struct colord {
+		double r = 0;
+		double g = 0;
+		double b = 0;
+		double a = 1;
 
 		// Returns a byte type color
 		color ToByte() {
@@ -244,12 +244,12 @@ namespace kl {
 
 	/* ----- Game Engine ----- */
 	struct vertex {
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float u = 0;
-		float v = 0;
-		colorf color = {};
+		double x = 0;
+		double y = 0;
+		double z = 0;
+		double u = 0;
+		double v = 0;
+		colord color = {};
 	};
 
 	struct triangle {

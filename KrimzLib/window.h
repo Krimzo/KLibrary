@@ -25,7 +25,6 @@ namespace kl {
 		std::function<void(void)> OpenGLEnd = []() {};
 
 		// Window creation and deletion
-		// You need to link "opengl32.lib" if you want to use OpenGL
 		void New(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false) {
 			if (!windowCreated) {
 				// Start a new window thread

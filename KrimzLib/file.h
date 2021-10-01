@@ -45,7 +45,6 @@ namespace kl {
 		}
 
 		// Returns a bitmap from the given image file
-		// You have to link "gdiplus.lib" if you want to use this function
 		static bitmap GetPixels(std::wstring imagePath) {
 			// Loads image file
 			ULONG_PTR gdiplusToken;
