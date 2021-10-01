@@ -4,11 +4,11 @@
 #include "KrimzLib/math.h"
 #include "KrimzLib/random.h"
 #include "KrimzLib/time.h"
-#include "KrimzLib/file.h"
+#include "KrimzLib/file.h"		// You need to link gdiplus.lib (just link you already have it)
 #include "KrimzLib/thread.h"
 #include "KrimzLib/console.h"
-#include "KrimzLib/opengl.h"
-#include "KrimzLib/opencl.h"
+#include "KrimzLib/opengl.h"	// You need to link opengl32.lib (just link you already have it)
+#include "KrimzLib/opencl.h"	// You need to link OpenCL.lib (from the lib folder)
 #include "KrimzLib/window.h"
 #include "KrimzLib/engine.h"
 

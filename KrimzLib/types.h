@@ -212,6 +212,8 @@ namespace kl {
 	typedef unsigned int id, index;
 	typedef void* cpumem;
 	typedef cl_mem gpumem;
+	typedef cl_program clprogram;
+	typedef cl_kernel clkernel;
 
 	struct colorf {
 		float r = 0;
