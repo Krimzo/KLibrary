@@ -162,6 +162,20 @@ namespace kl
 	/* ----- Colors/Bitmaps ----- */
 	typedef unsigned char byte;
 
+	struct colorf
+	{
+		float r = 0;
+		float g = 0;
+		float b = 0;
+		float a = 1;
+
+		// Prints the color to the console
+		void Print() const
+		{
+			std::cout << "r: " << r << " g: " << g << " b: " << b << " a: " << a << '\n';
+		}
+	};
+
 	struct color
 	{
 		byte r = 0;
@@ -169,8 +183,14 @@ namespace kl
 		byte b = 0;
 		byte a = 255;
 
+		// Returns the color as a float type
+		colorf ToFloat() const
+		{
+			return { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
+		}
+
 		// Prints the color to the console
-		void Print()
+		void Print() const
 		{
 			std::cout << "r: " << r << " g: " << g << " b: " << b << " a: " << a << '\n';
 		}
@@ -260,26 +280,6 @@ namespace kl
 	typedef cl_program clprogram;
 	typedef cl_kernel clkernel;
 
-	struct colord
-	{
-		double r = 0;
-		double g = 0;
-		double b = 0;
-		double a = 1;
-
-		// Returns a byte type color
-		color ToByte()
-		{
-			return { byte(r * 255), byte(g * 255), byte(b * 255), byte(a * 255) };
-		}
-
-		// Prints the color to the console
-		void Print()
-		{
-			std::cout << "r: " << r << " g: " << g << " b: " << b << " a: " << a << '\n';
-		}
-	};
-
 	enum class shadertype
 	{
 		NONE = -1, VERTEX = 0, FRAGMENT = 1
@@ -295,12 +295,12 @@ namespace kl
 	/* ----- Game Engine ----- */
 	struct vertex
 	{
-		double x = 0;
-		double y = 0;
-		double z = 0;
-		double u = 0;
-		double v = 0;
-		colord color = {};
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		float u = 0;
+		float v = 0;
+		colorf color = {};
 	};
 
 	struct triangle

@@ -22,8 +22,8 @@ namespace kl
 				glBegin(GL_TRIANGLES);
 				for (int i = 0; i < 3; i++)
 				{
-					glColor3f((float)tr.vertices[i].color.r, (float)tr.vertices[i].color.g, (float)tr.vertices[i].color.b);
-					glVertex3f((float)tr.vertices[i].x, (float)tr.vertices[i].y, (float)tr.vertices[i].z);
+					glColor3f(tr.vertices[i].color.r, tr.vertices[i].color.g, tr.vertices[i].color.b);
+					glVertex3f(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
 				}
 				glEnd();
 			}
@@ -47,9 +47,9 @@ namespace kl
 		};
 
 		// Set the whole screen to a given color
-		static void Clear(colord color = { 0, 0, 0, 1 })
+		static void Clear(colorf color = { 0, 0, 0, 1 })
 		{
-			glClearColor((float)color.r, (float)color.g, (float)color.b, (float)color.a);
+			glClearColor(color.r, color.g, color.b, color.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
@@ -100,13 +100,10 @@ namespace kl
 				if (line.find("#shader") != std::string::npos)
 				{
 					if (line.find("vertex") != std::string::npos)
-					{
 						type = shadertype::VERTEX;
-					}
+
 					else if (line.find("fragment") != std::string::npos)
-					{
 						type = shadertype::FRAGMENT;
-					}
 				}
 				else
 				{
