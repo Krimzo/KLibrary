@@ -128,10 +128,10 @@ namespace kl {
 		static void WaitFor(char toWaitFor, bool printMessage = false) {
 			if (printMessage) {
 				if (toWaitFor > 31 && toWaitFor < 127) {
-					printf("Waiting for '%c'\n", toWaitFor);
+					printf("Press '%c' to continue\n", toWaitFor);
 				}
 				else {
-					printf("Waiting for '%d'\n", toWaitFor);
+					printf("Press %d to continue\n", toWaitFor);
 				}
 			}
 			while (_getch() != toWaitFor);

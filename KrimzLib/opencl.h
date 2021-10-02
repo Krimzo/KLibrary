@@ -90,8 +90,13 @@ namespace kl {
 		}
 		
 		// Runs and waits for the kernel to finish
-		static void RunKernel(clkernel kernel, size_t runCount, size_t groupSize) {
-			clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &runCount, &groupSize, 0, NULL, NULL);
+		static void RunKernel(clkernel kernel, size_t runCount) {
+			if (!math::IsPrime(runCount)) {
+				clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &runCount, NULL, 0, NULL, NULL);
+			}
+			else {
+				kl::console::Print("Kernel run count can't be a prime number!\n", kl::constant::colorRed);
+			}
 		}
 
 		// Deletes a given OpenCL kernel

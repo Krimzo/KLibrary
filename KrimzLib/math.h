@@ -14,5 +14,18 @@ namespace kl {
 		static vec3 VectorCrossProd(vec3 a, vec3 b) {
 			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
 		}
+
+		// Checks if the given number is prime
+		static bool IsPrime(size_t num) {
+			if (num == 0 || num == 1) {
+				return false;
+			}
+			for (int i = 2; i <= num / 2; i++) {
+				if (num % i == 0) {
+					return false;
+				}
+			}
+			return true;
+		}
 	};
 }
