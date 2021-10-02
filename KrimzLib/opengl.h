@@ -8,15 +8,20 @@
 #define ASSERT(x) if (x) __debugbreak();
 #define GLCheckError(x) kl::opengl::debug::ClearErrors(); x; ASSERT(kl::opengl::debug::CheckError(__FILE__, __LINE__))
 
-namespace kl {
-	class opengl {
+namespace kl
+{
+	class opengl
+	{
 	public:
-		class debug {
+		class debug
+		{
 		public:
 			// Draws a triangle on the screen for debugging
-			static void DrawTriangle(triangle& tr) {
+			static void DrawTriangle(triangle& tr)
+			{
 				glBegin(GL_TRIANGLES);
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 3; i++)
+				{
 					glColor3f((float)tr.vertices[i].color.r, (float)tr.vertices[i].color.g, (float)tr.vertices[i].color.b);
 					glVertex3f((float)tr.vertices[i].x, (float)tr.vertices[i].y, (float)tr.vertices[i].z);
 				}
@@ -24,13 +29,16 @@ namespace kl {
 			}
 
 			// Clears the OpenGL error buffer
-			static void ClearErrors() {
+			static void ClearErrors()
+			{
 				while (glGetError());
 			}
 
 			// Prints OpenGL from the error buffer
-			static bool CheckError(const char* file, int line) {
-				if (GLenum error = glGetError()) {
+			static bool CheckError(const char* file, int line)
+			{
+				if (GLenum error = glGetError())
+				{
 					printf("[OpenGL Error] (0x%x) in file \"%s\" at line %d\n", error, file, line);
 					return true;
 				}
@@ -39,18 +47,21 @@ namespace kl {
 		};
 
 		// Set the whole screen to a given color
-		static void ClearScreen(colord color = { 0, 0, 0, 1 }) {
+		static void Clear(colord color = { 0, 0, 0, 1 })
+		{
 			glClearColor((float)color.r, (float)color.g, (float)color.b, (float)color.a);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
 		// Flips the front and back hdc buffers
-		static void FlipBuffers(HDC hdc) {
+		static void FlipBuffers(HDC hdc)
+		{
 			SwapBuffers(hdc);
 		}
 
 		// Creates a shader program from 2 given shaders sources
-		static kl::id CreateProgram(const std::string& vertexShader, const std::string& fragmentShader) {
+		static kl::id CreateProgram(const std::string& vertexShader, const std::string& fragmentShader)
+		{
 			// Creating and compiling shaders
 			kl::id program = glCreateProgram();
 			kl::id vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
@@ -71,27 +82,34 @@ namespace kl {
 		}
 
 		// Deletes the given shader program
-		static void DeleteProgram(kl::id program) {
+		static void Delete(kl::id program)
+		{
 			glDeleteProgram(program);
 		}
 
 		// Parses multiple shaders from a single file
-		static shaderpackage ShadersFromFile(std::wstring filepath) {
+		static shaderpackage ShadersFromFile(std::wstring filepath)
+		{
 			std::istringstream iss(kl::file::GetText(filepath));
 
 			std::string line;
 			std::stringstream ss[2];
 			shadertype type = shadertype::NONE;
-			while (getline(iss, line)) {
-				if (line.find("#shader") != std::string::npos) {
-					if (line.find("vertex") != std::string::npos) {
+			while (getline(iss, line))
+			{
+				if (line.find("#shader") != std::string::npos)
+				{
+					if (line.find("vertex") != std::string::npos)
+					{
 						type = shadertype::VERTEX;
 					}
-					else if (line.find("fragment") != std::string::npos) {
+					else if (line.find("fragment") != std::string::npos)
+					{
 						type = shadertype::FRAGMENT;
 					}
 				}
-				else {
+				else
+				{
 					ss[(int)type] << line << '\n';
 				}
 			}
@@ -101,11 +119,12 @@ namespace kl {
 
 	private:
 		// Compiles the given shader source
-		static kl::id CompileShader(kl::id type, const std::string& source) {
+		static kl::id CompileShader(kl::id type, const std::string& source)
+		{
 			// Creatings shader
 			kl::id shaderID = glCreateShader(type);
 			const char* shaderSource = source.c_str();
-			
+
 			// Compiling shader
 			glShaderSource(shaderID, 1, &shaderSource, NULL);
 			glCompileShader(shaderID);
@@ -113,7 +132,8 @@ namespace kl {
 			// Error checking
 			int status;
 			glGetShaderiv(shaderID, GL_COMPILE_STATUS, &status);
-			if (status == GL_FALSE) {
+			if (status == GL_FALSE)
+			{
 				int messageLen;
 				glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &messageLen);
 				char* message = new char[messageLen];

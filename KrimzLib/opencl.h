@@ -3,12 +3,16 @@
 #include "KrimzLib/incl/OpenCL/cl.hpp"
 
 
-namespace kl {
-	class opencl {
+namespace kl
+{
+	class opencl
+	{
 	public:
 		// Initalizes needed stuff from OpenCL
-		static void Init() {
-			if (!initialized) {
+		static void Init()
+		{
+			if (!initialized)
+			{
 				// Get platform and device information
 				clGetPlatformIDs(1, &platformID, NULL);
 				clGetDeviceIDs(platformID, CL_DEVICE_TYPE_DEFAULT, 1, &deviceID, NULL);
@@ -23,9 +27,10 @@ namespace kl {
 		}
 
 		// Unnitalizes OpenCL stuff
-		static void Uninit() {
-			if (initialized) {
-				clFlush(commandQueue);
+		static void Uninit()
+		{
+			if (initialized)
+			{
 				clFinish(commandQueue);
 				clReleaseCommandQueue(commandQueue);
 				clReleaseContext(context);
@@ -36,34 +41,40 @@ namespace kl {
 		}
 
 		// Creates a new gpu buffer
-		static gpumem CreateGpuBuffer(size_t byteSize) {
+		static gpumem CreateGpuBuffer(size_t byteSize)
+		{
 			return clCreateBuffer(context, CL_MEM_READ_WRITE, byteSize, NULL, NULL);
 		}
 
 		// Deletes a given gpu buffer
-		static void DeleteGpuBuffer(gpumem buffer) {
+		static void Delete(gpumem buffer)
+		{
 			clReleaseMemObject(buffer);
 		}
 
 		// Copies data from the cpu memory to the gpu memory
-		static void CpuToGpu(cpumem cpuMem, gpumem gpuMem, size_t byteSize) {
+		static void CpuToGpu(cpumem cpuMem, gpumem gpuMem, size_t byteSize)
+		{
 			clEnqueueWriteBuffer(commandQueue, gpuMem, CL_TRUE, 0, byteSize, cpuMem, 0, NULL, NULL);
 		}
 
 		// Copies data from the gpu memory to the cpu memory
-		static void GpuToCpu(gpumem gpuMem, cpumem cpuMem, size_t byteSize) {
+		static void GpuToCpu(gpumem gpuMem, cpumem cpuMem, size_t byteSize)
+		{
 			clEnqueueReadBuffer(commandQueue, gpuMem, CL_TRUE, 0, byteSize, cpuMem, 0, NULL, NULL);
 		}
 
 		// Creates a new OpenCL program
-		static clprogram CreateProgram(std::string source) {
+		static clprogram CreateProgram(std::string source)
+		{
 			const char* kernelSourceAsChar = source.c_str();
 			const size_t kernelSourceSize = source.size();
 			clprogram tempProgram = clCreateProgramWithSource(context, 1, &kernelSourceAsChar, &kernelSourceSize, NULL);
 			clBuildProgram(tempProgram, 1, &deviceID, NULL, NULL, NULL);
 			return tempProgram;
 		}
-		static clprogram CreateProgram(std::wstring filepath) {
+		static clprogram CreateProgram(std::wstring filepath)
+		{
 			std::string source = file::GetText(filepath);
 			const char* kernelSourceAsChar = source.c_str();
 			const size_t kernelSourceSize = source.size();
@@ -73,34 +84,42 @@ namespace kl {
 		}
 
 		// Deletes a given OpenCL program
-		static void DeleteProgram(clprogram program) {
+		static void Delete(clprogram program)
+		{
 			clReleaseProgram(program);
 		}
 
 		// Creates a new OpenCL kernel
-		static clkernel CreateKernel(clprogram program, std::string kernelName) {
+		static clkernel CreateKernel(clprogram program, std::string kernelName)
+		{
 			return clCreateKernel(program, kernelName.c_str(), NULL);
 		}
 
 		// Sets the given kernel arguments
-		static void SetKernelArguments(clkernel kernel, std::vector<gpumem> arguments) {
-			for (int i = 0; i < arguments.size(); i++) {
+		static void SetKernelArguments(clkernel kernel, std::vector<gpumem> arguments)
+		{
+			for (int i = 0; i < arguments.size(); i++)
+			{
 				clSetKernelArg(kernel, i, 8, &arguments[i]);
 			}
 		}
-		
+
 		// Runs and waits for the kernel to finish
-		static void RunKernel(clkernel kernel, size_t runCount) {
-			if (!math::IsPrime(runCount)) {
+		static void RunKernel(clkernel kernel, size_t runCount)
+		{
+			if (!math::IsPrime(runCount))
+			{
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &runCount, NULL, 0, NULL, NULL);
 			}
-			else {
+			else
+			{
 				kl::console::Print("Kernel run count can't be a prime number!\n", kl::constant::colorRed);
 			}
 		}
 
 		// Deletes a given OpenCL kernel
-		static void DeleteKernel(clkernel kernel) {
+		static void Delete(clkernel kernel)
+		{
 			clReleaseKernel(kernel);
 		}
 

@@ -7,17 +7,22 @@
 #include "KrimzLib/types.h"
 
 
-namespace kl {
-	class file {
+namespace kl
+{
+	class file
+	{
 	public:
 		// Returns a string from a given text file
-		static std::string GetText(std::wstring fileName) {
+		static std::string GetText(std::wstring fileName)
+		{
 			std::stringstream textBuffer;
 			std::ifstream fileStream(fileName);
-			if (fileStream.is_open()) {
+			if (fileStream.is_open())
+			{
 				textBuffer << fileStream.rdbuf();
 			}
-			else {
+			else
+			{
 				std::wcout << "Couldn't load text file \"" << fileName << "\"" << std::endl;
 				char iHateWarnings = getchar();
 				exit(69);
@@ -27,10 +32,12 @@ namespace kl {
 		}
 
 		// Returns a filedata from a given file
-		static filedata GetBytes(std::wstring fileName) {
+		static filedata GetBytes(std::wstring fileName)
+		{
 			filedata tempFileData = { fileName };
 			std::ifstream fileStream(fileName, std::ios::binary);
-			if (!fileStream.is_open()) {
+			if (!fileStream.is_open())
+			{
 				std::wcout << "Couldn't load file \"" << fileName << "\"" << std::endl;
 				char iHateWarnings = getchar();
 				exit(69);
@@ -45,7 +52,8 @@ namespace kl {
 		}
 
 		// Returns a bitmap from the given image file
-		static bitmap GetPixels(std::wstring imagePath) {
+		static bitmap GetPixels(std::wstring imagePath)
+		{
 			// Loads image file
 			ULONG_PTR gdiplusToken;
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
@@ -54,7 +62,8 @@ namespace kl {
 
 			// Checks load status
 			int lastBitmapStatus = loadedBitmap->GetLastStatus();
-			if (lastBitmapStatus) {
+			if (lastBitmapStatus)
+			{
 				std::wcout << "Couldn't load image file \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
 				char iHateWarnings = getchar();
 				exit(69);
@@ -62,8 +71,10 @@ namespace kl {
 
 			// Saves data
 			bitmap tempBitmap(loadedBitmap->GetWidth(), loadedBitmap->GetHeight());
-			for (int y = 0; y < tempBitmap.GetHeight(); y++) {
-				for (int x = 0; x < tempBitmap.GetWidth(); x++) {
+			for (int y = 0; y < tempBitmap.GetHeight(); y++)
+			{
+				for (int x = 0; x < tempBitmap.GetWidth(); x++)
+				{
 					Gdiplus::Color tempPixel;
 					loadedBitmap->GetPixel(x, y, &tempPixel);
 					tempBitmap.SetPixel(x, y, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), 255 });

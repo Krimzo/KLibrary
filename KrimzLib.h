@@ -13,12 +13,19 @@
 #include "KrimzLib/engine.h"
 
 
-namespace kl {
+namespace kl
+{
 	// Lbrary intialiser
-	void InitLib() {
+	void InitLib()
+	{
 		random::SetSeed();
 		console::EnableRGB();
 		time::LoadPCFrequency();
-		opencl::Init();
+	}
+
+	// Lbrary unintialiser
+	void UninitLib()
+	{
+		console::DisableRGB();
 	}
 }

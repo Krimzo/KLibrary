@@ -2,17 +2,21 @@
 #include <windows.h>
 
 
-namespace kl {
-	class time {
+namespace kl
+{
+	class time
+	{
 	public:
 		// Loads the current pc frequency
-		static void LoadPCFrequency() {
+		static void LoadPCFrequency()
+		{
 			QueryPerformanceFrequency(&counterLast);
 			PCFrequency = double(counterLast.QuadPart);
 		}
 
 		// Returns a time since the the last GetElapsed call
-		static double GetElapsed() {
+		static double GetElapsed()
+		{
 			QueryPerformanceCounter(&counterNow);
 			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
 			counterLast = counterNow;

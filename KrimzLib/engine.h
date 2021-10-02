@@ -3,25 +3,29 @@
 #include "KrimzLib/time.h"
 
 
-namespace kl {
-	class engine {
+namespace kl
+{
+	class engine
+	{
 	public:
 		// Engine properties
 		double deltaTime = 0;
 
 		// Outside functions that user defines
-		std::function<void(void)> EngineStart = []() {};
-		std::function<void(char)> EngineInput = [](char input) {};
-		std::function<void(void)> EngineUpdate = []() {};
+		std::function<void(void)> EngineStart = []() { };
+		std::function<void(char)> EngineInput = [](char input) { };
+		std::function<void(void)> EngineUpdate = []() { };
 
 		// Starts the engine
-		void Start() {
+		void Start()
+		{
 			engineRunning = true;
 			EngineLoop();
 		}
 
 		// Stops the engine
-		void Stop() {
+		void Stop()
+		{
 			engineRunning = false;
 		}
 
@@ -30,22 +34,26 @@ namespace kl {
 		bool engineRunning = false;
 
 		// Computing object physics 
-		void ObjectPhysics() {
+		void ObjectPhysics()
+		{
 
 		}
 
 		// Rendering objects to the screen
-		void ObjectRender() {
+		void ObjectRender()
+		{
 
 		}
 
 		// Engine game loop
-		void EngineLoop() {
+		void EngineLoop()
+		{
 			// One call before engine start
 			EngineStart();
 
 			// Needed for time calculations
-			while (engineRunning) {
+			while (engineRunning)
+			{
 				/* Game input */
 				EngineInput("placeholder"[0]);
 

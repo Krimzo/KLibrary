@@ -10,8 +10,10 @@
 #include "KrimzLib/constants.h"
 
 
-namespace kl {
-	class window {
+namespace kl
+{
+	class window
+	{
 	public:
 		// Input properties
 		WPARAM KEY = 0;
@@ -20,141 +22,177 @@ namespace kl {
 		point MOUSE = {};
 
 		// OpenGL calls
-		std::function<void(void)> OpenGLStart = []() {};
-		std::function<void(void)> OpenGLUpdate = []() {};
-		std::function<void(void)> OpenGLEnd = []() {};
+		std::function<void(void)> OpenGLStart = []() { };
+		std::function<void(void)> OpenGLUpdate = []() { };
+		std::function<void(void)> OpenGLEnd = []() { };
 
 		// Window creation and deletion
-		void New(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false) {
-			if (!windowCreated) {
+		void New(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false)
+		{
+			if (!windowCreated)
+			{
 				// Start a new window thread
-				std::thread windowThread([&]() {
-					// Define windowapi window class
-					WNDCLASS windowClass = {};
-					windowClass.lpfnWndProc = DefWindowProc;
-					windowClass.hInstance = hInstance;
-					windowClass.lpszClassName = windowName;
-					windowClass.style = CS_OWNDC;
-					RegisterClass(&windowClass);
+				std::thread windowThread([&]()
+					{
+						// Define windowapi window class
+						WNDCLASS windowClass = {};
+						windowClass.lpfnWndProc = DefWindowProc;
+						windowClass.hInstance = hInstance;
+						windowClass.lpszClassName = windowName;
+						windowClass.style = CS_OWNDC;
+						RegisterClass(&windowClass);
 
-					// Create window
-					DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
-					RECT adjustedWindowSize = { 0, 0, windowWidth, windowHeight };
-					AdjustWindowRectEx(&adjustedWindowSize, windowStyle, NULL, NULL);
-					windowWidth = (adjustedWindowSize.right - adjustedWindowSize.left);
-					windowHeight = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-					hwnd = CreateWindowEx(NULL, windowName, windowName, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
-					if (!hwnd) { exit(69); }
-					ShowWindow(hwnd, SW_SHOW);
-					hdc = GetDC(hwnd);
-					windowCreated = true;
+						// Create window
+						DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+						RECT adjustedWindowSize = { 0, 0, windowWidth, windowHeight };
+						AdjustWindowRectEx(&adjustedWindowSize, windowStyle, NULL, NULL);
+						windowWidth = (adjustedWindowSize.right - adjustedWindowSize.left);
+						windowHeight = (adjustedWindowSize.bottom - adjustedWindowSize.top);
+						hwnd = CreateWindowEx(NULL, windowName, windowName, windowStyle, (constant::ScreenWidth / 2 - windowWidth / 2), (constant::ScreenHeight / 2 - windowHeight / 2), windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
+						if (!hwnd) { exit(69); }
+						ShowWindow(hwnd, SW_SHOW);
+						hdc = GetDC(hwnd);
+						windowCreated = true;
 
-					// Bitmapinfo setup
-					bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
-					bitmapInfo.bmiHeader.biPlanes = 1;
-					bitmapInfo.bmiHeader.biBitCount = 32;
-					bitmapInfo.bmiHeader.biCompression = BI_RGB;
+						// Bitmapinfo setup
+						bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
+						bitmapInfo.bmiHeader.biPlanes = 1;
+						bitmapInfo.bmiHeader.biBitCount = 32;
+						bitmapInfo.bmiHeader.biCompression = BI_RGB;
 
-					// OpenGL setup
-					if (useOpenGL) {
-						PIXELFORMATDESCRIPTOR pfd = {
-						sizeof(PIXELFORMATDESCRIPTOR),
-						1,
-						PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    // Flags
-						PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
-						32,                   // Colordepth of the framebuffer.
-						0, 0, 0, 0, 0, 0,
-						0,
-						0,
-						0,
-						0, 0, 0, 0,
-						24,                   // Number of bits for the depthbuffer
-						8,                    // Number of bits for the stencilbuffer
-						0,                    // Number of Aux buffers in the framebuffer.
-						PFD_MAIN_PLANE,
-						0,
-						0, 0, 0
-						};
-						int pixelFormat = ChoosePixelFormat(hdc, &pfd);
-						if (!pixelFormat) { exit(69); }
-						SetPixelFormat(hdc, pixelFormat, &pfd);
-						hglrc = wglCreateContext(hdc);
-						wglMakeCurrent(hdc, hglrc);
-						gladLoadGL();		// Loads modern OpenGL functions
-						RECT clientArea = {};
-						GetClientRect(hwnd, &clientArea);
-						glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
-					}
+						// OpenGL setup
+						if (useOpenGL)
+						{
+							PIXELFORMATDESCRIPTOR pfd = {
+							sizeof(PIXELFORMATDESCRIPTOR),
+							1,
+							PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    // Flags
+							PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
+							32,                   // Colordepth of the framebuffer.
+							0, 0, 0, 0, 0, 0,
+							0,
+							0,
+							0,
+							0, 0, 0, 0,
+							24,                   // Number of bits for the depthbuffer
+							8,                    // Number of bits for the stencilbuffer
+							0,                    // Number of Aux buffers in the framebuffer.
+							PFD_MAIN_PLANE,
+							0,
+							0, 0, 0
+							};
+							int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+							if (!pixelFormat) { exit(69); }
+							SetPixelFormat(hdc, pixelFormat, &pfd);
+							hglrc = wglCreateContext(hdc);
+							wglMakeCurrent(hdc, hglrc);
+							gladLoadGL();		// Loads modern OpenGL functions
+							RECT clientArea = {};
+							GetClientRect(hwnd, &clientArea);
+							glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
+						}
 
-					// Window message loop
-					if (useOpenGL) {
-						OpenGLStart();
-						while (IsWindow(hwnd)) {
-							while (PeekMessage(&windowMessage, hwnd, 0, 0, PM_REMOVE)) {
+						// Window message loop
+						if (useOpenGL)
+						{
+							OpenGLStart();
+							while (IsWindow(hwnd))
+							{
+								while (PeekMessage(&windowMessage, hwnd, 0, 0, PM_REMOVE))
+								{
+									HandleMessage();
+								}
+								OpenGLUpdate();
+							}
+						}
+						else
+						{
+							while (IsWindow(hwnd))
+							{
+								GetMessage(&windowMessage, hwnd, 0, 0);
 								HandleMessage();
 							}
-							OpenGLUpdate();
 						}
-					}
-					else {
-						while (IsWindow(hwnd)) {
-							GetMessage(&windowMessage, hwnd, 0, 0);
-							HandleMessage();
-						}
-					}
 
-					// Memory release
-					if (useOpenGL) {
-						OpenGLEnd();
-						wglMakeCurrent(NULL, NULL);
-						ReleaseDC(hwnd, hdc);
-						wglDeleteContext(hglrc);
-						hglrc = NULL;
-					}
-					UnregisterClass(windowName, hInstance);
-					hdc = NULL;
-					hwnd = NULL;
-					windowCreated = false;
-				});
+						// Memory release
+						if (useOpenGL)
+						{
+							OpenGLEnd();
+							wglMakeCurrent(NULL, NULL);
+							ReleaseDC(hwnd, hdc);
+							wglDeleteContext(hglrc);
+							hglrc = NULL;
+						}
+						UnregisterClass(windowName, hInstance);
+						hdc = NULL;
+						hwnd = NULL;
+						windowCreated = false;
+					});
 				windowThread.detach();
 				while (!windowCreated);
 			}
 		}
-		void Delete() {
-			if (windowCreated) {
+		void Delete()
+		{
+			if (windowCreated)
+			{
 				// Wait until window/thread gets destroyed
 				PostMessage(hwnd, WM_CLOSE, 0, 0);
 				while (windowCreated);
 			}
 		}
-		~window() {
+		~window()
+		{
 			this->Delete();
 		}
 
 		// Getters
-		HWND GetHWND() {
+		HWND GetHWND()
+		{
 			return this->hwnd;
 		}
-		HDC GetHDC() {
+		HDC GetHDC()
+		{
 			return this->hdc;
 		}
-		HGLRC GetHGLRC() {
+		HGLRC GetHGLRC()
+		{
 			return this->hglrc;
 		}
 
+		// Gets a window client area width
+		int GetWidth()
+		{
+			RECT clientArea = {};
+			GetClientRect(hwnd, &clientArea);
+			return clientArea.right - clientArea.left;
+		}
+
+		// Gets a window client area height
+		int GetHeight()
+		{
+			RECT clientArea = {};
+			GetClientRect(hwnd, &clientArea);
+			return clientArea.bottom - clientArea.top;
+		}
+
 		// Sets the window title
-		void SetTitle(std::string data) {
+		void SetTitle(std::string data)
+		{
 			SetWindowTextA(hwnd, data.c_str());
 		}
-		void SetTitle(int data) {
+		void SetTitle(int data)
+		{
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
-		void SetTitle(double data) {
+		void SetTitle(double data)
+		{
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
 
 		// Sets the pixels of the window
-		void DisplayBitmap(bitmap& toDraw, point position = { 0, 0 }) {
+		void DisplayBitmap(bitmap& toDraw, point position = { 0, 0 })
+		{
 			bitmapInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bitmapInfo.bmiHeader.biHeight = toDraw.GetHeight();
 			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
@@ -173,8 +211,10 @@ namespace kl {
 		HGLRC hglrc = NULL;
 
 		// Handles the windows message
-		void HandleMessage() {
-			switch (windowMessage.message) {
+		void HandleMessage()
+		{
+			switch (windowMessage.message)
+			{
 			case WM_KEYDOWN:
 				KEY = windowMessage.wParam;
 				break;
