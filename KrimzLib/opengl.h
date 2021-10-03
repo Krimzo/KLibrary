@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "KrimzLib/incl/OpenGL/glad.h"
 #include "KrimzLib/types.h"
+#pragma comment (lib, "opengl32.lib")
 
 // Debug
 #define ASSERT(x) if (x) __debugbreak();
@@ -16,18 +17,6 @@ namespace kl
 		class debug
 		{
 		public:
-			// Draws a triangle on the screen for debugging
-			static void DrawTriangle(triangle& tr)
-			{
-				glBegin(GL_TRIANGLES);
-				for (int i = 0; i < 3; i++)
-				{
-					glColor3f(tr.vertices[i].color.r, tr.vertices[i].color.g, tr.vertices[i].color.b);
-					glVertex3f(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
-				}
-				glEnd();
-			}
-
 			// Clears the OpenGL error buffer
 			static void ClearErrors()
 			{
@@ -46,10 +35,25 @@ namespace kl
 			}
 		};
 
+		class old {
+		public:
+			// Draws a triangle on the screen
+			static void DrawTriangle(triangle& tr)
+			{
+				glBegin(GL_TRIANGLES);
+				for (int i = 0; i < 3; i++)
+				{
+					glColor3f((float)tr.vertices[i].color.r, (float)tr.vertices[i].color.g, (float)tr.vertices[i].color.b);
+					glVertex3f((float)tr.vertices[i].x, (float)tr.vertices[i].y, (float)tr.vertices[i].z);
+				}
+				glEnd();
+			}
+		};
+
 		// Set the whole screen to a given color
-		static void Clear(colorf color = { 0, 0, 0, 1 })
+		static void Clear(colord color = { 0, 0, 0, 1 })
 		{
-			glClearColor(color.r, color.g, color.b, color.a);
+			glClearColor((float)color.r, (float)color.g, (float)color.b, (float)color.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 

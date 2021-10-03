@@ -26,6 +26,9 @@ namespace kl
 		std::function<void(void)> OpenGLUpdate = []() { };
 		std::function<void(void)> OpenGLEnd = []() { };
 
+		// Other properties
+		double deltaTime = 0;
+
 		// Window creation and deletion
 		void New(int windowWidth, int windowHeight, const wchar_t* windowName, bool resizeable = true, bool useOpenGL = false)
 		{
@@ -103,6 +106,7 @@ namespace kl
 									HandleMessage();
 								}
 								OpenGLUpdate();
+								deltaTime = windowTime.GetElapsed();
 							}
 						}
 						else
@@ -111,6 +115,7 @@ namespace kl
 							{
 								GetMessage(&windowMessage, hwnd, 0, 0);
 								HandleMessage();
+								deltaTime = windowTime.GetElapsed();
 							}
 						}
 
@@ -209,6 +214,9 @@ namespace kl
 
 		// OpenGL properties
 		HGLRC hglrc = NULL;
+
+		// Other properties
+		kl::time windowTime;
 
 		// Handles the windows message
 		void HandleMessage()

@@ -23,15 +23,13 @@ namespace kl
 		static bool IsPrime(size_t num)
 		{
 			if (num == 0 || num == 1)
-			{
 				return false;
-			}
-			for (int i = 2; i <= num / 2; i++)
+			
+			size_t half = num / 2;
+			for (size_t i = 2; i <= half; i++)
 			{
 				if (num % i == 0)
-				{
 					return false;
-				}
 			}
 			return true;
 		}

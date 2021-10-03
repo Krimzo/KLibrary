@@ -1128,13 +1128,13 @@ inline cl_int getInfoHelper(Func f, cl_uint name, VECTOR_CLASS<T>* param, long)
         return err;
     }
 
-    T* value = (T*) alloca(required);
+    T* value = (T*)_malloca(required);
     err = f(name, required, value, NULL);
     if (err != CL_SUCCESS) {
         return err;
     }
 
-    param->assign(&value[0], &value[required/sizeof(T)]);
+    param->assign(value, value + required / sizeof(T));
     return CL_SUCCESS;
 }
 
@@ -1153,17 +1153,20 @@ inline cl_int getInfoHelper(Func f, cl_uint name, VECTOR_CLASS<T>* param, int, t
         return err;
     }
 
-    typename T::cl_type * value = (typename T::cl_type *) alloca(required);
+    typename T::cl_type * value = (typename T::cl_type *) _malloca(required);
+    if (!value)
+        exit(-1);
+
     err = f(name, required, value, NULL);
     if (err != CL_SUCCESS) {
         return err;
     }
 
     ::size_t elements = required / sizeof(typename T::cl_type);
-    param->assign(&value[0], &value[elements]);
+    param->assign(value, value + elements);
     for (::size_t i = 0; i < elements; i++)
     {
-        if (value[i] != NULL)
+        if (*(value + i))
         {
             err = (*param)[i].retain();
             if (err != CL_SUCCESS) {
@@ -1197,7 +1200,10 @@ inline cl_int getInfoHelper(Func f, cl_uint name, STRING_CLASS* param, long)
         return err;
     }
 
-    char* value = (char*) alloca(required);
+    char* value = (char*)_malloca(required);
+    if (!value)
+        exit(-1);
+
     err = f(name, required, value, NULL);
     if (err != CL_SUCCESS) {
         return err;
@@ -1715,7 +1721,7 @@ static cl_uint getPlatformVersion(cl_platform_id platform)
 {
     ::size_t size = 0;
     clGetPlatformInfo(platform, CL_PLATFORM_VERSION, 0, NULL, &size);
-    char *versionInfo = (char *) alloca(size);
+    char *versionInfo = (char *)_malloca(size);
     clGetPlatformInfo(platform, CL_PLATFORM_VERSION, size, &versionInfo[0], &size);
     return getVersion(versionInfo);
 }
@@ -2016,13 +2022,13 @@ public:
             return detail::errHandler(err, __CREATE_SUB_DEVICES);
         }
 
-        cl_device_id* ids = (cl_device_id*) alloca(n * sizeof(cl_device_id));
+        cl_device_id* ids = (cl_device_id*)_malloca(n * sizeof(cl_device_id));
         err = clCreateSubDevices(object_, properties, n, ids, NULL);
         if (err != CL_SUCCESS) {
             return detail::errHandler(err, __CREATE_SUB_DEVICES);
         }
 
-        devices->assign(&ids[0], &ids[n]);
+        devices->assign(ids, ids + n);
         return CL_SUCCESS;
     }
 #endif // #if defined(CL_VERSION_1_2)
@@ -2152,13 +2158,13 @@ public:
             return detail::errHandler(err, __GET_DEVICE_IDS_ERR);
         }
 
-        cl_device_id* ids = (cl_device_id*) alloca(n * sizeof(cl_device_id));
+        cl_device_id* ids = (cl_device_id*)_malloca(n * sizeof(cl_device_id));
         err = ::clGetDeviceIDs(object_, type, n, ids, NULL);
         if (err != CL_SUCCESS) {
             return detail::errHandler(err, __GET_DEVICE_IDS_ERR);
         }
 
-        devices->assign(&ids[0], &ids[n]);
+        devices->assign(ids, ids + n);
         return CL_SUCCESS;
     }
 
@@ -2257,14 +2263,14 @@ public:
             return detail::errHandler(err, __GET_PLATFORM_IDS_ERR);
         }
 
-        cl_platform_id* ids = (cl_platform_id*) alloca(
+        cl_platform_id* ids = (cl_platform_id*)_malloca(
             n * sizeof(cl_platform_id));
         err = ::clGetPlatformIDs(n, ids, NULL);
         if (err != CL_SUCCESS) {
             return detail::errHandler(err, __GET_PLATFORM_IDS_ERR);
         }
 
-        platforms->assign(&ids[0], &ids[n]);
+        platforms->assign(ids, ids + n);
         return CL_SUCCESS;
     }
 
@@ -2286,14 +2292,14 @@ public:
             return detail::errHandler(err, __GET_PLATFORM_IDS_ERR);
         }
 
-        cl_platform_id* ids = (cl_platform_id*) alloca(
+        cl_platform_id* ids = (cl_platform_id*)_malloca(
             n * sizeof(cl_platform_id));
         err = ::clGetPlatformIDs(n, ids, NULL);
         if (err != CL_SUCCESS) {
             return detail::errHandler(err, __GET_PLATFORM_IDS_ERR);
         }
 
-        *platform = ids[0];
+        *platform = *(Platform*)ids;
         return CL_SUCCESS;
     }
 
@@ -2314,7 +2320,7 @@ public:
             }
         }
 
-        cl_platform_id* ids = (cl_platform_id*) alloca(
+        cl_platform_id* ids = (cl_platform_id*)_malloca(
             n * sizeof(cl_platform_id));
         err = ::clGetPlatformIDs(n, ids, NULL);
 
@@ -2326,7 +2332,7 @@ public:
             *errResult = err;
         }
         
-        return ids[0];
+        return *(Platform*)ids;
     }
 
     static Platform getDefault( 
@@ -2403,8 +2409,12 @@ public:
         cl_int error;
 
         ::size_t numDevices = devices.size();
-        cl_device_id* deviceIDs = (cl_device_id*) alloca(numDevices * sizeof(cl_device_id));
-        for( ::size_t deviceIndex = 0; deviceIndex < numDevices; ++deviceIndex ) {
+        cl_device_id* deviceIDs = (cl_device_id*)_malloca(numDevices * sizeof(cl_device_id));
+        if (!deviceIDs)
+            exit(-1);
+        
+        for( ::size_t deviceIndex = 0; deviceIndex < numDevices; ++deviceIndex )
+        {
             deviceIDs[deviceIndex] = (devices[deviceIndex])();
         }
 
@@ -2622,8 +2632,7 @@ public:
             return detail::errHandler(err, __GET_SUPPORTED_IMAGE_FORMATS_ERR);
         }
 
-        ImageFormat* value = (ImageFormat*)
-            alloca(numEntries * sizeof(ImageFormat));
+        ImageFormat* value = (ImageFormat*)_malloca(numEntries * sizeof(ImageFormat));
         err = ::clGetSupportedImageFormats(
             object_, 
             flags, 
@@ -2635,7 +2644,7 @@ public:
             return detail::errHandler(err, __GET_SUPPORTED_IMAGE_FORMATS_ERR);
         }
 
-        formats->assign(&value[0], &value[numEntries]);
+        formats->assign(value, value + numEntries);
         return CL_SUCCESS;
     }
 };
@@ -4736,8 +4745,14 @@ public:
         cl_int error;
 
         const ::size_t n = (::size_t)sources.size();
-        ::size_t* lengths = (::size_t*) alloca(n * sizeof(::size_t));
-        const char** strings = (const char**) alloca(n * sizeof(const char*));
+        ::size_t* lengths = (::size_t*)_malloca(n * sizeof(::size_t));
+        if (!lengths)
+            exit(-1);
+
+        const char** strings = (const char**)_malloca(n * sizeof(const char*));
+        if (!strings)
+            exit(-1);
+
 
         for (::size_t i = 0; i < n; ++i) {
             strings[i] = sources[(int)i].first;
@@ -4793,15 +4808,23 @@ public:
             return;
         }
 
-        ::size_t* lengths = (::size_t*) alloca(numDevices * sizeof(::size_t));
-        const unsigned char** images = (const unsigned char**) alloca(numDevices * sizeof(const unsigned char**));
+        ::size_t* lengths = (::size_t*)_malloca(numDevices * sizeof(::size_t));
+        if (!lengths)
+            exit(-1);
+
+        const unsigned char** images = (const unsigned char**)_malloca(numDevices * sizeof(const unsigned char**));
+        if (!images)
+            exit(-1);
 
         for (::size_t i = 0; i < numDevices; ++i) {
             images[i] = (const unsigned char*)binaries[i].first;
             lengths[i] = binaries[(int)i].second;
         }
 
-        cl_device_id* deviceIDs = (cl_device_id*) alloca(numDevices * sizeof(cl_device_id));
+        cl_device_id* deviceIDs = (cl_device_id*)_malloca(numDevices * sizeof(cl_device_id));
+        if (!deviceIDs)
+            exit(-1);
+
         for( ::size_t deviceIndex = 0; deviceIndex < numDevices; ++deviceIndex ) {
             deviceIDs[deviceIndex] = (devices[deviceIndex])();
         }
@@ -4837,9 +4860,11 @@ public:
     {
         cl_int error;
 
-
         ::size_t numDevices = devices.size();
-        cl_device_id* deviceIDs = (cl_device_id*) alloca(numDevices * sizeof(cl_device_id));
+        cl_device_id* deviceIDs = (cl_device_id*)_malloca(numDevices * sizeof(cl_device_id));
+        if (!deviceIDs)
+            exit(-1);
+
         for( ::size_t deviceIndex = 0; deviceIndex < numDevices; ++deviceIndex ) {
             deviceIDs[deviceIndex] = (devices[deviceIndex])();
         }
@@ -4885,7 +4910,10 @@ public:
         void* data = NULL) const
     {
         ::size_t numDevices = devices.size();
-        cl_device_id* deviceIDs = (cl_device_id*) alloca(numDevices * sizeof(cl_device_id));
+        cl_device_id* deviceIDs = (cl_device_id*)_malloca(numDevices * sizeof(cl_device_id));
+        if (!deviceIDs)
+            exit(-1);
+
         for( ::size_t deviceIndex = 0; deviceIndex < numDevices; ++deviceIndex ) {
             deviceIDs[deviceIndex] = (devices[deviceIndex])();
         }
@@ -4991,14 +5019,14 @@ public:
             return detail::errHandler(err, __CREATE_KERNELS_IN_PROGRAM_ERR);
         }
 
-        Kernel* value = (Kernel*) alloca(numKernels * sizeof(Kernel));
+        Kernel* value = (Kernel*)_malloca(numKernels * sizeof(Kernel));
         err = ::clCreateKernelsInProgram(
             object_, numKernels, (cl_kernel*) value, NULL);
         if (err != CL_SUCCESS) {
             return detail::errHandler(err, __CREATE_KERNELS_IN_PROGRAM_ERR);
         }
 
-        kernels->assign(&value[0], &value[numKernels]);
+        kernels->assign(value, value + numKernels);
         return CL_SUCCESS;
     }
 };
@@ -5046,7 +5074,7 @@ inline Program linkProgram(
 {
     cl_int err_local = CL_SUCCESS;
 
-    cl_program * programs = (cl_program*) alloca(inputPrograms.size() * sizeof(cl_program));
+    cl_program * programs = (cl_program*)_malloca(inputPrograms.size() * sizeof(cl_program));
 
     if (programs != NULL) {
         for (unsigned int i = 0; i < inputPrograms.size(); i++) {
@@ -5928,7 +5956,10 @@ public:
     {
         cl_event tmp;
         
-        cl_mem* localMemObjects = static_cast<cl_mem*>(alloca(memObjects.size() * sizeof(cl_mem)));
+        cl_mem* localMemObjects = static_cast<cl_mem*>(_malloca(memObjects.size() * sizeof(cl_mem)));
+        if (!localMemObjects)
+            exit(-1);
+
         for( int i = 0; i < (int)memObjects.size(); ++i ) {
             localMemObjects[i] = memObjects[i]();
         }
@@ -6008,10 +6039,7 @@ public:
         const VECTOR_CLASS<Event>* events = NULL,
         Event* event = NULL) const
     {
-        cl_mem * mems = (mem_objects != NULL && mem_objects->size() > 0) 
-            ? (cl_mem*) alloca(mem_objects->size() * sizeof(cl_mem))
-            : NULL;
-
+        cl_mem * mems = (mem_objects != NULL && mem_objects->size() > 0) ? (cl_mem*)_malloca(mem_objects->size() * sizeof(cl_mem)) : NULL;
         if (mems != NULL) {
             for (unsigned int i = 0; i < mem_objects->size(); i++) {
                 mems[i] = ((*mem_objects)[i])();

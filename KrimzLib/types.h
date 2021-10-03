@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <ws2tcpip.h>
 #include <windows.h>
 #include "KrimzLib/incl/OpenCL/cl.hpp"
 
@@ -162,12 +163,12 @@ namespace kl
 	/* ----- Colors/Bitmaps ----- */
 	typedef unsigned char byte;
 
-	struct colorf
+	struct colord
 	{
-		float r = 0;
-		float g = 0;
-		float b = 0;
-		float a = 1;
+		double r = 0;
+		double g = 0;
+		double b = 0;
+		double a = 1;
 
 		// Prints the color to the console
 		void Print() const
@@ -184,9 +185,9 @@ namespace kl
 		byte a = 255;
 
 		// Returns the color as a float type
-		colorf ToFloat() const
+		colord ToDouble() const
 		{
-			return { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
+			return { r / 255.0, g / 255.0, b / 255.0, a / 255.0 };
 		}
 
 		// Prints the color to the console
@@ -261,7 +262,7 @@ namespace kl
 	private:
 		int width = 0;
 		int height = 0;
-		std::vector<color> pixels;
+		std::vector<color> pixels = {};
 	};
 
 
@@ -287,20 +288,20 @@ namespace kl
 
 	struct shaderpackage
 	{
-		std::string vertex;
-		std::string fragment;
+		std::string vertex = "";
+		std::string fragment = "";
 	};
 
 
 	/* ----- Game Engine ----- */
 	struct vertex
 	{
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float u = 0;
-		float v = 0;
-		colorf color = {};
+		double x = 0;
+		double y = 0;
+		double z = 0;
+		double u = 0;
+		double v = 0;
+		colord color = {};
 	};
 
 	struct triangle

@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <gdiplus.h>
 #include "KrimzLib/types.h"
-
+#pragma comment (lib, "gdiplus.lib")
 
 namespace kl
 {

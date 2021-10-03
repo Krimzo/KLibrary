@@ -67,7 +67,7 @@ namespace kl
 				ObjectRender();
 
 				/* Calculating frame time */
-				deltaTime = time::GetElapsed();
+				//deltaTime = time::GetElapsed();
 
 				/* Updating the title */
 				// window.SetTitle(int(1 / deltaTime));
