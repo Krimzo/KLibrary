@@ -161,8 +161,6 @@ namespace kl
 
 
 	/* ----- Colors/Bitmaps ----- */
-	typedef unsigned char byte;
-
 	struct colord
 	{
 		double r = 0;
@@ -266,11 +264,16 @@ namespace kl
 	};
 
 
+	/* ----- Binary ----- */
+	typedef std::vector<byte> bytes;
+	typedef std::string bits;
+
+
 	/* ----- Files ----- */
 	struct filedata
 	{
 		std::wstring name;
-		std::vector<byte> bytes;
+		bytes bytes;
 	};
 
 
