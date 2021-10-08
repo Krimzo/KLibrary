@@ -269,14 +269,6 @@ namespace kl
 	typedef std::string bits;
 
 
-	/* ----- Files ----- */
-	struct filedata
-	{
-		std::wstring name;
-		bytes bytes;
-	};
-
-
 	/* ----- OpenGL/OpenCL ----- */
 	typedef unsigned int id, index;
 	typedef void* cpumem;

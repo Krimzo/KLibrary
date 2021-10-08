@@ -94,7 +94,7 @@ namespace kl
 		// Parses multiple shaders from a single file
 		static shaderpackage ShadersFromFile(std::wstring filepath)
 		{
-			std::istringstream iss(kl::file::GetText(filepath));
+			std::istringstream iss(kl::file::ReadText(filepath));
 
 			std::string line;
 			std::stringstream ss[2];

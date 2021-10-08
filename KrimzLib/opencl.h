@@ -75,7 +75,7 @@ namespace kl
 		}
 		static clprogram CreateProgram(std::wstring filepath)
 		{
-			std::string source = file::GetText(filepath);
+			std::string source = file::ReadText(filepath);
 			const char* kernelSourceAsChar = source.c_str();
 			const size_t kernelSourceSize = source.size();
 			clprogram tempProgram = clCreateProgramWithSource(context, 1, &kernelSourceAsChar, &kernelSourceSize, NULL);

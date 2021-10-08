@@ -7,6 +7,14 @@ namespace kl
 	class binary
 	{
 	public:
+		// Converts a byte to the hex string
+		static std::string ToHex(byte b)
+		{
+			char tempBuffer[5];
+			sprintf_s(tempBuffer, "0x%02X", b);
+			return tempBuffer;
+		}
+
 		// Returns bits from the given value
 		template<typename T> static bits GetBits(T num)
 		{
