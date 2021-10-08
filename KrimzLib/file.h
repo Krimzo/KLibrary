@@ -12,6 +12,13 @@ namespace kl
 	class file
 	{
 	public:
+		// Creates a file
+		static void Create(std::wstring filePath)
+		{
+			std::ofstream fileStream(filePath);
+			fileStream.close();
+		}
+
 		// Opens a file with default program
 		static void OpenWithDefault(std::wstring filePath)
 		{
@@ -35,16 +42,13 @@ namespace kl
 		{
 			std::ifstream fileStream(filePath);
 			std::stringstream textBuffer;
-			if (fileStream.is_open())
-			{
-				textBuffer << fileStream.rdbuf();
-			}
-			else
+			if (!fileStream.is_open())
 			{
 				std::wcout << "Couldn't load text file \"" << filePath << "\"" << std::endl;
 				char iHateWarnings = getchar();
 				exit(69);
 			}
+			textBuffer << fileStream.rdbuf();
 			fileStream.close();
 			return textBuffer.str();
 		}
@@ -61,6 +65,12 @@ namespace kl
 		static void AppendText(std::wstring filePath, std::string& data, int position = -1)
 		{
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
+			if (!fileStream.is_open())
+			{
+				std::wcout << "Couldn't load text file \"" << filePath << "\"" << std::endl;
+				char iHateWarnings = getchar();
+				exit(69);
+			}
 			if (position < 0)
 			{
 				fileStream.seekp(0, std::ios_base::end);
@@ -104,6 +114,12 @@ namespace kl
 		static void AppendBytes(std::wstring filePath, bytes& data, int position = -1)
 		{
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
+			if (!fileStream.is_open())
+			{
+				std::wcout << "Couldn't load file \"" << filePath << "\"" << std::endl;
+				char iHateWarnings = getchar();
+				exit(69);
+			}
 			if (position < 0)
 			{
 				fileStream.seekp(0, std::ios_base::end);

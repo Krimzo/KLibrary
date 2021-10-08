@@ -24,19 +24,19 @@ namespace kl
 			};
 
 			kl::triangle tr1 = { {
-				{-0.90, -0.90, -2, 0, 0, kl::constant::colorBlack.ToDouble()},
-				{ 0.00,  0.00, -2, 0, 0, kl::constant::colorWhite.ToDouble()},
-				{ 0.00,  0.90, -2, 0, 0, kl::constant::colorBlack.ToDouble()}
+				{-0.90, -0.90, -2, 0, 0, 0, kl::constant::colorBlack.ToDouble()},
+				{ 0.00,  0.00, -2, 0, 0, 0, kl::constant::colorWhite.ToDouble()},
+				{ 0.00,  0.90, -2, 0, 0, 0, kl::constant::colorBlack.ToDouble()}
 			} };
 			kl::triangle tr2 = { {
-				{-0.90, -0.90, -2, 0, 0, kl::constant::colorBlack.ToDouble()},
-				{ 0.00,  0.00, -2, 0, 0, kl::constant::colorWhite.ToDouble()},
-				{ 0.90, -0.90, -2, 0, 0, kl::constant::colorBlack.ToDouble()}
+				{-0.90, -0.90, -2, 0, 0, 0, kl::constant::colorBlack.ToDouble()},
+				{ 0.00,  0.00, -2, 0, 0, 0, kl::constant::colorWhite.ToDouble()},
+				{ 0.90, -0.90, -2, 0, 0, 0, kl::constant::colorBlack.ToDouble()}
 			} };
 			kl::triangle tr3 = { {
-				{ 0.90, -0.90, -2, 0, 0, kl::constant::colorBlack.ToDouble()},
-				{ 0.00,  0.00, -2, 0, 0, kl::constant::colorWhite.ToDouble()},
-				{ 0.00,  0.90, -2, 0, 0, kl::constant::colorBlack.ToDouble()}
+				{ 0.90, -0.90, -2, 0, 0, 0, kl::constant::colorBlack.ToDouble()},
+				{ 0.00,  0.00, -2, 0, 0, 0, kl::constant::colorWhite.ToDouble()},
+				{ 0.00,  0.90, -2, 0, 0, 0, kl::constant::colorBlack.ToDouble()}
 			} };
 
 			kl::colord backgroundColor = kl::constant::colorDarkGray.ToDouble();

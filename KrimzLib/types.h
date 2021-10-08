@@ -296,6 +296,7 @@ namespace kl
 		double z = 0;
 		double u = 0;
 		double v = 0;
+		double w = 0;
 		colord color = {};
 	};
 
