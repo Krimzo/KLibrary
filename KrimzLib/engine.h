@@ -46,6 +46,7 @@ namespace kl
 		// Private variables
 		bool engineRunning = false;
 		window* engineWindow = NULL;
+		time engineTime = kl::time();
 		bitmap frameBuffer = bitmap(0, 0);
 
 		// Computing object physics 
@@ -86,7 +87,7 @@ namespace kl
 				ObjectRender();
 
 				/* Calculating frame time */
-				deltaTime = engineWindow->deltaTime;
+				deltaTime = engineTime.GetElapsed();
 
 				/* Updating the title */
 				engineWindow->SetTitle(int(1 / deltaTime));
