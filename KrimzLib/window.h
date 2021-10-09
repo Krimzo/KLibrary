@@ -30,15 +30,15 @@ namespace kl
 		double deltaTime = 0;
 
 		// Window creation and deletion
-		window (int width, int height, const wchar_t* name, bool resizeable = true, bool opengl = false, std::function<void(void)> openglStart = []() {})
+		window (int width, int height, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false)
 		{
 			// Start a new window thread
-			OpenGLStart = openglStart;
 			std::thread windowThread([&]()
 			{
 				// Saving info
-				bool t_opengl = opengl;
 				std::wstring t_name(name);
+				bool t_continuous = continuous;
+				bool t_opengl = opengl;
 
 				// Define windowapi window class
 				WNDCLASS windowClass = {};
@@ -101,24 +101,52 @@ namespace kl
 				// Window message loop
 				if (t_opengl)
 				{
-					OpenGLStart();
-					while (IsWindow(hwnd))
+					if (t_continuous)
 					{
-						while (PeekMessage(&windowMessage, hwnd, 0, 0, PM_REMOVE))
+						OpenGLStart();
+						while (IsWindow(hwnd))
 						{
-							HandleMessage();
+							while (PeekMessage(&windowMessage, hwnd, 0, 0, PM_REMOVE))
+							{
+								HandleMessage();
+							}
+							OpenGLUpdate();
+							deltaTime = windowTime.GetElapsed();
 						}
-						OpenGLUpdate();
-						deltaTime = windowTime.GetElapsed();
+					}
+					else
+					{
+						OpenGLStart();
+						while (IsWindow(hwnd))
+						{
+							GetMessage(&windowMessage, hwnd, 0, 0);
+							HandleMessage();
+							OpenGLUpdate();
+							deltaTime = windowTime.GetElapsed();
+						}
 					}
 				}
 				else
 				{
-					while (IsWindow(hwnd))
+					if (t_continuous)
 					{
-						GetMessage(&windowMessage, hwnd, 0, 0);
-						HandleMessage();
-						deltaTime = windowTime.GetElapsed();
+						while (IsWindow(hwnd))
+						{
+							while (PeekMessage(&windowMessage, hwnd, 0, 0, PM_REMOVE))
+							{
+								HandleMessage();
+							}
+							deltaTime = windowTime.GetElapsed();
+						}
+					}
+					else
+					{
+						while (IsWindow(hwnd))
+						{
+							GetMessage(&windowMessage, hwnd, 0, 0);
+							HandleMessage();
+							deltaTime = windowTime.GetElapsed();
+						}
 					}
 				}
 

@@ -12,26 +12,41 @@ namespace kl
 		double deltaTime = 0;
 
 		// Outside functions that user defines
-		std::function<void(void)> EngineStart = []() { };
-		std::function<void(char)> EngineInput = [](char input) { };
-		std::function<void(void)> EngineUpdate = []() { };
+		std::function<void(void)> EngineStart = []() {};
+		std::function<void(char)> EngineInput = [](char input) {};
+		std::function<void(void)> EngineUpdate = []() {};
 
-		// Starts the engine
-		void Start()
+		// Creates the engine
+		void Start(int width, int height, std::wstring name)
 		{
-			engineRunning = true;
-			EngineLoop();
+			if (!engineRunning)
+			{
+				engineRunning = true;
+				engineWindow = new window(width, height, name.c_str(), false, true);
+				frameBuffer = bitmap(width, height);
+				EngineLoop();
+			}
 		}
 
-		// Stops the engine
+		// Destroyes the engine
 		void Stop()
 		{
-			engineRunning = false;
+			if (engineRunning)
+			{
+				engineRunning = false;
+				delete engineWindow;
+			}
+		}
+		~engine()
+		{
+			this->Stop();
 		}
 
 	private:
 		// Private variables
 		bool engineRunning = false;
+		window* engineWindow = NULL;
+		bitmap frameBuffer = bitmap(0, 0);
 
 		// Computing object physics 
 		void ObjectPhysics()
@@ -42,7 +57,11 @@ namespace kl
 		// Rendering objects to the screen
 		void ObjectRender()
 		{
+			frameBuffer.FastClear(0);
 
+			
+
+			engineWindow->DisplayBitmap(frameBuffer);
 		}
 
 		// Engine game loop
@@ -55,7 +74,7 @@ namespace kl
 			while (engineRunning)
 			{
 				/* Game input */
-				EngineInput("placeholder"[0]);
+				EngineInput((char)engineWindow->KEY);
 
 				/* Game logic */
 				EngineUpdate();
@@ -67,10 +86,10 @@ namespace kl
 				ObjectRender();
 
 				/* Calculating frame time */
-				//deltaTime = time::GetElapsed();
+				deltaTime = engineWindow->deltaTime;
 
 				/* Updating the title */
-				// window.SetTitle(int(1 / deltaTime));
+				engineWindow->SetTitle(int(1 / deltaTime));
 			}
 		}
 	};

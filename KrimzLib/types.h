@@ -257,6 +257,12 @@ namespace kl
 			std::fill(pixels.begin(), pixels.end(), color);
 		}
 
+		// Resets the byte values
+		void FastClear(byte value)
+		{
+			memset(&pixels[0], value, 4 * pixels.size());
+		}
+
 	private:
 		int width = 0;
 		int height = 0;
