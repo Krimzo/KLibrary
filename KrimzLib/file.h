@@ -5,7 +5,9 @@
 #include <windows.h>
 #include <gdiplus.h>
 #include "KrimzLib/types.h"
+#include "KrimzLib/console.h"
 #pragma comment (lib, "gdiplus.lib")
+
 
 namespace kl
 {
@@ -45,7 +47,7 @@ namespace kl
 			if (!fileStream.is_open())
 			{
 				std::wcout << "Couldn't load text file \"" << filePath << "\"" << std::endl;
-				char iHateWarnings = getchar();
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 			textBuffer << fileStream.rdbuf();
@@ -54,7 +56,13 @@ namespace kl
 		}
 
 		// Writes text to a text file
-		static void WriteText(std::wstring filePath, std::string& data)
+		static void WriteText(std::string& data, std::wstring filePath)
+		{
+			std::ofstream fileStream(filePath);
+			fileStream << data;
+			fileStream.close();
+		}
+		static void WriteText(std::string&& data, std::wstring filePath)
 		{
 			std::ofstream fileStream(filePath);
 			fileStream << data;
@@ -62,13 +70,33 @@ namespace kl
 		}
 
 		// Appends text to a text file
-		static void AppendText(std::wstring filePath, std::string& data, int position = -1)
+		static void AppendText(std::string& data, std::wstring filePath, int position = -1)
 		{
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open())
 			{
 				std::wcout << "Couldn't load text file \"" << filePath << "\"" << std::endl;
-				char iHateWarnings = getchar();
+				kl::console::WaitFor(' ', true);
+				exit(69);
+			}
+			if (position < 0)
+			{
+				fileStream.seekp(0, std::ios_base::end);
+			}
+			else
+			{
+				fileStream.seekp(position);
+			}
+			fileStream << data;
+			fileStream.close();
+		}
+		static void AppendText(std::string&& data, std::wstring filePath, int position = -1)
+		{
+			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
+			if (!fileStream.is_open())
+			{
+				std::wcout << "Couldn't load text file \"" << filePath << "\"" << std::endl;
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 			if (position < 0)
@@ -90,7 +118,7 @@ namespace kl
 			if (!fileStream.is_open())
 			{
 				std::wcout << "Couldn't load file \"" << filePath << "\"" << std::endl;
-				char iHateWarnings = getchar();
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 			fileStream.seekg(0, std::ios::end);
@@ -103,7 +131,13 @@ namespace kl
 		}
 
 		// Writes bytes to a file
-		static void WriteBytes(std::wstring filePath, bytes& data)
+		static void WriteBytes(bytes& data, std::wstring filePath)
+		{
+			std::ofstream fileStream(filePath, std::ios::binary);
+			fileStream.write((char*)&data[0], data.size());
+			fileStream.close();
+		}
+		static void WriteBytes(bytes&& data, std::wstring filePath)
 		{
 			std::ofstream fileStream(filePath, std::ios::binary);
 			fileStream.write((char*)&data[0], data.size());
@@ -111,13 +145,33 @@ namespace kl
 		}
 
 		// Appends bytes to a file
-		static void AppendBytes(std::wstring filePath, bytes& data, int position = -1)
+		static void AppendBytes(bytes& data, std::wstring filePath, int position = -1)
 		{
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open())
 			{
 				std::wcout << "Couldn't load file \"" << filePath << "\"" << std::endl;
-				char iHateWarnings = getchar();
+				kl::console::WaitFor(' ', true);
+				exit(69);
+			}
+			if (position < 0)
+			{
+				fileStream.seekp(0, std::ios_base::end);
+			}
+			else
+			{
+				fileStream.seekp(position);
+			}
+			fileStream.write((char*)&data[0], data.size());
+			fileStream.close();
+		}
+		static void AppendBytes(bytes&& data, std::wstring filePath, int position = -1)
+		{
+			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
+			if (!fileStream.is_open())
+			{
+				std::wcout << "Couldn't load file \"" << filePath << "\"" << std::endl;
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 			if (position < 0)
@@ -146,7 +200,7 @@ namespace kl
 			if (lastBitmapStatus)
 			{
 				std::wcout << "Couldn't load image file \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
-				char iHateWarnings = getchar();
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 

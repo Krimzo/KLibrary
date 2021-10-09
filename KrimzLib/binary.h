@@ -18,6 +18,15 @@ namespace kl
 			}
 			return ss.str();
 		}
+		static std::string ToString(bytes&& b)
+		{
+			std::stringstream ss;
+			for (int i = 0; i < b.size(); i++)
+			{
+				ss << (char)b[i];
+			}
+			return ss.str();
+		}
 
 		// Converts a byte to the hex string
 		static std::string ToHex(byte b)

@@ -48,8 +48,7 @@ namespace kl
 		// Downloads data from the internet and saves it in a file
 		static void DownloadToFile(std::wstring fileUrl, std::wstring fileName)
 		{
-			bytes tempBytes = GetSiteData(fileUrl);
-			file::WriteBytes(fileName, tempBytes);
+			file::WriteBytes(GetSiteData(fileUrl), fileName);
 		}
 	};
 }

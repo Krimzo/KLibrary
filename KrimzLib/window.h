@@ -33,10 +33,12 @@ namespace kl
 		window (int width, int height, const wchar_t* name, bool resizeable = true, bool opengl = false, std::function<void(void)> openglStart = []() {})
 		{
 			// Start a new window thread
+			OpenGLStart = openglStart;
 			std::thread windowThread([&]()
 			{
-				// Saving OpenGL start function
-				OpenGLStart = openglStart;
+				// Saving info
+				bool t_opengl = opengl;
+				std::wstring t_name(name);
 
 				// Define windowapi window class
 				WNDCLASS windowClass = {};
@@ -49,7 +51,7 @@ namespace kl
 				// Create window
 				DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 				RECT adjustedWindowSize = { 0, 0, width, height };
-				AdjustWindowRectEx(&adjustedWindowSize, windowStyle, NULL, NULL);
+				AdjustWindowRect(&adjustedWindowSize, windowStyle, NULL);
 				width = (adjustedWindowSize.right - adjustedWindowSize.left);
 				height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
 				hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - width / 2), (constant::ScreenHeight / 2 - height / 2), width, height, NULL, NULL, hInstance, NULL);
@@ -65,7 +67,7 @@ namespace kl
 				bitmapInfo.bmiHeader.biCompression = BI_RGB;
 
 				// OpenGL setup
-				if (opengl)
+				if (t_opengl)
 				{
 					PIXELFORMATDESCRIPTOR pfd = {
 					sizeof(PIXELFORMATDESCRIPTOR),
@@ -97,7 +99,7 @@ namespace kl
 				}
 
 				// Window message loop
-				if (opengl)
+				if (t_opengl)
 				{
 					OpenGLStart();
 					while (IsWindow(hwnd))
@@ -121,7 +123,7 @@ namespace kl
 				}
 
 				// Memory release
-				if (opengl)
+				if (t_opengl)
 				{
 					OpenGLEnd();
 					wglMakeCurrent(NULL, NULL);
@@ -129,7 +131,7 @@ namespace kl
 					wglDeleteContext(hglrc);
 					hglrc = NULL;
 				}
-				UnregisterClass(name, hInstance);
+				UnregisterClass(t_name.c_str(), hInstance);
 				hdc = NULL;
 				hwnd = NULL;
 				windowCreated = false;
@@ -189,6 +191,12 @@ namespace kl
 
 		// Sets the pixels of the window
 		void DisplayBitmap(bitmap& toDraw, point position = { 0, 0 })
+		{
+			bitmapInfo.bmiHeader.biWidth = toDraw.GetWidth();
+			bitmapInfo.bmiHeader.biHeight = toDraw.GetHeight();
+			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+		}
+		void DisplayBitmap(bitmap&& toDraw, point position = { 0, 0 })
 		{
 			bitmapInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bitmapInfo.bmiHeader.biHeight = toDraw.GetHeight();
