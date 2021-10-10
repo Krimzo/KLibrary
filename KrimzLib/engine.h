@@ -229,9 +229,11 @@ namespace kl
 							double pointU = tr.vertices[0].u * baryRatios.x + tr.vertices[1].u * baryRatios.y + tr.vertices[2].u * baryRatios.z;
 							double pointV = tr.vertices[0].v * baryRatios.x + tr.vertices[1].v * baryRatios.y + tr.vertices[2].v * baryRatios.z;
 							double pointW = tr.vertices[0].w * baryRatios.x + tr.vertices[1].w * baryRatios.y + tr.vertices[2].w * baryRatios.z;
+							pointU /= pointW;
+							pointV /= pointW;
 
 							// Getting the correct texture pixel
-							color pixelColor = tr.texture->GetPixel(int(pointU / pointW), int(pointV / pointW));
+							color pixelColor = tr.texture->GetPixel(int(pointU * tr.texture->GetWidth()), int(pointV * tr.texture->GetHeight()));
 
 							// Apply ambient light
 							pixelColor.r = min(pixelColor.r * ambientLight.r / 255, 255);

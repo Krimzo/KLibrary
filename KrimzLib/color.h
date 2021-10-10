@@ -73,7 +73,7 @@ namespace kl
 			{
 				return pixels[y * size_t(width) + x];
 			}
-			return { 0, 0, 0, 0 };
+			return { 0, 0, 0 };
 		}
 		color* GetPixelData()
 		{
