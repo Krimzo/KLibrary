@@ -12,81 +12,6 @@
 /* --- TYPES --- */
 namespace kl
 {
-	struct vertex
-	{
-		double x = 0;
-		double y = 0;
-		double z = 0;
-		double u = 0;
-		double v = 0;
-		double w = 0;
-		colord color = {};
-
-		// Resizes the vertex
-		void Resize(vec3 size)
-		{
-			x *= size.x;
-			y *= size.y;
-			z *= size.z;
-		}
-
-		// Rotates the vertex
-		void Rotate(vec3 rotation)
-		{
-			// Transforming degrees to radians
-			rotation.x *= constant::toRadians;
-			rotation.y *= constant::toRadians;
-			rotation.z *= constant::toRadians;
-
-			// Rotating
-			vertex tempVertex = { x, y, z };
-			tempVertex.x = x * (cos(rotation.z) * cos(rotation.y)) + y * (cos(rotation.z) * sin(rotation.y) * sin(rotation.x) - sin(rotation.z) * cos(rotation.x)) + z * (cos(rotation.z) * sin(rotation.y) * cos(rotation.x) + sin(rotation.z) * sin(rotation.x));
-			tempVertex.y = x * (sin(rotation.z) * cos(rotation.y)) + y * (sin(rotation.z) * sin(rotation.y) * sin(rotation.x) + cos(rotation.z) * cos(rotation.x)) + z * (sin(rotation.z) * sin(rotation.y) * cos(rotation.x) - cos(rotation.z) * sin(rotation.x));
-			tempVertex.z = x * (-sin(rotation.y)) + y * (cos(rotation.y) * sin(rotation.x)) + z * (cos(rotation.y) * cos(rotation.x));
-			x = tempVertex.x;
-			y = tempVertex.y;
-			z = tempVertex.z;
-		}
-
-		// Translates the vertex
-		void Translate(vec3 translation)
-		{
-			x += translation.x;
-			y += translation.y;
-			z += translation.z;
-		}
-
-		// Transforms the vertex from 3D space to 2D space
-		void ApplyPerspective(double perspectiveChange)
-		{
-			x *= perspectiveChange;
-			y *= perspectiveChange;
-			u *= perspectiveChange;
-			v *= perspectiveChange;
-			w = perspectiveChange;
-		}
-
-		// Fixes the vertex position compared to the screen
-		void ScreenFix(int frameWidth, int frameHeight)
-		{
-			x = x + frameWidth / 2.0f;
-			y = frameHeight / 2.0f - y;
-		}
-	};
-
-	struct triangle
-	{
-		vertex vertices[3] = {};
-
-		bool ContainsPoint(int x, int y)
-		{
-			double d1 = (x - vertices[1].x) * (vertices[0].y - vertices[1].y) - (vertices[0].x - vertices[1].x) * (y - vertices[1].y);
-			double d2 = (x - vertices[2].x) * (vertices[1].y - vertices[2].y) - (vertices[1].x - vertices[2].x) * (y - vertices[2].y);
-			double d3 = (x - vertices[0].x) * (vertices[2].y - vertices[0].y) - (vertices[2].x - vertices[0].x) * (y - vertices[0].y);
-			return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
-		}
-	};
-
 	struct gameobject
 	{
 		std::string name = "";
@@ -101,7 +26,8 @@ namespace kl
 		vec3 angularMo = {};
 	};
 
-	struct camera {
+	struct camera
+	{
 		vec3 position = {};
 		vec3 rotation = {};
 		double fov = 60;
@@ -132,7 +58,9 @@ namespace kl
 		double deltaTime = 0;
 		double gravity = 10;
 		bool useGpu = false;
-		color ambientLight = { 230, 230, 230 };
+		color ambientLight = { 255, 255, 255 };
+		spotlight spotLight = {};
+		byte background = 5;
 
 		// Outside functions that user defines
 		std::function<void(void)> EngineStart = []() {};
@@ -153,7 +81,7 @@ namespace kl
 
 				// Buffers
 				frameBuffer = bitmap(width, height);
-				depthBuffer.resize(size_t(width * height));
+				depthBuffer.resize((size_t)width * (size_t)height);
 				
 				// Start
 				EngineLoop();
@@ -175,7 +103,7 @@ namespace kl
 		}
 
 		// Adds a new game object if the name doesn't already exist
-		gameobject& AddGameObject(std::string objectName)
+		gameobject* NewGameObject(std::string objectName)
 		{
 			for (int i = 0; i < engineObjects.size(); i++)
 			{
@@ -188,11 +116,11 @@ namespace kl
 			}
 			gameobject tempObject = { objectName };
 			engineObjects.push_back(tempObject);
-			return engineObjects.back();
+			return &engineObjects.back();
 		}
 
 		// Removes a game object with the given name
-		void RemoveGameObject(std::string objectName)
+		void DeleteGameObject(std::string objectName)
 		{
 			for (int i = 0; i < engineObjects.size(); i++)
 			{
@@ -208,13 +136,13 @@ namespace kl
 		}
 
 		// Returns a reference to a wanted game object
-		gameobject& GetGameObject(std::string objectName)
+		gameobject* GetGameObject(std::string objectName)
 		{
 			for (int i = 0; i < engineObjects.size(); i++)
 			{
 				if (engineObjects[i].name == objectName)
 				{
-					return engineObjects[i];
+					return &engineObjects[i];
 				}
 			}
 			printf("Game object \"%s\" doesn't exist!\n", objectName.c_str());
@@ -245,7 +173,8 @@ namespace kl
 		{
 			for (int i = 0; i < engineObjects.size(); i++)
 			{
-				if (engineObjects[i].physics) {
+				if (engineObjects[i].physics)
+				{
 					// Applying gravity
 					engineObjects[i].velocity.y -= gravity * engineObjects[i].gravityMulti * deltaTime;
 
@@ -282,22 +211,27 @@ namespace kl
 			int maxY = (int)min(max(tr.vertices[0].y, max(tr.vertices[1].y, tr.vertices[2].y)), engineHeight - 1.0);
 			int minY = (int)max(min(tr.vertices[0].y, min(tr.vertices[1].y, tr.vertices[2].y)), 0.0f);
 
-			kl::thread::ParallelFor(minY, maxY + 1, 4, [&](int y) {
-				for (int x = minX; x <= maxX; x++) {
-					if (tr.ContainsPoint(x, y)) {
+			//thread::ParallelFor(minY, maxY + 1, 4, [&](int y)
+			for(int y = minY; y <= maxY; y++)
+			{
+				for (int x = minX; x <= maxX; x++)
+				{
+					if (tr.ContainsPoint(x, y))
+					{
 						// Calculate 3 bary ratios and world space z
-						vec3 baryRatios = kl::math::CalculateBarycentricRatios(tr, x, y);
+						vec3 baryRatios = math::CalculateBarycentricRatios(tr, x, y);
 						double pointZ = tr.vertices[0].z * baryRatios.x + tr.vertices[1].z * baryRatios.y + tr.vertices[2].z * baryRatios.z;
 
 						// Check if the current point is inside the triangle
-						if (pointZ > 0 && CheckDepthBuffer(x, y, pointZ)) {
+						if (pointZ > 0 && CheckDepthBuffer(x, y, pointZ))
+						{
 							// Calculating u, v and w
 							double pointU = tr.vertices[0].u * baryRatios.x + tr.vertices[1].u * baryRatios.y + tr.vertices[2].u * baryRatios.z;
 							double pointV = tr.vertices[0].v * baryRatios.x + tr.vertices[1].v * baryRatios.y + tr.vertices[2].v * baryRatios.z;
 							double pointW = tr.vertices[0].w * baryRatios.x + tr.vertices[1].w * baryRatios.y + tr.vertices[2].w * baryRatios.z;
 
 							// Getting the correct texture pixel
-							color pixelColor = { 255, 255, 255 };//GetTexturePixel(engineTextures[tr.textureIndex], pointU / pointW, pointV / pointW);
+							color pixelColor = tr.texture->GetPixel(int(pointU / pointW), int(pointV / pointW));
 
 							// Apply ambient light
 							pixelColor.r = min(pixelColor.r * ambientLight.r / 255, 255);
@@ -309,7 +243,7 @@ namespace kl
 						}
 					}
 				}
-			});
+			}
 		}
 
 		// Rendering triangle with GPU
@@ -322,7 +256,7 @@ namespace kl
 		void ObjectRender()
 		{
 			// Clear buffers
-			frameBuffer.FastClear(0);
+			frameBuffer.FastClear(background);
 			memset(&depthBuffer[0], 0, depthBuffer.size() * 8);
 
 			// Render objects to the frame
@@ -381,7 +315,7 @@ namespace kl
 			EngineStart();
 
 			// Needed for time calculations
-			while (engineRunning && IsWindow(engineWindow->GetHWND()))
+			while (engineRunning && engineWindow->GetHWND())
 			{
 				/* Game input */
 				EngineInput((char)engineWindow->KEY);

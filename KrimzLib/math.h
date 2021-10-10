@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-#include "KrimzLib/engine.h"
+#include "KrimzLib/color.h"
 
 
 /* --- TYPES --- */
@@ -153,6 +153,90 @@ namespace kl
 		int Area()
 		{
 			return width * height;
+		}
+	};
+
+	struct vertex
+	{
+		double x = 0;
+		double y = 0;
+		double z = 0;
+		double u = 0;
+		double v = 0;
+		double w = 0;
+		colord color = {};	// For OpenGL
+
+		// Resizes the vertex
+		void Resize(vec3 size)
+		{
+			x *= size.x;
+			y *= size.y;
+			z *= size.z;
+		}
+
+		// Rotates the vertex
+		void Rotate(vec3 rotation)
+		{
+			// Transforming degrees to radians
+			rotation.x *= constant::toRadians;
+			rotation.y *= constant::toRadians;
+			rotation.z *= constant::toRadians;
+
+			// Rotating
+			vertex tempVertex = { x, y, z };
+			tempVertex.x = x * (cos(rotation.z) * cos(rotation.y)) + y * (cos(rotation.z) * sin(rotation.y) * sin(rotation.x) - sin(rotation.z) * cos(rotation.x)) + z * (cos(rotation.z) * sin(rotation.y) * cos(rotation.x) + sin(rotation.z) * sin(rotation.x));
+			tempVertex.y = x * (sin(rotation.z) * cos(rotation.y)) + y * (sin(rotation.z) * sin(rotation.y) * sin(rotation.x) + cos(rotation.z) * cos(rotation.x)) + z * (sin(rotation.z) * sin(rotation.y) * cos(rotation.x) - cos(rotation.z) * sin(rotation.x));
+			tempVertex.z = x * (-sin(rotation.y)) + y * (cos(rotation.y) * sin(rotation.x)) + z * (cos(rotation.y) * cos(rotation.x));
+			x = tempVertex.x;
+			y = tempVertex.y;
+			z = tempVertex.z;
+		}
+
+		// Translates the vertex
+		void Translate(vec3 translation)
+		{
+			x += translation.x;
+			y += translation.y;
+			z += translation.z;
+		}
+
+		// Transforms the vertex from 3D space to 2D space
+		void ApplyPerspective(double perspectiveChange)
+		{
+			x *= perspectiveChange;
+			y *= perspectiveChange;
+			u *= perspectiveChange;
+			v *= perspectiveChange;
+			w = perspectiveChange;
+		}
+
+		// Fixes the vertex position compared to the screen
+		void ScreenFix(int frameWidth, int frameHeight)
+		{
+			x = x + frameWidth / 2.0f;
+			y = frameHeight / 2.0f - y;
+		}
+	};
+
+	struct triangle
+	{
+		vertex vertices[3] = {};
+		bitmap* texture = NULL;
+
+		// Returns true of false respectively if the point is inside the triangle
+		bool ContainsPoint(point pt)
+		{
+			double d1 = (pt.x - vertices[1].x) * (vertices[0].y - vertices[1].y) - (vertices[0].x - vertices[1].x) * (pt.y - vertices[1].y);
+			double d2 = (pt.x - vertices[2].x) * (vertices[1].y - vertices[2].y) - (vertices[1].x - vertices[2].x) * (pt.y - vertices[2].y);
+			double d3 = (pt.x - vertices[0].x) * (vertices[2].y - vertices[0].y) - (vertices[2].x - vertices[0].x) * (pt.y - vertices[0].y);
+			return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
+		}
+		bool ContainsPoint(int x, int y)
+		{
+			double d1 = (x - vertices[1].x) * (vertices[0].y - vertices[1].y) - (vertices[0].x - vertices[1].x) * (y - vertices[1].y);
+			double d2 = (x - vertices[2].x) * (vertices[1].y - vertices[2].y) - (vertices[1].x - vertices[2].x) * (y - vertices[2].y);
+			double d3 = (x - vertices[0].x) * (vertices[2].y - vertices[0].y) - (vertices[2].x - vertices[0].x) * (y - vertices[0].y);
+			return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
 		}
 	};
 }

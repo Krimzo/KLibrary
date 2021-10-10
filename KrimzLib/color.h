@@ -16,7 +16,7 @@ namespace kl
 		// Prints the color to the console
 		void Print() const
 		{
-			std::cout << "r: " << r << " g: " << g << " b: " << b << " a: " << a << '\n';
+			printf("r: %lf g: %lf b: %lf a: %lf\n", r, g, b, a);
 		}
 	};
 
@@ -36,19 +36,22 @@ namespace kl
 		// Prints the color to the console
 		void Print() const
 		{
-			std::cout << "r: " << r << " g: " << g << " b: " << b << " a: " << a << '\n';
+			printf("r: %d g: %d b: %d a: %d\n", r, g, b, a);
 		}
 	};
 
 	struct bitmap
 	{
 	public:
+		std::string name = "";
+
 		// Constructor
-		bitmap(int width, int height)
+		bitmap(int width, int height, color color = { 0, 0, 0, 255 })
 		{
 			this->width = width;
 			this->height = height;
 			pixels.resize(size_t(this->width) * size_t(this->height));
+			FillSolid(color);
 		}
 
 		// Getters
