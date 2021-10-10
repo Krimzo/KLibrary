@@ -1,8 +1,18 @@
 #pragma once
-#include "KrimzLib/types.h"
 #include "KrimzLib/incl/OpenCL/cl.hpp"
 
 
+/* --- TYPES --- */
+namespace kl
+{
+	typedef void* cpumem;
+	typedef cl_mem gpumem;
+	typedef cl_program clprogram;
+	typedef cl_kernel clkernel;
+}
+
+
+/* --- CLASS --- */
 namespace kl
 {
 	class opencl

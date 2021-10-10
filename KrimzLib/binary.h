@@ -3,6 +3,15 @@
 #include <sstream>
 
 
+/* --- TYPES --- */
+namespace kl
+{
+	typedef std::vector<byte> bytes;
+	typedef std::string bits;
+}
+
+
+/* --- CLASS --- */
 namespace kl
 {
 	class binary

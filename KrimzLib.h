@@ -1,6 +1,6 @@
 #pragma once
-#include "KrimzLib/types.h"
-#include "KrimzLib/constants.h"
+#include "KrimzLib/constant.h"
+#include "KrimzLib/color.h"
 #include "KrimzLib/math.h"
 #include "KrimzLib/random.h"
 #include "KrimzLib/time.h"

@@ -6,8 +6,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #include "KrimzLib/incl/OpenGL/glad.h"
-#include "KrimzLib/types.h"
-#include "KrimzLib/constants.h"
+#include "KrimzLib/constant.h"
 
 
 namespace kl

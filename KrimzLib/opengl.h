@@ -1,14 +1,35 @@
 #pragma once
 #include <functional>
 #include <windows.h>
+#include "KrimzLib/engine.h"
 #include "KrimzLib/incl/OpenGL/glad.h"
-#include "KrimzLib/types.h"
 #pragma comment (lib, "opengl32.lib")
 
-// Debug
+
+/* --- DEBUG --- */
 #define ASSERT(x) if (x) __debugbreak();
 #define GLCheckError(x) kl::opengl::debug::ClearErrors(); x; ASSERT(kl::opengl::debug::CheckError(__FILE__, __LINE__))
 
+
+/* --- TYPES --- */
+namespace kl
+{
+	typedef unsigned int id;
+
+	enum class shadertype
+	{
+		NONE = -1, VERTEX = 0, FRAGMENT = 1
+	};
+
+	struct shaderpackage
+	{
+		std::string vertex = "";
+		std::string fragment = "";
+	};
+}
+
+
+/* --- CLASS --- */
 namespace kl
 {
 	class opengl
