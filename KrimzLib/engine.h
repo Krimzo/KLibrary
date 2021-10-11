@@ -72,8 +72,8 @@ namespace kl
 					// Camera setup
 					glMatrixMode(GL_PROJECTION);
 					glLoadIdentity();
-					glFrustum(-1, 1, -1, 1, 1, 40);
-
+					glFrustum(-1, 1, -1, 1, 1.5, 40);
+					
 					// Enable z buffer
 					glEnable(GL_DEPTH_TEST);
 					glDepthFunc(GL_LESS);
