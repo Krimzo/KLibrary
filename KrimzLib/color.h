@@ -22,10 +22,19 @@ namespace kl
 
 	struct color
 	{
-		byte r = 0;
-		byte g = 0;
-		byte b = 0;
-		byte a = 255;
+		/* Had to flip red and blue channels in order to fix StretchDIBits function */
+		byte b;
+		byte g;
+		byte r;
+		byte a;
+
+		color(byte r = 0, byte g = 0, byte b = 0, byte a = 255)
+		{
+			this->r = r;
+			this->g = g;
+			this->b = b;
+			this->a = a;
+		}
 
 		// Returns the color as a float type
 		colord ToDouble() const

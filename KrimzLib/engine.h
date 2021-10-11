@@ -7,6 +7,7 @@
 #include "KrimzLib/console.h"
 #include "KrimzLib/constant.h"
 #include "KrimzLib/math.h"
+#include "KrimzLib/opencl.h"
 
 
 /* --- TYPES --- */
@@ -82,6 +83,13 @@ namespace kl
 				// Buffers
 				frameBuffer = bitmap(width, height);
 				depthBuffer.resize((size_t)width * (size_t)height);
+
+				// GPU stuff
+				opencl::Init();
+				frameBufferGPU = opencl::CreateGpuBuffer(width * height * 4);
+				depthBufferGPU = opencl::CreateGpuBuffer(width * height * 8);
+				renderPogram = opencl::CreateProgram("");
+				renderKernel = opencl::CreateKernel(renderPogram, "RenderKernel");
 				
 				// Start
 				EngineLoop();
@@ -95,6 +103,11 @@ namespace kl
 			{
 				engineRunning = false;
 				delete engineWindow;
+				opencl::Delete(renderKernel);
+				opencl::Delete(renderPogram);
+				opencl::Delete(frameBufferGPU);
+				opencl::Delete(depthBufferGPU);
+				opencl::Uninit();
 			}
 		}
 		~engine()
@@ -168,6 +181,12 @@ namespace kl
 		// Objects
 		std::vector<gameobject> engineObjects = {};
 
+		// GPU stuff
+		gpumem frameBufferGPU = NULL;
+		gpumem depthBufferGPU = NULL;
+		clprogram renderPogram = NULL;
+		clkernel renderKernel = NULL;
+
 		// Computing object physics 
 		void ObjectPhysics()
 		{
@@ -219,7 +238,7 @@ namespace kl
 					if (tr.ContainsPoint(x, y))
 					{
 						// Calculate 3 bary ratios and world space z
-						vec3 baryRatios = math::CalculateBarycentricRatios(tr, x, y);
+						vec3 baryRatios = tr.CalculateBarycentricRatios(x, y);
 						double pointZ = tr.vertices[0].z * baryRatios.x + tr.vertices[1].z * baryRatios.y + tr.vertices[2].z * baryRatios.z;
 
 						// Check if the current point is inside the triangle
@@ -251,7 +270,9 @@ namespace kl
 		// Rendering triangle with GPU
 		void TriangleRenderGPU(triangle& t)
 		{
-
+			//opencl::CpuToGpu();
+			opencl::RunKernel(renderKernel, engineWidth * engineHeight);
+			opencl::GpuToCpu(frameBufferGPU, frameBuffer.GetPixelData(), engineWidth * engineHeight * 4);
 		}
 
 		// Render objects to the screen

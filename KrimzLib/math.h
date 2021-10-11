@@ -238,6 +238,14 @@ namespace kl
 			double d3 = (x - vertices[0].x) * (vertices[2].y - vertices[0].y) - (vertices[2].x - vertices[0].x) * (y - vertices[0].y);
 			return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
 		}
+
+		// Calculates and returns 3 triangle barycentric ratios
+		vec3 CalculateBarycentricRatios(int x, int y)
+		{
+			double baryRatio1 = ((vertices[1].y - vertices[2].y) * (x - vertices[2].x) + (vertices[2].x - vertices[1].x) * (y - vertices[2].y)) / ((vertices[1].y - vertices[2].y) * (vertices[0].x - vertices[2].x) + (vertices[2].x - vertices[1].x) * (vertices[0].y - vertices[2].y));
+			double baryRatio2 = ((vertices[2].y - vertices[0].y) * (x - vertices[2].x) + (vertices[0].x - vertices[2].x) * (y - vertices[2].y)) / ((vertices[1].y - vertices[2].y) * (vertices[0].x - vertices[2].x) + (vertices[2].x - vertices[1].x) * (vertices[0].y - vertices[2].y));
+			return { baryRatio1, baryRatio2,  1 - baryRatio1 - baryRatio2 };
+		}
 	};
 }
 
@@ -252,6 +260,10 @@ namespace kl
 		static double VectorDotProd(vec3 a, vec3 b)
 		{
 			return a.x * b.x + a.y * b.y + a.z * b.z;
+		}
+		static double VectorDotProd(vec2 a, vec2 b)
+		{
+			return a.x * b.x + a.y * b.y;
 		}
 
 		// Returns a cross product of 2 given vectors
@@ -273,20 +285,6 @@ namespace kl
 					return false;
 			}
 			return true;
-		}
-
-		// Calculates and returns 3 triangle barycentric ratios
-		static vec3 CalculateBarycentricRatios(triangle& tr, int x, int y)
-		{
-			double baryRatio1 = ((tr.vertices[1].y - tr.vertices[2].y) * (x - tr.vertices[2].x) + (tr.vertices[2].x - tr.vertices[1].x) * (y - tr.vertices[2].y)) / ((tr.vertices[1].y - tr.vertices[2].y) * (tr.vertices[0].x - tr.vertices[2].x) + (tr.vertices[2].x - tr.vertices[1].x) * (tr.vertices[0].y - tr.vertices[2].y));
-			double baryRatio2 = ((tr.vertices[2].y - tr.vertices[0].y) * (x - tr.vertices[2].x) + (tr.vertices[0].x - tr.vertices[2].x) * (y - tr.vertices[2].y)) / ((tr.vertices[1].y - tr.vertices[2].y) * (tr.vertices[0].x - tr.vertices[2].x) + (tr.vertices[2].x - tr.vertices[1].x) * (tr.vertices[0].y - tr.vertices[2].y));
-			return { baryRatio1, baryRatio2,  1 - baryRatio1 - baryRatio2 };
-		}
-		static vec3 CalculateBarycentricRatios(triangle&& tr, int x, int y)
-		{
-			double baryRatio1 = ((tr.vertices[1].y - tr.vertices[2].y) * (x - tr.vertices[2].x) + (tr.vertices[2].x - tr.vertices[1].x) * (y - tr.vertices[2].y)) / ((tr.vertices[1].y - tr.vertices[2].y) * (tr.vertices[0].x - tr.vertices[2].x) + (tr.vertices[2].x - tr.vertices[1].x) * (tr.vertices[0].y - tr.vertices[2].y));
-			double baryRatio2 = ((tr.vertices[2].y - tr.vertices[0].y) * (x - tr.vertices[2].x) + (tr.vertices[0].x - tr.vertices[2].x) * (y - tr.vertices[2].y)) / ((tr.vertices[1].y - tr.vertices[2].y) * (tr.vertices[0].x - tr.vertices[2].x) + (tr.vertices[2].x - tr.vertices[1].x) * (tr.vertices[0].y - tr.vertices[2].y));
-			return { baryRatio1, baryRatio2,  1 - baryRatio1 - baryRatio2 };
 		}
 	};
 }
