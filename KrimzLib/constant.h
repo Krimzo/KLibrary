@@ -31,7 +31,6 @@ namespace kl
 		const color colorOrange = { 255, 140, 0, 255 };
 		const color colorMagenta = { 153, 0, 153, 255 };
 		const color colorCrimson = { 102, 0, 0, 255 };
-		const color colorSnow = { 255, 255, 255, 255 };
 		const color colorSapphire = { 0, 103, 165, 255 };
 		const color colorWheat = { 245, 222, 179, 255 };
 	}

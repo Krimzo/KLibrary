@@ -4,10 +4,8 @@
 #include "KrimzLib/window.h"
 #include "KrimzLib/time.h"
 #include "KrimzLib/color.h"
-#include "KrimzLib/console.h"
 #include "KrimzLib/constant.h"
-#include "KrimzLib/math.h"
-#include "KrimzLib/opencl.h"
+#include "KrimzLib/opengl.h"
 
 
 /* --- TYPES --- */
@@ -31,20 +29,12 @@ namespace kl
 	{
 		vec3 position = {};
 		vec3 rotation = {};
-		double fov = 60;
-		double windowDistance = 0;
-
-		void CalculateWindowDistance(int frameWidth)
-		{
-			windowDistance = (frameWidth / 2.0) / tan((fov / 2.0) * kl::constant::toRadians);
-		}
 	};
 
 	struct spotlight {
 		color color = {};
 		vec3 position = {};
 		vec3 rotation = {};
-		double fov = 60;
 	};
 }
 
@@ -58,10 +48,8 @@ namespace kl
 		// Engine properties
 		double deltaTime = 0;
 		double gravity = 10;
-		bool useGpu = false;
-		color ambientLight = { 255, 255, 255 };
-		spotlight spotLight = {};
-		byte background = 5;
+		colord background = {};
+		camera engineCamera = {};
 
 		// Outside functions that user defines
 		std::function<void(void)> EngineStart = []() {};
@@ -75,21 +63,55 @@ namespace kl
 			{
 				// Misc
 				engineRunning = true;
-				engineWindow = new window(width, height, name.c_str(), false, true);
+				engineWindow = new window(width, height, name.c_str(), false, true, true);
 				engineWidth = engineWindow->GetWidth();
 				engineHeight = engineWindow->GetHeight();
-				engineCamera.CalculateWindowDistance(engineWidth);
 
-				// Buffers
-				frameBuffer = bitmap(width, height);
-				depthBuffer.resize((size_t)width * (size_t)height);
+				engineWindow->OpenGLStart = [&]()
+				{
+					// Camera setup
+					glMatrixMode(GL_PROJECTION);
+					glLoadIdentity();
+					glFrustum(-1, 1, -1, 1, 1, 40);
 
-				// GPU stuff
-				opencl::Init();
-				frameBufferGPU = opencl::CreateGpuBuffer(width * height * 4);
-				depthBufferGPU = opencl::CreateGpuBuffer(width * height * 8);
-				renderPogram = opencl::CreateProgram("");
-				renderKernel = opencl::CreateKernel(renderPogram, "RenderKernel");
+					// Enable z buffer
+					glEnable(GL_DEPTH_TEST);
+					glDepthFunc(GL_LESS);
+				};
+
+				engineWindow->OpenGLUpdate = [&]()
+				{
+					// Buffer clearing
+					opengl::ClearBuffers(background);
+
+					// Update camera rotation and position
+					glMatrixMode(GL_MODELVIEW);
+					glLoadIdentity();
+					glRotated(engineCamera.rotation.x, 1, 0, 0);
+					glRotated(engineCamera.rotation.y, 0, 1, 0);
+					glRotated(engineCamera.rotation.z, 0, 0, 1);
+					glTranslated(engineCamera.position.x, engineCamera.position.y, engineCamera.position.z);
+
+					// Rendering all game triangles
+					for (int i = 0; i < engineObjects.size(); i++)
+					{
+						if (engineObjects[i].visible)
+						{
+							for (int j = 0; j < engineObjects[i].triangles.size(); j++)
+							{
+								opengl::old::DrawTriangle(engineObjects[i].triangles[j], engineObjects[i].size, engineObjects[i].rotation, engineObjects[i].position);
+							}
+						}
+					}
+
+					// Flipping front and back frame buffers
+					opengl::FlipBuffers(engineWindow->GetHDC());
+				};
+
+				engineWindow->OpenGLEnd = [&]()
+				{
+
+				};
 				
 				// Start
 				EngineLoop();
@@ -103,11 +125,6 @@ namespace kl
 			{
 				engineRunning = false;
 				delete engineWindow;
-				opencl::Delete(renderKernel);
-				opencl::Delete(renderPogram);
-				opencl::Delete(frameBufferGPU);
-				opencl::Delete(depthBufferGPU);
-				opencl::Uninit();
 			}
 		}
 		~engine()
@@ -169,23 +186,12 @@ namespace kl
 		window* engineWindow = NULL;
 		int engineWidth = 0;
 		int engineHeight = 0;
-		camera engineCamera = {};
 
 		// Time
 		time engineTime = kl::time();
 
-		// Buffers
-		bitmap frameBuffer = bitmap(0, 0);
-		std::vector<double> depthBuffer = {};
-
 		// Objects
 		std::vector<gameobject> engineObjects = {};
-
-		// GPU stuff
-		gpumem frameBufferGPU = NULL;
-		gpumem depthBufferGPU = NULL;
-		clprogram renderPogram = NULL;
-		clkernel renderKernel = NULL;
 
 		// Computing object physics 
 		void ObjectPhysics()
@@ -210,127 +216,6 @@ namespace kl
 			}
 		}
 
-		// Checks and updates depth buffer values if necessary
-		bool CheckDepthBuffer(int x, int y, double z)
-		{
-			int location = y * engineWidth + x;
-			if (location >= 0 && location < (engineWidth * engineHeight) && (!depthBuffer[location] || depthBuffer[location] > z))
-			{
-				depthBuffer[location] = z;
-				return true;
-			}
-			return false;
-		}
-
-		// Rendering triangle with CPU
-		void TriangleRenderCPU(triangle& tr)
-		{
-			int maxX = (int)min(max(tr.vertices[0].x, max(tr.vertices[1].x, tr.vertices[2].x)), engineWidth - 1.0);
-			int minX = (int)max(min(tr.vertices[0].x, min(tr.vertices[1].x, tr.vertices[2].x)), 0.0f);
-			int maxY = (int)min(max(tr.vertices[0].y, max(tr.vertices[1].y, tr.vertices[2].y)), engineHeight - 1.0);
-			int minY = (int)max(min(tr.vertices[0].y, min(tr.vertices[1].y, tr.vertices[2].y)), 0.0f);
-
-			//thread::ParallelFor(minY, maxY + 1, 4, [&](int y)
-			for(int y = minY; y <= maxY; y++)
-			{
-				for (int x = minX; x <= maxX; x++)
-				{
-					if (tr.ContainsPoint(x, y))
-					{
-						// Calculate 3 bary ratios and world space z
-						vec3 baryRatios = tr.CalculateBarycentricRatios(x, y);
-						double pointZ = tr.vertices[0].z * baryRatios.x + tr.vertices[1].z * baryRatios.y + tr.vertices[2].z * baryRatios.z;
-
-						// Check if the current point is inside the triangle
-						if (pointZ > 0 && CheckDepthBuffer(x, y, pointZ))
-						{
-							// Calculating u, v and w
-							double pointU = tr.vertices[0].u * baryRatios.x + tr.vertices[1].u * baryRatios.y + tr.vertices[2].u * baryRatios.z;
-							double pointV = tr.vertices[0].v * baryRatios.x + tr.vertices[1].v * baryRatios.y + tr.vertices[2].v * baryRatios.z;
-							double pointW = tr.vertices[0].w * baryRatios.x + tr.vertices[1].w * baryRatios.y + tr.vertices[2].w * baryRatios.z;
-							pointU /= pointW;
-							pointV /= pointW;
-
-							// Getting the correct texture pixel
-							color pixelColor = tr.texture->GetPixel(int(pointU * tr.texture->GetWidth()), int(pointV * tr.texture->GetHeight()));
-
-							// Apply ambient light
-							pixelColor.r = min(pixelColor.r * ambientLight.r / 255, 255);
-							pixelColor.g = min(pixelColor.g * ambientLight.g / 255, 255);
-							pixelColor.b = min(pixelColor.b * ambientLight.b / 255, 255);
-
-							// Writing pixel in the memory
-							frameBuffer.SetPixel(x, y, pixelColor);
-						}
-					}
-				}
-			}
-		}
-
-		// Rendering triangle with GPU
-		void TriangleRenderGPU(triangle& t)
-		{
-			//opencl::CpuToGpu();
-			opencl::RunKernel(renderKernel, engineWidth * engineHeight);
-			opencl::GpuToCpu(frameBufferGPU, frameBuffer.GetPixelData(), engineWidth * engineHeight * 4);
-		}
-
-		// Render objects to the screen
-		void ObjectRender()
-		{
-			// Clear buffers
-			frameBuffer.FastClear(background);
-			memset(&depthBuffer[0], 0, depthBuffer.size() * 8);
-
-			// Render objects to the frame
-			for (int i = 0; i < engineObjects.size(); i++)
-			{
-				if (engineObjects[i].visible)
-				{
-					for (int j = 0; j < engineObjects[i].triangles.size(); j++)
-					{
-						triangle cameraTriangle = engineObjects[i].triangles[j];
-
-						// Compute triangle vertices
-						for (int k = 0; k < 3; k++)
-						{
-							// Resize vertex
-							cameraTriangle.vertices[k].Resize(engineObjects[i].size);
-
-							// Apply vertex rotation
-							cameraTriangle.vertices[k].Rotate(engineObjects[i].rotation);
-
-							// Apply vertex translation
-							cameraTriangle.vertices[k].Translate(engineObjects[i].position);
-
-							// Apply camera translation and rotation
-							cameraTriangle.vertices[k].Translate(engineCamera.position * -1);
-							cameraTriangle.vertices[k].Rotate(engineCamera.rotation * -1);
-
-							// Change the perspective from 3D space to 2D space
-							cameraTriangle.vertices[k].ApplyPerspective(engineCamera.windowDistance / abs(cameraTriangle.vertices[k].z));
-
-							// Center the points on screen
-							cameraTriangle.vertices[k].ScreenFix(engineWidth, engineHeight);
-						}
-
-						// Rendering triangle
-						if (useGpu)
-						{
-							TriangleRenderGPU(cameraTriangle);
-						}
-						else
-						{
-							TriangleRenderCPU(cameraTriangle);
-						}
-					}
-				}
-			}
-			
-			// Display the frame
-			engineWindow->DisplayBitmap(frameBuffer);
-		}
-
 		// Engine game loop
 		void EngineLoop()
 		{
@@ -350,7 +235,7 @@ namespace kl
 				ObjectPhysics();
 
 				/* Rendering */
-				ObjectRender();
+				// is done by OpenGL
 
 				/* Calculating frame time */
 				deltaTime = engineTime.GetElapsed();

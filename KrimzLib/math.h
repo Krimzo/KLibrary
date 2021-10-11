@@ -163,8 +163,7 @@ namespace kl
 		double z = 0;
 		double u = 0;
 		double v = 0;
-		double w = 0;
-		colord color = {};	// For OpenGL
+		colord color = {};
 
 		// Resizes the vertex
 		void Resize(vec3 size)
@@ -207,7 +206,6 @@ namespace kl
 			y *= perspectiveChange;
 			u *= perspectiveChange;
 			v *= perspectiveChange;
-			w = perspectiveChange;
 		}
 
 		// Fixes the vertex position compared to the screen
@@ -221,7 +219,6 @@ namespace kl
 	struct triangle
 	{
 		vertex vertices[3] = {};
-		bitmap* texture = NULL;
 
 		// Returns true of false respectively if the point is inside the triangle
 		bool ContainsPoint(point pt)

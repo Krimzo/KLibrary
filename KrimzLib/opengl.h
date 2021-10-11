@@ -1,7 +1,6 @@
 #pragma once
 #include <functional>
 #include <windows.h>
-#include "KrimzLib/engine.h"
 #include "KrimzLib/incl/OpenGL/glad.h"
 #pragma comment (lib, "opengl32.lib")
 
@@ -59,20 +58,39 @@ namespace kl
 		class old {
 		public:
 			// Draws a triangle on the screen
-			static void DrawTriangle(triangle& tr)
+			static void DrawTriangle(triangle& tr, vec3& size, vec3& rotation, vec3& position, bool useTexture = false)
 			{
 				glBegin(GL_TRIANGLES);
-				for (int i = 0; i < 3; i++)
+				if (useTexture)
 				{
-					glColor3f((float)tr.vertices[i].color.r, (float)tr.vertices[i].color.g, (float)tr.vertices[i].color.b);
-					glVertex3f((float)tr.vertices[i].x, (float)tr.vertices[i].y, (float)tr.vertices[i].z);
+					for (int i = 0; i < 3; i++)
+					{
+						vertex tempVertex = tr.vertices[i];
+						tempVertex.Resize(size);
+						tempVertex.Rotate(rotation);
+						tempVertex.Translate(position);
+						glTexCoord2d(tempVertex.u, tempVertex.v);
+						glVertex3d(tempVertex.x, tempVertex.y, tempVertex.z);
+					}
+				}
+				else
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						vertex tempVertex = tr.vertices[i];
+						tempVertex.Resize(size);
+						tempVertex.Rotate(rotation);
+						tempVertex.Translate(position);
+						glColor3d(tempVertex.color.r, tempVertex.color.g, tempVertex.color.b);
+						glVertex3d(tempVertex.x, tempVertex.y, tempVertex.z);
+					}
 				}
 				glEnd();
 			}
 		};
 
 		// Set the whole screen to a given color
-		static void Clear(colord color = { 0, 0, 0, 1 })
+		static void ClearBuffers(colord color = { 0, 0, 0, 1 })
 		{
 			glClearColor((float)color.r, (float)color.g, (float)color.b, (float)color.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
