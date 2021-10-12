@@ -118,7 +118,11 @@ namespace kl
 		}
 
 		// Prints RGB text
-		static void Print(std::string data, color textColor = constant::colorWhite, bool newLine = false)
+		static void Print(std::string& data, color textColor = constant::colorWhite, bool newLine = false)
+		{
+			printf("\033[38;2;%d;%d;%dm%s%c\033[0m", textColor.r, textColor.g, textColor.b, data.c_str(), newLine ? '\n' : '\0');
+		}
+		static void Print(std::string&& data, color textColor = constant::colorWhite, bool newLine = false)
 		{
 			printf("\033[38;2;%d;%d;%dm%s%c\033[0m", textColor.r, textColor.g, textColor.b, data.c_str(), newLine ? '\n' : '\0');
 		}
