@@ -72,6 +72,9 @@ namespace kl
 				glEnable(GL_DEPTH_TEST);
 				glDepthFunc(GL_LESS);
 
+				/* Enable textures */
+				glEnable(GL_TEXTURE_2D);
+
 				/* Game start function call */
 				EngineStart();
 			};
@@ -103,10 +106,14 @@ namespace kl
 				{
 					if (engineObjects[i].visible)
 					{
+						glBindTexture(GL_TEXTURE_2D, engineObjects[i].triangles[0].texture);
+						glBegin(GL_TRIANGLES);
+						glColor3d(1, 1, 1);
 						for (int j = 0; j < engineObjects[i].triangles.size(); j++)
 						{
 							opengl::old::DrawTriangle(engineObjects[i].triangles[j], engineObjects[i].size, engineObjects[i].rotation, engineObjects[i].position);
 						}
+						glEnd();
 					}
 				}
 

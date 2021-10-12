@@ -64,10 +64,6 @@ namespace kl
 			{
 				if (tr.textured)
 				{
-					glEnable(GL_TEXTURE_2D);
-					glBindTexture(GL_TEXTURE_2D, tr.texture);
-					glBegin(GL_TRIANGLES);
-					glColor3d(1, 1, 1);
 					for (int i = 0; i < 3; i++)
 					{
 						vertex tempVertex = tr.vertices[i];
@@ -77,12 +73,9 @@ namespace kl
 						glTexCoord2d(tempVertex.u, tempVertex.v);
 						glVertex3d(tempVertex.x, tempVertex.y, tempVertex.z);
 					}
-					glEnd();
-					glDisable(GL_TEXTURE_2D);
 				}
 				else
 				{
-					glBegin(GL_TRIANGLES);
 					for (int i = 0; i < 3; i++)
 					{
 						vertex tempVertex = tr.vertices[i];
@@ -92,7 +85,6 @@ namespace kl
 						glColor3d(tempVertex.color.r, tempVertex.color.g, tempVertex.color.b);
 						glVertex3d(tempVertex.x, tempVertex.y, tempVertex.z);
 					}
-					glEnd();
 				}
 				
 			}
