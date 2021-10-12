@@ -52,25 +52,23 @@ namespace kl
 	struct bitmap
 	{
 	public:
-		std::string name = "";
-
 		// Constructor
-		bitmap(int width, int height, color color = { 0, 0, 0, 255 })
+		bitmap(int width, int height)
 		{
 			this->width = width;
 			this->height = height;
-			pixels.resize(size_t(this->width) * size_t(this->height));
-			FillSolid(color);
+			for (int i = 0; i < width * height; i++)
+				pixels.push_back({ 0, 0, 0, 255 });
 		}
 
 		// Getters
 		int GetWidth()
 		{
-			return this->width;
+			return width;
 		}
 		int GetHeight()
 		{
-			return this->height;
+			return height;
 		}
 		size_t GetSize()
 		{
@@ -86,7 +84,7 @@ namespace kl
 		}
 		color* GetPixelData()
 		{
-			return &this->pixels[0];
+			return &pixels[0];
 		}
 
 		// Setters

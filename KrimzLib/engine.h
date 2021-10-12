@@ -59,82 +59,77 @@ namespace kl
 		std::function<void(void)> EngineUpdate = []() {};
 
 		// Creates the engine
-		void Start(int width, int height, std::wstring name, double fov = 60)
+		void Start(int width, int height, const wchar_t* name, double fov = 60)
 		{
-			if (!engineRunning)
+			engineWindow.WindowStart = [&]()
 			{
-				// Misc
-				engineRunning = true;
-				engineWindow = new window(width, height, name.c_str(), false, true, true);
-				engineWidth = engineWindow->GetWidth();
-				engineHeight = engineWindow->GetHeight();
+				/* Camera setup */
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				gluPerspective(fov, (double)engineWindow.GetWidth() / engineWindow.GetHeight(), 0.01, 100.0);
 
-				engineWindow->OpenGLStart = [&]()
+				/* Enable z buffer */
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GL_LESS);
+
+				/* Game start function call */
+				EngineStart();
+			};
+
+			engineWindow.WindowUpdate = [&]()
+			{
+				/* Game input */
+				EngineInput((char)engineWindow.KEY);
+
+				/* Game logic */
+				EngineUpdate();
+
+				/* Applying physics */
+				ObjectPhysics();
+
+				/* Buffer clearing */
+				opengl::ClearBuffers(background);
+
+				/* Update camera rotation and position */
+				glMatrixMode(GL_MODELVIEW);
+				glLoadIdentity();
+				glRotated(engineCamera.rotation.x, 1, 0, 0);
+				glRotated(engineCamera.rotation.y, 0, 1, 0);
+				glRotated(engineCamera.rotation.z, 0, 0, 1);
+				glTranslated(engineCamera.position.x, engineCamera.position.y, engineCamera.position.z);
+
+				/* Rendering all game triangles */
+				for (int i = 0; i < engineObjects.size(); i++)
 				{
-					// Camera setup
-					glMatrixMode(GL_PROJECTION);
-					glLoadIdentity();
-					gluPerspective(fov, (double)engineWidth / engineHeight, 0.01, 100.0);
-
-					// Enable z buffer
-					glEnable(GL_DEPTH_TEST);
-					glDepthFunc(GL_LESS);
-				};
-
-				engineWindow->OpenGLUpdate = [&]()
-				{
-					// Handle texture creation/destruction
-					if (createTexture)
+					if (engineObjects[i].visible)
 					{
-						id createdID;
-						glGenTextures(1, &createdID);
-						glBindTexture(GL_TEXTURE_2D, createdID);
-						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tempTextureWidth, tempTextureHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, tempTextureData);
-						glGenerateMipmap(GL_TEXTURE_2D);
-						tempTextureID = createdID;
-						createTexture = false;
-					}
-
-					// Buffer clearing
-					opengl::ClearBuffers(background);
-
-					// Update camera rotation and position
-					glMatrixMode(GL_MODELVIEW);
-					glLoadIdentity();
-					glRotated(engineCamera.rotation.x, 1, 0, 0);
-					glRotated(engineCamera.rotation.y, 0, 1, 0);
-					glRotated(engineCamera.rotation.z, 0, 0, 1);
-					glTranslated(engineCamera.position.x, engineCamera.position.y, engineCamera.position.z);
-
-					// Rendering all game triangles
-					for (int i = 0; i < engineObjects.size(); i++)
-					{
-						if (engineObjects[i].visible)
+						for (int j = 0; j < engineObjects[i].triangles.size(); j++)
 						{
-							for (int j = 0; j < engineObjects[i].triangles.size(); j++)
-							{
-								opengl::old::DrawTriangle(engineObjects[i].triangles[j], engineObjects[i].size, engineObjects[i].rotation, engineObjects[i].position);
-							}
+							opengl::old::DrawTriangle(engineObjects[i].triangles[j], engineObjects[i].size, engineObjects[i].rotation, engineObjects[i].position);
 						}
 					}
+				}
 
-					// Flipping front and back frame buffers
-					opengl::FlipBuffers(engineWindow->GetHDC());
-				};
-				
-				// Start
-				EngineLoop();
-			}
+				/* Flipping front and back frame buffers */
+				opengl::FlipBuffers(engineWindow.GetHDC());
+
+				/* Delta time calculation */
+				deltaTime = engineTime.GetElapsed();
+
+				/* Displaying the FPS */
+				engineWindow.SetTitle(int(1 / deltaTime));
+			};
+
+			engineWindow.WindowEnd = [&]()
+			{
+
+			};
+
+			engineWindow.Start(width, height, name, false, true, true);
 		}
-
-		// Destroyes the engine
 		void Stop()
 		{
-			if (engineRunning)
-			{
-				engineRunning = false;
-				delete engineWindow;
-			}
+			engineWindow.Stop();
 		}
 		~engine()
 		{
@@ -247,7 +242,8 @@ namespace kl
 					uvCoords[fileTriangles[i][0].y].x,
 					uvCoords[fileTriangles[i][0].y].y
 					},
-					{ xyzCoords[fileTriangles[i][1].x].x,
+					{
+					xyzCoords[fileTriangles[i][1].x].x,
 					xyzCoords[fileTriangles[i][1].x].y,
 					xyzCoords[fileTriangles[i][1].x].z,
 					uvCoords[fileTriangles[i][1].y].x,
@@ -302,42 +298,32 @@ namespace kl
 		// Adds a new texture to the engine memory
 		id NewTexture(bitmap& textureData)
 		{
-			tempTextureWidth = textureData.GetWidth();
-			tempTextureHeight = textureData.GetHeight();
-			tempTextureData = textureData.GetPixelData();
-			createTexture = true;
-			while (createTexture);
-			return tempTextureID;
+			id createdID = 0;
+			glGenTextures(1, &createdID);
+			glBindTexture(GL_TEXTURE_2D, createdID);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.GetWidth(), textureData.GetHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, textureData.GetPixelData());
+			glGenerateMipmap(GL_TEXTURE_2D);
+			return createdID;
 		}
 		id NewTexture(bitmap&& textureData)
 		{
-			tempTextureWidth = textureData.GetWidth();
-			tempTextureHeight = textureData.GetHeight();
-			tempTextureData = textureData.GetPixelData();
-			createTexture = true;
-			while (createTexture);
-			return tempTextureID;
+			id createdID = 0;
+			glGenTextures(1, &createdID);
+			glBindTexture(GL_TEXTURE_2D, createdID);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.GetWidth(), textureData.GetHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, textureData.GetPixelData());
+			glGenerateMipmap(GL_TEXTURE_2D);
+			return createdID;
 		}
 
 	private:
 		// Misc
-		bool engineRunning = false;
-		window* engineWindow = NULL;
-		int engineWidth = 0;
-		int engineHeight = 0;
+		window engineWindow = window();
 
 		// Time
 		time engineTime = time();
 
 		// Objects
 		std::vector<gameobject> engineObjects = {};
-
-		// Textures
-		bool createTexture = false;
-		int tempTextureWidth = 0;
-		int tempTextureHeight = 0;
-		color* tempTextureData = NULL;
-		id tempTextureID = 0;
 
 		// Computing object physics 
 		void ObjectPhysics()
@@ -359,29 +345,6 @@ namespace kl
 					engineObjects[i].rotation.y += engineObjects[i].angularMo.y * deltaTime;
 					engineObjects[i].rotation.z += engineObjects[i].angularMo.z * deltaTime;
 				}
-			}
-		}
-
-		// Engine game loop
-		void EngineLoop()
-		{
-			EngineStart();
-			while (engineRunning && engineWindow->GetHWND())
-			{
-				/* Game input */
-				EngineInput((char)engineWindow->KEY);
-
-				/* Game logic */
-				EngineUpdate();
-
-				/* Applying physics */
-				ObjectPhysics();
-
-				// Delta time calculation
-				deltaTime = engineTime.GetElapsed();
-
-				// Displaying the FPS
-				engineWindow->SetTitle(int(1 / engineWindow->deltaTime));
 			}
 		}
 	};
