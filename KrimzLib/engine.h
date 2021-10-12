@@ -1,5 +1,7 @@
 #pragma once
 #include <functional>
+#include <string>
+#include <sstream>
 #include <windows.h>
 #include "KrimzLib/window.h"
 #include "KrimzLib/time.h"
@@ -57,7 +59,7 @@ namespace kl
 		std::function<void(void)> EngineUpdate = []() {};
 
 		// Creates the engine
-		void Start(int width, int height, std::wstring name)
+		void Start(int width, int height, std::wstring name, double fov = 60)
 		{
 			if (!engineRunning)
 			{
@@ -72,8 +74,8 @@ namespace kl
 					// Camera setup
 					glMatrixMode(GL_PROJECTION);
 					glLoadIdentity();
-					glFrustum(-1, 1, -1, 1, 1.5, 40);
-					
+					gluPerspective(fov, (double)engineWidth / engineHeight, 0.01, 100.0);
+
 					// Enable z buffer
 					glEnable(GL_DEPTH_TEST);
 					glDepthFunc(GL_LESS);
@@ -89,6 +91,7 @@ namespace kl
 						glBindTexture(GL_TEXTURE_2D, createdID);
 						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tempTextureWidth, tempTextureHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, tempTextureData);
 						glGenerateMipmap(GL_TEXTURE_2D);
+						tempTextureID = createdID;
 						createTexture = false;
 					}
 
@@ -151,6 +154,117 @@ namespace kl
 				}
 			}
 			engineObjects.push_back({ objectName });
+			return &engineObjects.back();
+		}
+		gameobject* NewGameObject(std::string objectName, std::wstring filePath, id textureID)
+		{
+			for (int i = 0; i < engineObjects.size(); i++)
+			{
+				if (engineObjects[i].name == objectName)
+				{
+					printf("Game object \"%s\" already exists!\n", objectName.c_str());
+					console::WaitFor(' ', true);
+					exit(69);
+				}
+			}
+
+			// Load file
+			std::stringstream ss = std::stringstream(file::ReadText(filePath));
+
+			// Parse object data
+			std::string fileLine;
+			std::vector<vec3> xyzCoords;
+			std::vector<vec2> uvCoords;
+			std::vector<std::vector<point>> fileTriangles;
+			while (std::getline(ss, fileLine)) {
+				std::istringstream iss(fileLine);
+				std::string linePart;
+				iss >> linePart;
+				if (linePart == "v") {
+					vec3 tempVertex;
+					int counter = 0;
+					while (iss) {
+						iss >> linePart;
+						if (counter == 0) {
+							tempVertex.x = stod(linePart);
+						}
+						else if (counter == 1) {
+							tempVertex.y = stod(linePart);
+						}
+						else if (counter == 2) {
+							tempVertex.z = stod(linePart);
+						}
+						counter++;
+					}
+					xyzCoords.push_back(tempVertex);
+				}
+				else if (linePart == "vt") {
+					vec2 tempVertex;
+					int counter = 0;
+					while (iss) {
+						iss >> linePart;
+						if (counter == 0) {
+							tempVertex.x = stod(linePart);
+						}
+						else if (counter == 1) {
+							tempVertex.y = stod(linePart);
+						}
+						counter++;
+					}
+					uvCoords.push_back(tempVertex);
+				}
+				else if (linePart == "f") {
+					std::vector<point> tempTriangle(3);
+					int vertexCounter = 0;
+					while (iss && vertexCounter < 3) {
+						iss >> linePart;
+						for (int i = 0; i < 2; i++) {
+							size_t slashPosition = linePart.find('/');
+							std::string dataAsString = linePart.substr(0, slashPosition);
+							if (i == 0) {
+								tempTriangle[vertexCounter].x = stoi(dataAsString) - 1;
+							}
+							else if (i == 1) {
+								tempTriangle[vertexCounter].y = stoi(dataAsString) - 1;
+							}
+							linePart = linePart.substr(slashPosition + 1);
+						}
+						vertexCounter++;
+					}
+					fileTriangles.push_back(tempTriangle);
+				}
+			}
+
+			// Create the game object with data
+			gameobject tempObject = { objectName };
+			for (int i = 0; i < fileTriangles.size(); i++)
+			{
+				tempObject.triangles.push_back({{
+					{
+					xyzCoords[fileTriangles[i][0].x].x,
+					xyzCoords[fileTriangles[i][0].x].y,
+					xyzCoords[fileTriangles[i][0].x].z,
+					uvCoords[fileTriangles[i][0].y].x,
+					uvCoords[fileTriangles[i][0].y].y
+					},
+					{ xyzCoords[fileTriangles[i][1].x].x,
+					xyzCoords[fileTriangles[i][1].x].y,
+					xyzCoords[fileTriangles[i][1].x].z,
+					uvCoords[fileTriangles[i][1].y].x,
+					uvCoords[fileTriangles[i][1].y].y
+					},
+					{
+					xyzCoords[fileTriangles[i][2].x].x,
+					xyzCoords[fileTriangles[i][2].x].y,
+					xyzCoords[fileTriangles[i][2].x].z,
+					uvCoords[fileTriangles[i][2].y].x,
+					uvCoords[fileTriangles[i][2].y].y
+					}
+				}, true, textureID });
+			}
+			
+			// Load the game object to the engine
+			engineObjects.push_back(tempObject);
 			return &engineObjects.back();
 		}
 

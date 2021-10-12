@@ -2,7 +2,9 @@
 #include <functional>
 #include <windows.h>
 #include "KrimzLib/incl/OpenGL/glad.h"
+#include <gl/GLU.h>
 #pragma comment (lib, "opengl32.lib")
+#pragma comment (lib, "glu32.lib")
 
 
 /* --- DEBUG --- */
@@ -63,9 +65,9 @@ namespace kl
 				if (tr.textured)
 				{
 					glEnable(GL_TEXTURE_2D);
+					glBindTexture(GL_TEXTURE_2D, tr.texture);
 					glBegin(GL_TRIANGLES);
 					glColor3d(1, 1, 1);
-					glBindTexture(GL_TEXTURE_2D, tr.texture);
 					for (int i = 0; i < 3; i++)
 					{
 						vertex tempVertex = tr.vertices[i];
