@@ -212,6 +212,7 @@ namespace kl
 	{
 		vertex vertices[3] = {};
 		bool textured = false;
+		unsigned int texture = 0;
 
 		// Returns true of false respectively if the point is inside the triangle
 		bool ContainsPoint(point pt)

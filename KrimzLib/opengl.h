@@ -58,11 +58,14 @@ namespace kl
 		class old {
 		public:
 			// Draws a triangle on the screen
-			static void DrawTriangle(triangle& tr, vec3& size, vec3& rotation, vec3& position, bool useTexture = false)
+			static void DrawTriangle(triangle& tr, vec3& size, vec3& rotation, vec3& position)
 			{
-				glBegin(GL_TRIANGLES);
-				if (useTexture)
+				if (tr.textured)
 				{
+					glEnable(GL_TEXTURE_2D);
+					glBegin(GL_TRIANGLES);
+					glColor3d(1, 1, 1);
+					glBindTexture(GL_TEXTURE_2D, tr.texture);
 					for (int i = 0; i < 3; i++)
 					{
 						vertex tempVertex = tr.vertices[i];
@@ -72,9 +75,12 @@ namespace kl
 						glTexCoord2d(tempVertex.u, tempVertex.v);
 						glVertex3d(tempVertex.x, tempVertex.y, tempVertex.z);
 					}
+					glEnd();
+					glDisable(GL_TEXTURE_2D);
 				}
 				else
 				{
+					glBegin(GL_TRIANGLES);
 					for (int i = 0; i < 3; i++)
 					{
 						vertex tempVertex = tr.vertices[i];
@@ -84,8 +90,9 @@ namespace kl
 						glColor3d(tempVertex.color.r, tempVertex.color.g, tempVertex.color.b);
 						glVertex3d(tempVertex.x, tempVertex.y, tempVertex.z);
 					}
+					glEnd();
 				}
-				glEnd();
+				
 			}
 		};
 

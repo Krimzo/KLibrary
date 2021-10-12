@@ -52,6 +52,7 @@ namespace kl
 		camera engineCamera = {};
 
 		// Outside functions that user defines
+		std::function<void(void)> EngineStart = []() {};
 		std::function<void(char)> EngineInput = [](char input) {};
 		std::function<void(void)> EngineUpdate = []() {};
 
@@ -80,6 +81,17 @@ namespace kl
 
 				engineWindow->OpenGLUpdate = [&]()
 				{
+					// Handle texture creation/destruction
+					if (createTexture)
+					{
+						id createdID;
+						glGenTextures(1, &createdID);
+						glBindTexture(GL_TEXTURE_2D, createdID);
+						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tempTextureWidth, tempTextureHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, tempTextureData);
+						glGenerateMipmap(GL_TEXTURE_2D);
+						createTexture = false;
+					}
+
 					// Buffer clearing
 					opengl::ClearBuffers(background);
 
@@ -138,8 +150,7 @@ namespace kl
 					exit(69);
 				}
 			}
-			gameobject tempObject = { objectName };
-			engineObjects.push_back(tempObject);
+			engineObjects.push_back({ objectName });
 			return &engineObjects.back();
 		}
 
@@ -174,6 +185,26 @@ namespace kl
 			exit(69);
 		}
 
+		// Adds a new texture to the engine memory
+		id NewTexture(bitmap& textureData)
+		{
+			tempTextureWidth = textureData.GetWidth();
+			tempTextureHeight = textureData.GetHeight();
+			tempTextureData = textureData.GetPixelData();
+			createTexture = true;
+			while (createTexture);
+			return tempTextureID;
+		}
+		id NewTexture(bitmap&& textureData)
+		{
+			tempTextureWidth = textureData.GetWidth();
+			tempTextureHeight = textureData.GetHeight();
+			tempTextureData = textureData.GetPixelData();
+			createTexture = true;
+			while (createTexture);
+			return tempTextureID;
+		}
+
 	private:
 		// Misc
 		bool engineRunning = false;
@@ -186,6 +217,13 @@ namespace kl
 
 		// Objects
 		std::vector<gameobject> engineObjects = {};
+
+		// Textures
+		bool createTexture = false;
+		int tempTextureWidth = 0;
+		int tempTextureHeight = 0;
+		color* tempTextureData = NULL;
+		id tempTextureID = 0;
 
 		// Computing object physics 
 		void ObjectPhysics()
@@ -213,6 +251,7 @@ namespace kl
 		// Engine game loop
 		void EngineLoop()
 		{
+			EngineStart();
 			while (engineRunning && engineWindow->GetHWND())
 			{
 				/* Game input */
