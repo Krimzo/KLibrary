@@ -19,6 +19,7 @@ namespace kl
 		bool LMB = false;
 		bool RMB = false;
 		point MOUSE = {};
+		double deltaTime = 0;
 
 		// OpenGL calls
 		std::function<void(void)> OpenGLStart = []() {};
@@ -107,6 +108,7 @@ namespace kl
 								HandleMessage();
 							}
 							OpenGLUpdate();
+							deltaTime = engineTime.GetElapsed();
 						}
 					}
 					else
@@ -117,6 +119,7 @@ namespace kl
 							GetMessage(&windowMessage, hwnd, 0, 0);
 							HandleMessage();
 							OpenGLUpdate();
+							deltaTime = engineTime.GetElapsed();
 						}
 					}
 				}
@@ -130,6 +133,7 @@ namespace kl
 							{
 								HandleMessage();
 							}
+							deltaTime = engineTime.GetElapsed();
 						}
 					}
 					else
@@ -138,6 +142,7 @@ namespace kl
 						{
 							GetMessage(&windowMessage, hwnd, 0, 0);
 							HandleMessage();
+							deltaTime = engineTime.GetElapsed();
 						}
 					}
 				}
@@ -234,6 +239,9 @@ namespace kl
 
 		// OpenGL properties
 		HGLRC hglrc = NULL;
+
+		// Time
+		time engineTime = time();
 
 		// Handles the windows message
 		void HandleMessage()

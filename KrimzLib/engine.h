@@ -52,7 +52,6 @@ namespace kl
 		camera engineCamera = {};
 
 		// Outside functions that user defines
-		std::function<void(void)> EngineStart = []() {};
 		std::function<void(char)> EngineInput = [](char input) {};
 		std::function<void(void)> EngineUpdate = []() {};
 
@@ -106,11 +105,6 @@ namespace kl
 
 					// Flipping front and back frame buffers
 					opengl::FlipBuffers(engineWindow->GetHDC());
-				};
-
-				engineWindow->OpenGLEnd = [&]()
-				{
-
 				};
 				
 				// Start
@@ -188,7 +182,7 @@ namespace kl
 		int engineHeight = 0;
 
 		// Time
-		time engineTime = kl::time();
+		time engineTime = time();
 
 		// Objects
 		std::vector<gameobject> engineObjects = {};
@@ -219,10 +213,6 @@ namespace kl
 		// Engine game loop
 		void EngineLoop()
 		{
-			// One call before engine start
-			EngineStart();
-
-			// Needed for time calculations
 			while (engineRunning && engineWindow->GetHWND())
 			{
 				/* Game input */
@@ -234,14 +224,11 @@ namespace kl
 				/* Applying physics */
 				ObjectPhysics();
 
-				/* Rendering */
-				// is done by OpenGL
-
-				/* Calculating frame time */
+				// Delta time calculation
 				deltaTime = engineTime.GetElapsed();
 
-				/* Updating the title */
-				engineWindow->SetTitle(int(1 / deltaTime));
+				// Displaying the FPS
+				engineWindow->SetTitle(int(1 / engineWindow->deltaTime));
 			}
 		}
 	};
