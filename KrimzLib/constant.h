@@ -13,9 +13,9 @@ namespace kl
 		const int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 		// Doubles
-		const double pi = 3.141592653589f;
-		const double toRadians = pi / 180.0f;
-		const double toDegrees = 180.0f / pi;
+		const double pi = 3.14159265358979;
+		const double toRadians = pi / 180;
+		const double toDegrees = 180 / pi;
 
 		// Colors
 		const color colorBlack = { 0, 0, 0, 255 };

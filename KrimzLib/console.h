@@ -17,6 +17,12 @@ namespace kl
 			SetConsoleTitleA(text.c_str());
 		}
 
+		// Deletes the console
+		static void Delete()
+		{
+			FreeConsole();
+		}
+
 		// Hides the console cursor
 		static void HideCursor()
 		{

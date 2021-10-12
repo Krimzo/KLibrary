@@ -181,14 +181,22 @@ namespace kl
 			rotation.y *= constant::toRadians;
 			rotation.z *= constant::toRadians;
 
+			// Calculating trig function only once to gain performance
+			double sinx = sin(rotation.x);
+			double cosx = cos(rotation.x);
+			double siny = sin(rotation.y);
+			double cosy = cos(rotation.y);
+			double sinz = sin(rotation.z);
+			double cosz = cos(rotation.z);
+
 			// Rotating
-			vertex tempVertex = { x, y, z };
-			tempVertex.x = x * (cos(rotation.z) * cos(rotation.y)) + y * (cos(rotation.z) * sin(rotation.y) * sin(rotation.x) - sin(rotation.z) * cos(rotation.x)) + z * (cos(rotation.z) * sin(rotation.y) * cos(rotation.x) + sin(rotation.z) * sin(rotation.x));
-			tempVertex.y = x * (sin(rotation.z) * cos(rotation.y)) + y * (sin(rotation.z) * sin(rotation.y) * sin(rotation.x) + cos(rotation.z) * cos(rotation.x)) + z * (sin(rotation.z) * sin(rotation.y) * cos(rotation.x) - cos(rotation.z) * sin(rotation.x));
-			tempVertex.z = x * (-sin(rotation.y)) + y * (cos(rotation.y) * sin(rotation.x)) + z * (cos(rotation.y) * cos(rotation.x));
-			x = tempVertex.x;
-			y = tempVertex.y;
-			z = tempVertex.z;
+			vec3 tempPoint;
+			tempPoint.x = x * (cosz * cosy) + y * (cosz * siny * sinx - sinz * cosx) + z * (cosz * siny * cosx + sinz * sinx);
+			tempPoint.y = x * (sinz * cosy) + y * (sinz * siny * sinx + cosz * cosx) + z * (sinz * siny * cosx - cosz * sinx);
+			tempPoint.z = x * (-siny) + y * (cosy * sinx) + z * (cosy * cosx);
+			x = tempPoint.x;
+			y = tempPoint.y;
+			z = tempPoint.z;
 		}
 
 		// Translates the vertex
@@ -198,27 +206,12 @@ namespace kl
 			y += translation.y;
 			z += translation.z;
 		}
-
-		// Transforms the vertex from 3D space to 2D space
-		void ApplyPerspective(double perspectiveChange)
-		{
-			x *= perspectiveChange;
-			y *= perspectiveChange;
-			u *= perspectiveChange;
-			v *= perspectiveChange;
-		}
-
-		// Fixes the vertex position compared to the screen
-		void ScreenFix(int frameWidth, int frameHeight)
-		{
-			x = x + frameWidth / 2.0f;
-			y = frameHeight / 2.0f - y;
-		}
 	};
 
 	struct triangle
 	{
 		vertex vertices[3] = {};
+		bool textured = false;
 
 		// Returns true of false respectively if the point is inside the triangle
 		bool ContainsPoint(point pt)
@@ -274,7 +267,7 @@ namespace kl
 		{
 			if (num == 0 || num == 1)
 				return false;
-			
+
 			size_t half = num / 2;
 			for (size_t i = 2; i <= half; i++)
 			{

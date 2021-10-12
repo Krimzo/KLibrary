@@ -7,23 +7,18 @@ namespace kl
 	class time
 	{
 	public:
-		// Constructor
-		time()
-		{
-			QueryPerformanceCounter(&counterLast);
-		}
-
 		// Loads the current pc frequency
 		static void LoadPCFrequency()
 		{
-			QueryPerformanceFrequency(&counterStaticLast);
-			PCFrequency = double(counterStaticLast.QuadPart);
-			QueryPerformanceCounter(&counterStaticLast);
+			LARGE_INTEGER counterTempFreq;
+			QueryPerformanceFrequency(&counterTempFreq);
+			PCFrequency = double(counterTempFreq.QuadPart);
 		}
 
 		// Returns a time since the the last static GetElapsed call
 		static double GetStaticElapsed()
 		{
+			static LARGE_INTEGER counterStaticNow, counterStaticLast;
 			QueryPerformanceCounter(&counterStaticNow);
 			double time = (counterStaticNow.QuadPart - counterStaticLast.QuadPart) / PCFrequency;
 			counterStaticLast = counterStaticNow;
@@ -39,14 +34,29 @@ namespace kl
 			return time;
 		}
 
+		// Sleeps for the given time
+		static void SleepSeconds(double time)
+		{
+			static LARGE_INTEGER sleepCounterStart, sleepCounter;
+			QueryPerformanceCounter(&sleepCounterStart);
+			do {
+				QueryPerformanceCounter(&sleepCounter);
+			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < time);
+		}
+		static void SleepMiliseconds(double time)
+		{
+			time /= 1000;
+			static LARGE_INTEGER sleepCounterStart, sleepCounter;
+			QueryPerformanceCounter(&sleepCounterStart);
+			do {
+				QueryPerformanceCounter(&sleepCounter);
+			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < time);
+		}
+
 	private:
-		static LARGE_INTEGER counterStaticNow;
-		static LARGE_INTEGER counterStaticLast;
 		static double PCFrequency;
 		LARGE_INTEGER counterNow = {};
 		LARGE_INTEGER counterLast = {};
 	};
-	LARGE_INTEGER time::counterStaticNow = {};
-	LARGE_INTEGER time::counterStaticLast = {};
 	double time::PCFrequency = 0;
 }
