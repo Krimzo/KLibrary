@@ -175,55 +175,69 @@ namespace kl
 			std::vector<vec3> xyzCoords;
 			std::vector<vec2> uvCoords;
 			std::vector<std::vector<point>> fileTriangles;
-			while (std::getline(ss, fileLine)) {
+			while (std::getline(ss, fileLine))
+			{
 				std::istringstream iss(fileLine);
 				std::string linePart;
 				iss >> linePart;
-				if (linePart == "v") {
+				if (linePart == "v")
+				{
 					vec3 tempVertex;
-					int counter = 0;
+					int spaceCoordCounter = 0;
 					while (iss) {
 						iss >> linePart;
-						if (counter == 0) {
+						if (spaceCoordCounter == 0)
+						{
 							tempVertex.x = stod(linePart);
 						}
-						else if (counter == 1) {
+						else if (spaceCoordCounter == 1)
+						{
 							tempVertex.y = stod(linePart);
 						}
-						else if (counter == 2) {
+						else if (spaceCoordCounter == 2)
+						{
 							tempVertex.z = stod(linePart);
 						}
-						counter++;
+						spaceCoordCounter++;
 					}
 					xyzCoords.push_back(tempVertex);
 				}
-				else if (linePart == "vt") {
+				else if (linePart == "vt")
+				{
 					vec2 tempVertex;
-					int counter = 0;
-					while (iss) {
+					int textureCoordCounter = 0;
+					while (iss)
+					{
 						iss >> linePart;
-						if (counter == 0) {
+						if (textureCoordCounter == 0)
+						{
 							tempVertex.x = stod(linePart);
 						}
-						else if (counter == 1) {
+						else if (textureCoordCounter == 1)
+						{
 							tempVertex.y = stod(linePart);
 						}
-						counter++;
+						textureCoordCounter++;
 					}
 					uvCoords.push_back(tempVertex);
 				}
-				else if (linePart == "f") {
+				else if (linePart == "f")
+				{
 					std::vector<point> tempTriangle(3);
 					int vertexCounter = 0;
-					while (iss && vertexCounter < 3) {
+					while (iss && vertexCounter < 3)
+					{
 						iss >> linePart;
-						for (int i = 0; i < 2; i++) {
+						for (int i = 0; i < 2; i++)
+						{
 							size_t slashPosition = linePart.find('/');
 							std::string dataAsString = linePart.substr(0, slashPosition);
-							if (i == 0) {
+							if (i == 0)
+							{
 								tempTriangle[vertexCounter].x = stoi(dataAsString) - 1;
 							}
-							else if (i == 1) {
+							else if (i == 1)
+							{
 								tempTriangle[vertexCounter].y = stoi(dataAsString) - 1;
 							}
 							linePart = linePart.substr(slashPosition + 1);
