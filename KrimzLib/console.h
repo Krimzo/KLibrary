@@ -173,6 +173,14 @@ namespace kl
 			while (_getch() != toWaitFor);
 		}
 
+		// Waits for any key to be pressed
+		static void WaitForAny(bool printMessage = false)
+		{
+			if (printMessage)
+				printf("Press any key to continue\n");
+			char iHateWarnings = _getch();
+		}
+
 	private:
 		static HANDLE stdConsoleHandle;
 		static bool rgbEnabled;

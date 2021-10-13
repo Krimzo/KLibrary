@@ -53,12 +53,12 @@ namespace kl
 	{
 	public:
 		// Constructor
-		bitmap(int width, int height)
+		bitmap(int width, int height, color color = { 0, 0, 0, 255 })
 		{
 			this->width = width;
 			this->height = height;
-			for (int i = 0; i < width * height; i++)
-				pixels.push_back({ 0, 0, 0, 255 });
+			pixels.resize(size_t(width) * size_t(height));
+			FillSolid(color);
 		}
 
 		// Getters
