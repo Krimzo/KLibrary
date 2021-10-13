@@ -57,41 +57,64 @@ namespace kl
 			}
 		};
 
-		class old {
-		public:
-			// Draws a triangle on the screen
-			static void DrawTriangle(triangle& tr, vec3& size, vec3& rotation, vec3& position)
+		// Translates and rotates the camera
+		static void SetCameraProperties(vec3& position, vec3& rotation)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glRotated(rotation.x, 1, 0, 0);
+			glRotated(rotation.y, 0, 1, 0);
+			glRotated(rotation.z, 0, 0, 1);
+			glTranslated(position.x, position.y, position.z);
+		}
+
+		// Translates, rotates and resizes opengl matrix
+		/* !!! Needs to be between glPushMatrix(); and glPopMatrix(); !!! */
+		static void SetDrawProperties(vec3& position, vec3& rotation, vec3& size)
+		{
+			glTranslated(position.x, position.y, position.z);
+			glRotated(rotation.x, 1, 0, 0);
+			glRotated(rotation.y, 0, 1, 0);
+			glRotated(rotation.z, 0, 0, 1);
+			glScaled(size.x, size.y, size.z);
+		}
+
+		// Draws a triangle on the screen
+		/* !!! Needs to be between glBegin(GL_TRIANGLES); and glEnd(); !!! */
+		static void DrawTriangle(triangle& tr)
+		{
+			if (tr.textured)
 			{
-				if (tr.textured)
+				glColor3d(1, 1, 1);
+				for (int i = 0; i < 3; i++)
 				{
-					for (int i = 0; i < 3; i++)
-					{
-						vertex tempVertex = tr.vertices[i];
-						tempVertex.Resize(size);
-						tempVertex.Rotate(rotation);
-						tempVertex.Translate(position);
-						glTexCoord2d(tempVertex.u, tempVertex.v);
-						glVertex3d(tempVertex.x, tempVertex.y, tempVertex.z);
-					}
+					glTexCoord2d(tr.vertices[i].u, tr.vertices[i].v);
+					glVertex3d(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
 				}
-				else
-				{
-					for (int i = 0; i < 3; i++)
-					{
-						vertex tempVertex = tr.vertices[i];
-						tempVertex.Resize(size);
-						tempVertex.Rotate(rotation);
-						tempVertex.Translate(position);
-						glColor3d(tempVertex.color.r, tempVertex.color.g, tempVertex.color.b);
-						glVertex3d(tempVertex.x, tempVertex.y, tempVertex.z);
-					}
-				}
-				
 			}
-		};
+			else
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					glColor3d(tr.vertices[i].color.r, tr.vertices[i].color.g, tr.vertices[i].color.b);
+					glVertex3d(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
+				}
+			}
+		}
+
+		// Sets the given texture to be used by the opengl
+		static void BindTexture(id textureID)
+		{
+			glBindTexture(GL_TEXTURE_2D, textureID);
+		}
 
 		// Set the whole screen to a given color
-		static void ClearBuffers(colord color = { 0, 0, 0, 1 })
+		static void ClearBuffers(colord& color)
+		{
+			glClearColor((float)color.r, (float)color.g, (float)color.b, (float)color.a);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
+		static void ClearBuffers(colord&& color)
 		{
 			glClearColor((float)color.r, (float)color.g, (float)color.b, (float)color.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

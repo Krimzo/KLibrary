@@ -7,6 +7,12 @@ namespace kl
 	class time
 	{
 	public:
+		// Constructor
+		time()
+		{
+			QueryPerformanceCounter(&counterLast);
+		}
+
 		// Loads the current pc frequency
 		static void LoadPCFrequency()
 		{

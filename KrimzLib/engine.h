@@ -49,7 +49,7 @@ namespace kl
 	public:
 		// Engine properties
 		double deltaTime = 0;
-		double gravity = 10;
+		double gravity = 4;
 		colord background = {};
 		camera engineCamera = {};
 
@@ -94,26 +94,23 @@ namespace kl
 				opengl::ClearBuffers(background);
 
 				/* Update camera rotation and position */
-				glMatrixMode(GL_MODELVIEW);
-				glLoadIdentity();
-				glRotated(engineCamera.rotation.x, 1, 0, 0);
-				glRotated(engineCamera.rotation.y, 0, 1, 0);
-				glRotated(engineCamera.rotation.z, 0, 0, 1);
-				glTranslated(engineCamera.position.x, engineCamera.position.y, engineCamera.position.z);
+				opengl::SetCameraProperties(engineCamera.position, engineCamera.rotation);
 
 				/* Rendering all game triangles */
 				for (int i = 0; i < engineObjects.size(); i++)
 				{
 					if (engineObjects[i].visible)
 					{
-						glBindTexture(GL_TEXTURE_2D, engineObjects[i].triangles[0].texture);
+						opengl::BindTexture(engineObjects[i].triangles[0].texture);
+						glPushMatrix();
+						opengl::SetDrawProperties(engineObjects[i].position, engineObjects[i].rotation, engineObjects[i].size);
 						glBegin(GL_TRIANGLES);
-						glColor3d(1, 1, 1);
 						for (int j = 0; j < engineObjects[i].triangles.size(); j++)
 						{
-							opengl::old::DrawTriangle(engineObjects[i].triangles[j], engineObjects[i].size, engineObjects[i].rotation, engineObjects[i].position);
+							opengl::DrawTriangle(engineObjects[i].triangles[j]);
 						}
 						glEnd();
+						glPopMatrix();
 					}
 				}
 
