@@ -32,12 +32,6 @@ namespace kl
 		vec3 position = {};
 		vec3 rotation = {};
 	};
-
-	struct spotlight {
-		color color = {};
-		vec3 position = {};
-		vec3 rotation = {};
-	};
 }
 
 
