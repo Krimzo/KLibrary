@@ -18,7 +18,7 @@ namespace kl
 	{
 	public:
 		// Converts a byte array to a string
-		static std::string ToString(bytes& b)
+		static std::string BytesToString(bytes& b)
 		{
 			std::stringstream ss;
 			for (int i = 0; i < b.size(); i++)
@@ -27,7 +27,7 @@ namespace kl
 			}
 			return ss.str();
 		}
-		static std::string ToString(bytes&& b)
+		static std::string BytesToString(bytes&& b)
 		{
 			std::stringstream ss;
 			for (int i = 0; i < b.size(); i++)

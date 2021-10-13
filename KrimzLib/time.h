@@ -41,7 +41,7 @@ namespace kl
 		}
 
 		// Sleeps for the given time
-		static void SleepSeconds(double time)
+		static void WaitSeconds(double time)
 		{
 			static LARGE_INTEGER sleepCounterStart, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
@@ -49,7 +49,7 @@ namespace kl
 				QueryPerformanceCounter(&sleepCounter);
 			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < time);
 		}
-		static void SleepMiliseconds(double time)
+		static void WaitMiliseconds(double time)
 		{
 			time /= 1000;
 			static LARGE_INTEGER sleepCounterStart, sleepCounter;
