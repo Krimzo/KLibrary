@@ -13,6 +13,7 @@
 /* --- TYPES --- */
 namespace kl
 {
+	typedef unsigned int texture;
 	struct gameobject
 	{
 		std::string name = "";
@@ -149,7 +150,7 @@ namespace kl
 			engineObjects.push_back({ objectName });
 			return &engineObjects.back();
 		}
-		gameobject* NewGameObject(std::string objectName, std::wstring filePath, id textureID)
+		gameobject* NewGameObject(std::string objectName, std::wstring filePath, texture textureID)
 		{
 			for (int i = 0; i < engineObjects.size(); i++)
 			{
@@ -308,18 +309,18 @@ namespace kl
 		}
 
 		// Adds a new texture to the engine memory
-		id NewTexture(bitmap& textureData)
+		texture NewTexture(bitmap& textureData)
 		{
-			id createdID = 0;
+			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.GetWidth(), textureData.GetHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, textureData.GetPixelData());
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
-		id NewTexture(bitmap&& textureData)
+		texture NewTexture(bitmap&& textureData)
 		{
-			id createdID = 0;
+			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.GetWidth(), textureData.GetHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, textureData.GetPixelData());
