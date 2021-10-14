@@ -29,17 +29,11 @@ namespace kl
 		{
 			engineWindow.WindowStart = [&]()
 			{
-				/* Camera setup */
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-				gluPerspective(fov, (double)engineWindow.GetWidth() / engineWindow.GetHeight(), 0.01, 100.0);
-
-				/* Enable z buffer */
-				glEnable(GL_DEPTH_TEST);
-				glDepthFunc(GL_LESS);
+				/* Enable 3D and depth buffer */
+				opengl::Enabled3D(fov, engineWindow.GetWidth(), engineWindow.GetHeight());
 
 				/* Enable textures */
-				glEnable(GL_TEXTURE_2D);
+				opengl::EnableTextures();
 
 				/* Game start function call */
 				EngineStart();
@@ -63,7 +57,7 @@ namespace kl
 				opengl::ClearBuffers(background);
 
 				/* Update camera rotation and position */
-				opengl::SetCameraProperties(engineCamera.position, engineCamera.rotation);
+				opengl::UpdateCamera(engineCamera.position, engineCamera.rotation);
 
 				/* Render all game triangles */
 				for (int i = 0; i < engineObjects.size(); i++)
@@ -71,15 +65,7 @@ namespace kl
 					if (engineObjects[i].visible)
 					{
 						opengl::BindTexture(engineObjects[i].triangles[0].texture);
-						glPushMatrix();
-						opengl::SetDrawProperties(engineObjects[i].position, engineObjects[i].rotation, engineObjects[i].size);
-						glBegin(GL_TRIANGLES);
-						for (int j = 0; j < engineObjects[i].triangles.size(); j++)
-						{
-							opengl::DrawTriangle(engineObjects[i].triangles[j]);
-						}
-						glEnd();
-						glPopMatrix();
+						opengl::RenderTriangles(engineObjects[i].triangles, engineObjects[i].position, engineObjects[i].rotation, engineObjects[i].size);
 					}
 				}
 
@@ -155,7 +141,7 @@ namespace kl
 				iss >> linePart;
 				if (linePart == "v")
 				{
-					vec3 tempVertex;
+					vec3 tempVertex = {};
 					int spaceCoordCounter = 0;
 					while (iss) {
 						iss >> linePart;
@@ -177,7 +163,7 @@ namespace kl
 				}
 				else if (linePart == "vt")
 				{
-					vec2 tempVertex;
+					vec2 tempVertex = {};
 					int textureCoordCounter = 0;
 					while (iss)
 					{
