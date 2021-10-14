@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-#include "KrimzLib/color.h"
+#include "KrimzLib/graphics.h"
 
 
 /* --- TYPES --- */
