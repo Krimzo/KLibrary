@@ -75,6 +75,7 @@ namespace kl
 			return { x / vecLen, y / vecLen };
 		}
 	};
+
 	struct vec3
 	{
 		double x = 0;
@@ -143,6 +144,7 @@ namespace kl
 			return { x / vecLen, y / vecLen, z / vecLen };
 		}
 	};
+
 	struct size
 	{
 		int width = 0;
@@ -449,7 +451,6 @@ namespace kl
 	typedef cl_kernel clkernel;
 }
 
-
 /* OPENGL */
 namespace kl
 {
@@ -459,6 +460,8 @@ namespace kl
 /* ENGINE */
 namespace kl
 {
+	typedef unsigned int texture;
+
 	struct vertex
 	{
 		double x = 0;
@@ -468,13 +471,14 @@ namespace kl
 		double v = 0;
 		colord color = {};
 	};
+
 	struct triangle
 	{
 		vertex vertices[3] = {};
 		bool textured = false;
 		unsigned int texture = 0;
 	};
-	typedef unsigned int texture;
+	
 	struct gameobject
 	{
 		std::string name = "";
@@ -488,6 +492,7 @@ namespace kl
 		vec3 velocity = {};
 		vec3 angularMo = {};
 	};
+
 	struct camera
 	{
 		vec3 position = {};

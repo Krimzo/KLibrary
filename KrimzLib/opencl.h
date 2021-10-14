@@ -1,6 +1,7 @@
 #pragma once
 #include "KrimzLib/incl/OpenCL/cl.hpp"
 #include "KrimzLib/types.h"
+#pragma comment(lib, "incl/KrimzLib/lib/opencl.lib")
 
 
 namespace kl

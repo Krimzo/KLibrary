@@ -10,8 +10,8 @@
 #include "KrimzLib/thread.h"
 #include "KrimzLib/web.h"
 #include "KrimzLib/console.h"
+#include "KrimzLib/opencl.h"
 #include "KrimzLib/opengl.h"
-#include "KrimzLib/opencl.h"	// opencl.lib is needed (link it from the KrimzLib/lib folder)
 #include "KrimzLib/window.h"
 #include "KrimzLib/engine.h"
 
