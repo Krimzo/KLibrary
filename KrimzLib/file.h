@@ -4,6 +4,7 @@
 #include <sstream>
 #include <windows.h>
 #include <gdiplus.h>
+#include "KrimzLib/types.h"
 #include "KrimzLib/console.h"
 #pragma comment (lib, "gdiplus.lib")
 

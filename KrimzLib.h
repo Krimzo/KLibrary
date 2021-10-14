@@ -1,4 +1,5 @@
 #pragma once
+#include "KrimzLib/types.h"
 #include "KrimzLib/constant.h"
 #include "KrimzLib/graphics.h"
 #include "KrimzLib/math.h"

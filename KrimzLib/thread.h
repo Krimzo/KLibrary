@@ -2,6 +2,7 @@
 #include <functional>
 #include <vector>
 #include <thread>
+#include "KrimzLib/types.h"
 
 
 namespace kl

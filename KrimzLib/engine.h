@@ -3,40 +3,10 @@
 #include <string>
 #include <sstream>
 #include <windows.h>
-#include "KrimzLib/window.h"
-#include "KrimzLib/time.h"
-#include "KrimzLib/graphics.h"
+#include "KrimzLib/types.h"
 #include "KrimzLib/constant.h"
-#include "KrimzLib/opengl.h"
 
 
-/* --- TYPES --- */
-namespace kl
-{
-	typedef unsigned int texture;
-	struct gameobject
-	{
-		std::string name = "";
-		std::vector<triangle> triangles = {};
-		bool visible = true;
-		vec3 position = {};
-		vec3 size = { 1, 1, 1 };
-		vec3 rotation = {};
-		bool physics = false;
-		double gravityMulti = 1;
-		vec3 velocity = {};
-		vec3 angularMo = {};
-	};
-
-	struct camera
-	{
-		vec3 position = {};
-		vec3 rotation = {};
-	};
-}
-
-
-/* --- CLASS --- */
 namespace kl
 {
 	class engine
