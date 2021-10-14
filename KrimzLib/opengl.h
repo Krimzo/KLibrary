@@ -8,11 +8,6 @@
 #pragma comment (lib, "glu32.lib")
 
 
-/* --- DEBUG --- */
-#define ASSERT(x) if (x) __debugbreak();
-#define GLCheckError(x) kl::opengl::debug::ClearErrors(); x; ASSERT(kl::opengl::debug::CheckError(__FILE__, __LINE__))
-
-
 namespace kl
 {
 	class opengl
