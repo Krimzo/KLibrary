@@ -136,7 +136,7 @@ namespace kl
 			while (std::getline(ss, fileLine))
 			{
 				std::istringstream iss(fileLine);
-				std::string linePart;
+				std::string linePart = "";
 				iss >> linePart;
 				if (linePart == "v")
 				{
