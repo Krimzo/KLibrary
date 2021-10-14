@@ -109,14 +109,14 @@ namespace kl
 		}
 
 		// Set the whole screen to a given color
-		static void ClearBuffers(colord& color)
+		static void ClearBuffers(colorf& color)
 		{
-			glClearColor((float)color.r, (float)color.g, (float)color.b, (float)color.a);
+			glClearColor(color.r, color.g, color.b, color.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
-		static void ClearBuffers(colord&& color)
+		static void ClearBuffers(colorf&& color)
 		{
-			glClearColor((float)color.r, (float)color.g, (float)color.b, (float)color.a);
+			glClearColor(color.r, color.g, color.b, color.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
@@ -127,7 +127,7 @@ namespace kl
 		}
 
 		// Creates a shader program from 2 given shaders sources
-		static kl::id CreateProgram(const std::string& vertexShader, const std::string& fragmentShader)
+		static kl::id CreateShaderProgram(const std::string& vertexShader, const std::string& fragmentShader)
 		{
 			// Creating and compiling shaders
 			kl::id program = glCreateProgram();
@@ -149,7 +149,7 @@ namespace kl
 		}
 
 		// Deletes the given shader program
-		static void Delete(kl::id program)
+		static void DeleteShaderProgram(kl::id program)
 		{
 			glDeleteProgram(program);
 		}

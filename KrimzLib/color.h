@@ -6,6 +6,20 @@
 /* --- TYPES --- */
 namespace kl
 {
+	struct colorf
+	{
+		float r = 0;
+		float g = 0;
+		float b = 0;
+		float a = 1;
+
+		// Prints the color to the console
+		void Print() const
+		{
+			printf("r: %lf g: %lf b: %lf a: %lf\n", r, g, b, a);
+		}
+	};
+
 	struct colord
 	{
 		double r = 0;
@@ -37,6 +51,12 @@ namespace kl
 		}
 
 		// Returns the color as a float type
+		colorf ToFloat() const
+		{
+			return { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
+		}
+
+		// Returns the color as a double type
 		colord ToDouble() const
 		{
 			return { r / 255.0, g / 255.0, b / 255.0, a / 255.0 };

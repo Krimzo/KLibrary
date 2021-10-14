@@ -46,7 +46,7 @@ namespace kl
 		double fpsLimit = -1;
 		double deltaTime = 0;
 		double gravity = 4;
-		colord background = {};
+		colorf background = {};
 		camera engineCamera = {};
 
 		// Outside functions that user defines
@@ -86,7 +86,7 @@ namespace kl
 				/* Game logic */
 				EngineUpdate();
 
-				/* Applying physics */
+				/* Apply physics */
 				ObjectPhysics();
 
 				/* Buffer clearing */
@@ -95,7 +95,7 @@ namespace kl
 				/* Update camera rotation and position */
 				opengl::SetCameraProperties(engineCamera.position, engineCamera.rotation);
 
-				/* Rendering all game triangles */
+				/* Render all game triangles */
 				for (int i = 0; i < engineObjects.size(); i++)
 				{
 					if (engineObjects[i].visible)
@@ -113,7 +113,7 @@ namespace kl
 					}
 				}
 
-				/* Flipping front and back frame buffers */
+				/* Swap front and back frame buffers */
 				opengl::FlipBuffers(engineWindow.GetHDC());
 
 				/* Delta time calculation */
@@ -123,7 +123,7 @@ namespace kl
 				} while (deltaTime < wantedFrameTime);
 				engineTime.StopwatchReset();
 
-				/* Displaying the FPS */
+				/* Display the FPS */
 				engineWindow.SetTitle(int(1 / deltaTime));
 			};
 
