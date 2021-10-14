@@ -43,6 +43,7 @@ namespace kl
 	{
 	public:
 		// Engine properties
+		double fpsLimit = -1;
 		double deltaTime = 0;
 		double gravity = 4;
 		colord background = {};
@@ -72,6 +73,9 @@ namespace kl
 
 				/* Game start function call */
 				EngineStart();
+
+				/* First stopwatch reset */
+				engineTime.StopwatchReset();
 			};
 
 			engineWindow.WindowUpdate = [&]()
@@ -113,7 +117,11 @@ namespace kl
 				opengl::FlipBuffers(engineWindow.GetHDC());
 
 				/* Delta time calculation */
-				deltaTime = engineTime.GetElapsed();
+				double wantedFrameTime = 1 / fpsLimit;
+				do {
+					deltaTime = engineTime.StopwatchElapsed();
+				} while (deltaTime < wantedFrameTime);
+				engineTime.StopwatchReset();
 
 				/* Displaying the FPS */
 				engineWindow.SetTitle(int(1 / deltaTime));
