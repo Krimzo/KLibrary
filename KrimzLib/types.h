@@ -454,14 +454,12 @@ namespace kl
 /* OPENGL */
 namespace kl
 {
-	typedef unsigned int id;
+	typedef unsigned int texture;
 }
 
 /* ENGINE */
 namespace kl
 {
-	typedef unsigned int texture;
-
 	struct vertex
 	{
 		double x = 0;
@@ -476,12 +474,12 @@ namespace kl
 	{
 		vertex vertices[3] = {};
 		bool textured = false;
-		unsigned int texture = 0;
 	};
 	
 	struct gameobject
 	{
 		std::string name = "";
+		texture texture = 0;
 		std::vector<triangle> triangles = {};
 		bool visible = true;
 		vec3 position = {};

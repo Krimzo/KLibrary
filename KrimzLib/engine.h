@@ -64,8 +64,7 @@ namespace kl
 				{
 					if (engineObjects[i].visible)
 					{
-						opengl::BindTexture(engineObjects[i].triangles[0].texture);
-						opengl::RenderTriangles(engineObjects[i].triangles, engineObjects[i].position, engineObjects[i].rotation, engineObjects[i].size);
+						opengl::RenderTriangles(engineObjects[i].triangles, engineObjects[i].position, engineObjects[i].rotation, engineObjects[i].size, engineObjects[i].texture);
 					}
 				}
 
@@ -100,7 +99,7 @@ namespace kl
 		}
 
 		// Adds a new game object if the name doesn't already exist
-		gameobject* NewGameObject(std::string objectName)
+		gameobject* NewGameObject(std::string objectName, texture textureID = 0)
 		{
 			for (int i = 0; i < engineObjects.size(); i++)
 			{
@@ -111,7 +110,7 @@ namespace kl
 					exit(69);
 				}
 			}
-			engineObjects.push_back({ objectName });
+			engineObjects.push_back({ objectName, textureID });
 			return &engineObjects.back();
 		}
 		gameobject* NewGameObject(std::string objectName, std::wstring filePath, texture textureID)
@@ -233,8 +232,9 @@ namespace kl
 					uvCoords[fileTriangles[i][2].y].x,
 					uvCoords[fileTriangles[i][2].y].y
 					}
-				}, true, textureID });
+				}, true });
 			}
+			tempObject.texture = textureID;
 			
 			// Load the game object to the engine
 			engineObjects.push_back(tempObject);

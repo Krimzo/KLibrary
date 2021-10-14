@@ -44,8 +44,9 @@ namespace kl
 		}
 
 		// Renders a triangle
-		static void RenderTriangle(triangle& tr, vec3& position, vec3& rotation, vec3& size)
+		static void RenderTriangle(triangle& tr, vec3& position, vec3& rotation, vec3& size, texture textureID)
 		{
+			glBindTexture(GL_TEXTURE_2D, textureID);
 			glPushMatrix();
 			glTranslated(position.x, position.y, position.z);
 			glRotated(rotation.x, 1, 0, 0);
@@ -75,8 +76,9 @@ namespace kl
 		}
 
 		// Renders an array of triangles
-		static void RenderTriangles(std::vector<triangle>& trs, vec3& position, vec3& rotation, vec3& size)
+		static void RenderTriangles(std::vector<triangle>& trs, vec3& position, vec3& rotation, vec3& size, texture textureID)
 		{
+			glBindTexture(GL_TEXTURE_2D, textureID);
 			glPushMatrix();
 			glTranslated(position.x, position.y, position.z);
 			glRotated(rotation.x, 1, 0, 0);
@@ -106,12 +108,6 @@ namespace kl
 			}
 			glEnd();
 			glPopMatrix();
-		}
-
-		// Sets the given texture to be used by the opengl
-		static void BindTexture(id textureID)
-		{
-			glBindTexture(GL_TEXTURE_2D, textureID);
 		}
 
 		// Set the whole screen to a given color
