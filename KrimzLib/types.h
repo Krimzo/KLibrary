@@ -478,13 +478,17 @@ namespace kl
 	
 	struct gameobject
 	{
-		std::string name = "";
+		// Looks
+		bool visible = true;
 		texture texture = 0;
 		std::vector<triangle> triangles = {};
-		bool visible = true;
+		
+		// Geometry
 		vec3 position = {};
-		vec3 size = { 1, 1, 1 };
 		vec3 rotation = {};
+		vec3 size = { 1, 1, 1 };
+
+		// Physics
 		bool physics = false;
 		double gravityMulti = 1;
 		vec3 velocity = {};

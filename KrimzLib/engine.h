@@ -2,6 +2,8 @@
 #include <functional>
 #include <string>
 #include <sstream>
+#include <map>
+#include <iterator>
 #include <windows.h>
 #include "KrimzLib/types.h"
 #include "KrimzLib/constant.h"
@@ -15,7 +17,7 @@ namespace kl
 		// Engine properties
 		double fpsLimit = -1;
 		double deltaTime = 0;
-		double gravity = 4;
+		double gravity = 5;
 		colorf background = {};
 		camera engineCamera = {};
 
@@ -60,11 +62,13 @@ namespace kl
 				opengl::UpdateCamera(engineCamera.position, engineCamera.rotation);
 
 				/* Render all game triangles */
-				for (int i = 0; i < engineObjects.size(); i++)
+				static std::map<std::string, gameobject>::iterator itr;
+				for (itr = engineObjects.begin(); itr != engineObjects.end(); itr++)
 				{
-					if (engineObjects[i].visible)
+					if (itr->second.physics)
 					{
-						opengl::RenderTriangles(engineObjects[i].triangles, engineObjects[i].position, engineObjects[i].rotation, engineObjects[i].size, engineObjects[i].texture);
+						opengl::RenderTriangles(itr->second.triangles, itr->second.position, itr->second.rotation, itr->second.size, itr->second.texture);
+
 					}
 				}
 
@@ -101,175 +105,149 @@ namespace kl
 		// Adds a new game object if the name doesn't already exist
 		gameobject* NewGameObject(std::string objectName, texture textureID = 0)
 		{
-			for (int i = 0; i < engineObjects.size(); i++)
+			if (!engineObjects.count(objectName))
 			{
-				if (engineObjects[i].name == objectName)
-				{
-					printf("Game object \"%s\" already exists!\n", objectName.c_str());
-					console::WaitFor(' ', true);
-					exit(69);
-				}
+				engineObjects.insert(std::pair<std::string, gameobject>(objectName, { true, textureID }));
+				return &engineObjects.at(objectName);
 			}
-			engineObjects.push_back({ objectName, textureID });
-			return &engineObjects.back();
+			return NULL;
 		}
 		gameobject* NewGameObject(std::string objectName, std::wstring filePath, texture textureID)
 		{
-			for (int i = 0; i < engineObjects.size(); i++)
+			if (!engineObjects.count(objectName))
 			{
-				if (engineObjects[i].name == objectName)
-				{
-					printf("Game object \"%s\" already exists!\n", objectName.c_str());
-					console::WaitFor(' ', true);
-					exit(69);
-				}
-			}
+				// Load file
+				std::stringstream ss = std::stringstream(file::ReadText(filePath));
 
-			// Load file
-			std::stringstream ss = std::stringstream(file::ReadText(filePath));
-
-			// Parse object data
-			std::string fileLine;
-			std::vector<vec3> xyzCoords;
-			std::vector<vec2> uvCoords;
-			std::vector<std::vector<point>> fileTriangles;
-			while (std::getline(ss, fileLine))
-			{
-				std::istringstream iss(fileLine);
-				std::string linePart = "";
-				iss >> linePart;
-				if (linePart == "v")
+				// Parse object data
+				std::string fileLine;
+				std::vector<vec3> xyzCoords;
+				std::vector<vec2> uvCoords;
+				std::vector<std::vector<point>> fileTriangles;
+				while (std::getline(ss, fileLine))
 				{
-					vec3 tempVertex = {};
-					int spaceCoordCounter = 0;
-					while (iss) {
-						iss >> linePart;
-						if (spaceCoordCounter == 0)
-						{
-							tempVertex.x = stod(linePart);
-						}
-						else if (spaceCoordCounter == 1)
-						{
-							tempVertex.y = stod(linePart);
-						}
-						else if (spaceCoordCounter == 2)
-						{
-							tempVertex.z = stod(linePart);
-						}
-						spaceCoordCounter++;
-					}
-					xyzCoords.push_back(tempVertex);
-				}
-				else if (linePart == "vt")
-				{
-					vec2 tempVertex = {};
-					int textureCoordCounter = 0;
-					while (iss)
+					std::istringstream iss(fileLine);
+					std::string linePart = "";
+					iss >> linePart;
+					if (linePart == "v")
 					{
-						iss >> linePart;
-						if (textureCoordCounter == 0)
-						{
-							tempVertex.x = stod(linePart);
-						}
-						else if (textureCoordCounter == 1)
-						{
-							tempVertex.y = stod(linePart);
-						}
-						textureCoordCounter++;
-					}
-					uvCoords.push_back(tempVertex);
-				}
-				else if (linePart == "f")
-				{
-					std::vector<point> tempTriangle(3);
-					int vertexCounter = 0;
-					while (iss && vertexCounter < 3)
-					{
-						iss >> linePart;
-						for (int i = 0; i < 2; i++)
-						{
-							size_t slashPosition = linePart.find('/');
-							std::string dataAsString = linePart.substr(0, slashPosition);
-							if (i == 0)
+						vec3 tempVertex = {};
+						int spaceCoordCounter = 0;
+						while (iss) {
+							iss >> linePart;
+							if (spaceCoordCounter == 0)
 							{
-								tempTriangle[vertexCounter].x = stoi(dataAsString) - 1;
+								tempVertex.x = stod(linePart);
 							}
-							else if (i == 1)
+							else if (spaceCoordCounter == 1)
 							{
-								tempTriangle[vertexCounter].y = stoi(dataAsString) - 1;
+								tempVertex.y = stod(linePart);
 							}
-							linePart = linePart.substr(slashPosition + 1);
+							else if (spaceCoordCounter == 2)
+							{
+								tempVertex.z = stod(linePart);
+							}
+							spaceCoordCounter++;
 						}
-						vertexCounter++;
+						xyzCoords.push_back(tempVertex);
 					}
-					fileTriangles.push_back(tempTriangle);
+					else if (linePart == "vt")
+					{
+						vec2 tempVertex = {};
+						int textureCoordCounter = 0;
+						while (iss)
+						{
+							iss >> linePart;
+							if (textureCoordCounter == 0)
+							{
+								tempVertex.x = stod(linePart);
+							}
+							else if (textureCoordCounter == 1)
+							{
+								tempVertex.y = stod(linePart);
+							}
+							textureCoordCounter++;
+						}
+						uvCoords.push_back(tempVertex);
+					}
+					else if (linePart == "f")
+					{
+						std::vector<point> tempTriangle(3);
+						int vertexCounter = 0;
+						while (iss && vertexCounter < 3)
+						{
+							iss >> linePart;
+							for (int i = 0; i < 2; i++)
+							{
+								size_t slashPosition = linePart.find('/');
+								std::string dataAsString = linePart.substr(0, slashPosition);
+								if (i == 0)
+								{
+									tempTriangle[vertexCounter].x = stoi(dataAsString) - 1;
+								}
+								else if (i == 1)
+								{
+									tempTriangle[vertexCounter].y = stoi(dataAsString) - 1;
+								}
+								linePart = linePart.substr(slashPosition + 1);
+							}
+							vertexCounter++;
+						}
+						fileTriangles.push_back(tempTriangle);
+					}
 				}
-			}
 
-			// Create the game object with data
-			gameobject tempObject = { objectName };
-			for (int i = 0; i < fileTriangles.size(); i++)
-			{
-				tempObject.triangles.push_back({{
-					{
-					xyzCoords[fileTriangles[i][0].x].x,
-					xyzCoords[fileTriangles[i][0].x].y,
-					xyzCoords[fileTriangles[i][0].x].z,
-					uvCoords[fileTriangles[i][0].y].x,
-					uvCoords[fileTriangles[i][0].y].y
-					},
-					{
-					xyzCoords[fileTriangles[i][1].x].x,
-					xyzCoords[fileTriangles[i][1].x].y,
-					xyzCoords[fileTriangles[i][1].x].z,
-					uvCoords[fileTriangles[i][1].y].x,
-					uvCoords[fileTriangles[i][1].y].y
-					},
-					{
-					xyzCoords[fileTriangles[i][2].x].x,
-					xyzCoords[fileTriangles[i][2].x].y,
-					xyzCoords[fileTriangles[i][2].x].z,
-					uvCoords[fileTriangles[i][2].y].x,
-					uvCoords[fileTriangles[i][2].y].y
-					}
-				}, true });
+				// Create the game object with data
+				gameobject tempObject = { true, textureID };
+				for (int i = 0; i < fileTriangles.size(); i++)
+				{
+					tempObject.triangles.push_back({ {
+						{
+						xyzCoords[fileTriangles[i][0].x].x,
+						xyzCoords[fileTriangles[i][0].x].y,
+						xyzCoords[fileTriangles[i][0].x].z,
+						uvCoords[fileTriangles[i][0].y].x,
+						uvCoords[fileTriangles[i][0].y].y
+						},
+						{
+						xyzCoords[fileTriangles[i][1].x].x,
+						xyzCoords[fileTriangles[i][1].x].y,
+						xyzCoords[fileTriangles[i][1].x].z,
+						uvCoords[fileTriangles[i][1].y].x,
+						uvCoords[fileTriangles[i][1].y].y
+						},
+						{
+						xyzCoords[fileTriangles[i][2].x].x,
+						xyzCoords[fileTriangles[i][2].x].y,
+						xyzCoords[fileTriangles[i][2].x].z,
+						uvCoords[fileTriangles[i][2].y].x,
+						uvCoords[fileTriangles[i][2].y].y
+						}
+					}, true });
+				}
+				engineObjects.insert(std::pair<std::string, gameobject>(objectName, tempObject));
+				return &engineObjects.at(objectName);
 			}
-			tempObject.texture = textureID;
-			
-			// Load the game object to the engine
-			engineObjects.push_back(tempObject);
-			return &engineObjects.back();
+			return NULL;
 		}
 
 		// Removes a game object with the given name
-		void DeleteGameObject(std::string objectName)
+		bool DeleteGameObject(std::string objectName)
 		{
-			for (int i = 0; i < engineObjects.size(); i++)
+			if (engineObjects.count(objectName))
 			{
-				if (engineObjects[i].name == objectName)
-				{
-					engineObjects.erase(engineObjects.begin() + i);
-					return;
-				}
+				engineObjects.erase(objectName);
+				return true;
 			}
-			printf("Game object \"%s\" doesn't exist!\n", objectName.c_str());
-			console::WaitFor(' ', true);
-			exit(69);
+			return false;		
 		}
 
 		// Returns a reference to a wanted game object
 		gameobject* GetGameObject(std::string objectName)
 		{
-			for (int i = 0; i < engineObjects.size(); i++)
-			{
-				if (engineObjects[i].name == objectName)
-				{
-					return &engineObjects[i];
-				}
-			}
-			printf("Game object \"%s\" doesn't exist!\n", objectName.c_str());
-			console::WaitFor(' ', true);
-			exit(69);
+			if (engineObjects.count(objectName))
+				return &engineObjects.at(objectName);
+			return NULL;
 		}
 
 		// Adds a new texture to the engine memory
@@ -300,27 +278,28 @@ namespace kl
 		time engineTime = time();
 
 		// Objects
-		std::vector<gameobject> engineObjects = {};
+		std::map<std::string, gameobject> engineObjects;
 
 		// Computing object physics 
 		void ObjectPhysics()
 		{
-			for (int i = 0; i < engineObjects.size(); i++)
+			static std::map<std::string, gameobject>::iterator itr;
+			for (itr = engineObjects.begin(); itr != engineObjects.end(); itr++)
 			{
-				if (engineObjects[i].physics)
+				if (itr->second.physics)
 				{
 					// Applying gravity
-					engineObjects[i].velocity.y -= gravity * engineObjects[i].gravityMulti * deltaTime;
+					itr->second.velocity.y -= gravity * itr->second.gravityMulti * deltaTime;
 
 					// Applying velocity
-					engineObjects[i].position.x += engineObjects[i].velocity.x * deltaTime;
-					engineObjects[i].position.y += engineObjects[i].velocity.y * deltaTime;
-					engineObjects[i].position.z += engineObjects[i].velocity.z * deltaTime;
+					itr->second.position.x += itr->second.velocity.x * deltaTime;
+					itr->second.position.y += itr->second.velocity.y * deltaTime;
+					itr->second.position.z += itr->second.velocity.z * deltaTime;
 
 					// Applying angular momentum
-					engineObjects[i].rotation.x += engineObjects[i].angularMo.x * deltaTime;
-					engineObjects[i].rotation.y += engineObjects[i].angularMo.y * deltaTime;
-					engineObjects[i].rotation.z += engineObjects[i].angularMo.z * deltaTime;
+					itr->second.rotation.x += itr->second.angularMo.x * deltaTime;
+					itr->second.rotation.y += itr->second.angularMo.y * deltaTime;
+					itr->second.rotation.z += itr->second.angularMo.z * deltaTime;
 				}
 			}
 		}
