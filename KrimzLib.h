@@ -13,7 +13,7 @@
 
 // Including external headers
 #include <conio.h>
-#include <WinSock2.h>
+#include <ws2tcpip.h>
 #include <wininet.h>
 #include <windows.h>
 #include <windowsx.h>
@@ -39,9 +39,9 @@
 #include "KrimzLib/window.h"
 #include "KrimzLib/engine.h"
 
-// Linking libs
+// Linking .libs
+#pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib,"wininet.lib")
-#pragma comment(lib, "Ws2_32.lib")
 #pragma comment (lib, "gdiplus.lib")
 #pragma comment(lib, "incl/KrimzLib/lib/opencl.lib")
 #pragma comment (lib, "opengl32.lib")

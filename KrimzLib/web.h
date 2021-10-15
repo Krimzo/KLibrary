@@ -45,5 +45,77 @@ namespace kl
 		{
 			file::WriteBytes(GetSiteData(fileUrl), fileName);
 		}
+
+		// Simple TCP client
+		// Keeps sending and receiving data until sent/received data is 0 bytes
+		static void TcpClient(std::string serverIP, int serverPort, int receiveBufferSize, std::function<void(std::string& dataToSend, std::string receivedData)> DataEdit)
+		{
+			// Init winsock
+			WSADATA wsData = {};
+			if (WSAStartup(MAKEWORD(2, 2), &wsData))
+			{
+				printf("Couldn't init winsock!\n");
+				return;
+			}
+
+			// Create a socket
+			SOCKET sock = socket(AF_INET, SOCK_STREAM, NULL);
+			if (sock == INVALID_SOCKET)
+			{
+				printf("Couldn't create socket!, Error = %d\n", WSAGetLastError());
+				WSACleanup();
+				return;
+			}
+
+			// Connect to the server
+			sockaddr_in sockHint = {};
+			sockHint.sin_family = AF_INET;
+			sockHint.sin_port = htons(serverPort);
+			inet_pton(AF_INET, serverIP.c_str(), &sockHint.sin_addr);
+			if (connect(sock, (sockaddr*)&sockHint, sizeof(sockHint)))
+			{
+				printf("Couldn't connect to the server! Error = %d\n", WSAGetLastError());
+				closesocket(sock);
+				WSACleanup();
+				return;
+			}
+
+			// Alloate memory
+			std::string dataToSend;
+			char* receieveBuffer = new char[receiveBufferSize];
+			if (!receieveBuffer)
+				return;
+			memset(receieveBuffer, 0, receiveBufferSize);
+
+			// Keep communicating
+			while (true)
+			{
+				// Edit data
+				DataEdit(dataToSend, receieveBuffer);
+
+				// Check if data is not 0 otherwise quit
+				if (dataToSend.size())
+				{
+					// Send data and clear send buffer
+					send(sock, dataToSend.c_str(), (int)dataToSend.size() + 1, NULL);
+					dataToSend = "";
+
+					// Clear receieve buffer and wait for data to come
+					memset(receieveBuffer, 0, receiveBufferSize);
+					recv(sock, receieveBuffer, receiveBufferSize, NULL);
+
+					// Check if received data is not 0 otherwise quit
+					if (!receieveBuffer[0])
+						break;
+				}
+				else
+					break;
+			}
+
+			// Cleanup
+			delete[] receieveBuffer;
+			closesocket(sock);
+			WSACleanup();
+		}
 	};
 }
