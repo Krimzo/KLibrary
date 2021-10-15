@@ -100,7 +100,7 @@ namespace kl
 					// Edit data
 					std::string dataToSend = DataTransfer(receivedData);
 
-					// Check if the client should stop
+					// Check if the client should disconnect
 					if (!running)
 						break;
 
@@ -110,7 +110,8 @@ namespace kl
 
 					// Clear receieve buffer and wait for data to come
 					memset(receivedData, 0, receiveBufferSize);
-					recv(sock, receivedData, receiveBufferSize, NULL);
+					if (recv(sock, receivedData, receiveBufferSize, NULL) == SOCKET_ERROR)
+						break;
 				}
 
 				// Cleanup
