@@ -205,14 +205,14 @@ namespace kl
 			}
 
 			// Saves data
-			bitmap tempBitmap(loadedBitmap->GetWidth(), loadedBitmap->GetHeight());
+			bitmap tempBitmap({ (int)loadedBitmap->GetWidth(), (int)loadedBitmap->GetHeight() });
 			for (int y = 0; y < tempBitmap.GetHeight(); y++)
 			{
 				for (int x = 0; x < tempBitmap.GetWidth(); x++)
 				{
 					Gdiplus::Color tempPixel;
 					loadedBitmap->GetPixel(x, y, &tempPixel);
-					tempBitmap.SetPixel(x, y, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), 255 });
+					tempBitmap.SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), 255 });
 				}
 			}
 

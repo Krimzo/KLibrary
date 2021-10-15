@@ -9,17 +9,18 @@
 namespace kl
 {
 	typedef POINT point;
+
 	struct vec2
 	{
 		double x = 0;
 		double y = 0;
 
 		// Operator overloading
-		vec2 operator + (vec2 obj)
+		vec2 operator + (vec2& obj)
 		{
 			return { x + obj.x, y + obj.y };
 		}
-		vec2 operator - (vec2 obj)
+		vec2 operator - (vec2& obj)
 		{
 			return { x - obj.x, y - obj.y };
 		}
@@ -39,11 +40,11 @@ namespace kl
 		{
 			return { x / obj, y / obj };
 		}
-		bool operator == (vec2 obj)
+		bool operator == (vec2& obj)
 		{
 			return (x == obj.x && y == obj.y);
 		}
-		bool operator != (vec2 obj)
+		bool operator != (vec2& obj)
 		{
 			return (x != obj.x || y != obj.y);
 		}
@@ -77,11 +78,11 @@ namespace kl
 		double z = 0;
 
 		// Operator overloading
-		vec3 operator + (vec3 obj)
+		vec3 operator + (vec3& obj)
 		{
 			return { x + obj.x, y + obj.y, z + obj.z };
 		}
-		vec3 operator - (vec3 obj)
+		vec3 operator - (vec3& obj)
 		{
 			return { x - obj.x, y - obj.y, z - obj.z };
 		}
@@ -101,11 +102,11 @@ namespace kl
 		{
 			return { x / obj, y / obj, z / obj };
 		}
-		bool operator == (vec3 obj)
+		bool operator == (vec3& obj)
 		{
 			return (x == obj.x && y == obj.y && z == obj.z);
 		}
-		bool operator != (vec3 obj)
+		bool operator != (vec3& obj)
 		{
 			return (x != obj.x || y != obj.y || z != obj.z);
 		}
@@ -171,10 +172,10 @@ namespace kl
 	{
 	public:
 		// Constructor
-		bitmap(int width, int height, color color = { 0, 0, 0, 255 })
+		bitmap(size size, color color = { 0, 0, 0, 255 })
 		{
-			this->width = width;
-			this->height = height;
+			width = size.width;
+			height = size.height;
 			pixels.resize(size_t(width) * size_t(height));
 			FillSolid(color);
 		}
@@ -188,15 +189,19 @@ namespace kl
 		{
 			return height;
 		}
-		size_t GetSize()
+		size GetSize()
+		{
+			return { width, height };
+		}
+		size_t GetLenght()
 		{
 			return pixels.size();
 		}
-		color GetPixel(int x, int y)
+		color GetPixel(point point)
 		{
-			if (x >= 0 && x < width && y >= 0 && y < height)
+			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
 			{
-				return pixels[y * size_t(width) + x];
+				return pixels[point.y * size_t(width) + point.x];
 			}
 			return { 0, 0, 0 };
 		}
@@ -216,11 +221,17 @@ namespace kl
 			this->height = height;
 			pixels.resize(size_t(this->width) * size_t(this->height));
 		}
-		void SetPixel(int x, int y, color color)
+		void SetSize(size size)
 		{
-			if (x >= 0 && x < width && y >= 0 && y < height)
+			width = size.width;
+			height = size.height;
+			pixels.resize(size_t(width) * size_t(height));
+		}
+		void SetPixel(point point, color color)
+		{
+			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
 			{
-				pixels[y * size_t(width) + x] = color;
+				pixels[point.y * size_t(width) + point.x] = color;
 			}
 		}
 
@@ -234,6 +245,17 @@ namespace kl
 		void FastClear(byte value)
 		{
 			memset(&pixels[0], value, pixels.size() * 4);
+		}
+
+		// Flips red and blue color channels
+		void FlipRB()
+		{
+			for (int i = 0; i < pixels.size(); i++)
+			{
+				byte tempByte = pixels[i].r;
+				pixels[i].r = pixels[i].b;
+				pixels[i].b = tempByte;
+			}
 		}
 
 		// Converts a bitmap to an ASCII frame
@@ -250,7 +272,7 @@ namespace kl
 				for (int x = 0; x < frameSize.width; x++)
 				{
 					// Pixels to grayscale
-					color currentPixel = this->GetPixel(x * pixelWidthIncrement, y * pixelHeightIncrement);
+					color currentPixel = this->GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement });
 					int grayScaledPixel = (int)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
 
 					// Grayscaled values to ASCII
@@ -267,105 +289,6 @@ namespace kl
 		int height = 0;
 		std::vector<color> pixels = {};
 		char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
-	};
-
-	struct colorf_bgra
-	{
-		float b = 0;
-		float g = 0;
-		float r = 0;
-		float a = 1;
-	};
-
-	struct colord_bgra
-	{
-		double b = 0;
-		double g = 0;
-		double r = 0;
-		double a = 1;
-	};
-
-	struct color_bgra
-	{
-		byte b = 0;
-		byte g = 0;
-		byte r = 0;
-		byte a = 255;
-	};
-
-	struct bitmap_bgra
-	{
-	public:
-		// Constructor
-		bitmap_bgra(int width, int height, color_bgra color = { 0, 0, 0, 255 })
-		{
-			this->width = width;
-			this->height = height;
-			pixels.resize(size_t(width) * size_t(height));
-			FillSolid(color);
-		}
-
-		// Getters
-		int GetWidth()
-		{
-			return width;
-		}
-		int GetHeight()
-		{
-			return height;
-		}
-		size_t GetSize()
-		{
-			return pixels.size();
-		}
-		color_bgra GetPixel(int x, int y)
-		{
-			if (x >= 0 && x < width && y >= 0 && y < height)
-			{
-				return pixels[y * size_t(width) + x];
-			}
-			return { 0, 0, 0 };
-		}
-		color_bgra* GetPixelData()
-		{
-			return &pixels[0];
-		}
-
-		// Setters
-		void SetWidth(int width)
-		{
-			this->width = width;
-			pixels.resize(size_t(this->width) * size_t(this->height));
-		}
-		void SetHeight(int height)
-		{
-			this->height = height;
-			pixels.resize(size_t(this->width) * size_t(this->height));
-		}
-		void SetPixel(int x, int y, color_bgra color)
-		{
-			if (x >= 0 && x < width && y >= 0 && y < height)
-			{
-				pixels[y * size_t(width) + x] = color;
-			}
-		}
-
-		// Fils the bitmap with solid color
-		void FillSolid(color_bgra color)
-		{
-			std::fill(pixels.begin(), pixels.end(), color);
-		}
-
-		// Resets the byte values
-		void FastClear(byte value)
-		{
-			memset(&pixels[0], value, pixels.size() * 4);
-		}
-
-	private:
-		int width = 0;
-		int height = 0;
-		std::vector<color_bgra> pixels = {};
 	};
 }
 
