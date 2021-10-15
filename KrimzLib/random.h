@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include "KrimzLib/types.h"
 
 
 namespace kl

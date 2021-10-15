@@ -1,8 +1,4 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <windows.h>
-#include "KrimzLib/incl/OpenCL/cl.hpp"
 
 
 /* MATH */

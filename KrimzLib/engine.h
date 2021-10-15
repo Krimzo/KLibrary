@@ -1,12 +1,4 @@
 #pragma once
-#include <functional>
-#include <string>
-#include <sstream>
-#include <map>
-#include <iterator>
-#include <windows.h>
-#include "KrimzLib/types.h"
-#include "KrimzLib/constant.h"
 
 
 namespace kl

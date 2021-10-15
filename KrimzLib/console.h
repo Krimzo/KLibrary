@@ -1,9 +1,4 @@
 #pragma once
-#include <iostream>
-#include <windows.h>
-#include <conio.h>
-#include "KrimzLib/types.h"
-#include "KrimzLib/constant.h"
 
 
 namespace kl

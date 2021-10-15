@@ -1,13 +1,4 @@
 #pragma once
-#include <iostream>
-#include <functional>
-#include <thread>
-#include <string>
-#include <windows.h>
-#include <windowsx.h>
-#include "KrimzLib/incl/OpenGL/glad.h"
-#include "KrimzLib/types.h"
-#include "KrimzLib/constant.h"
 
 
 namespace kl

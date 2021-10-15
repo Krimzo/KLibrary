@@ -1,11 +1,4 @@
 #pragma once
-#include <iostream>
-#include <windows.h>
-#include <wininet.h>
-#include "KrimzLib/types.h"
-#include "KrimzLib/file.h"
-#pragma comment(lib,"wininet.lib")
-#pragma comment(lib, "Ws2_32.lib")
 
 
 namespace kl 

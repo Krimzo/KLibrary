@@ -1,11 +1,4 @@
 #pragma once
-#include <functional>
-#include <windows.h>
-#include <gl/GLU.h>
-#include "KrimzLib/incl/OpenGL/glad.h"
-#include "KrimzLib/types.h"
-#pragma comment (lib, "opengl32.lib")
-#pragma comment (lib, "glu32.lib")
 
 
 namespace kl
