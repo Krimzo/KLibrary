@@ -51,7 +51,7 @@ namespace kl
 		{
 		public:
 			// Starts a new tcp client
-			void Connect(std::string serverIP, int serverPort, int receiveBufferSize, std::function<std::string(std::string receivedData)> DataTransfer)
+			void Connect(std::string serverIP, int serverPort, int receiveBufferSize, std::function<std::string(std::string receivedData)> DataProcessing)
 			{
 				// Init winsock
 				WSADATA wsData = {};
@@ -69,7 +69,7 @@ namespace kl
 					WSACleanup();
 					return;
 				}
-
+	
 				// Connect to the server
 				sockaddr_in sockHint = {};
 				sockHint.sin_family = AF_INET;
@@ -98,12 +98,12 @@ namespace kl
 				while (true)
 				{
 					// Edit data
-					std::string dataToSend = DataTransfer(receivedData);
+					std::string dataToSend = DataProcessing(receivedData);
 
 					// Check if the client should disconnect
 					if (!running)
 						break;
-
+					
 					// Send data to server
 					if (send(sock, dataToSend.c_str(), (int)dataToSend.size() + 1, NULL) == SOCKET_ERROR)
 						break;
