@@ -67,10 +67,10 @@ namespace kl
 			hdc = GetDC(hwnd);
 
 			// Bitmapinfo setup
-			bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
-			bitmapInfo.bmiHeader.biPlanes = 1;
-			bitmapInfo.bmiHeader.biBitCount = 32;
-			bitmapInfo.bmiHeader.biCompression = BI_RGB;
+			bmpInfo.bmiHeader.biSize = sizeof(bmpInfo.bmiHeader);
+			bmpInfo.bmiHeader.biPlanes = 1;
+			bmpInfo.bmiHeader.biBitCount = 32;
+			bmpInfo.bmiHeader.biCompression = BI_RGB;
 
 			// OpenGL setup
 			if (opengl)
@@ -110,7 +110,7 @@ namespace kl
 				WindowStart();
 				while (IsWindow(hwnd))
 				{
-					while (PeekMessage(&windowMessage, hwnd, 0, 0, PM_REMOVE))
+					while (PeekMessage(&wndMsg, hwnd, 0, 0, PM_REMOVE))
 					{
 						HandleMessage();
 					}
@@ -123,7 +123,7 @@ namespace kl
 				WindowStart();
 				while (IsWindow(hwnd))
 				{
-					GetMessage(&windowMessage, hwnd, 0, 0);
+					GetMessage(&wndMsg, hwnd, 0, 0);
 					HandleMessage();
 					WindowUpdate();
 				}
@@ -198,15 +198,15 @@ namespace kl
 		// Sets the pixels of the window
 		void DisplayBitmap(bitmap& toDraw, point position = { 0, 0 })
 		{
-			bitmapInfo.bmiHeader.biWidth = toDraw.GetWidth();
-			bitmapInfo.bmiHeader.biHeight = toDraw.GetHeight();
-			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
+			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
+			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
 		void DisplayBitmap(bitmap&& toDraw, point position = { 0, 0 })
 		{
-			bitmapInfo.bmiHeader.biWidth = toDraw.GetWidth();
-			bitmapInfo.bmiHeader.biHeight = toDraw.GetHeight();
-			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
+			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
+			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
 
 	private:
@@ -214,8 +214,8 @@ namespace kl
 		HINSTANCE hInstance = GetModuleHandle(NULL);
 		HWND hwnd = NULL;
 		HDC hdc = NULL;
-		BITMAPINFO bitmapInfo = {};
-		MSG windowMessage = {};
+		BITMAPINFO bmpInfo = {};
+		MSG wndMsg = {};
 
 		// OpenGL properties
 		HGLRC hglrc = NULL;
@@ -223,10 +223,10 @@ namespace kl
 		// Handles the windows message
 		void HandleMessage()
 		{
-			switch (windowMessage.message)
+			switch (wndMsg.message)
 			{
 			case WM_KEYDOWN:
-				KEY = windowMessage.wParam;
+				KEY = wndMsg.wParam;
 				break;
 
 			case WM_KEYUP:
@@ -250,11 +250,11 @@ namespace kl
 				break;
 
 			case WM_MOUSEMOVE:
-				MOUSE = { GET_X_LPARAM(windowMessage.lParam),  GET_Y_LPARAM(windowMessage.lParam) };
+				MOUSE = { GET_X_LPARAM(wndMsg.lParam),  GET_Y_LPARAM(wndMsg.lParam) };
 				break;
 
 			default:
-				DispatchMessage(&windowMessage);
+				DispatchMessage(&wndMsg);
 				break;
 			}
 		}
