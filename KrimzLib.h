@@ -33,7 +33,7 @@
 #include "KrimzLib/binary.h"
 #include "KrimzLib/file.h"
 #include "KrimzLib/thread.h"
-#include "KrimzLib/web.h"
+#include "KrimzLib/net.h"
 #include "KrimzLib/opencl.h"
 #include "KrimzLib/opengl.h"
 #include "KrimzLib/window.h"
