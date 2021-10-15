@@ -1,7 +1,6 @@
 #pragma once
 #include <windows.h>
 #include "KrimzLib/types.h"
-#include "KrimzLib/graphics.h"
 
 
 namespace kl
@@ -15,8 +14,6 @@ namespace kl
 
 		// Doubles
 		const double pi = 3.14159265358979;
-		const double toRadians = pi / 180;
-		const double toDegrees = 180 / pi;
 
 		// Colors
 		const color colorBlack = { 0, 0, 0, 255 };

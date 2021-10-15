@@ -21,13 +21,13 @@ namespace kl
 			return rand() % (endExclusive - startInclusive) + startInclusive;
 		}
 
-		// Fills a vector with random integers
-		static void FillVector(std::vector<int>& vectorToFill, int startInclusive, int endExclusive)
+		// Returns a vector with random integers
+		static std::vector<int> GetIntVector(int startInclusive, int endExclusive, int vectorSize)
 		{
-			for (int i = 0; i < vectorToFill.size(); i++)
-			{
-				vectorToFill[i] = GetInt(startInclusive, endExclusive);
-			}
+			std::vector<int> tempVec(vectorSize);
+			for (int i = 0; i < vectorSize; i++)
+				tempVec[i] = GetInt(startInclusive, endExclusive);
+			return tempVec;
 		}
 	};
 }

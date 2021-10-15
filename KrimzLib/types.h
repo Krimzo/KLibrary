@@ -48,12 +48,6 @@ namespace kl
 			return (x != obj.x || y != obj.y);
 		}
 
-		// Prints the vector to the console
-		void Print()
-		{
-			std::cout << "x: " << x << " y: " << y << '\n';
-		}
-
 		// Returns the vectors lenght
 		double Lenght()
 		{
@@ -116,12 +110,6 @@ namespace kl
 			return (x != obj.x || y != obj.y || z != obj.z);
 		}
 
-		// Prints the vector to the console
-		void Print()
-		{
-			std::cout << "x: " << x << " y: " << y << " z: " << z << '\n';
-		}
-
 		// Returns the vectors lenght
 		double Lenght()
 		{
@@ -149,16 +137,10 @@ namespace kl
 	{
 		int width = 0;
 		int height = 0;
-
-		// Returns the area
-		int Area()
-		{
-			return width * height;
-		}
 	};
 }
 
-/* GRAPHICS */
+/* COLOR */
 namespace kl
 {
 	struct colorf
@@ -183,18 +165,6 @@ namespace kl
 		byte g = 0;
 		byte b = 0;
 		byte a = 255;
-
-		// Returns the color as a float type
-		colorf ToFloat() const
-		{
-			return { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
-		}
-
-		// Returns the color as a double type
-		colord ToDouble() const
-		{
-			return { r / 255.0, g / 255.0, b / 255.0, a / 255.0 };
-		}
 	};
 
 	struct bitmap
@@ -267,30 +237,6 @@ namespace kl
 		}
 
 		// Converts a bitmap to an ASCII frame
-		std::string ToASCIIFrame(int frameWidth, int frameHeight)
-		{
-			// Calculations
-			int pixelWidthIncrement = width / frameWidth;
-			int pixelHeightIncrement = height / frameHeight;
-
-			// Processing
-			std::string frame = "";
-			for (int y = 0; y < frameHeight; y++)
-			{
-				for (int x = 0; x < frameWidth; x++)
-				{
-					// Pixels to grayscale
-					color currentPixel = this->GetPixel(x * pixelWidthIncrement, y * pixelHeightIncrement);
-					int grayScaledPixel = (int)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
-
-					// Grayscaled values to ASCII
-					int saturationLevel = (int)((grayScaledPixel / 255.0) * 9);
-					frame += asciiPixelTable[saturationLevel];
-				}
-				frame += '\n';
-			}
-			return frame;
-		}
 		std::string ToASCIIFrame(size frameSize)
 		{
 			// Calculations
@@ -345,18 +291,6 @@ namespace kl
 		byte g = 0;
 		byte r = 0;
 		byte a = 255;
-
-		// Returns the color as a float type
-		colorf_bgra ToFloat() const
-		{
-			return { b / 255.0f, g / 255.0f, r / 255.0f, a / 255.0f };
-		}
-
-		// Returns the color as a double type
-		colord_bgra ToDouble() const
-		{
-			return { b / 255.0, g / 255.0, r / 255.0, a / 255.0 };
-		}
 	};
 
 	struct bitmap_bgra

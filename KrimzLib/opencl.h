@@ -1,6 +1,7 @@
 #pragma once
 #include "KrimzLib/incl/OpenCL/cl.hpp"
 #include "KrimzLib/types.h"
+#include "KrimzLib/math.h"
 #pragma comment(lib, "incl/KrimzLib/lib/opencl.lib")
 
 

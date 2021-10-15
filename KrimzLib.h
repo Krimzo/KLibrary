@@ -1,7 +1,7 @@
 #pragma once
 #include "KrimzLib/types.h"
 #include "KrimzLib/constant.h"
-#include "KrimzLib/graphics.h"
+#include "KrimzLib/convert.h"
 #include "KrimzLib/math.h"
 #include "KrimzLib/random.h"
 #include "KrimzLib/time.h"

@@ -1,7 +1,6 @@
 #pragma once
 #include <windows.h>
 #include "KrimzLib/types.h"
-#include "KrimzLib/graphics.h"
 
 
 namespace kl
