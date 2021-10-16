@@ -113,17 +113,15 @@ namespace kl
 					char service[NI_MAXSERV];
 					memset(host, 0, NI_MAXHOST);
 					memset(service, 0, NI_MAXSERV);
-					std::stringstream ss;
 					if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, NULL))
 					{
-						ss << host;
+						clientName = std::string(host);
 					}
 					else
 					{
 						inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
-						ss << host;
+						clientName = std::string(host);
 					}
-					clientName = ss.str();
 					clientConnected = true;
 				}
 			}
