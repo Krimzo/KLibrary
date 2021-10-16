@@ -50,8 +50,11 @@ namespace kl
 		class TcpServer
 		{
 		public:
+			// Vars
+			std::function<std::string(std::string receivedData)> DataProcessing = [](std::string receivedData) { return receivedData; };
+
 			// Starts the server
-			void Start(std::string serverIP, int serverPort, int receiveBufferSize, std::function<std::string(std::string receivedData)> DataProcessing)
+			void Start(std::string serverIP, int serverPort, int receiveBufferSize)
 			{
 				// Init winsock
 				WSADATA wsData = {};
@@ -65,7 +68,7 @@ namespace kl
 				SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, NULL);
 				if (serverSocket == INVALID_SOCKET)
 				{
-					printf("Failed to create server socket!, Error = %d\n", WSAGetLastError());
+					std::cout << "Failed to create server socket!, Error = " << WSAGetLastError() << std::endl;
 					WSACleanup();
 					return;
 				}
@@ -80,54 +83,60 @@ namespace kl
 				// Prepare for listening
 				listen(serverSocket, SOMAXCONN);
 
-				// Wait for a connection
-				sockaddr_in client = {};
-				int clientSize = sizeof(client);
-				std::cout << "Waiting for clients on " << serverIP << ":" << serverPort << std::endl;
-				SOCKET clientSocket = accept(serverSocket, (sockaddr*)&client, &clientSize);
-				if (clientSocket == INVALID_SOCKET)
-				{
-					printf("Failed to accept! Error = %d\n", WSAGetLastError());
-					closesocket(serverSocket);
-					WSACleanup();
-					return;
-				}
-
-				// Process the connected client data
-				char host[NI_MAXHOST];
-				char service[NI_MAXSERV];
-				memset(host, 0, NI_MAXHOST);
-				memset(service, 0, NI_MAXSERV);
-				if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, NULL))
-				{
-					std::cout << host << " connected on port " << service << std::endl;
-				}
-				else
-				{
-					inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
-					std::cout << host << " connected on port " << ntohs(client.sin_port) << std::endl;
-				}
-
-				// Close listening socket
-				closesocket(serverSocket);
-
 				// Memory allocation
 				running = true;
 				char* receiveBuffer = new char[receiveBufferSize];
 				if (!receiveBuffer)
 				{
-					closesocket(clientSocket);
+					closesocket(serverSocket);
 					WSACleanup();
 				}
 
 				// Communication
+				SOCKET clientSocket = {};
 				while (true)
 				{
+					if (!clientConnected)
+					{
+						// Wait for a connection
+						sockaddr_in client = {};
+						int clientSize = sizeof(client);
+						std::cout << "Waiting for clients on " << serverIP << ":" << serverPort << std::endl;
+						clientSocket = accept(serverSocket, (sockaddr*)&client, &clientSize);
+						if (clientSocket == INVALID_SOCKET)
+						{
+							std::cout << "Failed to accept! Error = " << WSAGetLastError() << std::endl;
+							closesocket(serverSocket);
+							WSACleanup();
+							return;
+						}
+						clientConnected = true;
+
+						// Process the connected client data
+						char host[NI_MAXHOST];
+						char service[NI_MAXSERV];
+						memset(host, 0, NI_MAXHOST);
+						memset(service, 0, NI_MAXSERV);
+						if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, NULL))
+						{
+							std::cout << host << " connected on port " << service << std::endl;
+						}
+						else
+						{
+							inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
+							std::cout << host << " connected on port " << ntohs(client.sin_port) << std::endl;
+						}
+					}
+
 					// Clear buffer and wait for data
 					memset(receiveBuffer, 0, receiveBufferSize);
 					if (recv(clientSocket, receiveBuffer, receiveBufferSize, NULL) == SOCKET_ERROR)
-						break;
-					
+					{
+						std::cout << "Client disconnected!\n";
+						clientConnected = false;
+						continue;
+					}
+
 					// Process data
 					std::string dataToSend = DataProcessing(receiveBuffer);
 
@@ -137,11 +146,16 @@ namespace kl
 
 					// Send data back to the client
 					if (send(clientSocket, dataToSend.c_str(), (int)dataToSend.size() + 1, NULL) == SOCKET_ERROR)
-						break;
+					{
+						std::cout << "Client disconnected!\n";
+						clientConnected = false;
+						continue;
+					}
 				}
 
 				// Cleanup
 				delete[] receiveBuffer;
+				closesocket(serverSocket);
 				closesocket(clientSocket);
 				WSACleanup();
 			}
@@ -153,6 +167,7 @@ namespace kl
 			}
 
 		private:
+			bool clientConnected = false;
 			bool running = true;
 		};
 
@@ -160,8 +175,11 @@ namespace kl
 		class TcpClient
 		{
 		public:
+			// Vars
+			std::function<std::string(std::string receivedData)> DataProcessing = [](std::string receivedData) { return receivedData; };
+
 			// Starts a new tcp client
-			void Connect(std::string serverIP, int serverPort, int receiveBufferSize, std::function<std::string(std::string receivedData)> DataProcessing)
+			void Connect(std::string serverIP, int serverPort, int receiveBufferSize)
 			{
 				// Init winsock
 				WSADATA wsData = {};
@@ -175,7 +193,7 @@ namespace kl
 				SOCKET clientSocket = socket(AF_INET, SOCK_STREAM, NULL);
 				if (clientSocket == INVALID_SOCKET)
 				{
-					printf("Failed to create socket!, Error = %d\n", WSAGetLastError());
+					std::cout << "Failed to create socket!, Error = " << WSAGetLastError() << std::endl;
 					WSACleanup();
 					return;
 				}
@@ -188,11 +206,12 @@ namespace kl
 				std::cout << "Trying to connect to " << serverIP << ":" << serverPort << std::endl;
 				if (connect(clientSocket, (sockaddr*)&sockHint, sizeof(sockHint)))
 				{
-					printf("Failed to connect! Error = %d\n", WSAGetLastError());
+					std::cout << "Failed to connect! Error = " << WSAGetLastError() << std::endl;
 					closesocket(clientSocket);
 					WSACleanup();
 					return;
 				}
+				printf("Connected!\n");
 
 				// Allocate memory
 				char* receivedData = new char[receiveBufferSize];
