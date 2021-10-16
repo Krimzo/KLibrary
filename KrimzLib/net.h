@@ -50,7 +50,8 @@ namespace kl
 		static void InitWinSock()
 		{
 			WSADATA wsData = {};
-			int iDontCare = WSAStartup(MAKEWORD(2, 2), &wsData);
+			if (WSAStartup(MAKEWORD(2, 2), &wsData))
+				printf("Failed to initalise winsock\n");
 		}
 
 		// Uninitialises winsock
@@ -63,113 +64,132 @@ namespace kl
 		class TcpServer
 		{
 		public:
-			// Vars
-			std::function<std::string(std::string receivedData)> DataProcessing = [](std::string receivedData) { return receivedData; };
-
-			// Starts the server
-			void Start(std::string serverIP, int serverPort, int receiveBufferSize)
+			~TcpServer()
 			{
-				// Create a socket
-				SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, NULL);
-				if (serverSocket == INVALID_SOCKET)
-				{
-					std::cout << "Failed to create server socket!, Error = " << WSAGetLastError() << std::endl;
-					return;
-				}
-
-				// Bind the ip and port to the socket
-				sockaddr_in sockHint = {};
-				sockHint.sin_family = AF_INET;
-				sockHint.sin_port = htons(serverPort);
-				sockHint.sin_addr.S_un.S_addr = INADDR_ANY;
-				bind(serverSocket, (sockaddr*)&sockHint, sizeof(sockHint));
-
-				// Prepare for listening
-				listen(serverSocket, SOMAXCONN);
-
-				// Memory allocation
-				running = true;
-				char* receiveBuffer = new char[receiveBufferSize];
-				if (!receiveBuffer)
-				{
-					closesocket(serverSocket);
-				}
-
-				// Communication
-				SOCKET clientSocket = {};
-				while (true)
-				{
-					if (!clientConnected)
-					{
-						// Wait for a connection
-						sockaddr_in client = {};
-						int clientSize = sizeof(client);
-						std::cout << "Waiting for clients on " << serverIP << ":" << serverPort << std::endl;
-						clientSocket = accept(serverSocket, (sockaddr*)&client, &clientSize);
-						if (clientSocket == INVALID_SOCKET)
-						{
-							std::cout << "Failed to accept! Error = " << WSAGetLastError() << std::endl;
-							closesocket(serverSocket);
-							return;
-						}
-						clientConnected = true;
-
-						// Process the connected client data
-						char host[NI_MAXHOST];
-						char service[NI_MAXSERV];
-						memset(host, 0, NI_MAXHOST);
-						memset(service, 0, NI_MAXSERV);
-						if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, NULL))
-						{
-							std::cout << host << " connected on port " << service << std::endl;
-						}
-						else
-						{
-							inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
-							std::cout << host << " connected on port " << ntohs(client.sin_port) << std::endl;
-						}
-					}
-
-					// Clear buffer and wait for data
-					memset(receiveBuffer, 0, receiveBufferSize);
-					if (recv(clientSocket, receiveBuffer, receiveBufferSize, NULL) == SOCKET_ERROR)
-					{
-						std::cout << "Client disconnected!\n";
-						clientConnected = false;
-						continue;
-					}
-
-					// Process data
-					std::string dataToSend = DataProcessing(receiveBuffer);
-
-					// Check if the server should stop running
-					if (!running)
-						break;
-
-					// Send data back to the client
-					if (send(clientSocket, dataToSend.c_str(), (int)dataToSend.size() + 1, NULL) == SOCKET_ERROR)
-					{
-						std::cout << "Client disconnected!\n";
-						clientConnected = false;
-						continue;
-					}
-				}
-
-				// Cleanup
-				delete[] receiveBuffer;
-				closesocket(serverSocket);
-				closesocket(clientSocket);
+				Destroy();
 			}
 
-			// Stos the server
-			void Stop()
+			// Create a new server
+			void Create(int port)
 			{
-				running = false;
+				if (!created)
+				{
+					// Create a socket
+					serverSocket = socket(AF_INET, SOCK_STREAM, NULL);
+					if (serverSocket == INVALID_SOCKET)
+					{
+						printf("Failed to create server socket!\n");
+						return;
+					}
+
+					// Bind the ip and port to the socket
+					sockaddr_in sockHint = {};
+					sockHint.sin_family = AF_INET;
+					sockHint.sin_port = htons(port);
+					sockHint.sin_addr.S_un.S_addr = INADDR_ANY;
+					bind(serverSocket, (sockaddr*)&sockHint, sizeof(sockHint));
+					listen(serverSocket, SOMAXCONN);
+					created = true;
+				}
+			}
+
+			// Wait for a client to connect
+			void WaitForClient(bool echo = false)
+			{
+				if (!clientConnected)
+				{
+					if (echo)
+						printf("Waiting for a client to join!\n");
+
+					// Wait for a connection
+					sockaddr_in client = {};
+					int clientSize = sizeof(client);
+					clientSocket = accept(serverSocket, (sockaddr*)&client, &clientSize);
+					if (clientSocket == INVALID_SOCKET)
+						return;
+
+					// Process the connected client data
+					char host[NI_MAXHOST];
+					char service[NI_MAXSERV];
+					memset(host, 0, NI_MAXHOST);
+					memset(service, 0, NI_MAXSERV);
+					std::stringstream ss;
+					if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, NULL))
+					{
+						ss << host;
+					}
+					else
+					{
+						inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
+						ss << host;
+					}
+					clientName = ss.str();
+					clientConnected = true;
+				}
+			}
+
+			// Return the currently connected clients name or empty string if no one is connected
+			std::string GetClient()
+			{
+				if (created && clientConnected)
+				{
+					return clientName;
+				}
+				return "";
+			}
+
+			// Send data back to the client
+			void SendData(bytes& data, bool echo = false)
+			{
+				if (created && clientConnected)
+				{
+					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
+						clientConnected = false;
+
+					if (echo)
+						printf("Data sent!\n");
+				}
+			}
+			void SendData(bytes&& data, bool echo = false)
+			{
+				if (created && clientConnected)
+				{
+					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
+						clientConnected = false;
+					
+					if (echo)
+						printf("Data sent!\n");
+				}
+			}
+
+			// Receive data from the client
+			void ReceiveData(bytes& dataBuffer, bool echo = false)
+			{
+				if (created && clientConnected)
+				{
+					if (echo)
+						printf("Waiting for client to send data!\n");
+
+					memset(&dataBuffer[0], 0, dataBuffer.size());
+					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
+						clientConnected = false;
+				}
+			}
+
+			// Destroys the server
+			void Destroy()
+			{
+				closesocket(serverSocket);
+				closesocket(clientSocket);
+				created = false;
 			}
 
 		private:
+			SOCKET serverSocket = {};
+			SOCKET clientSocket = {};
 			bool clientConnected = false;
-			bool running = true;
+			bool created = false;
+			std::string clientName = "";
 		};
 
 		// Simple TCP client
@@ -188,7 +208,7 @@ namespace kl
 			}
 
 			// Connects the client to server
-			void Connect(std::string serverIP, int serverPort)
+			void Connect(std::string serverIP, int serverPort, bool echo = false)
 			{
 				// Disconnect the client if it's already connected
 				Disconnect();
@@ -206,6 +226,8 @@ namespace kl
 				sockHint.sin_family = AF_INET;
 				sockHint.sin_port = htons(serverPort);
 				inet_pton(AF_INET, serverIP.c_str(), &sockHint.sin_addr);
+				if (echo)
+					printf("Trying to connect to %s:%d!\n", serverIP.c_str(), serverPort);
 				if (connect(clientSocket, (sockaddr*)&sockHint, sizeof(sockHint)))
 				{
 					printf("Failed to connect!\n");
@@ -216,28 +238,37 @@ namespace kl
 			}
 
 			// Send data to server
-			void SendData(bytes& data)
+			void SendData(bytes& data, bool echo = false)
 			{
 				if (connected)
 				{
 					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
 						Disconnect();
+
+					if (echo)
+						printf("Data sent!\n");
 				}
 			}
-			void SendData(bytes&& data)
+			void SendData(bytes&& data, bool echo = false)
 			{
 				if (connected)
 				{
 					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
 						Disconnect();
+
+					if (echo)
+						printf("Data sent!\n");
 				}
 			}
 
 			// Receive data from the server
-			void ReceiveData(bytes& dataBuffer)
+			void ReceiveData(bytes& dataBuffer, bool echo = false)
 			{
 				if (connected)
 				{
+					if (echo)
+						printf("Waiting for server to send data!\n");
+
 					memset(&dataBuffer[0], 0, dataBuffer.size());
 					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
 						Disconnect();
