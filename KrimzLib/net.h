@@ -69,6 +69,12 @@ namespace kl
 				Destroy();
 			}
 
+			// Returns server status
+			bool IsCreated()
+			{
+				return created;
+			}
+
 			// Create a new server
 			void Create(int port)
 			{
