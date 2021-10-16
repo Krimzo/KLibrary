@@ -7,7 +7,7 @@ namespace kl
 	{
 	public:
 		// Engine properties
-		double fpsLimit = -1;
+		double fpsLimit = 60;
 		double deltaTime = 0;
 		double gravity = 5;
 		colorf background = {};

@@ -46,6 +46,19 @@ namespace kl
 			file::WriteBytes(GetWebsiteData(url), fileName);
 		}
 
+		// Initialises winsock
+		static void InitWinSock()
+		{
+			WSADATA wsData = {};
+			int iDontCare = WSAStartup(MAKEWORD(2, 2), &wsData);
+		}
+
+		// Uninitialises winsock
+		static void UninitWinSock()
+		{
+			WSACleanup();
+		}
+
 		// Simple TCP server
 		class TcpServer
 		{
@@ -56,20 +69,11 @@ namespace kl
 			// Starts the server
 			void Start(std::string serverIP, int serverPort, int receiveBufferSize)
 			{
-				// Init winsock
-				WSADATA wsData = {};
-				if (WSAStartup(MAKEWORD(2, 2), &wsData))
-				{
-					printf("Failed to init winsock!\n");
-					return;
-				}
-
 				// Create a socket
 				SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, NULL);
 				if (serverSocket == INVALID_SOCKET)
 				{
 					std::cout << "Failed to create server socket!, Error = " << WSAGetLastError() << std::endl;
-					WSACleanup();
 					return;
 				}
 
@@ -89,7 +93,6 @@ namespace kl
 				if (!receiveBuffer)
 				{
 					closesocket(serverSocket);
-					WSACleanup();
 				}
 
 				// Communication
@@ -107,7 +110,6 @@ namespace kl
 						{
 							std::cout << "Failed to accept! Error = " << WSAGetLastError() << std::endl;
 							closesocket(serverSocket);
-							WSACleanup();
 							return;
 						}
 						clientConnected = true;
@@ -157,7 +159,6 @@ namespace kl
 				delete[] receiveBuffer;
 				closesocket(serverSocket);
 				closesocket(clientSocket);
-				WSACleanup();
 			}
 
 			// Stos the server
@@ -175,89 +176,87 @@ namespace kl
 		class TcpClient
 		{
 		public:
-			// Vars
-			std::function<std::string(std::string receivedData)> DataProcessing = [](std::string receivedData) { return receivedData; };
-
-			// Starts a new tcp client
-			void Connect(std::string serverIP, int serverPort, int receiveBufferSize)
+			~TcpClient()
 			{
-				// Init winsock
-				WSADATA wsData = {};
-				if (WSAStartup(MAKEWORD(2, 2), &wsData))
-				{
-					printf("Failed to init winsock!\n");
-					return;
-				}
+				Disconnect();
+			}
+
+			// Returns the current state of the client
+			bool IsConnected()
+			{
+				return connected;
+			}
+
+			// Connects the client to server
+			void Connect(std::string serverIP, int serverPort)
+			{
+				// Disconnect the client if it's already connected
+				Disconnect();
 
 				// Create a socket
-				SOCKET clientSocket = socket(AF_INET, SOCK_STREAM, NULL);
+				clientSocket = socket(AF_INET, SOCK_STREAM, NULL);
 				if (clientSocket == INVALID_SOCKET)
 				{
-					std::cout << "Failed to create socket!, Error = " << WSAGetLastError() << std::endl;
-					WSACleanup();
+					printf("Failed to create socket!\n");
 					return;
 				}
-	
+
 				// Connect to the server
 				sockaddr_in sockHint = {};
 				sockHint.sin_family = AF_INET;
 				sockHint.sin_port = htons(serverPort);
 				inet_pton(AF_INET, serverIP.c_str(), &sockHint.sin_addr);
-				std::cout << "Trying to connect to " << serverIP << ":" << serverPort << std::endl;
 				if (connect(clientSocket, (sockaddr*)&sockHint, sizeof(sockHint)))
 				{
-					std::cout << "Failed to connect! Error = " << WSAGetLastError() << std::endl;
+					printf("Failed to connect!\n");
 					closesocket(clientSocket);
-					WSACleanup();
 					return;
 				}
-				printf("Connected!\n");
-
-				// Allocate memory
-				char* receivedData = new char[receiveBufferSize];
-				if (!receivedData)
-				{
-					closesocket(clientSocket);
-					WSACleanup();
-					return;
-				}
-				memset(receivedData, 0, receiveBufferSize);
-
-				// Communicate with server
 				connected = true;
-				while (true)
-				{
-					// Edit data
-					std::string dataToSend = DataProcessing(receivedData);
-
-					// Check if the client should disconnect
-					if (!connected)
-						break;
-					
-					// Send data to server
-					if (send(clientSocket, dataToSend.c_str(), (int)dataToSend.size() + 1, NULL) == SOCKET_ERROR)
-						break;
-
-					// Clear receieve buffer and wait for data to come
-					memset(receivedData, 0, receiveBufferSize);
-					if (recv(clientSocket, receivedData, receiveBufferSize, NULL) == SOCKET_ERROR)
-						break;
-				}
-
-				// Cleanup
-				delete[] receivedData;
-				closesocket(clientSocket);
-				WSACleanup();
 			}
 
-			// Stops the client
+			// Send data to server
+			void SendData(bytes& data)
+			{
+				if (connected)
+				{
+					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
+						Disconnect();
+				}
+			}
+			void SendData(bytes&& data)
+			{
+				if (connected)
+				{
+					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
+						Disconnect();
+				}
+			}
+
+			// Receive data from the server
+			void ReceiveData(bytes& dataBuffer)
+			{
+				if (connected)
+				{
+					memset(&dataBuffer[0], 0, dataBuffer.size());
+					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
+						Disconnect();
+				}	
+			}
+
+			// Dsiconnects the client
 			void Disconnect()
 			{
-				connected = false;
+				if (connected)
+				{
+					closesocket(clientSocket);
+					connected = false;
+				}
 			}
 
 		private:
-			bool connected = true;
+			SOCKET clientSocket = {};
+			bool connected = false;
 		};
 	};
 }

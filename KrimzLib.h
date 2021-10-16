@@ -51,16 +51,21 @@
 namespace kl
 {
 	// Lbrary intialiser
-	void InitLib()
+	void InitLib(bool initOpenCL = false)
 	{
 		random::SetSeed();
 		console::EnableRGB();
 		time::LoadPCFrequency();
+		net::InitWinSock();
+		if (initOpenCL)
+			opencl::Init();
 	}
 
 	// Lbrary unintialiser
 	void UninitLib()
 	{
 		console::DisableRGB();
+		net::UninitWinSock();
+		opencl::Uninit();
 	}
 }
