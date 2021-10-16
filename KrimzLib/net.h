@@ -94,13 +94,10 @@ namespace kl
 			}
 
 			// Wait for a client to connect
-			void WaitForClient(bool echo = false)
+			void WaitForClient()
 			{
 				if (!clientConnected)
 				{
-					if (echo)
-						printf("Waiting for a client to join!\n");
-
 					// Wait for a connection
 					sockaddr_in client = {};
 					int clientSize = sizeof(client);
@@ -137,22 +134,19 @@ namespace kl
 			}
 
 			// Send data back to the client
-			void SendData(bytes& data, bool echo = false)
+			void SendData(bytes& data)
 			{
 				if (created && clientConnected)
 				{
-					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
 						clientConnected = false;
-
-					if (echo)
-						printf("Data sent!\n");
 				}
 			}
 			void SendData(bytes&& data, bool echo = false)
 			{
 				if (created && clientConnected)
 				{
-					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
 						clientConnected = false;
 					
 					if (echo)
@@ -161,13 +155,10 @@ namespace kl
 			}
 
 			// Receive data from the client
-			void ReceiveData(bytes& dataBuffer, bool echo = false)
+			void ReceiveData(bytes& dataBuffer)
 			{
 				if (created && clientConnected)
 				{
-					if (echo)
-						printf("Waiting for client to send data!\n");
-
 					memset(&dataBuffer[0], 0, dataBuffer.size());
 					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
 						clientConnected = false;
@@ -206,7 +197,7 @@ namespace kl
 			}
 
 			// Connects the client to server
-			void Connect(std::string serverIP, int serverPort, bool echo = false)
+			void Connect(std::string serverIP, int serverPort)
 			{
 				// Disconnect the client if it's already connected
 				Disconnect();
@@ -224,8 +215,6 @@ namespace kl
 				sockHint.sin_family = AF_INET;
 				sockHint.sin_port = htons(serverPort);
 				inet_pton(AF_INET, serverIP.c_str(), &sockHint.sin_addr);
-				if (echo)
-					printf("Trying to connect to %s:%d!\n", serverIP.c_str(), serverPort);
 				if (connect(clientSocket, (sockaddr*)&sockHint, sizeof(sockHint)))
 				{
 					printf("Failed to connect!\n");
@@ -236,37 +225,28 @@ namespace kl
 			}
 
 			// Send data to server
-			void SendData(bytes& data, bool echo = false)
+			void SendData(bytes& data)
 			{
 				if (connected)
 				{
-					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
 						Disconnect();
-
-					if (echo)
-						printf("Data sent!\n");
 				}
 			}
-			void SendData(bytes&& data, bool echo = false)
+			void SendData(bytes&& data)
 			{
 				if (connected)
 				{
-					if (send(clientSocket, (char*)&data[0], (int)data.size() + 1, NULL) == SOCKET_ERROR)
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
 						Disconnect();
-
-					if (echo)
-						printf("Data sent!\n");
 				}
 			}
 
 			// Receive data from the server
-			void ReceiveData(bytes& dataBuffer, bool echo = false)
+			void ReceiveData(bytes& dataBuffer)
 			{
 				if (connected)
 				{
-					if (echo)
-						printf("Waiting for server to send data!\n");
-
 					memset(&dataBuffer[0], 0, dataBuffer.size());
 					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
 						Disconnect();

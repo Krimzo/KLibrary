@@ -43,27 +43,17 @@ namespace kl
 		// Converts a byte array to a string
 		static std::string ToString(bytes& b)
 		{
-			std::stringstream ss;
-			for (int i = 0; i < b.size(); i++)
-			{
-				if (b[i])
-					ss << b[i];
-				else
-					break;
-			}
-			return ss.str();
+			std::string stringBuffer;
+			stringBuffer.resize(b.size());
+			memcpy(&stringBuffer[0], &b[0], b.size());
+			return stringBuffer;
 		}
 		static std::string ToString(bytes&& b)
 		{
-			std::stringstream ss;
-			for (int i = 0; i < b.size(); i++)
-			{
-				if (b[i])
-					ss << b[i];
-				else
-					break;
-			}
-			return ss.str();
+			std::string stringBuffer;
+			stringBuffer.resize(b.size());
+			memcpy(&stringBuffer[0], &b[0], b.size());
+			return stringBuffer;
 		}
 
 		// Converts a string to a bytes array
