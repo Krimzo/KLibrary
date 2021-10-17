@@ -306,6 +306,18 @@ namespace kl
 	typedef unsigned int texture;
 }
 
+/* WINDOW */
+namespace kl
+{
+	struct mouse
+	{
+		bool lmb = false;
+		bool mmb = false;
+		bool rmb = false;
+		point position = {};
+	};
+}
+
 /* ENGINE */
 namespace kl
 {

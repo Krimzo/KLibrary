@@ -6,13 +6,11 @@ namespace kl
 	class window
 	{
 	public:
-		// Input properties
+		// Input
 		WPARAM KEY = 0;
-		bool LMB = false;
-		bool RMB = false;
-		point MOUSE = {};
+		mouse MOUSE = {};
 
-		// OpenGL calls
+		// Window function calls
 		std::function<void(void)> WindowStart = []() {};
 		std::function<void(void)> WindowUpdate = []() {};
 		std::function<void(void)> WindowEnd = []() {};
@@ -200,15 +198,12 @@ namespace kl
 		}
 
 	private:
-		// Winapi properties
 		HINSTANCE hInstance = GetModuleHandle(NULL);
 		HWND hwnd = NULL;
 		HDC hdc = NULL;
+		HGLRC hglrc = NULL;
 		BITMAPINFO bmpInfo = {};
 		MSG wndMsg = {};
-
-		// OpenGL properties
-		HGLRC hglrc = NULL;
 
 		// Handles the windows message
 		void HandleMessage()
@@ -224,23 +219,31 @@ namespace kl
 				break;
 
 			case WM_LBUTTONDOWN:
-				LMB = true;
+				MOUSE.lmb = true;
 				break;
 
 			case WM_LBUTTONUP:
-				LMB = false;
+				MOUSE.lmb = false;
+				break;
+
+			case WM_MBUTTONDOWN:
+				MOUSE.mmb = true;
+				break;
+
+			case WM_MBUTTONUP:
+				MOUSE.mmb = false;
 				break;
 
 			case WM_RBUTTONDOWN:
-				RMB = true;
+				MOUSE.rmb = true;
 				break;
 
 			case WM_RBUTTONUP:
-				RMB = false;
+				MOUSE.rmb = false;
 				break;
 
 			case WM_MOUSEMOVE:
-				MOUSE = { GET_X_LPARAM(wndMsg.lParam),  GET_Y_LPARAM(wndMsg.lParam) };
+				MOUSE.position = { GET_X_LPARAM(wndMsg.lParam),  GET_Y_LPARAM(wndMsg.lParam) };
 				break;
 
 			default:
