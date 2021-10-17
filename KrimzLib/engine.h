@@ -120,14 +120,15 @@ namespace kl
 						while (iss) {
 							iss >> linePart;
 
-							if (spaceCoordCounter == 0)
+							if (spaceCoordCounter == 0) {
 								tempVertex.x = stod(linePart);
-
-							else if (spaceCoordCounter == 1)
+							}
+							else if (spaceCoordCounter == 1) {
 								tempVertex.y = stod(linePart);
-
-							else if (spaceCoordCounter == 2)
+							}
+							else if (spaceCoordCounter == 2) {
 								tempVertex.z = stod(linePart);
+							}
 
 							spaceCoordCounter++;
 						}
@@ -141,11 +142,12 @@ namespace kl
 						{
 							iss >> linePart;
 
-							if (textureCoordCounter == 0)
+							if (textureCoordCounter == 0) {
 								tempVertex.x = stod(linePart);
-
-							else if (textureCoordCounter == 1)
+							}
+							else if (textureCoordCounter == 1) {
 								tempVertex.y = stod(linePart);
+							}
 
 							textureCoordCounter++;
 						}
@@ -163,11 +165,12 @@ namespace kl
 								size_t slashPosition = linePart.find('/');
 								std::string dataAsString = linePart.substr(0, slashPosition);
 
-								if (i == 0)
+								if (i == 0) {
 									tempTriangle[vertexCounter].x = stoi(dataAsString) - 1;
-
-								else if (i == 1)
+								}
+								else if (i == 1) {
 									tempTriangle[vertexCounter].y = stoi(dataAsString) - 1;
+								}
 
 								linePart = linePart.substr(slashPosition + 1);
 							}
