@@ -26,7 +26,7 @@ namespace kl
 		// Returns a time since the the last StaticGetElapsed() call
 		static double StaticGetElapsed()
 		{
-			static LARGE_INTEGER staticCounterNow;
+			LARGE_INTEGER staticCounterNow;
 			QueryPerformanceCounter(&staticCounterNow);
 			double time = (staticCounterNow.QuadPart - staticCounterLast.QuadPart) / PCFrequency;
 			staticCounterLast = staticCounterNow;
@@ -42,7 +42,7 @@ namespace kl
 		// Returns the passed time since the last static stopwatch reset
 		static double StaticStopwatchElapsed()
 		{
-			static LARGE_INTEGER staticStopwatchNow;
+			LARGE_INTEGER staticStopwatchNow;
 			QueryPerformanceCounter(&staticStopwatchNow);
 			return (staticStopwatchNow.QuadPart - staticStopwatchLast.QuadPart) / PCFrequency;
 		}
@@ -50,7 +50,7 @@ namespace kl
 		// Sleeps for the given time
 		static void WaitSeconds(double time)
 		{
-			static LARGE_INTEGER sleepCounterStart, sleepCounter;
+			LARGE_INTEGER sleepCounterStart, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
 			do {
 				QueryPerformanceCounter(&sleepCounter);
@@ -59,7 +59,7 @@ namespace kl
 		static void WaitMiliseconds(double time)
 		{
 			time /= 1000;
-			static LARGE_INTEGER sleepCounterStart, sleepCounter;
+			LARGE_INTEGER sleepCounterStart, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
 			do {
 				QueryPerformanceCounter(&sleepCounter);
@@ -75,7 +75,7 @@ namespace kl
 		// Returns the passed time since the last stopwatch reset
 		double StopwatchElapsed()
 		{
-			static LARGE_INTEGER stopwatchNow;
+			LARGE_INTEGER stopwatchNow;
 			QueryPerformanceCounter(&stopwatchNow);
 			return (stopwatchNow.QuadPart - stopwatchLast.QuadPart) / PCFrequency;
 		}
@@ -83,7 +83,7 @@ namespace kl
 		// Returns a time since the the last GetElapsed() call
 		double GetElapsed()
 		{
-			static LARGE_INTEGER counterNow;
+			LARGE_INTEGER counterNow;
 			QueryPerformanceCounter(&counterNow);
 			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
 			counterLast = counterNow;

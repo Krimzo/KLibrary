@@ -7,7 +7,7 @@ namespace kl
 	{
 	public:
 		// Enables 3D perspective and depth buffer by deafult
-		static void Enabled3D(double fov, int frameWidth, int frameHeight, bool enableDepthBuffer = true)
+		static void Enable3D(double fov, int frameWidth, int frameHeight, bool enableDepthBuffer = true)
 		{
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
@@ -103,7 +103,7 @@ namespace kl
 			glPopMatrix();
 		}
 
-		// Set the whole screen to a given color
+		// Clear the frame and depth buffers
 		static void ClearBuffers(colorf& color)
 		{
 			glClearColor(color.r, color.g, color.b, color.a);

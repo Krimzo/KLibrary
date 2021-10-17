@@ -7,7 +7,7 @@ namespace kl
 	{
 	public:
 		// Engine properties
-		double fpsLimit = 60;
+		double fpsLimit = -1;
 		double deltaTime = 0;
 		double gravity = 5;
 		colorf background = {};
@@ -24,7 +24,7 @@ namespace kl
 			engineWindow.WindowStart = [&]()
 			{
 				/* Enable 3D and depth buffer */
-				opengl::Enabled3D(fov, engineWindow.GetWidth(), engineWindow.GetHeight());
+				opengl::Enable3D(fov, engineWindow.GetWidth(), engineWindow.GetHeight());
 
 				/* Enable textures */
 				opengl::EnableTextures();
@@ -222,7 +222,7 @@ namespace kl
 			return false;		
 		}
 
-		// Returns a reference to a wanted game object
+		// Returns a reference to the wanted game object
 		gameobject* GetGameObject(std::string objectName)
 		{
 			if (engineObjects.count(objectName))

@@ -12,11 +12,11 @@ namespace kl
 		double y = 0;
 
 		// Operator overloading
-		vec2 operator + (vec2& obj)
+		vec2 operator + (vec2 obj)
 		{
 			return { x + obj.x, y + obj.y };
 		}
-		vec2 operator - (vec2& obj)
+		vec2 operator - (vec2 obj)
 		{
 			return { x - obj.x, y - obj.y };
 		}
@@ -36,11 +36,11 @@ namespace kl
 		{
 			return { x / obj, y / obj };
 		}
-		bool operator == (vec2& obj)
+		bool operator == (vec2 obj)
 		{
 			return (x == obj.x && y == obj.y);
 		}
-		bool operator != (vec2& obj)
+		bool operator != (vec2 obj)
 		{
 			return (x != obj.x || y != obj.y);
 		}
@@ -74,11 +74,11 @@ namespace kl
 		double z = 0;
 
 		// Operator overloading
-		vec3 operator + (vec3& obj)
+		vec3 operator + (vec3 obj)
 		{
 			return { x + obj.x, y + obj.y, z + obj.z };
 		}
-		vec3 operator - (vec3& obj)
+		vec3 operator - (vec3 obj)
 		{
 			return { x - obj.x, y - obj.y, z - obj.z };
 		}
@@ -98,11 +98,11 @@ namespace kl
 		{
 			return { x / obj, y / obj, z / obj };
 		}
-		bool operator == (vec3& obj)
+		bool operator == (vec3 obj)
 		{
 			return (x == obj.x && y == obj.y && z == obj.z);
 		}
-		bool operator != (vec3& obj)
+		bool operator != (vec3 obj)
 		{
 			return (x != obj.x || y != obj.y || z != obj.z);
 		}
@@ -251,14 +251,14 @@ namespace kl
 		}
 
 		// Converts a bitmap to an ASCII frame
-		std::string ToASCIIFrame(size frameSize)
+		std::string ToASCII(size frameSize)
 		{
 			// Calculations
 			int pixelWidthIncrement = width / frameSize.width;
 			int pixelHeightIncrement = height / frameSize.height;
 
 			// Processing
-			std::string frame = "";
+			std::stringstream frame;
 			for (int y = 0; y < frameSize.height; y++)
 			{
 				for (int x = 0; x < frameSize.width; x++)
@@ -269,11 +269,11 @@ namespace kl
 
 					// Grayscaled values to ASCII
 					int saturationLevel = (int)((grayScaledPixel / 255.0) * 9);
-					frame += asciiPixelTable[saturationLevel];
+					frame << asciiPixelTable[saturationLevel];
 				}
-				frame += '\n';
+				frame << '\n';
 			}
-			return frame;
+			return frame.str();
 		}
 
 	private:
