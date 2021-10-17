@@ -29,9 +29,7 @@ namespace kl
 			while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount)
 			{
 				for (DWORD i = 0; i < byteReadCount; i++)
-				{
 					finalData.push_back(dataBuffer[i]);
-				}
 			}
 
 			InternetCloseHandle(openAddress);
@@ -130,12 +128,10 @@ namespace kl
 			}
 
 			// Return the currently connected clients name or empty string if no one is connected
-			std::string GetClient()
+			std::string Client()
 			{
 				if (created && clientConnected)
-				{
 					return clientName;
-				}
 				return "";
 			}
 

@@ -23,7 +23,7 @@
 #include <gl/GLU.h>
 
 // Including kl headers
-#include "KrimzLib/types.h"
+#include "KrimzLib/type.h"
 #include "KrimzLib/constant.h"
 #include "KrimzLib/convert.h"
 #include "KrimzLib/math.h"
