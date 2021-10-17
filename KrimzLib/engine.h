@@ -54,14 +54,11 @@ namespace kl
 				opengl::UpdateCamera(engineCamera.position, engineCamera.rotation);
 
 				/* Render all game triangles */
-				static std::map<std::string, gameobject>::iterator itr;
+				std::map<std::string, gameobject>::iterator itr;
 				for (itr = engineObjects.begin(); itr != engineObjects.end(); itr++)
 				{
-					if (itr->second.physics)
-					{
+					if (itr->second.visible)
 						opengl::RenderTriangles(itr->second.triangles, itr->second.position, itr->second.rotation, itr->second.size, itr->second.texture);
-
-					}
 				}
 
 				/* Swap front and back frame buffers */
@@ -76,11 +73,6 @@ namespace kl
 
 				/* Display the FPS */
 				engineWindow.SetTitle(int(1 / deltaTime));
-			};
-
-			engineWindow.WindowEnd = [&]()
-			{
-
 			};
 
 			engineWindow.Start(width, height, name, false, true, true);
@@ -127,18 +119,16 @@ namespace kl
 						int spaceCoordCounter = 0;
 						while (iss) {
 							iss >> linePart;
+
 							if (spaceCoordCounter == 0)
-							{
 								tempVertex.x = stod(linePart);
-							}
+
 							else if (spaceCoordCounter == 1)
-							{
 								tempVertex.y = stod(linePart);
-							}
+
 							else if (spaceCoordCounter == 2)
-							{
 								tempVertex.z = stod(linePart);
-							}
+
 							spaceCoordCounter++;
 						}
 						xyzCoords.push_back(tempVertex);
@@ -150,14 +140,13 @@ namespace kl
 						while (iss)
 						{
 							iss >> linePart;
+
 							if (textureCoordCounter == 0)
-							{
 								tempVertex.x = stod(linePart);
-							}
+
 							else if (textureCoordCounter == 1)
-							{
 								tempVertex.y = stod(linePart);
-							}
+
 							textureCoordCounter++;
 						}
 						uvCoords.push_back(tempVertex);
@@ -173,14 +162,13 @@ namespace kl
 							{
 								size_t slashPosition = linePart.find('/');
 								std::string dataAsString = linePart.substr(0, slashPosition);
+
 								if (i == 0)
-								{
 									tempTriangle[vertexCounter].x = stoi(dataAsString) - 1;
-								}
+
 								else if (i == 1)
-								{
 									tempTriangle[vertexCounter].y = stoi(dataAsString) - 1;
-								}
+
 								linePart = linePart.substr(slashPosition + 1);
 							}
 							vertexCounter++;

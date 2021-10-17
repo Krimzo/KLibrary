@@ -85,7 +85,8 @@ namespace kl
 				0, 0, 0
 				};
 				int pixelFormat = ChoosePixelFormat(hdc, &pfd);
-				if (!pixelFormat) exit(69);
+				if (!pixelFormat)
+					exit(69);
 				SetPixelFormat(hdc, pixelFormat, &pfd);
 				hglrc = wglCreateContext(hdc);
 				wglMakeCurrent(hdc, hglrc);
@@ -102,9 +103,7 @@ namespace kl
 				while (IsWindow(hwnd))
 				{
 					while (PeekMessage(&wndMsg, hwnd, 0, 0, PM_REMOVE))
-					{
 						HandleMessage();
-					}
 					WindowUpdate();
 				}
 				WindowEnd();

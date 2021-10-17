@@ -71,14 +71,12 @@ namespace kl
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
+
 			if (position < 0)
-			{
 				fileStream.seekp(0, std::ios_base::end);
-			}
 			else
-			{
 				fileStream.seekp(position);
-			}
+
 			fileStream << data;
 			fileStream.close();
 		}
@@ -91,14 +89,12 @@ namespace kl
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
+
 			if (position < 0)
-			{
 				fileStream.seekp(0, std::ios_base::end);
-			}
 			else
-			{
 				fileStream.seekp(position);
-			}
+
 			fileStream << data;
 			fileStream.close();
 		}
@@ -146,14 +142,12 @@ namespace kl
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
+
 			if (position < 0)
-			{
 				fileStream.seekp(0, std::ios_base::end);
-			}
 			else
-			{
 				fileStream.seekp(position);
-			}
+
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
@@ -166,14 +160,12 @@ namespace kl
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
+
 			if (position < 0)
-			{
 				fileStream.seekp(0, std::ios_base::end);
-			}
 			else
-			{
 				fileStream.seekp(position);
-			}
+
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}

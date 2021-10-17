@@ -131,10 +131,6 @@ namespace kl
 		}
 
 		// Prints RGB block
-		static void PrintBlock(byte r, byte g, byte b)
-		{
-			printf("\033[48;2;%d;%d;%dm \033[0m", r, g, b);
-		}
 		static void PrintBlock(color blockColor)
 		{
 			printf("\033[48;2;%d;%d;%dm \033[0m", blockColor.r, blockColor.g, blockColor.b);
@@ -145,9 +141,7 @@ namespace kl
 		{
 			char input = 0;
 			while (_kbhit())
-			{
 				input = _getch();
-			}
 			return input;
 		}
 
@@ -157,13 +151,9 @@ namespace kl
 			if (printMessage)
 			{
 				if (toWaitFor > 31 && toWaitFor < 127)
-				{
 					printf("Press '%c' to continue\n", toWaitFor);
-				}
 				else
-				{
 					printf("Press %d to continue\n", toWaitFor);
-				}
 			}
 			while (_getch() != toWaitFor);
 		}

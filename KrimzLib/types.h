@@ -196,9 +196,7 @@ namespace kl
 		color GetPixel(point point)
 		{
 			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
-			{
 				return pixels[point.y * size_t(width) + point.x];
-			}
 			return { 0, 0, 0 };
 		}
 		color* GetPixelData()
@@ -226,9 +224,7 @@ namespace kl
 		void SetPixel(point point, color color)
 		{
 			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
-			{
 				pixels[point.y * size_t(width) + point.x] = color;
-			}
 		}
 
 		// Fils the bitmap with solid color

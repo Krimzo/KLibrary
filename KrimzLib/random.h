@@ -13,18 +13,24 @@ namespace kl
 		}
 
 		// Returns a random integer
-		static int GetInt(int startInclusive, int endExclusive)
+		static int Int(int startInclusive, int endExclusive)
 		{
 			return rand() % (endExclusive - startInclusive) + startInclusive;
 		}
 
 		// Returns a vector with random integers
-		static std::vector<int> GetIntVector(int startInclusive, int endExclusive, int vectorSize)
+		static std::vector<int> IntVector(int startInclusive, int endExclusive, int vectorSize)
 		{
 			std::vector<int> tempVec(vectorSize);
 			for (int i = 0; i < vectorSize; i++)
-				tempVec[i] = GetInt(startInclusive, endExclusive);
+				tempVec[i] = Int(startInclusive, endExclusive);
 			return tempVec;
+		}
+
+		// Returns a random color
+		static color Color(bool randomAlpha = false)
+		{
+			return { (byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256), randomAlpha ? (byte)Int(0, 256) : (byte)255 };
 		}
 	};
 }
