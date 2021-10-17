@@ -24,6 +24,7 @@
 
 // Including kl headers
 #include "KrimzLib/type.h"
+#include "KrimzLib/literal.h"
 #include "KrimzLib/constant.h"
 #include "KrimzLib/convert.h"
 #include "KrimzLib/math.h"
