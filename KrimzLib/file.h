@@ -7,7 +7,7 @@ namespace kl
 	{
 	public:
 		// Initalises gdiplus
-		static void InitGdiplus()
+		static void InitGdiPlus()
 		{
 			if (!initialised)
 			{
@@ -17,7 +17,7 @@ namespace kl
 		}
 
 		// Uninitalises gdiplus
-		static void UninitGdiplus()
+		static void UninitGdiPlus()
 		{
 			if (initialised)
 			{

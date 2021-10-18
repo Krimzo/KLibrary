@@ -58,17 +58,15 @@ namespace kl
 		time::LoadPCFrequency();
 		console::EnableRGB();
 		net::InitWinSock();
-		file::InitGdiplus();
-		if (initOpenCL)
-			opencl::Init();
+		file::InitGdiPlus();
+		if (initOpenCL) opencl::Init();
 	}
 
 	// Lbrary unintialiser
 	void UninitLib()
 	{
-		console::DisableRGB();
 		net::UninitWinSock();
-		file::UninitGdiplus();
+		file::UninitGdiPlus();
 		opencl::Uninit();
 	}
 }

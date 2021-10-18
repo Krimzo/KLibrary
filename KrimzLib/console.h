@@ -88,27 +88,13 @@ namespace kl
 		// Enables RGB support for the console
 		static void EnableRGB()
 		{
+			static bool rgbEnabled = false;
 			if (!rgbEnabled)
 			{
-				// Get current console mode
 				DWORD consoleMode;
 				GetConsoleMode(stdConsoleHandle, &consoleMode);
-				lastConsoleMode = consoleMode;
-
-				// Enable the RGB
-				consoleMode = consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-				SetConsoleMode(stdConsoleHandle, consoleMode);
+				SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 				rgbEnabled = true;
-			}
-		}
-
-		// Disables RGB support for the console
-		static void DisableRGB()
-		{
-			if (rgbEnabled)
-			{
-				SetConsoleMode(stdConsoleHandle, lastConsoleMode);
-				rgbEnabled = false;
 			}
 		}
 
@@ -168,10 +154,6 @@ namespace kl
 
 	private:
 		static HANDLE stdConsoleHandle;
-		static bool rgbEnabled;
-		static DWORD lastConsoleMode;
 	};
 	HANDLE console::stdConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	bool console::rgbEnabled = false;
-	DWORD console::lastConsoleMode = 0;
 }
