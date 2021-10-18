@@ -32,8 +32,6 @@ namespace kl
 				clFinish(commandQueue);
 				clReleaseCommandQueue(commandQueue);
 				clReleaseContext(context);
-				commandQueue = NULL;
-				context = NULL;
 				initialized = false;
 			}
 		}
