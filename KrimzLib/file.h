@@ -213,7 +213,7 @@ namespace kl
 				{
 					Gdiplus::Color tempPixel;
 					loadedBitmap.GetPixel(x, y, &tempPixel);
-					tempBitmap.SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), 255 });
+					tempBitmap.SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), tempPixel.GetA() });
 				}
 			}
 
