@@ -213,5 +213,17 @@ namespace kl
 		{
 			_wremove(filePath.c_str());
 		}
+
+		// Extract the video frames and saves them as .jpg files
+		static void ExtractFrames(std::wstring videoPath, std::wstring outputPath)
+		{
+			if (outputPath.back() != '/')
+				outputPath.push_back('/');
+
+			std::wstring command = L"ffmpeg -i " + videoPath + L" " + outputPath + L"frame%d.jpg";
+			_wsystem(command.c_str());
+
+			kl::console::Print("Frames extracted!\n", kl::constant::colorOrange);
+		}
 	};
 }
