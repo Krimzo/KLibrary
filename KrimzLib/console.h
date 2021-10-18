@@ -113,21 +113,21 @@ namespace kl
 		}
 
 		// Prints RGB text
-		static void Print(std::string& data, color textColor = constant::colorWhite, bool newLine = false)
+		static void Print(std::string& data, color textColor = constant::colorWhite)
 		{
-			printf("\033[38;2;%d;%d;%dm%s%c\033[0m", textColor.r, textColor.g, textColor.b, data.c_str(), newLine ? '\n' : '\0');
+			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
-		static void Print(std::string&& data, color textColor = constant::colorWhite, bool newLine = false)
+		static void Print(std::string&& data, color textColor = constant::colorWhite)
 		{
-			printf("\033[38;2;%d;%d;%dm%s%c\033[0m", textColor.r, textColor.g, textColor.b, data.c_str(), newLine ? '\n' : '\0');
+			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
-		static void Print(int data, color textColor = constant::colorWhite, bool newLine = false)
+		static void Print(int data, color textColor = constant::colorWhite)
 		{
-			printf("\033[38;2;%d;%d;%dm%d%c\033[0m", textColor.r, textColor.g, textColor.b, data, newLine ? '\n' : '\0');
+			printf("\033[38;2;%d;%d;%dm%d\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Print(double data, color textColor = constant::colorWhite, bool newLine = false)
+		static void Print(double data, color textColor = constant::colorWhite)
 		{
-			printf("\033[38;2;%d;%d;%dm%lf%c\033[0m", textColor.r, textColor.g, textColor.b, data, newLine ? '\n' : '\0');
+			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 
 		// Prints RGB block
