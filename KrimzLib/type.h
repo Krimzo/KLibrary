@@ -309,6 +309,8 @@ namespace kl
 /* WINDOW */
 namespace kl
 {
+	typedef unsigned int key;
+
 	struct mouse
 	{
 		bool lmb = false;

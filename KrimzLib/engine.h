@@ -15,7 +15,7 @@ namespace kl
 
 		// Outside functions that user defines
 		std::function<void(void)> EngineStart = []() {};
-		std::function<void(char keyboard, mouse mouse)> EngineInput = [](char keyboard, mouse mouse) {};
+		std::function<void(key key, mouse mouse)> EngineInput = [](key key, mouse mouse) {};
 		std::function<void(void)> EngineUpdate = []() {};
 
 		// Creates the engine
@@ -39,7 +39,7 @@ namespace kl
 			engineWindow.WindowUpdate = [&]()
 			{
 				/* Game input */
-				EngineInput((char)engineWindow.KEY, engineWindow.MOUSE);
+				EngineInput(engineWindow.KEY, engineWindow.MOUSE);
 
 				/* Game logic */
 				EngineUpdate();

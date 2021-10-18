@@ -7,7 +7,7 @@ namespace kl
 	{
 	public:
 		// Input
-		WPARAM KEY = 0;
+		key KEY = 0;
 		mouse MOUSE = {};
 
 		// Window function calls
@@ -174,6 +174,10 @@ namespace kl
 		{
 			SetWindowTextA(hwnd, data.c_str());
 		}
+		void SetTitle(std::wstring data)
+		{
+			SetWindowTextW(hwnd, data.c_str());
+		}
 		void SetTitle(int data)
 		{
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
@@ -211,7 +215,7 @@ namespace kl
 			switch (wndMsg.message)
 			{
 			case WM_KEYDOWN:
-				KEY = wndMsg.wParam;
+				KEY = (key)wndMsg.wParam;
 				break;
 
 			case WM_KEYUP:
