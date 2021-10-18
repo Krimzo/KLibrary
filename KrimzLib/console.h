@@ -74,7 +74,7 @@ namespace kl
 		// Changes the console font size
 		static void SetFont(int width, int height, std::wstring fontName)
 		{
-			CONSOLE_FONT_INFOEX cfi;
+			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
 			cfi.dwFontSize.X = width;
@@ -98,7 +98,7 @@ namespace kl
 			}
 		}
 
-		// Prints RGB text
+		// Prints RGB data
 		static void Print(std::string& data, color textColor = constant::colorWhite)
 		{
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
@@ -114,6 +114,14 @@ namespace kl
 		static void Print(double data, color textColor = constant::colorWhite)
 		{
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Print(vec2 data, color textColor = constant::colorWhite)
+		{
+			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
+		}
+		static void Print(vec3 data, color textColor = constant::colorWhite)
+		{
+			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
 		}
 
 		// Prints RGB block
