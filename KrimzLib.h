@@ -51,7 +51,7 @@
 
 namespace kl
 {
-	// Lbrary intialiser
+	// Library intialiser
 	void InitLib(bool initOpenCL = false)
 	{
 		random::SetSeed();
@@ -62,7 +62,7 @@ namespace kl
 		if (initOpenCL) opencl::Init();
 	}
 
-	// Lbrary unintialiser
+	// Library unintialiser
 	void UninitLib()
 	{
 		net::UninitWinSock();
