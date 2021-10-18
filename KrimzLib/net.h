@@ -47,15 +47,23 @@ namespace kl
 		// Initialises winsock
 		static void InitWinSock()
 		{
-			WSADATA wsData = {};
-			if (WSAStartup(MAKEWORD(2, 2), &wsData))
-				printf("Failed to initalise winsock\n");
+			if (!initialised)
+			{
+				WSADATA wsData = {};
+				if (WSAStartup(MAKEWORD(2, 2), &wsData))
+					printf("Failed to initalise winsock\n");
+				initialised = true;
+			}
 		}
 
 		// Uninitialises winsock
 		static void UninitWinSock()
 		{
-			WSACleanup();
+			if (initialised)
+			{
+				WSACleanup();
+				initialised = false;
+			}
 		}
 
 		// Simple TCP server
@@ -269,5 +277,9 @@ namespace kl
 			SOCKET clientSocket = {};
 			bool connected = false;
 		};
+
+	private:
+		static bool initialised;
 	};
+	bool net::initialised = false;
 }

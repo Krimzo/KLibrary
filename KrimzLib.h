@@ -55,9 +55,10 @@ namespace kl
 	void InitLib(bool initOpenCL = false)
 	{
 		random::SetSeed();
-		console::EnableRGB();
 		time::LoadPCFrequency();
+		console::EnableRGB();
 		net::InitWinSock();
+		file::InitGdiplus();
 		if (initOpenCL)
 			opencl::Init();
 	}
@@ -67,6 +68,7 @@ namespace kl
 	{
 		console::DisableRGB();
 		net::UninitWinSock();
+		file::UninitGdiplus();
 		opencl::Uninit();
 	}
 }

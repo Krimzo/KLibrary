@@ -6,6 +6,26 @@ namespace kl
 	class file
 	{
 	public:
+		// Initalises gdiplus
+		static void InitGdiplus()
+		{
+			if (!initialised)
+			{
+				Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+				initialised = true;
+			}
+		}
+
+		// Uninitalises gdiplus
+		static void UninitGdiplus()
+		{
+			if (initialised)
+			{
+				Gdiplus::GdiplusShutdown(gdiplusToken);
+				initialised = false;
+			}
+		}
+
 		// Creates a file
 		static void Create(std::wstring filePath)
 		{
@@ -174,13 +194,10 @@ namespace kl
 		static bitmap ReadPixels(std::wstring imagePath)
 		{
 			// Loads image file
-			ULONG_PTR gdiplusToken;
-			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-			Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-			Gdiplus::Bitmap* loadedBitmap = Gdiplus::Bitmap::FromFile(imagePath.c_str());
+			Gdiplus::Bitmap loadedBitmap(imagePath.c_str());
 
 			// Checks load status
-			int lastBitmapStatus = loadedBitmap->GetLastStatus();
+			int lastBitmapStatus = loadedBitmap.GetLastStatus();
 			if (lastBitmapStatus)
 			{
 				std::wcout << "Couldn't load image file \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
@@ -189,20 +206,16 @@ namespace kl
 			}
 
 			// Saves data
-			bitmap tempBitmap({ (int)loadedBitmap->GetWidth(), (int)loadedBitmap->GetHeight() });
+			bitmap tempBitmap({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
 			for (int y = 0; y < tempBitmap.GetHeight(); y++)
 			{
 				for (int x = 0; x < tempBitmap.GetWidth(); x++)
 				{
 					Gdiplus::Color tempPixel;
-					loadedBitmap->GetPixel(x, y, &tempPixel);
+					loadedBitmap.GetPixel(x, y, &tempPixel);
 					tempBitmap.SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), 255 });
 				}
 			}
-
-			// Clears memory
-			delete loadedBitmap;
-			Gdiplus::GdiplusShutdown(gdiplusToken);
 
 			// Return created bitmap
 			return tempBitmap;
@@ -214,16 +227,12 @@ namespace kl
 			_wremove(filePath.c_str());
 		}
 
-		// Extract the video frames and saves them as .jpg files
-		static void ExtractFrames(std::wstring videoPath, std::wstring outputPath)
-		{
-			if (outputPath.back() != '/')
-				outputPath.push_back('/');
-
-			std::wstring command = L"ffmpeg -i " + videoPath + L" " + outputPath + L"frame%d.jpg";
-			_wsystem(command.c_str());
-
-			kl::console::Print("Frames extracted!\n", kl::constant::colorOrange);
-		}
+	private:
+		static bool initialised;
+		static ULONG_PTR gdiplusToken;
+		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	};
+	bool file::initialised = false;
+	ULONG_PTR file::gdiplusToken = 0;
+	Gdiplus::GdiplusStartupInput file::gdiplusStartupInput = {};
 }
