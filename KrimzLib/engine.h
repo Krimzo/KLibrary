@@ -18,6 +18,12 @@ namespace kl
 		std::function<void(key key, mouse mouse)> EngineInput = [](key key, mouse mouse) {};
 		std::function<void(void)> EngineUpdate = []() {};
 
+		// Constructor
+		engine(colorf background = {})
+		{
+			this->background = background;
+		}
+
 		// Creates the engine
 		void Start(int width, int height, const wchar_t* name, double fov = 60)
 		{
@@ -54,11 +60,10 @@ namespace kl
 				opengl::UpdateCamera(engineCamera.position, engineCamera.rotation);
 
 				/* Render all game triangles */
-				std::map<std::string, gameobject>::iterator itr;
-				for (itr = engineObjects.begin(); itr != engineObjects.end(); itr++)
+				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++)
 				{
-					if (itr->second.visible)
-						opengl::RenderTriangles(itr->second.triangles, itr->second.position, itr->second.rotation, itr->second.size, itr->second.texture);
+					if (objItr->second.visible)
+						opengl::RenderTriangles(objItr->second.triangles, objItr->second.position, objItr->second.rotation, objItr->second.size, objItr->second.texture);
 				}
 
 				/* Swap front and back frame buffers */
@@ -234,7 +239,7 @@ namespace kl
 		}
 
 		// Adds a new texture to the engine memory
-		texture NewTexture(bitmap& textureData)
+		texture NewTexture(image& textureData)
 		{
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
@@ -243,7 +248,7 @@ namespace kl
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
-		texture NewTexture(bitmap&& textureData)
+		texture NewTexture(image&& textureData)
 		{
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
@@ -257,27 +262,27 @@ namespace kl
 		window engineWindow = window();
 		time engineTime = time();
 		std::map<std::string, gameobject> engineObjects;
+		std::map<std::string, gameobject>::iterator objItr;
 
 		// Computing object physics 
 		void ObjectPhysics()
 		{
-			static std::map<std::string, gameobject>::iterator itr;
-			for (itr = engineObjects.begin(); itr != engineObjects.end(); itr++)
+			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++)
 			{
-				if (itr->second.physics)
+				if (objItr->second.physics)
 				{
 					// Applying gravity
-					itr->second.velocity.y -= gravity * itr->second.gravityMulti * deltaTime;
+					objItr->second.velocity.y -= gravity * objItr->second.gravityMulti * deltaTime;
 
 					// Applying velocity
-					itr->second.position.x += itr->second.velocity.x * deltaTime;
-					itr->second.position.y += itr->second.velocity.y * deltaTime;
-					itr->second.position.z += itr->second.velocity.z * deltaTime;
+					objItr->second.position.x += objItr->second.velocity.x * deltaTime;
+					objItr->second.position.y += objItr->second.velocity.y * deltaTime;
+					objItr->second.position.z += objItr->second.velocity.z * deltaTime;
 
 					// Applying angular momentum
-					itr->second.rotation.x += itr->second.angularMo.x * deltaTime;
-					itr->second.rotation.y += itr->second.angularMo.y * deltaTime;
-					itr->second.rotation.z += itr->second.angularMo.z * deltaTime;
+					objItr->second.rotation.x += objItr->second.angularMo.x * deltaTime;
+					objItr->second.rotation.y += objItr->second.angularMo.y * deltaTime;
+					objItr->second.rotation.z += objItr->second.angularMo.z * deltaTime;
 				}
 			}
 		}

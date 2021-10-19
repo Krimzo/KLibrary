@@ -1,5 +1,6 @@
 #pragma once
 
+
 // Including cpp headers
 #include <iostream>
 #include <fstream>
@@ -33,6 +34,7 @@
 #include "KrimzLib/console.h"
 #include "KrimzLib/binary.h"
 #include "KrimzLib/file.h"
+#include "KrimzLib/image.h"
 #include "KrimzLib/thread.h"
 #include "KrimzLib/net.h"
 #include "KrimzLib/opencl.h"
@@ -57,16 +59,16 @@ namespace kl
 		random::SetSeed();
 		time::LoadPCFrequency();
 		console::EnableRGB();
+		image::InitGdiPlus();
 		net::InitWinSock();
-		file::InitGdiPlus();
 		if (initOpenCL) opencl::Init();
 	}
 
 	// Library unintialiser
 	void UninitLib()
 	{
+		image::UninitGdiPlus();
 		net::UninitWinSock();
-		file::UninitGdiPlus();
 		opencl::Uninit();
 	}
 }

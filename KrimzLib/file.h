@@ -6,26 +6,6 @@ namespace kl
 	class file
 	{
 	public:
-		// Initalises gdiplus
-		static void InitGdiPlus()
-		{
-			if (!initialised)
-			{
-				Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-				initialised = true;
-			}
-		}
-
-		// Uninitalises gdiplus
-		static void UninitGdiPlus()
-		{
-			if (initialised)
-			{
-				Gdiplus::GdiplusShutdown(gdiplusToken);
-				initialised = false;
-			}
-		}
-
 		// Creates a file
 		static void Create(std::wstring filePath)
 		{
@@ -190,49 +170,10 @@ namespace kl
 			fileStream.close();
 		}
 
-		// Returns a bitmap from the given image file
-		static bitmap ReadPixels(std::wstring imagePath)
-		{
-			// Loads image file
-			Gdiplus::Bitmap loadedBitmap(imagePath.c_str());
-
-			// Checks load status
-			int lastBitmapStatus = loadedBitmap.GetLastStatus();
-			if (lastBitmapStatus)
-			{
-				std::wcout << "Couldn't load image file \"" << imagePath << "\", status: " << lastBitmapStatus << std::endl;
-				kl::console::WaitFor(' ', true);
-				exit(69);
-			}
-
-			// Saves data
-			bitmap tempBitmap({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
-			for (int y = 0; y < tempBitmap.GetHeight(); y++)
-			{
-				for (int x = 0; x < tempBitmap.GetWidth(); x++)
-				{
-					Gdiplus::Color tempPixel;
-					loadedBitmap.GetPixel(x, y, &tempPixel);
-					tempBitmap.SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), tempPixel.GetA() });
-				}
-			}
-
-			// Return created bitmap
-			return tempBitmap;
-		}
-
 		// Deletes a given file
 		static void Delete(std::wstring filePath)
 		{
 			_wremove(filePath.c_str());
 		}
-
-	private:
-		static bool initialised;
-		static ULONG_PTR gdiplusToken;
-		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	};
-	bool file::initialised = false;
-	ULONG_PTR file::gdiplusToken = 0;
-	Gdiplus::GdiplusStartupInput file::gdiplusStartupInput = {};
 }

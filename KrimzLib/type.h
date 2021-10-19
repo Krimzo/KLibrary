@@ -137,7 +137,7 @@ namespace kl
 	};
 }
 
-/* COLOR */
+/* IMAGE */
 namespace kl
 {
 	struct colorf
@@ -162,125 +162,6 @@ namespace kl
 		byte g = 0;
 		byte b = 0;
 		byte a = 255;
-	};
-
-	struct bitmap
-	{
-	public:
-		// Constructor
-		bitmap(size size, color color = { 0, 0, 0, 255 })
-		{
-			width = size.width;
-			height = size.height;
-			pixels.resize(size_t(width) * size_t(height));
-			FillSolid(color);
-		}
-
-		// Getters
-		int GetWidth()
-		{
-			return width;
-		}
-		int GetHeight()
-		{
-			return height;
-		}
-		size GetSize()
-		{
-			return { width, height };
-		}
-		size_t GetLenght()
-		{
-			return pixels.size();
-		}
-		color GetPixel(point point)
-		{
-			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
-				return pixels[point.y * size_t(width) + point.x];
-			return { 0, 0, 0 };
-		}
-		color* GetPixelData()
-		{
-			return &pixels[0];
-		}
-
-		// Setters
-		void SetWidth(int width)
-		{
-			this->width = width;
-			pixels.resize(size_t(this->width) * size_t(this->height));
-		}
-		void SetHeight(int height)
-		{
-			this->height = height;
-			pixels.resize(size_t(this->width) * size_t(this->height));
-		}
-		void SetSize(size size)
-		{
-			width = size.width;
-			height = size.height;
-			pixels.resize(size_t(width) * size_t(height));
-		}
-		void SetPixel(point point, color color)
-		{
-			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
-				pixels[point.y * size_t(width) + point.x] = color;
-		}
-
-		// Fils the bitmap with solid color
-		void FillSolid(color color)
-		{
-			std::fill(pixels.begin(), pixels.end(), color);
-		}
-
-		// Resets the byte values
-		void FastClear(byte value)
-		{
-			memset(&pixels[0], value, pixels.size() * 4);
-		}
-
-		// Flips red and blue color channels
-		void FlipRB()
-		{
-			for (int i = 0; i < pixels.size(); i++)
-			{
-				byte tempByte = pixels[i].r;
-				pixels[i].r = pixels[i].b;
-				pixels[i].b = tempByte;
-			}
-		}
-
-		// Converts a bitmap to an ASCII frame
-		std::string ToASCII(size frameSize)
-		{
-			// Calculations
-			int pixelWidthIncrement = width / frameSize.width;
-			int pixelHeightIncrement = height / frameSize.height;
-
-			// Processing
-			std::stringstream frame;
-			for (int y = 0; y < frameSize.height; y++)
-			{
-				for (int x = 0; x < frameSize.width; x++)
-				{
-					// Pixels to grayscale
-					color currentPixel = this->GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement });
-					int grayScaledPixel = (int)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
-
-					// Grayscaled values to ASCII
-					int saturationLevel = (int)((grayScaledPixel / 255.0) * 9);
-					frame << asciiPixelTable[saturationLevel];
-				}
-				frame << '\n';
-			}
-			return frame.str();
-		}
-
-	private:
-		int width = 0;
-		int height = 0;
-		std::vector<color> pixels = {};
-		char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 	};
 }
 
