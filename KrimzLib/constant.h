@@ -1,11 +1,9 @@
 #pragma once
 
 
-namespace kl
-{
+namespace kl {
 	// Library constants
-	namespace constant
-	{
+	namespace constant {
 		// Ints
 		const int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
 		const int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);

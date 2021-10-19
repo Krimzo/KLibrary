@@ -1,24 +1,19 @@
 #pragma once
 
 
-namespace kl 
-{
-	class net
-	{
+namespace kl {
+	class net {
 	public:
 		// Downloads website data(bytes) from the given url
-		static bytes GetWebsiteData(std::wstring url)
-		{
+		static bytes GetWebsiteData(std::wstring url) {
 			HINTERNET connection = InternetOpen(L"CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
-			if (!connection)
-			{
+			if (!connection) {
 				printf("Failed to conenct\n");
 				return {};
 			}
 
 			HINTERNET openAddress = InternetOpenUrl(connection, url.c_str(), NULL, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
-			if (!openAddress)
-			{
+			if (!openAddress) {
 				printf("Failed to open website\n");
 				return {};
 			}
@@ -26,8 +21,7 @@ namespace kl
 			bytes finalData;
 			bytes dataBuffer(8192);
 			DWORD byteReadCount = 0;
-			while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount)
-			{
+			while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount) {
 				for (DWORD i = 0; i < byteReadCount; i++)
 					finalData.push_back(dataBuffer[i]);
 			}
@@ -39,16 +33,13 @@ namespace kl
 		}
 
 		// Downloads data from the website and saves it in a file
-		static void DownloadToFile(std::wstring url, std::wstring fileName)
-		{
+		static void DownloadToFile(std::wstring url, std::wstring fileName) {
 			file::WriteBytes(GetWebsiteData(url), fileName);
 		}
 
 		// Initialises winsock
-		static void InitWinSock()
-		{
-			if (!initialised)
-			{
+		static void InitWinSock() {
+			if (!initialised) {
 				WSADATA wsData = {};
 				if (WSAStartup(MAKEWORD(2, 2), &wsData))
 					printf("Failed to initalise winsock\n");
@@ -57,39 +48,31 @@ namespace kl
 		}
 
 		// Uninitialises winsock
-		static void UninitWinSock()
-		{
-			if (initialised)
-			{
+		static void UninitWinSock() {
+			if (initialised) {
 				WSACleanup();
 				initialised = false;
 			}
 		}
 
 		// Simple TCP server
-		class TcpServer
-		{
+		class TcpServer {
 		public:
-			~TcpServer()
-			{
+			~TcpServer() {
 				Destroy();
 			}
 
 			// Returns server status
-			bool IsCreated()
-			{
+			bool IsCreated() {
 				return created;
 			}
 
 			// Create a new server
-			void Create(int port)
-			{
-				if (!created)
-				{
+			void Create(int port) {
+				if (!created) {
 					// Create a socket
 					serverSocket = socket(AF_INET, SOCK_STREAM, NULL);
-					if (serverSocket == INVALID_SOCKET)
-					{
+					if (serverSocket == INVALID_SOCKET) {
 						printf("Failed to create server socket!\n");
 						return;
 					}
@@ -106,10 +89,8 @@ namespace kl
 			}
 
 			// Wait for a client to connect
-			void WaitForClient()
-			{
-				if (!clientConnected)
-				{
+			void WaitForClient() {
+				if (!clientConnected) {
 					// Wait for a connection
 					sockaddr_in client = {};
 					int clientSize = sizeof(client);
@@ -122,12 +103,10 @@ namespace kl
 					char service[NI_MAXSERV];
 					memset(host, 0, NI_MAXHOST);
 					memset(service, 0, NI_MAXSERV);
-					if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, NULL))
-					{
+					if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, NULL)) {
 						clientName = std::string(host);
 					}
-					else
-					{
+					else {
 						inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
 						clientName = std::string(host);
 					}
@@ -136,39 +115,32 @@ namespace kl
 			}
 
 			// Return the currently connected clients name or empty string if no one is connected
-			std::string Client()
-			{
+			std::string Client() {
 				if (created && clientConnected)
 					return clientName;
 				return "";
 			}
 
 			// Send data back to the client
-			void SendData(bytes& data)
-			{
-				if (created && clientConnected)
-				{
+			void SendData(bytes& data) {
+				if (created && clientConnected) {
 					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
 						clientConnected = false;
 				}
 			}
-			void SendData(bytes&& data, bool echo = false)
-			{
-				if (created && clientConnected)
-				{
+			void SendData(bytes&& data, bool echo = false) {
+				if (created && clientConnected) {
 					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
 						clientConnected = false;
-					
+
 					if (echo)
 						printf("Data sent!\n");
 				}
 			}
 
 			// Receive data from the client
-			void ReceiveData(bytes& dataBuffer)
-			{
-				if (created && clientConnected)
-				{
+			void ReceiveData(bytes& dataBuffer) {
+				if (created && clientConnected) {
 					memset(&dataBuffer[0], 0, dataBuffer.size());
 					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
 						clientConnected = false;
@@ -176,8 +148,7 @@ namespace kl
 			}
 
 			// Destroys the server
-			void Destroy()
-			{
+			void Destroy() {
 				closesocket(serverSocket);
 				closesocket(clientSocket);
 				created = false;
@@ -192,30 +163,25 @@ namespace kl
 		};
 
 		// Simple TCP client
-		class TcpClient
-		{
+		class TcpClient {
 		public:
-			~TcpClient()
-			{
+			~TcpClient() {
 				Disconnect();
 			}
 
 			// Returns the current state of the client
-			bool IsConnected()
-			{
+			bool IsConnected() {
 				return connected;
 			}
 
 			// Connects the client to server
-			void Connect(std::string serverIP, int serverPort)
-			{
+			void Connect(std::string serverIP, int serverPort) {
 				// Disconnect the client if it's already connected
 				Disconnect();
 
 				// Create a socket
 				clientSocket = socket(AF_INET, SOCK_STREAM, NULL);
-				if (clientSocket == INVALID_SOCKET)
-				{
+				if (clientSocket == INVALID_SOCKET) {
 					printf("Failed to create socket!\n");
 					return;
 				}
@@ -225,8 +191,7 @@ namespace kl
 				sockHint.sin_family = AF_INET;
 				sockHint.sin_port = htons(serverPort);
 				inet_pton(AF_INET, serverIP.c_str(), &sockHint.sin_addr);
-				if (connect(clientSocket, (sockaddr*)&sockHint, sizeof(sockHint)))
-				{
+				if (connect(clientSocket, (sockaddr*)&sockHint, sizeof(sockHint))) {
 					printf("Failed to connect!\n");
 					closesocket(clientSocket);
 					return;
@@ -235,39 +200,31 @@ namespace kl
 			}
 
 			// Send data to server
-			void SendData(bytes& data)
-			{
-				if (connected)
-				{
+			void SendData(bytes& data) {
+				if (connected) {
 					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
 						Disconnect();
 				}
 			}
-			void SendData(bytes&& data)
-			{
-				if (connected)
-				{
+			void SendData(bytes&& data) {
+				if (connected) {
 					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
 						Disconnect();
 				}
 			}
 
 			// Receive data from the server
-			void ReceiveData(bytes& dataBuffer)
-			{
-				if (connected)
-				{
+			void ReceiveData(bytes& dataBuffer) {
+				if (connected) {
 					memset(&dataBuffer[0], 0, dataBuffer.size());
 					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
 						Disconnect();
-				}	
+				}
 			}
 
 			// Dsiconnects the client
-			void Disconnect()
-			{
-				if (connected)
-				{
+			void Disconnect() {
+				if (connected) {
 					closesocket(clientSocket);
 					connected = false;
 				}

@@ -1,23 +1,20 @@
 #pragma once
 
 
-namespace kl
-{
-	class window
-	{
+namespace kl {
+	class window {
 	public:
 		// Input
 		key KEY = 0;
 		mouse MOUSE = {};
 
 		// Window function calls
-		std::function<void(void)> WindowStart = []() {};
-		std::function<void(void)> WindowUpdate = []() {};
-		std::function<void(void)> WindowEnd = []() {};
+		std::function<void(void)> WindowStart = []() { };
+		std::function<void(void)> WindowUpdate = []() { };
+		std::function<void(void)> WindowEnd = []() { };
 
 		// Window creation and deletion
-		void Start (int width, int height, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false)
-		{
+		void Start(int width, int height, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false) {
 			// Define windowapi window class
 			WNDCLASSEX windowClass = {};
 			windowClass.cbSize = sizeof(WNDCLASSEX);
@@ -32,8 +29,7 @@ namespace kl
 			windowClass.lpszMenuName = NULL;
 			windowClass.lpszClassName = name;
 			windowClass.hIconSm = NULL;
-			if (!RegisterClassEx(&windowClass))
-			{
+			if (!RegisterClassEx(&windowClass)) {
 				printf("Couldn't register window class! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);
 				exit(69);
@@ -46,8 +42,7 @@ namespace kl
 			width = (adjustedWindowSize.right - adjustedWindowSize.left);
 			height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
 			hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - width / 2), (constant::ScreenHeight / 2 - height / 2), width, height, NULL, NULL, hInstance, NULL);
-			if (!hwnd)
-			{
+			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);
 				exit(69);
@@ -62,8 +57,7 @@ namespace kl
 			bmpInfo.bmiHeader.biCompression = BI_RGB;
 
 			// OpenGL setup
-			if (opengl)
-			{
+			if (opengl) {
 				PIXELFORMATDESCRIPTOR pfd = {
 				sizeof(PIXELFORMATDESCRIPTOR),
 				1,
@@ -95,22 +89,18 @@ namespace kl
 			}
 
 			// Window message loop
-			if (continuous)
-			{
+			if (continuous) {
 				WindowStart();
-				while (IsWindow(hwnd))
-				{
+				while (IsWindow(hwnd)) {
 					while (PeekMessage(&wndMsg, hwnd, 0, 0, PM_REMOVE))
 						HandleMessage();
 					WindowUpdate();
 				}
 				WindowEnd();
 			}
-			else
-			{
+			else {
 				WindowStart();
-				while (IsWindow(hwnd))
-				{
+				while (IsWindow(hwnd)) {
 					GetMessage(&wndMsg, hwnd, 0, 0);
 					HandleMessage();
 					WindowUpdate();
@@ -119,8 +109,7 @@ namespace kl
 			}
 
 			// Memory release
-			if (opengl)
-			{
+			if (opengl) {
 				wglMakeCurrent(NULL, NULL);
 				ReleaseDC(hwnd, hdc);
 				wglDeleteContext(hglrc);
@@ -130,72 +119,59 @@ namespace kl
 			hdc = NULL;
 			hwnd = NULL;
 		}
-		void Stop()
-		{
+		void Stop() {
 			PostMessage(hwnd, WM_CLOSE, 0, 0);
 		}
-		~window()
-		{
+		~window() {
 			this->Stop();
 		}
 
 		// Getters
-		HWND GetHWND()
-		{
+		HWND GetHWND() {
 			return this->hwnd;
 		}
-		HDC GetHDC()
-		{
+		HDC GetHDC() {
 			return this->hdc;
 		}
-		HGLRC GetHGLRC()
-		{
+		HGLRC GetHGLRC() {
 			return this->hglrc;
 		}
 
 		// Gets a window client area width
-		int GetWidth()
-		{
+		int GetWidth() {
 			RECT clientArea = {};
 			GetClientRect(hwnd, &clientArea);
 			return clientArea.right - clientArea.left;
 		}
 
 		// Gets a window client area height
-		int GetHeight()
-		{
+		int GetHeight() {
 			RECT clientArea = {};
 			GetClientRect(hwnd, &clientArea);
 			return clientArea.bottom - clientArea.top;
 		}
 
 		// Sets the window title
-		void SetTitle(std::string data)
-		{
+		void SetTitle(std::string data) {
 			SetWindowTextA(hwnd, data.c_str());
 		}
-		void SetTitle(std::wstring data)
-		{
+		void SetTitle(std::wstring data) {
 			SetWindowTextW(hwnd, data.c_str());
 		}
-		void SetTitle(int data)
-		{
+		void SetTitle(int data) {
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
-		void SetTitle(double data)
-		{
+		void SetTitle(double data) {
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
 
 		// Sets the pixels of the window
-		void DisplayImage(image& toDraw, point position = { 0, 0 })
-		{
+		void DisplayImage(image& toDraw, point position = { 0, 0 }) {
 			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
 			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
-		void DisplayImage(image&& toDraw, point position = { 0, 0 })
-		{
+		void DisplayImage(image&& toDraw, point position = { 0, 0 }) {
 			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
 			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
@@ -210,10 +186,8 @@ namespace kl
 		MSG wndMsg = {};
 
 		// Handles the windows message
-		void HandleMessage()
-		{
-			switch (wndMsg.message)
-			{
+		void HandleMessage() {
+			switch (wndMsg.message) {
 			case WM_KEYDOWN:
 				KEY = (key)wndMsg.wParam;
 				break;

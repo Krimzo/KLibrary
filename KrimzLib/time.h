@@ -1,21 +1,17 @@
 #pragma once
 
 
-namespace kl
-{
-	class time
-	{
+namespace kl {
+	class time {
 	public:
 		// Constructor
-		time()
-		{
+		time() {
 			QueryPerformanceCounter(&counterLast);
 			QueryPerformanceCounter(&stopwatchLast);
 		}
 
 		// Loads the current pc frequency
-		static void LoadPCFrequency()
-		{
+		static void LoadPCFrequency() {
 			LARGE_INTEGER counterTempFreq;
 			QueryPerformanceFrequency(&counterTempFreq);
 			PCFrequency = double(counterTempFreq.QuadPart);
@@ -24,8 +20,7 @@ namespace kl
 		}
 
 		// Returns a time since the the last StaticGetElapsed() call
-		static double StaticGetElapsed()
-		{
+		static double StaticGetElapsed() {
 			LARGE_INTEGER staticCounterNow;
 			QueryPerformanceCounter(&staticCounterNow);
 			double time = (staticCounterNow.QuadPart - staticCounterLast.QuadPart) / PCFrequency;
@@ -34,30 +29,26 @@ namespace kl
 		}
 
 		// Resets the static stopwatch to 0 seconds
-		static void StaticStopwatchReset()
-		{
+		static void StaticStopwatchReset() {
 			QueryPerformanceCounter(&staticStopwatchLast);
 		}
 
 		// Returns the passed time since the last static stopwatch reset
-		static double StaticStopwatchElapsed()
-		{
+		static double StaticStopwatchElapsed() {
 			LARGE_INTEGER staticStopwatchNow;
 			QueryPerformanceCounter(&staticStopwatchNow);
 			return (staticStopwatchNow.QuadPart - staticStopwatchLast.QuadPart) / PCFrequency;
 		}
 
 		// Sleeps for the given time
-		static void WaitSeconds(double time)
-		{
+		static void WaitSeconds(double time) {
 			LARGE_INTEGER sleepCounterStart, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
 			do {
 				QueryPerformanceCounter(&sleepCounter);
 			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < time);
 		}
-		static void WaitMiliseconds(double time)
-		{
+		static void WaitMiliseconds(double time) {
 			time /= 1000;
 			LARGE_INTEGER sleepCounterStart, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
@@ -67,22 +58,19 @@ namespace kl
 		}
 
 		// Resets the stopwatch to 0 seconds
-		void StopwatchReset()
-		{
+		void StopwatchReset() {
 			QueryPerformanceCounter(&stopwatchLast);
 		}
 
 		// Returns the passed time since the last stopwatch reset
-		double StopwatchElapsed()
-		{
+		double StopwatchElapsed() {
 			LARGE_INTEGER stopwatchNow;
 			QueryPerformanceCounter(&stopwatchNow);
 			return (stopwatchNow.QuadPart - stopwatchLast.QuadPart) / PCFrequency;
 		}
 
 		// Returns a time since the the last GetElapsed() call
-		double GetElapsed()
-		{
+		double GetElapsed() {
 			LARGE_INTEGER counterNow;
 			QueryPerformanceCounter(&counterNow);
 			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;

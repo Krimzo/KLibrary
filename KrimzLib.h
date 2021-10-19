@@ -18,6 +18,7 @@
 #include <wininet.h>
 #include <windows.h>
 #include <windowsx.h>
+#include <shlwapi.h>
 #include <gdiplus.h>
 #include "KrimzLib/incl/OpenCL/cl.hpp"
 #include "KrimzLib/incl/OpenGL/glad.h"
@@ -31,6 +32,7 @@
 #include "KrimzLib/math.h"
 #include "KrimzLib/random.h"
 #include "KrimzLib/time.h"
+#include "KrimzLib/string.h"
 #include "KrimzLib/console.h"
 #include "KrimzLib/binary.h"
 #include "KrimzLib/file.h"
@@ -45,17 +47,16 @@
 // Linking .libs
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib,"wininet.lib")
+#pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib, "incl/KrimzLib/lib/opencl.lib")
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
 
-namespace kl
-{
+namespace kl {
 	// Library intialiser
-	void InitLib(bool initOpenCL = false)
-	{
+	void InitLib(bool initOpenCL = false) {
 		random::SetSeed();
 		time::LoadPCFrequency();
 		console::EnableRGB();
@@ -65,8 +66,7 @@ namespace kl
 	}
 
 	// Library unintialiser
-	void UninitLib()
-	{
+	void UninitLib() {
 		image::UninitGdiPlus();
 		net::UninitWinSock();
 		opencl::Uninit();

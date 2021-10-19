@@ -1,10 +1,8 @@
 #pragma once
 
 
-namespace kl
-{
-	class engine
-	{
+namespace kl {
+	class engine {
 	public:
 		// Engine properties
 		double fpsLimit = -1;
@@ -14,21 +12,18 @@ namespace kl
 		camera engineCamera = {};
 
 		// Outside functions that user defines
-		std::function<void(void)> EngineStart = []() {};
-		std::function<void(key key, mouse mouse)> EngineInput = [](key key, mouse mouse) {};
-		std::function<void(void)> EngineUpdate = []() {};
+		std::function<void(void)> EngineStart = []() { };
+		std::function<void(key key, mouse mouse)> EngineInput = [](key key, mouse mouse) { };
+		std::function<void(void)> EngineUpdate = []() { };
 
 		// Constructor
-		engine(colorf background = {})
-		{
+		engine(colorf background = {}) {
 			this->background = background;
 		}
 
 		// Creates the engine
-		void Start(int width, int height, const wchar_t* name, double fov = 60)
-		{
-			engineWindow.WindowStart = [&]()
-			{
+		void Start(int width, int height, const wchar_t* name, double fov = 60) {
+			engineWindow.WindowStart = [&]() {
 				/* Enable 3D and depth buffer */
 				opengl::Enable3D(fov, engineWindow.GetWidth(), engineWindow.GetHeight());
 
@@ -42,8 +37,7 @@ namespace kl
 				engineTime.StopwatchReset();
 			};
 
-			engineWindow.WindowUpdate = [&]()
-			{
+			engineWindow.WindowUpdate = [&]() {
 				/* Game input */
 				EngineInput(engineWindow.KEY, engineWindow.MOUSE);
 
@@ -60,8 +54,7 @@ namespace kl
 				opengl::UpdateCamera(engineCamera.position, engineCamera.rotation);
 
 				/* Render all game triangles */
-				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++)
-				{
+				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
 					if (objItr->second.visible)
 						opengl::RenderTriangles(objItr->second.triangles, objItr->second.position, objItr->second.rotation, objItr->second.size, objItr->second.texture);
 				}
@@ -82,29 +75,23 @@ namespace kl
 
 			engineWindow.Start(width, height, name, false, true, true);
 		}
-		void Stop()
-		{
+		void Stop() {
 			engineWindow.Stop();
 		}
-		~engine()
-		{
+		~engine() {
 			this->Stop();
 		}
 
 		// Adds a new game object if the name doesn't already exist
-		gameobject* NewGameObject(std::string objectName, texture textureID = 0)
-		{
-			if (!engineObjects.count(objectName))
-			{
+		gameobject* NewGameObject(std::string objectName, texture textureID = 0) {
+			if (!engineObjects.count(objectName)) {
 				engineObjects.insert(std::pair<std::string, gameobject>(objectName, { true, textureID }));
 				return &engineObjects.at(objectName);
 			}
 			return NULL;
 		}
-		gameobject* NewGameObject(std::string objectName, std::wstring filePath, texture textureID)
-		{
-			if (!engineObjects.count(objectName))
-			{
+		gameobject* NewGameObject(std::string objectName, std::wstring filePath, texture textureID) {
+			if (!engineObjects.count(objectName)) {
 				// Load file
 				std::stringstream ss = std::stringstream(file::ReadText(filePath));
 
@@ -113,13 +100,11 @@ namespace kl
 				std::vector<vec3> xyzCoords;
 				std::vector<vec2> uvCoords;
 				std::vector<std::vector<point>> fileTriangles;
-				while (std::getline(ss, fileLine))
-				{
+				while (std::getline(ss, fileLine)) {
 					std::istringstream iss(fileLine);
 					std::string linePart = "";
 					iss >> linePart;
-					if (linePart == "v")
-					{
+					if (linePart == "v") {
 						vec3 tempVertex = {};
 						int spaceCoordCounter = 0;
 						while (iss) {
@@ -139,12 +124,10 @@ namespace kl
 						}
 						xyzCoords.push_back(tempVertex);
 					}
-					else if (linePart == "vt")
-					{
+					else if (linePart == "vt") {
 						vec2 tempVertex = {};
 						int textureCoordCounter = 0;
-						while (iss)
-						{
+						while (iss) {
 							iss >> linePart;
 
 							if (textureCoordCounter == 0) {
@@ -158,15 +141,12 @@ namespace kl
 						}
 						uvCoords.push_back(tempVertex);
 					}
-					else if (linePart == "f")
-					{
+					else if (linePart == "f") {
 						std::vector<point> tempTriangle(3);
 						int vertexCounter = 0;
-						while (iss && vertexCounter < 3)
-						{
+						while (iss && vertexCounter < 3) {
 							iss >> linePart;
-							for (int i = 0; i < 2; i++)
-							{
+							for (int i = 0; i < 2; i++) {
 								size_t slashPosition = linePart.find('/');
 								std::string dataAsString = linePart.substr(0, slashPosition);
 
@@ -187,8 +167,7 @@ namespace kl
 
 				// Create the game object with data
 				gameobject tempObject = { true, textureID };
-				for (int i = 0; i < fileTriangles.size(); i++)
-				{
+				for (int i = 0; i < fileTriangles.size(); i++) {
 					tempObject.triangles.push_back({ {
 						{
 						xyzCoords[fileTriangles[i][0].x].x,
@@ -220,27 +199,23 @@ namespace kl
 		}
 
 		// Removes a game object with the given name
-		bool DeleteGameObject(std::string objectName)
-		{
-			if (engineObjects.count(objectName))
-			{
+		bool DeleteGameObject(std::string objectName) {
+			if (engineObjects.count(objectName)) {
 				engineObjects.erase(objectName);
 				return true;
 			}
-			return false;		
+			return false;
 		}
 
 		// Returns a reference to the wanted game object
-		gameobject* GetGameObject(std::string objectName)
-		{
+		gameobject* GetGameObject(std::string objectName) {
 			if (engineObjects.count(objectName))
 				return &engineObjects.at(objectName);
 			return NULL;
 		}
 
 		// Adds a new texture to the engine memory
-		texture NewTexture(image& textureData)
-		{
+		texture NewTexture(image& textureData) {
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
@@ -248,8 +223,7 @@ namespace kl
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
-		texture NewTexture(image&& textureData)
-		{
+		texture NewTexture(image&& textureData) {
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
@@ -265,12 +239,9 @@ namespace kl
 		std::map<std::string, gameobject>::iterator objItr;
 
 		// Computing object physics 
-		void ObjectPhysics()
-		{
-			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++)
-			{
-				if (objItr->second.physics)
-				{
+		void ObjectPhysics() {
+			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
+				if (objItr->second.physics) {
 					// Applying gravity
 					objItr->second.velocity.y -= gravity * objItr->second.gravityMulti * deltaTime;
 

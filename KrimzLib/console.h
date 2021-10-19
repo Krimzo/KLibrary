@@ -1,26 +1,21 @@
 #pragma once
 
 
-namespace kl
-{
-	class console
-	{
+namespace kl {
+	class console {
 	public:
 		// Sets the console title
-		static void SetTitle(std::string text)
-		{
+		static void SetTitle(std::string text) {
 			SetConsoleTitleA(text.c_str());
 		}
 
 		// Deletes the console
-		static void Delete()
-		{
+		static void Delete() {
 			FreeConsole();
 		}
 
 		// Hides the console cursor
-		static void HideCursor()
-		{
+		static void HideCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
 			GetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
 			cursorInfo.bVisible = FALSE;
@@ -28,8 +23,7 @@ namespace kl
 		}
 
 		// Shows the console cursor
-		static void ShowCursor()
-		{
+		static void ShowCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
 			GetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
 			cursorInfo.bVisible = TRUE;
@@ -37,18 +31,15 @@ namespace kl
 		}
 
 		// Sets the console cursor position
-		static void SetCursorPos(short x, short y)
-		{
+		static void SetCursorPos(short x, short y) {
 			SetConsoleCursorPosition(stdConsoleHandle, { x, y });
 		}
-		static void SetCursorPos(COORD position)
-		{
+		static void SetCursorPos(COORD position) {
 			SetConsoleCursorPosition(stdConsoleHandle, position);
 		}
 
 		// Returns the current console size
-		static size GetSize()
-		{
+		static size GetSize() {
 			CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo;
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &consoleScreenBufferInfo);
 			return {
@@ -58,22 +49,19 @@ namespace kl
 		}
 
 		// Changes the console buffer size
-		static void SetBufferSize(int width, int height)
-		{
+		static void SetBufferSize(int width, int height) {
 			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)width, (short)height });
 		}
 
 		// Changes the console size
-		static void SetSize(int width, int height)
-		{
+		static void SetSize(int width, int height) {
 			SetBufferSize(width, height);
 			SMALL_RECT consoleRect = { 0, 0, (short)width - 1, (short)height - 1 };
 			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
 		}
 
 		// Changes the console font size
-		static void SetFont(int width, int height, std::wstring fontName)
-		{
+		static void SetFont(int width, int height, std::wstring fontName) {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
@@ -86,11 +74,9 @@ namespace kl
 		}
 
 		// Enables RGB support for the console
-		static void EnableRGB()
-		{
+		static void EnableRGB() {
 			static bool rgbEnabled = false;
-			if (!rgbEnabled)
-			{
+			if (!rgbEnabled) {
 				DWORD consoleMode;
 				GetConsoleMode(stdConsoleHandle, &consoleMode);
 				SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
@@ -99,40 +85,32 @@ namespace kl
 		}
 
 		// Prints RGB data
-		static void Print(std::string& data, color textColor = constant::colorWhite)
-		{
+		static void Print(std::string& data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
-		static void Print(std::string&& data, color textColor = constant::colorWhite)
-		{
+		static void Print(std::string&& data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
-		static void Print(int data, color textColor = constant::colorWhite)
-		{
+		static void Print(int data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Print(double data, color textColor = constant::colorWhite)
-		{
+		static void Print(double data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Print(vec2 data, color textColor = constant::colorWhite)
-		{
+		static void Print(vec2 data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
-		static void Print(vec3 data, color textColor = constant::colorWhite)
-		{
+		static void Print(vec3 data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
 		}
 
 		// Prints RGB block
-		static void PrintBlock(color blockColor)
-		{
+		static void PrintBlock(color blockColor) {
 			printf("\033[48;2;%d;%d;%dm \033[0m", blockColor.r, blockColor.g, blockColor.b);
 		}
 
 		// Returns a pressed key
-		static char GetInput()
-		{
+		static char GetInput() {
 			char input = 0;
 			while (_kbhit())
 				input = _getch();
@@ -140,10 +118,8 @@ namespace kl
 		}
 
 		// Waits until the wanted key is pressed
-		static void WaitFor(char toWaitFor, bool printMessage = false)
-		{
-			if (printMessage)
-			{
+		static void WaitFor(char toWaitFor, bool printMessage = false) {
+			if (printMessage) {
 				if (toWaitFor > 31 && toWaitFor < 127)
 					printf("Press '%c' to continue\n", toWaitFor);
 				else
@@ -153,8 +129,7 @@ namespace kl
 		}
 
 		// Waits for any key to be pressed
-		static void WaitForAny(bool printMessage = false)
-		{
+		static void WaitForAny(bool printMessage = false) {
 			if (printMessage)
 				printf("Press any key to continue\n");
 			char iHateWarnings = _getch();
