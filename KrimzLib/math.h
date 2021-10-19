@@ -19,13 +19,15 @@ namespace kl {
 
 		// Checks if the given number is prime
 		static bool IsPrime(size_t num) {
-			if (num == 0 || num == 1)
+			if (num == 0 || num == 1) {
 				return false;
+			}
 
 			size_t half = num / 2;
 			for (size_t i = 2; i <= half; i++) {
-				if (num % i == 0)
+				if (num % i == 0) {
 					return false;
+				}
 			}
 			return true;
 		}

@@ -79,16 +79,19 @@ namespace kl {
 
 		// Sets the given kernel arguments
 		static void SetKernelArguments(clkernel kernel, std::vector<gpumem> arguments) {
-			for (int i = 0; i < arguments.size(); i++)
+			for (int i = 0; i < arguments.size(); i++) {
 				clSetKernelArg(kernel, i, 8, &arguments[i]);
+			}
 		}
 
 		// Runs and waits for the kernel to finish
 		static void RunKernel(clkernel kernel, size_t runCount) {
-			if (!math::IsPrime(runCount))
+			if (!math::IsPrime(runCount)) {
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &runCount, NULL, 0, NULL, NULL);
-			else
-				kl::console::Print("Kernel run count can't be a prime number!\n", kl::constant::colorRed);
+			}
+			else {
+				console::Print("Kernel run count can't be a prime number!\n", kl::constant::colorRed);
+			}
 		}
 
 		// Deletes a given OpenCL kernel

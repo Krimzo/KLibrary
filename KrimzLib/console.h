@@ -119,18 +119,21 @@ namespace kl {
 		// Returns a pressed key
 		static char GetInput() {
 			char input = 0;
-			while (_kbhit())
+			while (_kbhit()) {
 				input = _getch();
+			}
 			return input;
 		}
 
 		// Waits until the wanted key is pressed
 		static void WaitFor(char toWaitFor, bool echo = false) {
 			if (echo) {
-				if (toWaitFor > 31 && toWaitFor < 127)
+				if (toWaitFor > 31 && toWaitFor < 127) {
 					printf("Press '%c' to continue\n", toWaitFor);
-				else
+				}
+				else {
 					printf("Press %d to continue\n", toWaitFor);
+				}
 			}
 			while (_getch() != toWaitFor);
 		}

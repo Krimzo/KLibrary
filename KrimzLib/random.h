@@ -17,8 +17,9 @@ namespace kl {
 		// Returns a vector with random integers
 		static std::vector<int> IntVector(int startInclusive, int endExclusive, int vectorSize) {
 			std::vector<int> tempVec(vectorSize);
-			for (int i = 0; i < vectorSize; i++)
+			for (int i = 0; i < vectorSize; i++) {
 				tempVec[i] = Int(startInclusive, endExclusive);
+			}
 			return tempVec;
 		}
 

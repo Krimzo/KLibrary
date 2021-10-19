@@ -22,8 +22,9 @@ namespace kl {
 			bytes dataBuffer(8192);
 			DWORD byteReadCount = 0;
 			while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount) {
-				for (DWORD i = 0; i < byteReadCount; i++)
+				for (DWORD i = 0; i < byteReadCount; i++) {
 					finalData.push_back(dataBuffer[i]);
+				}
 			}
 
 			InternetCloseHandle(openAddress);
@@ -41,8 +42,9 @@ namespace kl {
 		static void InitWinSock() {
 			if (!winSockInitialised) {
 				WSADATA wsData = {};
-				if (WSAStartup(MAKEWORD(2, 2), &wsData))
+				if (WSAStartup(MAKEWORD(2, 2), &wsData)) {
 					printf("Failed to initalise winsock\n");
+				}
 				winSockInitialised = true;
 			}
 		}
@@ -95,8 +97,9 @@ namespace kl {
 					sockaddr_in client = {};
 					int clientSize = sizeof(client);
 					clientSocket = accept(serverSocket, (sockaddr*)&client, &clientSize);
-					if (clientSocket == INVALID_SOCKET)
+					if (clientSocket == INVALID_SOCKET) {
 						return;
+					}
 
 					// Process the connected client data
 					char host[NI_MAXHOST];
@@ -116,25 +119,25 @@ namespace kl {
 
 			// Return the currently connected clients name or empty string if no one is connected
 			std::string Client() {
-				if (created && clientConnected)
+				if (created && clientConnected) {
 					return clientName;
+				}
 				return "";
 			}
 
 			// Send data back to the client
 			void SendData(bytes& data) {
 				if (created && clientConnected) {
-					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR) {
 						clientConnected = false;
+					}
 				}
 			}
-			void SendData(bytes&& data, bool echo = false) {
+			void SendData(bytes&& data) {
 				if (created && clientConnected) {
-					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR) {
 						clientConnected = false;
-
-					if (echo)
-						printf("Data sent!\n");
+					}
 				}
 			}
 
@@ -142,8 +145,9 @@ namespace kl {
 			void ReceiveData(bytes& dataBuffer) {
 				if (created && clientConnected) {
 					memset(&dataBuffer[0], 0, dataBuffer.size());
-					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
+					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR) {
 						clientConnected = false;
+					}
 				}
 			}
 
@@ -202,14 +206,16 @@ namespace kl {
 			// Send data to server
 			void SendData(bytes& data) {
 				if (connected) {
-					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR) {
 						Disconnect();
+					}
 				}
 			}
 			void SendData(bytes&& data) {
 				if (connected) {
-					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR)
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR) {
 						Disconnect();
+					}
 				}
 			}
 
@@ -217,8 +223,9 @@ namespace kl {
 			void ReceiveData(bytes& dataBuffer) {
 				if (connected) {
 					memset(&dataBuffer[0], 0, dataBuffer.size());
-					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR)
+					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR) {
 						Disconnect();
+					}
 				}
 			}
 

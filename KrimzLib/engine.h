@@ -55,8 +55,9 @@ namespace kl {
 
 				/* Render all game triangles */
 				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
-					if (objItr->second.visible)
+					if (objItr->second.visible) {
 						opengl::RenderTriangles(objItr->second.triangles, objItr->second.position, objItr->second.rotation, objItr->second.size, objItr->second.texture);
+					}
 				}
 
 				/* Swap front and back frame buffers */
@@ -109,7 +110,6 @@ namespace kl {
 						int spaceCoordCounter = 0;
 						while (iss) {
 							iss >> linePart;
-
 							if (spaceCoordCounter == 0) {
 								tempVertex.x = stod(linePart);
 							}
@@ -119,7 +119,6 @@ namespace kl {
 							else if (spaceCoordCounter == 2) {
 								tempVertex.z = stod(linePart);
 							}
-
 							spaceCoordCounter++;
 						}
 						xyzCoords.push_back(tempVertex);
@@ -129,14 +128,12 @@ namespace kl {
 						int textureCoordCounter = 0;
 						while (iss) {
 							iss >> linePart;
-
 							if (textureCoordCounter == 0) {
 								tempVertex.x = stod(linePart);
 							}
 							else if (textureCoordCounter == 1) {
 								tempVertex.y = stod(linePart);
 							}
-
 							textureCoordCounter++;
 						}
 						uvCoords.push_back(tempVertex);
@@ -149,14 +146,12 @@ namespace kl {
 							for (int i = 0; i < 2; i++) {
 								size_t slashPosition = linePart.find('/');
 								std::string dataAsString = linePart.substr(0, slashPosition);
-
 								if (i == 0) {
 									tempTriangle[vertexCounter].x = stoi(dataAsString) - 1;
 								}
 								else if (i == 1) {
 									tempTriangle[vertexCounter].y = stoi(dataAsString) - 1;
 								}
-
 								linePart = linePart.substr(slashPosition + 1);
 							}
 							vertexCounter++;
@@ -209,8 +204,9 @@ namespace kl {
 
 		// Returns a reference to the wanted game object
 		gameobject* GetGameObject(std::string objectName) {
-			if (engineObjects.count(objectName))
+			if (engineObjects.count(objectName)) {
 				return &engineObjects.at(objectName);
+			}
 			return NULL;
 		}
 

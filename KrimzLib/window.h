@@ -92,8 +92,9 @@ namespace kl {
 			if (continuous) {
 				WindowStart();
 				while (IsWindow(hwnd)) {
-					while (PeekMessage(&wndMsg, hwnd, 0, 0, PM_REMOVE))
+					while (PeekMessage(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
 						HandleMessage();
+					}
 					WindowUpdate();
 				}
 				WindowEnd();

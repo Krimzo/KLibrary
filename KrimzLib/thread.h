@@ -18,8 +18,9 @@ namespace kl {
 			}
 
 			// Waiting for the threads to finish
-			for (int i = 0; i < threadCount; i++)
+			for (int i = 0; i < threadCount; i++) {
 				cpuThreads[i].join();
+			}
 		}
 	};
 }

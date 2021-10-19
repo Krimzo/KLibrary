@@ -60,10 +60,12 @@ namespace kl {
 				exit(69);
 			}
 
-			if (position < 0)
+			if (position < 0) {
 				fileStream.seekp(0, std::ios_base::end);
-			else
+			}
+			else {
 				fileStream.seekp(position);
+			}
 
 			fileStream << data;
 			fileStream.close();
@@ -76,10 +78,12 @@ namespace kl {
 				exit(69);
 			}
 
-			if (position < 0)
+			if (position < 0) {
 				fileStream.seekp(0, std::ios_base::end);
-			else
+			}
+			else {
 				fileStream.seekp(position);
+			}
 
 			fileStream << data;
 			fileStream.close();
@@ -123,10 +127,12 @@ namespace kl {
 				exit(69);
 			}
 
-			if (position < 0)
+			if (position < 0) {
 				fileStream.seekp(0, std::ios_base::end);
-			else
+			}
+			else {
 				fileStream.seekp(position);
+			}
 
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
@@ -139,10 +145,12 @@ namespace kl {
 				exit(69);
 			}
 
-			if (position < 0)
+			if (position < 0) {
 				fileStream.seekp(0, std::ios_base::end);
-			else
+			}
+			else {
 				fileStream.seekp(position);
+			}
 
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();

@@ -22,8 +22,9 @@ namespace kl {
 		template<typename T> static bytes GetBytes(T num) {
 			byte* bytePointer = (byte*)&num;
 			std::vector<byte> byteData;
-			for (int i = 0; i < sizeof(num); i++)
+			for (int i = 0; i < sizeof(num); i++) {
 				byteData.insert(byteData.begin(), *(bytePointer + i));
+			}
 			return byteData;
 		}
 	};
