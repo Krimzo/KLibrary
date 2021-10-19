@@ -170,12 +170,12 @@ namespace kl {
 		void DisplayImage(image& toDraw, point position = { 0, 0 }) {
 			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
-			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetRawData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
 		void DisplayImage(image&& toDraw, point position = { 0, 0 }) {
 			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
-			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetRawData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
 
 	private:

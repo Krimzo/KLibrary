@@ -25,7 +25,7 @@ namespace kl {
 			SetSize(size);
 			FillSolid(color);
 		}
-		image(std::wstring fileName) {
+		image(const wchar_t* fileName) {
 			FromFile(fileName);
 		}
 
@@ -48,7 +48,7 @@ namespace kl {
 			}
 			return { 0, 0, 0 };
 		}
-		color* GetPixelData() {
+		color* GetRawData() {
 			return &pixels[0];
 		}
 

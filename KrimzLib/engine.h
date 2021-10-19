@@ -215,7 +215,7 @@ namespace kl {
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.GetWidth(), textureData.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.GetPixelData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.GetWidth(), textureData.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.GetRawData());
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
@@ -223,7 +223,7 @@ namespace kl {
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.GetWidth(), textureData.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.GetPixelData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureData.GetWidth(), textureData.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.GetRawData());
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
