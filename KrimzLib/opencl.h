@@ -6,7 +6,7 @@ namespace kl {
 	public:
 		// Initalizes needed stuff from OpenCL
 		static void Init() {
-			if (!initialized) {
+			if (!clInitialized) {
 				// Get platform and device information
 				clGetPlatformIDs(1, &platformID, NULL);
 				clGetDeviceIDs(platformID, CL_DEVICE_TYPE_DEFAULT, 1, &deviceID, NULL);
@@ -16,17 +16,17 @@ namespace kl {
 
 				// Create a command queue
 				commandQueue = clCreateCommandQueue(context, deviceID, 0, NULL);
-				initialized = true;
+				clInitialized = true;
 			}
 		}
 
 		// Unnitalizes OpenCL stuff
 		static void Uninit() {
-			if (initialized) {
+			if (clInitialized) {
 				clFinish(commandQueue);
 				clReleaseCommandQueue(commandQueue);
 				clReleaseContext(context);
-				initialized = false;
+				clInitialized = false;
 			}
 		}
 
@@ -97,13 +97,13 @@ namespace kl {
 		}
 
 	private:
-		static bool initialized;
+		static bool clInitialized;
 		static cl_platform_id platformID;
 		static cl_device_id deviceID;
 		static cl_context context;
 		static cl_command_queue commandQueue;
 	};
-	bool opencl::initialized = false;
+	bool opencl::clInitialized = false;
 	cl_platform_id opencl::platformID = NULL;
 	cl_device_id opencl::deviceID = NULL;
 	cl_context opencl::context = NULL;

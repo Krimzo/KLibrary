@@ -39,19 +39,19 @@ namespace kl {
 
 		// Initialises winsock
 		static void InitWinSock() {
-			if (!initialised) {
+			if (!winSockInitialised) {
 				WSADATA wsData = {};
 				if (WSAStartup(MAKEWORD(2, 2), &wsData))
 					printf("Failed to initalise winsock\n");
-				initialised = true;
+				winSockInitialised = true;
 			}
 		}
 
 		// Uninitialises winsock
 		static void UninitWinSock() {
-			if (initialised) {
+			if (winSockInitialised) {
 				WSACleanup();
-				initialised = false;
+				winSockInitialised = false;
 			}
 		}
 
@@ -236,7 +236,7 @@ namespace kl {
 		};
 
 	private:
-		static bool initialised;
+		static bool winSockInitialised;
 	};
-	bool net::initialised = false;
+	bool net::winSockInitialised = false;
 }

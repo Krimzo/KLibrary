@@ -6,94 +6,27 @@ namespace kl {
 	public:
 		// Initalises gdiplus
 		static void InitGdiPlus() {
-			if (!initialised) {
+			if (!gdipInitialised) {
 				Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-				initialised = true;
+				gdipInitialised = true;
 			}
 		}
 
 		// Uninitalises gdiplus
 		static void UninitGdiPlus() {
-			if (initialised) {
+			if (gdipInitialised) {
 				Gdiplus::GdiplusShutdown(gdiplusToken);
-				initialised = false;
-			}
-		}
-
-		// Returns an image from the given image file
-		static image FromFile(std::wstring filePath) {
-			if (initialised) {
-				// Loads image file
-				Gdiplus::Bitmap loadedBitmap(filePath.c_str());
-
-				// Checks load status
-				int lastBitmapStatus = loadedBitmap.GetLastStatus();
-				if (lastBitmapStatus) {
-					std::wcout << "Couldn't load image file \"" << filePath << "\", status: " << lastBitmapStatus << std::endl;
-					kl::console::WaitFor(' ', true);
-					exit(69);
-				}
-
-				// Saves data
-				image tempImage({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
-				for (int y = 0; y < tempImage.GetHeight(); y++) {
-					for (int x = 0; x < tempImage.GetWidth(); x++) {
-						Gdiplus::Color tempPixel = {};
-						loadedBitmap.GetPixel(x, y, &tempPixel);
-						tempImage.SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), tempPixel.GetA() });
-					}
-				}
-
-				// Return created image
-				return tempImage;
-			}
-
-			// Return an empty image
-			return { { 0, 0 } };
-		}
-
-		// Saves an image to a file
-		static void ToFile(image& imageToSave, std::wstring fileName) {
-			static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-			static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-
-			if (initialised) {
-				const CLSID* formatToUse = NULL;
-				std::wstring fileExtension = string::GetFileExtension(fileName);
-				if (fileExtension == L".bmp") {
-					formatToUse = &bmpEncoderCLSID;
-				}
-				else if (fileExtension == L".jpg") {
-					formatToUse = &jpgEncoderCLSID;
-				}
-				else if (fileExtension == L".png") {
-					formatToUse = &pngEncoderCLSID;
-				}
-				else {
-					wprintf(L"File extension \"%s\" is not supported!\n", fileExtension.c_str());
-					return;
-				}
-
-				Gdiplus::Bitmap tempBitmap(imageToSave.GetWidth(), imageToSave.GetHeight(), PixelFormat32bppARGB);
-				for (int y = 0; y < imageToSave.GetHeight(); y++) {
-					for (int x = 0; x < imageToSave.GetWidth(); x++) {
-						color tempColor = imageToSave.GetPixel({ x, y });
-						Gdiplus::Color tempPixel = { tempColor.a, tempColor.r, tempColor.g, tempColor.b };
-						tempBitmap.SetPixel(x, y, tempPixel);
-					}
-				}
-
-				tempBitmap.Save(fileName.c_str(), &pngEncoderCLSID, NULL);
+				gdipInitialised = false;
 			}
 		}
 
 		// Constructor
 		image(size size, color color = { 0, 0, 0, 255 }) {
-			width = size.width;
-			height = size.height;
-			pixels.resize(size_t(width) * size_t(height));
+			SetSize(size);
 			FillSolid(color);
+		}
+		image(std::wstring fileName) {
+			FromFile(fileName);
 		}
 
 		// Getters
@@ -110,8 +43,9 @@ namespace kl {
 			return pixels.size();
 		}
 		color GetPixel(point point) {
-			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
+			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
 				return pixels[point.y * size_t(width) + point.x];
+			}
 			return { 0, 0, 0 };
 		}
 		color* GetPixelData() {
@@ -119,22 +53,87 @@ namespace kl {
 		}
 
 		// Setters
-		void SetWidth(int width) {
-			this->width = width;
-			pixels.resize(size_t(this->width) * size_t(this->height));
-		}
-		void SetHeight(int height) {
-			this->height = height;
-			pixels.resize(size_t(this->width) * size_t(this->height));
-		}
 		void SetSize(size size) {
 			width = size.width;
 			height = size.height;
 			pixels.resize(size_t(width) * size_t(height));
 		}
+		void SetWidth(int width) {
+			SetSize({ width, height });
+		}
+		void SetHeight(int height) {
+			SetSize({ width, height });
+		}
 		void SetPixel(point point, color color) {
-			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
+			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
 				pixels[point.y * size_t(width) + point.x] = color;
+			}
+		}
+		
+		// Reads an image file and stores it in the image instance
+		void FromFile(std::wstring filePath) {
+			if (gdipInitialised) {
+				// Loads image file
+				Gdiplus::Bitmap loadedBitmap(filePath.c_str());
+
+				// Checks load status
+				int lastBitmapStatus = loadedBitmap.GetLastStatus();
+				if (lastBitmapStatus) {
+					std::wcout << "Couldn't load image file \"" << filePath << "\", status: " << lastBitmapStatus << std::endl;
+					kl::console::WaitFor(' ', true);
+					exit(69);
+				}
+
+				// Saves data
+				SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						Gdiplus::Color tempPixel = {};
+						loadedBitmap.GetPixel(x, y, &tempPixel);
+						SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), tempPixel.GetA() });
+					}
+				}
+			}
+		}
+
+		// Saves the image to a file
+		void ToFile(std::wstring fileName) {
+			static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID gifEncoderCLSID = { 0x557cf402, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+
+			if (gdipInitialised) {
+				const CLSID* formatToUse = NULL;
+				std::wstring fileExtension = string::GetFileExtension(fileName);
+				if (fileExtension == L".bmp") {
+					formatToUse = &bmpEncoderCLSID;
+				}
+				else if (fileExtension == L".jpg") {
+					formatToUse = &jpgEncoderCLSID;
+				}
+				else if (fileExtension == L".gif") {
+					formatToUse = &gifEncoderCLSID;
+				}
+				else if (fileExtension == L".png") {
+					formatToUse = &pngEncoderCLSID;
+				}
+				else {
+					wprintf(L"File extension \"%s\" is not supported!\n", fileExtension.c_str());
+					return;
+				}
+
+				Gdiplus::Bitmap tempBitmap(width, height, PixelFormat32bppARGB);
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						color tempColor = GetPixel({ x, y });
+						Gdiplus::Color tempPixel = { tempColor.a, tempColor.r, tempColor.g, tempColor.b };
+						tempBitmap.SetPixel(x, y, tempPixel);
+					}
+				}
+
+				tempBitmap.Save(fileName.c_str(), formatToUse, NULL);
+			}
 		}
 
 		// Fils the image with solid color
@@ -180,7 +179,7 @@ namespace kl {
 		}
 
 	private:
-		static bool initialised;
+		static bool gdipInitialised;
 		static ULONG_PTR gdiplusToken;
 		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 		static char asciiPixelTable[10];
@@ -188,7 +187,7 @@ namespace kl {
 		int height = 0;
 		std::vector<color> pixels = {};
 	};
-	bool image::initialised = false;
+	bool image::gdipInitialised = false;
 	ULONG_PTR image::gdiplusToken = 0;
 	Gdiplus::GdiplusStartupInput image::gdiplusStartupInput = {};
 	char image::asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
