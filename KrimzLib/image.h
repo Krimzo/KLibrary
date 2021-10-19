@@ -166,7 +166,7 @@ namespace kl {
 			for (int y = 0; y < frameSize.height; y++) {
 				for (int x = 0; x < frameSize.width; x++) {
 					// Pixels to grayscale
-					color currentPixel = this->GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement });
+					color currentPixel = GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement });
 					int grayScaledPixel = (int)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
 
 					// Grayscaled values to ASCII

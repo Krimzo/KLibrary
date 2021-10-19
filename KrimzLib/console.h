@@ -40,12 +40,19 @@ namespace kl {
 
 		// Returns the current console size
 		static size GetSize() {
-			CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo;
-			GetConsoleScreenBufferInfo(stdConsoleHandle, &consoleScreenBufferInfo);
+			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
+			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
 			return {
-				int(consoleScreenBufferInfo.srWindow.Right) - int(consoleScreenBufferInfo.srWindow.Left) + 1,
-				int(consoleScreenBufferInfo.srWindow.Bottom) - int(consoleScreenBufferInfo.srWindow.Top) + 1
+				int(csbi.srWindow.Right) - int(csbi.srWindow.Left) + 1,
+				int(csbi.srWindow.Bottom) - int(csbi.srWindow.Top) + 1
 			};
+		}
+
+		// Returns screen buffer size
+		static size GetBufferSize() {
+			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
+			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
+			return { csbi.dwSize.X, csbi.dwSize.Y };
 		}
 
 		// Changes the console buffer size
@@ -61,7 +68,7 @@ namespace kl {
 		}
 
 		// Changes the console font size
-		static void SetFont(int width, int height, std::wstring fontName) {
+		static void SetFont(int width, int height, std::wstring fontName = L"Consolas") {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
@@ -118,8 +125,8 @@ namespace kl {
 		}
 
 		// Waits until the wanted key is pressed
-		static void WaitFor(char toWaitFor, bool printMessage = false) {
-			if (printMessage) {
+		static void WaitFor(char toWaitFor, bool echo = false) {
+			if (echo) {
 				if (toWaitFor > 31 && toWaitFor < 127)
 					printf("Press '%c' to continue\n", toWaitFor);
 				else
@@ -129,9 +136,10 @@ namespace kl {
 		}
 
 		// Waits for any key to be pressed
-		static void WaitForAny(bool printMessage = false) {
-			if (printMessage)
+		static void WaitForAny(bool echo = false) {
+			if (echo) {
 				printf("Press any key to continue\n");
+			}
 			char iHateWarnings = _getch();
 		}
 
