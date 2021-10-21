@@ -53,7 +53,7 @@ namespace kl {
 			// Bitmapinfo setup
 			bmpInfo.bmiHeader.biSize = sizeof(bmpInfo.bmiHeader);
 			bmpInfo.bmiHeader.biPlanes = 1;
-			bmpInfo.bmiHeader.biBitCount = 32;
+			bmpInfo.bmiHeader.biBitCount = 24;
 			bmpInfo.bmiHeader.biCompression = BI_RGB;
 
 			// OpenGL setup

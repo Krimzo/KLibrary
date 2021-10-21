@@ -117,21 +117,18 @@ namespace kl {
 		byte r = 0;
 		byte g = 0;
 		byte b = 0;
-		byte a = 255;
 	};
 
 	struct colord {
 		double r = 0;
 		double g = 0;
 		double b = 0;
-		double a = 1;
 	};
 
 	struct colorf {
 		float r = 0;
 		float g = 0;
 		float b = 0;
-		float a = 1;
 	};
 }
 

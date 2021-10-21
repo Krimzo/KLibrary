@@ -24,8 +24,8 @@ namespace kl {
 		}
 
 		// Returns a random color
-		static color Color(bool randomAlpha = false) {
-			return { (byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256), randomAlpha ? (byte)Int(0, 256) : (byte)255 };
+		static color Color() {
+			return { (byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256) };
 		}
 	};
 }

@@ -21,7 +21,7 @@ namespace kl {
 		}
 
 		// Constructor
-		image(size size, color color = { 0, 0, 0, 255 }) {
+		image(size size, color color = {}) {
 			SetSize(size);
 			FillSolid(color);
 		}
@@ -85,14 +85,15 @@ namespace kl {
 				}
 
 				// Saves data
-				SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
-				for (int y = 0; y < height; y++) {
-					for (int x = 0; x < width; x++) {
-						Gdiplus::Color tempPixel = {};
-						loadedBitmap.GetPixel(x, y, &tempPixel);
-						SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG(), tempPixel.GetB(), tempPixel.GetA() });
-					}
+				Gdiplus::BitmapData bitmapData = {};
+				Gdiplus::Rect rect(0, 0, loadedBitmap.GetWidth(), loadedBitmap.GetHeight());
+				loadedBitmap.LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat24bppRGB, &bitmapData);
+				byte* rawBitmapData = (byte*)bitmapData.Scan0;
+				if (rawBitmapData) {
+					SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
+					memcpy(GetRawData(), rawBitmapData, (size_t)width * (size_t)height * sizeof(color));
 				}
+				FlipRB();
 			}
 		}
 
@@ -104,6 +105,7 @@ namespace kl {
 			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 
 			if (gdipInitialised) {
+				// Choosing the image format
 				const CLSID* formatToUse = NULL;
 				std::wstring fileExtension = string::GetFileExtension(fileName);
 				if (fileExtension == L".bmp") {
@@ -123,15 +125,22 @@ namespace kl {
 					return;
 				}
 
-				Gdiplus::Bitmap tempBitmap(width, height, PixelFormat32bppARGB);
-				for (int y = 0; y < height; y++) {
-					for (int x = 0; x < width; x++) {
-						color tempColor = GetPixel({ x, y });
-						Gdiplus::Color tempPixel = { tempColor.a, tempColor.r, tempColor.g, tempColor.b };
-						tempBitmap.SetPixel(x, y, tempPixel);
-					}
+				// Gdiplus bitmap setup
+				Gdiplus::BitmapData bitmapData = {};
+				Gdiplus::Rect rect(0, 0, width, height);
+				Gdiplus::Bitmap tempBitmap(width, height, PixelFormat24bppRGB);
+				tempBitmap.LockBits(&rect, Gdiplus::ImageLockModeWrite, PixelFormat24bppRGB, &bitmapData);
+				byte* rawBitmapData = (byte*)bitmapData.Scan0;
+
+				// Data copy
+				if (rawBitmapData) {
+					FlipRB();
+					memcpy(rawBitmapData, GetRawData(), (size_t)width * (size_t)height * sizeof(color));
+					FlipRB();
+					tempBitmap.UnlockBits(&bitmapData);
 				}
 
+				// Saving to image file
 				tempBitmap.Save(fileName.c_str(), formatToUse, NULL);
 			}
 		}
@@ -143,7 +152,7 @@ namespace kl {
 
 		// Resets the byte values
 		void FastClear(byte value) {
-			memset(&pixels[0], value, pixels.size() * 4);
+			memset(&pixels[0], value, pixels.size() * sizeof(color));
 		}
 
 		// Flips red and blue color channels

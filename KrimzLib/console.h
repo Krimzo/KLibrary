@@ -14,6 +14,11 @@ namespace kl {
 			FreeConsole();
 		}
 
+		// Clears the console screen
+		static void Clear() {
+			system("cls");
+		}
+
 		// Hides the console cursor
 		static void HideCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
@@ -31,11 +36,8 @@ namespace kl {
 		}
 
 		// Sets the console cursor position
-		static void SetCursorPos(short x, short y) {
-			SetConsoleCursorPosition(stdConsoleHandle, { x, y });
-		}
-		static void SetCursorPos(COORD position) {
-			SetConsoleCursorPosition(stdConsoleHandle, position);
+		static void SetCursorPos(point position) {
+			SetConsoleCursorPosition(stdConsoleHandle, { (short)position.x, (short)position.y });
 		}
 
 		// Returns the current console size
@@ -68,12 +70,12 @@ namespace kl {
 		}
 
 		// Changes the console font size
-		static void SetFont(int width, int height, std::wstring fontName = L"Consolas") {
+		static void SetFont(size size, std::wstring fontName = L"Consolas") {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
-			cfi.dwFontSize.X = width;
-			cfi.dwFontSize.Y = height;
+			cfi.dwFontSize.X = size.width;
+			cfi.dwFontSize.Y = size.height;
 			cfi.FontFamily = FF_DONTCARE;
 			cfi.FontWeight = FW_NORMAL;
 			wcscpy_s(cfi.FaceName, fontName.c_str());

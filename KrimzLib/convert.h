@@ -16,20 +16,20 @@ namespace kl {
 
 		// Converts the color to a float type
 		static colorf ToFloatColor(color c) {
-			return { c.r * toFloatColor, c.g * toFloatColor, c.b * toFloatColor, c.a * toFloatColor };
+			return { c.r * toFloatColor, c.g * toFloatColor, c.b * toFloatColor };
 		}
 
 		// Converts the color tp a double type
 		static colord ToDoubleColor(color c) {
-			return { c.r * toDoubleColor, c.g * toDoubleColor, c.b * toDoubleColor, c.a * toDoubleColor };
+			return { c.r * toDoubleColor, c.g * toDoubleColor, c.b * toDoubleColor };
 		}
 
 		// Converts the color to a byte type
 		static color ToByteColor(colorf c) {
-			return { byte(c.r * 255), byte(c.g * 255), byte(c.b * 255), byte(c.a * 255) };
+			return { byte(c.r * 255), byte(c.g * 255), byte(c.b * 255) };
 		}
 		static color ToByteColor(colord c) {
-			return { byte(c.r * 255), byte(c.g * 255), byte(c.b * 255), byte(c.a * 255) };
+			return { byte(c.r * 255), byte(c.g * 255), byte(c.b * 255) };
 		}
 
 		// Converts a byte array to a string
