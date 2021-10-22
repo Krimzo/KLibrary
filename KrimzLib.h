@@ -49,7 +49,7 @@
 #pragma comment(lib,"wininet.lib")
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "gdiplus.lib")
-#pragma comment(lib, "incl/KrimzLib/lib/opencl.lib")
+#pragma comment(lib, "incl/KrimzLib/lib/opencl.lib")	/* !!! Fix the path in case you get linker errors !!! */
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
