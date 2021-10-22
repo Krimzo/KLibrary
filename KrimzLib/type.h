@@ -180,7 +180,7 @@ namespace kl {
 	};
 
 	struct gameobject {
-		// Looks
+		// Visual
 		bool visible = true;
 		texture texture = 0;
 		std::vector<triangle> triangles = {};
