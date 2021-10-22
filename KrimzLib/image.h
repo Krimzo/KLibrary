@@ -138,10 +138,8 @@ namespace kl {
 					memcpy(rawBitmapData, GetRawData(), (size_t)width * (size_t)height * sizeof(color));
 					FlipRB();
 					tempBitmap.UnlockBits(&bitmapData);
+					tempBitmap.Save(fileName.c_str(), formatToUse, NULL);
 				}
-
-				// Saving to image file
-				tempBitmap.Save(fileName.c_str(), formatToUse, NULL);
 			}
 		}
 
