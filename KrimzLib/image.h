@@ -77,9 +77,8 @@ namespace kl {
 				Gdiplus::Bitmap loadedBitmap(filePath.c_str());
 
 				// Checks load status
-				int lastBitmapStatus = loadedBitmap.GetLastStatus();
-				if (lastBitmapStatus) {
-					std::wcout << "Couldn't load image file \"" << filePath << "\", status: " << lastBitmapStatus << std::endl;
+				if (loadedBitmap.GetLastStatus()) {
+					wprintf(L"Couldn't load image file \"%s\".", filePath.c_str());
 					kl::console::WaitFor(' ', true);
 					exit(69);
 				}

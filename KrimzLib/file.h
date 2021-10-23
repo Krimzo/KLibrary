@@ -30,7 +30,7 @@ namespace kl {
 			std::ifstream fileStream(filePath);
 			std::stringstream textBuffer;
 			if (!fileStream.is_open()) {
-				std::wcout << "Couldn't load text file \"" << filePath << "\"" << std::endl;
+				wprintf(L"Couldn't load text file \"%s\".", filePath.c_str());
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
@@ -55,7 +55,7 @@ namespace kl {
 		static void AppendText(std::string& data, std::wstring filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
-				std::wcout << "Couldn't load text file \"" << filePath << "\"" << std::endl;
+				wprintf(L"Couldn't load text file \"%s\".", filePath.c_str());
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
@@ -73,7 +73,7 @@ namespace kl {
 		static void AppendText(std::string&& data, std::wstring filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
-				std::wcout << "Couldn't load text file \"" << filePath << "\"" << std::endl;
+				wprintf(L"Couldn't load text file \"%s\".", filePath.c_str());
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
@@ -93,7 +93,7 @@ namespace kl {
 		static bytes ReadBytes(std::wstring filePath) {
 			std::ifstream fileStream(filePath, std::ios::binary);
 			if (!fileStream.is_open()) {
-				std::wcout << "Couldn't load file \"" << filePath << "\"" << std::endl;
+				wprintf(L"Couldn't load file \"%s\".", filePath.c_str());
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
@@ -122,7 +122,7 @@ namespace kl {
 		static void AppendBytes(bytes& data, std::wstring filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
-				std::wcout << "Couldn't load file \"" << filePath << "\"" << std::endl;
+				wprintf(L"Couldn't load file \"%s\".", filePath.c_str());
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
@@ -140,7 +140,7 @@ namespace kl {
 		static void AppendBytes(bytes&& data, std::wstring filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
-				std::wcout << "Couldn't load file \"" << filePath << "\"" << std::endl;
+				wprintf(L"Couldn't load file \"%s\".", filePath.c_str());
 				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
