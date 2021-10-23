@@ -22,10 +22,10 @@ namespace kl {
 		}
 
 		// Creates the engine
-		void Start(int width, int height, const wchar_t* name, double fov = 60) {
+		void Start(size size, const wchar_t* name, double fov = 60) {
 			engineWindow.WindowStart = [&]() {
 				/* Enable 3D and depth buffer */
-				opengl::Enable3D(fov, engineWindow.GetWidth(), engineWindow.GetHeight());
+				opengl::Enable3D(fov, engineWindow.GetSize());
 
 				/* Enable textures */
 				opengl::EnableTextures();
@@ -51,7 +51,7 @@ namespace kl {
 				opengl::ClearBuffers(background);
 
 				/* Update camera rotation and position */
-				opengl::UpdateCamera(engineCamera.position, engineCamera.rotation);
+				opengl::UpdateCamera(engineCamera);
 
 				/* Render all game triangles */
 				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
@@ -74,7 +74,7 @@ namespace kl {
 				engineWindow.SetTitle(int(1 / deltaTime));
 			};
 
-			engineWindow.Start(width, height, name, false, true, true);
+			engineWindow.Start(size, name, false, true, true);
 		}
 		void Stop() {
 			engineWindow.Stop();

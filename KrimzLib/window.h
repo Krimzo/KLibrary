@@ -14,7 +14,7 @@ namespace kl {
 		std::function<void(void)> WindowEnd = []() {};
 
 		// Window creation
-		void Start(int width, int height, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false) {
+		void Start(size size, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false) {
 			// Define windowapi window class
 			WNDCLASSEX windowClass = {};
 			windowClass.cbSize = sizeof(WNDCLASSEX);
@@ -37,11 +37,11 @@ namespace kl {
 
 			// Create window
 			DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
-			RECT adjustedWindowSize = { 0, 0, width, height };
+			RECT adjustedWindowSize = { 0, 0, size.width, size.height };
 			AdjustWindowRect(&adjustedWindowSize, windowStyle, NULL);
-			width = (adjustedWindowSize.right - adjustedWindowSize.left);
-			height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-			hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - width / 2), (constant::ScreenHeight / 2 - height / 2), width, height, NULL, NULL, hInstance, NULL);
+			size.width = (adjustedWindowSize.right - adjustedWindowSize.left);
+			size.height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
+			hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - size.width / 2), (constant::ScreenHeight / 2 - size.height / 2), size.width, size.height, NULL, NULL, hInstance, NULL);
 			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);

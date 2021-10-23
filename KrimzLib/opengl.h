@@ -5,10 +5,10 @@ namespace kl {
 	class opengl {
 	public:
 		// Enables 3D perspective and depth buffer by deafult
-		static void Enable3D(double fov, int frameWidth, int frameHeight, bool enableDepthBuffer = true) {
+		static void Enable3D(double fov, size frameSize, bool enableDepthBuffer = true) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			gluPerspective(fov, (double)frameWidth / frameHeight, 0.01, 100.0);
+			gluPerspective(fov, (double)frameSize.width / frameSize.height, 0.01, 100.0);
 			if (enableDepthBuffer) {
 				glEnable(GL_DEPTH_TEST);
 				glDepthFunc(GL_LESS);
@@ -21,13 +21,13 @@ namespace kl {
 		}
 
 		// Translates and rotates the camera
-		static void UpdateCamera(vec3 position, vec3 rotation) {
+		static void UpdateCamera(camera camera) {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
-			glRotated(rotation.x, 1, 0, 0);
-			glRotated(rotation.y, 0, 1, 0);
-			glRotated(rotation.z, 0, 0, 1);
-			glTranslated(position.x, position.y, position.z);
+			glRotated(camera.rotation.x, 1, 0, 0);
+			glRotated(camera.rotation.y, 0, 1, 0);
+			glRotated(camera.rotation.z, 0, 0, 1);
+			glTranslated(camera.position.x, camera.position.y, camera.position.z);
 		}
 
 		// Renders a 2D triangle
