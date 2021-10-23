@@ -14,7 +14,7 @@ namespace kl {
 		std::function<void(void)> WindowEnd = []() {};
 
 		// Window creation
-		void Start(size size, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false) {
+		void StartNew(size size, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false) {
 			// Define windowapi window class
 			WNDCLASSEX windowClass = {};
 			windowClass.cbSize = sizeof(WNDCLASSEX);

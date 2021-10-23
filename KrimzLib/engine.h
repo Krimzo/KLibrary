@@ -22,7 +22,7 @@ namespace kl {
 		}
 
 		// Creates the engine
-		void Start(size size, const wchar_t* name, double fov = 60) {
+		void StartNew(size size, const wchar_t* name, double fov = 60) {
 			engineWindow.WindowStart = [&]() {
 				/* Enable 3D and depth buffer */
 				opengl::Enable3D(fov, engineWindow.GetSize());
@@ -74,7 +74,7 @@ namespace kl {
 				engineWindow.SetTitle(int(1 / deltaTime));
 			};
 
-			engineWindow.Start(size, name, false, true, true);
+			engineWindow.StartNew(size, name, false, true, true);
 		}
 		void Stop() {
 			engineWindow.Stop();
