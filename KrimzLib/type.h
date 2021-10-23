@@ -131,10 +131,10 @@ namespace kl {
 namespace kl {
 	typedef unsigned char byte;
 
-	struct color {
-		byte r = 0;
-		byte g = 0;
-		byte b = 0;
+	struct colorf {
+		float r = 0;
+		float g = 0;
+		float b = 0;
 	};
 
 	struct colord {
@@ -143,10 +143,18 @@ namespace kl {
 		double b = 0;
 	};
 
-	struct colorf {
-		float r = 0;
-		float g = 0;
-		float b = 0;
+	struct color {
+		byte r = 0;
+		byte g = 0;
+		byte b = 0;
+
+		// Conversions
+		operator colorf() const {
+			return { r / 255.0f, g / 255.0f, b / 255.0f };
+		}
+		operator colord() const {
+			return { r / 255.0, g / 255.0, b / 255.0 };
+		}
 	};
 }
 

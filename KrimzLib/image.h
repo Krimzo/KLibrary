@@ -185,6 +185,37 @@ namespace kl {
 			return frame.str();
 		}
 
+		// Draws a line between 2 points
+		void DrawLine(point a, point b, color c = { 255, 255, 255 }) {
+			// Calculations
+			int len = abs(b.x - a.x) > abs(b.y - a.y) ? abs(b.x - a.x) : abs(b.y - a.y);
+			vec2 incr = { double(b.x - a.x) / len, double(b.y - a.y) / len };
+
+			// Drawing
+			vec2 drawPoint = { (double)a.x, (double)a.y };
+			for (int i = 0; i < len; i++) {
+				SetPixel({ (int)drawPoint.x, (int)drawPoint.y }, c);
+				drawPoint = drawPoint + incr;
+			}
+		}
+
+		// Draws a rectangle between 2 points
+		void DrawRect(point a, point b, color c = { 255, 255, 255 }, bool fill = false) {
+			if (fill) {
+				for (int y = a.y; y < (b.y - a.y); y++) {
+					for (int x = a.x; x < (b.x - a.x); x++) {
+						SetPixel({ x, y }, c);
+					}
+				}
+			}
+			else {
+				DrawLine(a, { a.x, b.y }, c);
+				DrawLine(a, { b.x, a.y }, c);
+				DrawLine(b, { a.x, b.y }, c);
+				DrawLine(b, { b.x, a.y }, c);
+			}
+		}
+
 	private:
 		static bool gdipInitialised;
 		static ULONG_PTR gdiplusToken;

@@ -13,7 +13,7 @@ namespace kl {
 		std::function<void(void)> WindowUpdate = []() {};
 		std::function<void(void)> WindowEnd = []() {};
 
-		// Window creation and deletion
+		// Window creation
 		void Start(int width, int height, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false) {
 			// Define windowapi window class
 			WNDCLASSEX windowClass = {};
@@ -120,6 +120,8 @@ namespace kl {
 			hdc = NULL;
 			hwnd = NULL;
 		}
+
+		// Window destruction
 		void Stop() {
 			PostMessage(hwnd, WM_CLOSE, 0, 0);
 		}
