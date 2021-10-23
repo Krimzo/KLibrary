@@ -100,8 +100,17 @@ namespace kl {
 		static void Print(std::string&& data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
+		static void Print(char data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%c\033[0m", textColor.r, textColor.g, textColor.b, data);
+		}
 		static void Print(int data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Print(int64 data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%lld\033[0m", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Print(float data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%f\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Print(double data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
@@ -126,8 +135,17 @@ namespace kl {
 		static void Println(std::string&& data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
+		static void Println(char data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%c\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+		}
 		static void Println(int data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Println(int64 data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%lld\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Println(float data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%f\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(double data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m\n", textColor.r, textColor.g, textColor.b, data);
