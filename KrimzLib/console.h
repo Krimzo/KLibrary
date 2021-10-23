@@ -58,14 +58,14 @@ namespace kl {
 		}
 
 		// Changes the console buffer size
-		static void SetBufferSize(int width, int height) {
-			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)width, (short)height });
+		static void SetBufferSize(size size) {
+			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)size.width, (short)size.height });
 		}
 
 		// Changes the console size
-		static void SetSize(int width, int height) {
-			SetBufferSize(width, height);
-			SMALL_RECT consoleRect = { 0, 0, (short)width - 1, (short)height - 1 };
+		static void SetSize(size size) {
+			SetBufferSize(size);
+			SMALL_RECT consoleRect = { 0, 0, (short)size.width - 1, (short)size.height - 1 };
 			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
 		}
 

@@ -12,9 +12,9 @@ namespace kl {
 		camera engineCamera = {};
 
 		// Outside functions that user defines
-		std::function<void(void)> EngineStart = []() { };
-		std::function<void(key key, mouse mouse)> EngineInput = [](key key, mouse mouse) { };
-		std::function<void(void)> EngineUpdate = []() { };
+		std::function<void(void)> EngineStart = []() {};
+		std::function<void(key key, mouse mouse)> EngineInput = [](key key, mouse mouse) {};
+		std::function<void(void)> EngineUpdate = []() {};
 
 		// Constructor
 		engine(colorf background = {}) {
@@ -56,7 +56,7 @@ namespace kl {
 				/* Render all game triangles */
 				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
 					if (objItr->second.visible) {
-						opengl::RenderTriangles(objItr->second.triangles, objItr->second.position, objItr->second.rotation, objItr->second.size, objItr->second.texture);
+						opengl::Render3DTriangles(objItr->second.triangles, objItr->second.position, objItr->second.rotation, objItr->second.size, objItr->second.texture);
 					}
 				}
 
@@ -211,19 +211,19 @@ namespace kl {
 		}
 
 		// Adds a new texture to the engine memory
-		texture NewTexture(image& textureData) {
+		texture NewTexture(image& textureImage) {
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureData.GetWidth(), textureData.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.GetRawData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage.GetRawData());
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
-		texture NewTexture(image&& textureData) {
+		texture NewTexture(image&& textureImage) {
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureData.GetWidth(), textureData.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.GetRawData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage.GetRawData());
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}

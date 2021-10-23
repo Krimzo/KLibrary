@@ -30,14 +30,14 @@ namespace kl {
 		}
 
 		// Getters
+		size GetSize() {
+			return { width, height };
+		}
 		int GetWidth() {
 			return width;
 		}
 		int GetHeight() {
 			return height;
-		}
-		size GetSize() {
-			return { width, height };
 		}
 		size_t GetLenght() {
 			return pixels.size();

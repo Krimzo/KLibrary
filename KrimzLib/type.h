@@ -1,9 +1,30 @@
 #pragma once
 
 
+/* PRIMITIVES */
+namespace kl {
+	typedef char int8;
+	typedef short int16;
+	typedef int int32;
+	typedef long long int64;
+
+	typedef unsigned char uint8;
+	typedef unsigned short uint16;
+	typedef unsigned int uint32;
+	typedef unsigned long long uint64;
+}
+
 /* MATH */
 namespace kl {
-	typedef POINT point;
+	struct point {
+		int x = 0;
+		int y = 0;
+	};
+
+	struct size {
+		int width = 0;
+		int height = 0;
+	};
 
 	struct vec2 {
 		double x = 0;
@@ -104,15 +125,12 @@ namespace kl {
 			return { x / vecLen, y / vecLen, z / vecLen };
 		}
 	};
-
-	struct size {
-		int width = 0;
-		int height = 0;
-	};
 }
 
 /* IMAGE */
 namespace kl {
+	typedef unsigned char byte;
+
 	struct color {
 		byte r = 0;
 		byte g = 0;

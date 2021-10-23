@@ -9,9 +9,9 @@ namespace kl {
 		mouse MOUSE = {};
 
 		// Window function calls
-		std::function<void(void)> WindowStart = []() { };
-		std::function<void(void)> WindowUpdate = []() { };
-		std::function<void(void)> WindowEnd = []() { };
+		std::function<void(void)> WindowStart = []() {};
+		std::function<void(void)> WindowUpdate = []() {};
+		std::function<void(void)> WindowEnd = []() {};
 
 		// Window creation and deletion
 		void Start(int width, int height, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false) {
@@ -138,18 +138,17 @@ namespace kl {
 			return this->hglrc;
 		}
 
-		// Gets a window client area width
-		int GetWidth() {
+		// Returns the window size
+		size GetSize() {
 			RECT clientArea = {};
 			GetClientRect(hwnd, &clientArea);
-			return clientArea.right - clientArea.left;
+			return { clientArea.right - clientArea.left, clientArea.bottom - clientArea.top };
 		}
-
-		// Gets a window client area height
+		int GetWidth() {
+			return GetSize().width;
+		}
 		int GetHeight() {
-			RECT clientArea = {};
-			GetClientRect(hwnd, &clientArea);
-			return clientArea.bottom - clientArea.top;
+			return GetSize().height;
 		}
 
 		// Sets the window title
