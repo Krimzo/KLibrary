@@ -215,7 +215,7 @@ namespace kl {
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage.GetRawData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.GetRawData());
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
@@ -223,7 +223,7 @@ namespace kl {
 			texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage.GetRawData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.GetRawData());
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
@@ -239,7 +239,7 @@ namespace kl {
 			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
 				if (objItr->second.physics) {
 					// Applying gravity
-					objItr->second.velocity.y -= gravity * objItr->second.gravityMulti * deltaTime;
+					objItr->second.velocity.y -= gravity * objItr->second.gravity * deltaTime;
 
 					// Applying velocity
 					objItr->second.position.x += objItr->second.velocity.x * deltaTime;
@@ -247,9 +247,9 @@ namespace kl {
 					objItr->second.position.z += objItr->second.velocity.z * deltaTime;
 
 					// Applying angular momentum
-					objItr->second.rotation.x += objItr->second.angularMo.x * deltaTime;
-					objItr->second.rotation.y += objItr->second.angularMo.y * deltaTime;
-					objItr->second.rotation.z += objItr->second.angularMo.z * deltaTime;
+					objItr->second.rotation.x += objItr->second.angular.x * deltaTime;
+					objItr->second.rotation.y += objItr->second.angular.y * deltaTime;
+					objItr->second.rotation.z += objItr->second.angular.z * deltaTime;
 				}
 			}
 		}

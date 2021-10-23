@@ -91,11 +91,7 @@ namespace kl {
 				byte* rawBitmapData = (byte*)bitmapData.Scan0;
 				if (rawBitmapData) {
 					SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
-					for (int i = 0; i < pixels.size(); i++) {
-						pixels[i].r = rawBitmapData[i * 3 + 2];
-						pixels[i].g = rawBitmapData[i * 3 + 1];
-						pixels[i].b = rawBitmapData[i * 3 + 0];
-					}
+					memcpy(GetRawData(), rawBitmapData, pixels.size() * 3);
 				}
 			}
 		}
@@ -132,11 +128,7 @@ namespace kl {
 
 				// Data copy
 				if (rawBitmapData) {
-					for (int i = 0; i < pixels.size(); i++) {
-						rawBitmapData[i * 3 + 0] = pixels[i].b;
-						rawBitmapData[i * 3 + 1] = pixels[i].g;
-						rawBitmapData[i * 3 + 2] = pixels[i].r;
-					}
+					memcpy(rawBitmapData, GetRawData(), pixels.size() * 3);
 					tempBitmap.UnlockBits(&bitmapData);
 					tempBitmap.Save(fileName.c_str(), formatToUse, NULL);
 				}
@@ -151,15 +143,6 @@ namespace kl {
 		// Resets the byte values
 		void FastClear(byte value) {
 			memset(&pixels[0], value, pixels.size() * sizeof(color));
-		}
-
-		// Flips red and blue color channels
-		void FlipRB() {
-			for (int i = 0; i < pixels.size(); i++) {
-				byte tempByte = pixels[i].r;
-				pixels[i].r = pixels[i].b;
-				pixels[i].b = tempByte;
-			}
 		}
 
 		// Converts an image to an ASCII frame

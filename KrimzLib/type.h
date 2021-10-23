@@ -144,9 +144,16 @@ namespace kl {
 	};
 
 	struct color {
-		byte r = 0;
-		byte g = 0;
-		byte b = 0;
+		byte b;
+		byte g;
+		byte r;
+
+		// Had to flip R and B because the winapi uses BGR
+		color(byte r = 0, byte g = 0, byte b = 0) {
+			this->r = r;
+			this->g = g;
+			this->b = b;
+		}
 
 		// Conversions
 		operator colorf() const {
@@ -218,9 +225,9 @@ namespace kl {
 
 		// Physics
 		bool physics = false;
-		double gravityMulti = 1;
+		double gravity = 1;
 		vec3 velocity = {};
-		vec3 angularMo = {};
+		vec3 angular = {};
 	};
 
 	struct camera {
