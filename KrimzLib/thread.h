@@ -8,12 +8,12 @@ namespace kl {
 		static void ParallelFor(int startInclusive, int endExclusive, int threadCount, std::function<void(int i)> loopBody) {
 			// Thread storage
 			std::vector<std::thread> cpuThreads(threadCount);
-			int countPerThread = (endExclusive - startInclusive) / threadCount;
+			int runsPerThread = (endExclusive - startInclusive) / threadCount;
 			
 			// Thread creation
 			for (int i = 0; i < threadCount; i++) {
-				int loopStart = countPerThread * i + startInclusive;
-				int loopEnd = (i == threadCount - 1) ? endExclusive : (loopStart + countPerThread);
+				int loopStart = runsPerThread * i + startInclusive;
+				int loopEnd = (i == threadCount - 1) ? endExclusive : (loopStart + runsPerThread);
 				cpuThreads[i] = std::thread([&](int start, int end) { for (int i = start; i < end; i++) { loopBody(i); } }, loopStart, loopEnd);
 			}
 
