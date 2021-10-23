@@ -106,6 +106,12 @@ namespace kl {
 		static void Print(double data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
+		static void Print(size data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m", textColor.r, textColor.g, textColor.b, data.width, data.height);
+		}
+		static void Print(point data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
+		}
 		static void Print(vec2 data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
@@ -113,8 +119,34 @@ namespace kl {
 			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
 		}
 
+		// Prints RGB data with new line at the end
+		static void Println(std::string& data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
+		}
+		static void Println(std::string&& data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
+		}
+		static void Println(int data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%d\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Println(double data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%lf\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Println(size data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.width, data.height);
+		}
+		static void Println(point data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
+		}
+		static void Println(vec2 data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
+		}
+		static void Println(vec3 data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
+		}
+
 		// Prints RGB block
-		static void PrintBlock(color blockColor) {
+		static void PrintCell(color blockColor) {
 			printf("\033[48;2;%d;%d;%dm \033[0m", blockColor.r, blockColor.g, blockColor.b);
 		}
 

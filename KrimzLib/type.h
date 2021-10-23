@@ -16,19 +16,45 @@ namespace kl {
 
 /* MATH */
 namespace kl {
-	struct point {
-		int x = 0;
-		int y = 0;
-	};
-
 	struct size {
 		int width = 0;
 		int height = 0;
 	};
 
+	struct point {
+		int x;
+		int y;
+
+		// Constructor
+		point(int x = 0, int y = 0) {
+			this->x = x;
+			this->y = y;
+		}
+
+		// Operator overloading
+		point operator + (point obj) {
+			return { x + obj.x, y + obj.y };
+		}
+		point operator - (point obj) {
+			return { x - obj.x, y - obj.y };
+		}
+		bool operator == (point obj) {
+			return (x == obj.x && y == obj.y);
+		}
+		bool operator != (point obj) {
+			return (x != obj.x || y != obj.y);
+		}
+	};
+
 	struct vec2 {
-		double x = 0;
-		double y = 0;
+		double x;
+		double y;
+
+		// Constructor
+		vec2(double x = 0, double y = 0) {
+			this->x = x;
+			this->y = y;
+		}
 
 		// Operator overloading
 		vec2 operator + (vec2 obj) {
@@ -76,9 +102,16 @@ namespace kl {
 	};
 
 	struct vec3 {
-		double x = 0;
-		double y = 0;
-		double z = 0;
+		double x;
+		double y;
+		double z;
+
+		// Constructor
+		vec3(double x = 0, double y = 0, double z = 0) {
+			this->x = x;
+			this->y = y;
+			this->z = z;
+		}
 
 		// Operator overloading
 		vec3 operator + (vec3 obj) {

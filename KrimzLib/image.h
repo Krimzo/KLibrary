@@ -141,7 +141,7 @@ namespace kl {
 		}
 
 		// Resets the byte values
-		void FastClear(byte value) {
+		void FastClear(byte value = 0) {
 			memset(&pixels[0], value, pixels.size() * sizeof(color));
 		}
 
@@ -171,7 +171,7 @@ namespace kl {
 		// Draws a line between 2 points
 		void DrawLine(point a, point b, color c = { 255, 255, 255 }) {
 			// Calculations
-			int len = abs(b.x - a.x) > abs(b.y - a.y) ? abs(b.x - a.x) : abs(b.y - a.y);
+			int len = max(abs(b.x - a.x), abs(b.y - a.y));
 			vec2 incr = { double(b.x - a.x) / len, double(b.y - a.y) / len };
 
 			// Drawing
@@ -185,11 +185,7 @@ namespace kl {
 		// Draws a rectangle between 2 points
 		void DrawRect(point a, point b, color c = { 255, 255, 255 }, bool fill = false) {
 			if (fill) {
-				for (int y = a.y; y < (b.y - a.y); y++) {
-					for (int x = a.x; x < (b.x - a.x); x++) {
-						SetPixel({ x, y }, c);
-					}
-				}
+				
 			}
 			else {
 				DrawLine(a, { a.x, b.y }, c);
