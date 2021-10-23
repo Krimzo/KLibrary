@@ -91,19 +91,17 @@ namespace kl {
 				byte* rawBitmapData = (byte*)bitmapData.Scan0;
 				if (rawBitmapData) {
 					SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
-					memcpy(GetRawData(), rawBitmapData, (size_t)width * (size_t)height * sizeof(color));
+					for (int i = 0; i < pixels.size(); i++) {
+						pixels[i].r = rawBitmapData[i * 3 + 2];
+						pixels[i].g = rawBitmapData[i * 3 + 1];
+						pixels[i].b = rawBitmapData[i * 3 + 0];
+					}
 				}
-				FlipRB();
 			}
 		}
 
 		// Saves the image to a file
 		void ToFile(std::wstring fileName) {
-			static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-			static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-			static const CLSID gifEncoderCLSID = { 0x557cf402, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-
 			if (gdipInitialised) {
 				// Choosing the image format
 				const CLSID* formatToUse = NULL;
@@ -134,9 +132,11 @@ namespace kl {
 
 				// Data copy
 				if (rawBitmapData) {
-					FlipRB();
-					memcpy(rawBitmapData, GetRawData(), (size_t)width * (size_t)height * sizeof(color));
-					FlipRB();
+					for (int i = 0; i < pixels.size(); i++) {
+						rawBitmapData[i * 3 + 0] = pixels[i].b;
+						rawBitmapData[i * 3 + 1] = pixels[i].g;
+						rawBitmapData[i * 3 + 2] = pixels[i].r;
+					}
 					tempBitmap.UnlockBits(&bitmapData);
 					tempBitmap.Save(fileName.c_str(), formatToUse, NULL);
 				}
@@ -220,6 +220,10 @@ namespace kl {
 		static bool gdipInitialised;
 		static ULONG_PTR gdiplusToken;
 		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+		static const CLSID bmpEncoderCLSID;
+		static const CLSID jpgEncoderCLSID;
+		static const CLSID gifEncoderCLSID;
+		static const CLSID pngEncoderCLSID;
 		static char asciiPixelTable[10];
 		int width = 0;
 		int height = 0;
@@ -228,5 +232,9 @@ namespace kl {
 	bool image::gdipInitialised = false;
 	ULONG_PTR image::gdiplusToken = 0;
 	Gdiplus::GdiplusStartupInput image::gdiplusStartupInput = {};
+	const CLSID image::bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+	const CLSID image::jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+	const CLSID image::gifEncoderCLSID = { 0x557cf402, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+	const CLSID image::pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 	char image::asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 }
