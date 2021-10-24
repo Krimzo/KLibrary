@@ -100,6 +100,12 @@ namespace kl {
 		static void Print(std::string&& data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
+		static void Print(bytes& data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, convert::ToString(data).c_str());
+		}
+		static void Print(bytes&& data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, convert::ToString(data).c_str());
+		}
 		static void Print(char data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
@@ -134,6 +140,12 @@ namespace kl {
 		}
 		static void Println(std::string&& data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
+		}
+		static void Println(bytes& data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, convert::ToString(data).c_str());
+		}
+		static void Println(bytes&& data, color textColor = constant::colorWhite) {
+			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, convert::ToString(data).c_str());
 		}
 		static void Println(char data, color textColor = constant::colorWhite) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m\n", textColor.r, textColor.g, textColor.b, data);

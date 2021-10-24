@@ -6,7 +6,7 @@ namespace kl {
 	public:
 		// Downloads website data(bytes) from the given url
 		static bytes GetWebsiteData(std::string url) {
-			HINTERNET connection = InternetOpen(L"CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+			HINTERNET connection = InternetOpenA("CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 			if (!connection) {
 				printf("Failed to conenct\n");
 				return {};
