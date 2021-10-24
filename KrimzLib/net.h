@@ -5,21 +5,24 @@ namespace kl {
 	class net {
 	public:
 		// Downloads website data(bytes) from the given url
-		static bytes GetWebsiteData(std::string url) {
+		static bytes GetWebsiteData(std::string url, int bufferSize = 8192) {
+			// Create browser
 			HINTERNET connection = InternetOpenA("CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 			if (!connection) {
 				printf("Failed to conenct\n");
 				return {};
 			}
 
+			// Open url
 			HINTERNET openAddress = InternetOpenUrlA(connection, url.c_str(), NULL, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
 			if (!openAddress) {
 				printf("Failed to open website\n");
 				return {};
 			}
 
+			// Download data
 			bytes finalData;
-			bytes dataBuffer(8192);
+			bytes dataBuffer(bufferSize);
 			DWORD byteReadCount = 0;
 			while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount) {
 				for (DWORD i = 0; i < byteReadCount; i++) {
@@ -27,9 +30,11 @@ namespace kl {
 				}
 			}
 
+			// Close browser and url
 			InternetCloseHandle(openAddress);
 			InternetCloseHandle(connection);
 
+			// Return data
 			return finalData;
 		}
 
@@ -134,11 +139,7 @@ namespace kl {
 				}
 			}
 			void SendData(bytes&& data) {
-				if (created && clientConnected) {
-					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR) {
-						clientConnected = false;
-					}
-				}
+				SendData(data);
 			}
 
 			// Receive data from the client
@@ -212,11 +213,7 @@ namespace kl {
 				}
 			}
 			void SendData(bytes&& data) {
-				if (connected) {
-					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR) {
-						Disconnect();
-					}
-				}
+				SendData(data);
 			}
 
 			// Receive data from the server

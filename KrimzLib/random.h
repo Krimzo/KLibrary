@@ -27,5 +27,11 @@ namespace kl {
 		static color Color() {
 			return { (byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256) };
 		}
+		static colorf Colorf() {
+			return color((byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256));
+		}
+		static colord Colord() {
+			return color((byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256));
+		}
 	};
 }

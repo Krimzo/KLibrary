@@ -30,17 +30,14 @@ namespace kl {
 		}
 
 		// Getters
-		size GetSize() {
-			return { width, height };
-		}
 		int GetWidth() {
 			return width;
 		}
 		int GetHeight() {
 			return height;
 		}
-		size_t GetLenght() {
-			return pixels.size();
+		size GetSize() {
+			return { width, height };
 		}
 		color GetPixel(point point) {
 			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
@@ -48,21 +45,24 @@ namespace kl {
 			}
 			return { 0, 0, 0 };
 		}
+		size_t GetPixelCount() {
+			return pixels.size();
+		}
 		color* GetRawData() {
 			return &pixels[0];
 		}
 
 		// Setters
-		void SetSize(size size) {
-			width = size.width;
-			height = size.height;
-			pixels.resize(size_t(width) * size_t(height));
-		}
 		void SetWidth(int width) {
 			SetSize({ width, height });
 		}
 		void SetHeight(int height) {
 			SetSize({ width, height });
+		}
+		void SetSize(size size) {
+			width = size.width;
+			height = size.height;
+			pixels.resize(size_t(width) * size_t(height));
 		}
 		void SetPixel(point point, color color) {
 			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
@@ -97,6 +97,11 @@ namespace kl {
 
 		// Saves the image to a file
 		void ToFile(std::string fileName) {
+			static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID gifEncoderCLSID = { 0x557cf402, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+
 			if (gdipInitialised) {
 				// Checking the file extension
 				const CLSID* formatToUse = NULL;
@@ -146,6 +151,8 @@ namespace kl {
 
 		// Converts an image to an ASCII frame
 		std::string ToASCII(size frameSize) {
+			static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
+
 			// Calculations
 			int pixelWidthIncrement = width / frameSize.width;
 			int pixelHeightIncrement = height / frameSize.height;
@@ -195,24 +202,15 @@ namespace kl {
 		}
 
 	private:
-		static bool gdipInitialised;
-		static ULONG_PTR gdiplusToken;
-		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-		static const CLSID bmpEncoderCLSID;
-		static const CLSID jpgEncoderCLSID;
-		static const CLSID gifEncoderCLSID;
-		static const CLSID pngEncoderCLSID;
-		static char asciiPixelTable[10];
 		int width = 0;
 		int height = 0;
 		std::vector<color> pixels = {};
+
+		static bool gdipInitialised;
+		static ULONG_PTR gdiplusToken;
+		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	};
 	bool image::gdipInitialised = false;
 	ULONG_PTR image::gdiplusToken = 0;
 	Gdiplus::GdiplusStartupInput image::gdiplusStartupInput = {};
-	const CLSID image::bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-	const CLSID image::jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-	const CLSID image::gifEncoderCLSID = { 0x557cf402, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-	const CLSID image::pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-	char image::asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 }

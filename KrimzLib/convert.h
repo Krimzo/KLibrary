@@ -4,14 +4,14 @@
 namespace kl {
 	class convert {
 	public:
-		// Converts radians to degrees
-		static double ToDegrees(double radians) {
-			return radians * toDegrees;
-		}
-
 		// Converts degrees to radians
 		static double ToRadians(double degrees) {
-			return degrees * toRadians;
+			return degrees * constant::toRadians;
+		}
+
+		// Converts radians to degrees
+		static double ToDegrees(double radians) {
+			return radians * constant::toDegrees;
 		}
 
 		// Converts a byte array to a string
@@ -22,10 +22,7 @@ namespace kl {
 			return stringBuffer;
 		}
 		static std::string ToString(bytes&& b) {
-			std::string stringBuffer;
-			stringBuffer.resize(b.size());
-			memcpy(&stringBuffer[0], &b[0], b.size());
-			return stringBuffer;
+			ToString(b);
 		}
 
 		// Converts a string to a bytes array
@@ -35,9 +32,7 @@ namespace kl {
 			return tempBytes;
 		}
 		static bytes ToBytes(std::string&& s) {
-			bytes tempBytes(s.size());
-			memcpy(&tempBytes[0], &s[0], s.size());
-			return tempBytes;
+			ToBytes(s);
 		}
 
 		// Converts a string to a wstring
@@ -47,15 +42,5 @@ namespace kl {
 			mbstowcs(&toReturn[0], &data[0], data.size());
 			return toReturn;
 		}
-
-	private:
-		static double toRadians;
-		static double toDegrees;
-		static float toFloatColor;
-		static double toDoubleColor;
 	};
-	double convert::toRadians = constant::pi / 180;
-	double convert::toDegrees = 180 / constant::pi;
-	float convert::toFloatColor = 1 / 255.0f;
-	double convert::toDoubleColor = 1 / 255.0;
 }

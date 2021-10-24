@@ -6,8 +6,7 @@ namespace kl {
 	public:
 		// Creates a file
 		static void Create(std::string filePath) {
-			std::ofstream fileStream(filePath);
-			fileStream.close();
+			std::ofstream(filePath).close();
 		}
 
 		// Opens a file with default program
@@ -46,9 +45,7 @@ namespace kl {
 			fileStream.close();
 		}
 		static void WriteText(std::string&& data, std::string filePath) {
-			std::ofstream fileStream(filePath);
-			fileStream << data;
-			fileStream.close();
+			WriteText(data, filePath);
 		}
 
 		// Appends text to a text file
@@ -71,22 +68,7 @@ namespace kl {
 			fileStream.close();
 		}
 		static void AppendText(std::string&& data, std::string filePath, int position = -1) {
-			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
-			if (!fileStream.is_open()) {
-				printf("Couldn't load text file \"%s\".", filePath.c_str());
-				console::WaitFor(' ', true);
-				exit(69);
-			}
-
-			if (position < 0) {
-				fileStream.seekp(0, std::ios_base::end);
-			}
-			else {
-				fileStream.seekp(position);
-			}
-
-			fileStream << data;
-			fileStream.close();
+			AppendText(data, filePath, position);
 		}
 
 		// Returns a filedata from a given file
@@ -113,9 +95,7 @@ namespace kl {
 			fileStream.close();
 		}
 		static void WriteBytes(bytes&& data, std::string filePath) {
-			std::ofstream fileStream(filePath, std::ios::binary);
-			fileStream.write((char*)&data[0], data.size());
-			fileStream.close();
+			WriteBytes(data, filePath);
 		}
 
 		// Appends bytes to a file
@@ -138,22 +118,7 @@ namespace kl {
 			fileStream.close();
 		}
 		static void AppendBytes(bytes&& data, std::string filePath, int position = -1) {
-			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
-			if (!fileStream.is_open()) {
-				printf("Couldn't load file \"%s\".", filePath.c_str());
-				console::WaitFor(' ', true);
-				exit(69);
-			}
-
-			if (position < 0) {
-				fileStream.seekp(0, std::ios_base::end);
-			}
-			else {
-				fileStream.seekp(position);
-			}
-
-			fileStream.write((char*)&data[0], data.size());
-			fileStream.close();
+			AppendBytes(data, filePath, position);
 		}
 
 		// Deletes a given file
