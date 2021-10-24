@@ -220,12 +220,7 @@ namespace kl {
 			return createdID;
 		}
 		texture NewTexture(image&& textureImage) {
-			texture createdID = 0;
-			glGenTextures(1, &createdID);
-			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.GetRawData());
-			glGenerateMipmap(GL_TEXTURE_2D);
-			return createdID;
+			return NewTexture(textureImage);
 		}
 
 	private:

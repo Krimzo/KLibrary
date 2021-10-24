@@ -22,7 +22,7 @@ namespace kl {
 			return stringBuffer;
 		}
 		static std::string ToString(bytes&& b) {
-			ToString(b);
+			return ToString(b);
 		}
 
 		// Converts a string to a bytes array
@@ -32,7 +32,7 @@ namespace kl {
 			return tempBytes;
 		}
 		static bytes ToBytes(std::string&& s) {
-			ToBytes(s);
+			return ToBytes(s);
 		}
 
 		// Converts a string to a wstring
