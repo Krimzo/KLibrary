@@ -5,33 +5,33 @@ namespace kl {
 	class file {
 	public:
 		// Creates a file
-		static void Create(std::wstring filePath) {
+		static void Create(std::string filePath) {
 			std::ofstream fileStream(filePath);
 			fileStream.close();
 		}
 
 		// Opens a file with default program
-		static void OpenWithDefault(std::wstring filePath) {
-			_wsystem(filePath.c_str());
+		static void OpenWithDefault(std::string filePath) {
+			system(filePath.c_str());
 		}
 
 		// Opens a file with notepad
-		static void OpenWithNotepad(std::wstring filePath) {
-			_wsystem((L"notepad " + filePath).c_str());
+		static void OpenWithNotepad(std::string filePath) {
+			system(("notepad " + filePath).c_str());
 		}
 
 		// Opens a file with visual studio code
-		static void OpenWithVSCode(std::wstring filePath) {
-			_wsystem((L"code " + filePath).c_str());
+		static void OpenWithVSCode(std::string filePath) {
+			system(("code " + filePath).c_str());
 		}
 
 		// Returns a string from a given text file
-		static std::string ReadText(std::wstring filePath) {
+		static std::string ReadText(std::string filePath) {
 			std::ifstream fileStream(filePath);
 			std::stringstream textBuffer;
 			if (!fileStream.is_open()) {
-				wprintf(L"Couldn't load text file \"%s\".", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				printf("Couldn't load text file \"%s\".", filePath.c_str());
+				console::WaitFor(' ', true);
 				exit(69);
 			}
 			textBuffer << fileStream.rdbuf();
@@ -40,23 +40,23 @@ namespace kl {
 		}
 
 		// Writes text to a text file
-		static void WriteText(std::string& data, std::wstring filePath) {
+		static void WriteText(std::string& data, std::string filePath) {
 			std::ofstream fileStream(filePath);
 			fileStream << data;
 			fileStream.close();
 		}
-		static void WriteText(std::string&& data, std::wstring filePath) {
+		static void WriteText(std::string&& data, std::string filePath) {
 			std::ofstream fileStream(filePath);
 			fileStream << data;
 			fileStream.close();
 		}
 
 		// Appends text to a text file
-		static void AppendText(std::string& data, std::wstring filePath, int position = -1) {
+		static void AppendText(std::string& data, std::string filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
-				wprintf(L"Couldn't load text file \"%s\".", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				printf("Couldn't load text file \"%s\".", filePath.c_str());
+				console::WaitFor(' ', true);
 				exit(69);
 			}
 
@@ -70,11 +70,11 @@ namespace kl {
 			fileStream << data;
 			fileStream.close();
 		}
-		static void AppendText(std::string&& data, std::wstring filePath, int position = -1) {
+		static void AppendText(std::string&& data, std::string filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
-				wprintf(L"Couldn't load text file \"%s\".", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				printf("Couldn't load text file \"%s\".", filePath.c_str());
+				console::WaitFor(' ', true);
 				exit(69);
 			}
 
@@ -90,11 +90,11 @@ namespace kl {
 		}
 
 		// Returns a filedata from a given file
-		static bytes ReadBytes(std::wstring filePath) {
+		static bytes ReadBytes(std::string filePath) {
 			std::ifstream fileStream(filePath, std::ios::binary);
 			if (!fileStream.is_open()) {
-				wprintf(L"Couldn't load file \"%s\".", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				printf("Couldn't load file \"%s\".", filePath.c_str());
+				console::WaitFor(' ', true);
 				exit(69);
 			}
 			fileStream.seekg(0, std::ios::end);
@@ -107,23 +107,23 @@ namespace kl {
 		}
 
 		// Writes bytes to a file
-		static void WriteBytes(bytes& data, std::wstring filePath) {
+		static void WriteBytes(bytes& data, std::string filePath) {
 			std::ofstream fileStream(filePath, std::ios::binary);
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
-		static void WriteBytes(bytes&& data, std::wstring filePath) {
+		static void WriteBytes(bytes&& data, std::string filePath) {
 			std::ofstream fileStream(filePath, std::ios::binary);
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
 
 		// Appends bytes to a file
-		static void AppendBytes(bytes& data, std::wstring filePath, int position = -1) {
+		static void AppendBytes(bytes& data, std::string filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
-				wprintf(L"Couldn't load file \"%s\".", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				printf("Couldn't load file \"%s\".", filePath.c_str());
+				console::WaitFor(' ', true);
 				exit(69);
 			}
 
@@ -137,11 +137,11 @@ namespace kl {
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
-		static void AppendBytes(bytes&& data, std::wstring filePath, int position = -1) {
+		static void AppendBytes(bytes&& data, std::string filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
-				wprintf(L"Couldn't load file \"%s\".", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				printf("Couldn't load file \"%s\".", filePath.c_str());
+				console::WaitFor(' ', true);
 				exit(69);
 			}
 
@@ -157,8 +157,8 @@ namespace kl {
 		}
 
 		// Deletes a given file
-		static void Delete(std::wstring filePath) {
-			_wremove(filePath.c_str());
+		static void Delete(std::string filePath) {
+			remove(filePath.c_str());
 		}
 	};
 }

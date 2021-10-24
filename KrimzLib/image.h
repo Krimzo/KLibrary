@@ -25,7 +25,7 @@ namespace kl {
 			SetSize(size);
 			FillSolid(color);
 		}
-		image(const wchar_t* fileName) {
+		image(const char* fileName) {
 			FromFile(fileName);
 		}
 
@@ -71,15 +71,15 @@ namespace kl {
 		}
 		
 		// Reads an image file and stores it in the image instance
-		void FromFile(std::wstring filePath) {
+		void FromFile(std::string filePath) {
 			if (gdipInitialised) {
 				// Loads image file
-				Gdiplus::Bitmap loadedBitmap(filePath.c_str());
+				Gdiplus::Bitmap loadedBitmap(convert::ToWString(filePath).c_str());
 
 				// Checks load status
 				if (loadedBitmap.GetLastStatus()) {
-					wprintf(L"Couldn't load image file \"%s\".", filePath.c_str());
-					kl::console::WaitFor(' ', true);
+					printf("Couldn't load image file \"%s\".", filePath.c_str());
+					console::WaitFor(' ', true);
 					exit(69);
 				}
 
@@ -96,25 +96,25 @@ namespace kl {
 		}
 
 		// Saves the image to a file
-		void ToFile(std::wstring fileName) {
+		void ToFile(std::string fileName) {
 			if (gdipInitialised) {
-				// Choosing the image format
+				// Checking the file extension
 				const CLSID* formatToUse = NULL;
-				std::wstring fileExtension = string::GetFileExtension(fileName);
-				if (fileExtension == L".bmp") {
+				std::string fileExtension = string::GetFileExtension(fileName);
+				if (fileExtension == ".bmp") {
 					formatToUse = &bmpEncoderCLSID;
 				}
-				else if (fileExtension == L".jpg") {
+				else if (fileExtension == ".jpg") {
 					formatToUse = &jpgEncoderCLSID;
 				}
-				else if (fileExtension == L".gif") {
+				else if (fileExtension == ".gif") {
 					formatToUse = &gifEncoderCLSID;
 				}
-				else if (fileExtension == L".png") {
+				else if (fileExtension == ".png") {
 					formatToUse = &pngEncoderCLSID;
 				}
 				else {
-					wprintf(L"File extension \"%s\" is not supported!\n", fileExtension.c_str());
+					printf("File extension \"%s\" is not supported!\n", fileExtension.c_str());
 					return;
 				}
 
@@ -129,7 +129,7 @@ namespace kl {
 				if (rawBitmapData) {
 					memcpy(rawBitmapData, GetRawData(), pixels.size() * 3);
 					tempBitmap.UnlockBits(&bitmapData);
-					tempBitmap.Save(fileName.c_str(), formatToUse, NULL);
+					tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, NULL);
 				}
 			}
 		}

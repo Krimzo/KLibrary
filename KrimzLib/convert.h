@@ -40,6 +40,14 @@ namespace kl {
 			return tempBytes;
 		}
 
+		// Converts a string to a wstring
+		static std::wstring ToWString(std::string data) {
+			std::wstring toReturn;
+			toReturn.resize(data.size());
+			mbstowcs(&toReturn[0], &data[0], data.size());
+			return toReturn;
+		}
+
 	private:
 		static double toRadians;
 		static double toDegrees;

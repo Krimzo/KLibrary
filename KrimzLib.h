@@ -1,4 +1,5 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 
 
 // Including cpp headers
@@ -45,6 +46,7 @@
 #include "KrimzLib/engine.h"
 
 // Linking .libs
+#pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib,"wininet.lib")
 #pragma comment(lib, "shlwapi.lib")

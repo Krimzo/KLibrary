@@ -58,14 +58,6 @@ namespace kl {
 			clBuildProgram(tempProgram, 1, &deviceID, NULL, NULL, NULL);
 			return tempProgram;
 		}
-		static clprogram CreateProgram(std::wstring filepath) {
-			std::string source = file::ReadText(filepath);
-			const char* kernelSourceAsChar = source.c_str();
-			const size_t kernelSourceSize = source.size();
-			clprogram tempProgram = clCreateProgramWithSource(context, 1, &kernelSourceAsChar, &kernelSourceSize, NULL);
-			clBuildProgram(tempProgram, 1, &deviceID, NULL, NULL, NULL);
-			return tempProgram;
-		}
 
 		// Deletes a given OpenCL program
 		static void Delete(clprogram program) {
@@ -90,7 +82,7 @@ namespace kl {
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &runCount, NULL, 0, NULL, NULL);
 			}
 			else {
-				console::Print("Kernel run count can't be a prime number!\n", kl::constant::colorRed);
+				console::Print("Kernel run count can't be a prime number!\n", constant::colorRed);
 			}
 		}
 

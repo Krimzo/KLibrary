@@ -22,7 +22,7 @@ namespace kl {
 		}
 
 		// Creates the engine
-		void StartNew(size size, const wchar_t* name, double fov = 60) {
+		void StartNew(size size, std::string name, double fov = 60) {
 			engineWindow.WindowStart = [&]() {
 				/* Enable 3D and depth buffer */
 				opengl::Enable3D(fov, engineWindow.GetSize());
@@ -91,7 +91,7 @@ namespace kl {
 			}
 			return NULL;
 		}
-		gameobject* NewGameObject(std::string objectName, std::wstring filePath, texture textureID) {
+		gameobject* NewGameObject(std::string objectName, std::string filePath, texture textureID) {
 			if (!engineObjects.count(objectName)) {
 				// Load file
 				std::stringstream ss = std::stringstream(file::ReadText(filePath));

@@ -5,14 +5,14 @@ namespace kl {
 	class net {
 	public:
 		// Downloads website data(bytes) from the given url
-		static bytes GetWebsiteData(std::wstring url) {
+		static bytes GetWebsiteData(std::string url) {
 			HINTERNET connection = InternetOpen(L"CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 			if (!connection) {
 				printf("Failed to conenct\n");
 				return {};
 			}
 
-			HINTERNET openAddress = InternetOpenUrl(connection, url.c_str(), NULL, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
+			HINTERNET openAddress = InternetOpenUrlA(connection, url.c_str(), NULL, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
 			if (!openAddress) {
 				printf("Failed to open website\n");
 				return {};
@@ -34,7 +34,7 @@ namespace kl {
 		}
 
 		// Downloads data from the website and saves it in a file
-		static void DownloadToFile(std::wstring url, std::wstring fileName) {
+		static void DownloadToFile(std::string url, std::string fileName) {
 			file::WriteBytes(GetWebsiteData(url), fileName);
 		}
 

@@ -14,7 +14,10 @@ namespace kl {
 		std::function<void(void)> WindowEnd = []() {};
 
 		// Window creation
-		void StartNew(size size, const wchar_t* name, bool resizeable = true, bool continuous = false, bool opengl = false) {
+		void StartNew(size size, std::string name, bool resizeable = true, bool continuous = false, bool opengl = false) {
+			// Converting window name to a wstring
+			std::wstring wName = convert::ToWString(name);
+
 			// Define windowapi window class
 			WNDCLASSEX windowClass = {};
 			windowClass.cbSize = sizeof(WNDCLASSEX);
@@ -27,7 +30,7 @@ namespace kl {
 			windowClass.hCursor = NULL;
 			windowClass.hbrBackground = NULL;
 			windowClass.lpszMenuName = NULL;
-			windowClass.lpszClassName = name;
+			windowClass.lpszClassName = wName.c_str();
 			windowClass.hIconSm = NULL;
 			if (!RegisterClassEx(&windowClass)) {
 				printf("Couldn't register window class! Last error = %d\n", GetLastError());
@@ -41,7 +44,7 @@ namespace kl {
 			AdjustWindowRect(&adjustedWindowSize, windowStyle, NULL);
 			size.width = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-			hwnd = CreateWindowEx(NULL, name, name, windowStyle, (constant::ScreenWidth / 2 - size.width / 2), (constant::ScreenHeight / 2 - size.height / 2), size.width, size.height, NULL, NULL, hInstance, NULL);
+			hwnd = CreateWindowEx(NULL, wName.c_str(), wName.c_str(), windowStyle, (constant::ScreenWidth / 2 - size.width / 2), (constant::ScreenHeight / 2 - size.height / 2), size.width, size.height, NULL, NULL, hInstance, NULL);
 			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);
@@ -77,8 +80,7 @@ namespace kl {
 				0, 0, 0
 				};
 				int pixelFormat = ChoosePixelFormat(hdc, &pfd);
-				if (!pixelFormat)
-					exit(69);
+				if (!pixelFormat) { exit(69); }
 				SetPixelFormat(hdc, pixelFormat, &pfd);
 				hglrc = wglCreateContext(hdc);
 				wglMakeCurrent(hdc, hglrc);
@@ -116,7 +118,7 @@ namespace kl {
 				wglDeleteContext(hglrc);
 				hglrc = NULL;
 			}
-			UnregisterClass(name, hInstance);
+			UnregisterClass(wName.c_str(), hInstance);
 			hdc = NULL;
 			hwnd = NULL;
 		}
@@ -156,9 +158,6 @@ namespace kl {
 		// Sets the window title
 		void SetTitle(std::string data) {
 			SetWindowTextA(hwnd, data.c_str());
-		}
-		void SetTitle(std::wstring data) {
-			SetWindowTextW(hwnd, data.c_str());
 		}
 		void SetTitle(int data) {
 			SetWindowTextA(hwnd, std::to_string(data).c_str());

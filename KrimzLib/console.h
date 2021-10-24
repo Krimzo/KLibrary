@@ -70,7 +70,7 @@ namespace kl {
 		}
 
 		// Changes the console font size
-		static void SetFont(size size, std::wstring fontName = L"Consolas") {
+		static void SetFont(size size, std::string fontName = "Consolas") {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
@@ -78,7 +78,7 @@ namespace kl {
 			cfi.dwFontSize.Y = size.height;
 			cfi.FontFamily = FF_DONTCARE;
 			cfi.FontWeight = FW_NORMAL;
-			wcscpy_s(cfi.FaceName, fontName.c_str());
+			wcscpy(cfi.FaceName, convert::ToWString(fontName).c_str());
 			SetCurrentConsoleFontEx(stdConsoleHandle, FALSE, &cfi);
 		}
 
