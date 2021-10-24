@@ -5,7 +5,7 @@ namespace kl {
 	class net {
 	public:
 		// Downloads website data(bytes) from the given url
-		static bytes GetWebsiteData(std::string url, int bufferSize = 8192) {
+		static bytes GetWebsiteData(std::string url, int bufferSize = 16384) {
 			// Create browser
 			HINTERNET connection = InternetOpenA("CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 			if (!connection) {

@@ -15,24 +15,24 @@ namespace kl {
 		}
 
 		// Converts a byte array to a string
-		static std::string ToString(bytes& b) {
+		static std::string ToString(bytes& data) {
 			std::string stringBuffer;
-			stringBuffer.resize(b.size());
-			memcpy(&stringBuffer[0], &b[0], b.size());
+			stringBuffer.resize(data.size());
+			memcpy(&stringBuffer[0], &data[0], data.size());
 			return stringBuffer;
 		}
-		static std::string ToString(bytes&& b) {
-			return ToString(b);
+		static std::string ToString(bytes&& data) {
+			return ToString(data);
 		}
 
 		// Converts a string to a bytes array
-		static bytes ToBytes(std::string& s) {
-			bytes tempBytes(s.size());
-			memcpy(&tempBytes[0], &s[0], s.size());
+		static bytes ToBytes(std::string& data) {
+			bytes tempBytes(data.size());
+			memcpy(&tempBytes[0], &data[0], data.size());
 			return tempBytes;
 		}
-		static bytes ToBytes(std::string&& s) {
-			return ToBytes(s);
+		static bytes ToBytes(std::string&& data) {
+			return ToBytes(data);
 		}
 
 		// Converts a string to a wstring
