@@ -48,6 +48,12 @@ namespace kl {
 			glTranslated(camera.position.x, camera.position.y, camera.position.z);
 		}
 
+		// Clear the frame and depth buffers
+		static void ClearBuffers(colorf color) {
+			glClearColor(color.r, color.g, color.b, 1);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
+
 		// Renders an array of 2D triangles
 		static void Render2DTriangles(std::vector<triangle>& triangles, texture textureID) {
 			glBindTexture(GL_TEXTURE_2D, textureID);
@@ -103,12 +109,6 @@ namespace kl {
 		}
 		static void Render3DTriangles(std::vector<triangle>&& triangles, vec3 position, vec3 rotation, vec3 size, texture textureID) {
 			Render3DTriangles(triangles, position, rotation, size, textureID);
-		}
-
-		// Clear the frame and depth buffers
-		static void ClearBuffers(colorf color) {
-			glClearColor(color.r, color.g, color.b, 1);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
 		// Flips the front and back hdc buffers

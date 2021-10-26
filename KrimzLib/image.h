@@ -83,14 +83,14 @@ namespace kl {
 					exit(69);
 				}
 
-				// Saves data
-				Gdiplus::BitmapData bitmapData = {};
-				Gdiplus::Rect rect(0, 0, loadedBitmap.GetWidth(), loadedBitmap.GetHeight());
-				loadedBitmap.LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat24bppRGB, &bitmapData);
-				byte* rawBitmapData = (byte*)bitmapData.Scan0;
-				if (rawBitmapData) {
-					SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
-					memcpy(GetRawData(), rawBitmapData, pixels.size() * 3);
+				// Data saving
+				SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						Gdiplus::Color tempPixel;
+						loadedBitmap.GetPixel(x, y, &tempPixel);
+						SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB() });
+					}
 				}
 			}
 		}
@@ -123,19 +123,15 @@ namespace kl {
 					return;
 				}
 
-				// Gdiplus bitmap setup
-				Gdiplus::BitmapData bitmapData = {};
-				Gdiplus::Rect rect(0, 0, width, height);
+				// Data transfer and saving to file
 				Gdiplus::Bitmap tempBitmap(width, height, PixelFormat24bppRGB);
-				tempBitmap.LockBits(&rect, Gdiplus::ImageLockModeWrite, PixelFormat24bppRGB, &bitmapData);
-				byte* rawBitmapData = (byte*)bitmapData.Scan0;
-
-				// Data copy
-				if (rawBitmapData) {
-					memcpy(rawBitmapData, GetRawData(), pixels.size() * 3);
-					tempBitmap.UnlockBits(&bitmapData);
-					tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, NULL);
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						color tempPixel = GetPixel({ x, y });
+						tempBitmap.SetPixel(x, y, { tempPixel.r, tempPixel.g, tempPixel.b });
+					}
 				}
+				tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, NULL);
 			}
 		}
 
@@ -147,31 +143,6 @@ namespace kl {
 		// Resets the byte values
 		void FastClear(byte value = 0) {
 			memset(&pixels[0], value, pixels.size() * sizeof(color));
-		}
-
-		// Converts an image to an ASCII frame
-		std::string ToASCII(size frameSize) {
-			static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
-
-			// Calculations
-			int pixelWidthIncrement = width / frameSize.width;
-			int pixelHeightIncrement = height / frameSize.height;
-
-			// Processing
-			std::stringstream frame;
-			for (int y = 0; y < frameSize.height; y++) {
-				for (int x = 0; x < frameSize.width; x++) {
-					// Pixels to grayscale
-					color currentPixel = GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement });
-					int grayScaledPixel = (int)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
-
-					// Grayscaled values to ASCII
-					int saturationLevel = (int)((grayScaledPixel / 255.0) * 9);
-					frame << asciiPixelTable[saturationLevel];
-				}
-				frame << '\n';
-			}
-			return frame.str();
 		}
 
 		// Draws a line between 2 points
@@ -199,6 +170,46 @@ namespace kl {
 				DrawLine(b, { a.x, b.y }, c);
 				DrawLine(b, { b.x, a.y }, c);
 			}
+		}
+
+		// Prints the image to the console
+		void ToConsole() {
+			// Calculations
+			size consoleSize = { console::GetSize().width, console::GetSize().height - 1 };
+			int pixelWidthIncrement = width / consoleSize.width;
+			int pixelHeightIncrement = height / consoleSize.height;
+
+			// Printing
+			for (int y = 0; y < consoleSize.height; y++) {
+				for (int x = 0; x < consoleSize.width; x++) {
+					console::PrintCell(GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement }));
+				}
+			}
+		}
+
+		// Converts an image to an ASCII frame
+		std::string ToASCII(size frameSize) {
+			static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
+
+			// Calculations
+			int pixelWidthIncrement = width / frameSize.width;
+			int pixelHeightIncrement = height / frameSize.height;
+
+			// Processing
+			std::stringstream frame;
+			for (int y = 0; y < frameSize.height; y++) {
+				for (int x = 0; x < frameSize.width; x++) {
+					// Pixels to grayscale
+					color currentPixel = GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement });
+					int grayScaledPixel = (int)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
+
+					// Grayscaled values to ASCII
+					int saturationLevel = (int)((grayScaledPixel / 255.0) * 9);
+					frame << asciiPixelTable[saturationLevel];
+				}
+				frame << '\n';
+			}
+			return frame.str();
 		}
 
 	private:
