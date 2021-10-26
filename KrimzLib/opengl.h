@@ -20,6 +20,24 @@ namespace kl {
 			glEnable(GL_TEXTURE_2D);
 		}
 
+		// Creates a new texture and stores it in gpu memory
+		static texture NewTexture(image& textureImage) {
+			texture createdID = 0;
+			glGenTextures(1, &createdID);
+			glBindTexture(GL_TEXTURE_2D, createdID);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.GetRawData());
+			glGenerateMipmap(GL_TEXTURE_2D);
+			return createdID;
+		}
+		static texture NewTexture(image&& textureImage) {
+			return NewTexture(textureImage);
+		}
+
+		// Deletes a given texture
+		static void DeleteTexture(texture textureID) {
+			glDeleteTextures(1, &textureID);
+		}
+
 		// Translates and rotates the camera
 		static void UpdateCamera(camera camera) {
 			glMatrixMode(GL_MODELVIEW);
@@ -30,77 +48,33 @@ namespace kl {
 			glTranslated(camera.position.x, camera.position.y, camera.position.z);
 		}
 
-		// Renders a 2D triangle
-		static void Render2DTriangle(triangle& tr, texture textureID = 0) {
-			glBindTexture(GL_TEXTURE_2D, textureID);
-			glBegin(GL_TRIANGLES);
-			if (tr.textured) {
-				glColor3d(1, 1, 1);
-				for (int i = 0; i < 3; i++) {
-					glTexCoord2d(tr.vertices[i].u, tr.vertices[i].v);
-					glVertex3d(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
-				}
-			}
-			else {
-				for (int i = 0; i < 3; i++) {
-					glColor3d(tr.vertices[i].color.r, tr.vertices[i].color.g, tr.vertices[i].color.b);
-					glVertex3d(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
-				}
-			}
-			glEnd();
-		}
-
 		// Renders an array of 2D triangles
-		static void Render2DTriangles(std::vector<triangle>& trs, texture textureID = 0) {
+		static void Render2DTriangles(std::vector<triangle>& triangles, texture textureID) {
 			glBindTexture(GL_TEXTURE_2D, textureID);
 			glBegin(GL_TRIANGLES);
-			for (int i = 0; i < trs.size(); i++) {
-				if (trs[i].textured) {
+			for (int i = 0; i < triangles.size(); i++) {
+				if (triangles[i].textured) {
 					glColor3d(1, 1, 1);
 					for (int j = 0; j < 3; j++) {
-						glTexCoord2d(trs[i].vertices[j].u, trs[i].vertices[j].v);
-						glVertex3d(trs[i].vertices[j].x, trs[i].vertices[j].y, trs[i].vertices[j].z);
+						glTexCoord2d(triangles[i].vertices[j].u, triangles[i].vertices[j].v);
+						glVertex3d(triangles[i].vertices[j].x, triangles[i].vertices[j].y, triangles[i].vertices[j].z);
 					}
 				}
 				else {
 					for (int j = 0; j < 3; j++) {
-						glColor3d(trs[i].vertices[j].color.r, trs[i].vertices[j].color.g, trs[i].vertices[j].color.b);
-						glVertex3d(trs[i].vertices[j].x, trs[i].vertices[j].y, trs[i].vertices[j].z);
+						glColor3d(triangles[i].vertices[j].color.r, triangles[i].vertices[j].color.g, triangles[i].vertices[j].color.b);
+						glVertex3d(triangles[i].vertices[j].x, triangles[i].vertices[j].y, triangles[i].vertices[j].z);
 					}
 				}
 			}
 			glEnd();
 		}
-
-		// Renders a 3D triangle
-		static void Render3DTriangle(triangle& tr, vec3 position, vec3 rotation, vec3 size, texture textureID) {
-			glBindTexture(GL_TEXTURE_2D, textureID);
-			glPushMatrix();
-			glTranslated(position.x, position.y, position.z);
-			glRotated(rotation.x, 1, 0, 0);
-			glRotated(rotation.y, 0, 1, 0);
-			glRotated(rotation.z, 0, 0, 1);
-			glScaled(size.x, size.y, size.z);
-			glBegin(GL_TRIANGLES);
-			if (tr.textured) {
-				glColor3d(1, 1, 1);
-				for (int i = 0; i < 3; i++) {
-					glTexCoord2d(tr.vertices[i].u, tr.vertices[i].v);
-					glVertex3d(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
-				}
-			}
-			else {
-				for (int i = 0; i < 3; i++) {
-					glColor3d(tr.vertices[i].color.r, tr.vertices[i].color.g, tr.vertices[i].color.b);
-					glVertex3d(tr.vertices[i].x, tr.vertices[i].y, tr.vertices[i].z);
-				}
-			}
-			glEnd();
-			glPopMatrix();
+		static void Render2DTriangles(std::vector<triangle>&& triangles, texture textureID) {
+			Render2DTriangles(triangles, textureID);
 		}
 
 		// Renders an array of 3D triangles
-		static void Render3DTriangles(std::vector<triangle>& trs, vec3 position, vec3 rotation, vec3 size, texture textureID) {
+		static void Render3DTriangles(std::vector<triangle>& triangles, vec3 position, vec3 rotation, vec3 size, texture textureID) {
 			glBindTexture(GL_TEXTURE_2D, textureID);
 			glPushMatrix();
 			glTranslated(position.x, position.y, position.z);
@@ -109,23 +83,26 @@ namespace kl {
 			glRotated(rotation.z, 0, 0, 1);
 			glScaled(size.x, size.y, size.z);
 			glBegin(GL_TRIANGLES);
-			for (int i = 0; i < trs.size(); i++) {
-				if (trs[i].textured) {
+			for (int i = 0; i < triangles.size(); i++) {
+				if (triangles[i].textured) {
 					glColor3d(1, 1, 1);
 					for (int j = 0; j < 3; j++) {
-						glTexCoord2d(trs[i].vertices[j].u, trs[i].vertices[j].v);
-						glVertex3d(trs[i].vertices[j].x, trs[i].vertices[j].y, trs[i].vertices[j].z);
+						glTexCoord2d(triangles[i].vertices[j].u, triangles[i].vertices[j].v);
+						glVertex3d(triangles[i].vertices[j].x, triangles[i].vertices[j].y, triangles[i].vertices[j].z);
 					}
 				}
 				else {
 					for (int j = 0; j < 3; j++) {
-						glColor3d(trs[i].vertices[j].color.r, trs[i].vertices[j].color.g, trs[i].vertices[j].color.b);
-						glVertex3d(trs[i].vertices[j].x, trs[i].vertices[j].y, trs[i].vertices[j].z);
+						glColor3d(triangles[i].vertices[j].color.r, triangles[i].vertices[j].color.g, triangles[i].vertices[j].color.b);
+						glVertex3d(triangles[i].vertices[j].x, triangles[i].vertices[j].y, triangles[i].vertices[j].z);
 					}
 				}
 			}
 			glEnd();
 			glPopMatrix();
+		}
+		static void Render3DTriangles(std::vector<triangle>&& triangles, vec3 position, vec3 rotation, vec3 size, texture textureID) {
+			Render3DTriangles(triangles, position, rotation, size, textureID);
 		}
 
 		// Clear the frame and depth buffers
@@ -135,7 +112,7 @@ namespace kl {
 		}
 
 		// Flips the front and back hdc buffers
-		static void FlipBuffers(HDC hdc) {
+		static void SwapFrameBuffers(HDC hdc) {
 			SwapBuffers(hdc);
 		}
 	};

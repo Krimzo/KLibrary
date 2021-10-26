@@ -61,7 +61,7 @@ namespace kl {
 				}
 
 				/* Swap front and back frame buffers */
-				opengl::FlipBuffers(engineWindow.GetHDC());
+				opengl::SwapFrameBuffers(engineWindow.GetHDC());
 
 				/* Delta time calculation */
 				double wantedFrameTime = 1 / fpsLimit;
@@ -72,6 +72,12 @@ namespace kl {
 
 				/* Display the FPS */
 				engineWindow.SetTitle(int(1 / deltaTime));
+			};
+
+			engineWindow.WindowEnd = [&]() {
+				for (int i = 0; i < engineTextures.size(); i++) {
+					opengl::DeleteTexture(engineTextures[i]);
+				}
 			};
 
 			engineWindow.StartNew(size, name, false, true, true);
@@ -210,14 +216,11 @@ namespace kl {
 			return NULL;
 		}
 
-		// Adds a new texture to the engine memory
+		// Adds a new texture to the engine
 		texture NewTexture(image& textureImage) {
-			texture createdID = 0;
-			glGenTextures(1, &createdID);
-			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.GetRawData());
-			glGenerateMipmap(GL_TEXTURE_2D);
-			return createdID;
+			texture tempTex = opengl::NewTexture(textureImage);
+			engineTextures.push_back(tempTex);
+			return tempTex;
 		}
 		texture NewTexture(image&& textureImage) {
 			return NewTexture(textureImage);
@@ -228,6 +231,7 @@ namespace kl {
 		time engineTime = time();
 		std::map<std::string, gameobject> engineObjects;
 		std::map<std::string, gameobject>::iterator objItr;
+		std::vector<texture> engineTextures;
 
 		// Computing object physics 
 		void ObjectPhysics() {
