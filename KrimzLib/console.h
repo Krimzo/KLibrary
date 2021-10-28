@@ -45,8 +45,8 @@ namespace kl {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
 			return {
-				int(csbi.srWindow.Right) - int(csbi.srWindow.Left) + 1,
-				int(csbi.srWindow.Bottom) - int(csbi.srWindow.Top) + 1
+				int(csbi.srWindow.Right - csbi.srWindow.Left + 1),
+				int(csbi.srWindow.Bottom - csbi.srWindow.Top + 1)
 			};
 		}
 
