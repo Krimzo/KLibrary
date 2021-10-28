@@ -146,7 +146,7 @@ namespace kl {
 		}
 
 		// Draws a line between 2 points
-		void DrawLine(point a, point b, color c = { 255, 255, 255 }) {
+		void DrawLine(point a, point b, color c) {
 			// Calculations
 			int len = max(abs(b.x - a.x), abs(b.y - a.y));
 			vec2 incr = { double(b.x - a.x) / len, double(b.y - a.y) / len };
@@ -160,9 +160,15 @@ namespace kl {
 		}
 
 		// Draws a rectangle between 2 points
-		void DrawRect(point a, point b, color c = { 255, 255, 255 }, bool fill = false) {
+		void DrawRect(point a, point b, color c, bool fill = false) {
 			if (fill) {
-				
+				point topLeft = { min(a.x, b.x), min(a.y, b.y) };
+				point bottomRight = { max(a.x, b.x), max(a.y, b.y) };
+				for (int y = topLeft.y; y < bottomRight.y; y++) {
+					for (int x = topLeft.x; x < bottomRight.x; x++) {
+						SetPixel({ x, y }, c);
+					}
+				}
 			}
 			else {
 				DrawLine(a, { a.x, b.y }, c);
