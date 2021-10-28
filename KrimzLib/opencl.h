@@ -82,7 +82,7 @@ namespace kl {
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &runCount, NULL, 0, NULL, NULL);
 			}
 			else {
-				console::Print("Kernel run count can't be a prime number!\n", constant::colorRed);
+				console::Print("Kernel run count can't be a prime number!\n", constant::colors::red);
 			}
 		}
 

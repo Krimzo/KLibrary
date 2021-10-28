@@ -6,12 +6,12 @@ namespace kl {
 	public:
 		// Converts degrees to radians
 		static double ToRadians(double degrees) {
-			return degrees * constant::toRadians;
+			return degrees * constant::doubles::toRadians;
 		}
 
 		// Converts radians to degrees
 		static double ToDegrees(double radians) {
-			return radians * constant::toDegrees;
+			return radians * constant::doubles::toDegrees;
 		}
 
 		// Converts a byte array to a string

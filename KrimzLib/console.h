@@ -94,90 +94,90 @@ namespace kl {
 		}
 
 		// Prints RGB data
-		static void Print(char data, color textColor = constant::colorWhite) {
+		static void Print(char data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Print(int data, color textColor = constant::colorWhite) {
+		static void Print(int data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Print(int64 data, color textColor = constant::colorWhite) {
+		static void Print(int64 data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lld\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Print(float data, color textColor = constant::colorWhite) {
+		static void Print(float data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%f\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Print(double data, color textColor = constant::colorWhite) {
+		static void Print(double data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Print(size data, color textColor = constant::colorWhite) {
+		static void Print(size data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m", textColor.r, textColor.g, textColor.b, data.width, data.height);
 		}
-		static void Print(point data, color textColor = constant::colorWhite) {
+		static void Print(point data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
-		static void Print(vec2 data, color textColor = constant::colorWhite) {
+		static void Print(vec2 data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
-		static void Print(vec3 data, color textColor = constant::colorWhite) {
+		static void Print(vec3 data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
 		}
-		static void Print(color data, color textColor = constant::colorWhite) {
+		static void Print(color data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmr: %d g: %d b: %d\033[0m", textColor.r, textColor.g, textColor.b, data.r, data.g, data.b);
 		}
-		static void Print(std::string& data, color textColor = constant::colorWhite) {
+		static void Print(std::string& data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
-		static void Print(std::string&& data, color textColor = constant::colorWhite) {
+		static void Print(std::string&& data, color textColor = constant::colors::white) {
 			Print(data, textColor);
 		}
-		static void Print(bytes& data, color textColor = constant::colorWhite) {
+		static void Print(bytes& data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, convert::ToString(data).c_str());
 		}
-		static void Print(bytes&& data, color textColor = constant::colorWhite) {
+		static void Print(bytes&& data, color textColor = constant::colors::white) {
 			Print(data, textColor);
 		}
 
 		// Prints RGB data with new line at the end
-		static void Println(char data, color textColor = constant::colorWhite) {
+		static void Println(char data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Println(int data, color textColor = constant::colorWhite) {
+		static void Println(int data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Println(int64 data, color textColor = constant::colorWhite) {
+		static void Println(int64 data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lld\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Println(float data, color textColor = constant::colorWhite) {
+		static void Println(float data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%f\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Println(double data, color textColor = constant::colorWhite) {
+		static void Println(double data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void Println(size data, color textColor = constant::colorWhite) {
+		static void Println(size data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.width, data.height);
 		}
-		static void Println(point data, color textColor = constant::colorWhite) {
+		static void Println(point data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
-		static void Println(vec2 data, color textColor = constant::colorWhite) {
+		static void Println(vec2 data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
-		static void Println(vec3 data, color textColor = constant::colorWhite) {
+		static void Println(vec3 data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
 		}
-		static void Println(color data, color textColor = constant::colorWhite) {
+		static void Println(color data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmr: %d g: %d b: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.r, data.g, data.b);
 		}
-		static void Println(std::string& data, color textColor = constant::colorWhite) {
+		static void Println(std::string& data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
-		static void Println(std::string&& data, color textColor = constant::colorWhite) {
+		static void Println(std::string&& data, color textColor = constant::colors::white) {
 			Print(data, textColor);
 		}
-		static void Println(bytes& data, color textColor = constant::colorWhite) {
+		static void Println(bytes& data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, convert::ToString(data).c_str());
 		}
-		static void Println(bytes&& data, color textColor = constant::colorWhite) {
+		static void Println(bytes&& data, color textColor = constant::colors::white) {
 			Print(data, textColor);
 		}
 

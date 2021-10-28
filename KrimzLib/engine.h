@@ -100,99 +100,69 @@ namespace kl {
 		gameobject* NewGameObject(std::string objectName, std::string filePath, texture textureID) {
 			if (!engineObjects.count(objectName)) {
 				// Load file
-				std::stringstream ss = std::stringstream(file::ReadText(filePath));
+				FILE* fileStream = fopen(filePath.c_str(), "r");
+				if (!fileStream) {
+					return NULL;
+				}
 
-				// Parse object data
-				std::string fileLine;
+				// Data buffers
+				gameobject tempObject = { true, textureID };
 				std::vector<vec3> xyzCoords;
 				std::vector<vec2> uvCoords;
-				std::vector<std::vector<point>> fileTriangles;
-				while (std::getline(ss, fileLine)) {
-					std::istringstream iss(fileLine);
-					std::string linePart = "";
-					iss >> linePart;
-					if (linePart == "v") {
-						vec3 tempVertex = {};
-						int spaceCoordCounter = 0;
-						while (iss) {
-							iss >> linePart;
-							if (spaceCoordCounter == 0) {
-								tempVertex.x = stod(linePart);
-							}
-							else if (spaceCoordCounter == 1) {
-								tempVertex.y = stod(linePart);
-							}
-							else if (spaceCoordCounter == 2) {
-								tempVertex.z = stod(linePart);
-							}
-							spaceCoordCounter++;
-						}
-						xyzCoords.push_back(tempVertex);
-					}
-					else if (linePart == "vt") {
-						vec2 tempVertex = {};
-						int textureCoordCounter = 0;
-						while (iss) {
-							iss >> linePart;
-							if (textureCoordCounter == 0) {
-								tempVertex.x = stod(linePart);
-							}
-							else if (textureCoordCounter == 1) {
-								tempVertex.y = stod(linePart);
-							}
-							textureCoordCounter++;
-						}
-						uvCoords.push_back(tempVertex);
-					}
-					else if (linePart == "f") {
-						std::vector<point> tempTriangle(3);
-						int vertexCounter = 0;
-						while (iss && vertexCounter < 3) {
-							iss >> linePart;
-							for (int i = 0; i < 2; i++) {
-								size_t slashPosition = linePart.find('/');
-								std::string dataAsString = linePart.substr(0, slashPosition);
-								if (i == 0) {
-									tempTriangle[vertexCounter].x = stoi(dataAsString) - 1;
-								}
-								else if (i == 1) {
-									tempTriangle[vertexCounter].y = stoi(dataAsString) - 1;
-								}
-								linePart = linePart.substr(slashPosition + 1);
-							}
-							vertexCounter++;
-						}
-						fileTriangles.push_back(tempTriangle);
-					}
-				}
+				std::string tempBuffer; tempBuffer.resize(100);
+				int scanStatus = 0;
+				vec3 tempXYZ = {};
+				vec2 tempUV = {};
+				int coordIndex0 = 0;
+				int textureIndex0 = 0;
+				int normalIndx0 = 0;
+				int coordIndex1 = 0;
+				int textureIndex1 = 0;
+				int normalIndx1 = 0;
+				int coordIndex2 = 0;
+				int textureIndex2 = 0;
+				int normalIndx2 = 0;
 
-				// Create the game object with data
-				gameobject tempObject = { true, textureID };
-				for (int i = 0; i < fileTriangles.size(); i++) {
-					tempObject.triangles.push_back({ {
-						{
-						xyzCoords[fileTriangles[i][0].x].x,
-						xyzCoords[fileTriangles[i][0].x].y,
-						xyzCoords[fileTriangles[i][0].x].z,
-						uvCoords[fileTriangles[i][0].y].x,
-						uvCoords[fileTriangles[i][0].y].y
-						},
-						{
-						xyzCoords[fileTriangles[i][1].x].x,
-						xyzCoords[fileTriangles[i][1].x].y,
-						xyzCoords[fileTriangles[i][1].x].z,
-						uvCoords[fileTriangles[i][1].y].x,
-						uvCoords[fileTriangles[i][1].y].y
-						},
-						{
-						xyzCoords[fileTriangles[i][2].x].x,
-						xyzCoords[fileTriangles[i][2].x].y,
-						xyzCoords[fileTriangles[i][2].x].z,
-						uvCoords[fileTriangles[i][2].y].x,
-						uvCoords[fileTriangles[i][2].y].y
-						}
-					}, true });
+				// Parse data
+				while (scanStatus != -1) {
+					if ((scanStatus = fscanf(fileStream, "v %lf %lf %lf", &tempXYZ.x, &tempXYZ.y, &tempXYZ.z)) == 3) {
+						xyzCoords.push_back(tempXYZ);
+					}
+					else if ((scanStatus = fscanf(fileStream, "t %lf %lf", &tempUV.x, &tempUV.y)) == 2) {
+						uvCoords.push_back(tempUV);
+					}
+					else if ((scanStatus = fscanf(fileStream, "f %d/%d/%d %d/%d/%d %d/%d/%d", &coordIndex0, &textureIndex0, &normalIndx0, &coordIndex1, &textureIndex1, &normalIndx1, &coordIndex2, &textureIndex2, &normalIndx2)) == 9) {
+						tempObject.triangles.push_back({ {
+							{
+							xyzCoords[--coordIndex0].x,
+							xyzCoords[coordIndex0].y,
+							xyzCoords[coordIndex0].z,
+							uvCoords[--textureIndex0].x,
+							uvCoords[textureIndex0].y
+							},
+							{
+							xyzCoords[--coordIndex1].x,
+							xyzCoords[coordIndex1].y,
+							xyzCoords[coordIndex1].z,
+							uvCoords[--textureIndex1].x,
+							uvCoords[textureIndex1].y
+							},
+							{
+							xyzCoords[--coordIndex2].x,
+							xyzCoords[coordIndex2].y,
+							xyzCoords[coordIndex2].z,
+							uvCoords[--textureIndex2].x,
+							uvCoords[textureIndex2].y
+							}
+						}, true });
+					}
+					else {
+						fgets(&tempBuffer[0], 100, fileStream);
+					}
 				}
+				fclose(fileStream);
+
+				// Save object in memory
 				engineObjects.insert(std::pair<std::string, gameobject>(objectName, tempObject));
 				return &engineObjects.at(objectName);
 			}

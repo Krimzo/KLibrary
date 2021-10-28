@@ -5,28 +5,33 @@ namespace kl {
 	// Library constants
 	namespace constant {
 		// Ints
-		const int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-		const int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+		namespace ints {
+			const int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+			const int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+		}
 
 		// Doubles
-		const double pi = 3.14159265358979;
-		static double toRadians = pi / 180;
-		static double toDegrees = 180 / pi;
+		namespace doubles {
+			const double pi = 3.14159265358979;
+			const double toRadians = pi / 180;
+			const double toDegrees = 180 / pi;
+		}
 
 		// Colors
-		const color colorBlack = { 0, 0, 0 };
-		const color colorWhite = { 255, 255, 255 };
-		const color colorGray = { 30, 30, 30 };
-		const color colorRed = { 255, 0, 0 };
-		const color colorGreen = { 0, 255, 0 };
-		const color colorBlue = { 0, 0, 255 };
-		const color colorCyan = { 32, 178, 170 };
-		const color colorPurple = { 220, 0, 220 };
-		const color colorYellow = { 220, 220, 0 };
-		const color colorOrange = { 255, 140, 0 };
-		const color colorMagenta = { 153, 0, 153 };
-		const color colorCrimson = { 102, 0, 0 };
-		const color colorSapphire = { 0, 103, 165 };
-		const color colorWheat = { 245, 222, 179 };
+		namespace colors {
+			const color black = { 0, 0, 0 };
+			const color white = { 255, 255, 255 };
+			const color gray = { 30, 30, 30 };
+			const color red = { 255, 0, 0 };
+			const color green = { 0, 255, 0 };
+			const color blue = { 0, 0, 255 };
+			const color cyan = { 32, 178, 170 };
+			const color purple = { 220, 0, 220 };
+			const color yellow = { 220, 220, 0 };
+			const color orange = { 255, 140, 0 };
+			const color magenta = { 153, 0, 153 };
+			const color crimson = { 102, 0, 0 };
+			const color wheat = { 245, 222, 179 };
+		}
 	}
 }

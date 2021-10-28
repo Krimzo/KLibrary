@@ -44,7 +44,7 @@ namespace kl {
 			AdjustWindowRect(&adjustedWindowSize, windowStyle, NULL);
 			size.width = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-			hwnd = CreateWindowEx(NULL, wName.c_str(), wName.c_str(), windowStyle, (constant::ScreenWidth / 2 - size.width / 2), (constant::ScreenHeight / 2 - size.height / 2), size.width, size.height, NULL, NULL, hInstance, NULL);
+			hwnd = CreateWindowEx(NULL, wName.c_str(), wName.c_str(), windowStyle, (constant::ints::ScreenWidth / 2 - size.width / 2), (constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, NULL, NULL, hInstance, NULL);
 			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);
