@@ -5,7 +5,7 @@ namespace kl {
 	class binary {
 	public:
 		// Returns bits from the given value
-		template<typename T> static bits GetBits(T num) {
+		template<typename T> static bits ToBits(T num) {
 			byte* bytePointer = (byte*)&num;
 			std::string bitData = "";
 			for (int i = 0; i < sizeof(num); i++) {
@@ -19,7 +19,7 @@ namespace kl {
 		}
 
 		// Returns bytes from the given value
-		template<typename T> static bytes GetBytes(T num) {
+		template<typename T> static bytes ToBytes(T num) {
 			byte* bytePointer = (byte*)&num;
 			std::vector<byte> byteData;
 			for (int i = 0; i < sizeof(num); i++) {

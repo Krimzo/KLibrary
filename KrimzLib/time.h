@@ -41,20 +41,12 @@ namespace kl {
 		}
 
 		// Sleeps for the given time
-		static void WaitSeconds(double time) {
-			LARGE_INTEGER sleepCounterStart, sleepCounter;
+		static void Wait(double seconds) {
+			LARGE_INTEGER sleepCounterStart = {}, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
 			do {
 				QueryPerformanceCounter(&sleepCounter);
-			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < time);
-		}
-		static void WaitMiliseconds(double time) {
-			time /= 1000;
-			LARGE_INTEGER sleepCounterStart, sleepCounter;
-			QueryPerformanceCounter(&sleepCounterStart);
-			do {
-				QueryPerformanceCounter(&sleepCounter);
-			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < time);
+			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < seconds);
 		}
 
 		// Resets the stopwatch to 0 seconds

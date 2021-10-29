@@ -160,10 +160,15 @@ namespace kl {
 	};
 }
 
-/* IMAGE */
+/* BINARY */
 namespace kl {
 	typedef unsigned char byte;
+	typedef std::vector<byte> bytes;
+	typedef std::string bits;
+}
 
+/* IMAGE */
+namespace kl {
 	struct colorf {
 		float r = 0;
 		float g = 0;
@@ -196,12 +201,6 @@ namespace kl {
 			return { r / 255.0, g / 255.0, b / 255.0 };
 		}
 	};
-}
-
-/* BINARY */
-namespace kl {
-	typedef std::vector<byte> bytes;
-	typedef std::string bits;
 }
 
 /* OPENCL */

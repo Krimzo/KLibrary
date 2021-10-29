@@ -4,11 +4,6 @@
 namespace kl {
 	class console {
 	public:
-		// Sets the console title
-		static void SetTitle(std::string text) {
-			SetConsoleTitleA(text.c_str());
-		}
-
 		// Deletes the console
 		static void Delete() {
 			FreeConsole();
@@ -17,6 +12,11 @@ namespace kl {
 		// Clears the console screen
 		static void Clear() {
 			system("cls");
+		}
+
+		// Sets the console cursor position
+		static void MoveCursor(point position) {
+			SetConsoleCursorPosition(stdConsoleHandle, { (short)position.x, (short)position.y });
 		}
 
 		// Hides the console cursor
@@ -35,9 +35,9 @@ namespace kl {
 			SetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
 		}
 
-		// Sets the console cursor position
-		static void MoveCursor(point position) {
-			SetConsoleCursorPosition(stdConsoleHandle, { (short)position.x, (short)position.y });
+		// Sets the console title
+		static void SetTitle(std::string text) {
+			SetConsoleTitleA(text.c_str());
 		}
 
 		// Returns the current console size
@@ -57,16 +57,16 @@ namespace kl {
 			return { csbi.dwSize.X, csbi.dwSize.Y };
 		}
 
-		// Changes the console buffer size
-		static void SetBufferSize(size size) {
-			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)size.width, (short)size.height });
-		}
-
 		// Changes the console size
 		static void SetSize(size size) {
 			SetBufferSize(size);
 			SMALL_RECT consoleRect = { 0, 0, (short)size.width - 1, (short)size.height - 1 };
 			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
+		}
+
+		// Changes the console buffer size
+		static void SetBufferSize(size size) {
+			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)size.width, (short)size.height });
 		}
 
 		// Changes the console font size
@@ -109,6 +109,9 @@ namespace kl {
 		static void Print(double data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
+		static void Print(byte data, color textColor = constant::colors::white) {
+			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m", textColor.r, textColor.g, textColor.b, data);
+		}
 		static void Print(size data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m", textColor.r, textColor.g, textColor.b, data.width, data.height);
 		}
@@ -130,12 +133,6 @@ namespace kl {
 		static void Print(std::string&& data, color textColor = constant::colors::white) {
 			Print(data, textColor);
 		}
-		static void Print(bytes& data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, convert::ToString(data).c_str());
-		}
-		static void Print(bytes&& data, color textColor = constant::colors::white) {
-			Print(data, textColor);
-		}
 
 		// Prints RGB data with new line at the end
 		static void Println(char data, color textColor = constant::colors::white) {
@@ -152,6 +149,9 @@ namespace kl {
 		}
 		static void Println(double data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+		}
+		static void Println(byte data, color textColor = constant::colors::white) {
+			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(size data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.width, data.height);
@@ -172,13 +172,7 @@ namespace kl {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 		static void Println(std::string&& data, color textColor = constant::colors::white) {
-			Print(data, textColor);
-		}
-		static void Println(bytes& data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, convert::ToString(data).c_str());
-		}
-		static void Println(bytes&& data, color textColor = constant::colors::white) {
-			Print(data, textColor);
+			Println(data, textColor);
 		}
 
 		// Prints RGB block

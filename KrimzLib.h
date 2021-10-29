@@ -35,6 +35,7 @@
 #include "KrimzLib/time.h"
 #include "KrimzLib/string.h"
 #include "KrimzLib/console.h"
+#include "KrimzLib/array.h"
 #include "KrimzLib/binary.h"
 #include "KrimzLib/file.h"
 #include "KrimzLib/image.h"
