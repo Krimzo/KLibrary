@@ -5,13 +5,8 @@ namespace kl {
 	template<typename T> class array {
 	public:
 		// Constructor and destructor
-		array(uint32 count) {
-			dataMemory = (T*)calloc(count, sizeof(T));
-			if (!dataMemory) {
-				printf("Couldn't allocate %d bytes of memory..\n", int(count * sizeof(T)));
-				console::WaitFor(' ', true);
-				exit(-1);
-			}
+		array(uint32 arraySize) {
+			SetSize(arraySize);
 		}
 		~array() {
 			if (dataMemory) {
@@ -24,7 +19,35 @@ namespace kl {
 			return dataMemory[i];
 		}
 
+		// Returns the current array size
+		uint32 GetSize() {
+			return arraySize;
+		}
+		T* GetRaw() {
+			return dataMemory;
+		}
+
+		// Sets the array size
+		void SetSize(uint32 newSize) {
+			// Allocate memory
+			T* tempBuffer = (T*)calloc(newSize, sizeof(T));
+			if (!tempBuffer) {
+				printf("Couldn't allocate %d bytes of memory..\n", int(newSize * sizeof(T)));
+				console::WaitFor(' ', true);
+				exit(-1);
+			}
+			
+			// Check if memory is already allocated
+			if (dataMemory) {
+				memcpy(tempBuffer, dataMemory, min(arraySize, newSize) * sizeof(T));
+				free(dataMemory);
+			}
+			dataMemory = tempBuffer;
+			arraySize = newSize;
+		}
+
 	private:
 		T* dataMemory = NULL;
+		uint32 arraySize = 0;
 	};
 }
