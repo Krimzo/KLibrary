@@ -5,18 +5,20 @@ int main() {
     kl::InitLib();
 
 
-    kl::array<int> a(10);
+    kl::array<kl::array<int>> array1(3);
+    array1.ExecuteOnAll([](kl::array<int>& element) {
+        element.SetSize(3);
+        element.ExecuteOnAll([](int& element2) {
+            element2 = 6;
+        });
+    });
 
-    for (int i = 0; i < a.GetSize(); i++) {
-        a[i] = kl::random::Int(0, 10);
+    for(int i=0; i<3; i++) {
+        for(int j=0; j<3; j++) {
+            printf("%d ", array1[i][j]);
+        }
+        printf("\n");
     }
-
-    kl::console::Println(a.Replace(6, 26), kl::constant::colors::cyan);
-
-    for(int i=0; i<a.GetSize(); i++) {
-        printf("%d => %d\n", i, a[i]);
-    }
-
 
 
     printf("\n");

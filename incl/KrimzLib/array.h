@@ -9,6 +9,11 @@ namespace kl {
 			SetSize(arraySize);
 			this->canGrow = canGrow;
 		}
+		array(kl::array<T>& arrayToCopy) {
+			canGrow = arrayToCopy.CanGrow();
+			SetSize(arrayToCopy.GetSize());
+			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
+		}
 		~array() {
 			free(dataMemory);
 		}
@@ -24,6 +29,11 @@ namespace kl {
 				SetSize(index + 1);
 			}
 			return dataMemory[index];
+		}
+		void operator = (kl::array<T>& arrayToCopy) {
+			canGrow = arrayToCopy.CanGrow();
+			SetSize(arrayToCopy.GetSize());
+			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
 		}
 
 		// Returns the current array size
@@ -51,6 +61,11 @@ namespace kl {
             }
             dataMemory = tempBuffer;
             arraySize = newSize;
+		}
+
+		// Returns true if the array has growth enabled or false if not
+		bool CanGrow() {
+			return canGrow;
 		}
 
 		// Enables the auto array resizing
@@ -85,6 +100,13 @@ namespace kl {
             }
             return replaceCounter;
         }
+
+		// Executes a lambda expression on each array element
+		void ExecuteOnAll(std::function<void(T& element)> toExecute) {
+			for(int i=0; i<arraySize; i++) {
+				toExecute(dataMemory[i]);
+			}
+		}
 
 	private:
 		T* dataMemory = NULL;
