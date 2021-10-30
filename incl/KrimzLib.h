@@ -24,8 +24,6 @@
 // Including external headers
 #ifdef _WIN32
 #include <conio.h>
-#include <ws2tcpip.h>
-#include <wininet.h>
 #include <windows.h>
 #include <windowsx.h>
 #include "KrimzLib/incl/OpenCL/cl.hpp"
@@ -48,8 +46,8 @@
 #include "KrimzLib/thread.h"
 #include "KrimzLib/console.h"
 #include "KrimzLib/string.h"
+#include "KrimzLib/web.h"
 #ifdef _WIN32
-#include "KrimzLib/net.h"
 #include "KrimzLib/opencl.h"
 #include "KrimzLib/opengl.h"
 #include "KrimzLib/window.h"
@@ -58,8 +56,6 @@
 
 // Linking .libs
 #ifdef _WIN32
-#pragma comment(lib, "wininet.lib")
-#pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "incl/KrimzLib/lib/opencl.lib")	/* !!! Fix the path in case you get linker errors !!! */
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
@@ -68,20 +64,10 @@
 
 namespace kl {
 	// Library initializer
-	void InitLib(bool initOpenCL = false) {
+	void InitLib() {
 		random::SetSeed();
 		#ifdef _WIN32
 		console::EnableVirtual();
-		net::InitWinSock();
-		if (initOpenCL) opencl::Init();
-		#endif
-	}
-	
-	// Library uninitialised
-	void UninitLib() {
-		#ifdef _WIN32
-		net::UninitWinSock();
-		opencl::Uninit();
 		#endif
 	}
 }

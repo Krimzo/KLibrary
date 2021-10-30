@@ -215,7 +215,7 @@ namespace kl {
 
 /* OPENGL */
 namespace kl {
-	typedef unsigned int id;
+	typedef unsigned int textureid;
 }
 
 /* WINDOW */
@@ -249,7 +249,7 @@ namespace kl {
 	struct gameobject {
 		// Visual
 		bool visible = true;
-		id texture = 0;
+		textureid texture = 0;
 		std::vector<triangle> triangles = {};
 
 		// Geometry

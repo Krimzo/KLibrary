@@ -21,20 +21,20 @@ namespace kl {
 		}
 
 		// Creates a new texture and stores it in gpu memory
-		static texture NewTexture(image& textureImage) {
-			texture createdID = 0;
+		static textureid NewTexture(image& textureImage) {
+			textureid createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.GetRawData());
 			glGenerateMipmap(GL_TEXTURE_2D);
 			return createdID;
 		}
-		static texture NewTexture(image&& textureImage) {
+		static textureid NewTexture(image&& textureImage) {
 			return NewTexture(textureImage);
 		}
 
 		// Deletes a given texture
-		static void DeleteTexture(texture textureID) {
+		static void DeleteTexture(textureid textureID) {
 			glDeleteTextures(1, &textureID);
 		}
 
@@ -55,7 +55,7 @@ namespace kl {
 		}
 
 		// Renders an array of 2D triangles
-		static void Render2DTriangles(std::vector<triangle>& triangles, texture textureID) {
+		static void Render2DTriangles(std::vector<triangle>& triangles, textureid textureID) {
 			glBindTexture(GL_TEXTURE_2D, textureID);
 			glBegin(GL_TRIANGLES);
 			for (int i = 0; i < triangles.size(); i++) {
@@ -75,12 +75,12 @@ namespace kl {
 			}
 			glEnd();
 		}
-		static void Render2DTriangles(std::vector<triangle>&& triangles, texture textureID) {
+		static void Render2DTriangles(std::vector<triangle>&& triangles, textureid textureID) {
 			Render2DTriangles(triangles, textureID);
 		}
 
 		// Renders an array of 3D triangles
-		static void Render3DTriangles(std::vector<triangle>& triangles, vec3 position, vec3 rotation, vec3 size, texture textureID) {
+		static void Render3DTriangles(std::vector<triangle>& triangles, vec3 position, vec3 rotation, vec3 size, textureid textureID) {
 			glBindTexture(GL_TEXTURE_2D, textureID);
 			glPushMatrix();
 			glTranslated(position.x, position.y, position.z);
@@ -107,13 +107,20 @@ namespace kl {
 			glEnd();
 			glPopMatrix();
 		}
-		static void Render3DTriangles(std::vector<triangle>&& triangles, vec3 position, vec3 rotation, vec3 size, texture textureID) {
+		static void Render3DTriangles(std::vector<triangle>&& triangles, vec3 position, vec3 rotation, vec3 size, textureid textureID) {
 			Render3DTriangles(triangles, position, rotation, size, textureID);
 		}
 
 		// Flips the front and back hdc buffers
+		#ifdef _WIN32
 		static void SwapFrameBuffers(HDC hdc) {
 			SwapBuffers(hdc);
 		}
+		#endif
+		#ifdef linux
+		static void SwapFrameBuffers() {
+			
+		}
+		#endif
 	};
 }
