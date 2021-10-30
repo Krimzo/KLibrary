@@ -7,12 +7,12 @@ namespace kl {
 		#ifdef _WIN32
 		// Enables escape seq support for the console
 		static void EnableVirtual() {
-			static bool rgbEnabled = false;
-			if (!rgbEnabled) {
+			static bool virtualEnabled = false;
+			if (!virtualEnabled) {
 				DWORD consoleMode;
 				GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), &consoleMode);
 				SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-				rgbEnabled = true;
+				virtualEnabled = true;
 			}
 		}
 

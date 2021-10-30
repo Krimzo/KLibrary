@@ -5,8 +5,9 @@ namespace kl {
 	template<typename T> class array {
 	public:
 		// Constructor and destructor
-		array(uint32 arraySize) {
+		array(uint32 arraySize = 0, bool canGrow = false) {
 			SetSize(arraySize);
+			this->canGrow = canGrow;
 		}
 		~array() {
 			if (dataMemory) {
@@ -15,8 +16,16 @@ namespace kl {
 		}
 
 		// Operator overloading
-		T& operator [] (uint32 i) {
-			return dataMemory[i];
+		T& operator [] (uint32 index) {
+			if(index >= arraySize) {
+				if(!canGrow) {
+					printf("Error. Trying to access memory outside the nongrowing array");
+					getchar();
+					exit(69);
+				}
+				SetSize(index + 1);
+			}
+			return dataMemory[index];
 		}
 
 		// Returns the current array size
@@ -46,8 +55,19 @@ namespace kl {
 			arraySize = newSize;
 		}
 
+		// Enables the auto array resizing
+		void EnableGrowth() {
+			canGrow = true;
+		}
+
+		// Disables the auto array resizing
+		void DisableGrowth() {
+			canGrow = false;
+		}
+
 	private:
 		T* dataMemory = NULL;
 		uint32 arraySize = 0;
+		bool canGrow = false;
 	};
 }
