@@ -5,40 +5,15 @@ namespace kl {
 	class console {
 	public:
 		#ifdef _WIN32
-		// Deletes the console
-		static void Delete() {
-			FreeConsole();
-		}
-
-		// Clears the console screen
-		static void Clear() {
-			system("cls");
-		}
-
-		// Sets the console cursor position
-		static void MoveCursor(point position) {
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { (short)position.x, (short)position.y });
-		}
-
-		// Hides the console cursor
-		static void HideCursor() {
-			CONSOLE_CURSOR_INFO cursorInfo;
-			GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
-			cursorInfo.bVisible = FALSE;
-			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
-		}
-
-		// Shows the console cursor
-		static void ShowCursor() {
-			CONSOLE_CURSOR_INFO cursorInfo;
-			GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
-			cursorInfo.bVisible = TRUE;
-			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
-		}
-
-		// Sets the console title
-		static void SetTitle(std::string text) {
-			SetConsoleTitleA(text.c_str());
+		// Enables escape seq support for the console
+		static void EnableVirtual() {
+			static bool rgbEnabled = false;
+			if (!rgbEnabled) {
+				DWORD consoleMode;
+				GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), &consoleMode);
+				SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+				rgbEnabled = true;
+			}
 		}
 
 		// Returns the current console size
@@ -83,17 +58,6 @@ namespace kl {
 			SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 		}
 
-		// Enables RGB support for the console
-		static void EnableRGB() {
-			static bool rgbEnabled = false;
-			if (!rgbEnabled) {
-				DWORD consoleMode;
-				GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), &consoleMode);
-				SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-				rgbEnabled = true;
-			}
-		}
-
 		// Returns a pressed key
 		static char GetInput() {
 			char input = 0;
@@ -125,42 +89,67 @@ namespace kl {
 		}
 		#endif
 
+		// Clears the console screen
+		static void Clear() {
+			printf("\e[2J");
+		}
+
+		// Hides the console cursor
+		static void HideCursor() {
+			printf("\e[?25l");
+		}
+
+		// Shows the console cursor
+		static void ShowCursor() {
+			printf("\e[?25h");
+		}
+
+		// Sets the console cursor position
+		static void MoveCursor(point position) {
+			printf("\e[%d;%df", position.y, position.x);
+		}
+
+		// Sets the console title
+		static void SetTitle(std::string text) {
+			printf("\e]0;%s\007", text.c_str());
+		}
+
 		// Prints RGB data
 		static void Print(char data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%c\033[0m", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%c\e[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Print(int data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%d\033[0m", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%d\e[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Print(int64 data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%lld\033[0m", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%lld\e[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Print(float data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%f\033[0m", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%f\e[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Print(double data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%lf\e[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Print(byte data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm0x%02X\e[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Print(size data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m", textColor.r, textColor.g, textColor.b, data.width, data.height);
+			printf("\e[38;2;%d;%d;%dmw: %d h: %d\e[0m", textColor.r, textColor.g, textColor.b, data.width, data.height);
 		}
 		static void Print(point data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
+			printf("\e[38;2;%d;%d;%dmx: %d y: %d\e[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
 		static void Print(vec2 data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
+			printf("\e[38;2;%d;%d;%dmx: %lf y: %lf\e[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
 		static void Print(vec3 data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
+			printf("\e[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\e[0m", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
 		}
 		static void Print(color data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmr: %d g: %d b: %d\033[0m", textColor.r, textColor.g, textColor.b, data.r, data.g, data.b);
+			printf("\e[38;2;%d;%d;%dmr: %d g: %d b: %d\e[0m", textColor.r, textColor.g, textColor.b, data.r, data.g, data.b);
 		}
 		static void Print(std::string& data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
+			printf("\e[38;2;%d;%d;%dm%s\e[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 		static void Print(std::string&& data, color textColor = constant::colors::white) {
 			Print(data, textColor);
@@ -168,40 +157,40 @@ namespace kl {
 
 		// Prints RGB data with new line at the end
 		static void Println(char data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%c\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%c\e[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(int data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%d\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%d\e[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(int64 data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%lld\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%lld\e[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(float data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%f\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%f\e[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(double data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%lf\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm%lf\e[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(byte data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m\n", textColor.r, textColor.g, textColor.b, data);
+			printf("\e[38;2;%d;%d;%dm0x%02X\e[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(size data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.width, data.height);
+			printf("\e[38;2;%d;%d;%dmw: %d h: %d\e[0m\n", textColor.r, textColor.g, textColor.b, data.width, data.height);
 		}
 		static void Println(point data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
+			printf("\e[38;2;%d;%d;%dmx: %d y: %d\e[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
 		static void Println(vec2 data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
+			printf("\e[38;2;%d;%d;%dmx: %lf y: %lf\e[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
 		}
 		static void Println(vec3 data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
+			printf("\e[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\e[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
 		}
 		static void Println(color data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmr: %d g: %d b: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.r, data.g, data.b);
+			printf("\e[38;2;%d;%d;%dmr: %d g: %d b: %d\e[0m\n", textColor.r, textColor.g, textColor.b, data.r, data.g, data.b);
 		}
 		static void Println(std::string& data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
+			printf("\e[38;2;%d;%d;%dm%s\e[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 		static void Println(std::string&& data, color textColor = constant::colors::white) {
 			Println(data, textColor);
@@ -209,7 +198,7 @@ namespace kl {
 
 		// Prints RGB block
 		static void PrintCell(color blockColor) {
-			printf("\033[48;2;%d;%d;%dm \033[0m", blockColor.r, blockColor.g, blockColor.b);
+			printf("\e[48;2;%d;%d;%dm \e[0m", blockColor.r, blockColor.g, blockColor.b);
 		}
 	};
 }

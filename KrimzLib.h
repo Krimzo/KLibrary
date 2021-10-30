@@ -73,7 +73,7 @@ namespace kl {
 	void InitLib(bool initOpenCL = false) {
 		random::SetSeed();
 		#ifdef _WIN32
-		console::EnableRGB();
+		console::EnableVirtual();
 		net::InitWinSock();
 		if (initOpenCL) opencl::Init();
 		#endif
