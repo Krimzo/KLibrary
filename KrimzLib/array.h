@@ -19,7 +19,7 @@ namespace kl {
 		T& operator [] (uint32 index) {
 			if(index >= arraySize) {
 				if(!canGrow) {
-					printf("Error. Trying to access memory outside the nongrowing array");
+					printf("Error. Trying to access memory outside the non growing array");
 					getchar();
 					exit(69);
 				}
@@ -32,27 +32,27 @@ namespace kl {
 		uint32 GetSize() {
 			return arraySize;
 		}
-		T* GetRaw() {
+		T* GetRawData() {
 			return dataMemory;
 		}
 
 		// Sets the array size
 		void SetSize(uint32 newSize) {
-			// Allocate memory
-			T* tempBuffer = (T*)calloc(newSize, sizeof(T));
-			if (!tempBuffer) {
-				printf("Couldn't allocate %d bytes of memory..\n", int(newSize * sizeof(T)));
-				getchar();
-				exit(-1);
-			}
-			
-			// Check if memory is already allocated
-			if (dataMemory) {
-				memcpy(tempBuffer, dataMemory, std::min(arraySize, newSize) * sizeof(T));
-				free(dataMemory);
-			}
-			dataMemory = tempBuffer;
-			arraySize = newSize;
+            // Allocate memory
+            T* tempBuffer = (T*)calloc(newSize, sizeof(T));
+            if (!tempBuffer) {
+                printf("Couldn't allocate %d bytes of memory..\n", int(newSize * sizeof(T)));
+                getchar();
+                exit(-1);
+            }
+
+            // Check if memory is already allocated
+            if (dataMemory) {
+                memcpy(tempBuffer, dataMemory, std::min(arraySize, newSize) * sizeof(T));
+                free(dataMemory);
+            }
+            dataMemory = tempBuffer;
+            arraySize = newSize;
 		}
 
 		// Enables the auto array resizing
@@ -64,6 +64,29 @@ namespace kl {
 		void DisableGrowth() {
 			canGrow = false;
 		}
+
+        // Returns the index of the first found element or -1 if the element was not found
+        int Find(T toFind) {
+            for(int i=0; i<arraySize; i++) {
+                if(dataMemory[i] == toFind) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        // Replaces all occurrences of an element with a given replace value
+        // Returns the number of replaced elements
+        int Replace(T toReplace, T with) {
+            int replaceCounter = 0;
+            for(int i=0; i<arraySize; i++) {
+                if(dataMemory[i] == toReplace) {
+                    dataMemory[i] = with;
+                    replaceCounter++;
+                }
+            }
+            return replaceCounter;
+        }
 
 	private:
 		T* dataMemory = NULL;

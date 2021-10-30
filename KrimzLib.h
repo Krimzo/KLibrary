@@ -6,7 +6,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <cmath>
 #include <string>
 #include <vector>
 #include <chrono>
@@ -17,9 +16,10 @@
 #include <algorithm>
 
 // Including c headers
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
 
 // Including external headers
 #ifdef _WIN32
@@ -69,7 +69,7 @@
 #endif
 
 namespace kl {
-	// Library intialiser
+	// Library initializer
 	void InitLib(bool initOpenCL = false) {
 		random::SetSeed();
 		#ifdef _WIN32
@@ -79,7 +79,7 @@ namespace kl {
 		#endif
 	}
 	
-	// Library unintialiser
+	// Library uninitialised
 	void UninitLib() {
 		#ifdef _WIN32
 		net::UninitWinSock();
