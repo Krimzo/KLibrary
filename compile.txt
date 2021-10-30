@@ -1,0 +1,1 @@
+clear && g++ -I ./incl ./src/*.cpp -o ./out/MyLib.out && ./out/MyLib.out

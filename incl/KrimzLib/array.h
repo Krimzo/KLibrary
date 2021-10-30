@@ -10,9 +10,7 @@ namespace kl {
 			this->canGrow = canGrow;
 		}
 		~array() {
-			if (dataMemory) {
-				free(dataMemory);
-			}
+			free(dataMemory);
 		}
 
 		// Operator overloading
