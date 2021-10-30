@@ -4,6 +4,7 @@
 namespace kl {
 	class console {
 	public:
+		#ifdef _WIN32
 		// Deletes the console
 		static void Delete() {
 			FreeConsole();
@@ -16,23 +17,23 @@ namespace kl {
 
 		// Sets the console cursor position
 		static void MoveCursor(point position) {
-			SetConsoleCursorPosition(stdConsoleHandle, { (short)position.x, (short)position.y });
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { (short)position.x, (short)position.y });
 		}
 
 		// Hides the console cursor
 		static void HideCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
-			GetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
+			GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 			cursorInfo.bVisible = FALSE;
-			SetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
+			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 		}
 
 		// Shows the console cursor
 		static void ShowCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
-			GetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
+			GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 			cursorInfo.bVisible = TRUE;
-			SetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
+			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 		}
 
 		// Sets the console title
@@ -43,7 +44,7 @@ namespace kl {
 		// Returns the current console size
 		static size GetSize() {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
-			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
+			GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 			return {
 				int(csbi.srWindow.Right - csbi.srWindow.Left + 1),
 				int(csbi.srWindow.Bottom - csbi.srWindow.Top + 1)
@@ -53,7 +54,7 @@ namespace kl {
 		// Returns screen buffer size
 		static size GetBufferSize() {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
-			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
+			GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 			return { csbi.dwSize.X, csbi.dwSize.Y };
 		}
 
@@ -61,12 +62,12 @@ namespace kl {
 		static void SetSize(size size) {
 			SetBufferSize(size);
 			SMALL_RECT consoleRect = { 0, 0, (short)size.width - 1, (short)size.height - 1 };
-			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
+			SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &consoleRect);
 		}
 
 		// Changes the console buffer size
 		static void SetBufferSize(size size) {
-			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)size.width, (short)size.height });
+			SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), { (short)size.width, (short)size.height });
 		}
 
 		// Changes the console font size
@@ -79,7 +80,7 @@ namespace kl {
 			cfi.FontFamily = FF_DONTCARE;
 			cfi.FontWeight = FW_NORMAL;
 			wcscpy(cfi.FaceName, convert::ToWString(fontName).c_str());
-			SetCurrentConsoleFontEx(stdConsoleHandle, FALSE, &cfi);
+			SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 		}
 
 		// Enables RGB support for the console
@@ -87,11 +88,42 @@ namespace kl {
 			static bool rgbEnabled = false;
 			if (!rgbEnabled) {
 				DWORD consoleMode;
-				GetConsoleMode(stdConsoleHandle, &consoleMode);
-				SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+				GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), &consoleMode);
+				SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 				rgbEnabled = true;
 			}
 		}
+
+		// Returns a pressed key
+		static char GetInput() {
+			char input = 0;
+			while (_kbhit()) {
+				input = _getch();
+			}
+			return input;
+		}
+
+		// Waits until the wanted key is pressed
+		static void WaitFor(char toWaitFor, bool echo = false) {
+			if (echo) {
+				if (toWaitFor > 31 && toWaitFor < 127) {
+					printf("Press '%c' to continue\n", toWaitFor);
+				}
+				else {
+					printf("Press %d to continue\n", toWaitFor);
+				}
+			}
+			while (_getch() != toWaitFor);
+		}
+
+		// Waits for any key to be pressed
+		static void WaitForAny(bool echo = false) {
+			if (echo) {
+				printf("Press any key to continue\n");
+			}
+			char iHateWarnings = _getch();
+		}
+		#endif
 
 		// Prints RGB data
 		static void Print(char data, color textColor = constant::colors::white) {
@@ -179,39 +211,5 @@ namespace kl {
 		static void PrintCell(color blockColor) {
 			printf("\033[48;2;%d;%d;%dm \033[0m", blockColor.r, blockColor.g, blockColor.b);
 		}
-
-		// Returns a pressed key
-		static char GetInput() {
-			char input = 0;
-			while (_kbhit()) {
-				input = _getch();
-			}
-			return input;
-		}
-
-		// Waits until the wanted key is pressed
-		static void WaitFor(char toWaitFor, bool echo = false) {
-			if (echo) {
-				if (toWaitFor > 31 && toWaitFor < 127) {
-					printf("Press '%c' to continue\n", toWaitFor);
-				}
-				else {
-					printf("Press %d to continue\n", toWaitFor);
-				}
-			}
-			while (_getch() != toWaitFor);
-		}
-
-		// Waits for any key to be pressed
-		static void WaitForAny(bool echo = false) {
-			if (echo) {
-				printf("Press any key to continue\n");
-			}
-			char iHateWarnings = _getch();
-		}
-
-	private:
-		static HANDLE stdConsoleHandle;
 	};
-	HANDLE console::stdConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 }

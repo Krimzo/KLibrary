@@ -6,78 +6,58 @@ namespace kl {
 	public:
 		// Constructor
 		time() {
-			QueryPerformanceCounter(&counterLast);
-			QueryPerformanceCounter(&stopwatchLast);
-		}
-
-		// Loads the current pc frequency
-		static void LoadPCFrequency() {
-			LARGE_INTEGER counterTempFreq;
-			QueryPerformanceFrequency(&counterTempFreq);
-			PCFrequency = double(counterTempFreq.QuadPart);
-			StaticGetElapsed();
-			StaticStopwatchReset();
+			counterLast = std::chrono::high_resolution_clock::now();
+			stopwatchLast = counterLast;
 		}
 
 		// Returns a time since the the last StaticGetElapsed() call
 		static double StaticGetElapsed() {
-			LARGE_INTEGER staticCounterNow;
-			QueryPerformanceCounter(&staticCounterNow);
-			double time = (staticCounterNow.QuadPart - staticCounterLast.QuadPart) / PCFrequency;
+			auto staticCounterNow = std::chrono::high_resolution_clock::now();
+			double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(staticCounterNow - staticCounterLast).count() / 1000000000.0;
 			staticCounterLast = staticCounterNow;
-			return time;
+			return elapsedTime;
 		}
 
 		// Resets the static stopwatch to 0 seconds
 		static void StaticStopwatchReset() {
-			QueryPerformanceCounter(&staticStopwatchLast);
+			staticStopwatchLast = std::chrono::high_resolution_clock::now();
 		}
 
 		// Returns the passed time since the last static stopwatch reset
 		static double StaticStopwatchElapsed() {
-			LARGE_INTEGER staticStopwatchNow;
-			QueryPerformanceCounter(&staticStopwatchNow);
-			return (staticStopwatchNow.QuadPart - staticStopwatchLast.QuadPart) / PCFrequency;
-		}
-
-		// Sleeps for the given time
-		static void Wait(double seconds) {
-			LARGE_INTEGER sleepCounterStart = {}, sleepCounter;
-			QueryPerformanceCounter(&sleepCounterStart);
-			do {
-				QueryPerformanceCounter(&sleepCounter);
-			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < seconds);
+			return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - staticStopwatchLast).count() / 1000000000.0;
 		}
 
 		// Resets the stopwatch to 0 seconds
 		void StopwatchReset() {
-			QueryPerformanceCounter(&stopwatchLast);
+			stopwatchLast = std::chrono::high_resolution_clock::now();
 		}
 
 		// Returns the passed time since the last stopwatch reset
 		double StopwatchElapsed() {
-			LARGE_INTEGER stopwatchNow;
-			QueryPerformanceCounter(&stopwatchNow);
-			return (stopwatchNow.QuadPart - stopwatchLast.QuadPart) / PCFrequency;
+			return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - stopwatchLast).count() / 1000000000.0;
 		}
 
 		// Returns a time since the the last GetElapsed() call
 		double GetElapsed() {
-			LARGE_INTEGER counterNow;
-			QueryPerformanceCounter(&counterNow);
-			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
+			auto counterNow = std::chrono::high_resolution_clock::now();
+			double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(counterNow - counterLast).count() / 1000000000.0;
 			counterLast = counterNow;
-			return time;
+			return elapsedTime;
+		}
+
+		// Sleeps for the given time
+		static void Wait(double seconds) {
+			auto sleepCounterStart = std::chrono::high_resolution_clock::now();
+			while(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - sleepCounterStart).count() / 1000000000.0 < seconds);
 		}
 
 	private:
-		static double PCFrequency;
-		static LARGE_INTEGER staticCounterLast;
-		static LARGE_INTEGER staticStopwatchLast;
-		LARGE_INTEGER counterLast = {};
-		LARGE_INTEGER stopwatchLast = {};
+		static std::chrono::_V2::system_clock::time_point staticCounterLast;
+		static std::chrono::_V2::system_clock::time_point staticStopwatchLast;
+		std::chrono::_V2::system_clock::time_point counterLast = {};
+		std::chrono::_V2::system_clock::time_point stopwatchLast = {};
 	};
-	double time::PCFrequency = 0;
-	LARGE_INTEGER time::staticCounterLast = {};
-	LARGE_INTEGER time::staticStopwatchLast = {};
+	std::chrono::_V2::system_clock::time_point time::staticCounterLast = {};
+	std::chrono::_V2::system_clock::time_point time::staticStopwatchLast = {};
 }

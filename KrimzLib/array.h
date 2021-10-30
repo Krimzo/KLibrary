@@ -33,13 +33,13 @@ namespace kl {
 			T* tempBuffer = (T*)calloc(newSize, sizeof(T));
 			if (!tempBuffer) {
 				printf("Couldn't allocate %d bytes of memory..\n", int(newSize * sizeof(T)));
-				console::WaitFor(' ', true);
+				getchar();
 				exit(-1);
 			}
 			
 			// Check if memory is already allocated
 			if (dataMemory) {
-				memcpy(tempBuffer, dataMemory, min(arraySize, newSize) * sizeof(T));
+				memcpy(tempBuffer, dataMemory, std::min(arraySize, newSize) * sizeof(T));
 				free(dataMemory);
 			}
 			dataMemory = tempBuffer;

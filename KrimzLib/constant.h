@@ -6,8 +6,10 @@ namespace kl {
 	namespace constant {
 		// Ints
 		namespace ints {
+			#ifdef _WIN32
 			const int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
 			const int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+			#endif
 		}
 
 		// Doubles
