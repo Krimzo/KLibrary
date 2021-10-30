@@ -17,6 +17,9 @@ int main() {
         printf("%d => %d\n", i, a[i]);
     }
 
+    std::string ijes = "./haha/ne.t/lolz.ijes.SomeFile.txt";
+    std::cout << kl::string::GetFileExtension(ijes);
 
+    printf("\n");
     return 0;
 }
