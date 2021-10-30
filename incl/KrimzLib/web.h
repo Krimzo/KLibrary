@@ -4,7 +4,7 @@
 namespace kl {
 	class web {
 	public:
-		// Downloads website data(bytes) from the given url
+		// Downloads website/file data(bytes) from the given url
 		static bytes GetWebsiteData(std::string url) {
 			bytes siteData;
 

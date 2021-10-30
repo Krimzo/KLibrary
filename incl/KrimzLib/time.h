@@ -4,17 +4,17 @@
 namespace kl {
 	class time {
 	public:
-		// Constructor
-		time() {
-			counterLast = std::chrono::high_resolution_clock::now();
-			stopwatchLast = counterLast;
+		// Sleeps for the given time
+		static void Wait(double seconds) {
+			auto sleepCounterStart = std::chrono::high_resolution_clock::now();
+			while(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - sleepCounterStart).count() / 1000000000.0 < seconds);
 		}
 
 		// Returns a time since the the last StaticGetElapsed() call
 		static double StaticGetElapsed() {
 			auto staticCounterNow = std::chrono::high_resolution_clock::now();
-			double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(staticCounterNow - staticCounterLast).count() / 1000000000.0;
-			staticCounterLast = staticCounterNow;
+			double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(staticCounterNow - staticElapsedLast).count() / 1000000000.0;
+			staticElapsedLast = staticCounterNow;
 			return elapsedTime;
 		}
 
@@ -28,6 +28,20 @@ namespace kl {
 			return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - staticStopwatchLast).count() / 1000000000.0;
 		}
 
+		// Constructor
+		time() {
+			elapsedLast = std::chrono::high_resolution_clock::now();
+			stopwatchLast = elapsedLast;
+		}
+
+		// Returns a time since the the last GetElapsed() call
+		double GetElapsed() {
+			auto counterNow = std::chrono::high_resolution_clock::now();
+			double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(counterNow - elapsedLast).count() / 1000000000.0;
+			elapsedLast = counterNow;
+			return elapsedTime;
+		}
+
 		// Resets the stopwatch to 0 seconds
 		void StopwatchReset() {
 			stopwatchLast = std::chrono::high_resolution_clock::now();
@@ -38,26 +52,12 @@ namespace kl {
 			return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - stopwatchLast).count() / 1000000000.0;
 		}
 
-		// Returns a time since the the last GetElapsed() call
-		double GetElapsed() {
-			auto counterNow = std::chrono::high_resolution_clock::now();
-			double elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(counterNow - counterLast).count() / 1000000000.0;
-			counterLast = counterNow;
-			return elapsedTime;
-		}
-
-		// Sleeps for the given time
-		static void Wait(double seconds) {
-			auto sleepCounterStart = std::chrono::high_resolution_clock::now();
-			while(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - sleepCounterStart).count() / 1000000000.0 < seconds);
-		}
-
 	private:
-		static std::chrono::_V2::system_clock::time_point staticCounterLast;
+		static std::chrono::_V2::system_clock::time_point staticElapsedLast;
 		static std::chrono::_V2::system_clock::time_point staticStopwatchLast;
-		std::chrono::_V2::system_clock::time_point counterLast = {};
+		std::chrono::_V2::system_clock::time_point elapsedLast = {};
 		std::chrono::_V2::system_clock::time_point stopwatchLast = {};
 	};
-	std::chrono::_V2::system_clock::time_point time::staticCounterLast = {};
+	std::chrono::_V2::system_clock::time_point time::staticElapsedLast = {};
 	std::chrono::_V2::system_clock::time_point time::staticStopwatchLast = {};
 }
