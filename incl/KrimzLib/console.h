@@ -26,23 +26,10 @@ namespace kl {
 			};
 		}
 
-		// Returns screen buffer size
-		static size GetBufferSize() {
-			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
-			GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-			return { csbi.dwSize.X, csbi.dwSize.Y };
-		}
-
 		// Changes the console size
 		static void SetSize(size size) {
-			SetBufferSize(size);
 			SMALL_RECT consoleRect = { 0, 0, (short)size.width - 1, (short)size.height - 1 };
 			SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &consoleRect);
-		}
-
-		// Changes the console buffer size
-		static void SetBufferSize(size size) {
-			SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), { (short)size.width, (short)size.height });
 		}
 
 		// Changes the console font size
