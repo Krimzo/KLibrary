@@ -5,7 +5,7 @@ namespace kl {
 	template<typename T> class array {
 	public:
 		// Constructors and destructor
-		array(uint64 arraySize, bool canGrow = false) {
+		array(uint64 arraySize = 0, bool canGrow = false) {
 			// Update properties
 			this->canGrow = canGrow;
 
@@ -20,7 +20,7 @@ namespace kl {
 			SetSize(arrayToCopy.GetSize());
 
 			// Copy the memory
-			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
+			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
 		}
 		array(kl::array<T>&& arrayToCopy) {
 			// Update properties
@@ -30,7 +30,7 @@ namespace kl {
 			SetSize(arrayToCopy.GetSize());
 
 			// Copy the memory
-			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
+			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
 		}
 		array(std::initializer_list<T> listOfElements) {
 			// Resize
@@ -71,7 +71,7 @@ namespace kl {
 			SetSize(arrayToCopy.GetSize());
 
 			// Copy the memory
-			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
+			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
 		}
 		void operator <= (T toAdd) {
 			SetSize(arraySize + 1);
@@ -121,7 +121,7 @@ namespace kl {
 		}
 
 		// Returns the pointer to the raw data
-		T* GetRawData() {
+		T* RawData() {
 			return dataMemory;
 		}
 
@@ -138,6 +138,11 @@ namespace kl {
 		// Disables the auto array resizing
 		void DisableGrowth() {
 			canGrow = false;
+		}
+
+		// Sets the value of all array bytes to 0
+		void Clear() {
+			memset(dataMemory, 0, arraySize * sizeof(T));
 		}
 
 		// Fills the whole array with the given value
@@ -159,6 +164,17 @@ namespace kl {
             return -1;
         }
 
+		// Returns an array of indexes of all found elements
+		kl::array<uint64> FindAll(T toFind) {
+			kl::array<uint64> indexArray;
+			for(uint64 i=0; i<arraySize; i++) {
+                if(dataMemory[i] == toFind) {
+                    indexArray <= i;
+                }
+            }
+			return indexArray;
+		}
+
         // Replaces all occurrences of an element with a given replace value
         // Returns the number of replaced elements
         uint64 Replace(T toReplace, T with) {
@@ -171,6 +187,32 @@ namespace kl {
             }
             return replaceCounter;
         }
+
+		// Sorts the array elements by the given direction
+		void Sort(bool ascending) {
+			if(ascending) {
+				for(uint64 i=0; i<arraySize; i++) {
+					for(uint64 j=i; j<arraySize; j++) {
+						if(dataMemory[j] < dataMemory[i]) {
+							T tempVar = dataMemory[i];
+							dataMemory[i] = dataMemory[j];
+							dataMemory[j] = tempVar;
+						}
+					}
+				}
+			}
+			else {
+				for(uint64 i=0; i<arraySize; i++) {
+					for(uint64 j=i; j<arraySize; j++) {
+						if(dataMemory[j] > dataMemory[i]) {
+							T tempVar = dataMemory[i];
+							dataMemory[i] = dataMemory[j];
+							dataMemory[j] = tempVar;
+						}
+					}
+				}
+			}
+		}
 
 		// Executes a function on each array element
 		void ExecuteOnAll(std::function<void(T& element)> toExecute) {
