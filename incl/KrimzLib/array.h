@@ -5,7 +5,7 @@ namespace kl {
 	template<typename T> class array {
 	public:
 		// Constructors and destructor
-		array(uint64 arraySize = 0, bool canGrow = false) {
+		array(uint64 arraySize, bool canGrow = false) {
 			// Update properties
 			this->canGrow = canGrow;
 
@@ -21,6 +21,23 @@ namespace kl {
 
 			// Copy the memory
 			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
+		}
+		array(kl::array<T>&& arrayToCopy) {
+			// Update properties
+			canGrow = arrayToCopy.CanGrow();
+
+			// Resize
+			SetSize(arrayToCopy.GetSize());
+
+			// Copy the memory
+			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
+		}
+		array(std::initializer_list<T> listOfElements) {
+			// Resize
+			SetSize(listOfElements.size());
+
+			// Copy data from the initialiser list to the array memory
+			memcpy(dataMemory, listOfElements.begin(), arraySize * sizeof(T));
 		}
 		~array() {
 			if(dataMemory) {

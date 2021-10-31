@@ -5,11 +5,7 @@ int main() {
     kl::InitLib();
 
 
-    kl::array<int> array1;
-
-    array1 <= 25;
-    array1 <= 6;
-    array1 <= 15;
+    kl::array<int> array1 = { 12 };
 
 
     for(int i=0; i<array1.GetSize(); i++) {
