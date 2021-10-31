@@ -17,7 +17,7 @@ namespace kl {
 			canGrow = arrayToCopy.CanGrow();
 
 			// Resize
-			Resize(arrayToCopy.GetSize());
+			Resize(arrayToCopy.Size());
 
 			// Copy the data
 			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
@@ -27,7 +27,7 @@ namespace kl {
 			canGrow = arrayToCopy.CanGrow();
 
 			// Resize
-			Resize(arrayToCopy.GetSize());
+			Resize(arrayToCopy.Size());
 
 			// Copy the data
 			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
@@ -68,7 +68,7 @@ namespace kl {
 			canGrow = arrayToCopy.CanGrow();
 
 			// Resize
-			Resize(arrayToCopy.GetSize());
+			Resize(arrayToCopy.Size());
 
 			// Copy the data
 			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
@@ -78,7 +78,7 @@ namespace kl {
 			canGrow = arrayToCopy.CanGrow();
 
 			// Resize
-			Resize(arrayToCopy.GetSize());
+			Resize(arrayToCopy.Size());
 
 			// Copy the data
 			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
@@ -157,9 +157,9 @@ namespace kl {
 			dataMemory[index] = toInsert;
 		}
 		void Insert(uint64 index, kl::array<T>& toInsert) {
-			Resize(arraySize + toInsert.GetSize());
-			memcpy(dataMemory + index + toInsert.GetSize(), dataMemory + index, (arraySize - index - toInsert.GetSize()) * sizeof(T));
-			memcpy(dataMemory + index, toInsert.RawData(), toInsert.GetSize() * sizeof(T));
+			Resize(arraySize + toInsert.Size());
+			memcpy(dataMemory + index + toInsert.Size(), dataMemory + index, (arraySize - index - toInsert.Size()) * sizeof(T));
+			memcpy(dataMemory + index, toInsert.RawData(), toInsert.Size() * sizeof(T));
 		}
 		void Insert(uint64 index, kl::array<T>&& toInsert) {
 			Insert(index, toInsert);
@@ -254,7 +254,7 @@ namespace kl {
 		}
 
 		// Executes a function on each array element
-		void ExecuteOnAll(std::function<void(T& element)> toExecute) {
+		void RunOnAll(std::function<void(T& element)> toExecute) {
 			for(uint64 i=0; i<arraySize; i++) {
 				toExecute(dataMemory[i]);
 			}
