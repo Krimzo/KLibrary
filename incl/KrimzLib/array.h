@@ -10,16 +10,16 @@ namespace kl {
 			this->canGrow = canGrow;
 
 			// Resize
-			SetSize(arraySize);
+			Resize(arraySize);
 		}
 		array(kl::array<T>& arrayToCopy) {
 			// Update properties
 			canGrow = arrayToCopy.CanGrow();
 
 			// Resize
-			SetSize(arrayToCopy.GetSize());
+			Resize(arrayToCopy.GetSize());
 
-			// Copy the memory
+			// Copy the data
 			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
 		}
 		array(kl::array<T>&& arrayToCopy) {
@@ -27,14 +27,14 @@ namespace kl {
 			canGrow = arrayToCopy.CanGrow();
 
 			// Resize
-			SetSize(arrayToCopy.GetSize());
+			Resize(arrayToCopy.GetSize());
 
-			// Copy the memory
+			// Copy the data
 			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
 		}
 		array(std::initializer_list<T> listOfElements) {
 			// Resize
-			SetSize(listOfElements.size());
+			Resize(listOfElements.size());
 
 			// Copy data from the initialiser list to the array memory
 			memcpy(dataMemory, listOfElements.begin(), arraySize * sizeof(T));
@@ -57,7 +57,7 @@ namespace kl {
 				}
 
 				// Resize if the growth is enabled
-				SetSize(index + 1);
+				Resize(index + 1);
 			}
 
 			// Return element
@@ -68,31 +68,48 @@ namespace kl {
 			canGrow = arrayToCopy.CanGrow();
 
 			// Resize
-			SetSize(arrayToCopy.GetSize());
+			Resize(arrayToCopy.GetSize());
 
-			// Copy the memory
+			// Copy the data
 			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
 		}
+		void operator = (kl::array<T>&& arrayToCopy) {
+			// Update properties
+			canGrow = arrayToCopy.CanGrow();
+
+			// Resize
+			Resize(arrayToCopy.GetSize());
+
+			// Copy the data
+			memcpy(dataMemory, arrayToCopy.RawData(), arraySize * sizeof(T));
+		}
+		void operator = (std::initializer_list<T> listOfElements) {
+			// Resize
+			Resize(listOfElements.size());
+
+			// Copy data from the initialiser list to the array memory
+			memcpy(dataMemory, listOfElements.begin(), arraySize * sizeof(T));
+		}
 		void operator <= (T toAdd) {
-			SetSize(arraySize + 1);
+			Resize(arraySize + 1);
 			dataMemory[arraySize - 1] = toAdd;
 		}
 		void operator ++ (int ignore) {
-			SetSize(arraySize + 1);
+			Resize(arraySize + 1);
 		}
 		void operator -- (int ignore) {
 			if(arraySize) {
-				SetSize(arraySize - 1);
+				Resize(arraySize - 1);
 			}
 		}
 
 		// Returns the current array size
-		uint64 GetSize() {
+		uint64 Size() {
 			return arraySize;
 		}
 
-		// Sets the array size
-		void SetSize(uint64 newSize) {
+		// Changes the array size
+		void Resize(uint64 newSize) {
 			// Allocate memory
 			dataMemory = (T*)realloc(dataMemory, newSize * sizeof(T));
 			if(!dataMemory && newSize) {
@@ -126,28 +143,21 @@ namespace kl {
 		}
 
 		// Returns true if the array has growth enabled or false if not
-		bool CanGrow() {
+		bool Growth() {
 			return canGrow;
 		}
-
-		// Enables the auto array resizing
-		void EnableGrowth() {
-			canGrow = true;
-		}
-
-		// Disables the auto array resizing
-		void DisableGrowth() {
-			canGrow = false;
+		void Growth(bool canGrow) {
+			this->canGrow = canGrow;
 		}
 
 		// Inserts an element(or an array of elements) on the given index
 		void Insert(uint64 index, T toInsert) {
-			SetSize(arraySize + 1);
+			Resize(arraySize + 1);
 			memcpy(dataMemory + index + 1, dataMemory + index, (arraySize - index - 1) * sizeof(T));
 			dataMemory[index] = toInsert;
 		}
 		void Insert(uint64 index, kl::array<T>& toInsert) {
-			SetSize(arraySize + toInsert.GetSize());
+			Resize(arraySize + toInsert.GetSize());
 			memcpy(dataMemory + index + toInsert.GetSize(), dataMemory + index, (arraySize - index - toInsert.GetSize()) * sizeof(T));
 			memcpy(dataMemory + index, toInsert.RawData(), toInsert.GetSize() * sizeof(T));
 		}

@@ -5,13 +5,14 @@ int main() {
     kl::InitLib();
 
 
-    kl::array<int> array1(6);
+    kl::array<int> testArray;
 
-    array1.Fill(2, 4, -1);
+    testArray = { 1, 2, 3, 5 };
 
 
-    for(int i=0; i<array1.GetSize(); i++) {
-        std::cout << array1[i] << std::endl;
+
+    for(int i=0; i<testArray.Size(); i++) {
+        std::cout << testArray[i] << std::endl;
     }
 
 
