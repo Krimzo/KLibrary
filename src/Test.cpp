@@ -5,10 +5,10 @@ int main() {
     kl::InitLib();
 
 
-    kl::array<int> array1 = { 1, 3, 6, 7, 6, 12, 61, 13, 6, 2 };
+    kl::array<int> array1(6);
 
-    // insert
-    
+    array1.Fill(2, 4, -1);
+
 
     for(int i=0; i<array1.GetSize(); i++) {
         std::cout << array1[i] << std::endl;

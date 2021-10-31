@@ -140,19 +140,48 @@ namespace kl {
 			canGrow = false;
 		}
 
+		// Inserts an element(or an array of elements) on the given index
+		void Insert(uint64 index, T toInsert) {
+			SetSize(arraySize + 1);
+			memcpy(dataMemory + index + 1, dataMemory + index, (arraySize - index - 1) * sizeof(T));
+			dataMemory[index] = toInsert;
+		}
+		void Insert(uint64 index, kl::array<T>& toInsert) {
+			SetSize(arraySize + toInsert.GetSize());
+			memcpy(dataMemory + index + toInsert.GetSize(), dataMemory + index, (arraySize - index - toInsert.GetSize()) * sizeof(T));
+			memcpy(dataMemory + index, toInsert.RawData(), toInsert.GetSize() * sizeof(T));
+		}
+		void Insert(uint64 index, kl::array<T>&& toInsert) {
+			Insert(index, toInsert);
+		}
+
 		// Sets the value of all array bytes to 0
 		void Clear() {
 			memset(dataMemory, 0, arraySize * sizeof(T));
 		}
 
-		// Fills the whole array with the given value
-		// Returns the number of filled elements
-		uint64 Fill(T value) {
+		// Fills the whole(or one part of) array with the given value
+		void Fill(T value) {
 			for(uint64 i=0; i<arraySize; i++) {
 				dataMemory[i] = value;
 			}
-			return arraySize;
-		} 
+		}
+		void Fill(uint64 startInclusive, uint64 endExclusive, T value) {
+			for(uint64 i=startInclusive; i<endExclusive; i++) {
+				dataMemory[i] = value;
+			}
+		}
+
+		// Returns the number of found elements
+		uint64 Count(T toCount) {
+			uint64 counter = 0;
+			for(uint64 i=0; i<arraySize; i++) {
+				if(dataMemory[i] == toCount) {
+					counter++;
+				}
+			}
+			return counter;
+		}
 
         // Returns the index of the first found element or -1 if the element was not found
         int64 Find(T toFind) {
