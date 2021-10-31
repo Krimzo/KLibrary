@@ -14,7 +14,7 @@ namespace kl {
 		}
 		array(kl::array<T>& arrayToCopy) {
 			// Update properties
-			canGrow = arrayToCopy.CanGrow();
+			canGrow = arrayToCopy.Growth();
 
 			// Resize
 			Resize(arrayToCopy.Size());
@@ -24,7 +24,7 @@ namespace kl {
 		}
 		array(kl::array<T>&& arrayToCopy) {
 			// Update properties
-			canGrow = arrayToCopy.CanGrow();
+			canGrow = arrayToCopy.Growth();
 
 			// Resize
 			Resize(arrayToCopy.Size());
@@ -48,7 +48,7 @@ namespace kl {
 		// Operator overloading
 		T& operator [] (uint64 index) {
 			// Check if the index is out of the array bounds
-			if(index >= arraySize) {
+			if(index > arraySize - 1) {
 				// Check if the growth is enabled
 				if(!canGrow) {
 					printf("Error. Trying to access memory outside the non growing array");
@@ -65,7 +65,7 @@ namespace kl {
 		}
 		void operator = (kl::array<T>& arrayToCopy) {
 			// Update properties
-			canGrow = arrayToCopy.CanGrow();
+			canGrow = arrayToCopy.Growth();
 
 			// Resize
 			Resize(arrayToCopy.Size());
@@ -75,7 +75,7 @@ namespace kl {
 		}
 		void operator = (kl::array<T>&& arrayToCopy) {
 			// Update properties
-			canGrow = arrayToCopy.CanGrow();
+			canGrow = arrayToCopy.Growth();
 
 			// Resize
 			Resize(arrayToCopy.Size());
@@ -90,10 +90,6 @@ namespace kl {
 			// Copy data from the initialiser list to the array memory
 			memcpy(dataMemory, listOfElements.begin(), arraySize * sizeof(T));
 		}
-		void operator <= (T toAdd) {
-			Resize(arraySize + 1);
-			dataMemory[arraySize - 1] = toAdd;
-		}
 		void operator ++ (int ignore) {
 			Resize(arraySize + 1);
 		}
@@ -101,6 +97,10 @@ namespace kl {
 			if(arraySize) {
 				Resize(arraySize - 1);
 			}
+		}
+		void operator <= (T toAdd) {
+			Resize(arraySize + 1);
+			dataMemory[arraySize - 1] = toAdd;
 		}
 
 		// Returns the current array size
@@ -151,18 +151,22 @@ namespace kl {
 		}
 
 		// Inserts an element(or an array of elements) on the given index
-		void Insert(uint64 index, T toInsert) {
-			Resize(arraySize + 1);
-			memcpy(dataMemory + index + 1, dataMemory + index, (arraySize - index - 1) * sizeof(T));
-			dataMemory[index] = toInsert;
-		}
 		void Insert(uint64 index, kl::array<T>& toInsert) {
-			Resize(arraySize + toInsert.Size());
-			memcpy(dataMemory + index + toInsert.Size(), dataMemory + index, (arraySize - index - toInsert.Size()) * sizeof(T));
-			memcpy(dataMemory + index, toInsert.RawData(), toInsert.Size() * sizeof(T));
+			if(index > arraySize - 1) {
+				Resize(index + toInsert.Size());
+				memcpy(dataMemory + index, toInsert.RawData(), toInsert.Size() * sizeof(T));
+			}
+			else {
+				Resize(arraySize + toInsert.Size());
+				memcpy(dataMemory + index + toInsert.Size(), dataMemory + index, (arraySize - index - toInsert.Size()) * sizeof(T));
+				memcpy(dataMemory + index, toInsert.RawData(), toInsert.Size() * sizeof(T));
+			}
 		}
 		void Insert(uint64 index, kl::array<T>&& toInsert) {
 			Insert(index, toInsert);
+		}
+		void Insert(uint64 index, T toInsert) {
+			Insert(index, kl::array<T>({ toInsert }));
 		}
 
 		// Sets the value of all array bytes to 0
@@ -177,6 +181,12 @@ namespace kl {
 			}
 		}
 		void Fill(uint64 startInclusive, uint64 endExclusive, T value) {
+			// Resizing if the end is bigger than array size
+			if(endExclusive > arraySize) {
+				Resize(endExclusive);
+			}
+
+			// Setting the data
 			for(uint64 i=startInclusive; i<endExclusive; i++) {
 				dataMemory[i] = value;
 			}
@@ -226,32 +236,6 @@ namespace kl {
             }
             return replaceCounter;
         }
-
-		// Sorts the array elements by the given direction
-		void Sort(bool ascending) {
-			if(ascending) {
-				for(uint64 i=0; i<arraySize; i++) {
-					for(uint64 j=i; j<arraySize; j++) {
-						if(dataMemory[j] < dataMemory[i]) {
-							T tempVar = dataMemory[i];
-							dataMemory[i] = dataMemory[j];
-							dataMemory[j] = tempVar;
-						}
-					}
-				}
-			}
-			else {
-				for(uint64 i=0; i<arraySize; i++) {
-					for(uint64 j=i; j<arraySize; j++) {
-						if(dataMemory[j] > dataMemory[i]) {
-							T tempVar = dataMemory[i];
-							dataMemory[i] = dataMemory[j];
-							dataMemory[j] = tempVar;
-						}
-					}
-				}
-			}
-		}
 
 		// Executes a function on each array element
 		void RunOnAll(std::function<void(T& element)> toExecute) {

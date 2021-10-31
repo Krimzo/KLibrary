@@ -5,18 +5,16 @@ int main() {
     kl::InitLib();
 
 
-    kl::array<int> testArray;
+    kl::array<int> testArray(10);
 
-    testArray = { 1, 2, 3, 5 };
+    testArray.RunOnAll([](int& elem) {
+        elem = kl::random::Int(0, 10);
+    });
 
-    testArray.Insert(0, { -1, -1 });
-    testArray.Replace(2, -6);
-    testArray++;
-    testArray <= 17;
+    kl::array<int> b = testArray;
 
-
-    for(int i=0; i<testArray.Size(); i++) {
-        std::cout << testArray[i] << std::endl;
+    for(int i=0; i<b.Size(); i++) {
+        std::cout << b[i] << std::endl;
     }
 
 
