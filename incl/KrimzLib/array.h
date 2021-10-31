@@ -5,7 +5,7 @@ namespace kl {
 	template<typename T> class array {
 	public:
 		// Constructors and destructor
-		array(uint32 arraySize = 0, bool canGrow = false) {
+		array(uint64 arraySize = 0, bool canGrow = false) {
 			// Update properties
 			this->canGrow = canGrow;
 
@@ -27,7 +27,7 @@ namespace kl {
 		}
 
 		// Operator overloading
-		T& operator [] (uint32 index) {
+		T& operator [] (uint64 index) {
 			// Check if the index is out of the array bounds
 			if(index >= arraySize) {
 				// Check if the growth is enabled
@@ -56,12 +56,12 @@ namespace kl {
 		}
 
 		// Returns the current array size
-		uint32 GetSize() {
+		uint64 GetSize() {
 			return arraySize;
 		}
 
 		// Sets the array size
-		void SetSize(uint32 newSize) {
+		void SetSize(uint64 newSize) {
 			// Allocate memory
 			dataMemory = (T*)realloc(dataMemory, newSize * sizeof(T));
 			if(!dataMemory) {
@@ -101,18 +101,18 @@ namespace kl {
 
 		// Fills the whole array with the given value
 		// Returns the number of filled elements
-		uint32 Fill(T value) {
-			for(int i=0; i<arraySize; i++) {
+		uint64 Fill(T value) {
+			for(uint64 i=0; i<arraySize; i++) {
 				dataMemory[i] = value;
 			}
 			return arraySize;
 		} 
 
         // Returns the index of the first found element or -1 if the element was not found
-        int Find(T toFind) {
-            for(int i=0; i<arraySize; i++) {
+        int64 Find(T toFind) {
+            for(uint64 i=0; i<arraySize; i++) {
                 if(dataMemory[i] == toFind) {
-                    return i;
+                    return (int64)i;
                 }
             }
             return -1;
@@ -120,9 +120,9 @@ namespace kl {
 
         // Replaces all occurrences of an element with a given replace value
         // Returns the number of replaced elements
-        int Replace(T toReplace, T with) {
-            int replaceCounter = 0;
-            for(int i=0; i<arraySize; i++) {
+        uint64 Replace(T toReplace, T with) {
+            uint64 replaceCounter = 0;
+            for(uint64 i=0; i<arraySize; i++) {
                 if(dataMemory[i] == toReplace) {
                     dataMemory[i] = with;
                     replaceCounter++;
@@ -133,14 +133,14 @@ namespace kl {
 
 		// Executes a function on each array element
 		void ExecuteOnAll(std::function<void(T& element)> toExecute) {
-			for(int i=0; i<arraySize; i++) {
+			for(uint64 i=0; i<arraySize; i++) {
 				toExecute(dataMemory[i]);
 			}
 		}
 
 	private:
 		T* dataMemory = NULL;
-		uint32 arraySize = 0;
+		uint64 arraySize = 0;
 		bool canGrow = false;
 	};
 }
