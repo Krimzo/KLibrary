@@ -4,14 +4,22 @@
 namespace kl {
 	template<typename T> class array {
 	public:
-		// Constructor and destructor
+		// Constructors and destructor
 		array(uint32 arraySize = 0, bool canGrow = false) {
-			SetSize(arraySize);
+			// Update properties
 			this->canGrow = canGrow;
+
+			// Resize
+			SetSize(arraySize);
 		}
 		array(kl::array<T>& arrayToCopy) {
+			// Update properties
 			canGrow = arrayToCopy.CanGrow();
+
+			// Resize
 			SetSize(arrayToCopy.GetSize());
+
+			// Copy the memory
 			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
 		}
 		~array() {
@@ -20,19 +28,30 @@ namespace kl {
 
 		// Operator overloading
 		T& operator [] (uint32 index) {
+			// Check if the index is out of the array bounds
 			if(index >= arraySize) {
+				// Check if the growth is enabled
 				if(!canGrow) {
 					printf("Error. Trying to access memory outside the non growing array");
 					getchar();
 					exit(69);
 				}
+
+				// Resize if the growth is enabled
 				SetSize(index + 1);
 			}
+
+			// Return element
 			return dataMemory[index];
 		}
 		void operator = (kl::array<T>& arrayToCopy) {
+			// Update properties
 			canGrow = arrayToCopy.CanGrow();
+
+			// Resize
 			SetSize(arrayToCopy.GetSize());
+
+			// Copy the memory
 			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
 		}
 
@@ -40,27 +59,29 @@ namespace kl {
 		uint32 GetSize() {
 			return arraySize;
 		}
-		T* GetRawData() {
-			return dataMemory;
-		}
 
 		// Sets the array size
 		void SetSize(uint32 newSize) {
-            // Allocate memory
-            T* tempBuffer = (T*)calloc(newSize, sizeof(T));
-            if (!tempBuffer) {
-                printf("Couldn't allocate %d bytes of memory..\n", int(newSize * sizeof(T)));
+			// Allocate memory
+			dataMemory = (T*)realloc(dataMemory, newSize * sizeof(T));
+			if(!dataMemory) {
+				printf("Couldn't allocate %d bytes of memory..\n", int(newSize * sizeof(T)));
                 getchar();
                 exit(-1);
-            }
+			}
 
-            // Check if memory is already allocated
-            if (dataMemory) {
-                memcpy(tempBuffer, dataMemory, std::min(arraySize, newSize) * sizeof(T));
-                free(dataMemory);
-            }
-            dataMemory = tempBuffer;
-            arraySize = newSize;
+			// Set newly allocated addresses to 0
+			if(newSize > arraySize) {
+				memset(dataMemory + arraySize, 0, (newSize - arraySize) * sizeof(T));
+			}
+
+			// Update size property
+			arraySize = newSize;
+		}
+
+		// Returns the pointer to the raw data
+		T* GetRawData() {
+			return dataMemory;
 		}
 
 		// Returns true if the array has growth enabled or false if not
@@ -77,6 +98,15 @@ namespace kl {
 		void DisableGrowth() {
 			canGrow = false;
 		}
+
+		// Fills the whole array with the given value
+		// Returns the number of filled elements
+		uint32 Fill(T value) {
+			for(int i=0; i<arraySize; i++) {
+				dataMemory[i] = value;
+			}
+			return arraySize;
+		} 
 
         // Returns the index of the first found element or -1 if the element was not found
         int Find(T toFind) {
@@ -101,7 +131,7 @@ namespace kl {
             return replaceCounter;
         }
 
-		// Executes a lambda expression on each array element
+		// Executes a function on each array element
 		void ExecuteOnAll(std::function<void(T& element)> toExecute) {
 			for(int i=0; i<arraySize; i++) {
 				toExecute(dataMemory[i]);

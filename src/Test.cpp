@@ -5,19 +5,13 @@ int main() {
     kl::InitLib();
 
 
-    kl::array<kl::array<int>> array1(3);
-    array1.ExecuteOnAll([](kl::array<int>& element) {
-        element.SetSize(3);
-        element.ExecuteOnAll([](int& element2) {
-            element2 = 6;
-        });
-    });
+    kl::array<int> array1(10);
+    array1.Fill(6);
 
-    for(int i=0; i<3; i++) {
-        for(int j=0; j<3; j++) {
-            printf("%d ", array1[i][j]);
-        }
-        printf("\n");
+    array1.SetSize(5);
+
+    for(int i=0; i<array1.GetSize(); i++) {
+        printf("%d\n", array1[i]);
     }
 
 
