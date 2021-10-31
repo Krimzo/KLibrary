@@ -23,7 +23,9 @@ namespace kl {
 			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
 		}
 		~array() {
-			free(dataMemory);
+			if(dataMemory) {
+				free(dataMemory);
+			}
 		}
 
 		// Operator overloading
@@ -54,6 +56,18 @@ namespace kl {
 			// Copy the memory
 			memcpy(dataMemory, arrayToCopy.GetRawData(), arraySize * sizeof(T));
 		}
+		void operator <= (T toAdd) {
+			SetSize(arraySize + 1);
+			dataMemory[arraySize - 1] = toAdd;
+		}
+		void operator ++ (int ignore) {
+			SetSize(arraySize + 1);
+		}
+		void operator -- (int ignore) {
+			if(arraySize) {
+				SetSize(arraySize - 1);
+			}
+		}
 
 		// Returns the current array size
 		uint64 GetSize() {
@@ -64,8 +78,8 @@ namespace kl {
 		void SetSize(uint64 newSize) {
 			// Allocate memory
 			dataMemory = (T*)realloc(dataMemory, newSize * sizeof(T));
-			if(!dataMemory) {
-				printf("Couldn't allocate %d bytes of memory..\n", int(newSize * sizeof(T)));
+			if(!dataMemory && newSize) {
+				printf("Couldn't allocate %llu bytes of memory..\n", newSize * sizeof(T));
                 getchar();
                 exit(-1);
 			}
@@ -77,6 +91,16 @@ namespace kl {
 
 			// Update size property
 			arraySize = newSize;
+		}
+
+		// Returns the first element
+		T& Front() {
+			return dataMemory[0];
+		}
+
+		// Returns the last element
+		T& Back() {
+			return dataMemory[arraySize - 1];
 		}
 
 		// Returns the pointer to the raw data
