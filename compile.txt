@@ -1,1 +1,1 @@
-clear && g++ -I ./incl ./src/*.cpp -o ./out/Test.out && ./out/Test.out
+clear && g++ -g0 -I ./incl ./src/*.cpp -o ./out/Test.out && ./out/Test.out
