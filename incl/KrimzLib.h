@@ -8,10 +8,10 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <iterator>
-#include <map>
 #include <functional>
 #include <thread>
+#include <iterator>
+#include <map>
 
 // Including external headers
 #include <conio.h>

@@ -108,6 +108,12 @@ namespace kl {
 				Resize(arraySize - 1);
 			}
 		}
+		void operator += (int increment) {
+			Resize(arraySize + increment);
+		}
+		void operator -= (int increment) {
+			Resize(max(0, arraySize - increment));
+		}
 		void operator <= (T toAdd) {
 			Resize(arraySize + 1);
 			Back() = toAdd;
