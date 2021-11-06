@@ -155,8 +155,7 @@
     <ClInclude Include="incl\KrimzLib\incl\OpenCL\cl.h" />
     <ClInclude Include="incl\KrimzLib\incl\OpenCL\cl_platform.h" />
     <ClInclude Include="incl\KrimzLib\incl\OpenCL\cl_version.h" />
-    <ClInclude Include="incl\KrimzLib\incl\OpenGL\glad.h" />
-    <ClInclude Include="incl\KrimzLib\incl\OpenGL\khrplatform.h" />
+    <ClInclude Include="incl\KrimzLib\dep\OpenGL\glad.h" />
     <ClInclude Include="incl\KrimzLib\literal.h" />
     <ClInclude Include="incl\KrimzLib\math.h" />
     <ClInclude Include="incl\KrimzLib\tcp.h" />

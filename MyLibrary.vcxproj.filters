@@ -84,10 +84,7 @@
     <ClInclude Include="incl\KrimzLib\incl\OpenCL\cl_platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\incl\OpenGL\glad.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\incl\OpenGL\khrplatform.h">
+    <ClInclude Include="incl\KrimzLib\dep\OpenGL\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

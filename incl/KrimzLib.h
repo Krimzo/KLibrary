@@ -21,7 +21,7 @@
 #include <windowsx.h>
 #include <shlwapi.h>
 #include <gdiplus.h>
-#include "KrimzLib/incl/OpenGL/glad.h"
+#include "KrimzLib/dep/OpenGL/glad.h"
 #include <gl/GLU.h>
 
 // Including kl headers
