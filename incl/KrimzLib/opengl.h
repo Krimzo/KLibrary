@@ -112,15 +112,8 @@ namespace kl {
 		}
 
 		// Flips the front and back hdc buffers
-		#ifdef _WIN32
 		static void SwapFrameBuffers(HDC hdc) {
 			SwapBuffers(hdc);
 		}
-		#endif
-		#ifdef linux
-		static void SwapFrameBuffers() {
-			
-		}
-		#endif
 	};
 }
