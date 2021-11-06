@@ -15,7 +15,7 @@ namespace kl {
 				context = clCreateContext(NULL, 1, &deviceID, NULL, NULL, NULL);
 
 				// Create a command queue
-				commandQueue = clCreateCommandQueue(context, deviceID, 0, NULL);
+				commandQueue = clCreateCommandQueueWithProperties(context, deviceID, NULL, NULL);
 				clInitialized = true;
 			}
 		}

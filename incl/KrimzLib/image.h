@@ -4,6 +4,22 @@
 namespace kl {
 	class image {
 	public:
+		// Initalises gdiplus
+		static void InitGdiPlus() {
+			if (!gdipInitialised) {
+				Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+				gdipInitialised = true;
+			}
+		}
+
+		// Uninitalises gdiplus
+		static void UninitGdiPlus() {
+			if (gdipInitialised) {
+				Gdiplus::GdiplusShutdown(gdiplusToken);
+				gdipInitialised = false;
+			}
+		}
+
 		// Constructor
 		image(size size, color color = {}) {
 			SetSize(size);
@@ -53,22 +69,77 @@ namespace kl {
 				pixels[point.y * size_t(width) + point.x] = color;
 			}
 		}
-		
+
 		// Reads an image file and stores it in the image instance
 		void FromFile(std::string filePath) {
-			
+			if (gdipInitialised) {
+				// Loads image file
+				Gdiplus::Bitmap loadedBitmap(convert::ToWString(filePath).c_str());
+
+				// Checks load status
+				if (loadedBitmap.GetLastStatus()) {
+					printf("Couldn't load image file \"%s\".", filePath.c_str());
+					console::WaitFor(' ', true);
+					exit(69);
+				}
+
+				// Data saving
+				SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						Gdiplus::Color tempPixel;
+						loadedBitmap.GetPixel(x, y, &tempPixel);
+						SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB() });
+					}
+				}
+			}
 		}
 
 		// Saves the image to a file
 		void ToFile(std::string fileName) {
-			
+			static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID gifEncoderCLSID = { 0x557cf402, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+
+			if (gdipInitialised) {
+				// Checking the file extension
+				const CLSID* formatToUse = NULL;
+				std::string fileExtension = string::GetFileExtension(fileName);
+				if (fileExtension == ".bmp") {
+					formatToUse = &bmpEncoderCLSID;
+				}
+				else if (fileExtension == ".jpg") {
+					formatToUse = &jpgEncoderCLSID;
+				}
+				else if (fileExtension == ".gif") {
+					formatToUse = &gifEncoderCLSID;
+				}
+				else if (fileExtension == ".png") {
+					formatToUse = &pngEncoderCLSID;
+				}
+				else {
+					printf("File extension \"%s\" is not supported!\n", fileExtension.c_str());
+					return;
+				}
+
+				// Data transfer and saving to file
+				Gdiplus::Bitmap tempBitmap(width, height, PixelFormat24bppRGB);
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						color tempPixel = GetPixel({ x, y });
+						tempBitmap.SetPixel(x, y, { tempPixel.r, tempPixel.g, tempPixel.b });
+					}
+				}
+				tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, NULL);
+			}
 		}
 
 		// Fils the image with solid color
 		void FillSolid(color color) {
 			std::fill(pixels.begin(), pixels.end(), color);
 		}
-		
+
 		// Resets the byte values
 		void FastClear(byte value = 0) {
 			memset(&pixels[0], value, pixels.size() * sizeof(color));
@@ -77,7 +148,7 @@ namespace kl {
 		// Draws a line between 2 points
 		void DrawLine(point a, point b, color c) {
 			// Calculations
-			int len = std::max(abs(b.x - a.x), abs(b.y - a.y));
+			int len = max(abs(b.x - a.x), abs(b.y - a.y));
 			vec2 incr = { double(b.x - a.x) / len, double(b.y - a.y) / len };
 
 			// Drawing
@@ -91,8 +162,8 @@ namespace kl {
 		// Draws a rectangle between 2 points
 		void DrawRect(point a, point b, color c, bool fill = false) {
 			if (fill) {
-				point topLeft = { std::min(a.x, b.x), std::min(a.y, b.y) };
-				point bottomRight = { std::max(a.x, b.x), std::max(a.y, b.y) };
+				point topLeft = { min(a.x, b.x), min(a.y, b.y) };
+				point bottomRight = { max(a.x, b.x), max(a.y, b.y) };
 				for (int y = topLeft.y; y < bottomRight.y; y++) {
 					for (int x = topLeft.x; x < bottomRight.x; x++) {
 						SetPixel({ x, y }, c);
@@ -104,6 +175,21 @@ namespace kl {
 				DrawLine(a, { b.x, a.y }, c);
 				DrawLine(b, { a.x, b.y }, c);
 				DrawLine(b, { b.x, a.y }, c);
+			}
+		}
+
+		// Prints the image to the console
+		void ToConsole() {
+			// Calculations
+			size consoleSize = { console::GetSize().width, console::GetSize().height - 1 };
+			int pixelWidthIncrement = width / consoleSize.width;
+			int pixelHeightIncrement = height / consoleSize.height;
+
+			// Printing
+			for (int y = 0; y < consoleSize.height; y++) {
+				for (int x = 0; x < consoleSize.width; x++) {
+					console::PrintCell(GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement }));
+				}
 			}
 		}
 
@@ -136,5 +222,12 @@ namespace kl {
 		int width = 0;
 		int height = 0;
 		std::vector<color> pixels = {};
+
+		static bool gdipInitialised;
+		static ULONG_PTR gdiplusToken;
+		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	};
+	bool image::gdipInitialised = false;
+	ULONG_PTR image::gdiplusToken = 0;
+	Gdiplus::GdiplusStartupInput image::gdiplusStartupInput = {};
 }

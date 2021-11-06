@@ -19,7 +19,7 @@ namespace kl {
 			std::wstring wName = convert::ToWString(name);
 
 			// Define windowapi window class
-			WNDCLASSEX windowClass = {};
+			WNDCLASSEXW windowClass = {};
 			windowClass.cbSize = sizeof(WNDCLASSEX);
 			windowClass.style = CS_OWNDC;
 			windowClass.lpfnWndProc = DefWindowProc;
@@ -32,7 +32,7 @@ namespace kl {
 			windowClass.lpszMenuName = NULL;
 			windowClass.lpszClassName = wName.c_str();
 			windowClass.hIconSm = NULL;
-			if (!RegisterClassEx(&windowClass)) {
+			if (!RegisterClassExW(&windowClass)) {
 				printf("Couldn't register window class! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);
 				exit(69);
@@ -41,10 +41,10 @@ namespace kl {
 			// Create window
 			DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 			RECT adjustedWindowSize = { 0, 0, size.width, size.height };
-			AdjustWindowRect(&adjustedWindowSize, windowStyle, NULL);
+			AdjustWindowRect(&adjustedWindowSize, windowStyle, FALSE);
 			size.width = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-			hwnd = CreateWindowEx(NULL, wName.c_str(), wName.c_str(), windowStyle, (constant::ints::ScreenWidth / 2 - size.width / 2), (constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, NULL, NULL, hInstance, NULL);
+			hwnd = CreateWindowExW(0, wName.c_str(), wName.c_str(), windowStyle, (constant::ints::ScreenWidth / 2 - size.width / 2), (constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, NULL, NULL, hInstance, NULL);
 			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);
@@ -94,7 +94,7 @@ namespace kl {
 			if (continuous) {
 				WindowStart();
 				while (IsWindow(hwnd)) {
-					while (PeekMessage(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
+					while (PeekMessageW(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
 						HandleMessage();
 					}
 					WindowUpdate();
@@ -104,7 +104,7 @@ namespace kl {
 			else {
 				WindowStart();
 				while (IsWindow(hwnd)) {
-					GetMessage(&wndMsg, hwnd, 0, 0);
+					GetMessageW(&wndMsg, hwnd, 0, 0);
 					HandleMessage();
 					WindowUpdate();
 				}
@@ -118,14 +118,14 @@ namespace kl {
 				wglDeleteContext(hglrc);
 				hglrc = NULL;
 			}
-			UnregisterClass(wName.c_str(), hInstance);
+			UnregisterClassW(wName.c_str(), hInstance);
 			hdc = NULL;
 			hwnd = NULL;
 		}
 
 		// Window destruction
 		void Stop() {
-			PostMessage(hwnd, WM_CLOSE, 0, 0);
+			PostMessageW(hwnd, WM_CLOSE, 0, 0);
 		}
 		~window() {
 			this->Stop();
@@ -177,7 +177,7 @@ namespace kl {
 		}
 
 	private:
-		HINSTANCE hInstance = GetModuleHandle(NULL);
+		HINSTANCE hInstance = GetModuleHandleW(NULL);
 		HWND hwnd = NULL;
 		HDC hdc = NULL;
 		HGLRC hglrc = NULL;
@@ -224,7 +224,7 @@ namespace kl {
 				break;
 
 			default:
-				DispatchMessage(&wndMsg);
+				DispatchMessageW(&wndMsg);
 				break;
 			}
 		}

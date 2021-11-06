@@ -29,8 +29,8 @@ namespace kl {
 			std::ifstream fileStream(filePath);
 			std::stringstream textBuffer;
 			if (!fileStream.is_open()) {
-				printf("Couldn't load text file \"%s\".", filePath.c_str());
-				char iHateWarnings = getchar();
+				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 			textBuffer << fileStream.rdbuf();
@@ -52,8 +52,8 @@ namespace kl {
 		static void AppendText(std::string& data, std::string filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
-				printf("Couldn't load text file \"%s\".", filePath.c_str());
-				char iHateWarnings = getchar();
+				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 
@@ -75,8 +75,8 @@ namespace kl {
 		static bytes ReadBytes(std::string filePath) {
 			std::ifstream fileStream(filePath, std::ios::binary);
 			if (!fileStream.is_open()) {
-				printf("Couldn't load file \"%s\".", filePath.c_str());
-				char iHateWarnings = getchar();
+				printf("Couldn't load file \"%s\".\n", filePath.c_str());
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 			fileStream.seekg(0, std::ios::end);
@@ -102,8 +102,8 @@ namespace kl {
 		static void AppendBytes(bytes& data, std::string filePath, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
-				printf("Couldn't load file \"%s\".", filePath.c_str());
-				char iHateWarnings = getchar();
+				printf("Couldn't load file \"%s\".\n", filePath.c_str());
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 

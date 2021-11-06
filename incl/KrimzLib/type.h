@@ -205,17 +205,15 @@ namespace kl {
 
 /* OPENCL */
 namespace kl {
-	#ifdef _WIN32
 	typedef void* cpumem;
 	typedef cl_mem gpumem;
 	typedef cl_program clprogram;
 	typedef cl_kernel clkernel;
-	#endif
 }
 
 /* OPENGL */
 namespace kl {
-	typedef unsigned int textureid;
+	typedef unsigned int texture;
 }
 
 /* WINDOW */
@@ -249,7 +247,7 @@ namespace kl {
 	struct gameobject {
 		// Visual
 		bool visible = true;
-		textureid texture = 0;
+		texture texture = 0;
 		std::vector<triangle> triangles = {};
 
 		// Geometry
