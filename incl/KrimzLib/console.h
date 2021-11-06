@@ -45,8 +45,8 @@ namespace kl {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
 			return {
-				int(csbi.srWindow.Right - csbi.srWindow.Left + 1),
-				int(csbi.srWindow.Bottom - csbi.srWindow.Top + 1)
+				uint32(csbi.srWindow.Right - csbi.srWindow.Left + 1),
+				uint32(csbi.srWindow.Bottom - csbi.srWindow.Top + 1)
 			};
 		}
 
@@ -54,13 +54,16 @@ namespace kl {
 		static size GetBufferSize() {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
-			return { csbi.dwSize.X, csbi.dwSize.Y };
+			return {
+				uint32(csbi.dwSize.X),
+				uint32(csbi.dwSize.Y)
+			};
 		}
 
 		// Changes the console size
 		static void SetSize(size size) {
 			SetBufferSize(size);
-			SMALL_RECT consoleRect = { 0, 0, (short)size.width - 1, (short)size.height - 1 };
+			SMALL_RECT consoleRect = { 0, 0, SHORT(size.width - 1), SHORT(size.height - 1) };
 			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
 		}
 
@@ -74,8 +77,8 @@ namespace kl {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
-			cfi.dwFontSize.X = size.width;
-			cfi.dwFontSize.Y = size.height;
+			cfi.dwFontSize.X = (SHORT)size.width;
+			cfi.dwFontSize.Y = (SHORT)size.height;
 			cfi.FontFamily = FF_DONTCARE;
 			cfi.FontWeight = FW_NORMAL;
 			wcscpy(cfi.FaceName, convert::ToWString(fontName).c_str());
@@ -143,7 +146,7 @@ namespace kl {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Print(size data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m", textColor.r, textColor.g, textColor.b, data.width, data.height);
+			printf("\033[38;2;%d;%d;%dmw: %u h: %u\033[0m", textColor.r, textColor.g, textColor.b, data.width, data.height);
 		}
 		static void Print(point data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
@@ -184,7 +187,7 @@ namespace kl {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void Println(size data, color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmw: %d h: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.width, data.height);
+			printf("\033[38;2;%d;%d;%dmw: %u h: %u\033[0m\n", textColor.r, textColor.g, textColor.b, data.width, data.height);
 		}
 		static void Println(point data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);

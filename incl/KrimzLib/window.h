@@ -40,7 +40,7 @@ namespace kl {
 
 			// Create window
 			DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
-			RECT adjustedWindowSize = { 0, 0, size.width, size.height };
+			RECT adjustedWindowSize = { 0, 0, (LONG)size.width, (LONG)size.height };
 			AdjustWindowRect(&adjustedWindowSize, windowStyle, FALSE);
 			size.width = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
@@ -146,7 +146,7 @@ namespace kl {
 		size GetSize() {
 			RECT clientArea = {};
 			GetClientRect(hwnd, &clientArea);
-			return { clientArea.right - clientArea.left, clientArea.bottom - clientArea.top };
+			return { uint32(clientArea.right - clientArea.left), uint32(clientArea.bottom - clientArea.top) };
 		}
 		int GetWidth() {
 			return GetSize().width;
@@ -170,7 +170,7 @@ namespace kl {
 		void DisplayImage(image& toDraw, point position = { 0, 0 }) {
 			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
-			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetRawData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -(int)toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetRawData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
 		void DisplayImage(image&& toDraw, point position = { 0, 0 }) {
 			DisplayImage(toDraw, position);

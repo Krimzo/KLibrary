@@ -4,12 +4,6 @@
 namespace kl {
 	class time {
 	public:
-		// Constructor
-		time() {
-			QueryPerformanceCounter(&counterLast);
-			QueryPerformanceCounter(&stopwatchLast);
-		}
-
 		// Loads the current pc frequency
 		static void LoadPCFrequency() {
 			LARGE_INTEGER counterTempFreq;
@@ -40,13 +34,28 @@ namespace kl {
 			return (staticStopwatchNow.QuadPart - staticStopwatchLast.QuadPart) / PCFrequency;
 		}
 
-		// Sleeps for the given time
+		// Waits for the given time in seconds
 		static void Wait(double seconds) {
 			LARGE_INTEGER sleepCounterStart = {}, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
 			do {
 				QueryPerformanceCounter(&sleepCounter);
 			} while (((sleepCounter.QuadPart - sleepCounterStart.QuadPart) / PCFrequency) < seconds);
+		}
+
+		// Constructor
+		time() {
+			QueryPerformanceCounter(&counterLast);
+			QueryPerformanceCounter(&stopwatchLast);
+		}
+
+		// Returns a time since the the last GetElapsed() call
+		double GetElapsed() {
+			LARGE_INTEGER counterNow;
+			QueryPerformanceCounter(&counterNow);
+			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
+			counterLast = counterNow;
+			return time;
 		}
 
 		// Resets the stopwatch to 0 seconds
@@ -59,15 +68,6 @@ namespace kl {
 			LARGE_INTEGER stopwatchNow;
 			QueryPerformanceCounter(&stopwatchNow);
 			return (stopwatchNow.QuadPart - stopwatchLast.QuadPart) / PCFrequency;
-		}
-
-		// Returns a time since the the last GetElapsed() call
-		double GetElapsed() {
-			LARGE_INTEGER counterNow;
-			QueryPerformanceCounter(&counterNow);
-			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
-			counterLast = counterNow;
-			return time;
 		}
 
 	private:

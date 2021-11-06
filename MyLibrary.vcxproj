@@ -159,8 +159,7 @@
     <ClInclude Include="incl\KrimzLib\incl\OpenGL\khrplatform.h" />
     <ClInclude Include="incl\KrimzLib\literal.h" />
     <ClInclude Include="incl\KrimzLib\math.h" />
-    <ClInclude Include="incl\KrimzLib\net.h" />
-    <ClInclude Include="incl\KrimzLib\opencl.h" />
+    <ClInclude Include="incl\KrimzLib\tcp.h" />
     <ClInclude Include="incl\KrimzLib\opengl.h" />
     <ClInclude Include="incl\KrimzLib\random.h" />
     <ClInclude Include="incl\KrimzLib\string.h" />
@@ -172,6 +171,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

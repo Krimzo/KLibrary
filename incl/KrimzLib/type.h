@@ -17,8 +17,8 @@ namespace kl {
 /* MATH */
 namespace kl {
 	struct size {
-		int width = 0;
-		int height = 0;
+		uint32 width = 0;
+		uint32 height = 0;
 	};
 
 	struct point {
@@ -201,14 +201,6 @@ namespace kl {
 			return { r / 255.0, g / 255.0, b / 255.0 };
 		}
 	};
-}
-
-/* OPENCL */
-namespace kl {
-	typedef void* cpumem;
-	typedef cl_mem gpumem;
-	typedef cl_program clprogram;
-	typedef cl_kernel clkernel;
 }
 
 /* OPENGL */

@@ -20,7 +20,7 @@ namespace kl {
 			Resize(arrayToCopy.Size());
 
 			// Copy the data
-			for(uint64 i = 0; i < arrayToCopy.Size(); i++) {
+			for (uint64 i = 0; i < arrayToCopy.Size(); i++) {
 				arrayData = arrayToCopy[i];
 			}
 		}
@@ -32,7 +32,7 @@ namespace kl {
 			Resize(arrayToCopy.Size());
 
 			// Copy the data
-			for(uint64 i = 0; i < arrayToCopy.Size(); i++) {
+			for (uint64 i = 0; i < arrayToCopy.Size(); i++) {
 				arrayData = arrayToCopy[i];
 			}
 		}
@@ -41,23 +41,20 @@ namespace kl {
 			Resize(listOfElements.size());
 
 			// Copy data from the initialiser list to the array memory
-			for(uint64 i = 0; i < listOfElements.size(); i++) {
+			for (uint64 i = 0; i < listOfElements.size(); i++) {
 				arrayData[i] = listOfElements.begin()[i];
 			}
 		}
 		~array() {
-			if(arrayData) {
-				delete[] arrayData;
-				arrayData = NULL;
-			}
+			delete[] arrayData;
 		}
 
 		// Operator overloading
 		T& operator [] (uint64 index) {
 			// Check if the index is out of the array bounds
-			if(index > arraySize - 1) {
+			if (index > arraySize - 1) {
 				// Check if the growth is enabled
-				if(!canGrow) {
+				if (!canGrow) {
 					printf("Error. Trying to access memory outside the non growing array\n");
 					kl::console::WaitFor(' ', true);
 					exit(69);
@@ -78,19 +75,28 @@ namespace kl {
 			Resize(arrayToCopy.Size());
 
 			// Copy the data
-			for(uint64 i = 0; i < arrayToCopy.Size(); i++) {
+			for (uint64 i = 0; i < arrayToCopy.Size(); i++) {
 				arrayData = arrayToCopy[i];
 			}
 		}
 		void operator = (kl::array<T>&& arrayToCopy) {
-			operator=(arrayToCopy);
+			// Update properties
+			canGrow = arrayToCopy.Growth();
+
+			// Resize
+			Resize(arrayToCopy.Size());
+
+			// Copy the data
+			for (uint64 i = 0; i < arrayToCopy.Size(); i++) {
+				arrayData = arrayToCopy[i];
+			}
 		}
 		void operator = (std::initializer_list<T> listOfElements) {
 			// Resize
 			Resize(listOfElements.size());
 
 			// Copy data from the initialiser list to the array memory
-			for(uint64 i = 0; i < listOfElements.size(); i++) {
+			for (uint64 i = 0; i < listOfElements.size(); i++) {
 				arrayData[i] = listOfElements.begin()[i];
 			}
 		}
@@ -98,7 +104,7 @@ namespace kl {
 			Resize(arraySize + 1);
 		}
 		void operator -- (int ignore) {
-			if(arraySize) {
+			if (arraySize) {
 				Resize(arraySize - 1);
 			}
 		}
@@ -116,10 +122,17 @@ namespace kl {
 		void Resize(uint64 newSize) {
 			// Allocate temp memory
 			T* tempMemory = new T[newSize];
-			if(!tempMemory) {
+			if (!tempMemory) {
 				printf("Couldn't allocate %llu bytes of memory..\n", newSize * sizeof(T));
 				console::WaitFor(' ', true);
                 exit(-1);
+			}
+
+			// Set newly allocated addresses to the default values
+			if (newSize > arraySize) {
+				for (uint64 i = arraySize; i < newSize; i++) {
+					tempMemory[i] = {};
+				}
 			}
 
 			// Copy the data from old to temp memory
@@ -127,17 +140,15 @@ namespace kl {
 				tempMemory[i] = arrayData[i];
 			}
 
-			// Set newly allocated addresses to the default values
-			if(newSize > arraySize) {
-				for (uint64 i = arraySize; i < newSize; i++) {
-					tempMemory[i] = {};
-				}
-			}
-
 			// Free old memory and update array properties
 			delete[] arrayData;
 			arrayData = tempMemory;
 			arraySize = newSize;
+		}
+
+		// Sets the size to 0
+		void Clear() {
+			Resize(0);
 		}
 
 		// Returns the first element
@@ -177,11 +188,6 @@ namespace kl {
 			Insert(index, toInsert);
 		}
 
-		// Sets the size to 0
-		void Clear() {
-			Resize(0);
-		}
-
 		// Fills the whole(or one part of) array with the given value
 		void Fill(T value) {
 			for (uint64 i=0; i<arraySize; i++) {
@@ -195,7 +201,7 @@ namespace kl {
 			}
 
 			// Setting the data
-			for (uint64 i=startInclusive; i<endExclusive; i++) {
+			for (uint64 i = startInclusive; i < endExclusive; i++) {
 				arrayData[i] = value;
 			}
 		}
@@ -203,8 +209,8 @@ namespace kl {
 		// Returns the number of found elements
 		uint64 Count(T toCount) {
 			uint64 counter = 0;
-			for(uint64 i=0; i<arraySize; i++) {
-				if(arrayData[i] == toCount) {
+			for (uint64 i=0; i<arraySize; i++) {
+				if (arrayData[i] == toCount) {
 					counter++;
 				}
 			}
@@ -213,8 +219,8 @@ namespace kl {
 
         // Returns the index of the first found element or -1 if the element was not found
         int64 Find(T toFind) {
-            for(uint64 i=0; i<arraySize; i++) {
-                if(arrayData[i] == toFind) {
+            for (uint64 i=0; i<arraySize; i++) {
+                if (arrayData[i] == toFind) {
                     return (int64)i;
                 }
             }
@@ -224,8 +230,8 @@ namespace kl {
 		// Returns an array of indexes of all found elements
 		kl::array<uint64> FindAll(T toFind) {
 			kl::array<uint64> indexArray;
-			for(uint64 i=0; i<arraySize; i++) {
-                if(arrayData[i] == toFind) {
+			for (uint64 i=0; i<arraySize; i++) {
+                if (arrayData[i] == toFind) {
                     indexArray <= i;
                 }
             }
@@ -236,8 +242,8 @@ namespace kl {
         // Returns the number of replaced elements
         uint64 Replace(T toReplace, T with) {
             uint64 replaceCounter = 0;
-            for(uint64 i=0; i<arraySize; i++) {
-                if(arrayData[i] == toReplace) {
+            for (uint64 i=0; i<arraySize; i++) {
+                if (arrayData[i] == toReplace) {
                     arrayData[i] = with;
                     replaceCounter++;
                 }
@@ -247,7 +253,7 @@ namespace kl {
 
 		// Executes a function on each array element
 		void RunOnEach(std::function<void(T& element)> toExecute) {
-			for(uint64 i=0; i<arraySize; i++) {
+			for (uint64 i=0; i<arraySize; i++) {
 				toExecute(arrayData[i]);
 			}
 		}

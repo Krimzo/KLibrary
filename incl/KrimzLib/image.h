@@ -30,22 +30,22 @@ namespace kl {
 		}
 
 		// Getters
-		int GetWidth() {
+		uint32 GetWidth() {
 			return width;
 		}
-		int GetHeight() {
+		uint32 GetHeight() {
 			return height;
 		}
 		size GetSize() {
 			return { width, height };
 		}
 		color GetPixel(point point) {
-			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
+			if (point.x >= 0 && point.x < (int)width && point.y >= 0 && point.y < (int)height) {
 				return pixels[point.y * size_t(width) + point.x];
 			}
 			return { 0, 0, 0 };
 		}
-		size_t GetPixelCount() {
+		uint64 GetPixelCount() {
 			return pixels.size();
 		}
 		color* GetRawData() {
@@ -53,10 +53,10 @@ namespace kl {
 		}
 
 		// Setters
-		void SetWidth(int width) {
+		void SetWidth(uint32 width) {
 			SetSize({ width, height });
 		}
-		void SetHeight(int height) {
+		void SetHeight(uint32 height) {
 			SetSize({ width, height });
 		}
 		void SetSize(size size) {
@@ -65,7 +65,7 @@ namespace kl {
 			pixels.resize(size_t(width) * size_t(height));
 		}
 		void SetPixel(point point, color color) {
-			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
+			if (point.x >= 0 && point.x < (int)width && point.y >= 0 && point.y < (int)height) {
 				pixels[point.y * size_t(width) + point.x] = color;
 			}
 		}
@@ -84,12 +84,12 @@ namespace kl {
 				}
 
 				// Data saving
-				SetSize({ (int)loadedBitmap.GetWidth(), (int)loadedBitmap.GetHeight() });
-				for (int y = 0; y < height; y++) {
-					for (int x = 0; x < width; x++) {
+				SetSize({ loadedBitmap.GetWidth(), loadedBitmap.GetHeight() });
+				for (uint32 y = 0; y < height; y++) {
+					for (uint32 x = 0; x < width; x++) {
 						Gdiplus::Color tempPixel;
-						loadedBitmap.GetPixel(x, y, &tempPixel);
-						SetPixel({ x, y }, { tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB() });
+						loadedBitmap.GetPixel((int)x, (int)y, &tempPixel);
+						SetPixel({ (int)x, (int)y }, { tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB() });
 					}
 				}
 			}
@@ -125,10 +125,10 @@ namespace kl {
 
 				// Data transfer and saving to file
 				Gdiplus::Bitmap tempBitmap(width, height, PixelFormat24bppRGB);
-				for (int y = 0; y < height; y++) {
-					for (int x = 0; x < width; x++) {
-						color tempPixel = GetPixel({ x, y });
-						tempBitmap.SetPixel(x, y, { tempPixel.r, tempPixel.g, tempPixel.b });
+				for (uint32 y = 0; y < height; y++) {
+					for (uint32 x = 0; x < width; x++) {
+						color tempPixel = GetPixel({ (int)x, (int)y });
+						tempBitmap.SetPixel((int)x, (int)y, { tempPixel.r, tempPixel.g, tempPixel.b });
 					}
 				}
 				tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, NULL);
@@ -137,19 +137,16 @@ namespace kl {
 
 		// Fils the image with solid color
 		void FillSolid(color color) {
-			std::fill(pixels.begin(), pixels.end(), color);
-		}
-
-		// Resets the byte values
-		void FastClear(byte value = 0) {
-			memset(&pixels[0], value, pixels.size() * sizeof(color));
+			for (uint32 i = 0; i < pixels.size(); i++) {
+				pixels[i] = color;
+			}
 		}
 
 		// Draws a line between 2 points
 		void DrawLine(point a, point b, color c) {
 			// Calculations
 			int len = max(abs(b.x - a.x), abs(b.y - a.y));
-			vec2 incr = { double(b.x - a.x) / len, double(b.y - a.y) / len };
+			vec2 incr = { ((double)b.x - (double)a.x) / len, ((double)b.y - (double)a.y) / len };
 
 			// Drawing
 			vec2 drawPoint = { (double)a.x, (double)a.y };
@@ -182,13 +179,13 @@ namespace kl {
 		void ToConsole() {
 			// Calculations
 			size consoleSize = { console::GetSize().width, console::GetSize().height - 1 };
-			int pixelWidthIncrement = width / consoleSize.width;
-			int pixelHeightIncrement = height / consoleSize.height;
+			uint32 pixelWidthIncrement = width / consoleSize.width;
+			uint32 pixelHeightIncrement = height / consoleSize.height;
 
 			// Printing
-			for (int y = 0; y < consoleSize.height; y++) {
-				for (int x = 0; x < consoleSize.width; x++) {
-					console::PrintCell(GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement }));
+			for (uint32 y = 0; y < consoleSize.height; y++) {
+				for (uint32 x = 0; x < consoleSize.width; x++) {
+					console::PrintCell(GetPixel({ int(x * pixelWidthIncrement), int(y * pixelHeightIncrement) }));
 				}
 			}
 		}
@@ -198,19 +195,19 @@ namespace kl {
 			static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 
 			// Calculations
-			int pixelWidthIncrement = width / frameSize.width;
-			int pixelHeightIncrement = height / frameSize.height;
+			uint32 pixelWidthIncrement = width / frameSize.width;
+			uint32 pixelHeightIncrement = height / frameSize.height;
 
 			// Processing
 			std::stringstream frame;
-			for (int y = 0; y < frameSize.height; y++) {
-				for (int x = 0; x < frameSize.width; x++) {
+			for (uint32 y = 0; y < frameSize.height; y++) {
+				for (uint32 x = 0; x < frameSize.width; x++) {
 					// Pixels to grayscale
-					color currentPixel = GetPixel({ x * pixelWidthIncrement, y * pixelHeightIncrement });
-					int grayScaledPixel = (int)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
+					color currentPixel = GetPixel({ int(x * pixelWidthIncrement), int(y * pixelHeightIncrement) });
+					uint32 grayScaledPixel = (uint32)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
 
 					// Grayscaled values to ASCII
-					int saturationLevel = (int)((grayScaledPixel / 255.0) * 9);
+					uint32 saturationLevel = (uint32)((grayScaledPixel / 255.0) * 9);
 					frame << asciiPixelTable[saturationLevel];
 				}
 				frame << '\n';
@@ -219,13 +216,13 @@ namespace kl {
 		}
 
 	private:
-		int width = 0;
-		int height = 0;
-		std::vector<color> pixels = {};
-
 		static bool gdipInitialised;
 		static ULONG_PTR gdiplusToken;
 		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+
+		uint32 width = 0;
+		uint32 height = 0;
+		std::vector<color> pixels = {};
 	};
 	bool image::gdipInitialised = false;
 	ULONG_PTR image::gdiplusToken = 0;

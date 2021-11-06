@@ -16,10 +16,11 @@ namespace kl {
 
 		// Converts a byte array to a string
 		static std::string ToString(bytes& data) {
-			std::string stringBuffer;
-			stringBuffer.resize(data.size());
-			memcpy(&stringBuffer[0], &data[0], data.size());
-			return stringBuffer;
+			std::stringstream ss;
+			for (uint64 i = 0; i < data.size(); i++) {
+				ss << (char)data[i];
+			}
+			return ss.str();
 		}
 		static std::string ToString(bytes&& data) {
 			return ToString(data);
@@ -28,7 +29,9 @@ namespace kl {
 		// Converts a string to a bytes array
 		static bytes ToBytes(std::string& data) {
 			bytes tempBytes(data.size());
-			memcpy(&tempBytes[0], &data[0], data.size());
+			for (uint64 i = 0; i < data.size(); i++) {
+				tempBytes[i] = (byte)data[i];
+			}
 			return tempBytes;
 		}
 		static bytes ToBytes(std::string&& data) {

@@ -21,7 +21,6 @@
 #include <windowsx.h>
 #include <shlwapi.h>
 #include <gdiplus.h>
-#include "KrimzLib/incl/OpenCL/cl.h"
 #include "KrimzLib/incl/OpenGL/glad.h"
 #include <gl/GLU.h>
 
@@ -40,8 +39,8 @@
 #include "KrimzLib/file.h"
 #include "KrimzLib/thread.h"
 #include "KrimzLib/image.h"
-#include "KrimzLib/net.h"
-#include "KrimzLib/opencl.h"
+#include "KrimzLib/web.h"
+#include "KrimzLib/tcp.h"
 #include "KrimzLib/opengl.h"
 #include "KrimzLib/window.h"
 #include "KrimzLib/engine.h"
@@ -55,13 +54,18 @@
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
-// Library intialiser
+// Library intialiser and unintialiser
 namespace kl {
 	void InitLib() {
-		random::SetSeed();
+		random::NewSeed();
 		time::LoadPCFrequency();
 		console::EnableRGB();
 		image::InitGdiPlus();
-		net::InitWinSock();
+		tcp::InitWinSock();
+	}
+
+	void UninitLib() {
+		image::UninitGdiPlus();
+		tcp::UninitWinSock();
 	}
 }

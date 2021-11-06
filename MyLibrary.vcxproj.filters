@@ -48,9 +48,6 @@
     <ClInclude Include="incl\KrimzLib\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\opencl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="incl\KrimzLib\opengl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,7 +72,7 @@
     <ClInclude Include="incl\KrimzLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\net.h">
+    <ClInclude Include="incl\KrimzLib\tcp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\incl\OpenCL\cl_version.h">
@@ -98,5 +95,8 @@
     <ClCompile Include="src\Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
   </ItemGroup>
 </Project>

@@ -5,13 +5,28 @@ namespace kl {
 	class random {
 	public:
 		// Sets the seed for random number generation
-		static void SetSeed() {
+		static void NewSeed() {
 			srand((unsigned)std::time(NULL));
+		}
+
+		// Returns a random bool
+		static bool Bool() {
+			return rand() % 2;
 		}
 
 		// Returns a random integer
 		static int Int(int startInclusive, int endExclusive) {
 			return rand() % (endExclusive - startInclusive) + startInclusive;
+		}
+
+		// Returns a random float
+		static float Float(float startInclusive, float endExclusive) {
+			return startInclusive + (float)rand() / float(RAND_MAX / (endExclusive - startInclusive));
+		}
+
+		// Returns a random double
+		static double Double(double startInclusive, double endExclusive) {
+			return startInclusive + (double)rand() / double(RAND_MAX / (endExclusive - startInclusive));
 		}
 
 		// Returns a random color
