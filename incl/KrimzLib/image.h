@@ -175,21 +175,6 @@ namespace kl {
 			}
 		}
 
-		// Prints the image to the console
-		void ToConsole() {
-			// Calculations
-			size consoleSize = { console::GetSize().width, console::GetSize().height - 1 };
-			uint32 pixelWidthIncrement = width / consoleSize.width;
-			uint32 pixelHeightIncrement = height / consoleSize.height;
-
-			// Printing
-			for (uint32 y = 0; y < consoleSize.height; y++) {
-				for (uint32 x = 0; x < consoleSize.width; x++) {
-					console::PrintCell(GetPixel({ int(x * pixelWidthIncrement), int(y * pixelHeightIncrement) }));
-				}
-			}
-		}
-
 		// Converts an image to an ASCII frame
 		std::string ToASCII(size frameSize) {
 			static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };

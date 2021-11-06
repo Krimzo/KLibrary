@@ -166,6 +166,12 @@ namespace kl {
 		static void Print(std::string&& data, color textColor = constant::colors::white) {
 			Print(data, textColor);
 		}
+		static void Print(bytes& data, color textColor = constant::colors::white) {
+			Print(convert::ToString(data), textColor);
+		}
+		static void Print(bytes&& data, color textColor = constant::colors::white) {
+			Print(convert::ToString(data), textColor);
+		}
 
 		// Prints RGB data with new line at the end
 		static void Println(char data, color textColor = constant::colors::white) {
@@ -207,10 +213,11 @@ namespace kl {
 		static void Println(std::string&& data, color textColor = constant::colors::white) {
 			Println(data, textColor);
 		}
-
-		// Prints RGB block
-		static void PrintCell(color blockColor) {
-			printf("\033[48;2;%d;%d;%dm \033[0m", blockColor.r, blockColor.g, blockColor.b);
+		static void Println(bytes& data, color textColor = constant::colors::white) {
+			Println(convert::ToString(data), textColor);
+		}
+		static void Println(bytes&& data, color textColor = constant::colors::white) {
+			Println(convert::ToString(data), textColor);
 		}
 
 	private:
