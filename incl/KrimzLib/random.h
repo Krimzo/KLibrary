@@ -29,6 +29,23 @@ namespace kl {
 			return startInclusive + (double)rand() / double(RAND_MAX / (endExclusive - startInclusive));
 		}
 
+		// Returns a random letter
+		static char Letter(bool upperCase = false) {
+			if (upperCase) {
+				return (char)random::Int(65, 91);
+			}
+			return (char)random::Int(97, 123);
+		}
+
+		// Returns a random string
+		static std::string String(uint32 size) {
+			std::stringstream ss;
+			for (uint32 i = 0; i < size; i++) {
+				ss << random::Letter(random::Bool());
+			}
+			return ss.str();
+		}
+
 		// Returns a random color
 		static color Color() {
 			return { (byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256) };
