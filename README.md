@@ -1,2 +1,2 @@
-# Cpp_MyLibrary
-My C++ library full of random stuff
+# My C++ library
+Full of random stuff
