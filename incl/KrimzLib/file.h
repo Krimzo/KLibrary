@@ -39,17 +39,17 @@ namespace kl {
 		}
 
 		// Writes text to a text file
-		static void WriteText(std::string& data, std::string filePath) {
+		static void WriteText(std::string filePath, std::string& data) {
 			std::ofstream fileStream(filePath);
 			fileStream << data;
 			fileStream.close();
 		}
-		static void WriteText(std::string&& data, std::string filePath) {
-			WriteText(data, filePath);
+		static void WriteText(std::string filePath, std::string&& data) {
+			WriteText(filePath, data);
 		}
 
 		// Appends text to a text file
-		static void AppendText(std::string& data, std::string filePath, int position = -1) {
+		static void AppendText(std::string filePath, std::string& data, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
@@ -67,8 +67,8 @@ namespace kl {
 			fileStream << data;
 			fileStream.close();
 		}
-		static void AppendText(std::string&& data, std::string filePath, int position = -1) {
-			AppendText(data, filePath, position);
+		static void AppendText(std::string filePath, std::string&& data, int position = -1) {
+			AppendText(filePath, data, position);
 		}
 
 		// Returns a filedata from a given file
@@ -89,17 +89,17 @@ namespace kl {
 		}
 
 		// Writes bytes to a file
-		static void WriteBytes(bytes& data, std::string filePath) {
+		static void WriteBytes(std::string filePath, bytes& data) {
 			std::ofstream fileStream(filePath, std::ios::binary);
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
-		static void WriteBytes(bytes&& data, std::string filePath) {
-			WriteBytes(data, filePath);
+		static void WriteBytes(std::string filePath, bytes&& data) {
+			WriteBytes(filePath, data);
 		}
 
 		// Appends bytes to a file
-		static void AppendBytes(bytes& data, std::string filePath, int position = -1) {
+		static void AppendBytes(std::string filePath, bytes& data, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load file \"%s\".\n", filePath.c_str());
@@ -117,8 +117,8 @@ namespace kl {
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
-		static void AppendBytes(bytes&& data, std::string filePath, int position = -1) {
-			AppendBytes(data, filePath, position);
+		static void AppendBytes(std::string filePath, bytes&& data, int position = -1) {
+			AppendBytes(filePath, data, position);
 		}
 
 		// Deletes a given file

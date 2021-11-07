@@ -40,7 +40,7 @@ namespace kl {
 
 		// Downloads data from the website and saves it in a file
 		static void DownloadToFile(std::string url, std::string fileName) {
-			file::WriteBytes(GetWebsiteData(url), fileName);
+			file::WriteBytes(fileName, GetWebsiteData(url));
 		}
 	};
 }

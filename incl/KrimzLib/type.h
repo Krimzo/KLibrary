@@ -182,11 +182,11 @@ namespace kl {
 	};
 
 	struct color {
+		// Had to flip R and B because the winapi uses BGR
 		byte b;
 		byte g;
 		byte r;
 
-		// Had to flip R and B because the winapi uses BGR
 		color(byte r = 0, byte g = 0, byte b = 0) {
 			this->r = r;
 			this->g = g;

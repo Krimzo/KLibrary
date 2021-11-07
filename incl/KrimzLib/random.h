@@ -14,6 +14,11 @@ namespace kl {
 			return rand() % 2;
 		}
 
+		// Returns a random byte
+		static byte Byte() {
+			return byte(rand() % 256);
+		}
+
 		// Returns a random integer
 		static int Int(int startInclusive, int endExclusive) {
 			return rand() % (endExclusive - startInclusive) + startInclusive;
@@ -48,13 +53,13 @@ namespace kl {
 
 		// Returns a random color
 		static color Color() {
-			return { (byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256) };
+			return { random::Byte(), random::Byte(), random::Byte() };
 		}
 		static colorf Colorf() {
-			return color((byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256));
+			return random::Color();
 		}
 		static colord Colord() {
-			return color((byte)Int(0, 256), (byte)Int(0, 256), (byte)Int(0, 256));
+			return random::Color();
 		}
 	};
 }

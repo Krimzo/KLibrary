@@ -31,42 +31,42 @@ namespace kl {
 
 		// Getters
 		uint32 GetWidth() {
-			return width;
+			return imageWidth;
 		}
 		uint32 GetHeight() {
-			return height;
+			return imageHeight;
 		}
 		size GetSize() {
-			return { width, height };
+			return { imageWidth, imageHeight };
 		}
 		color GetPixel(point point) {
-			if (point.x >= 0 && point.x < (int)width && point.y >= 0 && point.y < (int)height) {
-				return pixels[point.y * size_t(width) + point.x];
+			if (point.x >= 0 && point.x < (int)imageWidth && point.y >= 0 && point.y < (int)imageHeight) {
+				return imagePixels[point.y * size_t(imageWidth) + point.x];
 			}
 			return { 0, 0, 0 };
 		}
 		uint64 GetPixelCount() {
-			return pixels.size();
+			return imagePixels.size();
 		}
 		color* GetRawData() {
-			return &pixels[0];
+			return &imagePixels[0];
 		}
 
 		// Setters
 		void SetWidth(uint32 width) {
-			SetSize({ width, height });
+			SetSize({ width, imageHeight });
 		}
 		void SetHeight(uint32 height) {
-			SetSize({ width, height });
+			SetSize({ imageWidth, height });
 		}
 		void SetSize(size size) {
-			width = size.width;
-			height = size.height;
-			pixels.resize(size_t(width) * size_t(height));
+			imageWidth = size.width;
+			imageHeight = size.height;
+			imagePixels.resize(size_t(imageWidth) * size_t(imageHeight));
 		}
 		void SetPixel(point point, color color) {
-			if (point.x >= 0 && point.x < (int)width && point.y >= 0 && point.y < (int)height) {
-				pixels[point.y * size_t(width) + point.x] = color;
+			if (point.x >= 0 && point.x < (int)imageWidth && point.y >= 0 && point.y < (int)imageHeight) {
+				imagePixels[point.y * size_t(imageWidth) + point.x] = color;
 			}
 		}
 
@@ -83,10 +83,10 @@ namespace kl {
 					exit(69);
 				}
 
-				// Data saving
+				// Pixel data loading
 				SetSize({ loadedBitmap.GetWidth(), loadedBitmap.GetHeight() });
-				for (uint32 y = 0; y < height; y++) {
-					for (uint32 x = 0; x < width; x++) {
+				for (uint32 y = 0; y < imageHeight; y++) {
+					for (uint32 x = 0; x < imageWidth; x++) {
 						Gdiplus::Color tempPixel;
 						loadedBitmap.GetPixel((int)x, (int)y, &tempPixel);
 						SetPixel({ (int)x, (int)y }, { tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB() });
@@ -103,30 +103,44 @@ namespace kl {
 			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 
 			if (gdipInitialised) {
-				// Checking the file extension
+				// Checking the file extension is supported
 				const CLSID* formatToUse = NULL;
 				std::string fileExtension = string::GetFileExtension(fileName);
-				if (fileExtension == ".bmp") {
+				if (fileExtension == "bmp") {
 					formatToUse = &bmpEncoderCLSID;
 				}
-				else if (fileExtension == ".jpg") {
+				else if (fileExtension == "jpg") {
 					formatToUse = &jpgEncoderCLSID;
 				}
-				else if (fileExtension == ".gif") {
+				else if (fileExtension == "gif") {
 					formatToUse = &gifEncoderCLSID;
 				}
-				else if (fileExtension == ".png") {
+				else if (fileExtension == "png") {
 					formatToUse = &pngEncoderCLSID;
+				}
+				else if (fileExtension == "txt") {
+					std::stringstream ss;
+					for (uint32 y = 0; y < imageHeight; y++) {
+						for (uint32 x = 0; x < imageWidth; x++) {
+							ss <<
+								x << " " << y << " => " <<
+								(int)imagePixels[(uint64)y * imageWidth + x].r << " " <<
+								(int)imagePixels[(uint64)y * imageWidth + x].g << " " <<
+								(int)imagePixels[(uint64)y * imageWidth + x].b << "\n";
+						}
+					}
+					file::WriteText(fileName, ss.str());
+					return;
 				}
 				else {
 					printf("File extension \"%s\" is not supported!\n", fileExtension.c_str());
 					return;
 				}
 
-				// Data transfer and saving to file
-				Gdiplus::Bitmap tempBitmap(width, height, PixelFormat24bppRGB);
-				for (uint32 y = 0; y < height; y++) {
-					for (uint32 x = 0; x < width; x++) {
+				// Pixel data transfer and saving to file
+				Gdiplus::Bitmap tempBitmap(imageWidth, imageHeight, PixelFormat24bppRGB);
+				for (uint32 y = 0; y < imageHeight; y++) {
+					for (uint32 x = 0; x < imageWidth; x++) {
 						color tempPixel = GetPixel({ (int)x, (int)y });
 						tempBitmap.SetPixel((int)x, (int)y, { tempPixel.r, tempPixel.g, tempPixel.b });
 					}
@@ -137,8 +151,8 @@ namespace kl {
 
 		// Fils the image with solid color
 		void FillSolid(color color) {
-			for (uint32 i = 0; i < pixels.size(); i++) {
-				pixels[i] = color;
+			for (uint32 i = 0; i < imagePixels.size(); i++) {
+				imagePixels[i] = color;
 			}
 		}
 
@@ -180,8 +194,8 @@ namespace kl {
 			static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 
 			// Calculations
-			uint32 pixelWidthIncrement = width / frameSize.width;
-			uint32 pixelHeightIncrement = height / frameSize.height;
+			uint32 pixelWidthIncrement = imageWidth / frameSize.width;
+			uint32 pixelHeightIncrement = imageHeight / frameSize.height;
 
 			// Processing
 			std::stringstream frame;
@@ -205,9 +219,9 @@ namespace kl {
 		static ULONG_PTR gdiplusToken;
 		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 
-		uint32 width = 0;
-		uint32 height = 0;
-		std::vector<color> pixels = {};
+		uint32 imageWidth = 0;
+		uint32 imageHeight = 0;
+		std::vector<color> imagePixels = {};
 	};
 	bool image::gdipInitialised = false;
 	ULONG_PTR image::gdiplusToken = 0;

@@ -6,7 +6,7 @@ namespace kl {
 	public:
 		// Returns the file extension from the given file path
 		static std::string GetFileExtension(std::string filePath) {
-			size_t lastDotPos = filePath.find_last_of(".");
+			uint64 lastDotPos = filePath.find_last_of(".");
 			if(lastDotPos == std::string::npos) {
 				return "";
 			}
