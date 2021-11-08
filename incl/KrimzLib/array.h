@@ -52,7 +52,7 @@ namespace kl {
 		// Operator overloading
 		T& operator [] (uint64 index) {
 			// Check if the index is out of the array bounds
-			if (index > arraySize - 1) {
+			if (index > (arraySize - 1) || !arraySize) {
 				// Check if the growth is enabled
 				if (!canGrow) {
 					printf("Error. Trying to access memory outside the non growing array\n");
@@ -108,12 +108,6 @@ namespace kl {
 				Resize(arraySize - 1);
 			}
 		}
-		void operator += (int increment) {
-			Resize(arraySize + increment);
-		}
-		void operator -= (int increment) {
-			Resize(max(0, arraySize - increment));
-		}
 		void operator <= (T toAdd) {
 			Resize(arraySize + 1);
 			Back() = toAdd;
@@ -159,12 +153,22 @@ namespace kl {
 
 		// Returns the first element
 		T& Front() {
-			return arrayData[0];
+			if (arraySize) {
+				return arrayData[0];
+			}
+			printf("Error. Trying to access memory outside the non growing array\n");
+			kl::console::WaitFor(' ', true);
+			exit(69);
 		}
 
 		// Returns the last element
 		T& Back() {
-			return arrayData[arraySize - 1];
+			if (arraySize) {
+				return arrayData[arraySize - 1];
+			}
+			printf("Error. Trying to access memory outside the non growing array\n");
+			kl::console::WaitFor(' ', true);
+			exit(69);
 		}
 
 		// Returns the pointer to the raw data
@@ -180,12 +184,19 @@ namespace kl {
 			this->canGrow = canGrow;
 		}
 
-		// Inserts an element(or an array of elements) on the given index
+		// Inserts an array of elements on the given index
 		void Insert(uint64 index, kl::array<T>& toInsert) {
+			// Update to fit the new size
 			Resize(max(index + toInsert.Size(), arraySize + toInsert.Size()));
-			for (uint64 i = arraySize - 1; i >= index + toInsert.Size(); i--) {
-				arrayData[i] = arrayData[i - toInsert.Size()];
+			
+			// Move data by the inserted array size
+			if (arraySize) {
+				for (uint64 i = arraySize - 1; i >= index + toInsert.Size(); i--) {
+					arrayData[i] = arrayData[i - toInsert.Size()];
+				}
 			}
+
+			// Write inserted array data
 			for (uint64 i = 0; i < toInsert.Size(); i++) {
 				arrayData[i + index] = toInsert[i];
 			}
@@ -196,7 +207,7 @@ namespace kl {
 
 		// Fills the whole(or one part of) array with the given value
 		void Fill(T value) {
-			for (uint64 i=0; i<arraySize; i++) {
+			for (uint64 i = 0; i < arraySize; i++) {
 				arrayData[i] = value;
 			}
 		}
@@ -215,7 +226,7 @@ namespace kl {
 		// Returns the number of found elements
 		uint64 Count(T toCount) {
 			uint64 counter = 0;
-			for (uint64 i=0; i<arraySize; i++) {
+			for (uint64 i = 0; i < arraySize; i++) {
 				if (arrayData[i] == toCount) {
 					counter++;
 				}
@@ -225,7 +236,7 @@ namespace kl {
 
         // Returns the index of the first found element or -1 if the element was not found
         int64 Find(T toFind) {
-            for (uint64 i=0; i<arraySize; i++) {
+            for (uint64 i = 0; i < arraySize; i++) {
                 if (arrayData[i] == toFind) {
                     return (int64)i;
                 }
@@ -236,7 +247,7 @@ namespace kl {
 		// Returns an array of indexes of all found elements
 		kl::array<uint64> FindAll(T toFind) {
 			kl::array<uint64> indexArray;
-			for (uint64 i=0; i<arraySize; i++) {
+			for (uint64 i = 0; i < arraySize; i++) {
                 if (arrayData[i] == toFind) {
                     indexArray <= i;
                 }
@@ -248,7 +259,7 @@ namespace kl {
         // Returns the number of replaced elements
         uint64 Replace(T toReplace, T with) {
             uint64 replaceCounter = 0;
-            for (uint64 i=0; i<arraySize; i++) {
+            for (uint64 i = 0; i < arraySize; i++) {
                 if (arrayData[i] == toReplace) {
                     arrayData[i] = with;
                     replaceCounter++;
@@ -259,7 +270,7 @@ namespace kl {
 
 		// Executes a function on each array element
 		void RunOnEach(std::function<void(T& element)> toExecute) {
-			for (uint64 i=0; i<arraySize; i++) {
+			for (uint64 i = 0; i < arraySize; i++) {
 				toExecute(arrayData[i]);
 			}
 		}

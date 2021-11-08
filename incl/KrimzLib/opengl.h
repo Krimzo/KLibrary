@@ -49,8 +49,8 @@ namespace kl {
 		}
 
 		// Clear the frame and depth buffers
-		static void ClearBuffers(colorf color) {
-			glClearColor(color.r, color.g, color.b, 1);
+		static void ClearBuffers(colord color) {
+			glClearColor((float)color.r, (float)color.g, (float)color.b, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 

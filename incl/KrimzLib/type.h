@@ -17,8 +17,22 @@ namespace kl {
 /* MATH */
 namespace kl {
 	struct size {
-		uint32 width = 0;
-		uint32 height = 0;
+		uint32 width;
+		uint32 height;
+
+		// Constructor
+		size(uint32 width = 0, uint32 height = 0) {
+			this->width = width;
+			this->height = height;
+		}
+
+		// Operator overloading
+		bool operator == (size obj) {
+			return (width == obj.width && height == obj.height);
+		}
+		bool operator != (size obj) {
+			return (width != obj.width || height != obj.height);
+		}
 	};
 
 	struct point {
@@ -32,12 +46,6 @@ namespace kl {
 		}
 
 		// Operator overloading
-		point operator + (point obj) {
-			return { x + obj.x, y + obj.y };
-		}
-		point operator - (point obj) {
-			return { x - obj.x, y - obj.y };
-		}
 		bool operator == (point obj) {
 			return (x == obj.x && y == obj.y);
 		}
@@ -50,10 +58,18 @@ namespace kl {
 		double x;
 		double y;
 
-		// Constructor
+		// Constructors
 		vec2(double x = 0, double y = 0) {
 			this->x = x;
 			this->y = y;
+		}
+		vec2(point p) {
+			x = (double)p.x;
+			y = (double)p.y;
+		}
+		vec2(point a, point b) {
+			x = b.x - a.x;
+			y = b.y - a.y;
 		}
 
 		// Operator overloading
@@ -63,17 +79,11 @@ namespace kl {
 		vec2 operator - (vec2 obj) {
 			return { x - obj.x, y - obj.y };
 		}
-		vec2 operator * (int obj) {
-			return { x * obj, y * obj };
+		vec2 operator * (double a) {
+			return { x * a, y * a };
 		}
-		vec2 operator * (double obj) {
-			return { x * obj, y * obj };
-		}
-		vec2 operator / (int obj) {
-			return { x / obj, y / obj };
-		}
-		vec2 operator / (double obj) {
-			return { x / obj, y / obj };
+		vec2 operator / (double a) {
+			return { x / a, y / a };
 		}
 		bool operator == (vec2 obj) {
 			return (x == obj.x && y == obj.y);
@@ -120,17 +130,11 @@ namespace kl {
 		vec3 operator - (vec3 obj) {
 			return { x - obj.x, y - obj.y, z - obj.z };
 		}
-		vec3 operator * (int obj) {
-			return { x * obj, y * obj, z * obj };
+		vec3 operator * (double a) {
+			return { x * a, y * a, z * a };
 		}
-		vec3 operator * (double obj) {
-			return { x * obj, y * obj, z * obj };
-		}
-		vec3 operator / (int obj) {
-			return { x / obj, y / obj, z / obj };
-		}
-		vec3 operator / (double obj) {
-			return { x / obj, y / obj, z / obj };
+		vec3 operator / (double a) {
+			return { x / a, y / a, z / a };
 		}
 		bool operator == (vec3 obj) {
 			return (x == obj.x && y == obj.y && z == obj.z);
@@ -169,16 +173,25 @@ namespace kl {
 
 /* IMAGE */
 namespace kl {
-	struct colorf {
-		float r = 0;
-		float g = 0;
-		float b = 0;
-	};
-
 	struct colord {
-		double r = 0;
-		double g = 0;
-		double b = 0;
+		double r;
+		double g;
+		double b;
+
+		// Constructor
+		colord(double r = 0, double g = 0, double b = 0) {
+			this->r = r;
+			this->g = g;
+			this->b = b;
+		}
+
+		// Operator overloading
+		bool operator == (colord obj) {
+			return (r == obj.r && g == obj.g && b == obj.b);
+		}
+		bool operator != (colord obj) {
+			return (r != obj.r || g != obj.g || b != obj.b);
+		}
 	};
 
 	struct color {
@@ -194,11 +207,16 @@ namespace kl {
 		}
 
 		// Conversions
-		operator colorf() const {
-			return { r / 255.0f, g / 255.0f, b / 255.0f };
-		}
 		operator colord() const {
 			return { r / 255.0, g / 255.0, b / 255.0 };
+		}
+
+		// Operator overloading
+		bool operator == (color obj) {
+			return (r == obj.r && g == obj.g && b == obj.b);
+		}
+		bool operator != (color obj) {
+			return (r != obj.r || g != obj.g || b != obj.b);
 		}
 	};
 }

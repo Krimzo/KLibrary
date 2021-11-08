@@ -164,14 +164,14 @@ namespace kl {
 
 			// Drawing
 			vec2 drawPoint = { (double)a.x, (double)a.y };
-			for (int i = 0; i < len; i++) {
+			for (int i = 0; i <= len; i++) {
 				SetPixel({ (int)drawPoint.x, (int)drawPoint.y }, c);
 				drawPoint = drawPoint + incr;
 			}
 		}
 
 		// Draws a rectangle between 2 points
-		void DrawRect(point a, point b, color c, bool fill = false) {
+		void DrawRectangle(point a, point b, color c, bool fill = false) {
 			if (fill) {
 				point topLeft = { min(a.x, b.x), min(a.y, b.y) };
 				point bottomRight = { max(a.x, b.x), max(a.y, b.y) };
@@ -187,6 +187,35 @@ namespace kl {
 				DrawLine(b, { a.x, b.y }, c);
 				DrawLine(b, { b.x, a.y }, c);
 			}
+		}
+
+		// Draws a circle with the given center point and radius
+		void DrawCircle(point p, double r, color c, bool fill = false) {
+			if (fill) {
+				for (int y = int(p.y - r); y <= int(p.y + r); y++) {
+					int x = int(p.x + sqrt(r * r - (y - p.y) * (y - p.y)));
+					DrawLine({ 2 * p.x - x, y }, { x, y }, c);
+				}
+			}
+			else {
+				for (int i = 0; i < 2 * r; i++) {
+					// X run
+					int x1 = int(p.x - r + i);
+					int y1 = int(p.y + sqrt(r * r - (x1 - p.x) * (x1 - p.x)));
+					SetPixel({ x1, y1 }, c);
+					SetPixel({ x1, 2 * p.y - y1 }, c);
+					
+					// Y run
+					int y2 = int(p.y - r + i);
+					int x2 = int(p.x + sqrt(r * r - (y2 - p.y) * (y2 - p.y)));
+					SetPixel({ x2, y2 }, c);
+					SetPixel({ 2 * p.x - x2, y2 }, c);
+				}
+			}
+		}
+		// Draws a circle between 2 points
+		void DrawCircle(point a, point b, color c, bool fill = false) {
+			DrawCircle(a, vec2(a, b).Lenght(), c, fill);
 		}
 
 		// Converts an image to an ASCII frame

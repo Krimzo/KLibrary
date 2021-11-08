@@ -55,9 +55,6 @@ namespace kl {
 		static color Color() {
 			return { random::Byte(), random::Byte(), random::Byte() };
 		}
-		static colorf Colorf() {
-			return random::Color();
-		}
 		static colord Colord() {
 			return random::Color();
 		}
