@@ -205,12 +205,16 @@ namespace kl {
 		// Draws a rectangle between 2 points
 		void DrawRectangle(point a, point b, color col, bool fill = false) {
 			if (fill) {
-				point topLeft = { min(a.x, b.x), min(a.y, b.y) };
-				point bottomRight = { max(a.x, b.x), max(a.y, b.y) };
-				for (int y = topLeft.y; y <= bottomRight.y; y++) {
-					for (int x = topLeft.x; x <= bottomRight.x; x++) {
-						SetPixel({ x, y }, col);
-					}
+				// Sorting by y
+				if (a.y > b.y) {
+					point temp = a;
+					a = b;
+					b = temp;
+				}
+
+				// Drawing
+				for (int y = a.y; y <= b.y; y++) {
+					DrawLine({ a.x, y }, { b.x, y }, col);
 				}
 			}
 			else {
