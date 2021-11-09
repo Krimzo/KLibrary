@@ -54,18 +54,21 @@
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
-// Library intialiser and unintialiser
-namespace kl {
-	void InitLib() {
-		random::NewSeed();
-		time::LoadPCFrequency();
-		console::EnableRGB();
-		image::InitGdiPlus();
-		tcp::InitWinSock();
-	}
-
-	void UninitLib() {
-		image::UninitGdiPlus();
-		tcp::UninitWinSock();
-	}
+// Library intializer and unintializer
+namespace DontUse {
+	class Initialization {
+	public:
+		Initialization() {
+			kl::random::NewSeed();
+			kl::time::LoadPCFrequency();
+			kl::console::EnableRGB();
+			kl::image::InitGdiPlus();
+			kl::tcp::InitWinSock();
+		}
+		~Initialization() {
+			kl::image::UninitGdiPlus();
+			kl::tcp::UninitWinSock();
+		}
+	};
+	Initialization initLibrary;
 }

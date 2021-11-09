@@ -2,16 +2,13 @@
 
 
 int main() {
-    kl::InitLib();
-
-
     // Const
     kl::size customSize = { 900, 900 };
 
     // Window and image
     kl::window testWindow;
     kl::image testImage(customSize);
- 
+
     /* User variables */
     kl::point A = { 100, 100 };
     kl::point B = { 800, 800 };
