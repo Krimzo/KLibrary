@@ -17,6 +17,16 @@ namespace kl {
 			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
 		}
 
+		// Returns x from the given y of the line that goes through points a and b
+		static double XofLine(vec2 a, vec2 b, double y) {
+			return ((y - a.y) * (b.x - a.x)) / (b.y - a.y) + a.x;
+		}
+
+		// Returns y from the given x of the line that goes through points a and b
+		static double YofLine(vec2 a, vec2 b, double x) {
+			return ((b.y - a.y) * (x - a.x)) / (b.x - a.x) + a.y;
+		}
+
 		// Checks if the given number is prime
 		static bool IsPrime(uint64 num) {
 			if (num == 0 || num == 1) {

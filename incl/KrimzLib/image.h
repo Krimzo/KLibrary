@@ -157,7 +157,7 @@ namespace kl {
 		}
 
 		// Draws a line between 2 points
-		void DrawLine(point a, point b, color c) {
+		void DrawLine(point a, point b, color col) {
 			// Calculations
 			int len = max(abs(b.x - a.x), abs(b.y - a.y));
 			vec2 incr = { ((double)b.x - (double)a.x) / len, ((double)b.y - (double)a.y) / len };
@@ -165,36 +165,68 @@ namespace kl {
 			// Drawing
 			vec2 drawPoint = { (double)a.x, (double)a.y };
 			for (int i = 0; i <= len; i++) {
-				SetPixel({ (int)drawPoint.x, (int)drawPoint.y }, c);
+				SetPixel({ (int)drawPoint.x, (int)drawPoint.y }, col);
 				drawPoint = drawPoint + incr;
 			}
 		}
 
+		// Draws a triangle between 3 points
+		void DrawTriangle(point a, point b, point c, color col, bool fill = false) {
+			if (fill) {
+				// Sorting by y
+				if (a.y > b.y) {
+					point temp = a;
+					a = b;
+					b = temp;
+				}
+				if (a.y > c.y) {
+					point temp = a;
+					a = c;
+					c = temp;
+				}
+				if (b.y > c.y) {
+					point temp = b;
+					b = c;
+					c = temp;
+				}
+
+				// Drawing
+				for (int y = a.y; y < c.y; y++) {
+					DrawLine({ int(kl::math::XofLine((y < b.y) ? a : c, b, y)), y }, { int(kl::math::XofLine(a, c, y)), y }, col);
+				}
+			}
+			else {
+				DrawLine(a, b, col);
+				DrawLine(b, c, col);
+				DrawLine(c, a, col);
+			}
+		}
+
 		// Draws a rectangle between 2 points
-		void DrawRectangle(point a, point b, color c, bool fill = false) {
+		void DrawRectangle(point a, point b, color col, bool fill = false) {
 			if (fill) {
 				point topLeft = { min(a.x, b.x), min(a.y, b.y) };
 				point bottomRight = { max(a.x, b.x), max(a.y, b.y) };
-				for (int y = topLeft.y; y < bottomRight.y; y++) {
-					for (int x = topLeft.x; x < bottomRight.x; x++) {
-						SetPixel({ x, y }, c);
+				for (int y = topLeft.y; y <= bottomRight.y; y++) {
+					for (int x = topLeft.x; x <= bottomRight.x; x++) {
+						SetPixel({ x, y }, col);
 					}
 				}
 			}
 			else {
-				DrawLine(a, { a.x, b.y }, c);
-				DrawLine(a, { b.x, a.y }, c);
-				DrawLine(b, { a.x, b.y }, c);
-				DrawLine(b, { b.x, a.y }, c);
+				DrawLine(a, { a.x, b.y }, col);
+				DrawLine(a, { b.x, a.y }, col);
+				DrawLine(b, { a.x, b.y }, col);
+				DrawLine(b, { b.x, a.y }, col);
 			}
 		}
 
 		// Draws a circle with the given center point and radius
-		void DrawCircle(point p, double r, color c, bool fill = false) {
+		void DrawCircle(point p, double r, color col, bool fill = false) {
 			if (fill) {
 				for (int y = int(p.y - r); y <= int(p.y + r); y++) {
 					int x = int(p.x + sqrt(r * r - (y - p.y) * (y - p.y)));
-					DrawLine({ 2 * p.x - x, y }, { x, y }, c);
+					DrawLine({ 2 * p.x - x, y }, { x, y }, col);
 				}
 			}
 			else {
@@ -202,20 +234,20 @@ namespace kl {
 					// X run
 					int x1 = int(p.x - r + i);
 					int y1 = int(p.y + sqrt(r * r - (x1 - p.x) * (x1 - p.x)));
-					SetPixel({ x1, y1 }, c);
-					SetPixel({ x1, 2 * p.y - y1 }, c);
+					SetPixel({ x1, y1 }, col);
+					SetPixel({ x1, 2 * p.y - y1 }, col);
 					
 					// Y run
 					int y2 = int(p.y - r + i);
 					int x2 = int(p.x + sqrt(r * r - (y2 - p.y) * (y2 - p.y)));
-					SetPixel({ x2, y2 }, c);
-					SetPixel({ 2 * p.x - x2, y2 }, c);
+					SetPixel({ x2, y2 }, col);
+					SetPixel({ 2 * p.x - x2, y2 }, col);
 				}
 			}
 		}
-		// Draws a circle between 2 points
-		void DrawCircle(point a, point b, color c, bool fill = false) {
-			DrawCircle(a, vec2(a, b).Lenght(), c, fill);
+		// Draws a circle between 1 center and 1 outer point
+		void DrawCircle(point a, point b, color col, bool fill = false) {
+			DrawCircle(a, vec2(a, b).Lenght(), col, fill);
 		}
 
 		// Converts an image to an ASCII frame

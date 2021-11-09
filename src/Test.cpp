@@ -51,6 +51,7 @@ int main() {
             testImage.DrawCircle(*toMove, testWindow.MOUSE.position, kl::constant::colors::cyan);
         }
 
+        testImage.DrawTriangle(A, B, testWindow.MOUSE.position, kl::constant::colors::wheat);
         testImage.DrawLine(A, B, kl::constant::colors::orange);
 
         // Image displaying
