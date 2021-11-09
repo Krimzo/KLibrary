@@ -20,8 +20,8 @@ int main() {
         testImage.FillSolid(kl::constant::colors::gray);
 
         // User editing
-        double distanceFromA = kl::vec2(A, testWindow.MOUSE.position).Lenght();
-        double distanceFromB = kl::vec2(B, testWindow.MOUSE.position).Lenght();
+        double distanceFromA = kl::vec2(A, testWindow.MOUSE.position).Length();
+        double distanceFromB = kl::vec2(B, testWindow.MOUSE.position).Length();
  
         if (distanceFromA < distanceFromB) {
             if (distanceFromA < grabDistance) {
@@ -57,5 +57,7 @@ int main() {
 
     testWindow.StartNew(customSize, "Test Window", false);
 
+
+    //kl::console::WaitFor(' ');
     return 0;
 }

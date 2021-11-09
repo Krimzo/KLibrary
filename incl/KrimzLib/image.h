@@ -232,7 +232,7 @@ namespace kl {
 		}
 		// Draws a circle between 1 center and 1 outer point
 		void DrawCircle(point a, point b, color col, bool fill = false) {
-			DrawCircle(a, vec2(a, b).Lenght(), col, fill);
+			DrawCircle(a, vec2(a, b).Length(), col, fill);
 		}
 
 		// Converts an image to an ASCII frame

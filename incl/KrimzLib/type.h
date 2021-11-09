@@ -92,21 +92,21 @@ namespace kl {
 			return (x != obj.x || y != obj.y);
 		}
 
-		// Returns the vectors lenght
-		double Lenght() {
+		// Returns the vectors length
+		double Length() {
 			return sqrt(x * x + y * y);
 		}
 
 		// Normalizes a vector
 		void Normalize() {
-			double vecLen = this->Lenght();
+			double vecLen = this->Length();
 			x /= vecLen;
 			y /= vecLen;
 		}
 
 		// Retruns a normalized vector
 		vec2 Normalized() {
-			double vecLen = this->Lenght();
+			double vecLen = this->Length();
 			return { x / vecLen, y / vecLen };
 		}
 	};
@@ -143,14 +143,14 @@ namespace kl {
 			return (x != obj.x || y != obj.y || z != obj.z);
 		}
 
-		// Returns the vectors lenght
-		double Lenght() {
+		// Returns the vectors length
+		double Length() {
 			return sqrt(x * x + y * y + z * z);
 		}
 
 		// Normalizes a vector
 		void Normalize() {
-			double vecLen = this->Lenght();
+			double vecLen = this->Length();
 			x /= vecLen;
 			y /= vecLen;
 			z /= vecLen;
@@ -158,7 +158,7 @@ namespace kl {
 
 		// Retruns a normalized vector
 		vec3 Normalized() {
-			double vecLen = this->Lenght();
+			double vecLen = this->Length();
 			return { x / vecLen, y / vecLen, z / vecLen };
 		}
 	};

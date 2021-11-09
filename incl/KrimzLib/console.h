@@ -115,6 +115,27 @@ namespace kl {
 			char iHateWarnings = _getch();
 		}
 
+		// Outputs a progress bar on the console
+		static void ProgressBar(std::string message, uint32 outputY, double percentage) {
+			// Prep
+			percentage = max(min(percentage, 1), 0);
+			int barLen = console::GetSize().width - (int)message.length() - 11;
+			int doneLen = int(barLen * percentage);
+			int emptyLen = barLen - doneLen;
+
+			// Printing
+			std::stringstream ss;
+			ss << "  " << message << "[";
+			for (int i = 0; i < doneLen; i++) {
+				ss << '#';
+			}
+			for (int i = 0; i < emptyLen; i++) {
+				ss << ' ';
+			}
+			console::MoveCursor(point(0, outputY));
+			printf("%s] %3d%% \n", ss.str().c_str(), int(percentage * 100));
+		}
+
 		// Prints RGB data
 		static void Print(char data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m", textColor.r, textColor.g, textColor.b, data);
