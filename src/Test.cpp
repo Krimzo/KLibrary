@@ -3,13 +3,13 @@
 
 int main() {
     // Const
-    kl::size customSize = { 900, 900 };
+    const kl::size customSize = { 900, 900 };
 
     // Window and image
     kl::window testWindow;
     kl::image testImage(customSize);
 
-    /* User variables */
+    // User variables
     kl::point A = { 100, 100 };
     kl::point B = { 800, 800 };
     kl::point* toMove = NULL;
@@ -19,10 +19,10 @@ int main() {
         // Image clearing
         testImage.FillSolid(kl::constant::colors::gray);
 
-        /* User editing */
+        // User editing
         double distanceFromA = kl::vec2(A, testWindow.MOUSE.position).Lenght();
         double distanceFromB = kl::vec2(B, testWindow.MOUSE.position).Lenght();
-
+ 
         if (distanceFromA < distanceFromB) {
             if (distanceFromA < grabDistance) {
                 toMove = &A;
@@ -57,7 +57,5 @@ int main() {
 
     testWindow.StartNew(customSize, "Test Window", false);
 
-
-    //kl::console::WaitFor(' ');
     return 0;
 }

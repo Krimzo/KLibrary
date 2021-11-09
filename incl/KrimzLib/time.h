@@ -4,15 +4,6 @@
 namespace kl {
 	class time {
 	public:
-		// Loads the current pc frequency
-		static void LoadPCFrequency() {
-			LARGE_INTEGER counterTempFreq;
-			QueryPerformanceFrequency(&counterTempFreq);
-			PCFrequency = double(counterTempFreq.QuadPart);
-			StaticGetElapsed();
-			StaticStopwatchReset();
-		}
-
 		// Returns a time since the the last StaticGetElapsed() call
 		static double StaticGetElapsed() {
 			LARGE_INTEGER staticCounterNow;
@@ -68,6 +59,16 @@ namespace kl {
 			LARGE_INTEGER stopwatchNow;
 			QueryPerformanceCounter(&stopwatchNow);
 			return (stopwatchNow.QuadPart - stopwatchLast.QuadPart) / PCFrequency;
+		}
+
+	protected:
+		// Loads the current pc frequency
+		static void LoadPCFrequency() {
+			LARGE_INTEGER counterTempFreq;
+			QueryPerformanceFrequency(&counterTempFreq);
+			PCFrequency = double(counterTempFreq.QuadPart);
+			StaticGetElapsed();
+			StaticStopwatchReset();
 		}
 
 	private:

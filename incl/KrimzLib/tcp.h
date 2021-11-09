@@ -4,25 +4,6 @@
 namespace kl {
 	class tcp {
 	public:
-		// Initialises winsock
-		static void InitWinSock() {
-			if (!winSockInitialised) {
-				WSADATA wsData = {};
-				if (WSAStartup(MAKEWORD(2, 2), &wsData)) {
-					printf("Failed to initalise winsock\n");
-				}
-				winSockInitialised = true;
-			}
-		}
-
-		// Uninitialises winsock
-		static void UninitWinSock() {
-			if (winSockInitialised) {
-				WSACleanup();
-				winSockInitialised = false;
-			}
-		}
-
 		// Simple TCP server
 		class server {
 		public:
@@ -200,8 +181,20 @@ namespace kl {
 			bool connected = false;
 		};
 
-	private:
-		static bool winSockInitialised;
+	protected:
+		// Initialises winsock
+		static void InitWinSock() {
+			WSADATA wsData = {};
+			if (WSAStartup(MAKEWORD(2, 2), &wsData)) {
+				printf("Failed to initalise winsock\n");
+				console::WaitFor(' ', true);
+				exit(69);
+			}
+		}
+
+		// Uninitialises winsock
+		static void UninitWinSock() {
+			WSACleanup();
+		}
 	};
-	bool tcp::winSockInitialised = false;
 }

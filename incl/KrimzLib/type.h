@@ -68,8 +68,8 @@ namespace kl {
 			y = (double)p.y;
 		}
 		vec2(point a, point b) {
-			x = b.x - a.x;
-			y = b.y - a.y;
+			x = double(b.x - a.x);
+			y = double(b.y - a.y);
 		}
 
 		// Operator overloading

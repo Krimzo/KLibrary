@@ -85,17 +85,6 @@ namespace kl {
 			SetCurrentConsoleFontEx(stdConsoleHandle, FALSE, &cfi);
 		}
 
-		// Enables RGB support for the console
-		static void EnableRGB() {
-			static bool rgbEnabled = false;
-			if (!rgbEnabled) {
-				DWORD consoleMode;
-				GetConsoleMode(stdConsoleHandle, &consoleMode);
-				SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-				rgbEnabled = true;
-			}
-		}
-
 		// Returns a pressed key
 		static char GetInput() {
 			char input = 0;
@@ -218,6 +207,14 @@ namespace kl {
 		}
 		static void Println(bytes&& data, color textColor = constant::colors::white) {
 			Println(convert::ToString(data), textColor);
+		}
+
+	protected:
+		// Enables RGB support for the console
+		static void EnableRGB() {
+			DWORD consoleMode;
+			GetConsoleMode(stdConsoleHandle, &consoleMode);
+			SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		}
 
 	private:

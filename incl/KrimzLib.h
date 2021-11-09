@@ -55,20 +55,32 @@
 #pragma comment(lib, "glu32.lib")
 
 // Library intializer and unintializer
-namespace DontUse {
-	class Initialization {
+namespace _kl_dont_use_ {
+	class _kl_initialization_ : private kl::random, private kl::time, private kl::console, private kl::image, private kl::tcp {
 	public:
-		Initialization() {
-			kl::random::NewSeed();
-			kl::time::LoadPCFrequency();
-			kl::console::EnableRGB();
-			kl::image::InitGdiPlus();
-			kl::tcp::InitWinSock();
+		_kl_initialization_() {
+			// random.h
+			NewSeed();
+
+			// time.h
+			LoadPCFrequency();
+
+			// console.h
+			EnableRGB();
+
+			// image.h
+			InitGdiPlus();
+
+			// tcp.h
+			InitWinSock();
 		}
-		~Initialization() {
-			kl::image::UninitGdiPlus();
-			kl::tcp::UninitWinSock();
+		~_kl_initialization_() {
+			// image.h
+			UninitGdiPlus();
+
+			// tcp.h
+			UninitWinSock();
 		}
 	};
-	Initialization initLibrary;
+	_kl_initialization_ _lib_init_;
 }

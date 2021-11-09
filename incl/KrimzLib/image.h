@@ -4,23 +4,8 @@
 namespace kl {
 	class image {
 	public:
-		// Initalises gdiplus
-		static void InitGdiPlus() {
-			if (!gdipInitialised) {
-				Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-				gdipInitialised = true;
-			}
-		}
-
-		// Uninitalises gdiplus
-		static void UninitGdiPlus() {
-			if (gdipInitialised) {
-				Gdiplus::GdiplusShutdown(gdiplusToken);
-				gdipInitialised = false;
-			}
-		}
-
 		// Constructor
+		image() { }
 		image(size size, color color = {}) {
 			SetSize(size);
 			FillSolid(color);
@@ -72,25 +57,23 @@ namespace kl {
 
 		// Reads an image file and stores it in the image instance
 		void FromFile(std::string filePath) {
-			if (gdipInitialised) {
-				// Loads image file
-				Gdiplus::Bitmap loadedBitmap(convert::ToWString(filePath).c_str());
+			// Loads image file
+			Gdiplus::Bitmap loadedBitmap(convert::ToWString(filePath).c_str());
 
-				// Checks load status
-				if (loadedBitmap.GetLastStatus()) {
-					printf("Couldn't load image file \"%s\".", filePath.c_str());
-					console::WaitFor(' ', true);
-					exit(69);
-				}
+			// Checks load status
+			if (loadedBitmap.GetLastStatus()) {
+				printf("Couldn't load image file \"%s\".", filePath.c_str());
+				console::WaitFor(' ', true);
+				exit(69);
+			}
 
-				// Pixel data loading
-				SetSize({ loadedBitmap.GetWidth(), loadedBitmap.GetHeight() });
-				for (uint32 y = 0; y < imageHeight; y++) {
-					for (uint32 x = 0; x < imageWidth; x++) {
-						Gdiplus::Color tempPixel;
-						loadedBitmap.GetPixel((int)x, (int)y, &tempPixel);
-						SetPixel({ (int)x, (int)y }, { tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB() });
-					}
+			// Pixel data loading
+			SetSize({ loadedBitmap.GetWidth(), loadedBitmap.GetHeight() });
+			for (uint32 y = 0; y < imageHeight; y++) {
+				for (uint32 x = 0; x < imageWidth; x++) {
+					Gdiplus::Color tempPixel;
+					loadedBitmap.GetPixel((int)x, (int)y, &tempPixel);
+					SetPixel({ (int)x, (int)y }, { tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB() });
 				}
 			}
 		}
@@ -102,51 +85,49 @@ namespace kl {
 			static const CLSID gifEncoderCLSID = { 0x557cf402, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 
-			if (gdipInitialised) {
-				// Checking the file extension is supported
-				const CLSID* formatToUse = NULL;
-				std::string fileExtension = string::GetFileExtension(fileName);
-				if (fileExtension == "bmp") {
-					formatToUse = &bmpEncoderCLSID;
-				}
-				else if (fileExtension == "jpg") {
-					formatToUse = &jpgEncoderCLSID;
-				}
-				else if (fileExtension == "gif") {
-					formatToUse = &gifEncoderCLSID;
-				}
-				else if (fileExtension == "png") {
-					formatToUse = &pngEncoderCLSID;
-				}
-				else if (fileExtension == "txt") {
-					std::stringstream ss;
-					for (uint32 y = 0; y < imageHeight; y++) {
-						for (uint32 x = 0; x < imageWidth; x++) {
-							ss <<
-								x << " " << y << " => " <<
-								(int)imagePixels[(uint64)y * imageWidth + x].r << " " <<
-								(int)imagePixels[(uint64)y * imageWidth + x].g << " " <<
-								(int)imagePixels[(uint64)y * imageWidth + x].b << "\n";
-						}
-					}
-					file::WriteText(fileName, ss.str());
-					return;
-				}
-				else {
-					printf("File extension \"%s\" is not supported!\n", fileExtension.c_str());
-					return;
-				}
-
-				// Pixel data transfer and saving to file
-				Gdiplus::Bitmap tempBitmap(imageWidth, imageHeight, PixelFormat24bppRGB);
+			// Checking the file extension is supported
+			const CLSID* formatToUse = NULL;
+			std::string fileExtension = string::GetFileExtension(fileName);
+			if (fileExtension == "bmp") {
+				formatToUse = &bmpEncoderCLSID;
+			}
+			else if (fileExtension == "jpg") {
+				formatToUse = &jpgEncoderCLSID;
+			}
+			else if (fileExtension == "gif") {
+				formatToUse = &gifEncoderCLSID;
+			}
+			else if (fileExtension == "png") {
+				formatToUse = &pngEncoderCLSID;
+			}
+			else if (fileExtension == "txt") {
+				std::stringstream ss;
 				for (uint32 y = 0; y < imageHeight; y++) {
 					for (uint32 x = 0; x < imageWidth; x++) {
-						color tempPixel = GetPixel({ (int)x, (int)y });
-						tempBitmap.SetPixel((int)x, (int)y, { tempPixel.r, tempPixel.g, tempPixel.b });
+						ss <<
+							x << " " << y << " => " <<
+							(int)imagePixels[(uint64)y * imageWidth + x].r << " " <<
+							(int)imagePixels[(uint64)y * imageWidth + x].g << " " <<
+							(int)imagePixels[(uint64)y * imageWidth + x].b << "\n";
 					}
 				}
-				tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, NULL);
+				file::WriteText(fileName, ss.str());
+				return;
 			}
+			else {
+				printf("File extension \"%s\" is not supported!\n", fileExtension.c_str());
+				return;
+			}
+
+			// Pixel data transfer and saving to file
+			Gdiplus::Bitmap tempBitmap(imageWidth, imageHeight, PixelFormat24bppRGB);
+			for (uint32 y = 0; y < imageHeight; y++) {
+				for (uint32 x = 0; x < imageWidth; x++) {
+					color tempPixel = GetPixel({ (int)x, (int)y });
+					tempBitmap.SetPixel((int)x, (int)y, { tempPixel.r, tempPixel.g, tempPixel.b });
+				}
+			}
+			tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, NULL);
 		}
 
 		// Fils the image with solid color
@@ -279,16 +260,28 @@ namespace kl {
 			return frame.str();
 		}
 
+	protected:
+		// Initalises gdiplus
+		static void InitGdiPlus() {
+			if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL)) {
+				printf("Failed to initalise gdiplus\n");
+				console::WaitFor(' ', true);
+				exit(69);
+			}
+		}
+
+		// Uninitalises gdiplus
+		static void UninitGdiPlus() {
+			Gdiplus::GdiplusShutdown(gdiplusToken);
+		}
+
 	private:
-		static bool gdipInitialised;
 		static ULONG_PTR gdiplusToken;
 		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-
 		uint32 imageWidth = 0;
 		uint32 imageHeight = 0;
 		std::vector<color> imagePixels = {};
 	};
-	bool image::gdipInitialised = false;
 	ULONG_PTR image::gdiplusToken = 0;
 	Gdiplus::GdiplusStartupInput image::gdiplusStartupInput = {};
 }

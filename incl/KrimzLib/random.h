@@ -4,11 +4,6 @@
 namespace kl {
 	class random {
 	public:
-		// Sets the seed for random number generation
-		static void NewSeed() {
-			srand((unsigned)std::time(NULL));
-		}
-
 		// Returns a random bool
 		static bool Bool() {
 			return rand() % 2;
@@ -57,6 +52,12 @@ namespace kl {
 		}
 		static colord Colord() {
 			return random::Color();
+		}
+
+	protected:
+		// Sets the seed for random number generation
+		static void NewSeed() {
+			srand((unsigned)std::time(NULL));
 		}
 	};
 }
