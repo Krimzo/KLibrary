@@ -5,7 +5,7 @@ namespace kl {
 	class image {
 	public:
 		// Constructor
-		image() { }
+		image() {}
 		image(size size, color color = {}) {
 			SetSize(size);
 			FillSolid(color);
@@ -258,6 +258,15 @@ namespace kl {
 				frame << '\n';
 			}
 			return frame.str();
+		}
+
+		// Executes a function on each pixel
+		void RunOnEach(std::function<void(kl::color* pixelColor, kl::point pixelPosition)> toExecute) {
+			for (uint32 y = 0; y < imageHeight; y++) {
+				for (uint32 x = 0; x < imageWidth; x++) {
+					toExecute(&imagePixels[uint64(y * imageWidth + x)], kl::point(x, y));
+				}
+			}
 		}
 
 	protected:
