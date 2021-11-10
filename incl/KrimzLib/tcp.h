@@ -20,7 +20,7 @@ namespace kl {
 			void Create(int port) {
 				if (!created) {
 					// Create a socket
-					serverSocket = socket(AF_INET, SOCK_STREAM, NULL);
+					serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 					if (serverSocket == INVALID_SOCKET) {
 						printf("Failed to create server socket!\n");
 						return;
@@ -53,7 +53,7 @@ namespace kl {
 					char service[NI_MAXSERV];
 					memset(host, 0, NI_MAXHOST);
 					memset(service, 0, NI_MAXSERV);
-					if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, NULL)) {
+					if (!getnameinfo((sockaddr*)&client, clientSize, host, NI_MAXHOST, service, NI_MAXSERV, 0)) {
 						clientName = std::string(host);
 					}
 					else {
@@ -75,7 +75,7 @@ namespace kl {
 			// Send data back to the client
 			void SendData(bytes& data) {
 				if (created && clientConnected) {
-					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR) {
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), 0) == SOCKET_ERROR) {
 						clientConnected = false;
 					}
 				}
@@ -88,7 +88,7 @@ namespace kl {
 			void ReceiveData(bytes& dataBuffer) {
 				if (created && clientConnected) {
 					memset(&dataBuffer[0], 0, dataBuffer.size());
-					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR) {
+					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), 0) == SOCKET_ERROR) {
 						clientConnected = false;
 					}
 				}
@@ -127,7 +127,7 @@ namespace kl {
 				Disconnect();
 
 				// Create a socket
-				clientSocket = socket(AF_INET, SOCK_STREAM, NULL);
+				clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 				if (clientSocket == INVALID_SOCKET) {
 					printf("Failed to create socket!\n");
 					return;
@@ -149,7 +149,7 @@ namespace kl {
 			// Send data to server
 			void SendData(bytes& data) {
 				if (connected) {
-					if (send(clientSocket, (char*)&data[0], (int)data.size(), NULL) == SOCKET_ERROR) {
+					if (send(clientSocket, (char*)&data[0], (int)data.size(), 0) == SOCKET_ERROR) {
 						Disconnect();
 					}
 				}
@@ -162,7 +162,7 @@ namespace kl {
 			void ReceiveData(bytes& dataBuffer) {
 				if (connected) {
 					memset(&dataBuffer[0], 0, dataBuffer.size());
-					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), NULL) == SOCKET_ERROR) {
+					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), 0) == SOCKET_ERROR) {
 						Disconnect();
 					}
 				}

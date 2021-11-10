@@ -26,12 +26,12 @@ namespace kl {
 			windowClass.cbClsExtra = 0;
 			windowClass.cbWndExtra = 0;
 			windowClass.hInstance = hInstance;
-			windowClass.hIcon = NULL;
-			windowClass.hCursor = NULL;
-			windowClass.hbrBackground = NULL;
-			windowClass.lpszMenuName = NULL;
+			windowClass.hIcon = nullptr;
+			windowClass.hCursor = nullptr;
+			windowClass.hbrBackground = nullptr;
+			windowClass.lpszMenuName = nullptr;
 			windowClass.lpszClassName = wName.c_str();
-			windowClass.hIconSm = NULL;
+			windowClass.hIconSm = nullptr;
 			if (!RegisterClassExW(&windowClass)) {
 				printf("Couldn't register window class! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);
@@ -44,7 +44,7 @@ namespace kl {
 			AdjustWindowRect(&adjustedWindowSize, windowStyle, FALSE);
 			size.width = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-			hwnd = CreateWindowExW(0, wName.c_str(), wName.c_str(), windowStyle, (constant::ints::ScreenWidth / 2 - size.width / 2), (constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, NULL, NULL, hInstance, NULL);
+			hwnd = CreateWindowExW(0, wName.c_str(), wName.c_str(), windowStyle, (constant::ints::ScreenWidth / 2 - size.width / 2), (constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, nullptr, nullptr, hInstance, nullptr);
 			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
 				console::WaitFor(' ', true);
@@ -113,14 +113,14 @@ namespace kl {
 
 			// Memory release
 			if (opengl) {
-				wglMakeCurrent(NULL, NULL);
+				wglMakeCurrent(nullptr, nullptr);
 				ReleaseDC(hwnd, hdc);
 				wglDeleteContext(hglrc);
-				hglrc = NULL;
+				hglrc = nullptr;
 			}
 			UnregisterClassW(wName.c_str(), hInstance);
-			hdc = NULL;
-			hwnd = NULL;
+			hdc = nullptr;
+			hwnd = nullptr;
 		}
 
 		// Window destruction
@@ -177,10 +177,10 @@ namespace kl {
 		}
 
 	private:
-		HINSTANCE hInstance = GetModuleHandleW(NULL);
-		HWND hwnd = NULL;
-		HDC hdc = NULL;
-		HGLRC hglrc = NULL;
+		HINSTANCE hInstance = GetModuleHandleW(nullptr);
+		HWND hwnd = nullptr;
+		HDC hdc = nullptr;
+		HGLRC hglrc = nullptr;
 		BITMAPINFO bmpInfo = {};
 		MSG wndMsg = {};
 

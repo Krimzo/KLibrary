@@ -276,7 +276,7 @@ namespace kl {
 		}
 
 	private:
-		T* arrayData = NULL;
+		T* arrayData = nullptr;
 		uint64 arraySize = 0;
 		bool canGrow = false;
 	};

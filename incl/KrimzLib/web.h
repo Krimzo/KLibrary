@@ -7,14 +7,14 @@ namespace kl {
 		// Downloads website data(bytes) from the given url
 		static bytes GetWebsiteData(std::string url, int bufferSize = 16384) {
 			// Create browser
-			HINTERNET connection = InternetOpenA("CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+			HINTERNET connection = InternetOpenA("CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
 			if (!connection) {
 				printf("Failed to conenct\n");
 				return {};
 			}
 
 			// Open url
-			HINTERNET openAddress = InternetOpenUrlA(connection, url.c_str(), NULL, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
+			HINTERNET openAddress = InternetOpenUrlA(connection, url.c_str(), nullptr, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
 			if (!openAddress) {
 				printf("Failed to open website\n");
 				return {};

@@ -86,7 +86,7 @@ namespace kl {
 			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 
 			// Checking the file extension is supported
-			const CLSID* formatToUse = NULL;
+			const CLSID* formatToUse = nullptr;
 			std::string fileExtension = string::GetFileExtension(fileName);
 			if (fileExtension == "bmp") {
 				formatToUse = &bmpEncoderCLSID;
@@ -127,7 +127,7 @@ namespace kl {
 					tempBitmap.SetPixel((int)x, (int)y, { tempPixel.r, tempPixel.g, tempPixel.b });
 				}
 			}
-			tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, NULL);
+			tempBitmap.Save(convert::ToWString(fileName).c_str(), formatToUse, nullptr);
 		}
 
 		// Fils the image with solid color
@@ -210,7 +210,7 @@ namespace kl {
 		void DrawCircle(point p, double r, color col, bool fill = false) {
 			if (fill) {
 				for (int y = int(p.y - r); y <= int(p.y + r); y++) {
-					int x = int(p.x + sqrt(r * r - (y - p.y) * (y - p.y)));
+					int x = int((double)p.x + sqrt(r * r - double(y - p.y) * double(y - p.y)));
 					DrawLine({ 2 * p.x - x, y }, { x, y }, col);
 				}
 			}
@@ -218,13 +218,13 @@ namespace kl {
 				for (int i = 0; i < 2 * r; i++) {
 					// X run
 					int x1 = int(p.x - r + i);
-					int y1 = int(p.y + sqrt(r * r - (x1 - p.x) * (x1 - p.x)));
+					int y1 = int((double)p.y + sqrt(r * r - double(x1 - p.x) * double(x1 - p.x)));
 					SetPixel({ x1, y1 }, col);
 					SetPixel({ x1, 2 * p.y - y1 }, col);
 					
 					// Y run
 					int y2 = int(p.y - r + i);
-					int x2 = int(p.x + sqrt(r * r - (y2 - p.y) * (y2 - p.y)));
+					int x2 = int((double)p.x + sqrt(r * r - double(y2 - p.y) * double(y2 - p.y)));
 					SetPixel({ x2, y2 }, col);
 					SetPixel({ 2 * p.x - x2, y2 }, col);
 				}
@@ -263,7 +263,7 @@ namespace kl {
 	protected:
 		// Initalises gdiplus
 		static void InitGdiPlus() {
-			if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL)) {
+			if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
 				printf("Failed to initalise gdiplus\n");
 				console::WaitFor(' ', true);
 				exit(69);

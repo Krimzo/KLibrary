@@ -95,14 +95,14 @@ namespace kl {
 				engineObjects.insert(std::pair<std::string, gameobject>(objectName, { true, textureID }));
 				return &engineObjects.at(objectName);
 			}
-			return NULL;
+			return nullptr;
 		}
 		gameobject* NewGameObject(std::string objectName, std::string filePath, texture textureID) {
 			if (!engineObjects.count(objectName)) {
 				// Load file
 				FILE* fileStream = fopen(filePath.c_str(), "r");
 				if (!fileStream) {
-					return NULL;
+					return nullptr;
 				}
 
 				// Data buffers
@@ -166,7 +166,7 @@ namespace kl {
 				engineObjects.insert(std::pair<std::string, gameobject>(objectName, tempObject));
 				return &engineObjects.at(objectName);
 			}
-			return NULL;
+			return nullptr;
 		}
 
 		// Removes a game object with the given name
@@ -183,7 +183,7 @@ namespace kl {
 			if (engineObjects.count(objectName)) {
 				return &engineObjects.at(objectName);
 			}
-			return NULL;
+			return nullptr;
 		}
 
 		// Adds a new texture to the engine

@@ -2,7 +2,6 @@
 
 
 namespace kl {
-	// Library constants
 	namespace constant {
 		// Ints
 		namespace ints {

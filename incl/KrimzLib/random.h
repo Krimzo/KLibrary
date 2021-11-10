@@ -57,7 +57,7 @@ namespace kl {
 	protected:
 		// Sets the seed for random number generation
 		static void NewSeed() {
-			srand((unsigned)std::time(NULL));
+			srand((unsigned)std::time(nullptr));
 		}
 	};
 }
