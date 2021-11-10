@@ -136,6 +136,15 @@ namespace kl {
 			printf("%s] %3d%% \n", ss.str().c_str(), int(percentage * 100));
 		}
 
+		// Fast console writing
+		static void FastOut(std::string& data, point location = { 0, 0 }) {
+			static DWORD ignore = 0;
+			WriteConsoleOutputCharacterA(stdConsoleHandle, data.c_str(), (DWORD)data.length(), { (short)location.x, (short)location.y }, &ignore);
+		}
+		static void FastOut(std::string&& data, point location = { 0, 0 }) {
+			FastOut(data, location);
+		}
+
 		// Prints RGB data
 		static void Print(char data, color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m", textColor.r, textColor.g, textColor.b, data);

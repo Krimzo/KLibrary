@@ -64,6 +64,8 @@ namespace _kl_dont_use_ {
 
 			// time.h
 			LoadPCFrequency();
+			StaticGetElapsed();
+			StaticStopwatchReset();
 
 			// console.h
 			EnableRGB();

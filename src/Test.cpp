@@ -1,63 +1,63 @@
 #include "KrimzLib.h"
 
 
+const double timePerTest = 2;
+
 int main() {
-    // Const
-    const kl::size customSize = { 900, 900 };
+    // prep
+    const int frameWidth = kl::console::GetSize().width;
+    const int frameHeight = kl::console::GetSize().height - 1;
+    const int charCount = frameWidth * frameHeight;
+    std::string frameBuffer;
+    frameBuffer.resize(charCount);
+    for (int i = 0; i < charCount; i++) {
+        frameBuffer[i] = '#';
+    }
+    kl::console::HideCursor();
+    
+    // printf
+    int printfCounter = 0;
+    kl::time::StaticStopwatchReset();
+    while (kl::time::StaticStopwatchElapsed() < timePerTest) {
+        kl::console::MoveCursor({ 0, 0 });
+        printf("%s", frameBuffer.c_str());
+        printfCounter++;
+    }
 
-    // Window and image
-    kl::window testWindow;
-    kl::image testImage(customSize);
+    // stdout
+    int stdoutCounter = 0;
+    kl::time::StaticStopwatchReset();
+    while (kl::time::StaticStopwatchElapsed() < timePerTest) {
+        kl::console::MoveCursor({ 0, 0 });
+        std::cout << frameBuffer;
+        stdoutCounter++;
+    }
 
-    // User variables
-    kl::point A = { 100, 100 };
-    kl::point B = { 800, 800 };
-    kl::point* toMove = NULL;
+    // fwrite
+    int fwriteCounter = 0;
+    kl::time::StaticStopwatchReset();
+    while (kl::time::StaticStopwatchElapsed() < timePerTest) {
+        kl::console::MoveCursor({ 0, 0 });
+        fwrite(frameBuffer.c_str(), 1, charCount, stdout);
+        fwriteCounter++;
+    }
+    
+    // myfout
+    int myfoutCounter = 0;
+    kl::time::StaticStopwatchReset();
+    while (kl::time::StaticStopwatchElapsed() < timePerTest) {
+        kl::console::FastOut(frameBuffer);
+        myfoutCounter++;
+    }
 
-    int grabDistance = 50;
-    testWindow.WindowUpdate = [&]() {
-        // Image clearing
-        testImage.FillSolid(kl::constant::colors::gray);
-
-        // User editing
-        double distanceFromA = kl::vec2(A, testWindow.MOUSE.position).Length();
-        double distanceFromB = kl::vec2(B, testWindow.MOUSE.position).Length();
- 
-        if (distanceFromA < distanceFromB) {
-            if (distanceFromA < grabDistance) {
-                toMove = &A;
-            }
-            else {
-                toMove = NULL;
-            }
-        }
-        else {
-            if (distanceFromB < grabDistance) {
-                toMove = &B;
-            }
-            else {
-                toMove = NULL;
-            }
-        }
-
-        if (toMove) {
-            if (testWindow.MOUSE.lmb) {
-                *toMove = testWindow.MOUSE.position;
-            }
-
-            testImage.DrawCircle(*toMove, testWindow.MOUSE.position, kl::constant::colors::cyan);
-        }
-
-        testImage.DrawTriangle(A, B, testWindow.MOUSE.position, kl::constant::colors::wheat);
-        testImage.DrawLine(A, B, kl::constant::colors::orange);
-
-        // Image displaying
-        testWindow.DisplayImage(testImage);
-    };
-
-    testWindow.StartNew(customSize, "Test Window", false);
+    // printing results
+    kl::console::Clear();
+    printf("printf => %d fps\n", int(printfCounter / timePerTest));
+    printf("stdout => %d fps\n", int(stdoutCounter / timePerTest));
+    printf("fwrite => %d fps\n", int(fwriteCounter / timePerTest));
+    printf("myfout => %d fps\n", int(myfoutCounter / timePerTest));
 
 
-    //kl::console::WaitFor(' ');
+    kl::console::WaitFor(' ');
     return 0;
 }

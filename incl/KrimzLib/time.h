@@ -8,9 +8,9 @@ namespace kl {
 		static double StaticGetElapsed() {
 			LARGE_INTEGER staticCounterNow;
 			QueryPerformanceCounter(&staticCounterNow);
-			double time = (staticCounterNow.QuadPart - staticCounterLast.QuadPart) / PCFrequency;
+			double elapsedTime = (staticCounterNow.QuadPart - staticCounterLast.QuadPart) / PCFrequency;
 			staticCounterLast = staticCounterNow;
-			return time;
+			return elapsedTime;
 		}
 
 		// Resets the static stopwatch to 0 seconds
@@ -44,9 +44,9 @@ namespace kl {
 		double GetElapsed() {
 			LARGE_INTEGER counterNow;
 			QueryPerformanceCounter(&counterNow);
-			double time = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
+			double elapsedTime = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
 			counterLast = counterNow;
-			return time;
+			return elapsedTime;
 		}
 
 		// Resets the stopwatch to 0 seconds
@@ -67,8 +67,6 @@ namespace kl {
 			LARGE_INTEGER counterTempFreq;
 			QueryPerformanceFrequency(&counterTempFreq);
 			PCFrequency = double(counterTempFreq.QuadPart);
-			StaticGetElapsed();
-			StaticStopwatchReset();
 		}
 
 	private:
