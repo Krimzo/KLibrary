@@ -92,7 +92,7 @@ namespace kl {
 		// Adds a new game object if the name doesn't already exist
 		gameobject* NewObject(std::string objectName, texture textureID = 0) {
 			if (!engineObjects.count(objectName)) {
-				engineObjects.insert(std::pair<std::string, gameobject>(objectName, { true, textureID }));
+				engineObjects.insert(std::pair<std::string, gameobject>(objectName, gameobject(textureID)));
 				return &engineObjects.at(objectName);
 			}
 			return nullptr;
@@ -106,7 +106,7 @@ namespace kl {
 				}
 
 				// Data buffers
-				gameobject tempObject = { true, textureID };
+				gameobject tempObject(textureID);
 				std::vector<vec3> xyzCoords;
 				std::vector<vec2> uvCoords;
 				std::string tempBuffer; tempBuffer.resize(100);

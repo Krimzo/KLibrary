@@ -270,6 +270,11 @@ namespace kl {
 		double gravity = 1;
 		vec3 velocity = {};
 		vec3 angular = {};
+
+		gameobject() {}
+		gameobject(kl::texture textureID) {
+			this->texture = textureID;
+		}
 	};
 
 	struct camera {
