@@ -12,6 +12,5 @@ int main() {
     testWindow.StartNew({ 800, 800 }, "Test Window", false);
 
 
-    //kl::console::WaitFor(' ');
     return 0;
 }

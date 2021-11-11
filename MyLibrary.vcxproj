@@ -165,10 +165,11 @@
     <ClInclude Include="incl\KrimzLib\window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameEngine.cpp" />
+    <ClCompile Include="src\Testing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
