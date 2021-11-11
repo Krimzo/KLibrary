@@ -3,12 +3,7 @@
 
 int main() {
     kl::image testImage(kl::size(800, 800));
-    testImage.RunOnEach([](kl::color* pixel, kl::point pos) {
-        byte b = kl::random::Byte();
-        pixel->r = b;
-        pixel->g = b;
-        pixel->b = b;
-    });
+    testImage.PerlinNoise(10);
     
     kl::window testWindow;
     testWindow.WindowUpdate = [&]() {

@@ -152,10 +152,6 @@
     <ClInclude Include="incl\KrimzLib\engine.h" />
     <ClInclude Include="incl\KrimzLib\file.h" />
     <ClInclude Include="incl\KrimzLib\image.h" />
-    <ClInclude Include="incl\KrimzLib\incl\OpenCL\cl.h" />
-    <ClInclude Include="incl\KrimzLib\incl\OpenCL\cl_platform.h" />
-    <ClInclude Include="incl\KrimzLib\incl\OpenCL\cl_version.h" />
-    <ClInclude Include="incl\KrimzLib\dep\OpenGL\glad.h" />
     <ClInclude Include="incl\KrimzLib\literal.h" />
     <ClInclude Include="incl\KrimzLib\math.h" />
     <ClInclude Include="incl\KrimzLib\tcp.h" />
@@ -169,7 +165,7 @@
     <ClInclude Include="incl\KrimzLib\window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Test.cpp" />
+    <ClCompile Include="src\GameEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

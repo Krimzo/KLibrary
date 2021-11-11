@@ -260,6 +260,46 @@ namespace kl {
 			return frame.str();
 		}
 
+		// NOT MY IDEA, thank you javidx9 :)
+		// Fills the image with random perlin noise
+		void PerlinNoise(int octaveCount, double bias = 1) {
+			// Generating random seed array
+			std::vector<double> seedArray(imageWidth * imageHeight);
+			for (uint32 i = 0; i < imageWidth * imageHeight; i++) {
+				seedArray[i] = kl::random::Double(0, 1);
+			}
+
+			// Generating noise
+			for (uint32 y = 0; y < imageHeight; y++) {
+				for (uint32 x = 0; x < imageWidth; x++) {
+					double noise = 0;
+					double scale = 1;
+					double scaleSum = 0;
+					
+					for (int i = 0; i < octaveCount; i++) {
+						int pitch = !(imageWidth >> i) ? 1 : imageWidth >> i;
+						int x1 = (x / pitch) * pitch;
+						int y1 = (y / pitch) * pitch;
+						int x2 = (x1 + pitch) % imageWidth;
+						int y2 = (y1 + pitch) % imageWidth;
+						double blendX = (double)(x - x1) / (double)pitch;
+						double blendY = (double)(y - y1) / (double)pitch;
+						double sampleT = (1 - blendX) * seedArray[uint64(y1 * imageWidth + x1)] + blendX * seedArray[uint64(y1 * imageWidth + x2)];
+						double sampleB = (1 - blendX) * seedArray[uint64(y2 * imageWidth + x1)] + blendX * seedArray[uint64(y2 * imageWidth + x2)];
+
+						scaleSum += scale;
+						noise += (blendY * (sampleB - sampleT) + sampleT) * scale;
+						scale /= bias;
+					}
+
+					byte grayValue = byte(255 * (noise / scaleSum));
+					imagePixels[uint64(y * imageWidth + x)].r = grayValue;
+					imagePixels[uint64(y * imageWidth + x)].g = grayValue;
+					imagePixels[uint64(y * imageWidth + x)].b = grayValue;
+				}
+			}
+		}
+
 		// Executes a function on each pixel
 		void RunOnEach(std::function<void(kl::color* pixelColor, kl::point pixelPosition)> toExecute) {
 			for (uint32 y = 0; y < imageHeight; y++) {

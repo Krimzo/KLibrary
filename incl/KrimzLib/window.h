@@ -84,7 +84,6 @@ namespace kl {
 				SetPixelFormat(hdc, pixelFormat, &pfd);
 				hglrc = wglCreateContext(hdc);
 				wglMakeCurrent(hdc, hglrc);
-				gladLoadGL();	// Load modern OpenGL functions
 				RECT clientArea = {};
 				GetClientRect(hwnd, &clientArea);
 				glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);

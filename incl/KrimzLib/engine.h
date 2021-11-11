@@ -90,14 +90,14 @@ namespace kl {
 		}
 
 		// Adds a new game object if the name doesn't already exist
-		gameobject* NewGameObject(std::string objectName, texture textureID = 0) {
+		gameobject* NewObject(std::string objectName, texture textureID = 0) {
 			if (!engineObjects.count(objectName)) {
 				engineObjects.insert(std::pair<std::string, gameobject>(objectName, { true, textureID }));
 				return &engineObjects.at(objectName);
 			}
 			return nullptr;
 		}
-		gameobject* NewGameObject(std::string objectName, std::string filePath, texture textureID) {
+		gameobject* NewObject(std::string objectName, std::string filePath, texture textureID) {
 			if (!engineObjects.count(objectName)) {
 				// Load file
 				FILE* fileStream = fopen(filePath.c_str(), "r");
@@ -169,21 +169,21 @@ namespace kl {
 			return nullptr;
 		}
 
+		// Returns a reference to the wanted game object
+		gameobject* GetEngineObject(std::string objectName) {
+			if (engineObjects.count(objectName)) {
+				return &engineObjects.at(objectName);
+			}
+			return nullptr;
+		}
+
 		// Removes a game object with the given name
-		bool DeleteGameObject(std::string objectName) {
+		bool DeleteObject(std::string objectName) {
 			if (engineObjects.count(objectName)) {
 				engineObjects.erase(objectName);
 				return true;
 			}
 			return false;
-		}
-
-		// Returns a reference to the wanted game object
-		gameobject* GetGameObject(std::string objectName) {
-			if (engineObjects.count(objectName)) {
-				return &engineObjects.at(objectName);
-			}
-			return nullptr;
 		}
 
 		// Adds a new texture to the engine
@@ -197,11 +197,11 @@ namespace kl {
 		}
 
 	private:
-		window engineWindow = window();
-		time engineTime = time();
-		std::map<std::string, gameobject> engineObjects;
-		std::map<std::string, gameobject>::iterator objItr;
-		std::vector<texture> engineTextures;
+		window engineWindow = {};
+		time engineTime = {};
+		std::map<std::string, gameobject> engineObjects = {};
+		std::map<std::string, gameobject>::iterator objItr = {};
+		std::vector<texture> engineTextures = {};
 
 		// Computing object physics 
 		void ObjectPhysics() {
