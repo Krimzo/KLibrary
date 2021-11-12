@@ -15,12 +15,6 @@ namespace kl {
 			}
 		}
 
-		// Enables face culling
-		static void EnableFaceCulling(bool backFace = true) {
-			glEnable(GL_CULL_FACE);
-			glCullFace(backFace ? GL_BACK : GL_FRONT);
-		}
-
 		// Enables textures
 		static void EnableTextures() {
 			glEnable(GL_TEXTURE_2D);
@@ -45,6 +39,12 @@ namespace kl {
 			glDeleteTextures(1, &textureID);
 		}
 
+		// Clear the frame and depth buffers
+		static void ClearBuffers(kl::colord color) {
+			glClearColor((float)color.r, (float)color.g, (float)color.b, 1);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
+
 		// Translates and rotates the camera
 		static void UpdateCamera(kl::camera camera) {
 			glMatrixMode(GL_MODELVIEW);
@@ -55,32 +55,10 @@ namespace kl {
 			glTranslated(-camera.position.x, -camera.position.y, camera.position.z);
 		}
 
-		// Clear the frame and depth buffers
-		static void ClearBuffers(kl::colord color) {
-			glClearColor((float)color.r, (float)color.g, (float)color.b, 1);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
-
-		// Renders an array of 2D triangles
-		static void Render2DTriangles(std::vector<kl::triangle>& triangles, kl::texture textureID) {
-			glBindTexture(GL_TEXTURE_2D, textureID);
-			glBegin(GL_TRIANGLES);
-			glColor3d(1, 1, 1);
-			for (int i = 0; i < triangles.size(); i++) {
-				for (int j = 0; j < 3; j++) {
-					glTexCoord2d(triangles[i].vertices[j].u, triangles[i].vertices[j].v);
-					glVertex3d(triangles[i].vertices[j].x, triangles[i].vertices[j].y, triangles[i].vertices[j].z);
-				}
-			}
-			glEnd();
-		}
-		static void Render2DTriangles(std::vector<kl::triangle>&& triangles, kl::texture textureID) {
-			Render2DTriangles(triangles, textureID);
-		}
-
 		// Renders an array of 3D triangles
-		static void Render3DTriangles(std::vector<kl::triangle>& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
+		static void RenderTriangles(std::vector<kl::triangle>& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
 			glBindTexture(GL_TEXTURE_2D, textureID);
+			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 			glTranslated(position.x, position.y, position.z);
 			glRotated(rotation.x, 1, 0, 0);
@@ -98,8 +76,8 @@ namespace kl {
 			glEnd();
 			glPopMatrix();
 		}
-		static void Render3DTriangles(std::vector<kl::triangle>&& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
-			Render3DTriangles(triangles, position, rotation, size, textureID);
+		static void RenderTriangles(std::vector<kl::triangle>&& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
+			RenderTriangles(triangles, position, rotation, size, textureID);
 		}
 
 		// Flips the front and back hdc buffers

@@ -27,9 +27,6 @@ namespace kl {
 				/* Enable 3D and depth buffer */
 				kl::opengl::Enable3D(fov, engineWindow.GetSize());
 
-				/* Enable backface culling */
-				kl::opengl::EnableFaceCulling();
-
 				/* Enable textures */
 				kl::opengl::EnableTextures();
 
@@ -59,7 +56,7 @@ namespace kl {
 				/* Render all game triangles */
 				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
 					if (objItr->second.visible) {
-						kl::opengl::Render3DTriangles(objItr->second.triangles, objItr->second.position, objItr->second.rotation, objItr->second.size, objItr->second.texture);
+						kl::opengl::RenderTriangles(objItr->second.triangles, objItr->second.position, objItr->second.rotation, objItr->second.size, objItr->second.texture);
 					}
 				}
 
