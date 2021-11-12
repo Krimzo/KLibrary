@@ -26,6 +26,62 @@ int main() {
 		table3->gravity = 0;
 	};
 
+	double cameraMoveSpeed = 1;
+	double cameraRotateSpeed = 30;
+	testEngine.EngineInput = [&](kl::key key, kl::mouse mouse) {
+		switch (key)
+		{
+		case 'W':
+			testEngine.engineCamera.position.z += cameraMoveSpeed * testEngine.deltaTime;
+			break;
+		case 'S':
+			testEngine.engineCamera.position.z -= cameraMoveSpeed * testEngine.deltaTime;
+			break;
+		case 'D':
+			testEngine.engineCamera.position.x += cameraMoveSpeed * testEngine.deltaTime;
+			break;
+		case 'A':
+			testEngine.engineCamera.position.x -= cameraMoveSpeed * testEngine.deltaTime;
+			break;
+		case 'Q':
+			testEngine.engineCamera.position.y += cameraMoveSpeed * testEngine.deltaTime;
+			break;
+		case 'E':
+			testEngine.engineCamera.position.y -= cameraMoveSpeed * testEngine.deltaTime;
+			break;
+		case 'R':
+			testEngine.engineCamera.position = {};
+			break;
+
+		case 'K':
+			testEngine.engineCamera.rotation.x += cameraRotateSpeed * testEngine.deltaTime;
+			break;
+		case 'I':
+			testEngine.engineCamera.rotation.x -= cameraRotateSpeed * testEngine.deltaTime;
+			break;
+		case 'L':
+			testEngine.engineCamera.rotation.y += cameraRotateSpeed * testEngine.deltaTime;
+			break;
+		case 'J':
+			testEngine.engineCamera.rotation.y -= cameraRotateSpeed * testEngine.deltaTime;
+			break;
+		case 'O':
+			testEngine.engineCamera.rotation.z += cameraRotateSpeed * testEngine.deltaTime;
+			break;
+		case 'U':
+			testEngine.engineCamera.rotation.z -= cameraRotateSpeed * testEngine.deltaTime;
+			break;
+		case 'P':
+			testEngine.engineCamera.rotation = {};
+			break;
+		}
+
+		kl::console::HideCursor();
+		kl::console::MoveCursor(kl::point(0, 0));
+		kl::console::Println(testEngine.engineCamera.position);
+		kl::console::Println(testEngine.engineCamera.rotation);
+	};
+
 	testEngine.StartNew(kl::size(1600, 900), "Test Engine");
 
 

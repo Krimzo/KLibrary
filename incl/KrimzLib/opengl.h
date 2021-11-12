@@ -49,10 +49,10 @@ namespace kl {
 		static void UpdateCamera(kl::camera camera) {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
-			glRotated(camera.rotation.x, 1, 0, 0);
+			glRotated(-camera.rotation.x, 1, 0, 0);
 			glRotated(camera.rotation.y, 0, 1, 0);
 			glRotated(camera.rotation.z, 0, 0, 1);
-			glTranslated(camera.position.x, camera.position.y, camera.position.z);
+			glTranslated(-camera.position.x, -camera.position.y, camera.position.z);
 		}
 
 		// Clear the frame and depth buffers
