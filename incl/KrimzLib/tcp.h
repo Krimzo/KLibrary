@@ -73,19 +73,19 @@ namespace kl {
 			}
 
 			// Send data back to the client
-			void SendData(bytes& data) {
+			void SendData(kl::bytes& data) {
 				if (created && clientConnected) {
 					if (send(clientSocket, (char*)&data[0], (int)data.size(), 0) == SOCKET_ERROR) {
 						clientConnected = false;
 					}
 				}
 			}
-			void SendData(bytes&& data) {
+			void SendData(kl::bytes&& data) {
 				SendData(data);
 			}
 
 			// Receive data from the client
-			void ReceiveData(bytes& dataBuffer) {
+			void ReceiveData(kl::bytes& dataBuffer) {
 				if (created && clientConnected) {
 					memset(&dataBuffer[0], 0, dataBuffer.size());
 					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), 0) == SOCKET_ERROR) {
@@ -147,19 +147,19 @@ namespace kl {
 			}
 
 			// Send data to server
-			void SendData(bytes& data) {
+			void SendData(kl::bytes& data) {
 				if (connected) {
 					if (send(clientSocket, (char*)&data[0], (int)data.size(), 0) == SOCKET_ERROR) {
 						Disconnect();
 					}
 				}
 			}
-			void SendData(bytes&& data) {
+			void SendData(kl::bytes&& data) {
 				SendData(data);
 			}
 
 			// Receive data from the server
-			void ReceiveData(bytes& dataBuffer) {
+			void ReceiveData(kl::bytes& dataBuffer) {
 				if (connected) {
 					memset(&dataBuffer[0], 0, dataBuffer.size());
 					if (recv(clientSocket, (char*)&dataBuffer[0], (int)dataBuffer.size(), 0) == SOCKET_ERROR) {
@@ -187,7 +187,7 @@ namespace kl {
 			WSADATA wsData = {};
 			if (WSAStartup(MAKEWORD(2, 2), &wsData)) {
 				printf("Failed to initalise winsock\n");
-				console::WaitFor(' ', true);
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 		}

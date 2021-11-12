@@ -72,7 +72,7 @@ namespace kl {
 		}
 
 		// Returns a filedata from a given file
-		static bytes ReadBytes(std::string filePath) {
+		static kl::bytes ReadBytes(std::string filePath) {
 			std::ifstream fileStream(filePath, std::ios::binary);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load file \"%s\".\n", filePath.c_str());
@@ -82,24 +82,24 @@ namespace kl {
 			fileStream.seekg(0, std::ios::end);
 			size_t fileLen = fileStream.tellg();
 			fileStream.seekg(0, std::ios::beg);
-			bytes byteArray(fileLen);
+			kl::bytes byteArray(fileLen);
 			fileStream.read((char*)&byteArray[0], fileLen);
 			fileStream.close();
 			return byteArray;
 		}
 
 		// Writes bytes to a file
-		static void WriteBytes(std::string filePath, bytes& data) {
+		static void WriteBytes(std::string filePath, kl::bytes& data) {
 			std::ofstream fileStream(filePath, std::ios::binary);
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
-		static void WriteBytes(std::string filePath, bytes&& data) {
+		static void WriteBytes(std::string filePath, kl::bytes&& data) {
 			WriteBytes(filePath, data);
 		}
 
 		// Appends bytes to a file
-		static void AppendBytes(std::string filePath, bytes& data, int position = -1) {
+		static void AppendBytes(std::string filePath, kl::bytes& data, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load file \"%s\".\n", filePath.c_str());
@@ -117,7 +117,7 @@ namespace kl {
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
-		static void AppendBytes(std::string filePath, bytes&& data, int position = -1) {
+		static void AppendBytes(std::string filePath, kl::bytes&& data, int position = -1) {
 			AppendBytes(filePath, data, position);
 		}
 

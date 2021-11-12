@@ -5,7 +5,7 @@ namespace kl {
 	class web {
 	public:
 		// Downloads website data(bytes) from the given url
-		static bytes GetWebsiteData(std::string url, int bufferSize = 16384) {
+		static kl::bytes GetWebsiteData(std::string url, int bufferSize = 16384) {
 			// Create browser
 			HINTERNET connection = InternetOpenA("CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
 			if (!connection) {
@@ -21,8 +21,8 @@ namespace kl {
 			}
 
 			// Download data
-			bytes finalData;
-			bytes dataBuffer(bufferSize);
+			kl::bytes finalData;
+			kl::bytes dataBuffer(bufferSize);
 			DWORD byteReadCount = 0;
 			while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount) {
 				for (DWORD i = 0; i < byteReadCount; i++) {
@@ -40,7 +40,7 @@ namespace kl {
 
 		// Downloads data from the website and saves it in a file
 		static void DownloadToFile(std::string url, std::string fileName) {
-			file::WriteBytes(fileName, GetWebsiteData(url));
+			kl::file::WriteBytes(fileName, GetWebsiteData(url));
 		}
 	};
 }

@@ -5,7 +5,7 @@ namespace kl {
 	template<typename T> class array {
 	public:
 		// Constructors and destructor
-		array(uint64 arraySize = 0, bool canGrow = false) {
+		array(kl::uint64 arraySize = 0, bool canGrow = false) {
 			// Update properties
 			this->canGrow = canGrow;
 
@@ -20,7 +20,7 @@ namespace kl {
 			Resize(arrayToCopy.Size());
 
 			// Copy the data
-			for (uint64 i = 0; i < arrayToCopy.Size(); i++) {
+			for (kl::uint64 i = 0; i < arrayToCopy.Size(); i++) {
 				arrayData = arrayToCopy[i];
 			}
 		}
@@ -32,7 +32,7 @@ namespace kl {
 			Resize(arrayToCopy.Size());
 
 			// Copy the data
-			for (uint64 i = 0; i < arrayToCopy.Size(); i++) {
+			for (kl::uint64 i = 0; i < arrayToCopy.Size(); i++) {
 				arrayData = arrayToCopy[i];
 			}
 		}
@@ -41,7 +41,7 @@ namespace kl {
 			Resize(listOfElements.size());
 
 			// Copy data from the initialiser list to the array memory
-			for (uint64 i = 0; i < listOfElements.size(); i++) {
+			for (kl::uint64 i = 0; i < listOfElements.size(); i++) {
 				arrayData[i] = listOfElements.begin()[i];
 			}
 		}
@@ -50,7 +50,7 @@ namespace kl {
 		}
 
 		// Operator overloading
-		T& operator [] (uint64 index) {
+		T& operator [] (kl::uint64 index) {
 			// Check if the index is out of the array bounds
 			if (index > (arraySize - 1) || !arraySize) {
 				// Check if the growth is enabled
@@ -75,7 +75,7 @@ namespace kl {
 			Resize(arrayToCopy.Size());
 
 			// Copy the data
-			for (uint64 i = 0; i < arrayToCopy.Size(); i++) {
+			for (kl::uint64 i = 0; i < arrayToCopy.Size(); i++) {
 				arrayData = arrayToCopy[i];
 			}
 		}
@@ -87,7 +87,7 @@ namespace kl {
 			Resize(arrayToCopy.Size());
 
 			// Copy the data
-			for (uint64 i = 0; i < arrayToCopy.Size(); i++) {
+			for (kl::uint64 i = 0; i < arrayToCopy.Size(); i++) {
 				arrayData = arrayToCopy[i];
 			}
 		}
@@ -96,7 +96,7 @@ namespace kl {
 			Resize(listOfElements.size());
 
 			// Copy data from the initialiser list to the array memory
-			for (uint64 i = 0; i < listOfElements.size(); i++) {
+			for (kl::uint64 i = 0; i < listOfElements.size(); i++) {
 				arrayData[i] = listOfElements.begin()[i];
 			}
 		}
@@ -114,12 +114,12 @@ namespace kl {
 		}
 
 		// Returns the current array size
-		uint64 Size() {
+		kl::uint64 Size() {
 			return arraySize;
 		}
 
 		// Changes the array size
-		void Resize(uint64 newSize) {
+		void Resize(kl::uint64 newSize) {
 			// Allocate temp memory
 			T* tempMemory = new T[newSize];
 			if (!tempMemory) {
@@ -130,13 +130,13 @@ namespace kl {
 
 			// Set newly allocated addresses to the default values
 			if (newSize > arraySize) {
-				for (uint64 i = arraySize; i < newSize; i++) {
+				for (kl::uint64 i = arraySize; i < newSize; i++) {
 					tempMemory[i] = {};
 				}
 			}
 
 			// Copy the data from old to temp memory
-			for (uint64 i = 0; i < min(arraySize, newSize); i++) {
+			for (kl::uint64 i = 0; i < min(arraySize, newSize); i++) {
 				tempMemory[i] = arrayData[i];
 			}
 
@@ -185,48 +185,48 @@ namespace kl {
 		}
 
 		// Inserts an array of elements on the given index
-		void Insert(uint64 index, kl::array<T>& toInsert) {
+		void Insert(kl::uint64 index, kl::array<T>& toInsert) {
 			// Update to fit the new size
 			Resize(max(index + toInsert.Size(), arraySize + toInsert.Size()));
 			
 			// Move data by the inserted array size
 			if (arraySize) {
-				for (uint64 i = arraySize - 1; i >= index + toInsert.Size(); i--) {
+				for (kl::uint64 i = arraySize - 1; i >= index + toInsert.Size(); i--) {
 					arrayData[i] = arrayData[i - toInsert.Size()];
 				}
 			}
 
 			// Write inserted array data
-			for (uint64 i = 0; i < toInsert.Size(); i++) {
+			for (kl::uint64 i = 0; i < toInsert.Size(); i++) {
 				arrayData[i + index] = toInsert[i];
 			}
 		}
-		void Insert(uint64 index, kl::array<T>&& toInsert) {
+		void Insert(kl::uint64 index, kl::array<T>&& toInsert) {
 			Insert(index, toInsert);
 		}
 
 		// Fills the whole(or one part of) array with the given value
 		void Fill(T value) {
-			for (uint64 i = 0; i < arraySize; i++) {
+			for (kl::uint64 i = 0; i < arraySize; i++) {
 				arrayData[i] = value;
 			}
 		}
-		void Fill(uint64 startInclusive, uint64 endExclusive, T value) {
+		void Fill(kl::uint64 startInclusive, kl::uint64 endExclusive, T value) {
 			// Resizing if the end is bigger than array size
 			if (endExclusive > arraySize) {
 				Resize(endExclusive);
 			}
 
 			// Setting the data
-			for (uint64 i = startInclusive; i < endExclusive; i++) {
+			for (kl::uint64 i = startInclusive; i < endExclusive; i++) {
 				arrayData[i] = value;
 			}
 		}
 
 		// Returns the number of found elements
-		uint64 Count(T toCount) {
-			uint64 counter = 0;
-			for (uint64 i = 0; i < arraySize; i++) {
+		kl::uint64 Count(T toCount) {
+			kl::uint64 counter = 0;
+			for (kl::uint64 i = 0; i < arraySize; i++) {
 				if (arrayData[i] == toCount) {
 					counter++;
 				}
@@ -235,19 +235,19 @@ namespace kl {
 		}
 
         // Returns the index of the first found element or -1 if the element was not found
-        int64 Find(T toFind) {
-            for (uint64 i = 0; i < arraySize; i++) {
+		kl::int64 Find(T toFind) {
+            for (kl::uint64 i = 0; i < arraySize; i++) {
                 if (arrayData[i] == toFind) {
-                    return (int64)i;
+                    return (kl::int64)i;
                 }
             }
             return -1;
         }
 
 		// Returns an array of indexes of all found elements
-		kl::array<uint64> FindAll(T toFind) {
-			kl::array<uint64> indexArray;
-			for (uint64 i = 0; i < arraySize; i++) {
+		kl::array<kl::uint64> FindAll(T toFind) {
+			kl::array<kl::uint64> indexArray;
+			for (kl::uint64 i = 0; i < arraySize; i++) {
                 if (arrayData[i] == toFind) {
                     indexArray <= i;
                 }
@@ -257,9 +257,9 @@ namespace kl {
 
         // Replaces all occurrences of an element with a given replace value
         // Returns the number of replaced elements
-        uint64 Replace(T toReplace, T with) {
-            uint64 replaceCounter = 0;
-            for (uint64 i = 0; i < arraySize; i++) {
+		kl::uint64 Replace(T toReplace, T with) {
+			kl::uint64 replaceCounter = 0;
+            for (kl::uint64 i = 0; i < arraySize; i++) {
                 if (arrayData[i] == toReplace) {
                     arrayData[i] = with;
                     replaceCounter++;
@@ -270,14 +270,14 @@ namespace kl {
 
 		// Executes a function on each array element
 		void RunOnEach(std::function<void(T* element)> toExecute) {
-			for (uint64 i = 0; i < arraySize; i++) {
+			for (kl::uint64 i = 0; i < arraySize; i++) {
 				toExecute(arrayData + i);
 			}
 		}
 
 	private:
 		T* arrayData = nullptr;
-		uint64 arraySize = 0;
+		kl::uint64 arraySize = 0;
 		bool canGrow = false;
 	};
 }

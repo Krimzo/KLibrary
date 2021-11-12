@@ -6,35 +6,35 @@ namespace kl {
 	public:
 		// Converts degrees to radians
 		static double ToRadians(double degrees) {
-			return degrees * constant::doubles::toRadians;
+			return degrees * kl::constant::doubles::toRadians;
 		}
 
 		// Converts radians to degrees
 		static double ToDegrees(double radians) {
-			return radians * constant::doubles::toDegrees;
+			return radians * kl::constant::doubles::toDegrees;
 		}
 
 		// Converts a byte array to a string
-		static std::string ToString(bytes& data) {
+		static std::string ToString(kl::bytes& data) {
 			std::stringstream ss;
-			for (uint64 i = 0; i < data.size(); i++) {
+			for (kl::uint64 i = 0; i < data.size(); i++) {
 				ss << (char)data[i];
 			}
 			return ss.str();
 		}
-		static std::string ToString(bytes&& data) {
+		static std::string ToString(kl::bytes&& data) {
 			return ToString(data);
 		}
 
 		// Converts a string to a bytes array
-		static bytes ToBytes(std::string& data) {
-			bytes tempBytes(data.size());
-			for (uint64 i = 0; i < data.size(); i++) {
+		static kl::bytes ToBytes(std::string& data) {
+			kl::bytes tempBytes(data.size());
+			for (kl::uint64 i = 0; i < data.size(); i++) {
 				tempBytes[i] = (byte)data[i];
 			}
 			return tempBytes;
 		}
-		static bytes ToBytes(std::string&& data) {
+		static kl::bytes ToBytes(std::string&& data) {
 			return ToBytes(data);
 		}
 

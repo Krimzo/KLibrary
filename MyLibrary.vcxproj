@@ -134,6 +134,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)incl\;$(SolutionDir)incl\KrimzLib\dep\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,7 +166,7 @@
     <ClInclude Include="incl\KrimzLib\window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Testing.cpp" />
+    <ClCompile Include="src\GameEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

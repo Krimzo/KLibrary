@@ -10,8 +10,8 @@ namespace kl {
 		}
 
 		// Returns a random byte
-		static byte Byte() {
-			return byte(rand() % 256);
+		static kl::byte Byte() {
+			return kl::byte(rand() % 256);
 		}
 
 		// Returns a random integer
@@ -38,19 +38,19 @@ namespace kl {
 		}
 
 		// Returns a random string
-		static std::string String(uint32 size) {
+		static std::string String(kl::uint32 size) {
 			std::stringstream ss;
-			for (uint32 i = 0; i < size; i++) {
+			for (kl::uint32 i = 0; i < size; i++) {
 				ss << random::Letter(random::Bool());
 			}
 			return ss.str();
 		}
 
 		// Returns a random color
-		static color Color() {
+		static kl::color Color() {
 			return { random::Byte(), random::Byte(), random::Byte() };
 		}
-		static colord Colord() {
+		static kl::colord Colord() {
 			return random::Color();
 		}
 

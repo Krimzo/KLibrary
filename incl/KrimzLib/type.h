@@ -17,20 +17,24 @@ namespace kl {
 /* MATH */
 namespace kl {
 	struct size {
-		uint32 width;
-		uint32 height;
+		kl::uint32 width;
+		kl::uint32 height;
 
-		// Constructor
-		size(uint32 width = 0, uint32 height = 0) {
+		// Constructors
+		size() {
+			width = 0;
+			height = 0;
+		}
+		size(kl::uint32 width, kl::uint32 height) {
 			this->width = width;
 			this->height = height;
 		}
 
 		// Operator overloading
-		bool operator == (size obj) {
+		bool operator == (kl::size obj) {
 			return (width == obj.width && height == obj.height);
 		}
-		bool operator != (size obj) {
+		bool operator != (kl::size obj) {
 			return (width != obj.width || height != obj.height);
 		}
 	};
@@ -39,17 +43,21 @@ namespace kl {
 		int x;
 		int y;
 
-		// Constructor
-		point(int x = 0, int y = 0) {
+		// Constructors
+		point() {
+			x = 0;
+			y = 0;
+		}
+		point(int x, int y) {
 			this->x = x;
 			this->y = y;
 		}
 
 		// Operator overloading
-		bool operator == (point obj) {
+		bool operator == (kl::point obj) {
 			return (x == obj.x && y == obj.y);
 		}
-		bool operator != (point obj) {
+		bool operator != (kl::point obj) {
 			return (x != obj.x || y != obj.y);
 		}
 	};
@@ -59,36 +67,40 @@ namespace kl {
 		double y;
 
 		// Constructors
-		vec2(double x = 0, double y = 0) {
+		vec2() {
+			x = 0;
+			y = 0;
+		}
+		vec2(double x, double y) {
 			this->x = x;
 			this->y = y;
 		}
-		vec2(point p) {
+		vec2(kl::point p) {
 			x = (double)p.x;
 			y = (double)p.y;
 		}
-		vec2(point a, point b) {
+		vec2(kl::point a, kl::point b) {
 			x = (double)b.x - a.x;
 			y = (double)b.y - a.y;
 		}
 
 		// Operator overloading
-		vec2 operator + (vec2 obj) {
+		kl::vec2 operator + (kl::vec2 obj) {
 			return { x + obj.x, y + obj.y };
 		}
-		vec2 operator - (vec2 obj) {
+		kl::vec2 operator - (kl::vec2 obj) {
 			return { x - obj.x, y - obj.y };
 		}
-		vec2 operator * (double a) {
+		kl::vec2 operator * (double a) {
 			return { x * a, y * a };
 		}
-		vec2 operator / (double a) {
+		kl::vec2 operator / (double a) {
 			return { x / a, y / a };
 		}
-		bool operator == (vec2 obj) {
+		bool operator == (kl::vec2 obj) {
 			return (x == obj.x && y == obj.y);
 		}
-		bool operator != (vec2 obj) {
+		bool operator != (kl::vec2 obj) {
 			return (x != obj.x || y != obj.y);
 		}
 
@@ -105,7 +117,7 @@ namespace kl {
 		}
 
 		// Retruns a normalized vector
-		vec2 Normalized() {
+		kl::vec2 Normalized() {
 			double vecLen = this->Length();
 			return { x / vecLen, y / vecLen };
 		}
@@ -116,30 +128,35 @@ namespace kl {
 		double y;
 		double z;
 
-		// Constructor
-		vec3(double x = 0, double y = 0, double z = 0) {
+		// Constructors
+		vec3() {
+			x = 0;
+			y = 0;
+			z = 0;
+		}
+		vec3(double x, double y, double z) {
 			this->x = x;
 			this->y = y;
 			this->z = z;
 		}
 
 		// Operator overloading
-		vec3 operator + (vec3 obj) {
+		kl::vec3 operator + (kl::vec3 obj) {
 			return { x + obj.x, y + obj.y, z + obj.z };
 		}
-		vec3 operator - (vec3 obj) {
+		kl::vec3 operator - (kl::vec3 obj) {
 			return { x - obj.x, y - obj.y, z - obj.z };
 		}
-		vec3 operator * (double a) {
+		kl::vec3 operator * (double a) {
 			return { x * a, y * a, z * a };
 		}
-		vec3 operator / (double a) {
+		kl::vec3 operator / (double a) {
 			return { x / a, y / a, z / a };
 		}
-		bool operator == (vec3 obj) {
+		bool operator == (kl::vec3 obj) {
 			return (x == obj.x && y == obj.y && z == obj.z);
 		}
-		bool operator != (vec3 obj) {
+		bool operator != (kl::vec3 obj) {
 			return (x != obj.x || y != obj.y || z != obj.z);
 		}
 
@@ -157,7 +174,7 @@ namespace kl {
 		}
 
 		// Retruns a normalized vector
-		vec3 Normalized() {
+		kl::vec3 Normalized() {
 			double vecLen = this->Length();
 			return { x / vecLen, y / vecLen, z / vecLen };
 		}
@@ -178,44 +195,55 @@ namespace kl {
 		double g;
 		double b;
 
-		// Constructor
-		colord(double r = 0, double g = 0, double b = 0) {
+		// Constructors
+		colord() {
+			r = 0;
+			g = 0;
+			b = 0;
+		}
+		colord(double r, double g, double b) {
 			this->r = r;
 			this->g = g;
 			this->b = b;
 		}
 
 		// Operator overloading
-		bool operator == (colord obj) {
+		bool operator == (kl::colord obj) {
 			return (r == obj.r && g == obj.g && b == obj.b);
 		}
-		bool operator != (colord obj) {
+		bool operator != (kl::colord obj) {
 			return (r != obj.r || g != obj.g || b != obj.b);
 		}
 	};
 
 	struct color {
 		// Had to flip R and B because the winapi uses BGR
-		byte b;
-		byte g;
-		byte r;
+		kl::byte b;
+		kl::byte g;
+		kl::byte r;
 
-		color(byte r = 0, byte g = 0, byte b = 0) {
+		// Constructors
+		color() {
+			r = 0;
+			g = 0;
+			b = 0;
+		}
+		color(kl::byte r, kl::byte g, kl::byte b) {
 			this->r = r;
 			this->g = g;
 			this->b = b;
 		}
 
 		// Conversions
-		operator colord() const {
+		operator kl::colord() const {
 			return { r / 255.0, g / 255.0, b / 255.0 };
 		}
 
 		// Operator overloading
-		bool operator == (color obj) {
+		bool operator == (kl::color obj) {
 			return (r == obj.r && g == obj.g && b == obj.b);
 		}
-		bool operator != (color obj) {
+		bool operator != (kl::color obj) {
 			return (r != obj.r || g != obj.g || b != obj.b);
 		}
 	};
@@ -231,54 +259,132 @@ namespace kl {
 	typedef unsigned int key;
 
 	struct mouse {
-		bool lmb = false;
-		bool mmb = false;
-		bool rmb = false;
-		point position = {};
+		bool lmb;
+		bool mmb;
+		bool rmb;
+		kl::point position;
+
+		// Constructors
+		mouse() {
+			lmb = false;
+			mmb = false;
+			rmb = false;
+			position = {};
+		}
+		mouse(bool lmb, bool mmb, bool rmb, kl::point position) {
+			this->lmb = lmb;
+			this->mmb = mmb;
+			this->rmb = rmb;
+			this->position = position;
+		}
 	};
 }
 
 /* ENGINE */
 namespace kl {
 	struct vertex {
-		double x = 0;
-		double y = 0;
-		double z = 0;
-		double u = 0;
-		double v = 0;
-		colord color = {};
+		double x;
+		double y;
+		double z;
+		double u;
+		double v;
+
+		// Constructors
+		vertex() {
+			x = 0;
+			y = 0;
+			z = 0;
+			u = 0;
+			v = 0;
+		}
+		vertex(double x, double y, double z) {
+			this->x = x;
+			this->y = y;
+			this->z = z;
+			u = 0;
+			v = 0;
+		}
+		vertex(double x, double y, double z, double u, double v) {
+			this->x = x;
+			this->y = y;
+			this->z = z;
+			this->u = u;
+			this->v = v;
+		}
 	};
 
 	struct triangle {
-		vertex vertices[3] = {};
-		bool textured = false;
+		kl::vertex vertices[3];
+
+		// Constructors
+		triangle() {
+			vertices[0] = {};
+			vertices[1] = {};
+			vertices[2] = {};
+		}
+		triangle(kl::vertex v0, kl::vertex v1, kl::vertex v2) {
+			vertices[0] = v0;
+			vertices[1] = v1;
+			vertices[2] = v2;
+		}
 	};
 
 	struct gameobject {
 		// Visual
-		bool visible = true;
-		texture texture = 0;
-		std::vector<triangle> triangles = {};
+		bool visible;
+		kl::texture texture;
+		std::vector<kl::triangle> triangles;
 
 		// Geometry
-		vec3 position = {};
-		vec3 rotation = {};
-		vec3 size = { 1, 1, 1 };
+		kl::vec3 position;
+		kl::vec3 rotation;
+		kl::vec3 size;
 
 		// Physics
-		bool physics = false;
-		double gravity = 1;
-		vec3 velocity = {};
-		vec3 angular = {};
+		bool physics;
+		double gravity;
+		kl::vec3 velocity;
+		kl::vec3 angular;
 
-		gameobject() {}
+		// Constructors
+		gameobject() {
+			visible = true;
+			texture = 0;
+			triangles = {};
+			position = {};
+			rotation = {};
+			size = { 1, 1, 1 };
+			physics = false;
+			gravity = 1;
+			velocity = {};
+			angular = {};
+		}
 		gameobject(kl::texture textureID) {
-			this->texture = textureID;
+			visible = true;
+			texture = textureID;
+			triangles = {};
+			position = {};
+			rotation = {};
+			size = { 1, 1, 1 };
+			physics = false;
+			gravity = 1;
+			velocity = {};
+			angular = {};
 		}
 	};
 
 	struct camera {
-		vec3 position = {};
-		vec3 rotation = {};
+		kl::vec3 position;
+		kl::vec3 rotation;
+
+		// Constructors
+		camera() {
+			position = {};
+			rotation = {};
+		}
+		camera(kl::vec3 position, kl::vec3 rotation) {
+			this->position = position;
+			this->rotation = rotation;
+		}
 	};
 }

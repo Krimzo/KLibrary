@@ -5,8 +5,8 @@ namespace kl {
 	class window {
 	public:
 		// Input
-		key KEY = 0;
-		mouse MOUSE = {};
+		kl::key KEY = 0;
+		kl::mouse MOUSE = {};
 
 		// Window function calls
 		std::function<void(void)> WindowStart = []() {};
@@ -14,9 +14,9 @@ namespace kl {
 		std::function<void(void)> WindowEnd = []() {};
 
 		// Window creation
-		void StartNew(size size, std::string name, bool resizeable = true, bool continuous = false, bool opengl = false) {
+		void StartNew(kl::size size, std::string name, bool resizeable = true, bool continuous = false, bool opengl = false) {
 			// Converting window name to a wstring
-			std::wstring wName = convert::ToWString(name);
+			std::wstring wName = kl::convert::ToWString(name);
 
 			// Define windowapi window class
 			WNDCLASSEXW windowClass = {};
@@ -34,7 +34,7 @@ namespace kl {
 			windowClass.hIconSm = nullptr;
 			if (!RegisterClassExW(&windowClass)) {
 				printf("Couldn't register window class! Last error = %d\n", GetLastError());
-				console::WaitFor(' ', true);
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 
@@ -44,10 +44,10 @@ namespace kl {
 			AdjustWindowRect(&adjustedWindowSize, windowStyle, FALSE);
 			size.width = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-			hwnd = CreateWindowExW(0, wName.c_str(), wName.c_str(), windowStyle, (constant::ints::ScreenWidth / 2 - size.width / 2), (constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, nullptr, nullptr, hInstance, nullptr);
+			hwnd = CreateWindowExW(0, wName.c_str(), wName.c_str(), windowStyle, (kl::constant::ints::ScreenWidth / 2 - size.width / 2), (kl::constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, nullptr, nullptr, hInstance, nullptr);
 			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
-				console::WaitFor(' ', true);
+				kl::console::WaitFor(' ', true);
 				exit(69);
 			}
 			ShowWindow(hwnd, SW_SHOW);
@@ -80,7 +80,9 @@ namespace kl {
 				0, 0, 0
 				};
 				int pixelFormat = ChoosePixelFormat(hdc, &pfd);
-				if (!pixelFormat) { exit(69); }
+				if (!pixelFormat) { 
+					exit(69);
+				}
 				SetPixelFormat(hdc, pixelFormat, &pfd);
 				hglrc = wglCreateContext(hdc);
 				wglMakeCurrent(hdc, hglrc);
@@ -142,10 +144,10 @@ namespace kl {
 		}
 
 		// Returns the window size
-		size GetSize() {
+		kl::size GetSize() {
 			RECT clientArea = {};
 			GetClientRect(hwnd, &clientArea);
-			return { uint32(clientArea.right - clientArea.left), uint32(clientArea.bottom - clientArea.top) };
+			return { kl::uint32(clientArea.right - clientArea.left), kl::uint32(clientArea.bottom - clientArea.top) };
 		}
 		int GetWidth() {
 			return GetSize().width;
@@ -166,12 +168,12 @@ namespace kl {
 		}
 
 		// Sets the pixels of the window
-		void DisplayImage(image& toDraw, point position = { 0, 0 }) {
+		void DisplayImage(kl::image& toDraw, kl::point position = { 0, 0 }) {
 			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
 			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -(int)toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetRawData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
-		void DisplayImage(image&& toDraw, point position = { 0, 0 }) {
+		void DisplayImage(kl::image&& toDraw, kl::point position = { 0, 0 }) {
 			DisplayImage(toDraw, position);
 		}
 
@@ -187,7 +189,7 @@ namespace kl {
 		void HandleMessage() {
 			switch (wndMsg.message) {
 			case WM_KEYDOWN:
-				KEY = (key)wndMsg.wParam;
+				KEY = (kl::key)wndMsg.wParam;
 				break;
 
 			case WM_KEYUP:
