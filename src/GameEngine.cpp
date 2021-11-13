@@ -4,26 +4,35 @@
 int main() {
 	kl::engine testEngine(kl::constant::colors::gray);
 
+	kl::gameobject* table1 = nullptr;
+	kl::gameobject* table2 = nullptr;
+	kl::gameobject* table3 = nullptr;
+
 	testEngine.EngineStart = [&]() {
 		kl::texture tableTexture = testEngine.NewTexture("res/textures/table.png");
 
-		kl::gameobject* table1 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
+		table1 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
 		table1->position = { -1, -0.5, -2.5 };
 		table1->physics = true;
 		table1->angular.y = 36;
 		table1->gravity = 0;
 
-		kl::gameobject* table2 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
+		table2 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
 		table2->position = { 0, -0.5, -2.5 };
 		table2->physics = true;
 		table2->angular.x = -36;
 		table2->gravity = 0;
 
-		kl::gameobject* table3 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
+		table3 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
 		table3->position = { 1, -0.5, -2.5 };
 		table3->physics = true;
 		table3->angular.y = -36;
 		table3->gravity = 0;
+	};
+
+	testEngine.EngineUpdate = [&]() {
+		double tableNewSize = cos(kl::convert::ToRadians(table2->rotation.x));
+		table2->size = kl::vec3(tableNewSize, tableNewSize, tableNewSize);
 	};
 
 	double cameraMoveSpeed = 1;
