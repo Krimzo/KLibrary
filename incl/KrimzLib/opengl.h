@@ -68,10 +68,15 @@ namespace kl {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
+		// Resets the modelview matrix
+		static void ResetModelMatrix() {
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+		}
+
 		// Translates and rotates the camera
 		static void UpdateCamera(kl::camera camera) {
 			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
 			glRotated(-camera.rotation.x, 1, 0, 0);
 			glRotated(camera.rotation.y, 0, 1, 0);
 			glRotated(camera.rotation.z, 0, 0, 1);

@@ -121,7 +121,7 @@ namespace kl {
 			AppendBytes(filePath, data, position);
 		}
 
-		// Deletes a given file
+		// Deletes the given file
 		static void Delete(std::string filePath) {
 			remove(filePath.c_str());
 		}

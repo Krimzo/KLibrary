@@ -53,6 +53,9 @@ namespace kl {
 				/* Clear frame and depth buffers */
 				kl::opengl::ClearBuffers(background);
 
+				/* Reset the modelview matrix */
+				kl::opengl::ResetModelMatrix();
+
 				/* Update camera rotation and position */
 				kl::opengl::UpdateCamera(engineCamera);
 
