@@ -24,10 +24,10 @@ namespace kl {
 		// Creates the engine
 		void StartNew(kl::size size, std::string name, double fov = 60) {
 			engineWindow.WindowStart = [&]() {
-				/* Enable 3D and depth buffer */
+				/* 3D projection setup */
 				kl::opengl::Setup3D(fov, engineWindow.GetSize());
 
-				/* Enable depth buffering */
+				/* Enable depth buffer */
 				kl::opengl::SetDepthTest(true);
 
 				/* Enable textures */
@@ -50,7 +50,7 @@ namespace kl {
 				/* Apply physics */
 				PhysicsUpdate();
 
-				/* Buffer clearing */
+				/* Clear frame and depth buffers */
 				kl::opengl::ClearBuffers(background);
 
 				/* Update camera rotation and position */
@@ -58,8 +58,8 @@ namespace kl {
 
 				/* Render all game triangles */
 				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
-					if (objItr->second.visible) {
-						kl::opengl::RenderTriangles(objItr->second.triangles, objItr->second.position, objItr->second.rotation, objItr->second.size, objItr->second.texture);
+					if (objItr->visible) {
+						kl::opengl::RenderTriangles(objItr->triangles, objItr->position, objItr->rotation, objItr->size, objItr->texture);
 					}
 				}
 
@@ -92,83 +92,71 @@ namespace kl {
 			this->Stop();
 		}
 
-		// Adds a new game object if the name doesn't already exist
-		kl::gameobject* NewObject(std::string objectName, kl::texture textureID = 0) {
-			if (!engineObjects.count(objectName)) {
-				engineObjects.insert(std::pair<std::string, kl::gameobject>(objectName, kl::gameobject(textureID)));
-				return &engineObjects.at(objectName);
-			}
-			return nullptr;
+		// Creates a new game object
+		kl::gameobject* NewObject(kl::texture textureID) {
+			engineObjects.push_back(kl::gameobject(textureID));
+			return &engineObjects.back();
 		}
-		kl::gameobject* NewObject(std::string objectName, std::string filePath, kl::texture textureID) {
-			if (!engineObjects.count(objectName)) {
-				// Load file
-				FILE* fileStream = fopen(filePath.c_str(), "r");
-				if (!fileStream) {
-					return nullptr;
+		kl::gameobject* NewObject(kl::texture textureID, std::string objFilePath) {
+			// Load file
+			FILE* fileStream = fopen(objFilePath.c_str(), "r");
+			if (!fileStream) {
+				return nullptr;
+			}
+
+			// Data buffers
+			kl::gameobject tempObject(textureID);
+			std::vector<kl::vec3> xyzCoords = {};
+			std::vector<kl::vec2> uvCoords = {};
+			std::string tempBuffer; tempBuffer.resize(100);
+			int scanStatus = 0;
+			kl::vec3 tempXYZ = {};
+			kl::vec2 tempUV = {};
+			int coordIndex0 = 0;
+			int textureIndex0 = 0;
+			int normalIndx0 = 0;
+			int coordIndex1 = 0;
+			int textureIndex1 = 0;
+			int normalIndx1 = 0;
+			int coordIndex2 = 0;
+			int textureIndex2 = 0;
+			int normalIndx2 = 0;
+
+			// Parse .obj data
+			while (scanStatus != -1) {
+				if ((scanStatus = fscanf(fileStream, "v %lf %lf %lf", &tempXYZ.x, &tempXYZ.y, &tempXYZ.z)) == 3) {
+					xyzCoords.push_back(tempXYZ);
 				}
-
-				// Data buffers
-				kl::gameobject tempObject(textureID);
-				std::vector<kl::vec3> xyzCoords = {};
-				std::vector<kl::vec2> uvCoords = {};
-				std::string tempBuffer; tempBuffer.resize(100);
-				int scanStatus = 0;
-				kl::vec3 tempXYZ = {};
-				kl::vec2 tempUV = {};
-				int coordIndex0 = 0;
-				int textureIndex0 = 0;
-				int normalIndx0 = 0;
-				int coordIndex1 = 0;
-				int textureIndex1 = 0;
-				int normalIndx1 = 0;
-				int coordIndex2 = 0;
-				int textureIndex2 = 0;
-				int normalIndx2 = 0;
-
-				// Parse .obj data
-				while (scanStatus != -1) {
-					if ((scanStatus = fscanf(fileStream, "v %lf %lf %lf", &tempXYZ.x, &tempXYZ.y, &tempXYZ.z)) == 3) {
-						xyzCoords.push_back(tempXYZ);
-					}
-					else if ((scanStatus = fscanf(fileStream, "t %lf %lf", &tempUV.x, &tempUV.y)) == 2) {
-						uvCoords.push_back(tempUV);
-					}
-					else if ((scanStatus = fscanf(fileStream, "f %d/%d/%d %d/%d/%d %d/%d/%d", &coordIndex0, &textureIndex0, &normalIndx0, &coordIndex1, &textureIndex1, &normalIndx1, &coordIndex2, &textureIndex2, &normalIndx2)) == 9) {
-						tempObject.triangles.push_back(
-							kl::triangle(
-								kl::vertex(xyzCoords[--coordIndex0].x, xyzCoords[coordIndex0].y, xyzCoords[coordIndex0].z, uvCoords[--textureIndex0].x, uvCoords[textureIndex0].y),
-								kl::vertex(xyzCoords[--coordIndex1].x, xyzCoords[coordIndex1].y, xyzCoords[coordIndex1].z, uvCoords[--textureIndex1].x, uvCoords[textureIndex1].y),
-								kl::vertex(xyzCoords[--coordIndex2].x, xyzCoords[coordIndex2].y, xyzCoords[coordIndex2].z, uvCoords[--textureIndex2].x, uvCoords[textureIndex2].y)
-							)
-						);
-					}
-					else {
-						fgets(&tempBuffer[0], 100, fileStream);
-					}
+				else if ((scanStatus = fscanf(fileStream, "t %lf %lf", &tempUV.x, &tempUV.y)) == 2) {
+					uvCoords.push_back(tempUV);
 				}
-				fclose(fileStream);
-
-				// Save object in memory
-				engineObjects.insert(std::pair<std::string, kl::gameobject>(objectName, tempObject));
-				return &engineObjects.at(objectName);
+				else if ((scanStatus = fscanf(fileStream, "f %d/%d/%d %d/%d/%d %d/%d/%d", &coordIndex0, &textureIndex0, &normalIndx0, &coordIndex1, &textureIndex1, &normalIndx1, &coordIndex2, &textureIndex2, &normalIndx2)) == 9) {
+					tempObject.triangles.push_back(
+						kl::triangle(
+							kl::vertex(xyzCoords[--coordIndex0].x, xyzCoords[coordIndex0].y, xyzCoords[coordIndex0].z, uvCoords[--textureIndex0].x, uvCoords[textureIndex0].y),
+							kl::vertex(xyzCoords[--coordIndex1].x, xyzCoords[coordIndex1].y, xyzCoords[coordIndex1].z, uvCoords[--textureIndex1].x, uvCoords[textureIndex1].y),
+							kl::vertex(xyzCoords[--coordIndex2].x, xyzCoords[coordIndex2].y, xyzCoords[coordIndex2].z, uvCoords[--textureIndex2].x, uvCoords[textureIndex2].y)
+						)
+					);
+				}
+				else {
+					fgets(&tempBuffer[0], 100, fileStream);
+				}
 			}
-			return nullptr;
+			fclose(fileStream);
+
+			// Save object in engine memory
+			engineObjects.push_back(tempObject);
+			return &engineObjects.back();
 		}
 
-		// Returns a reference to the wanted game object
-		kl::gameobject* GetEngineObject(std::string objectName) {
-			if (engineObjects.count(objectName)) {
-				return &engineObjects.at(objectName);
-			}
-			return nullptr;
-		}
-
-		// Removes a game object with the given name
-		bool DeleteObject(std::string objectName) {
-			if (engineObjects.count(objectName)) {
-				engineObjects.erase(objectName);
-				return true;
+		// Deletes a game object
+		bool Delete(kl::gameobject* objectAddress) {
+			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
+				if (&*objItr == objectAddress) {
+					engineObjects.erase(objItr);
+					return true;
+				}
 			}
 			return false;
 		}
@@ -183,29 +171,41 @@ namespace kl {
 			return NewTexture(textureImage);
 		}
 
+		// Deletes an engine texture
+		bool Delete(kl::texture textureID) {
+			for (int i = 0; i < engineTextures.size(); i++) {
+				if (engineTextures[i] == textureID) {
+					kl::opengl::DeleteTexture(textureID);
+					engineTextures.erase(engineTextures.begin() + i);
+					return true;
+				}
+			}
+			return false;
+		}
+
 	private:
 		kl::window engineWindow = {};
 		kl::time engineTime = {};
-		std::map<std::string, kl::gameobject> engineObjects = {};
-		std::map<std::string, kl::gameobject>::iterator objItr = {};
+		std::list<kl::gameobject> engineObjects = {};
+		std::list<kl::gameobject>::iterator objItr = {};
 		std::vector<kl::texture> engineTextures = {};
 
 		// Computing object physics 
 		void PhysicsUpdate() {
 			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
-				if (objItr->second.physics) {
+				if (objItr->physics) {
 					// Applying gravity
-					objItr->second.velocity.y -= gravity * objItr->second.gravity * deltaTime;
+					objItr->velocity.y -= gravity * objItr->gravity * deltaTime;
 
 					// Applying velocity
-					objItr->second.position.x += objItr->second.velocity.x * deltaTime;
-					objItr->second.position.y += objItr->second.velocity.y * deltaTime;
-					objItr->second.position.z += objItr->second.velocity.z * deltaTime;
+					objItr->position.x += objItr->velocity.x * deltaTime;
+					objItr->position.y += objItr->velocity.y * deltaTime;
+					objItr->position.z += objItr->velocity.z * deltaTime;
 
 					// Applying angular momentum
-					objItr->second.rotation.x += objItr->second.angular.x * deltaTime;
-					objItr->second.rotation.y += objItr->second.angular.y * deltaTime;
-					objItr->second.rotation.z += objItr->second.angular.z * deltaTime;
+					objItr->rotation.x += objItr->angular.x * deltaTime;
+					objItr->rotation.y += objItr->angular.y * deltaTime;
+					objItr->rotation.z += objItr->angular.z * deltaTime;
 				}
 			}
 		}

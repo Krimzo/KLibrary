@@ -282,6 +282,8 @@ namespace kl {
 
 /* ENGINE */
 namespace kl {
+	typedef unsigned int id;
+
 	struct vertex {
 		double x;
 		double y;

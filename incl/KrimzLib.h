@@ -7,11 +7,12 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iterator>
 #include <vector>
+#include <list>
+#include <map>
 #include <functional>
 #include <thread>
-#include <iterator>
-#include <map>
 
 // Including external headers
 #include <conio.h>
