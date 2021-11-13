@@ -140,7 +140,7 @@ namespace kl {
 		// Draws a line between 2 points
 		void DrawLine(kl::point a, kl::point b, kl::color col) {
 			// Calculations
-			int len = max(abs(b.x - a.x), abs(b.y - a.y));
+			int len = std::max(abs(b.x - a.x), abs(b.y - a.y));
 			kl::vec2 incr = { ((double)b.x - (double)a.x) / len, ((double)b.y - (double)a.y) / len };
 
 			// Drawing

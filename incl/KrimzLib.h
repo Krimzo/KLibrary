@@ -25,6 +25,7 @@
 #include <gl/GLU.h>
 
 // Including kl headers
+#include "KrimzLib/macro.h"
 #include "KrimzLib/type.h"
 #include "KrimzLib/literal.h"
 #include "KrimzLib/constant.h"
@@ -47,12 +48,12 @@
 
 // Linking .libs
 #pragma comment(lib, "gdi32.lib")
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "wininet.lib")
-#pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "wininet.lib")
+#pragma comment(lib, "shlwapi.lib")
 
 // Library intializer and unintializer
 namespace _kl_dont_use_ {

@@ -4,20 +4,43 @@
 namespace kl {
 	class opengl {
 	public:
-		// Enables 3D perspective and depth buffer by deafult
-		static void Enable3D(double fov, kl::size frameSize, bool enableDepthBuffer = true) {
+		// Setups perspective for 3D rendering
+		static void Setup3D(double fov, kl::size frameSize) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluPerspective(fov, (double)frameSize.width / frameSize.height, 0.01, 100.0);
-			if (enableDepthBuffer) {
+		}
+		
+		// Enables/disables depth buffering
+		static void SetDepthTest(bool enable) {
+			if (enable) {
 				glEnable(GL_DEPTH_TEST);
 				glDepthFunc(GL_LESS);
 			}
+			else {
+				glDisable(GL_DEPTH_TEST);
+			}
 		}
 
-		// Enables textures
-		static void EnableTextures() {
-			glEnable(GL_TEXTURE_2D);
+		// Enables/disables face culling
+		static void SetFaceCulling(bool enable, bool backFace = true) {
+			if (enable) {
+				glEnable(GL_CULL_FACE);
+				glCullFace(backFace ? GL_BACK : GL_FRONT);
+			}
+			else {
+				glDisable(GL_CULL_FACE);
+			}
+		}
+
+		// Enables/disables textures
+		static void SetTextures(bool enable) {
+			if (enable) {
+				glEnable(GL_TEXTURE_2D);
+			}
+			else {
+				glDisable(GL_TEXTURE_2D);
+			}
 		}
 
 		// Creates a new texture and stores it in gpu memory

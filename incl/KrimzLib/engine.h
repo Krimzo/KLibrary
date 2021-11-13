@@ -25,10 +25,13 @@ namespace kl {
 		void StartNew(kl::size size, std::string name, double fov = 60) {
 			engineWindow.WindowStart = [&]() {
 				/* Enable 3D and depth buffer */
-				kl::opengl::Enable3D(fov, engineWindow.GetSize());
+				kl::opengl::Setup3D(fov, engineWindow.GetSize());
+
+				/* Enable depth buffering */
+				kl::opengl::SetDepthTest(true);
 
 				/* Enable textures */
-				kl::opengl::EnableTextures();
+				kl::opengl::SetTextures(true);
 
 				/* Game start function call */
 				EngineStart();

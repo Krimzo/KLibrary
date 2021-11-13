@@ -136,7 +136,7 @@ namespace kl {
 			}
 
 			// Copy the data from old to temp memory
-			for (kl::uint64 i = 0; i < min(arraySize, newSize); i++) {
+			for (kl::uint64 i = 0; i < std::min(arraySize, newSize); i++) {
 				tempMemory[i] = arrayData[i];
 			}
 
