@@ -44,7 +44,7 @@ namespace kl {
 			AdjustWindowRect(&adjustedWindowSize, windowStyle, FALSE);
 			size.width = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.height = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-			hwnd = CreateWindowExW(NONE, wName.c_str(), wName.c_str(), windowStyle, (kl::constant::ints::ScreenWidth / 2 - size.width / 2), (kl::constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, nullptr, nullptr, hInstance, nullptr);
+			hwnd = CreateWindowExW(0, wName.c_str(), wName.c_str(), windowStyle, (kl::constant::ints::ScreenWidth / 2 - size.width / 2), (kl::constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, nullptr, nullptr, hInstance, nullptr);
 			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
 				kl::console::WaitFor(' ', true);
@@ -95,7 +95,7 @@ namespace kl {
 			if (continuous) {
 				WindowStart();
 				while (IsWindow(hwnd)) {
-					while (PeekMessageW(&wndMsg, hwnd, NONE, NONE, PM_REMOVE)) {
+					while (PeekMessageW(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
 						HandleMessage();
 					}
 					WindowUpdate();
@@ -105,7 +105,7 @@ namespace kl {
 			else {
 				WindowStart();
 				while (IsWindow(hwnd)) {
-					GetMessageW(&wndMsg, hwnd, NONE, NONE);
+					GetMessageW(&wndMsg, hwnd, 0, 0);
 					HandleMessage();
 					WindowUpdate();
 				}

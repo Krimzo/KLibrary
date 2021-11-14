@@ -155,7 +155,6 @@
     <ClInclude Include="incl\KrimzLib\file.h" />
     <ClInclude Include="incl\KrimzLib\image.h" />
     <ClInclude Include="incl\KrimzLib\literal.h" />
-    <ClInclude Include="incl\KrimzLib\macro.h" />
     <ClInclude Include="incl\KrimzLib\math.h" />
     <ClInclude Include="incl\KrimzLib\tcp.h" />
     <ClInclude Include="incl\KrimzLib\opengl.h" />
