@@ -16,7 +16,7 @@ namespace kl {
 
 		// Sets the console cursor position
 		static void MoveCursor(kl::point position) {
-			SetConsoleCursorPosition(stdConsoleHandle, { (short)position.x, (short)position.y });
+			SetConsoleCursorPosition(stdConsoleHandle, { short(position.x), short(position.y) });
 		}
 
 		// Hides the console cursor
@@ -44,20 +44,14 @@ namespace kl {
 		static kl::size GetSize() {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
-			return {
-				kl::uint32(csbi.srWindow.Right - csbi.srWindow.Left + 1),
-				kl::uint32(csbi.srWindow.Bottom - csbi.srWindow.Top + 1)
-			};
+			return kl::size(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 		}
 
 		// Returns screen buffer size
 		static kl::size GetBufferSize() {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
-			return {
-				kl::uint32(csbi.dwSize.X),
-				kl::uint32(csbi.dwSize.Y)
-			};
+			return kl::size(csbi.dwSize.X, csbi.dwSize.Y);
 		}
 
 		// Changes the console size
@@ -77,8 +71,8 @@ namespace kl {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
-			cfi.dwFontSize.X = (SHORT)size.width;
-			cfi.dwFontSize.Y = (SHORT)size.height;
+			cfi.dwFontSize.X = SHORT(size.width);
+			cfi.dwFontSize.Y = SHORT(size.height);
 			cfi.FontFamily = FF_DONTCARE;
 			cfi.FontWeight = FW_NORMAL;
 			wcscpy(cfi.FaceName, kl::convert::ToWString(fontName).c_str());
@@ -119,7 +113,7 @@ namespace kl {
 		static void ProgressBar(std::string message, kl::uint32 outputY, double percentage) {
 			// Prep
 			percentage = std::max(std::min(percentage, 1.0), 0.0);
-			int barLen = console::GetSize().width - (int)message.length() - 11;
+			int barLen = console::GetSize().width - int(message.length() - 11);
 			int doneLen = int(barLen * percentage);
 			int emptyLen = barLen - doneLen;
 
@@ -139,7 +133,7 @@ namespace kl {
 		// Fast console writing
 		static void FastOut(std::string& data, kl::point location = { 0, 0 }) {
 			static DWORD ignore = 0;
-			WriteConsoleOutputCharacterA(stdConsoleHandle, data.c_str(), (DWORD)data.length(), { (short)location.x, (short)location.y }, &ignore);
+			WriteConsoleOutputCharacterA(stdConsoleHandle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 		}
 		static void FastOut(std::string&& data, kl::point location = { 0, 0 }) {
 			FastOut(data, location);

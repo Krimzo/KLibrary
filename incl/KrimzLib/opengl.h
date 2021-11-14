@@ -8,7 +8,7 @@ namespace kl {
 		static void Setup3D(double fov, kl::size frameSize) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			gluPerspective(fov, (double)frameSize.width / frameSize.height, 0.01, 100.0);
+			gluPerspective(fov, double(frameSize.width) / frameSize.height, 0.01, 100.0);
 		}
 		
 		// Enables/disables depth buffering
@@ -64,7 +64,7 @@ namespace kl {
 
 		// Clear the frame and depth buffers
 		static void ClearBuffers(kl::colord color) {
-			glClearColor((float)color.r, (float)color.g, (float)color.b, 1);
+			glClearColor(float(color.r), float(color.g), float(color.b), 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 

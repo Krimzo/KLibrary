@@ -21,43 +21,43 @@ namespace kl {
 
 		// Returns a random float
 		static float Float(float startInclusive, float endExclusive) {
-			return startInclusive + (float)rand() / float(RAND_MAX / (endExclusive - startInclusive));
+			return startInclusive + float(rand()) / float(RAND_MAX / (endExclusive - startInclusive));
 		}
 
 		// Returns a random double
 		static double Double(double startInclusive, double endExclusive) {
-			return startInclusive + (double)rand() / double(RAND_MAX / (endExclusive - startInclusive));
+			return startInclusive + double(rand()) / double(RAND_MAX / (endExclusive - startInclusive));
 		}
 
 		// Returns a random letter
 		static char Letter(bool upperCase = false) {
 			if (upperCase) {
-				return (char)random::Int(65, 91);
+				return char(kl::random::Int(65, 91));
 			}
-			return (char)random::Int(97, 123);
+			return char(kl::random::Int(97, 123));
 		}
 
 		// Returns a random string
 		static std::string String(kl::uint32 size) {
 			std::stringstream ss;
 			for (kl::uint32 i = 0; i < size; i++) {
-				ss << random::Letter(random::Bool());
+				ss << kl::random::Letter(kl::random::Bool());
 			}
 			return ss.str();
 		}
 
 		// Returns a random color
 		static kl::color Color() {
-			return { random::Byte(), random::Byte(), random::Byte() };
+			return kl::color(kl::random::Byte(), kl::random::Byte(), kl::random::Byte());
 		}
 		static kl::colord Colord() {
-			return random::Color();
+			return kl::random::Color();
 		}
 
 	protected:
 		// Sets the seed for random number generation
 		static void NewSeed() {
-			srand((unsigned)std::time(nullptr));
+			srand(unsigned(std::time(nullptr)));
 		}
 	};
 }

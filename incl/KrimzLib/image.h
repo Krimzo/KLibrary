@@ -25,8 +25,8 @@ namespace kl {
 			return { imageWidth, imageHeight };
 		}
 		kl::color GetPixel(kl::point point) {
-			if (point.x >= 0 && point.x < (int)imageWidth && point.y >= 0 && point.y < (int)imageHeight) {
-				return imagePixels[point.y * size_t(imageWidth) + point.x];
+			if (point.x >= 0 && point.x < int(imageWidth) && point.y >= 0 && point.y < int(imageHeight)) {
+				return imagePixels[point.y * imageWidth + point.x];
 			}
 			return { 0, 0, 0 };
 		}
@@ -47,11 +47,11 @@ namespace kl {
 		void SetSize(kl::size size) {
 			imageWidth = size.width;
 			imageHeight = size.height;
-			imagePixels.resize(size_t(imageWidth) * size_t(imageHeight));
+			imagePixels.resize(imageWidth * imageHeight);
 		}
 		void SetPixel(kl::point point, kl::color color) {
-			if (point.x >= 0 && point.x < (int)imageWidth && point.y >= 0 && point.y < (int)imageHeight) {
-				imagePixels[point.y * size_t(imageWidth) + point.x] = color;
+			if (point.x >= 0 && point.x < int(imageWidth) && point.y >= 0 && point.y < int(imageHeight)) {
+				imagePixels[point.y * imageWidth + point.x] = color;
 			}
 		}
 
@@ -72,8 +72,8 @@ namespace kl {
 			for (kl::uint32 y = 0; y < imageHeight; y++) {
 				for (kl::uint32 x = 0; x < imageWidth; x++) {
 					Gdiplus::Color tempPixel;
-					loadedBitmap.GetPixel((int)x, (int)y, &tempPixel);
-					SetPixel({ (int)x, (int)y }, { tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB() });
+					loadedBitmap.GetPixel(int(x), int(y), &tempPixel);
+					SetPixel(kl::point(x, y), kl::color(tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB()));
 				}
 			}
 		}
@@ -102,9 +102,9 @@ namespace kl {
 					for (kl::uint32 x = 0; x < imageWidth; x++) {
 						ss <<
 							x << " " << y << " => " <<
-							(int)imagePixels[(kl::uint64)y * imageWidth + x].r << " " <<
-							(int)imagePixels[(kl::uint64)y * imageWidth + x].g << " " <<
-							(int)imagePixels[(kl::uint64)y * imageWidth + x].b << "\n";
+							int(imagePixels[y * imageWidth + x].r) << " " <<
+							int(imagePixels[y * imageWidth + x].g) << " " <<
+							int(imagePixels[y * imageWidth + x].b) << "\n";
 					}
 				}
 				kl::file::WriteText(fileName, ss.str());
@@ -119,8 +119,8 @@ namespace kl {
 			Gdiplus::Bitmap tempBitmap(imageWidth, imageHeight, PixelFormat24bppRGB);
 			for (kl::uint32 y = 0; y < imageHeight; y++) {
 				for (kl::uint32 x = 0; x < imageWidth; x++) {
-					kl::color tempPixel = GetPixel({ (int)x, (int)y });
-					tempBitmap.SetPixel((int)x, (int)y, { tempPixel.r, tempPixel.g, tempPixel.b });
+					kl::color tempPixel = GetPixel(kl::point(x, y));
+					tempBitmap.SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.r, tempPixel.g, tempPixel.b));
 				}
 			}
 			tempBitmap.Save(kl::convert::ToWString(fileName).c_str(), formatToUse, nullptr);
@@ -137,12 +137,12 @@ namespace kl {
 		void DrawLine(kl::point a, kl::point b, kl::color col) {
 			// Calculations
 			int len = std::max(abs(b.x - a.x), abs(b.y - a.y));
-			kl::vec2 incr = { ((double)b.x - (double)a.x) / len, ((double)b.y - (double)a.y) / len };
+			kl::vec2 incr((double(b.x) - a.x) / len, (double(b.y) - a.y) / len);
 
 			// Drawing
-			kl::vec2 drawPoint = { (double)a.x, (double)a.y };
+			kl::vec2 drawPoint(a.x, a.y);
 			for (int i = 0; i <= len; i++) {
-				SetPixel({ (int)drawPoint.x, (int)drawPoint.y }, col);
+				SetPixel(kl::point(drawPoint.x, drawPoint.y), col);
 				drawPoint = drawPoint + incr;
 			}
 		}
@@ -169,7 +169,7 @@ namespace kl {
 
 				// Drawing
 				for (int y = a.y; y < c.y; y++) {
-					DrawLine({ int(kl::math::XofLine((y < b.y) ? a : c, b, y)), y }, { int(kl::math::XofLine(a, c, y)), y }, col);
+					DrawLine(kl::point(kl::math::XofLine((y < b.y) ? a : c, b, y), y), kl::point(kl::math::XofLine(a, c, y), y), col);
 				}
 			}
 			else {
@@ -191,14 +191,14 @@ namespace kl {
 
 				// Drawing
 				for (int y = a.y; y <= b.y; y++) {
-					DrawLine({ a.x, y }, { b.x, y }, col);
+					DrawLine(kl::point(a.x, y), kl::point(b.x, y), col);
 				}
 			}
 			else {
-				DrawLine(a, { a.x, b.y }, col);
-				DrawLine(a, { b.x, a.y }, col);
-				DrawLine(b, { a.x, b.y }, col);
-				DrawLine(b, { b.x, a.y }, col);
+				DrawLine(a, kl::point(a.x, b.y), col);
+				DrawLine(a, kl::point(b.x, a.y), col);
+				DrawLine(b, kl::point(a.x, b.y), col);
+				DrawLine(b, kl::point(b.x, a.y), col);
 			}
 		}
 
@@ -206,23 +206,23 @@ namespace kl {
 		void DrawCircle(kl::point p, double r, kl::color col, bool fill = false) {
 			if (fill) {
 				for (int y = int(p.y - r); y <= int(p.y + r); y++) {
-					int x = int((double)p.x + sqrt(r * r - double(y - p.y) * double(y - p.y)));
-					DrawLine({ 2 * p.x - x, y }, { x, y }, col);
+					int x(p.x + sqrt(r * r - double(y - p.y) * double(y - p.y)));
+					DrawLine(kl::point(2 * p.x - x, y), kl::point(x, y), col);
 				}
 			}
 			else {
 				for (int i = 0; i < 2 * r; i++) {
 					// X run
-					int x1 = int(p.x - r + i);
-					int y1 = int((double)p.y + sqrt(r * r - double(x1 - p.x) * double(x1 - p.x)));
-					SetPixel({ x1, y1 }, col);
-					SetPixel({ x1, 2 * p.y - y1 }, col);
+					int x1(p.x - r + i);
+					int y1(p.y + sqrt(r * r - double(x1 - p.x) * double(x1 - p.x)));
+					SetPixel(kl::point(x1, y1), col);
+					SetPixel(kl::point(x1, 2 * p.y - y1), col);
 					
 					// Y run
-					int y2 = int(p.y - r + i);
-					int x2 = int((double)p.x + sqrt(r * r - double(y2 - p.y) * double(y2 - p.y)));
-					SetPixel({ x2, y2 }, col);
-					SetPixel({ 2 * p.x - x2, y2 }, col);
+					int y2(p.y - r + i);
+					int x2(p.x + sqrt(r * r - double(y2 - p.y) * double(y2 - p.y)));
+					SetPixel(kl::point(x2, y2), col);
+					SetPixel(kl::point(2 * p.x - x2, y2), col);
 				}
 			}
 		}
@@ -244,11 +244,11 @@ namespace kl {
 			for (kl::uint32 y = 0; y < frameSize.height; y++) {
 				for (kl::uint32 x = 0; x < frameSize.width; x++) {
 					// Pixels to grayscale
-					kl::color currentPixel = GetPixel({ int(x * pixelWidthIncrement), int(y * pixelHeightIncrement) });
-					kl::uint32 grayScaledPixel = (kl::uint32)(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
+					kl::color currentPixel = GetPixel(kl::point(x * pixelWidthIncrement, y * pixelHeightIncrement));
+					kl::uint32 grayScaledPixel(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
 
 					// Grayscaled values to ASCII
-					kl::uint32 saturationLevel = (kl::uint32)((grayScaledPixel / 255.0) * 9);
+					kl::uint32 saturationLevel((grayScaledPixel / 255.0) * 9);
 					frame << asciiPixelTable[saturationLevel];
 				}
 				frame << '\n';
@@ -278,20 +278,20 @@ namespace kl {
 						int y1 = (y / pitch) * pitch;
 						int x2 = (x1 + pitch) % imageWidth;
 						int y2 = (y1 + pitch) % imageWidth;
-						double blendX = (double)(x - x1) / (double)pitch;
-						double blendY = (double)(y - y1) / (double)pitch;
-						double sampleT = (1 - blendX) * seedArray[kl::uint64(y1 * imageWidth + x1)] + blendX * seedArray[kl::uint64(y1 * imageWidth + x2)];
-						double sampleB = (1 - blendX) * seedArray[kl::uint64(y2 * imageWidth + x1)] + blendX * seedArray[kl::uint64(y2 * imageWidth + x2)];
+						double blendX = double(x - x1) / pitch;
+						double blendY = double(y - y1) / pitch;
+						double sampleT = (1 - blendX) * seedArray[y1 * imageWidth + x1] + blendX * seedArray[y1 * imageWidth + x2];
+						double sampleB = (1 - blendX) * seedArray[y2 * imageWidth + x1] + blendX * seedArray[y2 * imageWidth + x2];
 
 						scaleSum += scale;
 						noise += (blendY * (sampleB - sampleT) + sampleT) * scale;
 						scale /= bias;
 					}
 
-					byte grayValue = byte(255 * (noise / scaleSum));
-					imagePixels[kl::uint64(y * imageWidth + x)].r = grayValue;
-					imagePixels[kl::uint64(y * imageWidth + x)].g = grayValue;
-					imagePixels[kl::uint64(y * imageWidth + x)].b = grayValue;
+					byte grayValue((noise / scaleSum) * 255);
+					imagePixels[y * imageWidth + x].r = grayValue;
+					imagePixels[y * imageWidth + x].g = grayValue;
+					imagePixels[y * imageWidth + x].b = grayValue;
 				}
 			}
 		}
@@ -300,7 +300,7 @@ namespace kl {
 		void RunOnEach(std::function<void(kl::color* pixelColor, kl::point pixelPosition)> toExecute) {
 			for (kl::uint32 y = 0; y < imageHeight; y++) {
 				for (kl::uint32 x = 0; x < imageWidth; x++) {
-					toExecute(&imagePixels[kl::uint64(y * imageWidth + x)], kl::point(x, y));
+					toExecute(&imagePixels[y * imageWidth + x], kl::point(x, y));
 				}
 			}
 		}

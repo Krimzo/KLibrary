@@ -14,7 +14,7 @@ namespace kl {
 
 		// Returns a cross product of 2 given vectors
 		static kl::vec3 VectorCrossProd(kl::vec3 a, kl::vec3 b) {
-			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
+			return kl::vec3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
 		}
 
 		// Returns x from the given y of the line that goes through points a and b

@@ -76,26 +76,26 @@ namespace kl {
 			this->y = y;
 		}
 		vec2(kl::point p) {
-			x = (double)p.x;
-			y = (double)p.y;
+			x = double(p.x);
+			y = double(p.y);
 		}
 		vec2(kl::point a, kl::point b) {
-			x = (double)b.x - a.x;
-			y = (double)b.y - a.y;
+			x = double(b.x - a.x);
+			y = double(b.y - a.y);
 		}
 
 		// Operator overloading
 		kl::vec2 operator + (kl::vec2 obj) {
-			return { x + obj.x, y + obj.y };
+			return kl::vec2(x + obj.x, y + obj.y);
 		}
 		kl::vec2 operator - (kl::vec2 obj) {
-			return { x - obj.x, y - obj.y };
+			return kl::vec2(x - obj.x, y - obj.y);
 		}
 		kl::vec2 operator * (double a) {
-			return { x * a, y * a };
+			return kl::vec2(x * a, y * a);
 		}
 		kl::vec2 operator / (double a) {
-			return { x / a, y / a };
+			return kl::vec2(x / a, y / a);
 		}
 		bool operator == (kl::vec2 obj) {
 			return (x == obj.x && y == obj.y);
@@ -119,7 +119,7 @@ namespace kl {
 		// Retruns a normalized vector
 		kl::vec2 Normalized() {
 			double vecLen = this->Length();
-			return { x / vecLen, y / vecLen };
+			return kl::vec2(x / vecLen, y / vecLen);
 		}
 	};
 
@@ -142,16 +142,16 @@ namespace kl {
 
 		// Operator overloading
 		kl::vec3 operator + (kl::vec3 obj) {
-			return { x + obj.x, y + obj.y, z + obj.z };
+			return kl::vec3(x + obj.x, y + obj.y, z + obj.z);
 		}
 		kl::vec3 operator - (kl::vec3 obj) {
-			return { x - obj.x, y - obj.y, z - obj.z };
+			return kl::vec3(x - obj.x, y - obj.y, z - obj.z);
 		}
 		kl::vec3 operator * (double a) {
-			return { x * a, y * a, z * a };
+			return kl::vec3(x * a, y * a, z * a);
 		}
 		kl::vec3 operator / (double a) {
-			return { x / a, y / a, z / a };
+			return kl::vec3(x / a, y / a, z / a);
 		}
 		bool operator == (kl::vec3 obj) {
 			return (x == obj.x && y == obj.y && z == obj.z);
@@ -176,7 +176,7 @@ namespace kl {
 		// Retruns a normalized vector
 		kl::vec3 Normalized() {
 			double vecLen = this->Length();
-			return { x / vecLen, y / vecLen, z / vecLen };
+			return kl::vec3(x / vecLen, y / vecLen, z / vecLen);
 		}
 	};
 }
@@ -236,7 +236,7 @@ namespace kl {
 
 		// Conversions
 		operator kl::colord() const {
-			return { r / 255.0, g / 255.0, b / 255.0 };
+			return kl::colord(r / 255.0, g / 255.0, b / 255.0);
 		}
 
 		// Operator overloading
@@ -269,7 +269,7 @@ namespace kl {
 			lmb = false;
 			mmb = false;
 			rmb = false;
-			position = {};
+			position = kl::point();
 		}
 		mouse(bool lmb, bool mmb, bool rmb, kl::point position) {
 			this->lmb = lmb;
@@ -320,9 +320,9 @@ namespace kl {
 
 		// Constructors
 		triangle() {
-			vertices[0] = {};
-			vertices[1] = {};
-			vertices[2] = {};
+			vertices[0] = kl::vertex();
+			vertices[1] = kl::vertex();
+			vertices[2] = kl::vertex();
 		}
 		triangle(kl::vertex v0, kl::vertex v1, kl::vertex v2) {
 			vertices[0] = v0;
@@ -353,25 +353,25 @@ namespace kl {
 			visible = true;
 			texture = 0;
 			triangles = {};
-			position = {};
-			rotation = {};
-			size = { 1, 1, 1 };
+			position = kl::vec3();
+			rotation = kl::vec3();
+			size = kl::vec3(1, 1, 1);
 			physics = false;
 			gravity = 1;
-			velocity = {};
-			angular = {};
+			velocity = kl::vec3();
+			angular = kl::vec3();
 		}
 		gameobject(kl::texture textureID) {
 			visible = true;
 			texture = textureID;
 			triangles = {};
-			position = {};
-			rotation = {};
-			size = { 1, 1, 1 };
+			position = kl::vec3();
+			rotation = kl::vec3();
+			size = kl::vec3(1, 1, 1);
 			physics = false;
 			gravity = 1;
-			velocity = {};
-			angular = {};
+			velocity = kl::vec3();
+			angular = kl::vec3();
 		}
 	};
 
@@ -381,8 +381,8 @@ namespace kl {
 
 		// Constructors
 		camera() {
-			position = {};
-			rotation = {};
+			position = kl::vec3();
+			rotation = kl::vec3();
 		}
 		camera(kl::vec3 position, kl::vec3 rotation) {
 			this->position = position;

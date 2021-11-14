@@ -6,7 +6,7 @@ namespace kl {
 	public:
 		// Returns bytes from the given value
 		template<typename T> static kl::bytes ToBytes(T num) {
-			kl::byte* bytePointer = (byte*)&num;
+			kl::byte* bytePointer(&num);
 			std::vector<byte> byteData;
 			for (int i = 0; i < sizeof(num); i++) {
 				byteData.insert(byteData.begin(), *(bytePointer + i));
@@ -16,7 +16,7 @@ namespace kl {
 
 		// Returns bits from the given value
 		template<typename T> static kl::bits ToBits(T num) {
-			kl::byte* bytePointer = (byte*)&num;
+			kl::byte* bytePointer(&num);
 			std::string bitData = "";
 			for (int i = 0; i < sizeof(num); i++) {
 				byte tempByte = *(bytePointer + i);

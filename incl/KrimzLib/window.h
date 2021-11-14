@@ -129,25 +129,25 @@ namespace kl {
 			PostMessageW(hwnd, WM_CLOSE, 0, 0);
 		}
 		~window() {
-			this->Stop();
+			Stop();
 		}
 
 		// Getters
 		HWND GetHWND() {
-			return this->hwnd;
+			return hwnd;
 		}
 		HDC GetHDC() {
-			return this->hdc;
+			return hdc;
 		}
 		HGLRC GetHGLRC() {
-			return this->hglrc;
+			return hglrc;
 		}
 
 		// Returns the window size
 		kl::size GetSize() {
 			RECT clientArea = {};
 			GetClientRect(hwnd, &clientArea);
-			return { kl::uint32(clientArea.right - clientArea.left), kl::uint32(clientArea.bottom - clientArea.top) };
+			return kl::size(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
 		}
 		int GetWidth() {
 			return GetSize().width;
@@ -221,7 +221,7 @@ namespace kl {
 				break;
 
 			case WM_MOUSEMOVE:
-				MOUSE.position = { GET_X_LPARAM(wndMsg.lParam),  GET_Y_LPARAM(wndMsg.lParam) };
+				MOUSE.position = kl::point(GET_X_LPARAM(wndMsg.lParam),  GET_Y_LPARAM(wndMsg.lParam));
 				break;
 
 			default:
