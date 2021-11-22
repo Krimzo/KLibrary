@@ -238,7 +238,7 @@ namespace kl {
 		static void EnableRGB() {
 			DWORD consoleMode;
 			GetConsoleMode(stdConsoleHandle, &consoleMode);
-			SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+			SetConsoleMode(stdConsoleHandle, consoleMode | 0x04 /*ENABLE_VIRTUAL_TERMINAL_PROCESSING*/);
 		}
 
 	private:
