@@ -2,9 +2,8 @@
 
 
 int main() {
-
 	// Time table properties
-	int n = 250;
+	int n = 200;
 	double m = 0;
 	double mIncrement = 0.1;
 
@@ -20,7 +19,7 @@ int main() {
 	kl::color lineColor(225, 155, 60);
 
 	// Window properties
-	kl::size windowSize(1600, 900);
+	kl::size windowSize(1000, 600);
 
 
 	// Window
