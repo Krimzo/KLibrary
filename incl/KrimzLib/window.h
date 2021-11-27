@@ -168,13 +168,18 @@ namespace kl {
 		}
 
 		// Sets the pixels of the window
-		void DisplayImage(kl::image& toDraw, kl::point position = { 0, 0 }) {
+		void RenderImage(kl::image& toDraw, kl::point position = { 0, 0 }) {
 			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
 			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
 			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -(int)toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetRawData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
-		void DisplayImage(kl::image&& toDraw, kl::point position = { 0, 0 }) {
-			DisplayImage(toDraw, position);
+		void RenderImage(kl::image&& toDraw, kl::point position = { 0, 0 }) {
+			RenderImage(toDraw, position);
+		}
+
+		// Swaps the front and back buffers
+		void SwapFrameBuffers() {
+			SwapBuffers(hdc);
 		}
 
 	private:

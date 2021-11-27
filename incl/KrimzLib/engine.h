@@ -67,7 +67,7 @@ namespace kl {
 				}
 
 				/* Swap front and back frame buffers */
-				kl::opengl::SwapFrameBuffers(engineWindow.GetHDC());
+				engineWindow.SwapFrameBuffers();
 
 				/* Delta time calculation */
 				double wantedFrameTime = 1 / fpsLimit;

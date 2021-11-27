@@ -270,9 +270,14 @@ namespace kl {
         }
 
 		// Executes a function on each array element
-		void RunOnEach(std::function<void(T* element)> toExecute) {
+		void RunOnEach(std::function<void(T* elem)> toExecute) {
 			for (kl::uint64 i = 0; i < arraySize; i++) {
 				toExecute(arrayData + i);
+			}
+		}
+		void RunOnEach(std::function<void(T* elem, int i)> toExecute) {
+			for (kl::uint64 i = 0; i < arraySize; i++) {
+				toExecute(arrayData + i, i);
 			}
 		}
 

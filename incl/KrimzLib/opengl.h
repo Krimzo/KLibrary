@@ -1,6 +1,8 @@
 #pragma once
 
 
+#define GL_BGR 0x80E0
+
 namespace kl {
 	class opengl {
 	public:
@@ -48,7 +50,7 @@ namespace kl {
 			kl::texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, 0x80E0/* GL_BGR */, GL_UNSIGNED_BYTE, textureImage.GetRawData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.GetRawData());
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			return createdID;
@@ -106,11 +108,6 @@ namespace kl {
 		}
 		static void RenderTriangles(std::vector<kl::triangle>&& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
 			RenderTriangles(triangles, position, rotation, size, textureID);
-		}
-
-		// Flips the front and back hdc buffers
-		static void SwapFrameBuffers(HDC hdc) {
-			SwapBuffers(hdc);
 		}
 	};
 }
