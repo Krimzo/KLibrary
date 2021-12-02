@@ -320,9 +320,9 @@ namespace kl {
 
 		// Constructors
 		triangle() {
-			vertices[0] = kl::vertex();
-			vertices[1] = kl::vertex();
-			vertices[2] = kl::vertex();
+			for (int i = 0; i < 3; i++) {
+				vertices[i] = kl::vertex();
+			}
 		}
 		triangle(kl::vertex v0, kl::vertex v1, kl::vertex v2) {
 			vertices[0] = v0;

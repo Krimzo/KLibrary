@@ -13,13 +13,13 @@ int main() {
 
 	// Point properties
 	double pointRadius = 3;
-	kl::color pointColor(20, 175, 85);
+	kl::color pointColor(175, 20, 55);
 
 	// Line properties
-	kl::color lineColor(225, 155, 60);
+	kl::color lineColor(20, 175, 120);
 
 	// Window properties
-	kl::size windowSize(1000, 600);
+	kl::size windowSize(1600, 900);
 
 
 	// Window
@@ -60,7 +60,7 @@ int main() {
 		});
 
 		// Displaying
-		window.DisplayImage(frame);
+		window.RenderImage(frame);
 
 		// Incrementing m
 		m += mIncrement * kl::time::StaticGetElapsed();
