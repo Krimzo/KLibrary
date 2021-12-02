@@ -17,9 +17,9 @@ int main() {
 	kl::point D((windowSize.width - 1) * 0.667, 0);
 
 	// Point colors
-	kl::color cA = kl::constant::colors::red;
+	kl::color cA = kl::color(225, 135, 10);
 	kl::color cB = kl::constant::colors::black;
-	kl::color cC = kl::constant::colors::blue;
+	kl::color cC = kl::color(10, 230, 130);
 	kl::color cD = kl::constant::colors::white;
 
 	// Calculating the interpolation constant
