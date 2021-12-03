@@ -1,109 +1,85 @@
 #include "KrimzLib.h"
 
 
-kl::vec3 calcBaryWeights(kl::point, kl::point, kl::point, kl::point, double);
-
 int main() {
 	// Window size
-	const kl::size windowSize(800, 800);
-
-	// Scanline height
-	const kl::uint32 scanHeight = 100;
+	const kl::size windowSize(900, 900);
+	const int scanLineSize = 1;
+	const int fpsLimit = 60;
 
 	// Triangle points
-	kl::point A(0, (windowSize.height - 1) / 3);
-	kl::point B((windowSize.width - 1) / 3, windowSize.height - 1);
-	kl::point C(windowSize.width - 1, (windowSize.height - 1) * 0.667);
-	kl::point D((windowSize.width - 1) * 0.667, 0);
+	kl::vertex A(50, (windowSize.height - 1) / 3);
+	A.c = kl::color(215, 135, 65);
+	kl::vertex B((windowSize.width - 1) / 3, windowSize.height - 51);
+	B.c = kl::color(30, 95, 65);
+	kl::vertex C(windowSize.width - 51, (windowSize.height - 1) * 0.667);
+	C.c = kl::color(185, 115, 140);
+	kl::vertex D((windowSize.width - 1) * 0.667, 50);
+	D.c = kl::color(55, 100, 120);
 
-	// Point colors
-	kl::color cA = kl::color(225, 135, 10);
-	kl::color cB = kl::constant::colors::black;
-	kl::color cC = kl::color(10, 230, 130);
-	kl::color cD = kl::constant::colors::white;
-
-	// Calculating the interpolation constant
-	const double baryConst1 = 1.0 / ((B.y - C.y) * (A.x - C.x) + (C.x - B.x) * (A.y - C.y));
-	const double baryConst2 = 1.0 / ((C.y - D.y) * (A.x - D.x) + (D.x - C.x) * (A.y - D.y));
+	// Triangle creation
+	kl::triangle T1(A, B, C);
+	T1.computeBaryConst();
+	kl::triangle T2(A, D, C);
+	T2.computeBaryConst();
 
 	// Window creation
 	kl::window window;
 	kl::image frame(windowSize);
 
 	// Window update setup
-	int i = 0;
+	int x = 0;
+	const double timeToSleep = 1.0 / fpsLimit;
+	kl::time::StaticStopwatchReset();
 	window.WindowUpdate = [&]() {
-		// Getting x and y coords
-		int x = i % windowSize.width;
-		int y = (i / windowSize.width) * scanHeight;
+		// Interpolating the line
+		for (int y = 0; y < windowSize.height; y++) {
+			// Pixel buffer
+			kl::color pixel = {};
 
-		for (int yIncr = 0; yIncr < scanHeight; yIncr++) {
-			// Pixel color
-			kl::color pixel;
+			// Computing the interpolation weights
+			kl::vec3 weights1 = T1.getBaryWeights(kl::vec2(x, y));
+			kl::vec3 weights2 = T2.getBaryWeights(kl::vec2(x, y));
 
-			// Calculating the interpolation weights
-			kl::vec3 baryWeights1 = calcBaryWeights(A, B, C, kl::point(x, y + yIncr), baryConst1);
-			kl::vec3 baryWeights2 = calcBaryWeights(A, C, D, kl::point(x, y + yIncr), baryConst2);
-
-			// Checking if the point is inside first triangle
-			if (!(baryWeights1.x < 0 || baryWeights1.y < 0 || baryWeights1.z < 0)) {
-				// Interpolating the color
-				const kl::byte r(cA.r * baryWeights1.x + cB.r * baryWeights1.y + cC.r * baryWeights1.z);
-				const kl::byte g(cA.g * baryWeights1.x + cB.g * baryWeights1.y + cC.g * baryWeights1.z);
-				const kl::byte b(cA.b * baryWeights1.x + cB.b * baryWeights1.y + cC.b * baryWeights1.z);
-
-				// Saving to pixel
-				pixel = kl::color(r, g, b);
+			// Checkig if the point inside a triangle and coloring the pixel
+			if (T1.inTriangle(weights1)) {
+				pixel = T1.interpolateColor(weights1);
 			}
-			// Checking if the point is inside second triangle
-			else if (!(baryWeights2.x < 0 || baryWeights2.y < 0 || baryWeights2.z < 0)) {
-				// Interpolating the color
-				const kl::byte r(cA.r * baryWeights2.x + cC.r * baryWeights2.y + cD.r * baryWeights2.z);
-				const kl::byte g(cA.g * baryWeights2.x + cC.g * baryWeights2.y + cD.g * baryWeights2.z);
-				const kl::byte b(cA.b * baryWeights2.x + cC.b * baryWeights2.y + cD.b * baryWeights2.z);
-
-				// Saving to pixel
-				pixel = kl::color(r, g, b);
+			else if (T2.inTriangle(weights2)) {
+				pixel = T2.interpolateColor(weights2);
 			}
-			// Drawing the background
 			else {
 				pixel = kl::constant::colors::gray;
 			}
 
-			// Setting the pixel
-			frame.SetPixel(kl::point(x, y + yIncr), pixel);
+			// Drawing the pixel to the frame
+			frame.SetPixel(kl::point(x, y), pixel);
 
-			// Setting the future pixel
-			frame.SetPixel(kl::point(x + 1, y + yIncr), kl::constant::colors::white);
+			// Drawing the scanline
+			for (int i = 1; i <= scanLineSize; i++) {
+				frame.SetPixel(kl::point(x + i, y), kl::random::Color());
+			}
 		}
 		
-		// Drawing the frame
+		// Rendering the frame
 		window.RenderImage(frame);
 
-		// Updating the title info
-		window.SetTitle(std::to_string(i * scanHeight) + " of " + std::to_string(windowSize.width * windowSize.height));
-
-		// Updating the counter
-		i++;
+		// Updating the title
+		window.SetTitle(std::to_string(int((100.0 * x) / (windowSize.width - 1))) + "%");
 
 		// Checking the i
-		if (x == (windowSize.width - 1) && (y + scanHeight - 1) >= (windowSize.height - 1)) {
+		if (++x == windowSize.width) {
 			window.SetTitle("Finished!");
 			window.WindowUpdate = []() {};
 		}
+
+		// Delta time calculation
+		while (kl::time::StaticStopwatchElapsed() < timeToSleep);
+		kl::time::StaticStopwatchReset();
 	};
 
 	// Window start
-	window.StartNew(windowSize, "Times Table", false, true);
-
+	window.StartNew(windowSize, "Triangle Interpolation", false, true);
 
 	return 0;
-}
-
-
-// Calculates and returns the 3 barycentric weights of a triangle and a point
-kl::vec3 calcBaryWeights(kl::point A, kl::point B, kl::point C, kl::point P, double baryConst) {
-	double baryWeight1 = ((B.y - C.y) * (P.x - C.x) + (C.x - B.x) * (P.y - C.y)) * baryConst;
-	double baryWeight2 = ((C.y - A.y) * (P.x - C.x) + (A.x - C.x) * (P.y - C.y)) * baryConst;
-	return kl::vec3(baryWeight1, baryWeight2, 1 - baryWeight1 - baryWeight2);
 }
