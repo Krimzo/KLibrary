@@ -4,7 +4,6 @@
 int main() {
 	// Window size
 	const kl::size windowSize(900, 900);
-	const int scanLineSize = 1;
 	const int fpsLimit = 60;
 
 	// Triangle points
@@ -28,12 +27,16 @@ int main() {
 	kl::image frame(windowSize);
 
 	// Window update setup
-	int x = 0;
+	int counter = 0;
 	const double timeToSleep = 1.0 / fpsLimit;
 	kl::time::StaticStopwatchReset();
 	window.WindowUpdate = [&]() {
+		// Setting x and y
+		int x = counter - windowSize.height;
+		int y = 0;
+
 		// Interpolating the line
-		for (int y = 0; y < windowSize.height; y++) {
+		for (int i = 0; i < windowSize.height; i++) {
 			// Pixel buffer
 			kl::color pixel = {};
 
@@ -55,20 +58,26 @@ int main() {
 			// Drawing the pixel to the frame
 			frame.SetPixel(kl::point(x, y), pixel);
 
-			// Drawing the scanline
-			for (int i = 1; i <= scanLineSize; i++) {
-				frame.SetPixel(kl::point(x + i, y), kl::random::Color());
-			}
+			// Drawing the rand scanline
+			frame.SetPixel(kl::point(x + 1, y), kl::random::Color());
+
+			// Drawing the yellow scanlinepa
+			int yellowStrength = kl::random::Int(0, 256);
+			frame.SetPixel(kl::point(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
+
+			// Updating x and y
+			x++;
+			y++;
 		}
 		
 		// Rendering the frame
 		window.RenderImage(frame);
 
 		// Updating the title
-		window.SetTitle(std::to_string(int((100.0 * x) / (windowSize.width - 1))) + "%");
+		window.SetTitle(std::to_string(int((100.0 * counter) / (windowSize.width + windowSize.height - 1))) + "%");
 
 		// Checking the i
-		if (++x == windowSize.width) {
+		if (++counter == windowSize.width + windowSize.height) {
 			window.SetTitle("Finished!");
 			window.WindowUpdate = []() {};
 		}
