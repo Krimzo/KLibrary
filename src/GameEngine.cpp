@@ -41,10 +41,10 @@ int main() {
 		switch (key)
 		{
 		case 'W':
-			testEngine.engineCamera.position.z += cameraMoveSpeed * testEngine.deltaTime;
+			testEngine.engineCamera.position.z -= cameraMoveSpeed * testEngine.deltaTime;
 			break;
 		case 'S':
-			testEngine.engineCamera.position.z -= cameraMoveSpeed * testEngine.deltaTime;
+			testEngine.engineCamera.position.z += cameraMoveSpeed * testEngine.deltaTime;
 			break;
 		case 'D':
 			testEngine.engineCamera.position.x += cameraMoveSpeed * testEngine.deltaTime;
@@ -69,16 +69,16 @@ int main() {
 			testEngine.engineCamera.rotation.x -= cameraRotateSpeed * testEngine.deltaTime;
 			break;
 		case 'L':
-			testEngine.engineCamera.rotation.y += cameraRotateSpeed * testEngine.deltaTime;
-			break;
-		case 'J':
 			testEngine.engineCamera.rotation.y -= cameraRotateSpeed * testEngine.deltaTime;
 			break;
+		case 'J':
+			testEngine.engineCamera.rotation.y += cameraRotateSpeed * testEngine.deltaTime;
+			break;
 		case 'O':
-			testEngine.engineCamera.rotation.z += cameraRotateSpeed * testEngine.deltaTime;
+			testEngine.engineCamera.rotation.z -= cameraRotateSpeed * testEngine.deltaTime;
 			break;
 		case 'U':
-			testEngine.engineCamera.rotation.z -= cameraRotateSpeed * testEngine.deltaTime;
+			testEngine.engineCamera.rotation.z += cameraRotateSpeed * testEngine.deltaTime;
 			break;
 		case 'P':
 			testEngine.engineCamera.rotation = {};
