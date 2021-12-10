@@ -33,7 +33,7 @@ namespace kl {
 		kl::uint64 GetPixelCount() {
 			return imagePixels.size();
 		}
-		kl::color* GetRawData() {
+		kl::color* GetPixelData() {
 			return &imagePixels[0];
 		}
 
