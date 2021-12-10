@@ -3,7 +3,6 @@
 
 namespace kl {
     struct triangle {
-	public:
 		kl::vertex vertices[3];
 
 		// Constructors
