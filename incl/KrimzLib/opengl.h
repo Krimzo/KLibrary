@@ -49,7 +49,7 @@ namespace kl {
 			kl::texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.getWidth(), textureImage.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.getPixelData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.getWidth(), textureImage.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.getPointer());
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			return createdID;
@@ -98,8 +98,8 @@ namespace kl {
 			glColor3d(1, 1, 1);
 			for (int i = 0; i < triangles.size(); i++) {
 				for (int j = 0; j < 3; j++) {
-					glTexCoord2d(triangles[i].vertices[j].u, triangles[i].vertices[j].v);
-					glVertex3d(triangles[i].vertices[j].x, triangles[i].vertices[j].y, triangles[i].vertices[j].z);
+					glTexCoord2d(triangles[i].vertices[j].texture.x, triangles[i].vertices[j].world.y);
+					glVertex3d(triangles[i].vertices[j].world.x, triangles[i].vertices[j].world.y, triangles[i].vertices[j].world.z);
 				}
 			}
 			glEnd();

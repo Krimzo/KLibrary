@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "xlocale": "cpp",
-        "format": "cpp",
-        "functional": "cpp",
-        "charconv": "cpp",
-        "chrono": "cpp"
-    }
-}

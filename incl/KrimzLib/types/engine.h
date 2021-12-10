@@ -136,9 +136,9 @@ namespace kl {
 				else if ((scanStatus = fscanf(fileStream, "f %d/%d/%d %d/%d/%d %d/%d/%d", &coordIndex0, &textureIndex0, &normalIndx0, &coordIndex1, &textureIndex1, &normalIndx1, &coordIndex2, &textureIndex2, &normalIndx2)) == 9) {
 					tempObject.triangles.push_back(
 						kl::triangle(
-							kl::vertex(xyzCoords[--coordIndex0].x, xyzCoords[coordIndex0].y, xyzCoords[coordIndex0].z, uvCoords[--textureIndex0].x, uvCoords[textureIndex0].y),
-							kl::vertex(xyzCoords[--coordIndex1].x, xyzCoords[coordIndex1].y, xyzCoords[coordIndex1].z, uvCoords[--textureIndex1].x, uvCoords[textureIndex1].y),
-							kl::vertex(xyzCoords[--coordIndex2].x, xyzCoords[coordIndex2].y, xyzCoords[coordIndex2].z, uvCoords[--textureIndex2].x, uvCoords[textureIndex2].y)
+							kl::vertex(xyzCoords[--coordIndex0], uvCoords[--textureIndex0]),
+							kl::vertex(xyzCoords[--coordIndex1], uvCoords[--textureIndex1]),
+							kl::vertex(xyzCoords[--coordIndex2], uvCoords[--textureIndex2])
 						)
 					);
 				}

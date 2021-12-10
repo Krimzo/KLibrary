@@ -23,16 +23,16 @@ namespace kl {
 		}
 
 		// Computes and stores the barycentric constant
-		void computeInterConst() {
-			double tempConst = 1 / ((vertices[1].y - vertices[2].y) * (vertices[0].x - vertices[2].x) + (vertices[2].x - vertices[1].x) * (vertices[0].y - vertices[2].y));
-			w1Const = kl::vec2((vertices[1].y - vertices[2].y) * tempConst, (vertices[2].x - vertices[1].x) * tempConst);
-			w2Const = kl::vec2((vertices[2].y - vertices[0].y) * tempConst, (vertices[0].x - vertices[2].x) * tempConst);
+		void computeInterConsts() {
+			double tempConst = 1 / ((vertices[1].world.y - vertices[2].world.y) * (vertices[0].world.x - vertices[2].world.x) + (vertices[2].world.x - vertices[1].world.x) * (vertices[0].world.y - vertices[2].world.y));
+			w1Const = kl::vec2((vertices[1].world.y - vertices[2].world.y) * tempConst, (vertices[2].world.x - vertices[1].world.x) * tempConst);
+			w2Const = kl::vec2((vertices[2].world.y - vertices[0].world.y) * tempConst, (vertices[0].world.x - vertices[2].world.x) * tempConst);
 		}
 
 		// Calculates and returns the 3 barycentric weights of a triangle and a point
 		kl::vec3 getInterWeights(kl::vec2 p) {
-			double dx = p.x - vertices[2].x;
-			double dy = p.y - vertices[2].y;
+			double dx = p.x - vertices[2].world.x;
+			double dy = p.y - vertices[2].world.y;
 			double interWeight1 = dx * w1Const.x + dy * w1Const.y;
 			double interWeight2 = dx * w2Const.x + dy * w2Const.y;
 			return kl::vec3(interWeight1, interWeight2, 1 - interWeight1 - interWeight2);
@@ -46,9 +46,9 @@ namespace kl {
 		// Interpolates and returns a color of the barycentric weights
 		kl::color interpolateColor(kl::vec3 weights) {
 			return kl::color(
-				vertices[0].c.r * weights.x + vertices[1].c.r * weights.y + vertices[2].c.r * weights.z,
-				vertices[0].c.g * weights.x + vertices[1].c.g * weights.y + vertices[2].c.g * weights.z,
-				vertices[0].c.b * weights.x + vertices[1].c.b * weights.y + vertices[2].c.b * weights.z
+				vertices[0].color.r * weights.x + vertices[1].color.r * weights.y + vertices[2].color.r * weights.z,
+				vertices[0].color.g * weights.x + vertices[1].color.g * weights.y + vertices[2].color.g * weights.z,
+				vertices[0].color.b * weights.x + vertices[1].color.b * weights.y + vertices[2].color.b * weights.z
 			);
 		}
 

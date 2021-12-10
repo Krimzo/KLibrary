@@ -3,45 +3,30 @@
 
 namespace kl {
     struct vertex {
-		double x;
-		double y;
-		double z;
-		double u;
-		double v;
-		kl::color c;
+		kl::vec3 world;
+		kl::vec2 texture;
+		kl::color color;
 
 		// Constructors
 		vertex() {
-			x = 0;
-			y = 0;
-			z = 0;
-			u = 0;
-			v = 0;
-			c = {};
+			world = {};
+			texture = {};
+			color = {};
 		}
-		vertex(double x, double y) {
-			this->x = x;
-			this->y = y;
-			z = 0;
-			u = 0;
-			v = 0;
-			c = {};
+		vertex(kl::vec3 world) {
+			this->world = world;
+			texture = {};
+			color = {};
 		}
-		vertex(double x, double y, double z) {
-			this->x = x;
-			this->y = y;
-			this->z = z;
-			u = 0;
-			v = 0;
-			c = {};
+		vertex(kl::vec3 world, kl::color color) {
+			this->world = world;
+			this->texture = {};
+			this->color = color;
 		}
-		vertex(double x, double y, double z, double u, double v) {
-			this->x = x;
-			this->y = y;
-			this->z = z;
-			this->u = u;
-			this->v = v;
-			c = {};
+		vertex(kl::vec3 world, kl::vec2 texture) {
+			this->world = world;
+			this->texture = texture;
+			color = {};
 		}
 	};
 }

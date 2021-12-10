@@ -171,7 +171,7 @@ namespace kl {
 		void renderImage(kl::image& toDraw, kl::point position = { 0, 0 }) {
 			bmpInfo.bmiHeader.biWidth = toDraw.getWidth();
 			bmpInfo.bmiHeader.biHeight = toDraw.getHeight();
-			StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -(int)toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.getPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+			StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -(int)toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.getPointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
 		void renderImage(kl::image&& toDraw, kl::point position = { 0, 0 }) {
 			renderImage(toDraw, position);
