@@ -2,10 +2,9 @@
 
 
 namespace kl {
-	class string {
-	public:
+	namespace string {
 		// Returns the file extension from the given file path
-		static std::string GetFileExtension(std::string filePath) {
+		std::string GetFileExtension(std::string filePath) {
 			kl::uint64 lastDotPos = filePath.find_last_of(".");
 			if(lastDotPos == std::string::npos) {
 				return "";

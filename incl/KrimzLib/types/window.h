@@ -16,7 +16,7 @@ namespace kl {
 		// Window creation
 		void StartNew(kl::size size, std::string name, bool resizeable = true, bool continuous = false, bool opengl = false) {
 			// Converting window name to a wstring
-			std::wstring wName = kl::convert::ToWString(name);
+			std::wstring wName = kl::convert::toWString(name);
 
 			// Define windowapi window class
 			WNDCLASSEXW windowClass = {};

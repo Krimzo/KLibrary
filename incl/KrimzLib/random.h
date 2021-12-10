@@ -50,9 +50,6 @@ namespace kl {
 		static kl::color Color() {
 			return kl::color(kl::random::Byte(), kl::random::Byte(), kl::random::Byte());
 		}
-		static kl::colord Colord() {
-			return kl::random::Color();
-		}
 
 	protected:
 		// Sets the seed for random number generation

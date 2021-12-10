@@ -2,10 +2,9 @@
 
 
 namespace kl {
-	class web {
-	public:
+	namespace web {
 		// Downloads website data(bytes) from the given url
-		static kl::bytes GetWebsiteData(std::string url, int bufferSize = 16384) {
+		kl::bytes GetWebsiteData(std::string url, int bufferSize = 16384) {
 			// Create browser
 			HINTERNET connection = InternetOpenA("CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
 			if (!connection) {
@@ -39,7 +38,7 @@ namespace kl {
 		}
 
 		// Downloads data from the website and saves it in a file
-		static void DownloadToFile(std::string url, std::string fileName) {
+		void DownloadToFile(std::string url, std::string fileName) {
 			kl::file::WriteBytes(fileName, GetWebsiteData(url));
 		}
 	};

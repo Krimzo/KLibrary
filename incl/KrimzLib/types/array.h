@@ -56,7 +56,6 @@ namespace kl {
 				// Check if the growth is enabled
 				if (!canGrow) {
 					printf("Error. Trying to access memory outside the non growing array\n");
-					kl::console::WaitFor(' ', true);
 					exit(69);
 				}
 
@@ -124,7 +123,6 @@ namespace kl {
 			T* tempMemory = new T[newSize];
 			if (!tempMemory) {
 				printf("Couldn't allocate %llu bytes of memory..\n", newSize * sizeof(T));
-				console::WaitFor(' ', true);
                 exit(-1);
 			}
 
@@ -158,7 +156,6 @@ namespace kl {
 				return arrayData[0];
 			}
 			printf("Error. Trying to access memory outside the non growing array\n");
-			kl::console::WaitFor(' ', true);
 			exit(69);
 		}
 
@@ -168,7 +165,6 @@ namespace kl {
 				return arrayData[arraySize - 1];
 			}
 			printf("Error. Trying to access memory outside the non growing array\n");
-			kl::console::WaitFor(' ', true);
 			exit(69);
 		}
 

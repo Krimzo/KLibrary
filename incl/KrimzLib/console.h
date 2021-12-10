@@ -75,7 +75,7 @@ namespace kl {
 			cfi.dwFontSize.Y = SHORT(size.height);
 			cfi.FontFamily = FF_DONTCARE;
 			cfi.FontWeight = FW_NORMAL;
-			wcscpy(cfi.FaceName, kl::convert::ToWString(fontName).c_str());
+			wcscpy(cfi.FaceName, kl::convert::toWString(fontName).c_str());
 			SetCurrentConsoleFontEx(stdConsoleHandle, FALSE, &cfi);
 		}
 
@@ -180,10 +180,10 @@ namespace kl {
 			Print(data, textColor);
 		}
 		static void Print(kl::bytes& data, kl::color textColor = constant::colors::white) {
-			Print(kl::convert::ToString(data), textColor);
+			Print(kl::convert::toString(data), textColor);
 		}
 		static void Print(kl::bytes&& data, kl::color textColor = constant::colors::white) {
-			Print(kl::convert::ToString(data), textColor);
+			Print(kl::convert::toString(data), textColor);
 		}
 
 		// Prints RGB data with new line at the end
@@ -227,10 +227,10 @@ namespace kl {
 			Println(data, textColor);
 		}
 		static void Println(kl::bytes& data, kl::color textColor = constant::colors::white) {
-			Println(kl::convert::ToString(data), textColor);
+			Println(kl::convert::toString(data), textColor);
 		}
 		static void Println(kl::bytes&& data, kl::color textColor = constant::colors::white) {
-			Println(kl::convert::ToString(data), textColor);
+			Println(kl::convert::toString(data), textColor);
 		}
 
 	protected:

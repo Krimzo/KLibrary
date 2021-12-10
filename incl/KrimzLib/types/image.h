@@ -58,7 +58,7 @@ namespace kl {
 		// Reads an image file and stores it in the image instance
 		void FromFile(std::string filePath) {
 			// Loads image file
-			Gdiplus::Bitmap loadedBitmap(kl::convert::ToWString(filePath).c_str());
+			Gdiplus::Bitmap loadedBitmap(kl::convert::toWString(filePath).c_str());
 
 			// Checks load status
 			if (loadedBitmap.GetLastStatus()) {
@@ -123,7 +123,7 @@ namespace kl {
 					tempBitmap.SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.r, tempPixel.g, tempPixel.b));
 				}
 			}
-			tempBitmap.Save(kl::convert::ToWString(fileName).c_str(), formatToUse, nullptr);
+			tempBitmap.Save(kl::convert::toWString(fileName).c_str(), formatToUse, nullptr);
 		}
 
 		// Fils the image with solid color
@@ -169,7 +169,7 @@ namespace kl {
 
 				// Drawing
 				for (int y = a.y; y < c.y; y++) {
-					DrawLine(kl::point(kl::math::XofLine((y < b.y) ? a : c, b, y), y), kl::point(kl::math::XofLine(a, c, y), y), col);
+					DrawLine(kl::point(kl::math::lineX((y < b.y) ? a : c, b, y), y), kl::point(kl::math::lineX(a, c, y), y), col);
 				}
 			}
 			else {
@@ -228,7 +228,7 @@ namespace kl {
 		}
 		// Draws a circle between 1 center and 1 outer point
 		void DrawCircle(kl::point a, kl::point b, kl::color col, bool fill = false) {
-			DrawCircle(a, kl::vec2(a, b).Length(), col, fill);
+			DrawCircle(a, kl::vec2(a, b).length(), col, fill);
 		}
 
 		// Converts an image to an ASCII frame

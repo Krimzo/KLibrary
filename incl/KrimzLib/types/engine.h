@@ -8,7 +8,7 @@ namespace kl {
 		double fpsLimit = -1;
 		double deltaTime = 0;
 		double gravity = 9.81;
-		kl::colord background = {};
+		kl::color background = {};
 		kl::camera engineCamera = {};
 
 		// Outside functions that user defines
@@ -17,7 +17,7 @@ namespace kl {
 		std::function<void(void)> EngineUpdate = []() {};
 
 		// Constructor
-		engine(kl::colord background = {}) {
+		engine(kl::color background = {}) {
 			this->background = background;
 		}
 
