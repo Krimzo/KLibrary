@@ -6,14 +6,14 @@
 namespace kl {
 	namespace opengl {
 		// Setups perspective for 3D rendering
-		void Setup3D(double fov, kl::size frameSize) {
+		void setup3D(double fov, kl::size frameSize) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluPerspective(fov, double(frameSize.width) / frameSize.height, 0.01, 100.0);
 		}
 		
 		// Enables/disables depth buffering
-		void SetDepthTest(bool enable) {
+		void setDepthTest(bool enable) {
 			if (enable) {
 				glEnable(GL_DEPTH_TEST);
 				glDepthFunc(GL_LESS);
@@ -24,7 +24,7 @@ namespace kl {
 		}
 
 		// Enables/disables face culling
-		void SetFaceCulling(bool enable, bool backFace = true) {
+		void setFaceCulling(bool enable, bool backFace = true) {
 			if (enable) {
 				glEnable(GL_CULL_FACE);
 				glCullFace(backFace ? GL_BACK : GL_FRONT);
@@ -35,7 +35,7 @@ namespace kl {
 		}
 
 		// Enables/disables textures
-		void SetTextures(bool enable) {
+		void setTextures(bool enable) {
 			if (enable) {
 				glEnable(GL_TEXTURE_2D);
 			}
@@ -45,38 +45,38 @@ namespace kl {
 		}
 
 		// Creates a new texture and stores it in gpu memory
-		kl::texture NewTexture(kl::image& textureImage) {
+		kl::texture newTexture(kl::image& textureImage) {
 			kl::texture createdID = 0;
 			glGenTextures(1, &createdID);
 			glBindTexture(GL_TEXTURE_2D, createdID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.GetWidth(), textureImage.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.GetPixelData());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.getWidth(), textureImage.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureImage.getPixelData());
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			return createdID;
 		}
-		kl::texture NewTexture(kl::image&& textureImage) {
-			return NewTexture(textureImage);
+		kl::texture newTexture(kl::image&& textureImage) {
+			return newTexture(textureImage);
 		}
 
 		// Deletes a given texture
-		void DeleteTexture(kl::texture textureID) {
+		void deleteTexture(kl::texture textureID) {
 			glDeleteTextures(1, &textureID);
 		}
 
 		// Clear the frame and depth buffers
-		void ClearBuffers(kl::color color) {
+		void clearBuffers(kl::color color) {
 			glClearColor(color.r * kl::constant::floats::toFloatColor, color.g * kl::constant::floats::toFloatColor, color.b * kl::constant::floats::toFloatColor, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
 		// Resets the modelview matrix
-		void ResetModelMatrix() {
+		void resetModelMatrix() {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 		}
 
 		// Translates and rotates the camera
-		void UpdateCamera(kl::camera camera) {
+		void updateCamera(kl::camera camera) {
 			glMatrixMode(GL_MODELVIEW);
 			glRotated(-camera.rotation.x, 1, 0, 0);
 			glRotated(-camera.rotation.y, 0, 1, 0);
@@ -85,7 +85,7 @@ namespace kl {
 		}
 
 		// Renders an array of 3D triangles
-		void RenderTriangles(std::vector<kl::triangle>& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
+		void renderTriangles(std::vector<kl::triangle>& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
 			glBindTexture(GL_TEXTURE_2D, textureID);
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
@@ -105,8 +105,8 @@ namespace kl {
 			glEnd();
 			glPopMatrix();
 		}
-		void RenderTriangles(std::vector<kl::triangle>&& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
-			RenderTriangles(triangles, position, rotation, size, textureID);
+		void renderTriangles(std::vector<kl::triangle>&& triangles, kl::vec3 position, kl::vec3 rotation, kl::vec3 size, kl::texture textureID) {
+			renderTriangles(triangles, position, rotation, size, textureID);
 		}
 	};
 }

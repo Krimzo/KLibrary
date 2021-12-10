@@ -1,4 +1,4 @@
-#include "KrimzLib.h"
+#include "KrimzLib.hpp"
 
 
 __global__ void testKernel(kl::vec2* dataArray) {
@@ -11,19 +11,17 @@ __global__ void testKernel(kl::vec2* dataArray) {
 int main() {
     const int n = 6;
 
-    kl::vec2* a = new kl::vec2[n];
+    kl::array<kl::vec2> a(n);
     kl::gpubuff<kl::vec2> b(n);
 
     testKernel<<<1, n>>>(b.getPointer());
     cudaDeviceSynchronize();
 
-    b.toRAM(a);
+    b.toRAM(a.getPointer());
 
     for(int i = 0; i < n; i++) {
         a[i].print();
     }
-
-    delete[] a;
-
+    
     return 0;
 }

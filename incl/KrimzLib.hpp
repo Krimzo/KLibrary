@@ -85,22 +85,22 @@ namespace _kl_dont_use_ {
 	public:
 		_kl_initialization_() {
 			// random.h
-			NewSeed();
+			newSeed();
 
 			// time.h
-			LoadPCFrequency();
-			StaticGetElapsed();
-			StaticStopwatchReset();
+			loadPCFrequency();
+			staticGetElapsed();
+			staticStopwatchReset();
 
 			// console.h
-			EnableRGB();
+			enableRGB();
 
 			// image.h
-			InitGdiPlus();
+			initGdiPlus();
 		}
 		~_kl_initialization_() {
 			// image.h
-			UninitGdiPlus();
+			uninitGdiPlus();
 		}
 	};
 	_kl_initialization_ _lib_init_;

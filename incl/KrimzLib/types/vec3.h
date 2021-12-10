@@ -50,6 +50,16 @@ namespace kl {
 			return kl::vec3(x * vecLen, y * vecLen, z * vecLen);
 		}
 
+		// Returns the dot product
+		double dot(kl::vec3 a) {
+			return x * a.x + y * a.y + z * a.z;
+		}
+
+		// Returns the dot product
+		kl::vec3 cross(kl::vec3 a) {
+			return kl::vec3(y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x);
+		}
+
 		// Prints the data to the console
 		void print() {
 			printf("%lf %lf %lf\n", x, y, z);

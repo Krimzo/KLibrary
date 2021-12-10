@@ -4,7 +4,7 @@
 namespace kl {
 	namespace thread {
 		// Multithreaded for loop
-		void ParallelFor(int startInclusive, int endExclusive, int threadCount, std::function<void(int i)> loopBody) {
+		void parallelFor(int startInclusive, int endExclusive, int threadCount, std::function<void(int i)> loopBody) {
 			// Thread storage
 			std::vector<std::thread> cpuThreads(threadCount);
 			

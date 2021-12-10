@@ -1,4 +1,4 @@
-#include "KrimzLib.h"
+#include "KrimzLib.hpp"
 
 
 int main() {
@@ -18,9 +18,9 @@ int main() {
 
 	// Triangle creation
 	kl::triangle T1(A, B, C);
-	T1.computeBaryConst();
+	T1.computeInterConst();
 	kl::triangle T2(A, D, C);
-	T2.computeBaryConst();
+	T2.computeInterConst();
 
 	// Window creation
 	kl::window window;
@@ -29,8 +29,8 @@ int main() {
 	// Window update setup
 	int counter = 0;
 	const double timeToSleep = 1.0 / fpsLimit;
-	kl::time::StaticStopwatchReset();
-	window.WindowUpdate = [&]() {
+	kl::time::staticStopwatchReset();
+	window.windowUpdate = [&]() {
 		// Setting x and y
 		int x = counter - windowSize.height;
 		int y = 0;
@@ -41,8 +41,8 @@ int main() {
 			kl::color pixel = {};
 
 			// Computing the interpolation weights
-			kl::vec3 weights1 = T1.getBaryWeights(kl::vec2(x, y));
-			kl::vec3 weights2 = T2.getBaryWeights(kl::vec2(x, y));
+			kl::vec3 weights1 = T1.getInterWeights(kl::vec2(x, y));
+			kl::vec3 weights2 = T2.getInterWeights(kl::vec2(x, y));
 
 			// Checkig if the point inside a triangle and coloring the pixel
 			if (T1.inTriangle(weights1)) {
@@ -56,14 +56,14 @@ int main() {
 			}
 
 			// Drawing the pixel to the frame
-			frame.SetPixel(kl::point(x, y), pixel);
+			frame.setPixel(kl::point(x, y), pixel);
 
 			// Drawing the rand scanline
-			frame.SetPixel(kl::point(x + 1, y), kl::random::Color());
+			frame.setPixel(kl::point(x + 1, y), kl::random::getColor());
 
 			// Drawing the yellow scanlinepa
-			int yellowStrength = kl::random::Int(0, 256);
-			frame.SetPixel(kl::point(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
+			int yellowStrength = kl::random::getInt(0, 256);
+			frame.setPixel(kl::point(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
 
 			// Updating x and y
 			x++;
@@ -71,24 +71,24 @@ int main() {
 		}
 		
 		// Rendering the frame
-		window.RenderImage(frame);
+		window.renderImage(frame);
 
 		// Updating the title
-		window.SetTitle(std::to_string(int((100.0 * counter) / (windowSize.width + windowSize.height - 1))) + "%");
+		window.setTitle(std::to_string(int((100.0 * counter) / (windowSize.width + windowSize.height - 1))) + "%");
 
 		// Checking the i
 		if (++counter == windowSize.width + windowSize.height) {
-			window.SetTitle("Finished!");
-			window.WindowUpdate = []() {};
+			window.setTitle("Finished!");
+			window.windowUpdate = []() {};
 		}
 
 		// Delta time calculation
-		while (kl::time::StaticStopwatchElapsed() < timeToSleep);
-		kl::time::StaticStopwatchReset();
+		while (kl::time::staticStopwatchElapsed() < timeToSleep);
+		kl::time::staticStopwatchReset();
 	};
 
 	// Window start
-	window.StartNew(windowSize, "Triangle Interpolation", false, true);
+	window.startNew(windowSize, "Triangle Interpolation", false, true);
 
 	return 0;
 }

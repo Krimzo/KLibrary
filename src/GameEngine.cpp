@@ -1,4 +1,4 @@
-#include "KrimzLib.h"
+#include "KrimzLib.hpp"
 
 
 int main() {
@@ -9,21 +9,21 @@ int main() {
 	kl::gameobject* table3 = nullptr;
 
 	testEngine.EngineStart = [&]() {
-		kl::texture tableTexture = testEngine.NewTexture("res/textures/table.png");
+		kl::texture tableTexture = testEngine.newTexture("res/textures/table.png");
 
-		table1 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
+		table1 = testEngine.newObject(tableTexture, "res/objects/table.obj");
 		table1->position = { -1, -0.5, -2.5 };
 		table1->physics = true;
 		table1->angular.y = 36;
 		table1->gravity = 0;
 
-		table2 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
+		table2 = testEngine.newObject(tableTexture, "res/objects/table.obj");
 		table2->position = { 0, -0.5, -2.5 };
 		table2->physics = true;
 		table2->angular.x = -36;
 		table2->gravity = 0;
 
-		table3 = testEngine.NewObject(tableTexture, "res/objects/table.obj");
+		table3 = testEngine.newObject(tableTexture, "res/objects/table.obj");
 		table3->position = { 1, -0.5, -2.5 };
 		table3->physics = true;
 		table3->angular.y = -36;
@@ -86,7 +86,7 @@ int main() {
 		}
 	};
 
-	testEngine.StartNew(kl::size(1600, 900), "Test Engine");
+	testEngine.startNew(kl::size(1600, 900), "Test Engine");
 
 
 	return 0;

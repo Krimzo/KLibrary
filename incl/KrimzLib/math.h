@@ -3,19 +3,6 @@
 
 namespace kl {
 	namespace math {
-		// Returns a dot product of 2 given vectors
-		double VectorDotProd(kl::vec2 a, kl::vec2 b) {
-			return a.x * b.x + a.y * b.y;
-		}
-		double VectorDotProd(kl::vec3 a, kl::vec3 b) {
-			return a.x * b.x + a.y * b.y + a.z * b.z;
-		}
-
-		// Returns a cross product of 2 given vectors
-		kl::vec3 VectorCrossProd(kl::vec3 a, kl::vec3 b) {
-			return kl::vec3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
-		}
-
 		// Returns x from the given y of the line that goes through points a and b
 		double lineX(kl::vec2 a, kl::vec2 b, double y) {
 			return ((y - a.y) * (b.x - a.x)) / (b.y - a.y) + a.x;

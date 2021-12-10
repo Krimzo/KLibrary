@@ -5,55 +5,55 @@ namespace kl {
 	class random {
 	public:
 		// Returns a random bool
-		static bool Bool() {
+		static bool getBool() {
 			return rand() % 2;
 		}
 
 		// Returns a random byte
-		static kl::byte Byte() {
+		static kl::byte getByte() {
 			return kl::byte(rand() % 256);
 		}
 
 		// Returns a random integer
-		static int Int(int startInclusive, int endExclusive) {
+		static int getInt(int startInclusive, int endExclusive) {
 			return rand() % (endExclusive - startInclusive) + startInclusive;
 		}
 
 		// Returns a random float
-		static float Float(float startInclusive, float endExclusive) {
+		static float getFloat(float startInclusive, float endExclusive) {
 			return startInclusive + float(rand()) / float(RAND_MAX / (endExclusive - startInclusive));
 		}
 
 		// Returns a random double
-		static double Double(double startInclusive, double endExclusive) {
+		static double getDouble(double startInclusive, double endExclusive) {
 			return startInclusive + double(rand()) / double(RAND_MAX / (endExclusive - startInclusive));
 		}
 
 		// Returns a random letter
-		static char Letter(bool upperCase = false) {
+		static char getLetter(bool upperCase = false) {
 			if (upperCase) {
-				return char(kl::random::Int(65, 91));
+				return char(kl::random::getInt(65, 91));
 			}
-			return char(kl::random::Int(97, 123));
+			return char(kl::random::getInt(97, 123));
 		}
 
 		// Returns a random string
-		static std::string String(kl::uint32 size) {
+		static std::string getString(kl::uint32 size) {
 			std::stringstream ss;
 			for (kl::uint32 i = 0; i < size; i++) {
-				ss << kl::random::Letter(kl::random::Bool());
+				ss << kl::random::getLetter(kl::random::getBool());
 			}
 			return ss.str();
 		}
 
 		// Returns a random color
-		static kl::color Color() {
-			return kl::color(kl::random::Byte(), kl::random::Byte(), kl::random::Byte());
+		static kl::color getColor() {
+			return kl::color(kl::random::getByte(), kl::random::getByte(), kl::random::getByte());
 		}
 
 	protected:
 		// Sets the seed for random number generation
-		static void NewSeed() {
+		static void newSeed() {
 			srand(unsigned(std::time(nullptr)));
 		}
 	};

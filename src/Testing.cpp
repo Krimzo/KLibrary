@@ -1,19 +1,19 @@
-#include "KrimzLib.h"
+#include "KrimzLib.hpp"
 
 
 int main() {
     kl::array<double> a(5);
-    a.RunOnEach([](double* elem) {
-        *elem = kl::random::Int(0, 10);
+    a.runOnEach([](double* elem) {
+        *elem = kl::random::getInt(0, 10);
     });
 
     kl::array<double> b(5);
-    b.RunOnEach([](double* elem) {
-        *elem = kl::random::Int(0, 10);
+    b.runOnEach([](double* elem) {
+        *elem = kl::random::getInt(0, 10);
     });
 
     kl::array<double> sum(5);
-    sum.RunOnEach([&](double* elem, int i) {
+    sum.runOnEach([&](double* elem, int i) {
         *elem = a[i] + b[i];
     });
     
@@ -22,6 +22,6 @@ int main() {
     }
 
 
-	kl::console::WaitFor(' ');
+	kl::console::waitFor(' ');
 	return 0;
 }

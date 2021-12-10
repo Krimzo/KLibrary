@@ -55,6 +55,11 @@ namespace kl {
 			return kl::vec2(x * vecLen, y * vecLen);
 		}
 
+		// Returns the dot product
+		double dot(vec2 a) {
+			return x * a.x + y * a.y;
+		}
+
 		// Prints the data to the console
 		void print() {
 			printf("%lf %lf\n", x, y);

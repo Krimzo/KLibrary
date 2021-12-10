@@ -8,9 +8,9 @@ namespace kl {
 
 		// Constructors
 		triangle() {
-			for (int i = 0; i < 3; i++) {
-				vertices[i] = kl::vertex();
-			}
+			vertices[0] = {};
+			vertices[1] = {};
+			vertices[2] = {};
 			w1Const = {};
 			w2Const = {};
 		}
@@ -23,19 +23,19 @@ namespace kl {
 		}
 
 		// Computes and stores the barycentric constant
-		void computeBaryConst() {
+		void computeInterConst() {
 			double tempConst = 1 / ((vertices[1].y - vertices[2].y) * (vertices[0].x - vertices[2].x) + (vertices[2].x - vertices[1].x) * (vertices[0].y - vertices[2].y));
 			w1Const = kl::vec2((vertices[1].y - vertices[2].y) * tempConst, (vertices[2].x - vertices[1].x) * tempConst);
 			w2Const = kl::vec2((vertices[2].y - vertices[0].y) * tempConst, (vertices[0].x - vertices[2].x) * tempConst);
 		}
 
 		// Calculates and returns the 3 barycentric weights of a triangle and a point
-		kl::vec3 getBaryWeights(kl::vec2 p) {
+		kl::vec3 getInterWeights(kl::vec2 p) {
 			double dx = p.x - vertices[2].x;
 			double dy = p.y - vertices[2].y;
-			double baryWeight1 = dx * w1Const.x + dy * w1Const.y;
-			double baryWeight2 = dx * w2Const.x + dy * w2Const.y;
-			return kl::vec3(baryWeight1, baryWeight2, 1 - baryWeight1 - baryWeight2);
+			double interWeight1 = dx * w1Const.x + dy * w1Const.y;
+			double interWeight2 = dx * w2Const.x + dy * w2Const.y;
+			return kl::vec3(interWeight1, interWeight2, 1 - interWeight1 - interWeight2);
 		}
 
 		// Checks if the point is inside the triangle

@@ -12,9 +12,9 @@ namespace kl {
 		kl::camera engineCamera = {};
 
 		// Outside functions that user defines
-		std::function<void(void)> EngineStart = []() {};
-		std::function<void(kl::key key, kl::mouse mouse)> EngineInput = [](kl::key key, kl::mouse mouse) {};
-		std::function<void(void)> EngineUpdate = []() {};
+		std::function<void(void)> engineStart = []() {};
+		std::function<void(kl::key key, kl::mouse mouse)> engineInput = [](kl::key key, kl::mouse mouse) {};
+		std::function<void(void)> engineUpdate = []() {};
 
 		// Constructor
 		engine(kl::color background = {}) {
@@ -22,85 +22,85 @@ namespace kl {
 		}
 
 		// Creates the engine
-		void StartNew(kl::size size, std::string name, double fov = 60) {
-			engineWindow.WindowStart = [&]() {
+		void startNew(kl::size size, std::string name, double fov = 60) {
+			engineWindow.windowStart = [&]() {
 				/* 3D projection setup */
-				kl::opengl::Setup3D(fov, engineWindow.GetSize());
+				kl::opengl::setup3D(fov, engineWindow.getSize());
 
 				/* Enable depth buffer */
-				kl::opengl::SetDepthTest(true);
+				kl::opengl::setDepthTest(true);
 
 				/* Enable textures */
-				kl::opengl::SetTextures(true);
+				kl::opengl::setTextures(true);
 
 				/* Game start function call */
-				EngineStart();
+				engineStart();
 
 				/* First stopwatch reset */
-				engineTime.StopwatchReset();
+				engineTime.stopwatchReset();
 			};
 
-			engineWindow.WindowUpdate = [&]() {
+			engineWindow.windowUpdate = [&]() {
 				/* Game input */
-				EngineInput(engineWindow.KEY, engineWindow.MOUSE);
+				engineInput(engineWindow.KEY, engineWindow.MOUSE);
 
 				/* Game logic */
-				EngineUpdate();
+				engineUpdate();
 
 				/* Apply physics */
-				PhysicsUpdate();
+				physicsUpdate();
 
 				/* Clear frame and depth buffers */
-				kl::opengl::ClearBuffers(background);
+				kl::opengl::clearBuffers(background);
 
 				/* Reset the modelview matrix */
-				kl::opengl::ResetModelMatrix();
+				kl::opengl::resetModelMatrix();
 
 				/* Update camera rotation and position */
-				kl::opengl::UpdateCamera(engineCamera);
+				kl::opengl::updateCamera(engineCamera);
 
 				/* Render all game triangles */
 				for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
 					if (objItr->visible) {
-						kl::opengl::RenderTriangles(objItr->triangles, objItr->position, objItr->rotation, objItr->size, objItr->texture);
+						kl::opengl::renderTriangles(objItr->triangles, objItr->position, objItr->rotation, objItr->size, objItr->texture);
 					}
 				}
 
 				/* Swap front and back frame buffers */
-				engineWindow.SwapFrameBuffers();
+				engineWindow.swapFrameBuffers();
 
 				/* Delta time calculation */
 				double wantedFrameTime = 1 / fpsLimit;
 				do {
-					deltaTime = engineTime.StopwatchElapsed();
+					deltaTime = engineTime.stopwatchElapsed();
 				} while (deltaTime < wantedFrameTime);
-				engineTime.StopwatchReset();
+				engineTime.stopwatchReset();
 
 				/* Display the FPS */
-				engineWindow.SetTitle(int(1 / deltaTime));
+				engineWindow.setTitle(int(1 / deltaTime));
 			};
 
-			engineWindow.WindowEnd = [&]() {
+			engineWindow.windowEnd = [&]() {
 				for (int i = 0; i < engineTextures.size(); i++) {
-					kl::opengl::DeleteTexture(engineTextures[i]);
+					kl::opengl::deleteTexture(engineTextures[i]);
 				}
 			};
 
-			engineWindow.StartNew(size, name, false, true, true);
+			engineWindow.startNew(size, name, false, true, true);
 		}
-		void Stop() {
-			engineWindow.Stop();
+		void stop() {
+			engineWindow.stop();
 		}
 		~engine() {
-			this->Stop();
+			this->stop();
 		}
 
 		// Creates a new game object
-		kl::gameobject* NewObject(kl::texture textureID) {
+		kl::gameobject* newObject(kl::texture textureID) {
 			engineObjects.push_back(kl::gameobject(textureID));
 			return &engineObjects.back();
 		}
-		kl::gameobject* NewObject(kl::texture textureID, std::string objFilePath) {
+		kl::gameobject* newObject(kl::texture textureID, std::string objFilePath) {
 			// Load file
 			FILE* fileStream = fopen(objFilePath.c_str(), "r");
 			if (!fileStream) {
@@ -154,7 +154,7 @@ namespace kl {
 		}
 
 		// Deletes a game object
-		bool Delete(kl::gameobject* objectAddress) {
+		bool deleteGameObject(kl::gameobject* objectAddress) {
 			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
 				if (&*objItr == objectAddress) {
 					engineObjects.erase(objItr);
@@ -165,20 +165,20 @@ namespace kl {
 		}
 
 		// Adds a new texture to the engine
-		kl::texture NewTexture(kl::image& textureImage) {
-			kl::texture tempTex = kl::opengl::NewTexture(textureImage);
+		kl::texture newTexture(kl::image& textureImage) {
+			kl::texture tempTex = kl::opengl::newTexture(textureImage);
 			engineTextures.push_back(tempTex);
 			return tempTex;
 		}
-		kl::texture NewTexture(kl::image&& textureImage) {
-			return NewTexture(textureImage);
+		kl::texture newTexture(kl::image&& textureImage) {
+			return newTexture(textureImage);
 		}
 
 		// Deletes an engine texture
-		bool Delete(kl::texture textureID) {
+		bool deleteTexture(kl::texture textureID) {
 			for (int i = 0; i < engineTextures.size(); i++) {
 				if (engineTextures[i] == textureID) {
-					kl::opengl::DeleteTexture(textureID);
+					kl::opengl::deleteTexture(textureID);
 					engineTextures.erase(engineTextures.begin() + i);
 					return true;
 				}
@@ -194,7 +194,7 @@ namespace kl {
 		std::vector<kl::texture> engineTextures = {};
 
 		// Computing object physics 
-		void PhysicsUpdate() {
+		void physicsUpdate() {
 			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
 				if (objItr->physics) {
 					// Applying gravity

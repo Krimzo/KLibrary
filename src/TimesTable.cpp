@@ -1,4 +1,4 @@
-#include "KrimzLib.h"
+#include "KrimzLib.hpp"
 
 
 int main() {
@@ -25,22 +25,22 @@ int main() {
 	// Window
 	kl::window window;
 	kl::image frame(windowSize, kl::constant::colors::gray);
-	window.WindowUpdate = [&]() {
+	window.windowUpdate = [&]() {
 		// Clearing the frame
-		frame.FillSolid(kl::constant::colors::gray);
+		frame.fillSolid(kl::constant::colors::gray);
 
 		// Circle position and size calculations
 		kl::point circleCenter(windowSize.width / 2, windowSize.height / 2);
 		double circleRadius = std::min(windowSize.width / 2.0, windowSize.height / 2.0) - radiusBias;
 
 		// Drawing the circle
-		frame.DrawCircle(circleCenter, circleRadius, circleColor);
+		frame.drawCircle(circleCenter, circleRadius, circleColor);
 
 		// Calculating the points
 		double pointAngle = 360.0 / n;
 		kl::array<kl::point> circlePoints(n);
 		int pointCounter = 0;
-		circlePoints.RunOnEach([&](kl::point* p) {
+		circlePoints.runOnEach([&](kl::point* p) {
 			int pointX = int(cos((pointAngle * pointCounter + 180) * kl::constant::doubles::toRadians) * circleRadius) + windowSize.width / 2;
 			int pointY = int(sin((pointAngle * pointCounter + 180) * kl::constant::doubles::toRadians) * circleRadius) + windowSize.height / 2;
 			*p = kl::point(pointX, pointY);
@@ -48,28 +48,28 @@ int main() {
 		});
 
 		// Drawing the points
-		circlePoints.RunOnEach([&](kl::point* p) {
-			frame.DrawCircle(*p, pointRadius, pointColor, true);
+		circlePoints.runOnEach([&](kl::point* p) {
+			frame.drawCircle(*p, pointRadius, pointColor, true);
 		});
 
 		// Drawing the lines
 		pointCounter = 0;
-		circlePoints.RunOnEach([&](kl::point* p) {
+		circlePoints.runOnEach([&](kl::point* p) {
 			int secondPoint = abs(int(pointCounter++ * m) % n);
-			frame.DrawLine(*p, circlePoints[secondPoint], lineColor);
+			frame.drawLine(*p, circlePoints[secondPoint], lineColor);
 		});
 
 		// Displaying
-		window.RenderImage(frame);
+		window.renderImage(frame);
 
 		// Incrementing m
-		m += mIncrement * kl::time::StaticGetElapsed();
-		window.SetTitle("Times Table -> n: " + std::to_string(n) + " m: " + std::to_string(m));
+		m += mIncrement * kl::time::staticGetElapsed();
+		window.setTitle("Times Table -> n: " + std::to_string(n) + " m: " + std::to_string(m));
 	};
 
 
 	// Creating the window
-	window.StartNew(windowSize, "Times Table", false, true);
+	window.startNew(windowSize, "Times Table", false, true);
 
 	return 0;
 }

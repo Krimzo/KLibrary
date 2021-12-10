@@ -4,32 +4,32 @@
 namespace kl {
 	namespace file {
 		// Creates a file
-		void Create(std::string filePath) {
+		void create(std::string filePath) {
 			std::ofstream(filePath).close();
 		}
 
 		// Opens a file with default program
-		void OpenWithDefault(std::string filePath) {
+		void openWithDefault(std::string filePath) {
 			system(filePath.c_str());
 		}
 
 		// Opens a file with notepad
-		void OpenWithNotepad(std::string filePath) {
+		void openWithNotepad(std::string filePath) {
 			system(("notepad " + filePath).c_str());
 		}
 
 		// Opens a file with visual studio code
-		void OpenWithVSCode(std::string filePath) {
+		void openWithVSCode(std::string filePath) {
 			system(("code " + filePath).c_str());
 		}
 
 		// Returns a string from a given text file
-		std::string ReadText(std::string filePath) {
+		std::string readText(std::string filePath) {
 			std::ifstream fileStream(filePath);
 			std::stringstream textBuffer;
 			if (!fileStream.is_open()) {
 				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 			textBuffer << fileStream.rdbuf();
@@ -38,21 +38,21 @@ namespace kl {
 		}
 
 		// Writes text to a text file
-		void WriteText(std::string filePath, std::string& data) {
+		void writeText(std::string filePath, std::string& data) {
 			std::ofstream fileStream(filePath);
 			fileStream << data;
 			fileStream.close();
 		}
-		void WriteText(std::string filePath, std::string&& data) {
-			WriteText(filePath, data);
+		void writeText(std::string filePath, std::string&& data) {
+			writeText(filePath, data);
 		}
 
 		// Appends text to a text file
-		void AppendText(std::string filePath, std::string& data, int position = -1) {
+		void appendText(std::string filePath, std::string& data, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 
@@ -66,16 +66,16 @@ namespace kl {
 			fileStream << data;
 			fileStream.close();
 		}
-		void AppendText(std::string filePath, std::string&& data, int position = -1) {
-			AppendText(filePath, data, position);
+		void appendText(std::string filePath, std::string&& data, int position = -1) {
+			appendText(filePath, data, position);
 		}
 
 		// Returns a filedata from a given file
-		kl::bytes ReadBytes(std::string filePath) {
+		kl::bytes readBytes(std::string filePath) {
 			std::ifstream fileStream(filePath, std::ios::binary);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load file \"%s\".\n", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 			fileStream.seekg(0, std::ios::end);
@@ -88,21 +88,21 @@ namespace kl {
 		}
 
 		// Writes bytes to a file
-		void WriteBytes(std::string filePath, kl::bytes& data) {
+		void writeBytes(std::string filePath, kl::bytes& data) {
 			std::ofstream fileStream(filePath, std::ios::binary);
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
-		void WriteBytes(std::string filePath, kl::bytes&& data) {
-			WriteBytes(filePath, data);
+		void writeBytes(std::string filePath, kl::bytes&& data) {
+			writeBytes(filePath, data);
 		}
 
 		// Appends bytes to a file
-		void AppendBytes(std::string filePath, kl::bytes& data, int position = -1) {
+		void appendBytes(std::string filePath, kl::bytes& data, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load file \"%s\".\n", filePath.c_str());
-				kl::console::WaitFor(' ', true);
+				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 
@@ -116,13 +116,8 @@ namespace kl {
 			fileStream.write((char*)&data[0], data.size());
 			fileStream.close();
 		}
-		void AppendBytes(std::string filePath, kl::bytes&& data, int position = -1) {
-			AppendBytes(filePath, data, position);
-		}
-
-		// Deletes the given file
-		void Delete(std::string filePath) {
-			remove(filePath.c_str());
+		void appendBytes(std::string filePath, kl::bytes&& data, int position = -1) {
+			appendBytes(filePath, data, position);
 		}
 	};
 }

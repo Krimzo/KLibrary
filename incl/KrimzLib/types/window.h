@@ -9,12 +9,12 @@ namespace kl {
 		kl::mouse MOUSE = {};
 
 		// Window function calls
-		std::function<void(void)> WindowStart = []() {};
-		std::function<void(void)> WindowUpdate = []() {};
-		std::function<void(void)> WindowEnd = []() {};
+		std::function<void(void)> windowStart = []() {};
+		std::function<void(void)> windowUpdate = []() {};
+		std::function<void(void)> windowEnd = []() {};
 
 		// Window creation
-		void StartNew(kl::size size, std::string name, bool resizeable = true, bool continuous = false, bool opengl = false) {
+		void startNew(kl::size size, std::string name, bool resizeable = true, bool continuous = false, bool opengl = false) {
 			// Converting window name to a wstring
 			std::wstring wName = kl::convert::toWString(name);
 
@@ -34,7 +34,7 @@ namespace kl {
 			windowClass.hIconSm = nullptr;
 			if (!RegisterClassExW(&windowClass)) {
 				printf("Couldn't register window class! Last error = %d\n", GetLastError());
-				kl::console::WaitFor(' ', true);
+				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 
@@ -47,7 +47,7 @@ namespace kl {
 			hwnd = CreateWindowExW(0, wName.c_str(), wName.c_str(), windowStyle, (kl::constant::ints::ScreenWidth / 2 - size.width / 2), (kl::constant::ints::ScreenHeight / 2 - size.height / 2), size.width, size.height, nullptr, nullptr, hInstance, nullptr);
 			if (!hwnd) {
 				printf("Couldn't create window! Last error = %d\n", GetLastError());
-				kl::console::WaitFor(' ', true);
+				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 			ShowWindow(hwnd, SW_SHOW);
@@ -93,23 +93,23 @@ namespace kl {
 
 			// Window message loop
 			if (continuous) {
-				WindowStart();
+				windowStart();
 				while (IsWindow(hwnd)) {
 					while (PeekMessageW(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
-						HandleMessage();
+						handleMessage();
 					}
-					WindowUpdate();
+					windowUpdate();
 				}
-				WindowEnd();
+				windowEnd();
 			}
 			else {
-				WindowStart();
+				windowStart();
 				while (IsWindow(hwnd)) {
 					GetMessageW(&wndMsg, hwnd, 0, 0);
-					HandleMessage();
-					WindowUpdate();
+					handleMessage();
+					windowUpdate();
 				}
-				WindowEnd();
+				windowEnd();
 			}
 
 			// Memory release
@@ -125,60 +125,60 @@ namespace kl {
 		}
 
 		// Window destruction
-		void Stop() {
+		void stop() {
 			PostMessageW(hwnd, WM_CLOSE, 0, 0);
 		}
 		~window() {
-			Stop();
+			stop();
 		}
 
 		// Getters
-		HWND GetHWND() {
+		HWND getHWND() {
 			return hwnd;
 		}
-		HDC GetHDC() {
+		HDC getHDC() {
 			return hdc;
 		}
-		HGLRC GetHGLRC() {
+		HGLRC getHGLRC() {
 			return hglrc;
 		}
 
 		// Returns the window size
-		kl::size GetSize() {
+		kl::size getSize() {
 			RECT clientArea = {};
 			GetClientRect(hwnd, &clientArea);
 			return kl::size(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
 		}
-		int GetWidth() {
-			return GetSize().width;
+		int getWidth() {
+			return getSize().width;
 		}
-		int GetHeight() {
-			return GetSize().height;
+		int getHeight() {
+			return getSize().height;
 		}
 
 		// Sets the window title
-		void SetTitle(std::string data) {
+		void setTitle(std::string data) {
 			SetWindowTextA(hwnd, data.c_str());
 		}
-		void SetTitle(int data) {
+		void setTitle(int data) {
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
-		void SetTitle(double data) {
+		void setTitle(double data) {
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
 
 		// Sets the pixels of the window
-		void RenderImage(kl::image& toDraw, kl::point position = { 0, 0 }) {
-			bmpInfo.bmiHeader.biWidth = toDraw.GetWidth();
-			bmpInfo.bmiHeader.biHeight = toDraw.GetHeight();
-			StretchDIBits(hdc, position.x, (toDraw.GetHeight() - 1) + position.y, toDraw.GetWidth(), -(int)toDraw.GetHeight(), 0, 0, toDraw.GetWidth(), toDraw.GetHeight(), toDraw.GetPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+		void renderImage(kl::image& toDraw, kl::point position = { 0, 0 }) {
+			bmpInfo.bmiHeader.biWidth = toDraw.getWidth();
+			bmpInfo.bmiHeader.biHeight = toDraw.getHeight();
+			StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -(int)toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.getPixelData(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 		}
-		void RenderImage(kl::image&& toDraw, kl::point position = { 0, 0 }) {
-			RenderImage(toDraw, position);
+		void renderImage(kl::image&& toDraw, kl::point position = { 0, 0 }) {
+			renderImage(toDraw, position);
 		}
 
 		// Swaps the front and back buffers
-		void SwapFrameBuffers() {
+		void swapFrameBuffers() {
 			SwapBuffers(hdc);
 		}
 
@@ -191,7 +191,7 @@ namespace kl {
 		MSG wndMsg = {};
 
 		// Handles the windows message
-		void HandleMessage() {
+		void handleMessage() {
 			switch (wndMsg.message) {
 			case WM_KEYDOWN:
 				KEY = (kl::key)wndMsg.wParam;

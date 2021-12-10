@@ -4,8 +4,8 @@
 namespace kl {
 	class time {
 	public:
-		// Returns a time since the the last StaticGetElapsed() call
-		static double StaticGetElapsed() {
+		// Returns a time since the the last staticGetElapsed() call
+		static double staticGetElapsed() {
 			LARGE_INTEGER staticCounterNow;
 			QueryPerformanceCounter(&staticCounterNow);
 			double elapsedTime = (staticCounterNow.QuadPart - staticCounterLast.QuadPart) / PCFrequency;
@@ -14,19 +14,19 @@ namespace kl {
 		}
 
 		// Resets the static stopwatch to 0 seconds
-		static void StaticStopwatchReset() {
+		static void staticStopwatchReset() {
 			QueryPerformanceCounter(&staticStopwatchLast);
 		}
 
 		// Returns the passed time since the last static stopwatch reset
-		static double StaticStopwatchElapsed() {
+		static double staticStopwatchElapsed() {
 			LARGE_INTEGER staticStopwatchNow;
 			QueryPerformanceCounter(&staticStopwatchNow);
 			return (staticStopwatchNow.QuadPart - staticStopwatchLast.QuadPart) / PCFrequency;
 		}
 
 		// Waits for the given time in seconds
-		static void Wait(double seconds) {
+		static void wait(double seconds) {
 			LARGE_INTEGER sleepCounterStart = {}, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
 			do {
@@ -40,8 +40,8 @@ namespace kl {
 			QueryPerformanceCounter(&stopwatchLast);
 		}
 
-		// Returns a time since the the last GetElapsed() call
-		double GetElapsed() {
+		// Returns a time since the the last getElapsed() call
+		double getElapsed() {
 			LARGE_INTEGER counterNow;
 			QueryPerformanceCounter(&counterNow);
 			double elapsedTime = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
@@ -50,12 +50,12 @@ namespace kl {
 		}
 
 		// Resets the stopwatch to 0 seconds
-		void StopwatchReset() {
+		void stopwatchReset() {
 			QueryPerformanceCounter(&stopwatchLast);
 		}
 
 		// Returns the passed time since the last stopwatch reset
-		double StopwatchElapsed() {
+		double stopwatchElapsed() {
 			LARGE_INTEGER stopwatchNow;
 			QueryPerformanceCounter(&stopwatchNow);
 			return (stopwatchNow.QuadPart - stopwatchLast.QuadPart) / PCFrequency;
@@ -63,7 +63,7 @@ namespace kl {
 
 	protected:
 		// Loads the current pc frequency
-		static void LoadPCFrequency() {
+		static void loadPCFrequency() {
 			LARGE_INTEGER counterTempFreq;
 			QueryPerformanceFrequency(&counterTempFreq);
 			PCFrequency = double(counterTempFreq.QuadPart);
