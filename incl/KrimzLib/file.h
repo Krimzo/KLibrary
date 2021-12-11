@@ -29,7 +29,6 @@ namespace kl {
 			std::stringstream textBuffer;
 			if (!fileStream.is_open()) {
 				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
-				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 			textBuffer << fileStream.rdbuf();
@@ -52,7 +51,6 @@ namespace kl {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
-				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 
@@ -75,7 +73,6 @@ namespace kl {
 			std::ifstream fileStream(filePath, std::ios::binary);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load file \"%s\".\n", filePath.c_str());
-				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 			fileStream.seekg(0, std::ios::end);
@@ -102,7 +99,6 @@ namespace kl {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
 				printf("Couldn't load file \"%s\".\n", filePath.c_str());
-				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 

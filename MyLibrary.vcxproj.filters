@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="incl\KrimzLib\types\engine\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\engine\engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\engine\gameobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\engine\mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\engine\window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\opengl\ebo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\opengl\shaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\opengl\vao.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\opengl\vbo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\vecmath\vec2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\vecmath\vec3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\vecmath\vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\size.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\binary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\constant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\convert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\opengl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\web.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\eglew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\freeglut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\freeglut_ext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\freeglut_std.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\freeglut_ucall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\glew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\glut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\glxew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\GL\wglew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\freeglut_static.lib" />
+    <Library Include="lib\glew32s.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ModernGL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\basic.vs" />
+    <None Include="res\shaders\basic.fs" />
+  </ItemGroup>
+</Project>

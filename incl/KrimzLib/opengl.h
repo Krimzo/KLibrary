@@ -1,8 +1,6 @@
 #pragma once
 
 
-#define GL_BGR 0x80E0
-
 namespace kl {
 	namespace opengl {
 		// Setups perspective for 3D rendering
@@ -24,9 +22,10 @@ namespace kl {
 		}
 
 		// Enables/disables face culling
-		void setFaceCulling(bool enable, bool backFace = true) {
-			if (enable) {
+		void setFaceCulling(bool enabled, bool clockWise = true, bool backFace = true) {
+			if (enabled) {
 				glEnable(GL_CULL_FACE);
+				glFrontFace(clockWise ? GL_CW : GL_CCW);
 				glCullFace(backFace ? GL_BACK : GL_FRONT);
 			}
 			else {

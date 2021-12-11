@@ -45,9 +45,9 @@ namespace kl {
 		// Interpolates and returns a color of the barycentric weights
 		kl::color interpolateColor(kl::vec3 weights) {
 			return kl::color(
-				vertices[0].color.r * weights.x + vertices[1].color.r * weights.y + vertices[2].color.r * weights.z,
-				vertices[0].color.g * weights.x + vertices[1].color.g * weights.y + vertices[2].color.g * weights.z,
-				vertices[0].color.b * weights.x + vertices[1].color.b * weights.y + vertices[2].color.b * weights.z
+				kl::byte(vertices[0].color.r * weights.x + vertices[1].color.r * weights.y + vertices[2].color.r * weights.z),
+				kl::byte(vertices[0].color.g * weights.x + vertices[1].color.g * weights.y + vertices[2].color.g * weights.z),
+				kl::byte(vertices[0].color.b * weights.x + vertices[1].color.b * weights.y + vertices[2].color.b * weights.z)
 			);
 		}
 

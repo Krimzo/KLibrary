@@ -17,7 +17,7 @@ int main() {
         *elem = a[i] + b[i];
     });
     
-    for (int i = 0; i < sum.Size(); i++) {
+    for (int i = 0; i < sum.size(); i++) {
         std::cout << sum[i] << '\n';
     }
 

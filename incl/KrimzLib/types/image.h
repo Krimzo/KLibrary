@@ -140,9 +140,9 @@ namespace kl {
 			kl::vec2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
 
 			// Drawing
-			kl::vec2 drawPoint(a.x, a.y);
+			kl::vec2 drawPoint((float)a.x, (float)a.y);
 			for (int i = 0; i <= len; i++) {
-				setPixel(kl::point(drawPoint.x, drawPoint.y), col);
+				setPixel(kl::point((int)drawPoint.x, (int)drawPoint.y), col);
 				drawPoint = drawPoint + incr;
 			}
 		}
@@ -169,7 +169,7 @@ namespace kl {
 
 				// Drawing
 				for (int y = a.y; y < c.y; y++) {
-					drawLine(kl::point(kl::math::lineX((y < b.y) ? a : c, b, y), y), kl::point(kl::math::lineX(a, c, y), y), col);
+					drawLine(kl::point((int)kl::math::lineX((y < b.y) ? a : c, b, (float)y), y), kl::point((int)kl::math::lineX(a, c, (float)y), y), col);
 				}
 			}
 			else {
@@ -206,21 +206,21 @@ namespace kl {
 		void drawCircle(kl::point p, float r, kl::color col, bool fill = false) {
 			if (fill) {
 				for (int y = int(p.y - r); y <= int(p.y + r); y++) {
-					int x(p.x + sqrt(r * r - float(y - p.y) * float(y - p.y)));
+					int x = int(p.x + sqrt(r * r - float(y - p.y) * float(y - p.y)));
 					drawLine(kl::point(2 * p.x - x, y), kl::point(x, y), col);
 				}
 			}
 			else {
 				for (int i = 0; i < 2 * r; i++) {
 					// X run
-					int x1(p.x - r + i);
-					int y1(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
+					int x1 = int(p.x - r + i);
+					int y1 = int(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
 					setPixel(kl::point(x1, y1), col);
 					setPixel(kl::point(x1, 2 * p.y - y1), col);
 					
 					// Y run
-					int y2(p.y - r + i);
-					int x2(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
+					int y2 = int(p.y - r + i);
+					int x2 = int(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
 					setPixel(kl::point(x2, y2), col);
 					setPixel(kl::point(2 * p.x - x2, y2), col);
 				}
@@ -245,10 +245,10 @@ namespace kl {
 				for (kl::uint32 x = 0; x < frameSize.width; x++) {
 					// Pixels to grayscale
 					kl::color currentPixel = getPixel(kl::point(x * pixelWidthIncrement, y * pixelHeightIncrement));
-					kl::uint32 grayScaledPixel(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
+					kl::uint32 grayScaledPixel = kl::uint32(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
 
 					// Grayscaled values to ASCII
-					kl::uint32 saturationLevel((grayScaledPixel / 255.0) * 9);
+					kl::uint32 saturationLevel = kl::uint32((grayScaledPixel / 255.0) * 9);
 					frame << asciiPixelTable[saturationLevel];
 				}
 				frame << '\n';
@@ -288,7 +288,7 @@ namespace kl {
 						scale /= bias;
 					}
 
-					byte grayValue((noise / scaleSum) * 255);
+					byte grayValue = byte((noise / scaleSum) * 255);
 					imagePixels[y * imageWidth + x].r = grayValue;
 					imagePixels[y * imageWidth + x].g = grayValue;
 					imagePixels[y * imageWidth + x].b = grayValue;

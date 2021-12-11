@@ -1,5 +1,7 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
+#define FREEGLUT_STATIC
+#define GLEW_STATIC
 
 
 /* Including cpp headers */
@@ -20,7 +22,8 @@
 #include <windowsx.h>
 #include <wininet.h>
 #include <gdiplus.h>
-#include <gl/GL.h>
+#include <GL/glew.h>
+#include <GL/glut.h>
 #include <gl/GLU.h>
 
 /* Fixing external macros */
@@ -34,12 +37,18 @@
 #include "KrimzLib/types/size.h"
 #include "KrimzLib/types/color.h"
 #include "KrimzLib/types/array.h"
+
 // Including vector math headers
 #include "KrimzLib/types/vecmath/vec2.h"
 #include "KrimzLib/types/vecmath/vec3.h"
 #include "KrimzLib/types/vecmath/vertex.h"
 #include "KrimzLib/types/vecmath/triangle.h"
+
+// Including cuda headers
+#ifdef __CUDACC__
 #include "KrimzLib/types/cuda/gpubuffer.cuh"
+#endif
+
 // Including misc headers
 #include "KrimzLib/constant.h"
 #include "KrimzLib/convert.h"
@@ -52,11 +61,13 @@
 #include "KrimzLib/file.h"
 #include "KrimzLib/thread.h"
 #include "KrimzLib/web.h"
+
 // Including engine types
 #include "KrimzLib/types/image.h"
 #include "KrimzLib/types/engine/mouse.h"
 #include "KrimzLib/types/engine/camera.h"
 #include "KrimzLib/types/engine/gameobject.h"
+
 // Including opengl types and engine
 #include "KrimzLib/opengl.h"
 #include "KrimzLib/types/opengl/vao.h"
