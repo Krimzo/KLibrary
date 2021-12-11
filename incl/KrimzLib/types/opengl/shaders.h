@@ -12,37 +12,16 @@ namespace kl {
 				exit(69);
 			}
 
-			// Compiling the vertex shader
+			// Compiling the shaders
 			kl::id vertexShader = compileShader(kl::file::readText(vertexFile), GL_VERTEX_SHADER);
-
-			// Compiling the fragment shader
 			kl::id fragmentShader = compileShader(kl::file::readText(fragmentFile), GL_FRAGMENT_SHADER);
 
 			// Attaching the shaders
 			glAttachShader(shaderProgram, vertexShader);
 			glAttachShader(shaderProgram, fragmentShader);
 
-			// Linking the shaders
-			glLinkProgram(shaderProgram);
-			int linkStatus;
-			glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkStatus);
-			if (linkStatus == NULL) {
-				char linkingInfo[1024];
-				glGetProgramInfoLog(shaderProgram, sizeof(linkingInfo), NULL, linkingInfo);
-				printf("Shader program linking error: '%s'\n", linkingInfo);
-				exit(69);
-			}
-
-			// Validating the shader program
-			glValidateProgram(shaderProgram);
-			int validateStatus;
-			glGetProgramiv(shaderProgram, GL_VALIDATE_STATUS, &validateStatus);
-			if (validateStatus == NULL) {
-				char validateInfo[1024];
-				glGetProgramInfoLog(shaderProgram, sizeof(validateInfo), NULL, validateInfo);
-				printf("Shader program validation error: '%s'\n", validateInfo);
-				exit(69);
-			}
+			// Linking and validating the program
+			finalizeProgram();
 
 			// Cleanup
 			glDeleteShader(vertexShader);
@@ -93,6 +72,31 @@ namespace kl {
 
 			// Returning the built shader
 			return shader;
+		}
+
+		// Links the shaders and validates the shader program
+		void finalizeProgram() {
+			// Linking the shaders
+			glLinkProgram(shaderProgram);
+			int linkStatus;
+			glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkStatus);
+			if (linkStatus == NULL) {
+				char linkingInfo[1024];
+				glGetProgramInfoLog(shaderProgram, sizeof(linkingInfo), NULL, linkingInfo);
+				printf("Shader program linking error: '%s'\n", linkingInfo);
+				exit(69);
+			}
+
+			// Validating the shader program
+			glValidateProgram(shaderProgram);
+			int validateStatus;
+			glGetProgramiv(shaderProgram, GL_VALIDATE_STATUS, &validateStatus);
+			if (validateStatus == NULL) {
+				char validateInfo[1024];
+				glGetProgramInfoLog(shaderProgram, sizeof(validateInfo), NULL, validateInfo);
+				printf("Shader program validation error: '%s'\n", validateInfo);
+				exit(69);
+			}
 		}
 	};
 }
