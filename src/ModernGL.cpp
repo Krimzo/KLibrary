@@ -59,8 +59,8 @@ void Setup() {
 
 	// Generating the gpu array and passing data
 	basicVBO = new kl::vbo();
-	basicVBO->setData(vertices, sizeof(vertices));
-	basicVBO->setParsing(0, 3, sizeof(kl::vec3), 0);
+	basicVBO->setData(vertices, sizeof(vertices), GL_STATIC_DRAW);
+	basicVBO->setParsing(0, GL_FLOAT, 3, sizeof(kl::vec3), 0);
 
 	// Creating a shader program
 	basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");

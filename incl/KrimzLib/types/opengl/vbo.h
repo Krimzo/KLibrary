@@ -22,17 +22,17 @@ namespace kl {
 		}
 
 		// Sets the data of the buffer
-		void setData(void* data, kl::uint64 byteSize) {
+		void setData(void* data, kl::uint64 byteSize, kl::id usage) {
 			bind();
-			glBufferData(GL_ARRAY_BUFFER, byteSize, data, GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, byteSize, data, usage);
 			unbind();
 		}
 
 		// Sets up the parsing of the array data
-		void setParsing(int arrayIndex, int floatsPerAttr, int stride, int offset) {
+		void setParsing(int arrayIndex, kl::id dataType, int typesPerAttr, int stride, int offset) {
 			bind();
 			glEnableVertexAttribArray(arrayIndex);
-			glVertexAttribPointer(arrayIndex, floatsPerAttr, GL_FLOAT, false, stride, (void*)offset);
+			glVertexAttribPointer(arrayIndex, typesPerAttr, dataType, false, stride, (void*)offset);
 			unbind();
 		}
 

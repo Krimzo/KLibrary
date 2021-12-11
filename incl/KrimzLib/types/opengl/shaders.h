@@ -5,10 +5,6 @@ namespace kl {
 	struct shaders {
 		// Constructor/destructor
 		shaders(std::string vertexFile, std::string fragmentFile) {
-			// File reading
-			std::string vertexSource = kl::file::readText(vertexFile);
-			std::string fragmentSource = kl::file::readText(fragmentFile);
-
 			// Shader program creation
 			shaderProgram = glCreateProgram();
 			if (shaderProgram == NULL) {
@@ -17,10 +13,10 @@ namespace kl {
 			}
 
 			// Compiling the vertex shader
-			kl::id vertexShader = compileShader(vertexSource, GL_VERTEX_SHADER);
+			kl::id vertexShader = compileShader(kl::file::readText(vertexFile), GL_VERTEX_SHADER);
 
 			// Compiling the fragment shader
-			kl::id fragmentShader = compileShader(fragmentSource, GL_FRAGMENT_SHADER);
+			kl::id fragmentShader = compileShader(kl::file::readText(fragmentFile), GL_FRAGMENT_SHADER);
 
 			// Attaching the shaders
 			glAttachShader(shaderProgram, vertexShader);
