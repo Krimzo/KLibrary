@@ -24,11 +24,6 @@ namespace kl {
 			return startInclusive + float(rand()) / float(RAND_MAX / (endExclusive - startInclusive));
 		}
 
-		// Returns a random double
-		static double getDouble(double startInclusive, double endExclusive) {
-			return startInclusive + double(rand()) / double(RAND_MAX / (endExclusive - startInclusive));
-		}
-
 		// Returns a random letter
 		static char getLetter(bool upperCase = false) {
 			if (upperCase) {

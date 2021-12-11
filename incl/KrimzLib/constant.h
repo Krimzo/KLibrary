@@ -12,13 +12,9 @@ namespace kl {
 		// Floats
 		namespace floats {
 			const float toFloatColor = 1.0f / 255;
-		}
-
-		// Doubles
-		namespace doubles {
-			const double pi = 3.14159265358979;
-			const double toRadians = pi / 180;
-			const double toDegrees = 180 / pi;
+			const float pi = 3.14159265358979f;
+			const float toRadians = pi / 180;
+			const float toDegrees = 180 / pi;
 		}
 
 		// Colors

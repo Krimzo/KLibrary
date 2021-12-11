@@ -4,13 +4,13 @@
 namespace kl {
 	namespace convert {
 		// Converts degrees to radians
-		double toRadians(double degrees) {
-			return degrees * kl::constant::doubles::toRadians;
+		float toRadians(float degrees) {
+			return degrees * kl::constant::floats::toRadians;
 		}
 
 		// Converts radians to degrees
-		double toDegrees(double radians) {
-			return radians * kl::constant::doubles::toDegrees;
+		float toDegrees(float radians) {
+			return radians * kl::constant::floats::toDegrees;
 		}
 
 		// Converts a byte array to a string

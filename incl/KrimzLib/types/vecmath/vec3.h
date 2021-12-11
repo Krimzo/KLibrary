@@ -3,9 +3,9 @@
 
 namespace kl {
     struct vec3 {
-		double x;
-		double y;
-		double z;
+		float x;
+		float y;
+		float z;
 
 		// Constructors
 		vec3() {
@@ -13,7 +13,7 @@ namespace kl {
 			y = 0;
 			z = 0;
 		}
-		vec3(double x, double y, double z) {
+		vec3(float x, float y, float z) {
 			this->x = x;
 			this->y = y;
 			this->z = z;
@@ -26,10 +26,10 @@ namespace kl {
 		kl::vec3 operator - (kl::vec3 obj) {
 			return kl::vec3(x - obj.x, y - obj.y, z - obj.z);
 		}
-		kl::vec3 operator * (double a) {
+		kl::vec3 operator * (float a) {
 			return kl::vec3(x * a, y * a, z * a);
 		}
-		kl::vec3 operator / (double a) {
+		kl::vec3 operator / (float a) {
 			return kl::vec3(x / a, y / a, z / a);
 		}
 		bool operator == (kl::vec3 obj) {
@@ -40,18 +40,18 @@ namespace kl {
 		}
 
 		// Returns the vectors length
-		double length() {
+		float length() {
 			return sqrt(x * x + y * y + z * z);
 		}
 
 		// Retruns a normalized vector
 		kl::vec3 normalize() {
-			double vecLen = 1 / length();
+			float vecLen = 1 / length();
 			return kl::vec3(x * vecLen, y * vecLen, z * vecLen);
 		}
 
 		// Returns the dot product
-		double dot(kl::vec3 a) {
+		float dot(kl::vec3 a) {
 			return x * a.x + y * a.y + z * a.z;
 		}
 

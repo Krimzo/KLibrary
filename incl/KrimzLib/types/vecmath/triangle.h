@@ -23,17 +23,17 @@ namespace kl {
 
 		// Computes and stores the barycentric constant
 		void computeInterConsts() {
-			double tempConst = 1 / ((vertices[1].world.y - vertices[2].world.y) * (vertices[0].world.x - vertices[2].world.x) + (vertices[2].world.x - vertices[1].world.x) * (vertices[0].world.y - vertices[2].world.y));
+			float tempConst = 1 / ((vertices[1].world.y - vertices[2].world.y) * (vertices[0].world.x - vertices[2].world.x) + (vertices[2].world.x - vertices[1].world.x) * (vertices[0].world.y - vertices[2].world.y));
 			w1Const = kl::vec2((vertices[1].world.y - vertices[2].world.y) * tempConst, (vertices[2].world.x - vertices[1].world.x) * tempConst);
 			w2Const = kl::vec2((vertices[2].world.y - vertices[0].world.y) * tempConst, (vertices[0].world.x - vertices[2].world.x) * tempConst);
 		}
 
 		// Calculates and returns the 3 barycentric weights of a triangle and a point
 		kl::vec3 getInterWeights(kl::vec2 p) {
-			double dx = p.x - vertices[2].world.x;
-			double dy = p.y - vertices[2].world.y;
-			double interWeight1 = dx * w1Const.x + dy * w1Const.y;
-			double interWeight2 = dx * w2Const.x + dy * w2Const.y;
+			float dx = p.x - vertices[2].world.x;
+			float dy = p.y - vertices[2].world.y;
+			float interWeight1 = dx * w1Const.x + dy * w1Const.y;
+			float interWeight2 = dx * w2Const.x + dy * w2Const.y;
 			return kl::vec3(interWeight1, interWeight2, 1 - interWeight1 - interWeight2);
 		}
 

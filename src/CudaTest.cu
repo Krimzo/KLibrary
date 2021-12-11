@@ -49,16 +49,16 @@ __global__ void gpuInterpolation(kl::color* frameBuffer, kl::size frameSize, kl:
         const int y = i / frameSize.width;
 
         // Calculating the interpolation constants
-        double tempConst = 1 / ((tr.vertices[1].world.y - tr.vertices[2].world.y) * (tr.vertices[0].world.x - tr.vertices[2].world.x) + (tr.vertices[2].world.x - tr.vertices[1].world.x) * (tr.vertices[0].world.y - tr.vertices[2].world.y));
-        double w1xConst = (tr.vertices[1].world.y - tr.vertices[2].world.y) * tempConst;
-        double w1yConst = (tr.vertices[2].world.x - tr.vertices[1].world.x) * tempConst;
-        double w2xConst = (tr.vertices[2].world.y - tr.vertices[0].world.y) * tempConst;
-        double w2yConst = (tr.vertices[0].world.x - tr.vertices[2].world.x) * tempConst;
+        float tempConst = 1 / ((tr.vertices[1].world.y - tr.vertices[2].world.y) * (tr.vertices[0].world.x - tr.vertices[2].world.x) + (tr.vertices[2].world.x - tr.vertices[1].world.x) * (tr.vertices[0].world.y - tr.vertices[2].world.y));
+        float w1xConst = (tr.vertices[1].world.y - tr.vertices[2].world.y) * tempConst;
+        float w1yConst = (tr.vertices[2].world.x - tr.vertices[1].world.x) * tempConst;
+        float w2xConst = (tr.vertices[2].world.y - tr.vertices[0].world.y) * tempConst;
+        float w2yConst = (tr.vertices[0].world.x - tr.vertices[2].world.x) * tempConst;
 
         // Calculating the interpolation weights
-        double interWeight1 = (x - tr.vertices[2].world.x) * w1xConst + (y - tr.vertices[2].world.y) * w1yConst;
-        double interWeight2 = (x - tr.vertices[2].world.x) * w2xConst + (y - tr.vertices[2].world.y) * w2yConst;
-        double interWeight3 = 1 - interWeight1 - interWeight2;
+        float interWeight1 = (x - tr.vertices[2].world.x) * w1xConst + (y - tr.vertices[2].world.y) * w1yConst;
+        float interWeight2 = (x - tr.vertices[2].world.x) * w2xConst + (y - tr.vertices[2].world.y) * w2yConst;
+        float interWeight3 = 1 - interWeight1 - interWeight2;
 
         // Checking if the point is inside the triangle
         if (!(interWeight1 < 0 || interWeight2 < 0 || interWeight3 < 0)) {

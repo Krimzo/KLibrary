@@ -28,7 +28,7 @@ int main() {
 
 	// Window update setup
 	int counter = 0;
-	const double timeToSleep = 1.0 / fpsLimit;
+	const float timeToSleep = 1.0f / fpsLimit;
 	kl::time::staticStopwatchReset();
 	window.windowUpdate = [&]() {
 		// Setting x and y

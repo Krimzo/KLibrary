@@ -8,7 +8,7 @@ int main() {
 	kl::gameobject* table2 = nullptr;
 	kl::gameobject* table3 = nullptr;
 
-	testEngine.EngineStart = [&]() {
+	testEngine.engineStart = [&]() {
 		kl::texture tableTexture = testEngine.newTexture("res/textures/table.png");
 
 		table1 = testEngine.newObject(tableTexture, "res/objects/table.obj");
@@ -30,14 +30,14 @@ int main() {
 		table3->gravity = 0;
 	};
 
-	testEngine.EngineUpdate = [&]() {
-		double tableNewSize = cos(kl::convert::ToRadians(table2->rotation.x));
+	testEngine.engineUpdate = [&]() {
+		float tableNewSize = cos(kl::convert::toRadians(table2->rotation.x));
 		table2->size = kl::vec3(tableNewSize, tableNewSize, tableNewSize);
 	};
 
-	double cameraMoveSpeed = 1;
-	double cameraRotateSpeed = 30;
-	testEngine.EngineInput = [&](kl::key key, kl::mouse mouse) {
+	float cameraMoveSpeed = 1;
+	float cameraRotateSpeed = 30;
+	testEngine.engineInput = [&](kl::key key, kl::mouse mouse) {
 		switch (key)
 		{
 		case 'W':

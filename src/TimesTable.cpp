@@ -4,15 +4,15 @@
 int main() {
 	// Time table properties
 	int n = 200;
-	double m = 0;
-	double mIncrement = 0.1;
+	float m = 0;
+	float mIncrement = 0.1;
 
 	// Circle properties
-	double radiusBias = 25;
+	float radiusBias = 25;
 	kl::color circleColor(220, 220, 220);
 
 	// Point properties
-	double pointRadius = 3;
+	float pointRadius = 3;
 	kl::color pointColor(175, 20, 55);
 
 	// Line properties
@@ -31,18 +31,18 @@ int main() {
 
 		// Circle position and size calculations
 		kl::point circleCenter(windowSize.width / 2, windowSize.height / 2);
-		double circleRadius = std::min(windowSize.width / 2.0, windowSize.height / 2.0) - radiusBias;
+		float circleRadius = std::min(windowSize.width / 2.0, windowSize.height / 2.0) - radiusBias;
 
 		// Drawing the circle
 		frame.drawCircle(circleCenter, circleRadius, circleColor);
 
 		// Calculating the points
-		double pointAngle = 360.0 / n;
+		float pointAngle = 360.0 / n;
 		kl::array<kl::point> circlePoints(n);
 		int pointCounter = 0;
 		circlePoints.runOnEach([&](kl::point* p) {
-			int pointX = int(cos((pointAngle * pointCounter + 180) * kl::constant::doubles::toRadians) * circleRadius) + windowSize.width / 2;
-			int pointY = int(sin((pointAngle * pointCounter + 180) * kl::constant::doubles::toRadians) * circleRadius) + windowSize.height / 2;
+			int pointX = int(cos((pointAngle * pointCounter + 180) * kl::constant::floats::toRadians) * circleRadius) + windowSize.width / 2;
+			int pointY = int(sin((pointAngle * pointCounter + 180) * kl::constant::floats::toRadians) * circleRadius) + windowSize.height / 2;
 			*p = kl::point(pointX, pointY);
 			pointCounter++;
 		});

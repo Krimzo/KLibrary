@@ -5,9 +5,9 @@ namespace kl {
 	class engine {
 	public:
 		// Engine properties
-		double fpsLimit = -1;
-		double deltaTime = 0;
-		double gravity = 9.81;
+		float fpsLimit = -1;
+		float deltaTime = 0;
+		float gravity = 9.81f;
 		kl::color background = {};
 		kl::camera engineCamera = {};
 
@@ -22,7 +22,7 @@ namespace kl {
 		}
 
 		// Creates the engine
-		void startNew(kl::size size, std::string name, double fov = 60) {
+		void startNew(kl::size size, std::string name, float fov = 60) {
 			engineWindow.windowStart = [&]() {
 				/* 3D projection setup */
 				kl::opengl::setup3D(fov, engineWindow.getSize());
@@ -70,7 +70,7 @@ namespace kl {
 				engineWindow.swapFrameBuffers();
 
 				/* Delta time calculation */
-				double wantedFrameTime = 1 / fpsLimit;
+				float wantedFrameTime = 1 / fpsLimit;
 				do {
 					deltaTime = engineTime.stopwatchElapsed();
 				} while (deltaTime < wantedFrameTime);
@@ -127,10 +127,10 @@ namespace kl {
 
 			// Parse .obj data
 			while (scanStatus != -1) {
-				if ((scanStatus = fscanf(fileStream, "v %lf %lf %lf", &tempXYZ.x, &tempXYZ.y, &tempXYZ.z)) == 3) {
+				if ((scanStatus = fscanf(fileStream, "v %f %f %f", &tempXYZ.x, &tempXYZ.y, &tempXYZ.z)) == 3) {
 					xyzCoords.push_back(tempXYZ);
 				}
-				else if ((scanStatus = fscanf(fileStream, "t %lf %lf", &tempUV.x, &tempUV.y)) == 2) {
+				else if ((scanStatus = fscanf(fileStream, "t %f %f", &tempUV.x, &tempUV.y)) == 2) {
 					uvCoords.push_back(tempUV);
 				}
 				else if ((scanStatus = fscanf(fileStream, "f %d/%d/%d %d/%d/%d %d/%d/%d", &coordIndex0, &textureIndex0, &normalIndx0, &coordIndex1, &textureIndex1, &normalIndx1, &coordIndex2, &textureIndex2, &normalIndx2)) == 9) {

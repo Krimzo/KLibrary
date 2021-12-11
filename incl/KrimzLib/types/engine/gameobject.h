@@ -15,7 +15,7 @@ namespace kl {
 
 		// Physics
 		bool physics;
-		double gravity;
+		float gravity;
 		kl::vec3 velocity;
 		kl::vec3 angular;
 

@@ -137,7 +137,7 @@ namespace kl {
 		void drawLine(kl::point a, kl::point b, kl::color col) {
 			// Calculations
 			int len = std::max(abs(b.x - a.x), abs(b.y - a.y));
-			kl::vec2 incr((double(b.x) - a.x) / len, (double(b.y) - a.y) / len);
+			kl::vec2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
 
 			// Drawing
 			kl::vec2 drawPoint(a.x, a.y);
@@ -203,10 +203,10 @@ namespace kl {
 		}
 
 		// Draws a circle with the given center point and radius
-		void drawCircle(kl::point p, double r, kl::color col, bool fill = false) {
+		void drawCircle(kl::point p, float r, kl::color col, bool fill = false) {
 			if (fill) {
 				for (int y = int(p.y - r); y <= int(p.y + r); y++) {
-					int x(p.x + sqrt(r * r - double(y - p.y) * double(y - p.y)));
+					int x(p.x + sqrt(r * r - float(y - p.y) * float(y - p.y)));
 					drawLine(kl::point(2 * p.x - x, y), kl::point(x, y), col);
 				}
 			}
@@ -214,13 +214,13 @@ namespace kl {
 				for (int i = 0; i < 2 * r; i++) {
 					// X run
 					int x1(p.x - r + i);
-					int y1(p.y + sqrt(r * r - double(x1 - p.x) * double(x1 - p.x)));
+					int y1(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
 					setPixel(kl::point(x1, y1), col);
 					setPixel(kl::point(x1, 2 * p.y - y1), col);
 					
 					// Y run
 					int y2(p.y - r + i);
-					int x2(p.x + sqrt(r * r - double(y2 - p.y) * double(y2 - p.y)));
+					int x2(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
 					setPixel(kl::point(x2, y2), col);
 					setPixel(kl::point(2 * p.x - x2, y2), col);
 				}
@@ -258,19 +258,19 @@ namespace kl {
 
 		// NOT MY IDEA, thank you javidx9 :)
 		// Fills the image with random perlin noise
-		void genPerlinNoise(int octaveCount, double bias = 1) {
+		void genPerlinNoise(int octaveCount, float bias = 1) {
 			// Generating random seed array
-			std::vector<double> seedArray(imageWidth * imageHeight);
+			std::vector<float> seedArray(imageWidth * imageHeight);
 			for (kl::uint32 i = 0; i < imageWidth * imageHeight; i++) {
-				seedArray[i] = kl::random::getDouble(0, 1);
+				seedArray[i] = kl::random::getFloat(0, 1);
 			}
 
 			// Generating noise
 			for (kl::uint32 y = 0; y < imageHeight; y++) {
 				for (kl::uint32 x = 0; x < imageWidth; x++) {
-					double noise = 0;
-					double scale = 1;
-					double scaleSum = 0;
+					float noise = 0;
+					float scale = 1;
+					float scaleSum = 0;
 					
 					for (int i = 0; i < octaveCount; i++) {
 						int pitch = !(imageWidth >> i) ? 1 : imageWidth >> i;
@@ -278,10 +278,10 @@ namespace kl {
 						int y1 = (y / pitch) * pitch;
 						int x2 = (x1 + pitch) % imageWidth;
 						int y2 = (y1 + pitch) % imageWidth;
-						double blendX = double(x - x1) / pitch;
-						double blendY = double(y - y1) / pitch;
-						double sampleT = (1 - blendX) * seedArray[y1 * imageWidth + x1] + blendX * seedArray[y1 * imageWidth + x2];
-						double sampleB = (1 - blendX) * seedArray[y2 * imageWidth + x1] + blendX * seedArray[y2 * imageWidth + x2];
+						float blendX = float(x - x1) / pitch;
+						float blendY = float(y - y1) / pitch;
+						float sampleT = (1 - blendX) * seedArray[y1 * imageWidth + x1] + blendX * seedArray[y1 * imageWidth + x2];
+						float sampleB = (1 - blendX) * seedArray[y2 * imageWidth + x1] + blendX * seedArray[y2 * imageWidth + x2];
 
 						scaleSum += scale;
 						noise += (blendY * (sampleB - sampleT) + sampleT) * scale;

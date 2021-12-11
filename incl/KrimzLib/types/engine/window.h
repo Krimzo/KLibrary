@@ -163,7 +163,7 @@ namespace kl {
 		void setTitle(int data) {
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
-		void setTitle(double data) {
+		void setTitle(float data) {
 			SetWindowTextA(hwnd, std::to_string(data).c_str());
 		}
 

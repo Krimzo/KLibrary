@@ -6,7 +6,7 @@
 namespace kl {
 	namespace opengl {
 		// Setups perspective for 3D rendering
-		void setup3D(double fov, kl::size frameSize) {
+		void setup3D(float fov, kl::size frameSize) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluPerspective(fov, double(frameSize.width) / frameSize.height, 0.01, 100.0);
@@ -78,10 +78,10 @@ namespace kl {
 		// Translates and rotates the camera
 		void updateCamera(kl::camera camera) {
 			glMatrixMode(GL_MODELVIEW);
-			glRotated(-camera.rotation.x, 1, 0, 0);
-			glRotated(-camera.rotation.y, 0, 1, 0);
-			glRotated(-camera.rotation.z, 0, 0, 1);
-			glTranslated(-camera.position.x, -camera.position.y, -camera.position.z);
+			glRotatef(-camera.rotation.x, 1, 0, 0);
+			glRotatef(-camera.rotation.y, 0, 1, 0);
+			glRotatef(-camera.rotation.z, 0, 0, 1);
+			glTranslatef(-camera.position.x, -camera.position.y, -camera.position.z);
 		}
 
 		// Renders an array of 3D triangles
@@ -89,17 +89,17 @@ namespace kl {
 			glBindTexture(GL_TEXTURE_2D, textureID);
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
-			glTranslated(position.x, position.y, position.z);
-			glRotated(rotation.x, 1, 0, 0);
-			glRotated(rotation.y, 0, 1, 0);
-			glRotated(rotation.z, 0, 0, 1);
-			glScaled(size.x, size.y, size.z);
+			glTranslatef(position.x, position.y, position.z);
+			glRotatef(rotation.x, 1, 0, 0);
+			glRotatef(rotation.y, 0, 1, 0);
+			glRotatef(rotation.z, 0, 0, 1);
+			glScalef(size.x, size.y, size.z);
 			glBegin(GL_TRIANGLES);
-			glColor3d(1, 1, 1);
+			glColor3f(1, 1, 1);
 			for (int i = 0; i < triangles.size(); i++) {
 				for (int j = 0; j < 3; j++) {
-					glTexCoord2d(triangles[i].vertices[j].texture.x, triangles[i].vertices[j].world.y);
-					glVertex3d(triangles[i].vertices[j].world.x, triangles[i].vertices[j].world.y, triangles[i].vertices[j].world.z);
+					glTexCoord2f(triangles[i].vertices[j].texture.x, triangles[i].vertices[j].world.y);
+					glVertex3f(triangles[i].vertices[j].world.x, triangles[i].vertices[j].world.y, triangles[i].vertices[j].world.z);
 				}
 			}
 			glEnd();

@@ -105,9 +105,9 @@ namespace kl {
 		}
 
 		// Outputs a progress bar on the console
-		static void progressBar(std::string message, kl::uint32 outputY, double percentage) {
+		static void progressBar(std::string message, kl::uint32 outputY, float percentage) {
 			// Prep
-			percentage = std::max(std::min(percentage, 1.0), 0.0);
+			percentage = std::max(std::min(percentage, 1.0f), 0.0f);
 			int barLen = console::getSize().width - int(message.length() - 11);
 			int doneLen = int(barLen * percentage);
 			int emptyLen = barLen - doneLen;

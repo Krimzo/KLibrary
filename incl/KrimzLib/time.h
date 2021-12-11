@@ -5,10 +5,10 @@ namespace kl {
 	class time {
 	public:
 		// Returns a time since the the last staticGetElapsed() call
-		static double staticGetElapsed() {
+		static float staticGetElapsed() {
 			LARGE_INTEGER staticCounterNow;
 			QueryPerformanceCounter(&staticCounterNow);
-			double elapsedTime = (staticCounterNow.QuadPart - staticCounterLast.QuadPart) / PCFrequency;
+			float elapsedTime = (staticCounterNow.QuadPart - staticCounterLast.QuadPart) / PCFrequency;
 			staticCounterLast = staticCounterNow;
 			return elapsedTime;
 		}
@@ -19,14 +19,14 @@ namespace kl {
 		}
 
 		// Returns the passed time since the last static stopwatch reset
-		static double staticStopwatchElapsed() {
+		static float staticStopwatchElapsed() {
 			LARGE_INTEGER staticStopwatchNow;
 			QueryPerformanceCounter(&staticStopwatchNow);
 			return (staticStopwatchNow.QuadPart - staticStopwatchLast.QuadPart) / PCFrequency;
 		}
 
 		// Waits for the given time in seconds
-		static void wait(double seconds) {
+		static void wait(float seconds) {
 			LARGE_INTEGER sleepCounterStart = {}, sleepCounter;
 			QueryPerformanceCounter(&sleepCounterStart);
 			do {
@@ -41,10 +41,10 @@ namespace kl {
 		}
 
 		// Returns a time since the the last getElapsed() call
-		double getElapsed() {
+		float getElapsed() {
 			LARGE_INTEGER counterNow;
 			QueryPerformanceCounter(&counterNow);
-			double elapsedTime = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
+			float elapsedTime = (counterNow.QuadPart - counterLast.QuadPart) / PCFrequency;
 			counterLast = counterNow;
 			return elapsedTime;
 		}
@@ -55,7 +55,7 @@ namespace kl {
 		}
 
 		// Returns the passed time since the last stopwatch reset
-		double stopwatchElapsed() {
+		float stopwatchElapsed() {
 			LARGE_INTEGER stopwatchNow;
 			QueryPerformanceCounter(&stopwatchNow);
 			return (stopwatchNow.QuadPart - stopwatchLast.QuadPart) / PCFrequency;
@@ -66,17 +66,17 @@ namespace kl {
 		static void loadPCFrequency() {
 			LARGE_INTEGER counterTempFreq;
 			QueryPerformanceFrequency(&counterTempFreq);
-			PCFrequency = double(counterTempFreq.QuadPart);
+			PCFrequency = float(counterTempFreq.QuadPart);
 		}
 
 	private:
-		static double PCFrequency;
+		static float PCFrequency;
 		static LARGE_INTEGER staticCounterLast;
 		static LARGE_INTEGER staticStopwatchLast;
 		LARGE_INTEGER counterLast = {};
 		LARGE_INTEGER stopwatchLast = {};
 	};
-	double time::PCFrequency = 0;
+	float time::PCFrequency = 0;
 	LARGE_INTEGER time::staticCounterLast = {};
 	LARGE_INTEGER time::staticStopwatchLast = {};
 }
