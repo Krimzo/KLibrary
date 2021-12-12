@@ -68,14 +68,16 @@
 // Including engine types
 #include "KrimzLib/types/image.h"
 #include "KrimzLib/types/engine/mouse.h"
-#include "KrimzLib/types/engine/camera.h"
 #include "KrimzLib/types/engine/gameobject.h"
 
-// Including opengl types and engine
-#include "KrimzLib/opengl.h"
+// Including opengl types
 #include "KrimzLib/types/opengl/vbo.h"
 #include "KrimzLib/types/opengl/ibo.h"
 #include "KrimzLib/types/opengl/shaders.h"
+#include "KrimzLib/types/opengl/camera.h"
+#include "KrimzLib/opengl.h"
+
+// Including the engine
 #include "KrimzLib/types/engine/window.h"
 #include "KrimzLib/types/engine/engine.h"
 

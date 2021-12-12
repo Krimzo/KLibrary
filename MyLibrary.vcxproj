@@ -166,7 +166,7 @@
     <ClInclude Include="incl\KrimzLib\types\array.h" />
     <ClInclude Include="incl\KrimzLib\types\color.h" />
     <ClInclude Include="incl\KrimzLib\types\colorf.h" />
-    <ClInclude Include="incl\KrimzLib\types\engine\camera.h" />
+    <ClInclude Include="incl\KrimzLib\types\opengl\camera.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\engine.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\gameobject.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\mouse.h" />

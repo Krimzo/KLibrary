@@ -10,6 +10,7 @@ kl::vbo* basicVBO;
 kl::ibo* basicIBO;
 kl::shaders* basicShaders;
 int transformationUNI;
+kl::camera basicCamera;
 kl::time timer;
 
 /* Render function declaration */
@@ -44,11 +45,14 @@ int main(int argc, char** argv) {
 
 	// Creating a vertex array
 	kl::vertex vertices[] = {
-		kl::vertex(kl::vec3(-1, -1, 0), kl::vec2(0, 0), kl::color(230,  55,  40)),
-		kl::vertex(kl::vec3( 1, -1, 0), kl::vec2(0, 0), kl::color( 50, 200,  80)),
-		kl::vertex(kl::vec3( 1,  1, 0), kl::vec2(0, 0), kl::color(240,  10, 230)),
-		kl::vertex(kl::vec3(-1,  1, 0), kl::vec2(0, 0), kl::color( 50,  75, 200)),
-		kl::vertex(kl::vec3( 0,  0, 0), kl::vec2(0, 0), kl::color(220, 220, 220))
+		kl::vertex(kl::vec3( 0.5,  0.5,  0.5), kl::random::getColor()),
+		kl::vertex(kl::vec3(-0.5,  0.5,  0.5), kl::random::getColor()),
+		kl::vertex(kl::vec3( 0.5, -0.5,  0.5), kl::random::getColor()),
+		kl::vertex(kl::vec3(-0.5, -0.5,  0.5), kl::random::getColor()),
+		kl::vertex(kl::vec3( 0.5,  0.5, -0.5), kl::random::getColor()),
+		kl::vertex(kl::vec3(-0.5,  0.5, -0.5), kl::random::getColor()),
+		kl::vertex(kl::vec3( 0.5, -0.5, -0.5), kl::random::getColor()),
+		kl::vertex(kl::vec3(-0.5, -0.5, -0.5), kl::random::getColor())
 	};
 	basicVBO = new kl::vbo();
 	basicVBO->setData(vertices, sizeof(vertices), GL_STATIC_DRAW);
@@ -58,10 +62,18 @@ int main(int argc, char** argv) {
 
 	// Creating an index array
 	kl::index indices[] = {
-		0, 4, 1,
-		1, 4, 2,
-		2, 4, 3,
-		3, 4, 0
+		0, 1, 3,
+		0, 3, 2,
+		0, 4, 5,
+		0, 5, 1,
+		0, 2, 6,
+		0, 6, 4,
+		7, 3, 1,
+		7, 1, 5,
+		7, 4, 6,
+		7, 5, 4,
+		7, 6, 2,
+		7, 2, 3
 	};
 	basicIBO = new kl::ibo();
 	basicIBO->setData(indices, sizeof(indices), GL_STATIC_DRAW);
@@ -70,6 +82,10 @@ int main(int argc, char** argv) {
 	basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
 	basicShaders->bind();
 	transformationUNI = basicShaders->getUniformID("transform");
+
+	// Setting up the camera
+	basicCamera.updateAspect(frameSize);
+	basicCamera.updatePlanes(0.01, 100);
 
 	/* Rendering */
 	glutDisplayFunc(Render);
@@ -90,14 +106,20 @@ void Render() {
 	const float elapsed = timer.stopwatchElapsed();
 	const float deltaTime = timer.getElapsed();
 
-	/* Calculating the transformation matrix */
+	/* Calculating the transformation matrix */	
 	kl::vec3 size(1, 1, 1);
-	kl::vec3 rotation(0, 0, 0);
-	kl::vec3 position(0, 0, 0);
-	basicShaders->setUniformData(transformationUNI, kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size));
+	kl::vec3 rotation(0, elapsed * 36, 0);
+	kl::vec3 position(0, 0, 1.5);
+	kl::mat4 transform = kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size);
+
+	/* Calculating the projection matrix */
+	kl::mat4 projection = basicCamera.getMatrix();
+
+	/* Sending the transformation matrix */
+	basicShaders->setUniformData(transformationUNI, projection * transform);
 
 	/* Rendering */
-	basicIBO->drawElements(basicVBO, GL_TRIANGLES, 12, 0);
+	basicIBO->drawElements(basicVBO, GL_TRIANGLES, 36, 0);
 
 	/* Updating the fps display */
 	glutSetWindowTitle(std::to_string(int(1 / deltaTime)).c_str());
