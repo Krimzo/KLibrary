@@ -30,13 +30,10 @@
     <ClInclude Include="incl\KrimzLib\types\engine\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\opengl\ebo.h">
+    <ClInclude Include="incl\KrimzLib\types\opengl\ibo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\opengl\shaders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\opengl\vao.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\opengl\vbo.h">

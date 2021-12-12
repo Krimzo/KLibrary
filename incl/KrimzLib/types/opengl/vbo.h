@@ -11,6 +11,16 @@ namespace kl {
 			glDeleteBuffers(1, &buffer);
 		}
 
+		// Binds the buffer
+		void bind() {
+			glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		}
+
+		// Unbinds the buffer
+		void unbind() {
+			glBindBuffer(GL_ARRAY_BUFFER, NULL);
+		}
+
 		// Sets the data of the buffer
 		void setData(void* data, kl::uint64 byteSize, kl::id usage) {
 			bind();
@@ -36,15 +46,5 @@ namespace kl {
 	private:
 		// Variables
 		kl::id buffer;
-
-		// Binds the buffer
-		void bind() {
-			glBindBuffer(GL_ARRAY_BUFFER, buffer);
-		}
-
-		// Unbinds the buffer
-		void unbind() {
-			glBindBuffer(GL_ARRAY_BUFFER, NULL);
-		}
 	};
 }

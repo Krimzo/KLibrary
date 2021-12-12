@@ -73,9 +73,8 @@
 
 // Including opengl types and engine
 #include "KrimzLib/opengl.h"
-#include "KrimzLib/types/opengl/vao.h"
 #include "KrimzLib/types/opengl/vbo.h"
-#include "KrimzLib/types/opengl/ebo.h"
+#include "KrimzLib/types/opengl/ibo.h"
 #include "KrimzLib/types/opengl/shaders.h"
 #include "KrimzLib/types/engine/window.h"
 #include "KrimzLib/types/engine/engine.h"

@@ -23,15 +23,12 @@ namespace kl {
 
 /* OPENGL */
 namespace kl {
+	typedef unsigned int id;
+	typedef unsigned int index;
 	typedef unsigned int texture;
 }
 
 /* WINDOW */
 namespace kl {
 	typedef unsigned int key;
-}
-
-/* ENGINE */
-namespace kl {
-	typedef unsigned int id;
 }

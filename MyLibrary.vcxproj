@@ -172,9 +172,8 @@
     <ClInclude Include="incl\KrimzLib\types\engine\mouse.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\window.h" />
     <ClInclude Include="incl\KrimzLib\types\image.h" />
-    <ClInclude Include="incl\KrimzLib\types\opengl\ebo.h" />
+    <ClInclude Include="incl\KrimzLib\types\opengl\ibo.h" />
     <ClInclude Include="incl\KrimzLib\types\opengl\shaders.h" />
-    <ClInclude Include="incl\KrimzLib\types\opengl\vao.h" />
     <ClInclude Include="incl\KrimzLib\types\opengl\vbo.h" />
     <ClInclude Include="incl\KrimzLib\types\point.h" />
     <ClInclude Include="incl\KrimzLib\types\size.h" />

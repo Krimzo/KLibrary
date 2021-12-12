@@ -7,6 +7,7 @@ const kl::colorf background(kl::constant::colors::gray);
 
 /* Public vars */
 kl::vbo* basicVBO;
+kl::ibo* basicIBO;
 kl::shaders* basicShaders;
 int transformationUNI;
 kl::time timer;
@@ -42,27 +43,38 @@ int main(int argc, char** argv) {
 	kl::opengl::setFaceCulling(true);
 
 	// Creating a vertex array
-	kl::triangle basicTriangle(
-		kl::vertex(kl::vec3(-1, -1, 0), kl::vec2(0, 0), kl::color(255, 0, 0)),
-		kl::vertex(kl::vec3( 0,  1, 0), kl::vec2(0, 0), kl::color(0, 255, 0)),
-		kl::vertex(kl::vec3( 1, -1, 0), kl::vec2(0, 0), kl::color(0, 0, 255))
-	);
-
-	// Generating the gpu array and passing data
+	kl::vertex vertices[] = {
+		kl::vertex(kl::vec3(-1, -1, 0), kl::vec2(0, 0), kl::color(230,  55,  40)),
+		kl::vertex(kl::vec3( 1, -1, 0), kl::vec2(0, 0), kl::color( 50, 200,  80)),
+		kl::vertex(kl::vec3( 1,  1, 0), kl::vec2(0, 0), kl::color(240,  10, 230)),
+		kl::vertex(kl::vec3(-1,  1, 0), kl::vec2(0, 0), kl::color( 50,  75, 200)),
+		kl::vertex(kl::vec3( 0,  0, 0), kl::vec2(0, 0), kl::color(220, 220, 220))
+	};
 	basicVBO = new kl::vbo();
-	basicVBO->setData(basicTriangle.pointer(), sizeof(kl::triangle), GL_STATIC_DRAW);
+	basicVBO->setData(vertices, sizeof(vertices), GL_STATIC_DRAW);
 	basicVBO->setParsing(0, GL_FLOAT, 3, sizeof(kl::vertex), 0);
 	basicVBO->setParsing(1, GL_FLOAT, 2, sizeof(kl::vertex), sizeof(kl::vec3));
 	basicVBO->setParsing(2, GL_FLOAT, 3, sizeof(kl::vertex), sizeof(kl::vec3) + sizeof(kl::vec2));
 
+	// Creating an index array
+	kl::index indices[] = {
+		0, 4, 1,
+		1, 4, 2,
+		2, 4, 3,
+		3, 4, 0
+	};
+	basicIBO = new kl::ibo();
+	basicIBO->setData(indices, sizeof(indices), GL_STATIC_DRAW);
+
 	// Creating and binding the shaders
 	basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
 	basicShaders->bind();
-	transformationUNI = basicShaders->getUniformID("transformation");
+	transformationUNI = basicShaders->getUniformID("transform");
 
 	/* Rendering */
 	glutDisplayFunc(Render);
 	timer.stopwatchReset();
+	timer.getElapsed();
 	glutMainLoop();
 
 	/* Program exit */
@@ -74,22 +86,21 @@ void Render() {
 	/* Clearing the buffers */
 	kl::opengl::clearBuffers(background);
 
-	// Time calculations
-	const float elapsed = timer.staticStopwatchElapsed();
+	/* Time calculations */
+	const float elapsed = timer.stopwatchElapsed();
+	const float deltaTime = timer.getElapsed();
 
-	// Calculating the transformation matrix
-	kl::vec3 size(1, 0.5, 1);
-	kl::vec3 rotation(0, 0, 90);
-	kl::vec3 position(0.5, 0, 0);
-
-	// Setting the uniform data
+	/* Calculating the transformation matrix */
+	kl::vec3 size(1, 1, 1);
+	kl::vec3 rotation(0, 0, 0);
+	kl::vec3 position(0, 0, 0);
 	basicShaders->setUniformData(transformationUNI, kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size));
 
 	/* Rendering */
-	basicVBO->drawArrays(GL_TRIANGLES, 3, 0);
+	basicIBO->drawElements(basicVBO, GL_TRIANGLES, 12, 0);
 
 	/* Updating the fps display */
-	glutSetWindowTitle(std::to_string(int(1 / timer.getElapsed())).c_str());
+	glutSetWindowTitle(std::to_string(int(1 / deltaTime)).c_str());
 
 	/* Setting redisplay flag for the next frame */
 	glutPostRedisplay();
