@@ -2,6 +2,8 @@
 
 out vec4 pixelColor;
 
+in vec3 interColor;
+
 void main () {
-    pixelColor = vec4(0.195, 0.95, 0.5, 1);
+    pixelColor = vec4(interColor, 1);
 }

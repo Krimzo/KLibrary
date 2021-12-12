@@ -36,11 +36,13 @@
 #include "KrimzLib/types/point.h"
 #include "KrimzLib/types/size.h"
 #include "KrimzLib/types/color.h"
+#include "KrimzLib/types/colorf.h"
 #include "KrimzLib/types/array.h"
 
 // Including vector math headers
 #include "KrimzLib/types/vecmath/vec2.h"
 #include "KrimzLib/types/vecmath/vec3.h"
+#include "KrimzLib/types/vecmath/vec4.h"
 #include "KrimzLib/types/vecmath/vertex.h"
 #include "KrimzLib/types/vecmath/triangle.h"
 

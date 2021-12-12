@@ -138,6 +138,12 @@
     <ClInclude Include="incl\GL\wglew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\vecmath\vec4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\colorf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\freeglut_static.lib" />

@@ -29,10 +29,10 @@ namespace kl {
 		}
 
 		// Sets up the parsing of the array data
-		void setParsing(int arrayIndex, kl::id dataType, int typesPerAttr, int stride, int offset) {
+		void setParsing(int arrayIndex, kl::id dataType, int sizePerAttr, int stride, int offset) {
 			bind();
 			glEnableVertexAttribArray(arrayIndex);
-			glVertexAttribPointer(arrayIndex, typesPerAttr, dataType, false, stride, (void*)offset);
+			glVertexAttribPointer(arrayIndex, sizePerAttr, dataType, false, stride, (void*)offset);
 			unbind();
 		}
 

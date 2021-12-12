@@ -165,6 +165,7 @@
     <ClInclude Include="incl\KrimzLib\type.h" />
     <ClInclude Include="incl\KrimzLib\types\array.h" />
     <ClInclude Include="incl\KrimzLib\types\color.h" />
+    <ClInclude Include="incl\KrimzLib\types\colorf.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\camera.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\engine.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\gameobject.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h" />
     <ClInclude Include="incl\KrimzLib\types\vecmath\vec2.h" />
     <ClInclude Include="incl\KrimzLib\types\vecmath\vec3.h" />
+    <ClInclude Include="incl\KrimzLib\types\vecmath\vec4.h" />
     <ClInclude Include="incl\KrimzLib\types\vecmath\vertex.h" />
     <ClInclude Include="incl\KrimzLib\web.h" />
   </ItemGroup>

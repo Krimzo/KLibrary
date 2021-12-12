@@ -11,10 +11,7 @@ namespace kl {
 
 		// Floats
 		namespace floats {
-			const float toFloatColor = 1.0f / 255;
 			const float pi = 3.14159265358979f;
-			const float toRadians = pi / 180;
-			const float toDegrees = 180 / pi;
 		}
 
 		// Colors

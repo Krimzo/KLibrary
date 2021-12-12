@@ -5,12 +5,14 @@ namespace kl {
 	namespace convert {
 		// Converts degrees to radians
 		float toRadians(float degrees) {
-			return degrees * kl::constant::floats::toRadians;
+			static float toRadians = kl::constant::floats::pi / 180;
+			return degrees * toRadians;
 		}
 
 		// Converts radians to degrees
 		float toDegrees(float radians) {
-			return radians * kl::constant::floats::toDegrees;
+			static float toDegrees = 180 / kl::constant::floats::pi;
+			return radians * toDegrees;
 		}
 
 		// Converts a byte array to a string
