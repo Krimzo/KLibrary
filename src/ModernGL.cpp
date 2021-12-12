@@ -8,6 +8,9 @@ const kl::size frameSize(1600, 900);
 void Setup();
 void Render();
 
+// Timer creation
+kl::time timer;
+
 // Main func
 int main(int argc, char** argv) {
 	// Glut init
@@ -38,6 +41,7 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(Render);
 
 	// Main loop start
+	timer.stopwatchReset();
 	glutMainLoop();
 
 	// Program exit
@@ -46,7 +50,9 @@ int main(int argc, char** argv) {
 
 kl::vbo* basicVBO;
 kl::shaders* basicShaders;
-int scaleUni;
+int translationUNI;
+int rotationUNI;
+int scalingUNI;
 
 void Setup() {
 	// Enabling face culling
@@ -61,14 +67,14 @@ void Setup() {
 	
 	// Generating the gpu array and passing data
 	basicVBO = new kl::vbo();
-	basicVBO->setData(basicTriangle.data(), sizeof(kl::triangle), GL_STATIC_DRAW);
+	basicVBO->setData(basicTriangle.pointer(), sizeof(kl::triangle), GL_STATIC_DRAW);
 	basicVBO->setParsing(0, GL_FLOAT, 3, sizeof(kl::vertex), 0);
 	basicVBO->setParsing(1, GL_FLOAT, 2, sizeof(kl::vertex), sizeof(kl::vec3));
 	basicVBO->setParsing(2, GL_FLOAT, 3, sizeof(kl::vertex), sizeof(kl::vec3) + sizeof(kl::vec2));
 
 	// Creating and binding the shaders
 	basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
-	scaleUni = basicShaders->getUniformID("scaleFactor");
+	translationUNI = basicShaders->getUniformID("translation");
 	basicShaders->bind();
 }
 
@@ -77,11 +83,17 @@ void Render() {
 	// Clearing the buffers
 	kl::opengl::clearBuffers(background);
 
+	// Time calculations
+	const float timeSin = sinf(timer.stopwatchElapsed());
+
 	// Setting the uniform data
-	basicShaders->setUniformData(scaleUni, 0.5f);
+	basicShaders->setUniformData(translationUNI, kl::mat4::translate(kl::vec3(timeSin, 0, 0)));
 
 	// Rendering
 	basicVBO->drawArrays(GL_TRIANGLES, 3, 0);
+
+	// Updating the fps display
+	glutSetWindowTitle(std::to_string(int(1 / timer.getElapsed())).c_str());
 
 	// Setting redisplay flag for the next frame
 	glutPostRedisplay();

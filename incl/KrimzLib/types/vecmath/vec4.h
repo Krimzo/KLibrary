@@ -21,6 +21,12 @@ namespace kl {
 			this->z = z;
 			this->w = w;
 		}
+		vec4(kl::vec3 v) {
+			x = v.x;
+			y = v.y;
+			z = v.z;
+			w = 1;
+		}
 
 		// Operator overloading
 		kl::vec4 operator + (kl::vec4 obj) {
@@ -39,7 +45,7 @@ namespace kl {
 			return (x == obj.x && y == obj.y && z == obj.z && w == obj.w);
 		}
 		bool operator != (kl::vec4 obj) {
-			return (x != obj.x || y != obj.y || z != obj.z || w != obj.w);
+			return !operator==(obj);
 		}
 
 		// Returns the vectors length
@@ -65,7 +71,7 @@ namespace kl {
 
 		// Prints the data to the console
 		void print() {
-			printf("%f %f %f %f\n", x, y, z, w);
+			printf("%.2f %.2f %.2f %.2f\n", x, y, z, w);
 		}
 	};
 }

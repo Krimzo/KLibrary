@@ -41,7 +41,7 @@ namespace kl {
 			return (x == obj.x && y == obj.y);
 		}
 		bool operator != (kl::vec2 obj) {
-			return (x != obj.x || y != obj.y);
+			return !operator==(obj);
 		}
 
 		// Returns the vectors length
@@ -62,7 +62,7 @@ namespace kl {
 
 		// Prints the data to the console
 		void print() {
-			printf("%lf %lf\n", x, y);
+			printf("%.2f %.2f\n", x, y);
 		}
 	};   
 }

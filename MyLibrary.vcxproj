@@ -178,6 +178,7 @@
     <ClInclude Include="incl\KrimzLib\types\opengl\vbo.h" />
     <ClInclude Include="incl\KrimzLib\types\point.h" />
     <ClInclude Include="incl\KrimzLib\types\size.h" />
+    <ClInclude Include="incl\KrimzLib\types\vecmath\mat4.h" />
     <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h" />
     <ClInclude Include="incl\KrimzLib\types\vecmath\vec2.h" />
     <ClInclude Include="incl\KrimzLib\types\vecmath\vec3.h" />

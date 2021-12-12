@@ -18,7 +18,7 @@ namespace kl {
 		}
 
 		// Returns raw data pointer
-		void* data() {
+		void* pointer() {
 			return (void*)vertices;
 		}
 
