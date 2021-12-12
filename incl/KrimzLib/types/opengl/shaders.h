@@ -8,7 +8,7 @@ namespace kl {
 			// Shader program creation
 			shaderProgram = glCreateProgram();
 			if (shaderProgram == NULL) {
-				printf("Could not create a shader program!\n");
+				printf("Shader program creation error!\n");
 				exit(69);
 			}
 
@@ -41,6 +41,30 @@ namespace kl {
 			glUseProgram(NULL);
 		}
 
+		// Returns the id of the given uniform name
+		int getUniformID(std::string name) {
+			int uniformID = glGetUniformLocation(shaderProgram, name.c_str());
+			if (uniformID == -1) {
+				printf("Get uniform '%s' error\n", name.c_str());
+				exit(69);
+			}
+			return uniformID;
+		}
+
+		// Setts the data of an uniform
+		void setUniformData(int id, float data) {
+			glUniform1f(id, data);
+		}
+		void setUniformData(int id, kl::vec2 data) {
+			glUniform2f(id, data.x, data.y);
+		}
+		void setUniformData(int id, kl::vec3 data) {
+			glUniform3f(id, data.x, data.y, data.z);
+		}
+		void setUniformData(int id, kl::vec4 data) {
+			glUniform4f(id, data.x, data.y, data.z, data.w);
+		}
+
 	private:
 		// Variables
 		kl::id shaderProgram;
@@ -50,7 +74,7 @@ namespace kl {
 			// Creating the shader buffer
 			kl::id shader = glCreateShader(shaderType);
 			if (shader == NULL) {
-				printf("Could not create a '%d' shader!\n", shaderType);
+				printf("'%d' shader creation error\n", shaderType);
 				exit(69);
 			}
 

@@ -46,6 +46,7 @@ int main(int argc, char** argv) {
 
 kl::vbo* basicVBO;
 kl::shaders* basicShaders;
+int scaleUni;
 
 void Setup() {
 	// Enabling face culling
@@ -65,8 +66,10 @@ void Setup() {
 	basicVBO->setParsing(1, GL_FLOAT, 2, sizeof(kl::vertex), sizeof(kl::vec3));
 	basicVBO->setParsing(2, GL_FLOAT, 3, sizeof(kl::vertex), sizeof(kl::vec3) + sizeof(kl::vec2));
 
-	// Creating a shader program
+	// Creating and binding the shaders
 	basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
+	scaleUni = basicShaders->getUniformID("scaleFactor");
+	basicShaders->bind();
 }
 
 const kl::colorf background(kl::color(50, 50, 50));
@@ -74,8 +77,8 @@ void Render() {
 	// Clearing the buffers
 	kl::opengl::clearBuffers(background);
 
-	// Binding the shaders
-	basicShaders->bind();
+	// Setting the uniform data
+	basicShaders->setUniformData(scaleUni, 0.5f);
 
 	// Rendering
 	basicVBO->drawArrays(GL_TRIANGLES, 3, 0);
