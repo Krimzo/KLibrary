@@ -18,7 +18,7 @@ namespace kl {
 		namespace colors {
 			const kl::color black(0, 0, 0);
 			const kl::color white(255, 255, 255);
-			const kl::color gray(30, 30, 30);
+			const kl::color gray(50, 50, 50);
 			const kl::color red(255, 0, 0);
 			const kl::color green(0, 255, 0);
 			const kl::color blue(0, 0, 255);

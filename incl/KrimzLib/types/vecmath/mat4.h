@@ -137,15 +137,43 @@ namespace kl {
 
 		// Returns a rotation matrix
 		static kl::mat4 rotate(kl::vec3 rotation) {
-			kl::mat4 temp;
+			// Computing x rotation matrix
+			float xSin = sin(rotation.x * 0.01745329251f);
+			float xCos = cos(rotation.x * 0.01745329251f);
+			kl::mat4 xRot;
+			xRot[ 5] =  xCos;
+			xRot[ 6] = -xSin;
+			xRot[ 9] =  xSin;
+			xRot[10] =  xCos;
 
-			return temp;
+			// Computing y rotation matrix
+			float ySin = sin(rotation.y * 0.01745329251f);
+			float yCos = cos(rotation.y * 0.01745329251f);
+			kl::mat4 yRot;
+			yRot[ 0] =  yCos;
+			yRot[ 2] =  ySin;
+			yRot[ 8] = -ySin;
+			yRot[10] =  yCos;
+
+			// Computing z rotation matrix
+			float zSin = sin(rotation.z * 0.01745329251f);
+			float zCos = cos(rotation.z * 0.01745329251f);
+			kl::mat4 zRot;
+			zRot[0] =  zCos;
+			zRot[1] = -zSin;
+			zRot[4] =  zSin;
+			zRot[5] =  zCos;
+
+			// Multiplying and returning
+			return zRot * yRot * xRot;
 		}
 
-		// Returns a resizing matrix
-		static kl::mat4 resize(kl::vec3 size) {
+		// Returns a scaling matrix
+		static kl::mat4 scale(kl::vec3 size) {
 			kl::mat4 temp;
-
+			temp[ 0] = size.x;
+			temp[ 5] = size.y;
+			temp[10] = size.z;
 			return temp;
 		}
 

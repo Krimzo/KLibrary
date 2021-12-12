@@ -1,60 +1,43 @@
 #include "KrimzLib.hpp"
 
 
-// Frame/window size setup
+/* Frame setup */
 const kl::size frameSize(1600, 900);
+const kl::colorf background(kl::constant::colors::gray);
 
-// Function declarations
-void Setup();
-void Render();
-
-// Timer creation
+/* Public vars */
+kl::vbo* basicVBO;
+kl::shaders* basicShaders;
+int transformationUNI;
 kl::time timer;
 
-// Main func
+/* Render function declaration */
+void Render();
+
+/* Main func */
 int main(int argc, char** argv) {
-	// Glut init
+	/* Glut init */
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 
-	// Glut window size/pos setup
+	/* Glut window size/pos setup */
 	glutInitWindowSize(frameSize.width, frameSize.height);
 	glutInitWindowPosition(
 		kl::constant::ints::ScreenWidth / 2 - frameSize.width / 2,
 		kl::constant::ints::ScreenHeight / 2 - frameSize.height / 2 - 50
 	);
 
-	// Glut window creation
+	/* Glut window creation */
 	int window = glutCreateWindow("Modern OpenGL");
 
-	// Glew init
+	/* Glew init */
 	kl::id initRes = glewInit();
 	if (initRes != GLEW_OK) {
 		printf("Glew error: %s\n", glewGetErrorString(initRes));
 		return -1;
 	}
 
-	// Setup function call
-	Setup();
-
-	// Passing the render function
-	glutDisplayFunc(Render);
-
-	// Main loop start
-	timer.stopwatchReset();
-	glutMainLoop();
-
-	// Program exit
-	return 0;
-}
-
-kl::vbo* basicVBO;
-kl::shaders* basicShaders;
-int translationUNI;
-int rotationUNI;
-int scalingUNI;
-
-void Setup() {
+	/* Setup */
 	// Enabling face culling
 	kl::opengl::setFaceCulling(true);
 
@@ -64,7 +47,7 @@ void Setup() {
 		kl::vertex(kl::vec3( 0,  1, 0), kl::vec2(0, 0), kl::color(0, 255, 0)),
 		kl::vertex(kl::vec3( 1, -1, 0), kl::vec2(0, 0), kl::color(0, 0, 255))
 	);
-	
+
 	// Generating the gpu array and passing data
 	basicVBO = new kl::vbo();
 	basicVBO->setData(basicTriangle.pointer(), sizeof(kl::triangle), GL_STATIC_DRAW);
@@ -74,30 +57,43 @@ void Setup() {
 
 	// Creating and binding the shaders
 	basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
-	translationUNI = basicShaders->getUniformID("translation");
 	basicShaders->bind();
+	transformationUNI = basicShaders->getUniformID("transformation");
+
+	/* Rendering */
+	glutDisplayFunc(Render);
+	timer.stopwatchReset();
+	glutMainLoop();
+
+	/* Program exit */
+	return 0;
 }
 
-const kl::colorf background(kl::color(50, 50, 50));
+/* Render function definition */
 void Render() {
-	// Clearing the buffers
+	/* Clearing the buffers */
 	kl::opengl::clearBuffers(background);
 
 	// Time calculations
-	const float timeSin = sinf(timer.stopwatchElapsed());
+	const float elapsed = timer.staticStopwatchElapsed();
+
+	// Calculating the transformation matrix
+	kl::vec3 size(1, 0.5, 1);
+	kl::vec3 rotation(0, 0, 90);
+	kl::vec3 position(0.5, 0, 0);
 
 	// Setting the uniform data
-	basicShaders->setUniformData(translationUNI, kl::mat4::translate(kl::vec3(timeSin, 0, 0)));
+	basicShaders->setUniformData(transformationUNI, kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size));
 
-	// Rendering
+	/* Rendering */
 	basicVBO->drawArrays(GL_TRIANGLES, 3, 0);
 
-	// Updating the fps display
+	/* Updating the fps display */
 	glutSetWindowTitle(std::to_string(int(1 / timer.getElapsed())).c_str());
 
-	// Setting redisplay flag for the next frame
+	/* Setting redisplay flag for the next frame */
 	glutPostRedisplay();
 
-	// Swapping the frame buffers
+	/* Swapping the frame buffers */
 	glutSwapBuffers();
 }
