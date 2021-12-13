@@ -22,8 +22,7 @@
 #include <windowsx.h>
 #include <wininet.h>
 #include <gdiplus.h>
-#include <GL/glew.h>
-#include <GL/glut.h>
+#include <GL/glad.h>
 
 /* Fixing external macros */
 #undef min
@@ -94,8 +93,7 @@
 #pragma comment(lib, "odbccp32.lib")
 #pragma comment(lib, "wininet.lib")
 #pragma comment(lib, "gdiplus.lib")
-#pragma comment(lib, "glew32s.lib")
-#pragma comment(lib, "freeglut_static.lib")
+#pragma comment(lib, "opengl32.lib")
 
 /* Library intializer and unintializer */
 namespace _kl_dont_use_ {

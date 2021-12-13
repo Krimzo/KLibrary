@@ -187,10 +187,6 @@
     <ClInclude Include="incl\KrimzLib\web.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="lib\freeglut_static.lib" />
-    <Library Include="lib\glew32s.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\ModernGL.cpp" />
   </ItemGroup>
   <ItemGroup>

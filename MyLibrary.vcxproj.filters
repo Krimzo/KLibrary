@@ -149,10 +149,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="lib\freeglut_static.lib" />
-    <Library Include="lib\glew32s.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\ModernGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
