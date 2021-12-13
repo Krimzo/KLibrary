@@ -26,13 +26,13 @@ int main(int argc, char** argv) {
 
 		// Setting the vertex data
 		basicCube.vertices = {
-			kl::vertex(kl::vec3(0.5,  0.5,  0.5), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5,  0.5,  0.5), kl::random::getColor()),
 			kl::vertex(kl::vec3(-0.5,  0.5,  0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3(0.5, -0.5,  0.5), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5, -0.5,  0.5), kl::random::getColor()),
 			kl::vertex(kl::vec3(-0.5, -0.5,  0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3(0.5,  0.5, -0.5), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5,  0.5, -0.5), kl::random::getColor()),
 			kl::vertex(kl::vec3(-0.5,  0.5, -0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3(0.5, -0.5, -0.5), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5, -0.5, -0.5), kl::random::getColor()),
 			kl::vertex(kl::vec3(-0.5, -0.5, -0.5), kl::random::getColor())
 		};
 		basicVBO = new kl::vbo();
@@ -76,22 +76,22 @@ int main(int argc, char** argv) {
 		const float deltaTime = timer.getElapsed();
 
 		/* Input */
-		if (gameWindow.KEYS.w) {
+		if (gameWindow.keys.w) {
 			basicCamera.moveForward(deltaTime);
 		}
-		if (gameWindow.KEYS.s) {
+		if (gameWindow.keys.s) {
 			basicCamera.moveBack(deltaTime);
 		}
-		if (gameWindow.KEYS.d) {
+		if (gameWindow.keys.d) {
 			basicCamera.moveRight(deltaTime);
 		}
-		if (gameWindow.KEYS.a) {
+		if (gameWindow.keys.a) {
 			basicCamera.moveLeft(deltaTime);
 		}
-		if (gameWindow.KEYS.space) {
+		if (gameWindow.keys.space) {
 			basicCamera.moveUp(deltaTime);
 		}
-		if (gameWindow.KEYS.c) {
+		if (gameWindow.keys.c) {
 			basicCamera.moveDown(deltaTime);
 		}
 

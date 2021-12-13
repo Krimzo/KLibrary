@@ -5,8 +5,8 @@ namespace kl {
 	class window {
 	public:
 		// Input
-		kl::keys KEYS;
-		kl::mouse MOUSE;
+		kl::keys keys;
+		kl::mouse mouse;
 
 		// User functions
 		std::function<void(void)> start;
@@ -15,8 +15,8 @@ namespace kl {
 
 		// Constructor/destructor
 		window() {
-			KEYS = kl::keys();
-			MOUSE = kl::mouse();
+			keys = kl::keys();
+			mouse = kl::mouse();
 			start = []() {};
 			update = []() {};
 			end = []() {};
@@ -46,6 +46,9 @@ namespace kl {
 			if (opengl) {
 				setupOpenGL();
 			}
+
+			// Binding the mouse
+			mouse.bind(hwnd);
 
 			// Starting the update loops
 			if (continuous) {
@@ -80,9 +83,13 @@ namespace kl {
 
 		// Returns the window size
 		kl::size getSize() {
-			RECT clientArea = {};
+			RECT clientArea;
 			GetClientRect(hwnd, &clientArea);
 			return kl::size(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
+		}
+		kl::point getCenter() {
+			kl::size windowSize = getSize();
+			return kl::point(windowSize.width / 2, windowSize.height / 2);
 		}
 
 		// Sets the window title
@@ -197,39 +204,39 @@ namespace kl {
 		void handleMessage() {
 			switch (wndMsg.message) {
 			case WM_KEYDOWN:
-				KEYS.setKey(wndMsg.wParam, true);
+				keys.setKey(wndMsg.wParam, true);
 				break;
 
 			case WM_KEYUP:
-				KEYS.setKey(wndMsg.wParam, false);
+				keys.setKey(wndMsg.wParam, false);
 				break;
 
 			case WM_LBUTTONDOWN:
-				MOUSE.lmb = true;
+				mouse.lmb = true;
 				break;
 
 			case WM_LBUTTONUP:
-				MOUSE.lmb = false;
+				mouse.lmb = false;
 				break;
 
 			case WM_MBUTTONDOWN:
-				MOUSE.mmb = true;
+				mouse.mmb = true;
 				break;
 
 			case WM_MBUTTONUP:
-				MOUSE.mmb = false;
+				mouse.mmb = false;
 				break;
 
 			case WM_RBUTTONDOWN:
-				MOUSE.rmb = true;
+				mouse.rmb = true;
 				break;
 
 			case WM_RBUTTONUP:
-				MOUSE.rmb = false;
+				mouse.rmb = false;
 				break;
 
 			case WM_MOUSEMOVE:
-				MOUSE.position = kl::point(GET_X_LPARAM(wndMsg.lParam), GET_Y_LPARAM(wndMsg.lParam));
+				mouse.position = kl::point(GET_X_LPARAM(wndMsg.lParam), GET_Y_LPARAM(wndMsg.lParam));
 				break;
 
 			default:
@@ -240,12 +247,15 @@ namespace kl {
 
 		// Destroys the contexts
 		void cleanup(std::wstring name, bool opengl) {
+			// Destroying the opengl contexts
 			if (opengl) {
 				wglMakeCurrent(nullptr, nullptr);
 				ReleaseDC(hwnd, hdc);
 				wglDeleteContext(hglrc);
 				hglrc = nullptr;
 			}
+
+			// Unregistering the window class
 			UnregisterClassW(name.c_str(), hInstance);
 			hdc = nullptr;
 			hwnd = nullptr;

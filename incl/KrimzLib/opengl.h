@@ -4,10 +4,10 @@
 namespace kl {
 	namespace opengl {
 		// Enables/disables face culling
-		void setFaceCulling(bool enabled, bool clockWiseFront = true, bool cullBack = true) {
+		void setFaceCulling(bool enabled, bool cullBack = true, bool clockWise = true) {
 			if (enabled) {
 				glEnable(GL_CULL_FACE);
-				glFrontFace(clockWiseFront ? GL_CW : GL_CCW);
+				glFrontFace(clockWise ? GL_CW : GL_CCW);
 				glCullFace(cullBack ? GL_BACK : GL_FRONT);
 			}
 			else {

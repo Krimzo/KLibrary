@@ -146,6 +146,7 @@
     <ClInclude Include="incl\GL\freeglut_ext.h" />
     <ClInclude Include="incl\GL\freeglut_std.h" />
     <ClInclude Include="incl\GL\freeglut_ucall.h" />
+    <ClInclude Include="incl\GL\glad.h" />
     <ClInclude Include="incl\GL\glew.h" />
     <ClInclude Include="incl\GL\glut.h" />
     <ClInclude Include="incl\GL\glxew.h" />
