@@ -9,7 +9,7 @@ const kl::colorf background(kl::constant::colors::gray);
 kl::vbo* basicVBO;
 kl::ibo* basicIBO;
 kl::shaders* basicShaders;
-int transformationUNI;
+int wvpUNI;
 kl::camera basicCamera;
 kl::time timer;
 
@@ -81,13 +81,13 @@ int main(int argc, char** argv) {
 	// Creating and binding the shaders
 	basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
 	basicShaders->bind();
-	transformationUNI = basicShaders->getUniformID("transform");
+	wvpUNI = basicShaders->getUniformID("wvp");
 
 	// Setting up the camera
 	basicCamera.updateAspect(frameSize);
 	basicCamera.updatePlanes(0.01, 100);
 
-	/* Rendering */
+	/* Rendering setup */
 	glutDisplayFunc(Render);
 	timer.stopwatchReset();
 	timer.getElapsed();
@@ -106,17 +106,20 @@ void Render() {
 	const float elapsed = timer.stopwatchElapsed();
 	const float deltaTime = timer.getElapsed();
 
-	/* Calculating the transformation matrix */	
+	/* Calculating the world matrix */
 	kl::vec3 size(1, 1, 1);
-	kl::vec3 rotation(0, elapsed * 36, 0);
+	kl::vec3 rotation(0, 36 * elapsed, 0);
 	kl::vec3 position(0, 0, 1.5);
-	kl::mat4 transform = kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size);
+	kl::mat4 world = kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size);
+
+	/* Calculating the view matrix */
+	kl::mat4 view = basicCamera.getViewMatrix();
 
 	/* Calculating the projection matrix */
-	kl::mat4 projection = basicCamera.getMatrix();
+	kl::mat4 projection = basicCamera.getProjMatrix();
 
 	/* Sending the transformation matrix */
-	basicShaders->setUniformData(transformationUNI, projection * transform);
+	basicShaders->setUniformData(wvpUNI, projection * view * world);
 
 	/* Rendering */
 	basicIBO->drawElements(basicVBO, GL_TRIANGLES, 36, 0);

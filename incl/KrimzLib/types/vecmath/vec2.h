@@ -51,7 +51,7 @@ namespace kl {
 
 		// Retruns a normalized vector
 		kl::vec2 normalize() {
-			float vecLen = 1 / length();
+			const float vecLen = 1 / length();
 			return kl::vec2(x * vecLen, y * vecLen);
 		}
 

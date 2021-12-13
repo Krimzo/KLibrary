@@ -78,9 +78,9 @@ namespace kl {
 		// Translates and rotates the camera
 		void updateCamera(kl::camera camera) {
 			glMatrixMode(GL_MODELVIEW);
-			glRotatef(-camera.rotation.x, 1, 0, 0);
-			glRotatef(-camera.rotation.y, 0, 1, 0);
-			glRotatef(-camera.rotation.z, 0, 0, 1);
+			//glRotatef(-camera.rotation.x, 1, 0, 0);
+			//glRotatef(-camera.rotation.y, 0, 1, 0);
+			//glRotatef(-camera.rotation.z, 0, 0, 1);
 			glTranslatef(-camera.position.x, -camera.position.y, -camera.position.z);
 		}
 

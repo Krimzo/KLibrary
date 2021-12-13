@@ -18,6 +18,16 @@ namespace kl {
 			this->y = y;
 			this->z = z;
 		}
+		vec3(kl::vec2 v, float z) {
+			x = v.x;
+			y = v.y;
+			this->z = z;
+		}
+		vec3(float x, kl::vec2 v) {
+			this->x = x;
+			y = v.x;
+			z = v.y;
+		}
 
 		// Operator overloading
 		kl::vec3 operator + (kl::vec3 obj) {
@@ -30,7 +40,8 @@ namespace kl {
 			return kl::vec3(x * a, y * a, z * a);
 		}
 		kl::vec3 operator / (float a) {
-			return kl::vec3(x / a, y / a, z / a);
+			const float rec = 1 / a;
+			return kl::vec3(x * rec, y * rec, z * rec);
 		}
 		bool operator == (kl::vec3 obj) {
 			return (x == obj.x && y == obj.y && z == obj.z);
@@ -46,7 +57,7 @@ namespace kl {
 
 		// Retruns a normalized vector
 		kl::vec3 normalize() {
-			float vecLen = 1 / length();
+			const float vecLen = 1 / length();
 			return kl::vec3(x * vecLen, y * vecLen, z * vecLen);
 		}
 

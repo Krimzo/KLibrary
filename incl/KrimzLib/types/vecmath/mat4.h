@@ -138,8 +138,8 @@ namespace kl {
 		// Returns a rotation matrix
 		static kl::mat4 rotate(kl::vec3 rotation) {
 			// Computing x rotation matrix
-			float xSin = sin(rotation.x * 0.01745329251f);
-			float xCos = cos(rotation.x * 0.01745329251f);
+			const float xSin = sin(rotation.x * 0.01745329251f);
+			const float xCos = cos(rotation.x * 0.01745329251f);
 			kl::mat4 xRot;
 			xRot[ 5] =  xCos;
 			xRot[ 6] = -xSin;
@@ -147,8 +147,8 @@ namespace kl {
 			xRot[10] =  xCos;
 
 			// Computing y rotation matrix
-			float ySin = sin(rotation.y * 0.01745329251f);
-			float yCos = cos(rotation.y * 0.01745329251f);
+			const float ySin = sin(rotation.y * 0.01745329251f);
+			const float yCos = cos(rotation.y * 0.01745329251f);
 			kl::mat4 yRot;
 			yRot[ 0] =  yCos;
 			yRot[ 2] =  ySin;
@@ -156,8 +156,8 @@ namespace kl {
 			yRot[10] =  yCos;
 
 			// Computing z rotation matrix
-			float zSin = sin(rotation.z * 0.01745329251f);
-			float zCos = cos(rotation.z * 0.01745329251f);
+			const float zSin = sin(rotation.z * 0.01745329251f);
+			const float zCos = cos(rotation.z * 0.01745329251f);
 			kl::mat4 zRot;
 			zRot[0] =  zCos;
 			zRot[1] = -zSin;
