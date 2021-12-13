@@ -5,15 +5,15 @@ namespace kl {
 	class engine {
 	public:
 		// Engine properties
-		float fpsLimit = -1;
-		float deltaTime = 0;
-		float gravity = 9.81f;
-		kl::color background = {};
-		kl::camera engineCamera = {};
+		float fpsLimit;
+		float deltaTime;
+		float gravity;
+		kl::color background;
+		kl::camera camera;
 
 		// User defined functions
-		std::function<void(void)> engineStart = []() {};
-		std::function<void(void)> engineUpdate = []() {};
+		std::function<void(void)> start;
+		std::function<void(void)> update;
 
 		// Constructor
 		engine() {
@@ -21,27 +21,29 @@ namespace kl {
 			deltaTime = 0;
 			gravity = 9.81f;
 			background = kl::constant::colors::gray;
-			engineCamera = {};
+			camera = {};
+			start = []() {};
+			update = []() {};
 		}
 
 		// Creates the engine
 		void startNew(kl::size size) {
-			engineWindow.windowStart = [&]() {
+			window.start = [&]() {
 
 			};
 
-			engineWindow.windowUpdate = [&]() {
+			window.update = [&]() {
 
 			};
 
-			engineWindow.windowEnd = [&]() {
+			window.end = [&]() {
 
 			};
 
-			engineWindow.startNew(size, kl::random::getString(6), false, true, true);
+			window.startNew(size, kl::random::getString(6), false, true, true);
 		}
 		void stop() {
-			engineWindow.stop();
+			window.stop();
 		}
 		~engine() {
 			this->stop();
@@ -49,19 +51,19 @@ namespace kl {
 
 		// Creates a new game object
 		kl::gameobject* addObject() {
-			engineObjects.push_back(kl::gameobject());
-			return &engineObjects.back();
+			gObjects.push_back(kl::gameobject());
+			return &gObjects.back();
 		}
 		kl::gameobject* addObject(kl::texture textureID) {
-			engineObjects.push_back(kl::gameobject(textureID));
-			return &engineObjects.back();
+			gObjects.push_back(kl::gameobject(textureID));
+			return &gObjects.back();
 		}
 
 		// Deletes a game object
 		bool deleteGameObject(kl::gameobject* objectAddress) {
-			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
+			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 				if (&*objItr == objectAddress) {
-					engineObjects.erase(objItr);
+					gObjects.erase(objItr);
 					return true;
 				}
 			}
@@ -69,14 +71,14 @@ namespace kl {
 		}
 
 	private:
-		kl::window engineWindow = {};
-		kl::time engineTime = {};
-		std::list<kl::gameobject> engineObjects = {};
+		kl::window window = {};
+		kl::time timer = {};
+		std::list<kl::gameobject> gObjects = {};
 		std::list<kl::gameobject>::iterator objItr = {};
 
 		// Computing object physics 
 		void physicsUpdate() {
-			for (objItr = engineObjects.begin(); objItr != engineObjects.end(); objItr++) {
+			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 				if (objItr->physics) {
 					// Applying gravity
 					objItr->velocity.y -= gravity * objItr->gravity * deltaTime;

@@ -21,13 +21,13 @@ namespace kl {
 	typedef std::string bits;
 }
 
+/* WINDOW */
+namespace kl {
+	typedef unsigned long long key;
+}
+
 /* OPENGL */
 namespace kl {
 	typedef unsigned int id;
 	typedef unsigned int index;
-}
-
-/* WINDOW */
-namespace kl {
-	typedef unsigned int key;
 }

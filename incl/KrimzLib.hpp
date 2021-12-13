@@ -72,6 +72,7 @@
 #include "KrimzLib/opengl.h"
 
 // Including engine types
+#include "KrimzLib/types/engine/keys.h"
 #include "KrimzLib/types/engine/mouse.h"
 #include "KrimzLib/types/engine/camera.h"
 #include "KrimzLib/types/engine/gameobject.h"
