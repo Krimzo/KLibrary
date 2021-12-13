@@ -4,8 +4,8 @@
 namespace kl {
     struct camera {
 		kl::vec3 position;
-		float speed;
 		float sensitivity;
+		float speed;
 
 		// Constructors
 		camera() {
@@ -13,10 +13,10 @@ namespace kl {
 			forward = kl::vec3(0, 0, 1);
 			right = kl::vec3(1, 0, 0);
 			up = kl::vec3(0, 1, 0);
-			speed = 2;
 			sensitivity = 1;
+			speed = 2;
 			setFOV(90);
-			setAspect(kl::size(1, 1));
+			setAspect(1);
 			setPlanes(1, 10);
 		}
 
@@ -73,7 +73,7 @@ namespace kl {
 			rotation[ 8] = forward.x;
 			rotation[ 9] = forward.y;
 			rotation[10] = forward.z;
-			return rotation * kl::mat4::translate(position * (-1));
+			return rotation * kl::mat4::translate(position.negate());
 		}
 
 		// Computes and stores the tan const
@@ -82,6 +82,9 @@ namespace kl {
 		}
 
 		// Computes and stores the aspect ratio
+		void setAspect(float a) {
+			aspectRec = 1 / a;
+		}
 		void setAspect(kl::size frameSize) {
 			aspectRec = (float)frameSize.height / frameSize.width;
 		}

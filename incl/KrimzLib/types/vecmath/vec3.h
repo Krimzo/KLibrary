@@ -50,6 +50,11 @@ namespace kl {
 			return !operator==(obj);
 		}
 
+		// Returns a negated vectro
+		kl::vec3 negate() {
+			return operator*(-1);
+		}
+
 		// Returns the vectors length
 		float length() {
 			return sqrt(x * x + y * y + z * z);
