@@ -24,7 +24,6 @@
 #include <gdiplus.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
-#include <gl/GLU.h>
 
 /* Fixing external macros */
 #undef min
@@ -45,7 +44,6 @@
 #include "KrimzLib/types/vecmath/vec4.h"
 #include "KrimzLib/types/vecmath/mat4.h"
 #include "KrimzLib/types/vecmath/vertex.h"
-#include "KrimzLib/types/vecmath/triangle.h"
 
 // Including cuda headers
 #ifdef __CUDACC__
@@ -65,21 +63,20 @@
 #include "KrimzLib/thread.h"
 #include "KrimzLib/web.h"
 
-// Including engine types
-#include "KrimzLib/types/image.h"
-#include "KrimzLib/types/engine/mouse.h"
-#include "KrimzLib/types/engine/gameobject.h"
-
 // Including opengl types
 #include "KrimzLib/types/opengl/vbo.h"
 #include "KrimzLib/types/opengl/ibo.h"
 #include "KrimzLib/types/opengl/shaders.h"
-#include "KrimzLib/types/opengl/camera.h"
+#include "KrimzLib/types/opengl/texture.h"
+#include "KrimzLib/types/image.h"
 #include "KrimzLib/opengl.h"
 
-// Including the engine
-#include "KrimzLib/types/engine/window.h"
-#include "KrimzLib/types/engine/engine.h"
+// Including engine types
+#include "KrimzLib/types/engine/mouse.h"
+#include "KrimzLib/types/engine/camera.h"
+#include "KrimzLib/types/engine/gameobject.h"
+#include "KrimzLib/types/window.h"
+#include "KrimzLib/types/engine.h"
 
 /* Linking libs */
 #pragma comment(lib, "kernel32.lib")
@@ -96,8 +93,8 @@
 #pragma comment(lib, "odbccp32.lib")
 #pragma comment(lib, "wininet.lib")
 #pragma comment(lib, "gdiplus.lib")
-#pragma comment(lib, "opengl32.lib")
-#pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "glew32s.lib")
+#pragma comment(lib, "freeglut_static.lib")
 
 /* Library intializer and unintializer */
 namespace _kl_dont_use_ {

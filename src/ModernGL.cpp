@@ -11,6 +11,7 @@ kl::ibo* basicIBO;
 kl::shaders* basicShaders;
 int wvpUNI;
 kl::camera basicCamera;
+kl::gameobject basicCube;
 kl::time timer;
 
 /* Render function declaration */
@@ -44,7 +45,7 @@ int main(int argc, char** argv) {
 	kl::opengl::setFaceCulling(true);
 
 	// Creating a vertex array
-	kl::vertex vertices[] = {
+	basicCube.vertices = {
 		kl::vertex(kl::vec3( 0.5,  0.5,  0.5), kl::random::getColor()),
 		kl::vertex(kl::vec3(-0.5,  0.5,  0.5), kl::random::getColor()),
 		kl::vertex(kl::vec3( 0.5, -0.5,  0.5), kl::random::getColor()),
@@ -55,13 +56,13 @@ int main(int argc, char** argv) {
 		kl::vertex(kl::vec3(-0.5, -0.5, -0.5), kl::random::getColor())
 	};
 	basicVBO = new kl::vbo();
-	basicVBO->setData(vertices, sizeof(vertices), GL_STATIC_DRAW);
+	basicVBO->setData(basicCube.vertexData(), basicCube.vertexDataSize(), GL_STATIC_DRAW);
 	basicVBO->setParsing(0, GL_FLOAT, 3, sizeof(kl::vertex), 0);
 	basicVBO->setParsing(1, GL_FLOAT, 2, sizeof(kl::vertex), sizeof(kl::vec3));
 	basicVBO->setParsing(2, GL_FLOAT, 3, sizeof(kl::vertex), sizeof(kl::vec3) + sizeof(kl::vec2));
 
 	// Creating an index array
-	kl::index indices[] = {
+	basicCube.indices = {
 		0, 1, 3,
 		0, 3, 2,
 		0, 4, 5,
@@ -76,16 +77,16 @@ int main(int argc, char** argv) {
 		7, 2, 3
 	};
 	basicIBO = new kl::ibo();
-	basicIBO->setData(indices, sizeof(indices), GL_STATIC_DRAW);
+	basicIBO->setData(basicCube.indexData(), basicCube.indexDataSize(), GL_STATIC_DRAW);
+
+	// Setting up the camera
+	basicCamera.updateAspect(frameSize);
+	basicCamera.updatePlanes(0.01, 100);
 
 	// Creating and binding the shaders
 	basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
 	basicShaders->bind();
 	wvpUNI = basicShaders->getUniformID("wvp");
-
-	// Setting up the camera
-	basicCamera.updateAspect(frameSize);
-	basicCamera.updatePlanes(0.01, 100);
 
 	/* Rendering setup */
 	glutDisplayFunc(Render);
@@ -107,16 +108,16 @@ void Render() {
 	const float deltaTime = timer.getElapsed();
 
 	/* Calculating the world matrix */
-	kl::vec3 size(1, 1, 1);
-	kl::vec3 rotation(0, 36 * elapsed, 0);
-	kl::vec3 position(0, 0, 1.5);
-	kl::mat4 world = kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size);
+	basicCube.size = kl::vec3(1, 1, 1);
+	basicCube.position = kl::vec3(0, 0, 1.5);
+	basicCube.rotation = kl::vec3(0, 36 * elapsed, 0);
+	kl::mat4 world = basicCube.worldMatrix();
 
 	/* Calculating the view matrix */
-	kl::mat4 view = basicCamera.getViewMatrix();
+	kl::mat4 view = basicCamera.viewMatrix();
 
 	/* Calculating the projection matrix */
-	kl::mat4 projection = basicCamera.getProjMatrix();
+	kl::mat4 projection = basicCamera.projMatrix();
 
 	/* Sending the transformation matrix */
 	basicShaders->setUniformData(wvpUNI, projection * view * world);

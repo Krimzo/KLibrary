@@ -25,7 +25,6 @@ namespace kl {
 namespace kl {
 	typedef unsigned int id;
 	typedef unsigned int index;
-	typedef unsigned int texture;
 }
 
 /* WINDOW */

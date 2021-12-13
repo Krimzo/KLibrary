@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="incl\KrimzLib\types\opengl\camera.h">
+    <ClInclude Include="incl\KrimzLib\types\engine\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine\engine.h">
+    <ClInclude Include="incl\KrimzLib\types\engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\engine\gameobject.h">
@@ -27,7 +27,7 @@
     <ClInclude Include="incl\KrimzLib\types\engine\mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine\window.h">
+    <ClInclude Include="incl\KrimzLib\types\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\opengl\ibo.h">
@@ -37,9 +37,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\opengl\vbo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\vecmath\vec2.h">
@@ -142,6 +139,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\vecmath\mat4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\opengl\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

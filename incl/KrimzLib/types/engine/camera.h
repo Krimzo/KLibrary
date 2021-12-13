@@ -20,7 +20,7 @@ namespace kl {
 		}
 
 		// Computes and returns the camera transformation matrix
-		kl::mat4 getViewMatrix() {
+		kl::mat4 viewMatrix() {
 			kl::mat4 temp;
 			temp[ 0] = u.x;
 			temp[ 1] = u.y;
@@ -54,7 +54,7 @@ namespace kl {
 		}
 
 		// Computes and returns the camera projection matrix
-		kl::mat4 getProjMatrix() {
+		kl::mat4 projMatrix() {
 			kl::mat4 temp;
 			temp[0] = tanHalf * aspectRec;
 			temp[5] = tanHalf;
