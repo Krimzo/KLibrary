@@ -15,6 +15,16 @@ namespace kl {
 			}
 		}
 
+		// Enables/disables depth testing
+		void setDepthTest(bool enabled) {
+			if (enabled) {
+				glEnable(GL_DEPTH_TEST);
+			}
+			else {
+				glDisable(GL_DEPTH_TEST);
+			}
+		}
+
 		// Clear the frame and depth buffers
 		void clearBuffers(kl::colorf color) {
 			static const int clearBit = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;

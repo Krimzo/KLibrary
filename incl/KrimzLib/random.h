@@ -18,10 +18,16 @@ namespace kl {
 		static int getInt(int startInclusive, int endExclusive) {
 			return rand() % (endExclusive - startInclusive) + startInclusive;
 		}
+		static int getInt(int endExclusive) {
+			return getInt(0, endExclusive);
+		}
 
 		// Returns a random float
 		static float getFloat(float startInclusive, float endExclusive) {
 			return startInclusive + float(rand()) / float(RAND_MAX / (endExclusive - startInclusive));
+		}
+		static float getFloat(float endExclusive) {
+			return getFloat(0, endExclusive);
 		}
 
 		// Returns a random letter

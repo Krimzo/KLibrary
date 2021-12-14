@@ -22,6 +22,9 @@ int main(int argc, char** argv) {
 		// Enabling face culling
 		kl::opengl::setFaceCulling(true);
 
+		// Enabling depth test
+		kl::opengl::setDepthTest(true);
+
 		// Setting up the camera
 		gameCamera.setAspect(frameSize);
 		gameCamera.setPlanes(0.01f, 100);
