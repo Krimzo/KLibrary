@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 
 		// Setting up the camera
 		basicCamera.setAspect(frameSize);
-		basicCamera.setPlanes(0.01, 100);
+		basicCamera.setPlanes(0.01f, 100);
 
 		// Setting the vertex data
 		basicCube.vertices = {
@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
 
 	/* Window update definition */
 	kl::time timer;
+	bool movingCam = false;
 	gameWindow.update = [&]() {
 		/* Clearing the buffers */
 		kl::opengl::clearBuffers(background);
@@ -75,7 +76,7 @@ int main(int argc, char** argv) {
 		const float elapsed = timer.stopwatchElapsed();
 		const float deltaTime = timer.getElapsed();
 
-		/* Input */
+		/* Keyboard input */
 		if (gameWindow.keys.w) {
 			basicCamera.moveForward(deltaTime);
 		}
@@ -93,6 +94,29 @@ int main(int argc, char** argv) {
 		}
 		if (gameWindow.keys.c) {
 			basicCamera.moveDown(deltaTime);
+		}
+		if (gameWindow.keys.shift) {
+			basicCamera.speed = 5;
+		}
+		else {
+			basicCamera.speed = 2;
+		}
+
+		/* Mouse input */
+		if (gameWindow.mouse.lmb) {
+			movingCam = true;
+			gameWindow.mouse.hide();
+
+			// Fixing the camera jump on the first click
+			gameWindow.mouse.position = gameWindow.getCenter();
+		}
+		if (gameWindow.mouse.rmb) {
+			movingCam = false;
+			gameWindow.mouse.show();
+		}
+		if (movingCam) {
+			basicCamera.rotate(gameWindow.getSize(), gameWindow.mouse.position);
+			gameWindow.mouse.move(gameWindow.getCenter());
 		}
 
 		/* Calculating the world matrix */

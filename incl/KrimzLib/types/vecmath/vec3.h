@@ -76,6 +76,40 @@ namespace kl {
 			return kl::vec3(y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x);
 		}
 
+		// Returns the angle between the given vector and self
+		float angle(kl::vec3 a) {
+			return acos(normalize().dot(a.normalize()));
+		}
+
+		// Returns the rotated vector around custom axis
+		kl::vec3 rotate(float angle, kl::vec3 axis) {
+			// Calculating trig funcs
+			const float angleSin = sin(angle * 0.01745329251f * 0.5f);
+			const float angleCos = cos(angle * 0.01745329251f * 0.5f);
+			
+			// Calculating quaternion consts
+			const float qx = axis.x * angleSin;
+			const float qy = axis.y * angleSin;
+			const float qz = axis.z * angleSin;
+			const float x2 = qx * qx;
+			const float y2 = qy * qy;
+			const float z2 = qz * qz;
+			const float w2 = angleCos * angleCos;
+			const float xy = qx * qy;
+			const float xz = qx * qz;
+			const float yz = qy * qz;
+			const float xw = qx * angleCos;
+			const float yw = qy * angleCos;
+			const float zw = qz * angleCos;
+
+			// Calculating the rotated vector
+			kl::vec3 temp;
+			temp.x = (w2 + x2 - z2 - y2) * x + (-zw + xy - zw + xy) * y + (yw + xz + xz + yw) * z;
+			temp.y = (xy + zw + zw + xy) * x + (y2 - z2 + w2 - x2) * y + (yz + yz - xw - xw) * z;
+			temp.z = (xz - yw + xz - yw) * x + (yz + yz + xw + xw) * y + (z2 - y2 - x2 + w2) * z;
+			return temp;
+		}
+
 		// Prints the data to the console
 		void print() {
 			printf("%.2f %.2f %.2f\n", x, y, z);

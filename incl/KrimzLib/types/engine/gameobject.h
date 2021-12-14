@@ -56,7 +56,7 @@ namespace kl {
 		}
 
 		// Returns the byte size of the vertex data array
-		int vertexDataSize() {
+		kl::uint64 vertexDataSize() {
 			return vertices.size() * sizeof(kl::vertex);
 		}
 

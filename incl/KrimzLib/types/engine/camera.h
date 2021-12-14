@@ -11,68 +11,84 @@ namespace kl {
 		camera() {
 			position = kl::vec3(0, 0, 0);
 			forward = kl::vec3(0, 0, 1);
-			right = kl::vec3(1, 0, 0);
-			up = kl::vec3(0, 1, 0);
-			sensitivity = 1;
+			sensitivity = 80;
 			speed = 2;
-			setFOV(90);
+			setFOV(75);
 			setAspect(1);
 			setPlanes(1, 10);
 		}
 
-		// Direction getters
+		// Camera direction getters
 		kl::vec3 getForward() {
-			return forward;
+			return forward.normalize();
 		}
 		kl::vec3 getRight() {
-			return right;
+			return kl::vec3(0, 1, 0).cross(forward).normalize();
 		}
 		kl::vec3 getUp() {
-			return up;
-		}
-
-		// Direction setters
-		void setForward(kl::vec3 val) {
-			forward = val.normalize();
-			right = up.cross(forward);
-		}
-		void setUp(kl::vec3 val) {
-			up = val.normalize();
-			right = up.cross(forward);
+			return forward.cross(getRight()).normalize();
 		}
 
 		// Camera movement
 		void moveForward(float deltaTime) {
-			position = position + forward * (speed * deltaTime);
+			position = position + getForward() * (speed * deltaTime);
 		}
 		void moveBack(float deltaTime) {
-			position = position - forward * (speed * deltaTime);
+			position = position - getForward() * (speed * deltaTime);
 		}
 		void moveRight(float deltaTime) {
-			position = position + right * (speed * deltaTime);
+			position = position + getRight() * (speed * deltaTime);
 		}
 		void moveLeft(float deltaTime) {
-			position = position - right * (speed * deltaTime);
+			position = position - getRight() * (speed * deltaTime);
 		}
 		void moveUp(float deltaTime) {
-			position = position + up * (speed * deltaTime);
+			position = position + kl::vec3(0, 1, 0) * (speed * deltaTime);
 		}
 		void moveDown(float deltaTime) {
-			position = position - up * (speed * deltaTime);
+			position = position - kl::vec3(0, 1, 0) * (speed * deltaTime);
+		}
+
+		// Camera rotation
+		void rotate(kl::size frameSize, kl::point mousePos) {
+			// Calculating the mouse movement
+			const int dx = mousePos.x - (frameSize.width / 2);
+			const int dy = mousePos.y - (frameSize.height / 2);
+
+			// Calculating the x and y rotation
+			const float xRotation = (dx * sensitivity) / frameSize.width;
+			const float yRotation = (dy * sensitivity) / frameSize.height;
+
+			// Calculating the vertically rotated forward vector
+			kl::vec3 forwardVert = forward.rotate(yRotation, getRight());
+
+			// Checking if the vertical rotation is goin to be inside the bounds
+			if (std::abs(forwardVert.angle(kl::vec3(0, 1, 0)) - kl::convert::toRadians(90)) <= kl::convert::toRadians(85)) {
+				forward = forwardVert;
+			}
+
+			// Calculating the horizontally rotated forward vector
+			forward = forward.rotate(xRotation, kl::vec3(0, 1, 0));
 		}
 
 		// Computes and returns the camera transformation matrix
 		kl::mat4 viewMatrix() {
+			// Getting the direction vectors
+			const kl::vec3 u = getRight();
+			const kl::vec3 v = getUp();
+			const kl::vec3 n = getForward();
+
+			// Building the view matrix
 			kl::mat4 rotation;
-			rotation[ 0] = right.x;
-			rotation[ 1] = right.y;
-			rotation[ 2] = right.z;
-			rotation[ 4] = up.x;
-			rotation[ 5] = up.y;
-			rotation[ 6] = up.z;
-			rotation[ 8] = forward.x;
-			rotation[ 9] = forward.y;
-			rotation[10] = forward.z;
+			rotation[ 0] = u.x;
+			rotation[ 1] = u.y;
+			rotation[ 2] = u.z;
+			rotation[ 4] = v.x;
+			rotation[ 5] = v.y;
+			rotation[ 6] = v.z;
+			rotation[ 8] = n.x;
+			rotation[ 9] = n.y;
+			rotation[10] = n.z;
 			return rotation * kl::mat4::translate(position.negate());
 		}
 
@@ -110,8 +126,6 @@ namespace kl {
 	private:
 		// Variables
 		kl::vec3 forward;
-		kl::vec3 right;
-		kl::vec3 up;
 		float tanHalf;
 		float aspectRec;
 		float planesA;
