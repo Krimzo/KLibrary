@@ -5,7 +5,9 @@ namespace kl {
 	class image {
 	public:
 		// Constructor
-		image() {}
+		image() {
+			setSize(kl::size(0, 0));
+		}
 		image(kl::size size, kl::color color = {}) {
 			setSize(size);
 			fillSolid(color);
@@ -22,27 +24,27 @@ namespace kl {
 			return imageHeight;
 		}
 		kl::size getSize() {
-			return { imageWidth, imageHeight };
+			return kl::size(imageWidth, imageHeight);
 		}
 		kl::color getPixel(kl::point point) {
 			if (point.x >= 0 && point.x < int(imageWidth) && point.y >= 0 && point.y < int(imageHeight)) {
 				return imagePixels[point.y * imageWidth + point.x];
 			}
-			return { 0, 0, 0 };
+			return kl::color();
 		}
 		kl::uint64 getPixelCount() {
 			return imagePixels.size();
 		}
-		kl::color* getPointer() {
-			return &imagePixels[0];
+		kl::byte* pointer() {
+			return (kl::byte*)&imagePixels[0];
 		}
 
 		// Setters
 		void setWidth(kl::uint32 width) {
-			setSize({ width, imageHeight });
+			setSize(kl::size(width, imageHeight));
 		}
 		void setHeight(kl::uint32 height) {
-			setSize({ imageWidth, height });
+			setSize(kl::size(imageWidth, height));
 		}
 		void setSize(kl::size size) {
 			imageWidth = size.width;
@@ -63,16 +65,15 @@ namespace kl {
 			// Checks load status
 			if (loadedBitmap.GetLastStatus()) {
 				printf("Couldn't load image file \"%s\".", filePath.c_str());
-				kl::console::waitFor(' ', true);
 				exit(69);
 			}
 
 			// Pixel data loading
-			setSize({ loadedBitmap.GetWidth(), loadedBitmap.GetHeight() });
+			setSize(kl::size(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
 			for (kl::uint32 y = 0; y < imageHeight; y++) {
 				for (kl::uint32 x = 0; x < imageWidth; x++) {
 					Gdiplus::Color tempPixel;
-					loadedBitmap.GetPixel(int(x), int(y), &tempPixel);
+					loadedBitmap.GetPixel((int)x, (int)y, &tempPixel);
 					setPixel(kl::point(x, y), kl::color(tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB()));
 				}
 			}
@@ -130,6 +131,30 @@ namespace kl {
 		void fillSolid(kl::color color) {
 			for (kl::uint32 i = 0; i < imagePixels.size(); i++) {
 				imagePixels[i] = color;
+			}
+		}
+
+		// Flips the pixel on x axis
+		void flipHorizontal() {
+			const int halfWidth = imageWidth / 2;
+			for (int y = 0; y < imageHeight; y++) {
+				for (int x = 0; x < halfWidth; x++) {
+					kl::color tempPixel = imagePixels[y * imageWidth + x];
+					imagePixels[y * imageWidth + x] = imagePixels[y * imageWidth + (imageWidth - 1 - x)];
+					imagePixels[y * imageWidth + (imageWidth - 1 - x)] = tempPixel;
+				}
+			}
+		}
+
+		// Flips the pixel on y axis
+		void flipVertical() {
+			const int halfHeight = imageHeight / 2;
+			for (int x = 0; x < imageWidth; x++) {
+				for (int y = 0; y < halfHeight; y++) {
+					kl::color tempPixel = imagePixels[y * imageWidth + x];
+					imagePixels[y * imageWidth + x] = imagePixels[(imageHeight - 1 - y) * imageWidth + x];
+					imagePixels[(imageHeight - 1 - y) * imageWidth + x] = tempPixel;
+				}
 			}
 		}
 
@@ -323,10 +348,10 @@ namespace kl {
 	private:
 		static ULONG_PTR gdiplusToken;
 		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-		kl::uint32 imageWidth = 0;
-		kl::uint32 imageHeight = 0;
-		std::vector<kl::color> imagePixels = {};
+		kl::uint32 imageWidth;
+		kl::uint32 imageHeight;
+		std::vector<kl::color> imagePixels;
 	};
-	ULONG_PTR image::gdiplusToken = 0;
+	ULONG_PTR image::gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput image::gdiplusStartupInput = {};
 }

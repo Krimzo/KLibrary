@@ -11,35 +11,37 @@ int main(int argc, char** argv) {
 
 	/* Window start definition */
 	int wvpUNI = 0;
-	kl::vbo* basicVBO = nullptr;
-	kl::ibo* basicIBO = nullptr;
-	kl::shaders* basicShaders = nullptr;
-	kl::camera basicCamera;
+	int tex0UNI = 0;
+	kl::vbo* VBO = nullptr;
+	kl::ibo* IBO = nullptr;
+	kl::shaders* shaders = nullptr;
+	kl::texture* dogoTexture = nullptr;
+	kl::camera gameCamera;
 	kl::gameobject basicCube;
 	gameWindow.start = [&]() {
 		// Enabling face culling
 		kl::opengl::setFaceCulling(true);
 
 		// Setting up the camera
-		basicCamera.setAspect(frameSize);
-		basicCamera.setPlanes(0.01f, 100);
+		gameCamera.setAspect(frameSize);
+		gameCamera.setPlanes(0.01f, 100);
 
 		// Setting the vertex data
 		basicCube.vertices = {
-			kl::vertex(kl::vec3( 0.5,  0.5,  0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3(-0.5,  0.5,  0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3( 0.5, -0.5,  0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3(-0.5, -0.5,  0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3( 0.5,  0.5, -0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3(-0.5,  0.5, -0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3( 0.5, -0.5, -0.5), kl::random::getColor()),
-			kl::vertex(kl::vec3(-0.5, -0.5, -0.5), kl::random::getColor())
+			kl::vertex(kl::vec3( 0.5,  0.5,  0.5), kl::vec2(1, 1), kl::random::getColor()),
+			kl::vertex(kl::vec3(-0.5,  0.5,  0.5), kl::vec2(0, 1), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5, -0.5,  0.5), kl::vec2(1, 0), kl::random::getColor()),
+			kl::vertex(kl::vec3(-0.5, -0.5,  0.5), kl::vec2(0, 0), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5,  0.5, -0.5), kl::vec2(1, 1), kl::random::getColor()),
+			kl::vertex(kl::vec3(-0.5,  0.5, -0.5), kl::vec2(0, 1), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5, -0.5, -0.5), kl::vec2(1, 0), kl::random::getColor()),
+			kl::vertex(kl::vec3(-0.5, -0.5, -0.5), kl::vec2(0, 0), kl::random::getColor())
 		};
-		basicVBO = new kl::vbo();
-		basicVBO->setData(basicCube.vertexData(), basicCube.vertexDataSize(), GL_STATIC_DRAW);
-		basicVBO->setParsing(0, GL_FLOAT, 3, sizeof(kl::vertex), 0);
-		basicVBO->setParsing(1, GL_FLOAT, 2, sizeof(kl::vertex), sizeof(kl::vec3));
-		basicVBO->setParsing(2, GL_FLOAT, 3, sizeof(kl::vertex), sizeof(kl::vec3) + sizeof(kl::vec2));
+		VBO = new kl::vbo();
+		VBO->setData(basicCube.vertexData(), basicCube.vertexDataSize(), GL_STATIC_DRAW);
+		VBO->setParsing(0, GL_FLOAT, 3, sizeof(kl::vertex), 0);
+		VBO->setParsing(1, GL_FLOAT, 2, sizeof(kl::vertex), sizeof(kl::vec3));
+		VBO->setParsing(2, GL_FLOAT, 3, sizeof(kl::vertex), sizeof(kl::vec3) + sizeof(kl::vec2));
 
 		// Setting the index data
 		basicCube.indices = {
@@ -56,13 +58,20 @@ int main(int argc, char** argv) {
 			7, 6, 2,
 			7, 2, 3
 		};
-		basicIBO = new kl::ibo();
-		basicIBO->setData(basicCube.indexData(), basicCube.indexDataSize(), GL_STATIC_DRAW);
+		IBO = new kl::ibo();
+		IBO->setData(basicCube.indexData(), basicCube.indexDataSize(), GL_STATIC_DRAW);
 
 		// Creating and binding the shaders
-		basicShaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
-		basicShaders->bind();
-		wvpUNI = basicShaders->getUniformID("wvp");
+		shaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
+		shaders->bind();
+		wvpUNI = shaders->getUniform("wvp");
+		tex0UNI = shaders->getUniform("texture0");
+
+		// Loading and binding the dogo texture
+		dogoTexture = new kl::texture();
+		dogoTexture->load("res/textures/dogo.png");
+		dogoTexture->bind(GL_TEXTURE0);
+		shaders->setUniform(tex0UNI, 0);
 	};
 
 	/* Window update definition */
@@ -78,28 +87,28 @@ int main(int argc, char** argv) {
 
 		/* Keyboard input */
 		if (gameWindow.keys.w) {
-			basicCamera.moveForward(deltaTime);
+			gameCamera.moveForward(deltaTime);
 		}
 		if (gameWindow.keys.s) {
-			basicCamera.moveBack(deltaTime);
+			gameCamera.moveBack(deltaTime);
 		}
 		if (gameWindow.keys.d) {
-			basicCamera.moveRight(deltaTime);
+			gameCamera.moveRight(deltaTime);
 		}
 		if (gameWindow.keys.a) {
-			basicCamera.moveLeft(deltaTime);
+			gameCamera.moveLeft(deltaTime);
 		}
 		if (gameWindow.keys.space) {
-			basicCamera.moveUp(deltaTime);
+			gameCamera.moveUp(deltaTime);
 		}
 		if (gameWindow.keys.c) {
-			basicCamera.moveDown(deltaTime);
+			gameCamera.moveDown(deltaTime);
 		}
 		if (gameWindow.keys.shift) {
-			basicCamera.speed = 5;
+			gameCamera.speed = 5;
 		}
 		else {
-			basicCamera.speed = 2;
+			gameCamera.speed = 2;
 		}
 
 		/* Mouse input */
@@ -115,7 +124,7 @@ int main(int argc, char** argv) {
 			gameWindow.mouse.show();
 		}
 		if (movingCam) {
-			basicCamera.rotate(gameWindow.getSize(), gameWindow.mouse.position);
+			gameCamera.rotate(gameWindow.getSize(), gameWindow.mouse.position);
 			gameWindow.mouse.move(gameWindow.getCenter());
 		}
 
@@ -126,16 +135,16 @@ int main(int argc, char** argv) {
 		kl::mat4 world = basicCube.worldMatrix();
 
 		/* Calculating the view matrix */
-		kl::mat4 view = basicCamera.viewMatrix();
+		kl::mat4 view = gameCamera.viewMatrix();
 
 		/* Calculating the projection matrix */
-		kl::mat4 projection = basicCamera.projMatrix();
+		kl::mat4 projection = gameCamera.projMatrix();
 
-		/* Sending the transformation matrix */
-		basicShaders->setUniformData(wvpUNI, projection * view * world);
+		/* Setting the matrix uniform */
+		shaders->setUniform(wvpUNI, projection * view * world);
 
 		/* Rendering */
-		basicIBO->drawElements(basicVBO, GL_TRIANGLES, 36, 0);
+		IBO->drawElements(VBO, GL_TRIANGLES, 36, 0);
 
 		/* Updating the fps display */
 		gameWindow.setTitle(std::to_string(int(1 / deltaTime)));
@@ -148,6 +157,12 @@ int main(int argc, char** argv) {
 	timer.getElapsed();
 	timer.stopwatchReset();
 	gameWindow.startNew(frameSize, "Game Window", false, true, true);
+
+	/* Cleanup */
+	delete VBO;
+	delete IBO;
+	delete shaders;
+	delete dogoTexture;
 
 	return 0;
 }

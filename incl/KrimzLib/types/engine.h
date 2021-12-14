@@ -50,12 +50,8 @@ namespace kl {
 		}
 
 		// Creates a new game object
-		kl::gameobject* addObject() {
-			gObjects.push_back(kl::gameobject());
-			return &gObjects.back();
-		}
-		kl::gameobject* addObject(kl::texture textureID) {
-			gObjects.push_back(kl::gameobject(textureID));
+		kl::gameobject* addObject(kl::gameobject& gameObj) {
+			gObjects.push_back(gameObj);
 			return &gObjects.back();
 		}
 

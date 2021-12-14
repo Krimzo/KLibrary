@@ -5,7 +5,7 @@ namespace kl {
     struct gameobject {
 		// Visual
 		bool visible;
-		kl::texture texture;
+		kl::texture* texture;
 
 		// Buffers
 		std::vector<kl::vertex> vertices;
@@ -25,7 +25,7 @@ namespace kl {
 		// Constructors
 		gameobject() {
 			visible = true;
-			texture = kl::texture();
+			texture = nullptr;
 			vertices = {};
 			indices = {};
 			position = kl::vec3();
@@ -36,7 +36,7 @@ namespace kl {
 			velocity = kl::vec3();
 			angular = kl::vec3();
 		}
-		gameobject(kl::texture texture) {
+		gameobject(kl::texture* texture) {
 			visible = true;
 			this->texture = texture;
 			vertices = {};

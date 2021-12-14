@@ -63,11 +63,11 @@
 #include "KrimzLib/web.h"
 
 // Including opengl types
+#include "KrimzLib/types/image.h"
 #include "KrimzLib/types/opengl/vbo.h"
 #include "KrimzLib/types/opengl/ibo.h"
 #include "KrimzLib/types/opengl/shaders.h"
 #include "KrimzLib/types/opengl/texture.h"
-#include "KrimzLib/types/image.h"
 #include "KrimzLib/opengl.h"
 
 // Including engine types

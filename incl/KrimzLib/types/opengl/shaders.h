@@ -42,33 +42,36 @@ namespace kl {
 		}
 
 		// Returns the id of the given uniform name
-		int getUniformID(std::string name) {
+		int getUniform(std::string name) {
 			int uniformID = glGetUniformLocation(shaderProgram, name.c_str());
 			if (uniformID == -1) {
-				printf("Get uniform '%s' error\n", name.c_str());
+				printf("Error: Uniform '%s' doesn't exist!\n", name.c_str());
 				exit(69);
 			}
 			return uniformID;
 		}
 
 		// Setts the data of an uniform
-		void setUniformData(int id, float data) {
+		void setUniform(int id, int data) {
+			glUniform1i(id, data);
+		}
+		void setUniform(int id, float data) {
 			glUniform1f(id, data);
 		}
-		void setUniformData(int id, kl::vec2 data) {
+		void setUniform(int id, kl::vec2 data) {
 			glUniform2f(id, data.x, data.y);
 		}
-		void setUniformData(int id, kl::vec3 data) {
+		void setUniform(int id, kl::vec3 data) {
 			glUniform3f(id, data.x, data.y, data.z);
 		}
-		void setUniformData(int id, kl::vec4 data) {
+		void setUniform(int id, kl::vec4 data) {
 			glUniform4f(id, data.x, data.y, data.z, data.w);
 		}
-		void setUniformData(int id, kl::mat4& data) {
+		void setUniform(int id, kl::mat4& data) {
 			glUniformMatrix4fv(id, 1, true, data.pointer());
 		}
-		void setUniformData(int id, kl::mat4&& data) {
-			setUniformData(id, data);
+		void setUniform(int id, kl::mat4&& data) {
+			setUniform(id, data);
 		}
 
 	private:

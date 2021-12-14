@@ -1,9 +1,12 @@
 #version 330
 
+uniform sampler2D texture0;
+
 out vec4 pixelColor;
 
+in vec2 interTex;
 in vec3 interColor;
 
 void main () {
-    pixelColor = vec4(interColor, 1);
+    pixelColor = mix(texture2D(texture0, interTex), vec4(interColor, 1), 0);
 }
