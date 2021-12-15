@@ -36,6 +36,7 @@
 #include "KrimzLib/types/color.h"
 #include "KrimzLib/types/colorf.h"
 #include "KrimzLib/types/array.h"
+#include "KrimzLib/types/stack.h"
 
 // Including vector math headers
 #include "KrimzLib/types/vecmath/vec2.h"

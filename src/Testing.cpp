@@ -2,25 +2,19 @@
 
 
 int main() {
-    kl::array<float> a(5);
-    a.runOnEach([](float* elem) {
-        *elem = kl::random::getInt(0, 10);
-    });
+	kl::stack<int> pecanje;
 
-    kl::array<float> b(5);
-    b.runOnEach([](float* elem) {
-        *elem = kl::random::getInt(0, 10);
-    });
+	for (int i = 0; i < 10; i++) {
+		pecanje.push(i);
+	}
 
-    kl::array<float> sum(5);
-    sum.runOnEach([&](float* elem, int i) {
-        *elem = a[i] + b[i];
-    });
-    
-    for (int i = 0; i < sum.size(); i++) {
-        std::cout << sum[i] << '\n';
-    }
+	kl::uint64 stackSize = 0;
+	for (int i = 0; i < 10; i++) {
+		std::cout << "value: " << pecanje.pop(&stackSize) << ", size: " << stackSize << "\n";
+	}
 
+	pecanje.push(42069);
+	std::cout << "value: " << pecanje.pop() << ", size: " << stackSize << "\n";
 
 	kl::console::waitFor(' ');
 	return 0;

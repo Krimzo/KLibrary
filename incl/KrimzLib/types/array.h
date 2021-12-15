@@ -2,8 +2,7 @@
 
 
 namespace kl {
-	template<typename T> class array {
-	public:
+	template<typename T> struct array {
 		// Constructors and destructor
 		array(kl::uint64 arraySize = 0, bool canGrow = false) {
 			// Update properties
@@ -99,13 +98,17 @@ namespace kl {
 				arrayData[i] = listOfElements.begin()[i];
 			}
 		}
-		void operator ++ (int ignore) {
+		kl::uint64 operator ++ (int ignore) {
 			resize(arraySize + 1);
+			return arraySize;
 		}
-		void operator -- (int ignore) {
+		kl::uint64 operator -- (int ignore) {
 			if (arraySize) {
 				resize(arraySize - 1);
+				return arraySize;
 			}
+			printf("Error, can't shrink array of size 0!\n");
+			exit(69);
 		}
 		void operator <= (T toAdd) {
 			resize(arraySize + 1);
