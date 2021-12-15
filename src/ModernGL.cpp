@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 	kl::gameobject basicCube;
 	gameWindow.start = [&]() {
 		// Enabling face culling
-		kl::opengl::setFaceCulling(true);
+		kl::opengl::setFaceCulling(false);
 
 		// Enabling depth test
 		kl::opengl::setDepthTest(true);
@@ -127,8 +127,9 @@ int main(int argc, char** argv) {
 			gameWindow.mouse.show();
 		}
 		if (movingCam) {
-			gameCamera.rotate(gameWindow.getSize(), gameWindow.mouse.position);
-			gameWindow.mouse.move(gameWindow.getCenter());
+			const kl::point frameCenter = gameWindow.getCenter();
+			gameCamera.rotate(frameCenter, gameWindow.mouse.position);
+			gameWindow.mouse.move(frameCenter);
 		}
 
 		/* Calculating the world matrix */

@@ -11,7 +11,7 @@ namespace kl {
 		camera() {
 			position = kl::vec3(0, 0, 0);
 			forward = kl::vec3(0, 0, 1);
-			sensitivity = 80;
+			sensitivity = 0.05f;
 			speed = 2;
 			setFOV(75);
 			setAspect(1);
@@ -50,14 +50,14 @@ namespace kl {
 		}
 
 		// Camera rotation
-		void rotate(kl::size frameSize, kl::point mousePos) {
+		void rotate(kl::point frameCenter, kl::point mousePos) {
 			// Calculating the mouse movement
-			const int dx = mousePos.x - (frameSize.width / 2);
-			const int dy = mousePos.y - (frameSize.height / 2);
+			const int dx = mousePos.x - frameCenter.x;
+			const int dy = mousePos.y - frameCenter.y;
 
 			// Calculating the x and y rotation
-			const float xRotation = (dx * sensitivity) / frameSize.width;
-			const float yRotation = (dy * sensitivity) / frameSize.height;
+			const float xRotation = dx * sensitivity;
+			const float yRotation = dy * sensitivity;
 
 			// Calculating the vertically rotated forward vector
 			kl::vec3 forwardVert = forward.rotate(yRotation, getRight());
