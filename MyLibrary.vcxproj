@@ -172,6 +172,7 @@
     <ClInclude Include="incl\KrimzLib\types\engine\keys.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\mouse.h" />
     <ClInclude Include="incl\KrimzLib\types\stack.h" />
+    <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h" />
     <ClInclude Include="incl\KrimzLib\types\window.h" />
     <ClInclude Include="incl\KrimzLib\types\image.h" />
     <ClInclude Include="incl\KrimzLib\types\opengl\ibo.h" />
@@ -188,7 +189,7 @@
     <ClInclude Include="incl\KrimzLib\web.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\VisualSort.cpp" />
+    <ClCompile Include="src\TriangleInterpolation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />

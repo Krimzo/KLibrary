@@ -150,9 +150,12 @@
     <ClInclude Include="incl\KrimzLib\types\stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\VisualSort.cpp">
+    <ClCompile Include="src\TriangleInterpolation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

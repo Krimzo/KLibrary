@@ -50,7 +50,7 @@ int main() {
 	});
 
 	testWindow.update = [&]() {
-		for (kl::uint64 i = 0; i < sticks.size() / 2; i++) {
+		for (kl::uint64 i = 0; i <= sticks.size() / 2; i++) {
 			kl::uint64 min = i;
 			kl::uint64 max = sticks.size() - 1 - i;
 

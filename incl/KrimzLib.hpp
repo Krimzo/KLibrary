@@ -44,6 +44,7 @@
 #include "KrimzLib/types/vecmath/vec4.h"
 #include "KrimzLib/types/vecmath/mat4.h"
 #include "KrimzLib/types/vecmath/vertex.h"
+#include "KrimzLib/types/vecmath/triangle.h"
 
 // Including misc headers
 #include "KrimzLib/constant.h"

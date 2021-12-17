@@ -7,20 +7,16 @@ int main() {
 	const int fpsLimit = 60;
 
 	// Triangle points
-	kl::vertex A(50, (windowSize.height - 1) / 3);
-	A.c = kl::color(215, 135, 65);
-	kl::vertex B((windowSize.width - 1) / 3, windowSize.height - 51);
-	B.c = kl::color(30, 95, 65);
-	kl::vertex C(windowSize.width - 51, (windowSize.height - 1) * 0.667);
-	C.c = kl::color(185, 115, 140);
-	kl::vertex D((windowSize.width - 1) * 0.667, 50);
-	D.c = kl::color(55, 100, 120);
+	kl::vertex A(kl::vec3(50, (windowSize.height - 1) / 3, 0),                        kl::color(255,   0,   0));
+	kl::vertex B(kl::vec3((windowSize.width - 1) / 3, windowSize.height - 51, 0),	  kl::color(255, 255, 255));
+	kl::vertex C(kl::vec3(windowSize.width - 51, (windowSize.height - 1) * 0.667, 0), kl::color(  0,   0, 255));
+	kl::vertex D(kl::vec3((windowSize.width - 1) * 0.667, 50, 0),                     kl::color(  0, 255,   0));
 
 	// Triangle creation
 	kl::triangle T1(A, B, C);
-	T1.computeInterConst();
+	kl::vec4 t1Consts = T1.getInterConsts();
 	kl::triangle T2(A, D, C);
-	T2.computeInterConst();
+	kl::vec4 t2Consts = T2.getInterConsts();
 
 	// Window creation
 	kl::window window;
@@ -30,7 +26,7 @@ int main() {
 	int counter = 0;
 	const float timeToSleep = 1.0f / fpsLimit;
 	kl::time::staticStopwatchReset();
-	window.windowUpdate = [&]() {
+	window.update = [&]() {
 		// Setting x and y
 		int x = counter - windowSize.height;
 		int y = 0;
@@ -41,15 +37,15 @@ int main() {
 			kl::color pixel = {};
 
 			// Computing the interpolation weights
-			kl::vec3 weights1 = T1.getInterWeights(kl::vec2(x, y));
-			kl::vec3 weights2 = T2.getInterWeights(kl::vec2(x, y));
+			kl::vec3 weights1 = T1.getInterWeights(t1Consts, kl::vec2(x, y));
+			kl::vec3 weights2 = T2.getInterWeights(t2Consts, kl::vec2(x, y));
 
 			// Checkig if the point inside a triangle and coloring the pixel
 			if (T1.inTriangle(weights1)) {
-				pixel = T1.interpolateColor(weights1);
+				pixel = kl::convert::toColor(T1.getColor(weights1));
 			}
 			else if (T2.inTriangle(weights2)) {
-				pixel = T2.interpolateColor(weights2);
+				pixel = kl::convert::toColor(T2.getColor(weights2));
 			}
 			else {
 				pixel = kl::constant::colors::gray;
@@ -71,7 +67,7 @@ int main() {
 		}
 		
 		// Rendering the frame
-		window.renderImage(frame);
+		window.displayImage(frame);
 
 		// Updating the title
 		window.setTitle(std::to_string(int((100.0 * counter) / (windowSize.width + windowSize.height - 1))) + "%");
@@ -79,7 +75,7 @@ int main() {
 		// Checking the i
 		if (++counter == windowSize.width + windowSize.height) {
 			window.setTitle("Finished!");
-			window.windowUpdate = []() {};
+			window.update = []() {};
 		}
 
 		// Delta time calculation

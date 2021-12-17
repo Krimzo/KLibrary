@@ -15,6 +15,11 @@ namespace kl {
 			return radians * toDegrees;
 		}
 
+		// Converts a float color to color
+		kl::color toColor(kl::colorf colf) {
+			return kl::color(kl::byte(colf.r * 255), kl::byte(colf.g * 255), kl::byte(colf.b * 255));
+		}
+
 		// Converts a byte array to a string
 		std::string toString(kl::bytes& data) {
 			std::stringstream ss;
