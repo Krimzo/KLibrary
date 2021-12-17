@@ -45,18 +45,12 @@
 #include "KrimzLib/types/vecmath/mat4.h"
 #include "KrimzLib/types/vecmath/vertex.h"
 
-// Including cuda headers
-#ifdef __CUDACC__
-#include "KrimzLib/types/cuda/gpubuffer.cuh"
-#endif
-
 // Including misc headers
 #include "KrimzLib/constant.h"
 #include "KrimzLib/convert.h"
 #include "KrimzLib/math.h"
 #include "KrimzLib/random.h"
 #include "KrimzLib/time.h"
-#include "KrimzLib/string.h"
 #include "KrimzLib/console.h"
 #include "KrimzLib/binary.h"
 #include "KrimzLib/file.h"

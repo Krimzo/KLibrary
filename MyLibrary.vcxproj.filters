@@ -87,9 +87,6 @@
     <ClInclude Include="incl\KrimzLib\random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\string.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="incl\KrimzLib\thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -155,7 +152,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ModernGL.cpp">
+    <ClCompile Include="src\VisualSort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

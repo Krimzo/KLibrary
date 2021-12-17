@@ -23,6 +23,15 @@ namespace kl {
 			system(("code " + filePath).c_str());
 		}
 
+		// Returns the file extension from the given file path
+		std::string getExtension(std::string filePath) {
+			kl::uint64 lastDotPos = filePath.find_last_of(".");
+			if (lastDotPos == std::string::npos) {
+				return "";
+			}
+			return filePath.substr(lastDotPos + 1L);
+		}
+
 		// Returns a string from a given text file
 		std::string readText(std::string filePath) {
 			std::ifstream fileStream(filePath);

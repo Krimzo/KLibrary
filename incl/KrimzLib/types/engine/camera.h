@@ -50,7 +50,7 @@ namespace kl {
 		}
 
 		// Camera rotation
-		void rotate(kl::point frameCenter, kl::point mousePos) {
+		void rotate(kl::point frameCenter, kl::point mousePos, float verticalAngleLimit = 85) {
 			// Calculating the mouse movement
 			const int dx = mousePos.x - frameCenter.x;
 			const int dy = mousePos.y - frameCenter.y;
@@ -63,7 +63,7 @@ namespace kl {
 			kl::vec3 forwardVert = forward.rotate(yRotation, getRight());
 
 			// Checking if the vertical rotation is goin to be inside the bounds
-			if (std::abs(forwardVert.angle(kl::vec3(0, 1, 0)) - kl::convert::toRadians(90)) <= kl::convert::toRadians(85)) {
+			if (std::abs(kl::convert::toDegrees(forwardVert.angle(kl::vec3(0, 1, 0))) - 90) <= verticalAngleLimit) {
 				forward = forwardVert;
 			}
 

@@ -160,7 +160,6 @@
     <ClInclude Include="incl\KrimzLib\math.h" />
     <ClInclude Include="incl\KrimzLib\opengl.h" />
     <ClInclude Include="incl\KrimzLib\random.h" />
-    <ClInclude Include="incl\KrimzLib\string.h" />
     <ClInclude Include="incl\KrimzLib\thread.h" />
     <ClInclude Include="incl\KrimzLib\time.h" />
     <ClInclude Include="incl\KrimzLib\type.h" />
@@ -189,7 +188,7 @@
     <ClInclude Include="incl\KrimzLib\web.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ModernGL.cpp" />
+    <ClCompile Include="src\VisualSort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />

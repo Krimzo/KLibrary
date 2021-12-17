@@ -48,14 +48,18 @@ namespace kl {
 		}
 
 		// Returns a random color
-		static kl::color getColor() {
+		static kl::color getColor(bool grayScaled = false) {
+			if (grayScaled) {
+				kl::byte randGray = kl::random::getByte();
+				return kl::color(randGray, randGray, randGray);
+			}
 			return kl::color(kl::random::getByte(), kl::random::getByte(), kl::random::getByte());
 		}
 
 	protected:
 		// Sets the seed for random number generation
 		static void newSeed() {
-			srand(unsigned(std::time(nullptr)));
+			srand((unsigned)std::time(nullptr));
 		}
 	};
 }

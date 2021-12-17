@@ -84,8 +84,9 @@ namespace kl {
 		// Returns the rotated vector around custom axis
 		kl::vec3 rotate(float angle, kl::vec3 axis) {
 			// Calculating trig funcs
-			const float angleSin = sin(angle * 0.01745329251f * 0.5f);
-			const float angleCos = cos(angle * 0.01745329251f * 0.5f);
+			static const float halfeAngleRadians = 0.00872664625f;
+			const float angleSin = sin(angle * halfeAngleRadians);
+			const float angleCos = cos(angle * halfeAngleRadians);
 			
 			// Calculating quaternion consts
 			const float qx = axis.x * angleSin;
@@ -105,8 +106,8 @@ namespace kl {
 			// Calculating the rotated vector
 			kl::vec3 temp;
 			temp.x = (w2 + x2 - z2 - y2) * x + (-zw + xy - zw + xy) * y + (yw + xz + xz + yw) * z;
-			temp.y = (xy + zw + zw + xy) * x + (y2 - z2 + w2 - x2) * y + (yz + yz - xw - xw) * z;
-			temp.z = (xz - yw + xz - yw) * x + (yz + yz + xw + xw) * y + (z2 - y2 - x2 + w2) * z;
+			temp.y = (xy + zw + zw + xy) * x + ( y2 - z2 + w2 - x2) * y + (yz + yz - xw - xw) * z;
+			temp.z = (xz - yw + xz - yw) * x + ( yz + yz + xw + xw) * y + (z2 - y2 - x2 + w2) * z;
 			return temp;
 		}
 

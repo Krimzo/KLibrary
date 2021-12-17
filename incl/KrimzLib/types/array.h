@@ -172,7 +172,7 @@ namespace kl {
 		}
 
 		// Returns the pointer to the raw data
-		T* getPointer() {
+		T* pointer() {
 			return arrayData;
 		}
 

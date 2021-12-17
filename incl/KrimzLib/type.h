@@ -16,7 +16,7 @@ namespace kl {
 
 /* BINARY */
 namespace kl {
-	typedef unsigned char byte;
+	typedef kl::uint8 byte;
 	typedef std::vector<byte> bytes;
 	typedef std::string bits;
 }

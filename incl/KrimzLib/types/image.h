@@ -87,7 +87,7 @@ namespace kl {
 
 			// Checking the file extension is supported
 			const CLSID* formatToUse = nullptr;
-			std::string fileExtension = kl::string::getFileExtension(fileName);
+			std::string fileExtension = kl::file::getExtension(fileName);
 			if (fileExtension == "bmp") {
 				formatToUse = &bmpEncoderCLSID;
 			}
@@ -162,12 +162,12 @@ namespace kl {
 		void drawLine(kl::point a, kl::point b, kl::color col) {
 			// Calculations
 			int len = std::max(abs(b.x - a.x), abs(b.y - a.y));
-			kl::vec2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
+			kl::vec2 incr(((float)b.x - a.x) / len, ((float)b.y - a.y) / len);
 
 			// Drawing
-			kl::vec2 drawPoint((float)a.x, (float)a.y);
+			kl::vec2 drawPoint(a.x, a.y);
 			for (int i = 0; i <= len; i++) {
-				setPixel(kl::point((int)drawPoint.x, (int)drawPoint.y), col);
+				setPixel(kl::point(drawPoint.x, drawPoint.y), col);
 				drawPoint = drawPoint + incr;
 			}
 		}

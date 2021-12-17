@@ -4,9 +4,9 @@
 namespace kl {
 	namespace binary {
 		// Returns bytes from the given value
-		template<typename T> kl::bytes toBytes(T num) {
+		template<typename T> kl::bytes getBytes(T num) {
 			kl::byte* bytePointer = (kl::byte*)&num;
-			std::vector<byte> byteData;
+			kl::bytes byteData;
 			for (int i = 0; i < sizeof(num); i++) {
 				byteData.insert(byteData.begin(), *(bytePointer + i));
 			}
@@ -14,9 +14,9 @@ namespace kl {
 		}
 
 		// Returns bits from the given value
-		template<typename T> kl::bits toBits(T num) {
+		template<typename T> kl::bits getBits(T num) {
 			kl::byte* bytePointer = (kl::byte*)&num;
-			std::string bitData = "";
+			kl::bits bitData = "";
 			for (int i = 0; i < sizeof(num); i++) {
 				byte tempByte = *(bytePointer + i);
 				for (int j = 0; j < 8; j++) {
