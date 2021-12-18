@@ -28,6 +28,7 @@ int main(int argc, char** argv) {
 		// Setting up the camera
 		gameCamera.setAspect(frameSize);
 		gameCamera.setPlanes(0.01f, 100);
+		gameCamera.sensitivity = 0.025f;
 
 		// Setting the vertex data
 		basicCube.vertices = {
@@ -65,7 +66,10 @@ int main(int argc, char** argv) {
 		IBO->setData(basicCube.indexData(), basicCube.indexDataSize(), GL_STATIC_DRAW);
 
 		// Creating and binding the shaders
-		shaders = new kl::shaders("res/shaders/basic.vs", "res/shaders/basic.fs");
+		shaders = new kl::shaders(
+			kl::file::readText("res/shaders/basic.vs"),
+			kl::file::readText("res/shaders/basic.fs")
+		);
 		shaders->bind();
 		wvpUNI = shaders->getUniform("wvp");
 		tex0UNI = shaders->getUniform("texture0");
