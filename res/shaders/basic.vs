@@ -6,11 +6,11 @@ layout (location = 2) in vec3 rgb;
 
 uniform mat4 wvp;
 
-out vec2 interTex;
-out vec3 interColor;
+out vec2 interUV;
+out vec3 interRGB;
 
 void main() {
     gl_Position = wvp * vec4(xyz, 1);
-    interTex = uv;
-    interColor = rgb;
+    interUV = uv;
+    interRGB = rgb;
 }
