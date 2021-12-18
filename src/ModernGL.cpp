@@ -81,6 +81,27 @@ int main(int argc, char** argv) {
 		shaders->setUniform(tex0UNI, 0);
 	};
 
+	const int kerCount = 5000;
+	const int maxDistance = 50;
+	const int maxAngle = 72;
+
+	struct ker {
+		kl::vec3 pos = {};
+		int rot = 0;
+	};
+
+	const int halfMaxDist = maxDistance / 2;
+	const int halfMaxAngl = maxAngle / 2;
+
+	kl::array<ker> kerovi(kerCount);
+	kerovi.runOnEach([&](ker* k) {
+		k->pos.x = kl::random::getInt(maxDistance) - halfMaxDist;
+		k->pos.y = kl::random::getInt(maxDistance) - halfMaxDist;
+		k->pos.z = kl::random::getInt(maxDistance) - halfMaxDist;
+
+		k->rot = kl::random::getInt(maxAngle) - halfMaxAngl;
+	});
+
 	/* Window update definition */
 	kl::time timer;
 	bool movingCam = false;
@@ -136,23 +157,25 @@ int main(int argc, char** argv) {
 			gameWindow.mouse.move(frameCenter);
 		}
 
-		/* Calculating the world matrix */
-		basicCube.size = kl::vec3(1, 1, 1);
-		basicCube.position = kl::vec3(0, 0, 1.5);
-		basicCube.rotation = kl::vec3(0, 36 * elapsed, 0);
-		kl::mat4 world = basicCube.worldMatrix();
+		kerovi.runOnEach([&](ker* k) {
+			/* Calculating the world matrix */
+			basicCube.size = kl::vec3(1, 1, 1);
+			basicCube.position = k->pos;
+			basicCube.rotation = kl::vec3(0, k->rot * elapsed, 0);
+			kl::mat4 world = basicCube.worldMatrix();
 
-		/* Calculating the view matrix */
-		kl::mat4 view = gameCamera.viewMatrix();
+			/* Calculating the view matrix */
+			kl::mat4 view = gameCamera.viewMatrix();
 
-		/* Calculating the projection matrix */
-		kl::mat4 projection = gameCamera.projMatrix();
+			/* Calculating the projection matrix */
+			kl::mat4 projection = gameCamera.projMatrix();
 
-		/* Setting the matrix uniform */
-		shaders->setUniform(wvpUNI, projection * view * world);
+			/* Setting the matrix uniform */
+			shaders->setUniform(wvpUNI, projection* view* world);
 
-		/* Rendering */
-		IBO->drawElements(VBO, GL_TRIANGLES, 36, 0);
+			/* Rendering */
+			IBO->drawElements(VBO, GL_TRIANGLES, 36, 0);
+		});
 
 		/* Updating the fps display */
 		gameWindow.setTitle(std::to_string(int(1 / deltaTime)));

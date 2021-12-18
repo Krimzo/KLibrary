@@ -8,5 +8,5 @@ in vec2 interTex;
 in vec3 interColor;
 
 void main () {
-    pixelColor = mix(texture2D(texture0, interTex), vec4(interColor, 1), 0.5);
+    pixelColor = mix(texture2D(texture0, interTex), vec4(interColor, 1), 0);
 }
