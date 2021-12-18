@@ -75,8 +75,7 @@ namespace kl {
 			return kl::vec4(x * a, y * a, z * a, w * a);
 		}
 		kl::vec4 operator / (float a) {
-			const float rec = 1 / a;
-			return kl::vec4(x * rec, y * rec, z * rec, w * rec);
+			return operator*(1 / a);
 		}
 		bool operator == (kl::vec4 obj) {
 			return (x == obj.x && y == obj.y && z == obj.z && w == obj.w);
@@ -85,30 +84,24 @@ namespace kl {
 			return !operator==(obj);
 		}
 
-		// Returns a negated vectro
+		// Returns a negated vector
 		kl::vec4 negate() {
 			return operator*(-1);
 		}
 
 		// Returns the vectors length
 		float length() {
-			return sqrt(x * x + y * y + z * z);
+			return sqrt(x * x + y * y + z * z + w * w);
 		}
 
 		// Retruns a normalized vector
 		kl::vec4 normalize() {
-			const float vecLen = 1 / length();
-			return kl::vec4(x * vecLen, y * vecLen, z * vecLen, w);
+			return operator/(length());
 		}
 
 		// Returns the dot product
 		float dot(kl::vec4 a) {
 			return x * a.x + y * a.y + z * a.z + w * a.w;
-		}
-
-		// Returns the dot product
-		kl::vec4 cross(kl::vec4 a) {
-			return kl::vec4(y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x, w);
 		}
 
 		// Prints the data to the console

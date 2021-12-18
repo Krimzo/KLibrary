@@ -16,8 +16,8 @@ namespace kl {
 			this->y = y;
 		}
 		vec2(kl::point p) {
-			x = float(p.x);
-			y = float(p.y);
+			x = (float)p.x;
+			y = (float)p.y;
 		}
 		vec2(kl::point a, kl::point b) {
 			x = float(b.x - a.x);
@@ -35,7 +35,7 @@ namespace kl {
 			return kl::vec2(x * a, y * a);
 		}
 		kl::vec2 operator / (float a) {
-			return kl::vec2(x / a, y / a);
+			return operator*(1 / a);
 		}
 		bool operator == (kl::vec2 obj) {
 			return (x == obj.x && y == obj.y);
@@ -44,7 +44,7 @@ namespace kl {
 			return !operator==(obj);
 		}
 
-		// Returns a negated vectro
+		// Returns a negated vector
 		kl::vec2 negate() {
 			return operator*(-1);
 		}
@@ -56,8 +56,7 @@ namespace kl {
 
 		// Retruns a normalized vector
 		kl::vec2 normalize() {
-			const float vecLen = 1 / length();
-			return kl::vec2(x * vecLen, y * vecLen);
+			return operator/(length());
 		}
 
 		// Returns the dot product

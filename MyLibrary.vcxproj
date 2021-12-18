@@ -189,7 +189,7 @@
     <ClInclude Include="incl\KrimzLib\web.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\TriangleInterpolation.cpp" />
+    <ClCompile Include="src\ModernGL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />

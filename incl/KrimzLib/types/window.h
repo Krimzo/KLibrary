@@ -87,6 +87,8 @@ namespace kl {
 			GetClientRect(hwnd, &clientArea);
 			return kl::size(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
 		}
+
+		// Returns the center point of the frame
 		kl::point getCenter() {
 			kl::size windowSize = getSize();
 			return kl::point(windowSize.width / 2, windowSize.height / 2);

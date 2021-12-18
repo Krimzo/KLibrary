@@ -128,7 +128,7 @@ int main(int argc, char** argv) {
 		}
 		if (movingCam) {
 			const kl::point frameCenter = gameWindow.getCenter();
-			gameCamera.rotate(frameCenter, gameWindow.mouse.position);
+			gameCamera.rotate(gameWindow.mouse.position, frameCenter);
 			gameWindow.mouse.move(frameCenter);
 		}
 

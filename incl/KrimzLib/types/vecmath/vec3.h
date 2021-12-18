@@ -40,8 +40,7 @@ namespace kl {
 			return kl::vec3(x * a, y * a, z * a);
 		}
 		kl::vec3 operator / (float a) {
-			const float rec = 1 / a;
-			return kl::vec3(x * rec, y * rec, z * rec);
+			return operator*(1 / a);
 		}
 		bool operator == (kl::vec3 obj) {
 			return (x == obj.x && y == obj.y && z == obj.z);
@@ -50,7 +49,7 @@ namespace kl {
 			return !operator==(obj);
 		}
 
-		// Returns a negated vectro
+		// Returns a negated vector
 		kl::vec3 negate() {
 			return operator*(-1);
 		}
@@ -62,8 +61,7 @@ namespace kl {
 
 		// Retruns a normalized vector
 		kl::vec3 normalize() {
-			const float vecLen = 1 / length();
-			return kl::vec3(x * vecLen, y * vecLen, z * vecLen);
+			return operator/(length());
 		}
 
 		// Returns the dot product

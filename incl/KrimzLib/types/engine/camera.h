@@ -23,10 +23,10 @@ namespace kl {
 			return forward.normalize();
 		}
 		kl::vec3 getRight() {
-			return kl::vec3(0, 1, 0).cross(forward).normalize();
+			return kl::vec3(0, 1, 0).cross(getForward()).normalize();
 		}
 		kl::vec3 getUp() {
-			return forward.cross(getRight()).normalize();
+			return getForward().cross(getRight()).normalize();
 		}
 
 		// Camera movement
@@ -50,7 +50,7 @@ namespace kl {
 		}
 
 		// Camera rotation
-		void rotate(kl::point frameCenter, kl::point mousePos, float verticalAngleLimit = 85) {
+		void rotate(kl::point mousePos, kl::point frameCenter, float verticalAngleLimit = 85) {
 			// Calculating the mouse movement
 			const int dx = mousePos.x - frameCenter.x;
 			const int dy = mousePos.y - frameCenter.y;
@@ -60,7 +60,7 @@ namespace kl {
 			const float yRotation = dy * sensitivity;
 
 			// Calculating the vertically rotated forward vector
-			kl::vec3 forwardVert = forward.rotate(yRotation, getRight());
+			kl::vec3 forwardVert = getForward().rotate(yRotation, getRight());
 
 			// Checking if the vertical rotation is goin to be inside the bounds
 			if (std::abs(kl::convert::toDegrees(forwardVert.angle(kl::vec3(0, 1, 0))) - 90) <= verticalAngleLimit) {
@@ -68,7 +68,7 @@ namespace kl {
 			}
 
 			// Calculating the horizontally rotated forward vector
-			forward = forward.rotate(xRotation, kl::vec3(0, 1, 0));
+			forward = getForward().rotate(xRotation, kl::vec3(0, 1, 0));
 		}
 
 		// Computes and returns the camera transformation matrix

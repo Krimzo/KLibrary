@@ -27,5 +27,13 @@ namespace kl {
 			}
 			return true;
 		}
+
+		// Fast inverse sqrt
+		float invSqrt(float number) {
+			int i = 0x5f3759df - (*(int*)&number >> 1);
+			float y = *(float*)&i;
+			y = y * (1.5f - ((number * 0.5f) * y * y));
+			return y;
+		}
 	};
 }

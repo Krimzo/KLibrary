@@ -155,7 +155,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\TriangleInterpolation.cpp">
+    <ClCompile Include="src\ModernGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
