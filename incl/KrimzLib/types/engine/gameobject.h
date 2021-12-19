@@ -49,20 +49,18 @@ namespace kl {
 
 		// Sets the vertex data
 		void setData(std::vector<kl::vertex>& vertexData, std::vector<kl::index>& indexData) {
-			// Checking/creating the vao
+			// Setting up the vao
 			if (!VAO) VAO = new kl::vao();
-
-			// Defining the vao
 			VAO->define([&]() {
 				// Setting up the vbo
-				VBO = new kl::vbo();
+				if (!VBO) VBO = new kl::vbo();
 				VBO->setData(&vertexData[0], vertexData.size() * sizeof(kl::vertex), GL_STATIC_DRAW);
 				VBO->setParsing(0, GL_FLOAT, 3, sizeof(kl::vertex), 0);
 				VBO->setParsing(1, GL_FLOAT, 2, sizeof(kl::vertex), sizeof(kl::vec3));
 				VBO->setParsing(2, GL_FLOAT, 3, sizeof(kl::vertex), sizeof(kl::vec3) + sizeof(kl::vec2));
 
 				// Setting up the ibo
-				IBO = new kl::ibo();
+				if (!IBO) IBO = new kl::ibo();
 				IBO->setData(&indexData[0], indexData.size() * sizeof(kl::index), GL_STATIC_DRAW);
 				indexCount = indexData.size();
 			});
@@ -90,8 +88,8 @@ namespace kl {
 		}
 
 		// Render the game object
-		void render() {
-			shaders->setUniform(wvpID, kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size));
+		void render(kl::mat4& cameraMat) {
+			shaders->setUniform(wvpID, cameraMat * kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size));
 			texture->bind();
 			VAO->drawElements(GL_TRIANGLES, indexCount);
 		}

@@ -2,21 +2,19 @@
 
 
 int main() {
-	// Engine
+	/* Engine */
 	kl::engine testEngine;
-	
-	// Data
 	kl::shaders* basicShaders = nullptr;
 	kl::texture* dogoTexture = nullptr;
 	kl::gameobject* dogoCube = nullptr;
 
-	// User start
+	/* User start */
 	testEngine.start = [&]() {
-		// Compiling shaders
+		/* Shaders */
 		basicShaders = new kl::shaders(kl::file::readText("res/shaders/basic.vs"), kl::file::readText("res/shaders/basic.fs"));
 		basicShaders->setUniform(basicShaders->getUniform("texture0"), 0);
 
-		// Loading the textures
+		/* Textures */
 		dogoTexture = new kl::texture("res/textures/dogo.png");
 
 		// Creating a game object
@@ -30,13 +28,13 @@ int main() {
 
 		// Binding the vertex and index data
 		std::vector<kl::vertex> vertexData = {
-			kl::vertex(kl::vec3(0.5,  0.5,  0.5), kl::vec2(1, 1), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5,  0.5,  0.5), kl::vec2(1, 1), kl::random::getColor()),
 			kl::vertex(kl::vec3(-0.5,  0.5,  0.5), kl::vec2(0, 1), kl::random::getColor()),
-			kl::vertex(kl::vec3(0.5, -0.5,  0.5), kl::vec2(1, 0), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5, -0.5,  0.5), kl::vec2(1, 0), kl::random::getColor()),
 			kl::vertex(kl::vec3(-0.5, -0.5,  0.5), kl::vec2(0, 0), kl::random::getColor()),
-			kl::vertex(kl::vec3(0.5,  0.5, -0.5), kl::vec2(1, 1), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5,  0.5, -0.5), kl::vec2(1, 1), kl::random::getColor()),
 			kl::vertex(kl::vec3(-0.5,  0.5, -0.5), kl::vec2(0, 1), kl::random::getColor()),
-			kl::vertex(kl::vec3(0.5, -0.5, -0.5), kl::vec2(1, 0), kl::random::getColor()),
+			kl::vertex(kl::vec3( 0.5, -0.5, -0.5), kl::vec2(1, 0), kl::random::getColor()),
 			kl::vertex(kl::vec3(-0.5, -0.5, -0.5), kl::vec2(0, 0), kl::random::getColor())
 		};
 		std::vector<kl::index> indexData = {
@@ -54,34 +52,40 @@ int main() {
 			7, 2, 3
 		};
 		dogoCube->setData(vertexData, indexData);
+
+		// Setting the obj props
+		dogoCube->angular.y = 36;
+		dogoCube->physics = true;
+		dogoCube->gravity = 0;
+		dogoCube->position.z = 2;
 	};
 
-	// User update
+	/* User update */
 	testEngine.update = [&]() {
 		/* Keyboard input */
 		if (testEngine.getWindow().keys.w) {
-			testEngine.camera.moveForward(testEngine.deltaTime);
+			testEngine.gameCamera.moveForward(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.s) {
-			testEngine.camera.moveBack(testEngine.deltaTime);
+			testEngine.gameCamera.moveBack(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.d) {
-			testEngine.camera.moveRight(testEngine.deltaTime);
+			testEngine.gameCamera.moveRight(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.a) {
-			testEngine.camera.moveLeft(testEngine.deltaTime);
+			testEngine.gameCamera.moveLeft(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.space) {
-			testEngine.camera.moveUp(testEngine.deltaTime);
+			testEngine.gameCamera.moveUp(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.c) {
-			testEngine.camera.moveDown(testEngine.deltaTime);
+			testEngine.gameCamera.moveDown(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.shift) {
-			testEngine.camera.speed = 5;
+			testEngine.gameCamera.speed = 5;
 		}
 		else {
-			testEngine.camera.speed = 2;
+			testEngine.gameCamera.speed = 2;
 		}
 
 		/* Mouse input */
@@ -99,18 +103,17 @@ int main() {
 		}
 		if (camMoving) {
 			const kl::point frameCenter = testEngine.getWindow().getCenter();
-			testEngine.camera.rotate(testEngine.getWindow().mouse.position, frameCenter);
+			testEngine.gameCamera.rotate(testEngine.getWindow().mouse.position, frameCenter);
 			testEngine.getWindow().mouse.move(frameCenter);
 		}
 	};
 
-	// Window creation
+	/* Window creation */
 	testEngine.startNew(kl::size(1600, 900));
 
-	// Cleanup
+	/* Cleanup */
 	delete basicShaders;
 	delete dogoTexture;
-	delete dogoCube;
 
 	return 0;
 }

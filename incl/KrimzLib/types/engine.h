@@ -9,7 +9,7 @@ namespace kl {
 		float elapsedTime;
 		float gravity;
 		kl::color background;
-		kl::camera camera;
+		kl::camera gameCamera;
 
 		// User defined functions
 		std::function<void()> start;
@@ -20,14 +20,14 @@ namespace kl {
 			deltaTime = 0;
 			gravity = 9.81f;
 			background = kl::constant::colors::gray;
-			camera = {};
+			gameCamera = {};
 			start = []() {};
 			update = []() {};
 		}
 
 		// Creates the engine
 		void startNew(kl::size frameSize) {
-			window.start = [&]() {
+			gameWindow.start = [&]() {
 				/* Setting the face culling */
 				kl::opengl::setFaceCulling(false);
 
@@ -35,15 +35,15 @@ namespace kl {
 				kl::opengl::setDepthTest(true);
 
 				/* Setting up the camera */
-				camera.setAspect(frameSize);
-				camera.setPlanes(0.01f, 100);
-				camera.sensitivity = 0.025f;
+				gameCamera.setAspect(frameSize);
+				gameCamera.setPlanes(0.01f, 100);
+				gameCamera.sensitivity = 0.025f;
 
 				/* Calling the user start */
 				start();
 			};
 
-			window.update = [&]() {
+			gameWindow.update = [&]() {
 				/* Clearing the buffers */
 				kl::opengl::clearBuffers(background);
 
@@ -58,24 +58,25 @@ namespace kl {
 				physics();
 
 				/* Rendering */
+				kl::mat4 cameraMat = gameCamera.matrix();
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
-					objItr->render();
+					objItr->render(cameraMat);
 				}
 
 				/* Updating the fps display */
-				window.setTitle(std::to_string(int(1 / deltaTime)));
+				gameWindow.setTitle(std::to_string(int(1 / deltaTime)));
 
 				/* Swapping the frame buffers */
-				window.swapFrameBuffers();
+				gameWindow.swapFrameBuffers();
 			};
 
 			// Starting the window
 			timer.getElapsed();
 			timer.stopwatchReset();
-			window.startNew(frameSize, kl::random::getString(6), false, true, true);
+			gameWindow.startNew(frameSize, kl::random::getString(6), false, true, true);
 		}
 		void stop() {
-			window.stop();
+			gameWindow.stop();
 		}
 		~engine() {
 			this->stop();
@@ -83,7 +84,7 @@ namespace kl {
 
 		// Returns a reference to engine window
 		kl::window& getWindow() {
-			return window;
+			return gameWindow;
 		}
 
 		// Creates a new game object
@@ -104,8 +105,8 @@ namespace kl {
 		}
 
 	private:
-		kl::window window = {};
 		kl::time timer = {};
+		kl::window gameWindow = {};
 		std::list<kl::gameobject> gObjects = {};
 		std::list<kl::gameobject>::iterator objItr = {};
 
