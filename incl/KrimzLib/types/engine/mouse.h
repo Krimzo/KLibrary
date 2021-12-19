@@ -3,20 +3,10 @@
 
 namespace kl {
     struct mouse {
-		bool lmb;
-		bool mmb;
-		bool rmb;
-		kl::point position;
-
-		// Constructor
-		mouse() {
-			lmb = false;
-			mmb = false;
-			rmb = false;
-			position = kl::point();
-			hwnd = nullptr;
-			showCounter = 0;
-		}
+		bool lmb = false;
+		bool mmb = false;
+		bool rmb = false;
+		kl::point position = kl::point();
 
 		// Binds the mouse to the window
 		void bind(HWND hwnd) {
@@ -45,7 +35,7 @@ namespace kl {
 		}
 		
 	private:
-		HWND hwnd;
-		int showCounter;
+		HWND hwnd = nullptr;
+		int showCounter = 0;
 	};
 }

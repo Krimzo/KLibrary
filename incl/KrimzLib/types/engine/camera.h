@@ -3,16 +3,12 @@
 
 namespace kl {
     struct camera {
-		kl::vec3 position;
-		float sensitivity;
-		float speed;
+		kl::vec3 position = kl::vec3();
+		float sensitivity = 0.05f;
+		float speed = 2;
 
 		// Constructors
 		camera() {
-			position = kl::vec3(0, 0, 0);
-			forward = kl::vec3(0, 0, 1);
-			sensitivity = 0.05f;
-			speed = 2;
 			setFOV(75);
 			setAspect(1);
 			setPlanes(1, 10);
@@ -126,11 +122,11 @@ namespace kl {
 	private:
 		// Variables
 		static kl::vec3 yAxis;
-		kl::vec3 forward;
-		float tanHalf;
-		float aspectRec;
-		float planesA;
-		float planesB;
+		kl::vec3 forward = kl::vec3(0, 0, 1);
+		float tanHalf = 0;
+		float aspectRec = 0;
+		float planesA = 0;
+		float planesB = 0;
 	};
 	kl::vec3 camera::yAxis = kl::vec3(0, 1, 0);
 }

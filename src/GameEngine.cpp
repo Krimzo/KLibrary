@@ -54,10 +54,10 @@ int main() {
 		dogoCube->setData(vertexData, indexData);
 
 		// Setting the obj props
-		dogoCube->angular.y = 36;
-		dogoCube->physics = true;
-		dogoCube->gravity = 0;
-		dogoCube->position.z = 2;
+		dogoCube->physics.enabled = true;
+		dogoCube->physics.angular.y = 36;
+		dogoCube->physics.gravity = 0;
+		dogoCube->geometry.position.z = 2;
 	};
 
 	/* User update */

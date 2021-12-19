@@ -12,9 +12,7 @@ namespace kl {
 		T pop(kl::uint64* updateSize = nullptr) {
 			T tempVal = data.back();
 			kl::uint64 newSize = data--;
-			if (updateSize) {
-				*updateSize = newSize;
-			}
+			if (updateSize) *updateSize = newSize;
 			return tempVal;
 		}
 

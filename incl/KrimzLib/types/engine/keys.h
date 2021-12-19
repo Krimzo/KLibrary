@@ -4,133 +4,67 @@
 namespace kl {
 	struct keys {
 		// Letters
-		bool q;
-		bool w;
-		bool e;
-		bool r;
-		bool t;
-		bool z;
-		bool u;
-		bool i;
-		bool o;
-		bool p;
-		bool a;
-		bool s;
-		bool d;
-		bool f;
-		bool g;
-		bool h;
-		bool j;
-		bool k;
-		bool l;
-		bool y;
-		bool x;
-		bool c;
-		bool v;
-		bool b;
-		bool n;
-		bool m;
+		bool q = false;
+		bool w = false;
+		bool e = false;
+		bool r = false;
+		bool t = false;
+		bool z = false;
+		bool u = false;
+		bool i = false;
+		bool o = false;
+		bool p = false;
+		bool a = false;
+		bool s = false;
+		bool d = false;
+		bool f = false;
+		bool g = false;
+		bool h = false;
+		bool j = false;
+		bool k = false;
+		bool l = false;
+		bool y = false;
+		bool x = false;
+		bool c = false;
+		bool v = false;
+		bool b = false;
+		bool n = false;
+		bool m = false;
 
 		// Numbers
-		bool key0;
-		bool key1;
-		bool key2;
-		bool key3;
-		bool key4;
-		bool key5;
-		bool key6;
-		bool key7;
-		bool key8;
-		bool key9;
+		bool key0 = false;
+		bool key1 = false;
+		bool key2 = false;
+		bool key3 = false;
+		bool key4 = false;
+		bool key5 = false;
+		bool key6 = false;
+		bool key7 = false;
+		bool key8 = false;
+		bool key9 = false;
 
 		// Signs
-		bool period;
-		bool comma;
-		bool plus;
-		bool minus;
+		bool period = false;
+		bool comma = false;
+		bool plus = false;
+		bool minus = false;
 
 		// Special
-		bool esc;
-		bool tab;
-		bool caps;
-		bool shift;
-		bool ctrl;
-		bool alt;
-		bool space;
-		bool enter;
-		bool up;
-		bool left;
-		bool down;
-		bool right;
+		bool esc = false;
+		bool tab = false;
+		bool caps = false;
+		bool shift = false;
+		bool ctrl = false;
+		bool alt = false;
+		bool space = false;
+		bool enter = false;
+		bool up = false;
+		bool left = false;
+		bool down = false;
+		bool right = false;
 
 		// Unknown
-		kl::key unknown;
-
-		// Constructor
-		keys() {
-			// Letters
-			q = false;
-			w = false;
-			e = false;
-			r = false;
-			t = false;
-			z = false;
-			u = false;
-			i = false;
-			o = false;
-			p = false;
-			a = false;
-			s = false;
-			d = false;
-			f = false;
-			g = false;
-			h = false;
-			j = false;
-			k = false;
-			l = false;
-			y = false;
-			x = false;
-			c = false;
-			v = false;
-			b = false;
-			n = false;
-			m = false;
-
-			// Numbers
-			key0 = false;
-			key1 = false;
-			key2 = false;
-			key3 = false;
-			key4 = false;
-			key5 = false;
-			key6 = false;
-			key7 = false;
-			key8 = false;
-			key9 = false;
-
-			// Signs
-			period = false;
-			comma = false;
-			plus = false;
-			minus = false;
-
-			// Special
-			esc = false;
-			tab = false;
-			caps = false;
-			shift = false;
-			ctrl = false;
-			alt = false;
-			space = false;
-			enter = false;
-			up = false;
-			left = false;
-			down = false;
-			right = false;
-
-			// Unknown
-			unknown = 0;
-		}
+		kl::key unknown = NULL;
 
 		// Updates the given key to the given value
 		void setKey(kl::key key, bool state) {

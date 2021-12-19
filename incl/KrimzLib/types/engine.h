@@ -5,25 +5,15 @@ namespace kl {
 	class engine {
 	public:
 		// Engine properties
-		float deltaTime;
-		float elapsedTime;
-		float gravity;
-		kl::color background;
-		kl::camera gameCamera;
+		float deltaTime = 0;
+		float elapsedTime = 0;
+		float gravity = 9.81f;
+		kl::color background = kl::color(50, 50, 50);
+		kl::camera gameCamera = kl::camera();
 
 		// User defined functions
-		std::function<void()> start;
-		std::function<void()> update;
-
-		// Constructor
-		engine() {
-			deltaTime = 0;
-			gravity = 9.81f;
-			background = kl::constant::colors::gray;
-			gameCamera = {};
-			start = []() {};
-			update = []() {};
-		}
+		std::function<void()> start = []() {};
+		std::function<void()> update = []() {};
 
 		// Creates the engine
 		void startNew(kl::size frameSize) {
@@ -55,7 +45,7 @@ namespace kl {
 				update();
 
 				/* Calling the physics update */
-				physics();
+				computePhysics();
 
 				/* Rendering */
 				kl::mat4 cameraMat = gameCamera.matrix();
@@ -79,7 +69,7 @@ namespace kl {
 			gameWindow.stop();
 		}
 		~engine() {
-			this->stop();
+			stop();
 		}
 
 		// Returns a reference to engine window
@@ -105,27 +95,27 @@ namespace kl {
 		}
 
 	private:
-		kl::time timer = {};
-		kl::window gameWindow = {};
+		kl::time timer = kl::time();
+		kl::window gameWindow = kl::window();
 		std::list<kl::gameobject> gObjects = {};
 		std::list<kl::gameobject>::iterator objItr = {};
 
 		// Computing object physics 
-		void physics() {
+		void computePhysics() {
 			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
-				if (objItr->physics) {
+				if (objItr->physics.enabled) {
 					// Applying gravity
-					objItr->velocity.y -= gravity * objItr->gravity * deltaTime;
+					objItr->physics.velocity.y -= gravity * objItr->physics.gravity * deltaTime;
 
 					// Applying velocity
-					objItr->position.x += objItr->velocity.x * deltaTime;
-					objItr->position.y += objItr->velocity.y * deltaTime;
-					objItr->position.z += objItr->velocity.z * deltaTime;
+					objItr->geometry.position.x += objItr->physics.velocity.x * deltaTime;
+					objItr->geometry.position.y += objItr->physics.velocity.y * deltaTime;
+					objItr->geometry.position.z += objItr->physics.velocity.z * deltaTime;
 
 					// Applying angular momentum
-					objItr->rotation.x += objItr->angular.x * deltaTime;
-					objItr->rotation.y += objItr->angular.y * deltaTime;
-					objItr->rotation.z += objItr->angular.z * deltaTime;
+					objItr->geometry.rotation.x += objItr->physics.angular.x * deltaTime;
+					objItr->geometry.rotation.y += objItr->physics.angular.y * deltaTime;
+					objItr->geometry.rotation.z += objItr->physics.angular.z * deltaTime;
 				}
 			}
 		}

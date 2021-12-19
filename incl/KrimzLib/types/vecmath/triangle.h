@@ -3,19 +3,11 @@
 
 namespace kl {
 	struct triangle {
-		kl::vertex vertices[3];
-
-		// Constructors
-		triangle() {
-			vertices[0] = kl::vertex();
-			vertices[1] = kl::vertex();
-			vertices[2] = kl::vertex();
-		}
-		triangle(kl::vertex v0, kl::vertex v1, kl::vertex v2) {
-			vertices[0] = v0;
-			vertices[1] = v1;
-			vertices[2] = v2;
-		}
+		kl::vertex vertices[3] = {
+			kl::vertex(),
+			kl::vertex(),
+			kl::vertex()
+		};
 
 		// Returns raw data pointer
 		void* pointer() {
