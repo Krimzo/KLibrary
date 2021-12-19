@@ -33,5 +33,10 @@ namespace kl {
 			this->texture = texture;
 			this->color = color;
 		}
+
+		// Prints the vertex
+		void print() {
+			printf("%.2f %.2f %.2f | %.2f %.2f | %.2f %.2f %.2f\n", world.x, world.y, world.z, texture.x, texture.y, color.r, color.g, color.b);
+		}
 	};
 }

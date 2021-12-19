@@ -4,63 +4,75 @@
 int main() {
 	/* Engine */
 	kl::engine testEngine;
+
+	/* Shaders */
 	kl::shaders* basicShaders = nullptr;
-	kl::texture* dogoTexture = nullptr;
-	kl::gameobject* dogoCube = nullptr;
+
+	/* Textures */
+	kl::texture* checkersTex = nullptr;
+	kl::texture* tableTex = nullptr;
+	kl::texture* katanaTex = nullptr;
+
+	/* Objects */
+	kl::gameobject* pyramid = nullptr;
+	kl::gameobject* table = nullptr;
+	kl::gameobject* katana = nullptr;
+	kl::gameobject* katana2 = nullptr;
 
 	/* User start */
 	testEngine.start = [&]() {
 		/* Shaders */
 		basicShaders = new kl::shaders(kl::file::readText("res/shaders/basic.vs"), kl::file::readText("res/shaders/basic.fs"));
 		basicShaders->setUniform(basicShaders->getUniform("texture0"), 0);
+		testEngine.setShaders(basicShaders, "wvp");
 
 		/* Textures */
-		dogoTexture = new kl::texture("res/textures/dogo.png");
+		checkersTex = new kl::texture("res/textures/checkers.png");
+		tableTex = new kl::texture("res/textures/table.png");
+		katanaTex = new kl::texture("res/textures/katana.png");
 
-		// Creating a game object
-		dogoCube = testEngine.newObject();
+		/* Object creation */
+		pyramid = testEngine.newObject();
+		table = testEngine.newObject();
+		katana = testEngine.newObject();
+		katana2 = testEngine.newObject();
 
-		// Binding the shaders
-		dogoCube->setShaders(basicShaders, "wvp");
+		/* Loading vertex/index data */
+		pyramid->loadData("res/objects/pyramid.obj");
+		table->loadData("res/objects/table.obj");
+		katana->loadData("res/objects/katana.obj");
+		katana2->loadData("res/objects/katana.obj");
 
-		// Binding the texture
-		dogoCube->setTexture(dogoTexture);
+		/* Binding the textures */
+		pyramid->setTexture(checkersTex);
+		table->setTexture(tableTex);
+		katana->setTexture(katanaTex);
+		katana2->setTexture(katanaTex);
 
-		// Binding the vertex and index data
-		std::vector<kl::vertex> vertexData = {
-			kl::vertex(kl::vec3( 0.5,  0.5,  0.5), kl::vec2(1, 1), kl::random::getColor()),
-			kl::vertex(kl::vec3(-0.5,  0.5,  0.5), kl::vec2(0, 1), kl::random::getColor()),
-			kl::vertex(kl::vec3( 0.5, -0.5,  0.5), kl::vec2(1, 0), kl::random::getColor()),
-			kl::vertex(kl::vec3(-0.5, -0.5,  0.5), kl::vec2(0, 0), kl::random::getColor()),
-			kl::vertex(kl::vec3( 0.5,  0.5, -0.5), kl::vec2(1, 1), kl::random::getColor()),
-			kl::vertex(kl::vec3(-0.5,  0.5, -0.5), kl::vec2(0, 1), kl::random::getColor()),
-			kl::vertex(kl::vec3( 0.5, -0.5, -0.5), kl::vec2(1, 0), kl::random::getColor()),
-			kl::vertex(kl::vec3(-0.5, -0.5, -0.5), kl::vec2(0, 0), kl::random::getColor())
-		};
-		std::vector<kl::index> indexData = {
-			0, 1, 3,
-			0, 3, 2,
-			0, 4, 5,
-			0, 5, 1,
-			0, 2, 6,
-			0, 6, 4,
-			7, 3, 1,
-			7, 1, 5,
-			7, 4, 6,
-			7, 5, 4,
-			7, 6, 2,
-			7, 2, 3
-		};
-		dogoCube->setData(vertexData, indexData);
+		/* Setting obj properties */
+		pyramid->physics.enabled = true;
+		pyramid->physics.angular.y = 36;
+		pyramid->physics.gravity = 0;
+		pyramid->geometry.position = kl::vec3(0, 0, 2);
 
-		// Setting the obj props
-		dogoCube->physics.enabled = true;
-		dogoCube->physics.angular.y = 36;
-		dogoCube->physics.gravity = 0;
-		dogoCube->geometry.position.z = 2;
+		table->physics.enabled = true;
+		table->physics.angular.y = -36;
+		table->physics.gravity = 0;
+		table->geometry.position = kl::vec3(0, -1, 2);
+
+		katana->physics.enabled = true;
+		katana->physics.angular.y = 36;
+		katana->physics.gravity = 0;
+		katana->geometry.position = kl::vec3(-2, 0, 2);
+
+		katana2->physics.enabled = true;
+		katana2->physics.angular.y = -36;
+		katana2->physics.gravity = 0;
+		katana2->geometry.position = kl::vec3(2, 0, 2);
 	};
 
 	/* User update */
+	bool camMoving = false;
 	testEngine.update = [&]() {
 		/* Keyboard input */
 		if (testEngine.getWindow().keys.w) {
@@ -89,7 +101,6 @@ int main() {
 		}
 
 		/* Mouse input */
-		static bool camMoving = false;
 		if (testEngine.getWindow().mouse.lmb) {
 			camMoving = true;
 			testEngine.getWindow().mouse.hide();
@@ -102,7 +113,7 @@ int main() {
 			testEngine.getWindow().mouse.show();
 		}
 		if (camMoving) {
-			const kl::point frameCenter = testEngine.getWindow().getCenter();
+			kl::point frameCenter = testEngine.getWindow().getCenter();
 			testEngine.gameCamera.rotate(testEngine.getWindow().mouse.position, frameCenter);
 			testEngine.getWindow().mouse.move(frameCenter);
 		}
@@ -113,7 +124,9 @@ int main() {
 
 	/* Cleanup */
 	delete basicShaders;
-	delete dogoTexture;
+	delete checkersTex;
+	delete tableTex;
+	delete katanaTex;
 
 	return 0;
 }

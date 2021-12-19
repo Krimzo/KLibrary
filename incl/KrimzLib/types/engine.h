@@ -48,9 +48,9 @@ namespace kl {
 				computePhysics();
 
 				/* Rendering */
-				kl::mat4 cameraMat = gameCamera.matrix();
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
-					objItr->render(cameraMat);
+					engineShaders->setUniform(wvp, gameCamera.matrix() * objItr->geometry.matrix());
+					objItr->drawArrays();
 				}
 
 				/* Updating the fps display */
@@ -65,11 +65,17 @@ namespace kl {
 			timer.stopwatchReset();
 			gameWindow.startNew(frameSize, kl::random::getString(6), false, true, true);
 		}
+		~engine() {
+			stop();
+		}
 		void stop() {
 			gameWindow.stop();
 		}
-		~engine() {
-			stop();
+
+		// Shader setter
+		void setShaders(kl::shaders* shaders, std::string wvpName) {
+			engineShaders = shaders;
+			wvp = shaders->getUniform(wvpName);
 		}
 
 		// Returns a reference to engine window
@@ -95,8 +101,15 @@ namespace kl {
 		}
 
 	private:
+		// Window data
 		kl::time timer = kl::time();
 		kl::window gameWindow = kl::window();
+
+		// Shader data
+		int wvp = NULL;
+		kl::shaders* engineShaders = nullptr;
+
+		// Object buffer
 		std::list<kl::gameobject> gObjects = {};
 		std::list<kl::gameobject>::iterator objItr = {};
 
