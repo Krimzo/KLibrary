@@ -7,6 +7,14 @@ namespace kl {
 		texture() {
 			glGenTextures(1, &buffer);
 		}
+		texture(kl::image& image) {
+			glGenTextures(1, &buffer);
+			load(image);
+		}
+		texture(kl::image&& image) {
+			glGenTextures(1, &buffer);
+			load(image);
+		}
 		~texture() {
 			glDeleteTextures(1, &buffer);
 		}
@@ -21,7 +29,6 @@ namespace kl {
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.getWidth(), image.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, image.pointer());
 			glGenerateMipmap(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, NULL);
 			image.flipVertical();
 		}
 		void load(kl::image&& image) {
@@ -29,7 +36,7 @@ namespace kl {
 		}
 
 		// Binds the texture to the texture unit
-		void bind(kl::id textureUnit) {
+		void bind(kl::id textureUnit = GL_TEXTURE0) {
 			glActiveTexture(textureUnit);
 			glBindTexture(GL_TEXTURE_2D, buffer);
 		}

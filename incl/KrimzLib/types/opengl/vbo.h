@@ -11,36 +11,17 @@ namespace kl {
 			glDeleteBuffers(1, &buffer);
 		}
 
-		// Binds the buffer
-		void bind() {
-			glBindBuffer(GL_ARRAY_BUFFER, buffer);
-		}
-
-		// Unbinds the buffer
-		void unbind() {
-			glBindBuffer(GL_ARRAY_BUFFER, NULL);
-		}
-
 		// Sets the data of the buffer
 		void setData(void* data, kl::uint64 byteSize, kl::id usage) {
-			bind();
+			glBindBuffer(GL_ARRAY_BUFFER, buffer);
 			glBufferData(GL_ARRAY_BUFFER, byteSize, data, usage);
-			unbind();
 		}
 
 		// Sets up the parsing of the array data
 		void setParsing(int arrayIndex, kl::id dataType, int sizePerAttr, int stride, int offset) {
-			bind();
+			glBindBuffer(GL_ARRAY_BUFFER, buffer);
 			glEnableVertexAttribArray(arrayIndex);
 			glVertexAttribPointer(arrayIndex, sizePerAttr, dataType, false, stride, (void*)offset);
-			unbind();
-		}
-
-		// Draws the array data to the frame buffer
-		void drawArrays(kl::id primitiveType, int vertexCount, int offset) {
-			bind();
-			glDrawArrays(primitiveType, offset, vertexCount);
-			unbind();
 		}
 
 	private:

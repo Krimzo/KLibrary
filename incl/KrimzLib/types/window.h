@@ -33,7 +33,7 @@ namespace kl {
 			// Converting window name to a wstring
 			std::wstring wName = kl::convert::toWString(name);
 
-			// Defining windowapi window class
+			// Registering winapi window class
 			registerWindowClass(wName);
 
 			// Creating a window

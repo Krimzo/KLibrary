@@ -32,17 +32,13 @@ namespace kl {
 		}
 
 		// Binds the shader program
-		void bind() {
+		void use() {
 			glUseProgram(shaderProgram);
-		}
-
-		// Unbinds the shader program
-		void unbind() {
-			glUseProgram(NULL);
 		}
 
 		// Returns the id of the given uniform name
 		int getUniform(std::string name) {
+			use();
 			int uniformID = glGetUniformLocation(shaderProgram, name.c_str());
 			if (uniformID == -1) {
 				printf("Error: Uniform '%s' doesn't exist!\n", name.c_str());
@@ -53,21 +49,27 @@ namespace kl {
 
 		// Setts the data of an uniform
 		void setUniform(int id, int data) {
+			use();
 			glUniform1i(id, data);
 		}
 		void setUniform(int id, float data) {
+			use();
 			glUniform1f(id, data);
 		}
 		void setUniform(int id, kl::vec2 data) {
+			use();
 			glUniform2f(id, data.x, data.y);
 		}
 		void setUniform(int id, kl::vec3 data) {
+			use();
 			glUniform3f(id, data.x, data.y, data.z);
 		}
 		void setUniform(int id, kl::vec4 data) {
+			use();
 			glUniform4f(id, data.x, data.y, data.z, data.w);
 		}
 		void setUniform(int id, kl::mat4& data) {
+			use();
 			glUniformMatrix4fv(id, 1, true, data.pointer());
 		}
 		void setUniform(int id, kl::mat4&& data) {

@@ -62,6 +62,7 @@
 #include "KrimzLib/types/image.h"
 #include "KrimzLib/types/opengl/vbo.h"
 #include "KrimzLib/types/opengl/ibo.h"
+#include "KrimzLib/types/opengl/vao.h"
 #include "KrimzLib/types/opengl/shaders.h"
 #include "KrimzLib/types/opengl/texture.h"
 #include "KrimzLib/opengl.h"
