@@ -31,6 +31,7 @@ namespace kl {
 			VBO = nullptr;
 			IBO = nullptr;
 			VAO = nullptr;
+			wvpID = NULL;
 			shaders = nullptr;
 			texture = nullptr;
 		}
@@ -73,8 +74,9 @@ namespace kl {
 		}
 
 		// Shader setter
-		void setShaders(kl::shaders* shaders) {
+		void setShaders(kl::shaders* shaders, std::string wvpUniName) {
 			this->shaders = shaders;
+			wvpID = shaders->getUniform(wvpUniName);
 		}
 
 		// Texture getter
@@ -89,14 +91,9 @@ namespace kl {
 
 		// Render the game object
 		void render() {
-			shaders->use();
+			shaders->setUniform(wvpID, kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size));
 			texture->bind();
 			VAO->drawElements(GL_TRIANGLES, indexCount);
-		}
-
-		// Returns the world transformation matrix
-		kl::mat4 matrix() {
-			return kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size);
 		}
 
 	private:
@@ -105,6 +102,7 @@ namespace kl {
 		kl::vbo* VBO;
 		kl::ibo* IBO;
 		kl::vao* VAO;
+		kl::id wvpID;
 		kl::shaders* shaders;
 		kl::texture* texture;
 	};

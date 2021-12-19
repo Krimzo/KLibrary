@@ -5,19 +5,18 @@ namespace kl {
 	class engine {
 	public:
 		// Engine properties
-		float fpsLimit;
 		float deltaTime;
+		float elapsedTime;
 		float gravity;
 		kl::color background;
 		kl::camera camera;
 
 		// User defined functions
-		std::function<void(void)> start;
-		std::function<void(void)> update;
+		std::function<void()> start;
+		std::function<void()> update;
 
 		// Constructor
 		engine() {
-			fpsLimit = -1;
 			deltaTime = 0;
 			gravity = 9.81f;
 			background = kl::constant::colors::gray;
@@ -27,20 +26,53 @@ namespace kl {
 		}
 
 		// Creates the engine
-		void startNew(kl::size size) {
+		void startNew(kl::size frameSize) {
 			window.start = [&]() {
+				/* Setting the face culling */
+				kl::opengl::setFaceCulling(false);
 
+				/* Setting the depth testing */
+				kl::opengl::setDepthTest(true);
+
+				/* Setting up the camera */
+				camera.setAspect(frameSize);
+				camera.setPlanes(0.01f, 100);
+				camera.sensitivity = 0.025f;
+
+				/* Calling the user start */
+				start();
 			};
 
 			window.update = [&]() {
+				/* Clearing the buffers */
+				kl::opengl::clearBuffers(background);
 
+				/* Time calculations */
+				elapsedTime = timer.stopwatchElapsed();
+				deltaTime = timer.getElapsed();
+
+				/* Calling the user update */
+				update();
+
+				/* Calling the physics update */
+				physics();
+
+				/* Rendering */
+				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
+					objItr->render();
+				}
+
+				/* Updating the fps display */
+				window.setTitle(std::to_string(int(1 / deltaTime)));
+
+				/* Swapping the frame buffers */
+				window.swapFrameBuffers();
 			};
 
-			window.end = [&]() {
-
-			};
-
-			window.startNew(size, kl::random::getString(6), false, true, true);
+			// Starting the window
+			timer.getElapsed();
+			timer.stopwatchReset();
+			window.startNew(frameSize, kl::random::getString(6), false, true, true);
 		}
 		void stop() {
 			window.stop();
@@ -49,14 +81,19 @@ namespace kl {
 			this->stop();
 		}
 
+		// Returns a reference to engine window
+		kl::window& getWindow() {
+			return window;
+		}
+
 		// Creates a new game object
-		kl::gameobject* addObject(kl::gameobject& gameObj) {
-			gObjects.push_back(gameObj);
+		kl::gameobject* newObject() {
+			gObjects.push_back(kl::gameobject());
 			return &gObjects.back();
 		}
 
 		// Deletes a game object
-		bool deleteGameObject(kl::gameobject* objectAddress) {
+		bool delObject(kl::gameobject* objectAddress) {
 			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 				if (&*objItr == objectAddress) {
 					gObjects.erase(objItr);
@@ -73,7 +110,7 @@ namespace kl {
 		std::list<kl::gameobject>::iterator objItr = {};
 
 		// Computing object physics 
-		void physicsUpdate() {
+		void physics() {
 			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 				if (objItr->physics) {
 					// Applying gravity

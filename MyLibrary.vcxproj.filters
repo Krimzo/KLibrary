@@ -144,7 +144,7 @@
     <ClInclude Include="incl\KrimzLib\types\engine\keys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-	<ClInclude Include="incl\GL\glad.h">
+    <ClInclude Include="incl\GL\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\stack.h">
@@ -158,12 +158,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ModernGL.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\basic.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\GameEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
