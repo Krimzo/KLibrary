@@ -15,7 +15,7 @@ namespace kl {
 		// Renders the game object
 		void render() {
 			texture->bind();
-			mesh->drawArrays();
+			mesh->draw();
 		}
 	};
 }

@@ -18,16 +18,24 @@ namespace kl {
 		// Creates the engine
 		void startNew(kl::size frameSize) {
 			gameWindow.start = [&]() {
-				/* Setting the face culling */
+				/* Setting up the face culling */
 				kl::opengl::setFaceCulling(false);
 
-				/* Setting the depth testing */
+				/* Setting up the depth testing */
 				kl::opengl::setDepthTest(true);
 
 				/* Setting up the camera */
 				gameCamera.setAspect(frameSize);
 				gameCamera.setPlanes(0.01f, 100);
 				gameCamera.sensitivity = 0.025f;
+
+				/* Setting up the engine shaders */
+				engineShaders = new kl::shaders(
+					kl::file::readText("res/shaders/engine.vs"),
+					kl::file::readText("res/shaders/engine.fs")
+				);
+				engineShaders->setUniform(engineShaders->getUniform("texture0"), 0);
+				wvp = engineShaders->getUniform("wvp");
 
 				/* Calling the user start */
 				start();
@@ -62,6 +70,10 @@ namespace kl {
 				gameWindow.swapFrameBuffers();
 			};
 
+			gameWindow.end = [&]() {
+				delete engineShaders;
+			};
+
 			// Starting the window
 			timer.getElapsed();
 			timer.stopwatchReset();
@@ -72,12 +84,6 @@ namespace kl {
 		}
 		void stop() {
 			gameWindow.stop();
-		}
-
-		// Shader setter
-		void setShaders(kl::shaders* shaders, std::string wvpName) {
-			engineShaders = shaders;
-			wvp = shaders->getUniform(wvpName);
 		}
 
 		// Returns a reference to engine window

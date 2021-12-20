@@ -16,7 +16,7 @@ namespace kl {
 		}
 
 		// Renders the mesh
-		void drawArrays() {
+		void draw() {
 			// Binding the vao
 			glBindVertexArray(vao);
 

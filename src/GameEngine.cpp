@@ -5,9 +5,6 @@ int main() {
 	/* Engine */
 	kl::engine testEngine;
 
-	/* Shaders */
-	kl::shaders* basicShaders = nullptr;
-
 	/* Textures */
 	kl::texture* tableTex = nullptr;
 	kl::texture* checkersTex = nullptr;
@@ -26,12 +23,7 @@ int main() {
 
 	/* User start */
 	testEngine.start = [&]() {
-		/* Shader creation/binding */
-		basicShaders = new kl::shaders(kl::file::readText("res/shaders/basic.vs"), kl::file::readText("res/shaders/basic.fs"));
-		basicShaders->setUniform(basicShaders->getUniform("texture0"), 0);
-		testEngine.setShaders(basicShaders, "wvp");
-
-		/* Mesh creation/loading vertex data */
+		/* Mesh creation */
 		tableMes = new kl::mesh("res/objects/table.obj");
 		pyramidMes = new kl::mesh("res/objects/pyramid.obj");
 		katanaMes = new kl::mesh("res/objects/katana.obj");
@@ -140,7 +132,6 @@ int main() {
 	testEngine.startNew(kl::size(1600, 900));
 
 	/* Cleanup */
-	delete basicShaders;
 	delete tableTex;
 	delete checkersTex;
 	delete katanaTex;
