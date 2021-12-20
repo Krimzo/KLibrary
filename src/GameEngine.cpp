@@ -13,6 +13,11 @@ int main() {
 	kl::texture* checkersTex = nullptr;
 	kl::texture* katanaTex = nullptr;
 
+	/* Meshes */
+	kl::mesh* tableMes = nullptr;
+	kl::mesh* pyramidMes = nullptr;
+	kl::mesh* katanaMes = nullptr;
+
 	/* Objects */
 	kl::gameobject* table = nullptr;
 	kl::gameobject* pyramid = nullptr;
@@ -21,35 +26,40 @@ int main() {
 
 	/* User start */
 	testEngine.start = [&]() {
-		/* Shaders */
+		/* Shader creation/binding */
 		basicShaders = new kl::shaders(kl::file::readText("res/shaders/basic.vs"), kl::file::readText("res/shaders/basic.fs"));
 		basicShaders->setUniform(basicShaders->getUniform("texture0"), 0);
 		testEngine.setShaders(basicShaders, "wvp");
 
-		/* Textures */
-		checkersTex = new kl::texture("res/textures/checkers.png");
+		/* Mesh creation/loading vertex data */
+		tableMes = new kl::mesh("res/objects/table.obj");
+		pyramidMes = new kl::mesh("res/objects/pyramid.obj");
+		katanaMes = new kl::mesh("res/objects/katana.obj");
+
+		/* Texture creation */
 		tableTex = new kl::texture("res/textures/table.png");
+		checkersTex = new kl::texture("res/textures/checkers.png");
 		katanaTex = new kl::texture("res/textures/katana.png");
 
 		/* Object creation */
 		table = testEngine.newObject();
 		pyramid = testEngine.newObject();
-		katanaL= testEngine.newObject();
+		katanaL = testEngine.newObject();
 		katanaR = testEngine.newObject();
 
-		/* Loading vertex/index data */
-		table->loadData("res/objects/table.obj");
-		pyramid->loadData("res/objects/pyramid.obj");
-		katanaL->loadData("res/objects/katana.obj");
-		katanaR->loadData("res/objects/katana.obj");
+		/* Mesh binding */
+		table->mesh = tableMes;
+		pyramid->mesh = pyramidMes;
+		katanaL->mesh = katanaMes;
+		katanaR->mesh = katanaMes;
 
-		/* Binding the textures */
-		table->setTexture(tableTex);
-		pyramid->setTexture(checkersTex);
-		katanaL->setTexture(katanaTex);
-		katanaR->setTexture(katanaTex);
+		/* Texture binding */
+		table->texture = tableTex;
+		pyramid->texture = checkersTex;
+		katanaL->texture = katanaTex;
+		katanaR->texture = katanaTex;
 
-		/* Setting obj properties */
+		/* Object prop setting */
 		table->geometry.size = kl::vec3(1, 1, 1);
 		table->geometry.position = kl::vec3(0, -0.5, 2);
 		table->physics.enabled = false;
@@ -131,9 +141,12 @@ int main() {
 
 	/* Cleanup */
 	delete basicShaders;
-	delete checkersTex;
 	delete tableTex;
+	delete checkersTex;
 	delete katanaTex;
+	delete tableMes;
+	delete pyramidMes;
+	delete katanaMes;
 
 	return 0;
 }

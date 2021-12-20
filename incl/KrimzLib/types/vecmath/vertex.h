@@ -15,6 +15,10 @@ namespace kl {
 			this->world = world;
 			texture = kl::vec2();
 		}
+		vertex(kl::vec2 texture) {
+			world = kl::vec3();
+			this->texture = texture;
+		}
 		vertex(kl::vec3 world, kl::vec2 texture) {
 			this->world = world;
 			this->texture = texture;
