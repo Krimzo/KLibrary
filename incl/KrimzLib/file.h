@@ -37,7 +37,7 @@ namespace kl {
 			std::ifstream fileStream(filePath);
 			std::stringstream textBuffer;
 			if (!fileStream.is_open()) {
-				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
+				printf("Could not load text file \"%s\".\n", filePath.c_str());
 				exit(69);
 			}
 			textBuffer << fileStream.rdbuf();
@@ -59,7 +59,7 @@ namespace kl {
 		void appendText(std::string filePath, std::string& data, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
-				printf("Couldn't load text file \"%s\".\n", filePath.c_str());
+				printf("Could not load text file \"%s\".\n", filePath.c_str());
 				exit(69);
 			}
 
@@ -81,7 +81,7 @@ namespace kl {
 		kl::bytes readBytes(std::string filePath) {
 			std::ifstream fileStream(filePath, std::ios::binary);
 			if (!fileStream.is_open()) {
-				printf("Couldn't load file \"%s\".\n", filePath.c_str());
+				printf("Could not load file \"%s\".\n", filePath.c_str());
 				exit(69);
 			}
 			fileStream.seekg(0, std::ios::end);
@@ -107,7 +107,7 @@ namespace kl {
 		void appendBytes(std::string filePath, kl::bytes& data, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out | std::ios::binary);
 			if (!fileStream.is_open()) {
-				printf("Couldn't load file \"%s\".\n", filePath.c_str());
+				printf("Could not load file \"%s\".\n", filePath.c_str());
 				exit(69);
 			}
 

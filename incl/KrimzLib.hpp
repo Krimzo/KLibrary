@@ -60,8 +60,9 @@
 // Including opengl types
 #include "KrimzLib/types/image.h"
 #include "KrimzLib/types/opengl/mesh.h"
-#include "KrimzLib/types/opengl/shaders.h"
 #include "KrimzLib/types/opengl/texture.h"
+#include "KrimzLib/types/opengl/uniform.h"
+#include "KrimzLib/types/opengl/shaders.h"
 #include "KrimzLib/opengl.h"
 
 // Including engine types

@@ -6,8 +6,8 @@ namespace kl {
 		// Constructor/destructor
 		shaders(std::string vertexSource, std::string fragmentSource) {
 			// Shader program creation
-			shaderProgram = glCreateProgram();
-			if (shaderProgram == NULL) {
+			programID = glCreateProgram();
+			if (programID == NULL) {
 				printf("Shader program creation error!\n");
 				exit(69);
 			}
@@ -17,8 +17,8 @@ namespace kl {
 			kl::id fragmentShader = compileShader(fragmentSource, GL_FRAGMENT_SHADER);
 
 			// Attaching the shaders
-			glAttachShader(shaderProgram, vertexShader);
-			glAttachShader(shaderProgram, fragmentShader);
+			glAttachShader(programID, vertexShader);
+			glAttachShader(programID, fragmentShader);
 
 			// Linking and validating the program
 			finalizeProgram();
@@ -28,57 +28,33 @@ namespace kl {
 			glDeleteShader(fragmentShader);
 		}
 		~shaders() {
-			glDeleteProgram(shaderProgram);
+			glDeleteProgram(programID);
 		}
 
 		// Binds the shader program
 		void use() {
-			glUseProgram(shaderProgram);
+			glUseProgram(programID);
 		}
 
 		// Returns the id of the given uniform name
-		int getUniform(std::string name) {
+		kl::uniform getUniform(std::string name) {
+			// Binding the shader program
 			use();
-			int uniformID = glGetUniformLocation(shaderProgram, name.c_str());
+
+			// Getting/checking the uniform location
+			int uniformID = glGetUniformLocation(programID, name.c_str());
 			if (uniformID == -1) {
-				printf("Error: Uniform '%s' doesn't exist!\n", name.c_str());
+				printf("Error: Uniform '%s' does not exist!\n", name.c_str());
 				exit(69);
 			}
-			return uniformID;
-		}
 
-		// Setts the data of an uniform
-		void setUniform(int id, int data) {
-			use();
-			glUniform1i(id, data);
-		}
-		void setUniform(int id, float data) {
-			use();
-			glUniform1f(id, data);
-		}
-		void setUniform(int id, kl::vec2 data) {
-			use();
-			glUniform2f(id, data.x, data.y);
-		}
-		void setUniform(int id, kl::vec3 data) {
-			use();
-			glUniform3f(id, data.x, data.y, data.z);
-		}
-		void setUniform(int id, kl::vec4 data) {
-			use();
-			glUniform4f(id, data.x, data.y, data.z, data.w);
-		}
-		void setUniform(int id, kl::mat4& data) {
-			use();
-			glUniformMatrix4fv(id, 1, true, data.pointer());
-		}
-		void setUniform(int id, kl::mat4&& data) {
-			setUniform(id, data);
+			// Returing a kl::uniform instance
+			return kl::uniform(programID, uniformID);
 		}
 
 	private:
 		// Variables
-		kl::id shaderProgram;
+		kl::id programID = NULL;
 
 		// Returns a compiled shader
 		kl::id compileShader(std::string& shaderSource, kl::id shaderType) {
@@ -112,23 +88,23 @@ namespace kl {
 		// Links the shaders and validates the shader program
 		void finalizeProgram() {
 			// Linking the shaders
-			glLinkProgram(shaderProgram);
+			glLinkProgram(programID);
 			int linkStatus;
-			glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkStatus);
+			glGetProgramiv(programID, GL_LINK_STATUS, &linkStatus);
 			if (linkStatus == NULL) {
 				char linkingInfo[1024];
-				glGetProgramInfoLog(shaderProgram, sizeof(linkingInfo), NULL, linkingInfo);
+				glGetProgramInfoLog(programID, sizeof(linkingInfo), NULL, linkingInfo);
 				printf("Shader program linking error: '%s'\n", linkingInfo);
 				exit(69);
 			}
 
 			// Validating the shader program
-			glValidateProgram(shaderProgram);
+			glValidateProgram(programID);
 			int validateStatus;
-			glGetProgramiv(shaderProgram, GL_VALIDATE_STATUS, &validateStatus);
+			glGetProgramiv(programID, GL_VALIDATE_STATUS, &validateStatus);
 			if (validateStatus == NULL) {
 				char validateInfo[1024];
-				glGetProgramInfoLog(shaderProgram, sizeof(validateInfo), NULL, validateInfo);
+				glGetProgramInfoLog(programID, sizeof(validateInfo), NULL, validateInfo);
 				printf("Shader program validation error: '%s'\n", validateInfo);
 				exit(69);
 			}

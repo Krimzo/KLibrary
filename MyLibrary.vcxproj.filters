@@ -156,6 +156,9 @@
     <ClInclude Include="incl\KrimzLib\types\engine\light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\opengl\uniform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.vs" />

@@ -174,6 +174,7 @@
     <ClInclude Include="incl\KrimzLib\types\engine\keys.h" />
     <ClInclude Include="incl\KrimzLib\types\opengl\mesh.h" />
     <ClInclude Include="incl\KrimzLib\types\engine\mouse.h" />
+    <ClInclude Include="incl\KrimzLib\types\opengl\uniform.h" />
     <ClInclude Include="incl\KrimzLib\types\stack.h" />
     <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h" />
     <ClInclude Include="incl\KrimzLib\types\window.h" />

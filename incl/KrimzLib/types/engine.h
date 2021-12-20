@@ -21,6 +21,16 @@ namespace kl {
 
 		// Creates the engine
 		void startNew(kl::size frameSize) {
+			/* Engine timer */
+			kl::time timer = kl::time();
+
+			/* Shader uniforms */
+			kl::uniform wUni = kl::uniform();
+			kl::uniform vpUni = kl::uniform();
+			kl::uniform ambientUni = kl::uniform();
+			kl::uniform directUni = kl::uniform();
+			kl::uniform directDirUni = kl::uniform();
+
 			gameWindow.start = [&]() {
 				/* Setting up the face culling */
 				kl::opengl::setCulling(false);
@@ -33,24 +43,25 @@ namespace kl {
 				gameCamera.setPlanes(0.01f, 100);
 				gameCamera.sensitivity = 0.025f;
 
-				/* Setting up the light */
+				/* Setting up the lights */
 				ambient.color = kl::color(255, 255, 255);
 				ambient.intensity = 0.1;
 				directional.color = kl::color(255, 255, 255);
 				directional.intensity = 1;
 				directional.direction = kl::vec3(0, -1, 1);
 
-				/* Setting up the engine shaders */
-				engineShaders = new kl::shaders(
+				/* Compiling engine shaders */
+				kl::shaders engineShaders = kl::shaders(
 					kl::file::readText("res/shaders/engine.vs"),
 					kl::file::readText("res/shaders/engine.fs")
 				);
-				engineShaders->setUniform(engineShaders->getUniform("texture0"), 0);
-				wUni = engineShaders->getUniform("w");
-				vpUni = engineShaders->getUniform("vp");
-				ambientUni = engineShaders->getUniform("ambientLight");
-				directUni = engineShaders->getUniform("directLight");
-				directDirUni = engineShaders->getUniform("directDirec");
+
+				/* Getting shader uniforms */
+				wUni = engineShaders.getUniform("w");
+				vpUni = engineShaders.getUniform("vp");
+				ambientUni = engineShaders.getUniform("ambientLight");
+				directUni = engineShaders.getUniform("directLight");
+				directDirUni = engineShaders.getUniform("directDirec");
 
 				/* Calling the user start */
 				start();
@@ -71,17 +82,17 @@ namespace kl {
 				computePhysics();
 
 				/* Setting the camera uniforms */
-				engineShaders->setUniform(vpUni, gameCamera.matrix());
+				vpUni.setData(gameCamera.matrix());
 
 				/* Setting the light uniforms */
-				engineShaders->setUniform(ambientUni, ambient.getLight());
-				engineShaders->setUniform(directUni, directional.getLight());
-				engineShaders->setUniform(directDirUni, directional.getDirection());
+				ambientUni.setData(ambient.getLight());
+				directUni.setData(directional.getLight());
+				directDirUni.setData(directional.getDirection());
 
 				/* Rendering */
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 					if (objItr->visible) {
-						engineShaders->setUniform(wUni, objItr->geometry.matrix());
+						wUni.setData(objItr->geometry.matrix());
 						objItr->render();
 					}
 				}
@@ -91,10 +102,6 @@ namespace kl {
 
 				/* Swapping the frame buffers */
 				gameWindow.swapFrameBuffers();
-			};
-
-			gameWindow.end = [&]() {
-				delete engineShaders;
 			};
 
 			// Starting the window
@@ -132,17 +139,8 @@ namespace kl {
 		}
 
 	private:
-		// Window data
-		kl::time timer = kl::time();
+		// Window
 		kl::window gameWindow = kl::window();
-
-		// Shader data
-		int wUni = NULL;
-		int vpUni = NULL;
-		int ambientUni = NULL;
-		int directUni = NULL;
-		int directDirUni = NULL;
-		kl::shaders* engineShaders = nullptr;
 
 		// Object buffer
 		std::list<kl::gameobject> gObjects = {};
