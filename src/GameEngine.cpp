@@ -9,15 +9,15 @@ int main() {
 	kl::shaders* basicShaders = nullptr;
 
 	/* Textures */
-	kl::texture* checkersTex = nullptr;
 	kl::texture* tableTex = nullptr;
+	kl::texture* checkersTex = nullptr;
 	kl::texture* katanaTex = nullptr;
 
 	/* Objects */
-	kl::gameobject* pyramid = nullptr;
 	kl::gameobject* table = nullptr;
-	kl::gameobject* katana = nullptr;
-	kl::gameobject* katana2 = nullptr;
+	kl::gameobject* pyramid = nullptr;
+	kl::gameobject* katanaL = nullptr;
+	kl::gameobject* katanaR = nullptr;
 
 	/* User start */
 	testEngine.start = [&]() {
@@ -32,43 +32,50 @@ int main() {
 		katanaTex = new kl::texture("res/textures/katana.png");
 
 		/* Object creation */
-		pyramid = testEngine.newObject();
 		table = testEngine.newObject();
-		katana = testEngine.newObject();
-		katana2 = testEngine.newObject();
+		pyramid = testEngine.newObject();
+		katanaL= testEngine.newObject();
+		katanaR = testEngine.newObject();
 
 		/* Loading vertex/index data */
-		pyramid->loadData("res/objects/pyramid.obj");
 		table->loadData("res/objects/table.obj");
-		katana->loadData("res/objects/katana.obj");
-		katana2->loadData("res/objects/katana.obj");
+		pyramid->loadData("res/objects/pyramid.obj");
+		katanaL->loadData("res/objects/katana.obj");
+		katanaR->loadData("res/objects/katana.obj");
 
 		/* Binding the textures */
-		pyramid->setTexture(checkersTex);
 		table->setTexture(tableTex);
-		katana->setTexture(katanaTex);
-		katana2->setTexture(katanaTex);
+		pyramid->setTexture(checkersTex);
+		katanaL->setTexture(katanaTex);
+		katanaR->setTexture(katanaTex);
 
 		/* Setting obj properties */
-		pyramid->physics.enabled = true;
-		pyramid->physics.angular.y = 36;
-		pyramid->physics.gravity = 0;
-		pyramid->geometry.position = kl::vec3(0, 0, 2);
-
-		table->physics.enabled = true;
-		table->physics.angular.y = -36;
+		table->geometry.size = kl::vec3(1, 1, 1);
+		table->geometry.position = kl::vec3(0, -0.5, 2);
+		table->physics.enabled = false;
+		table->physics.angular.y = 18;
 		table->physics.gravity = 0;
-		table->geometry.position = kl::vec3(0, -1, 2);
 
-		katana->physics.enabled = true;
-		katana->physics.angular.y = 36;
-		katana->physics.gravity = 0;
-		katana->geometry.position = kl::vec3(-2, 0, 2);
+		pyramid->geometry.size = kl::vec3(0.35, 0.35, 0.35);
+		pyramid->geometry.position = kl::vec3(0, 0.47, 2);
+		pyramid->visible = true;
+		pyramid->physics.enabled = false;
+		pyramid->physics.angular.y = 18;
+		pyramid->physics.gravity = 0;
 
-		katana2->physics.enabled = true;
-		katana2->physics.angular.y = -36;
-		katana2->physics.gravity = 0;
-		katana2->geometry.position = kl::vec3(2, 0, 2);
+		katanaL->geometry.size = kl::vec3(2, 2, 2);
+		katanaL->geometry.rotation = kl::vec3(0, 180, -45);
+		katanaL->geometry.position = kl::vec3(-1, 0, 2);
+		katanaL->physics.enabled = false;
+		katanaL->physics.angular.y = 36;
+		katanaL->physics.gravity = 0;
+		
+		katanaR->geometry.size = kl::vec3(2, 2, 2);
+		katanaR->geometry.rotation = kl::vec3(0, 0, 45);
+		katanaR->geometry.position = kl::vec3(1, 0, 2);
+		katanaR->physics.enabled = false;
+		katanaR->physics.angular.y = -36;
+		katanaR->physics.gravity = 0;
 	};
 
 	/* User update */

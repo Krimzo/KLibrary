@@ -49,8 +49,10 @@ namespace kl {
 
 				/* Rendering */
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
-					engineShaders->setUniform(wvp, gameCamera.matrix() * objItr->geometry.matrix());
-					objItr->drawArrays();
+					if (objItr->visible) {
+						engineShaders->setUniform(wvp, gameCamera.matrix() * objItr->geometry.matrix());
+						objItr->render();
+					}
 				}
 
 				/* Updating the fps display */

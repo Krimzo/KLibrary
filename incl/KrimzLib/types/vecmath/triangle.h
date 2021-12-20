@@ -51,14 +51,5 @@ namespace kl {
 				vertices[0].texture.y * weights.x + vertices[1].texture.y * weights.y + vertices[2].texture.y * weights.z
 			);
 		}
-
-		// Interpolates and returns the color
-		kl::colorf getColor(kl::vec3 weights) {
-			return kl::colorf(
-				vertices[0].color.r * weights.x + vertices[1].color.r * weights.y + vertices[2].color.r * weights.z,
-				vertices[0].color.g * weights.x + vertices[1].color.g * weights.y + vertices[2].color.g * weights.z,
-				vertices[0].color.b * weights.x + vertices[1].color.b * weights.y + vertices[2].color.b * weights.z
-			);
-		}
 	};
 }

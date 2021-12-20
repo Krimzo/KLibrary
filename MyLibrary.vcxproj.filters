@@ -30,13 +30,7 @@
     <ClInclude Include="incl\KrimzLib\types\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\opengl\ibo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\opengl\shaders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\opengl\vbo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\vecmath\vec2.h">
@@ -153,10 +147,7 @@
     <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\opengl\vao.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine\gameobject\mesh.h">
+    <ClInclude Include="incl\KrimzLib\types\opengl\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\engine\gameobject\geometry.h">

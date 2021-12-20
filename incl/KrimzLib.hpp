@@ -60,9 +60,7 @@
 
 // Including opengl types
 #include "KrimzLib/types/image.h"
-#include "KrimzLib/types/opengl/vbo.h"
-#include "KrimzLib/types/opengl/ibo.h"
-#include "KrimzLib/types/opengl/vao.h"
+#include "KrimzLib/types/opengl/mesh.h"
 #include "KrimzLib/types/opengl/shaders.h"
 #include "KrimzLib/types/opengl/texture.h"
 #include "KrimzLib/opengl.h"
@@ -71,7 +69,6 @@
 #include "KrimzLib/types/engine/keys.h"
 #include "KrimzLib/types/engine/mouse.h"
 #include "KrimzLib/types/engine/camera.h"
-#include "KrimzLib/types/engine/gameobject/mesh.h"
 #include "KrimzLib/types/engine/gameobject/geometry.h"
 #include "KrimzLib/types/engine/gameobject/physics.h"
 #include "KrimzLib/types/engine/gameobject.h"
