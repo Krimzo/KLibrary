@@ -16,8 +16,8 @@ namespace kl {
 		}
 
 		// Converts a float color to color
-		kl::color toColor(kl::colorf colf) {
-			return kl::color(kl::byte(colf.r * 255), kl::byte(colf.g * 255), kl::byte(colf.b * 255));
+		kl::color toColor(kl::vec3 colf) {
+			return kl::color(kl::byte(colf.x * 255), kl::byte(colf.y * 255), kl::byte(colf.z * 255));
 		}
 
 		// Converts a byte array to a string

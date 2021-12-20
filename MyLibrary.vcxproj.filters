@@ -126,9 +126,6 @@
     <ClInclude Include="incl\KrimzLib\types\vecmath\vec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\colorf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\vecmath\mat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -154,6 +151,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\engine\gameobject\physics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\engine\light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -34,7 +34,6 @@
 #include "KrimzLib/types/point.h"
 #include "KrimzLib/types/size.h"
 #include "KrimzLib/types/color.h"
-#include "KrimzLib/types/colorf.h"
 #include "KrimzLib/types/array.h"
 #include "KrimzLib/types/stack.h"
 
@@ -72,6 +71,7 @@
 #include "KrimzLib/types/engine/gameobject/geometry.h"
 #include "KrimzLib/types/engine/gameobject/physics.h"
 #include "KrimzLib/types/engine/gameobject.h"
+#include "KrimzLib/types/engine/light.h"
 #include "KrimzLib/types/window.h"
 #include "KrimzLib/types/engine.h"
 

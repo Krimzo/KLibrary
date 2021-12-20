@@ -4,7 +4,7 @@
 namespace kl {
 	namespace opengl {
 		// Enables/disables face culling
-		void setFaceCulling(bool enabled, bool cullBack = true, bool clockWise = true) {
+		void setCulling(bool enabled, bool cullBack = true, bool clockWise = true) {
 			if (enabled) {
 				glEnable(GL_CULL_FACE);
 				glFrontFace(clockWise ? GL_CW : GL_CCW);
@@ -25,10 +25,20 @@ namespace kl {
 			}
 		}
 
+		// Enables/disables wireframe rendering
+		void setWireframe(bool enabled) {
+			if (enabled) {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			}
+			else {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			}
+		}
+
 		// Clear the frame and depth buffers
-		void clearBuffers(kl::colorf color) {
+		void clearBuffers(kl::vec3 color) {
 			static const int clearBit = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
-			glClearColor(color.r, color.g, color.b, 1);
+			glClearColor(color.x, color.y, color.z, 1);
 			glClear(clearBit);
 		}
 	};

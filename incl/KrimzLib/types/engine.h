@@ -8,8 +8,9 @@ namespace kl {
 		float deltaTime = 0;
 		float elapsedTime = 0;
 		float gravity = 9.81f;
-		kl::color background = kl::color(50, 50, 50);
+		kl::color background = kl::constant::colors::gray;
 		kl::camera gameCamera = kl::camera();
+		kl::light ambient = kl::light(0.1);
 
 		// User defined functions
 		std::function<void()> start = []() {};
@@ -19,7 +20,7 @@ namespace kl {
 		void startNew(kl::size frameSize) {
 			gameWindow.start = [&]() {
 				/* Setting up the face culling */
-				kl::opengl::setFaceCulling(false);
+				kl::opengl::setCulling(false);
 
 				/* Setting up the depth testing */
 				kl::opengl::setDepthTest(true);
@@ -35,7 +36,8 @@ namespace kl {
 					kl::file::readText("res/shaders/engine.fs")
 				);
 				engineShaders->setUniform(engineShaders->getUniform("texture0"), 0);
-				wvp = engineShaders->getUniform("wvp");
+				wvpUni = engineShaders->getUniform("wvp");
+				ambientUni = engineShaders->getUniform("ambient");
 
 				/* Calling the user start */
 				start();
@@ -55,10 +57,13 @@ namespace kl {
 				/* Calling the physics update */
 				computePhysics();
 
+				/* Setting the light uniforms */
+				engineShaders->setUniform(ambientUni, ambient.getColor());
+
 				/* Rendering */
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 					if (objItr->visible) {
-						engineShaders->setUniform(wvp, gameCamera.matrix() * objItr->geometry.matrix());
+						engineShaders->setUniform(wvpUni, gameCamera.matrix() * objItr->geometry.matrix());
 						objItr->render();
 					}
 				}
@@ -114,7 +119,8 @@ namespace kl {
 		kl::window gameWindow = kl::window();
 
 		// Shader data
-		int wvp = NULL;
+		int wvpUni = NULL;
+		int ambientUni = NULL;
 		kl::shaders* engineShaders = nullptr;
 
 		// Object buffer

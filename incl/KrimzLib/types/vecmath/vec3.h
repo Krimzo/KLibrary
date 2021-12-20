@@ -28,6 +28,12 @@ namespace kl {
 			y = v.x;
 			z = v.y;
 		}
+		vec3(kl::color color) {
+			static const float toFloatColor = 1.0f / 255;
+			x = color.r * toFloatColor;
+			y = color.g * toFloatColor;
+			z = color.b * toFloatColor;
+		}
 
 		// Operator overloading
 		kl::vec3 operator + (kl::vec3 obj) {
