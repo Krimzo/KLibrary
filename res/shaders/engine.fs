@@ -1,12 +1,40 @@
 #version 330
 
+// Object texture
 uniform sampler2D texture0;
-uniform vec3 ambient;
 
-in vec2 interUV;
+// Ambient light
+uniform vec3 ambientLight;
 
+// Directional light
+uniform vec3 directLight;
+uniform vec3 directDirec;
+
+// Interpolated values input
+in vec2 interTex;
+in vec3 interNorm;
+
+// Output pixel color
 out vec4 pixelColor;
 
 void main () {
-    pixelColor = texture2D(texture0, interUV) * vec4(ambient, 1);
+    // Texture color
+    vec4 textureColor = texture2D(texture0, interTex);
+
+    // Ambient light color
+    vec4 ambientColor = vec4(ambientLight, 1);
+
+    // Directional light color
+    vec4 directColor = vec4(0);
+
+    // Calculating the directional light intensity
+    float diffuseFactor = dot(normalize(interNorm), -directDirec);
+
+    // Checking the diffuse factor
+    if (diffuseFactor > 0) {
+        directColor = vec4(directLight, 1) * diffuseFactor;
+    }
+
+    // Setting the pixel color
+    pixelColor = textureColor * (directColor + ambientColor);
 }

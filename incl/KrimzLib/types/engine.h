@@ -10,7 +10,10 @@ namespace kl {
 		float gravity = 9.81f;
 		kl::color background = kl::constant::colors::gray;
 		kl::camera gameCamera = kl::camera();
-		kl::light ambient = kl::light(0.1);
+		
+		// Light
+		kl::light ambient = kl::light();
+		kl::light directional = kl::light();
 
 		// User defined functions
 		std::function<void()> start = []() {};
@@ -30,14 +33,24 @@ namespace kl {
 				gameCamera.setPlanes(0.01f, 100);
 				gameCamera.sensitivity = 0.025f;
 
+				/* Setting up the light */
+				ambient.color = kl::color(255, 255, 255);
+				ambient.intensity = 0.1;
+				directional.color = kl::color(255, 255, 255);
+				directional.intensity = 1;
+				directional.direction = kl::vec3(0, -1, 1);
+
 				/* Setting up the engine shaders */
 				engineShaders = new kl::shaders(
 					kl::file::readText("res/shaders/engine.vs"),
 					kl::file::readText("res/shaders/engine.fs")
 				);
 				engineShaders->setUniform(engineShaders->getUniform("texture0"), 0);
-				wvpUni = engineShaders->getUniform("wvp");
-				ambientUni = engineShaders->getUniform("ambient");
+				wUni = engineShaders->getUniform("w");
+				vpUni = engineShaders->getUniform("vp");
+				ambientUni = engineShaders->getUniform("ambientLight");
+				directUni = engineShaders->getUniform("directLight");
+				directDirUni = engineShaders->getUniform("directDirec");
 
 				/* Calling the user start */
 				start();
@@ -57,13 +70,18 @@ namespace kl {
 				/* Calling the physics update */
 				computePhysics();
 
+				/* Setting the camera uniforms */
+				engineShaders->setUniform(vpUni, gameCamera.matrix());
+
 				/* Setting the light uniforms */
-				engineShaders->setUniform(ambientUni, ambient.getColor());
+				engineShaders->setUniform(ambientUni, ambient.getLight());
+				engineShaders->setUniform(directUni, directional.getLight());
+				engineShaders->setUniform(directDirUni, directional.getDirection());
 
 				/* Rendering */
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 					if (objItr->visible) {
-						engineShaders->setUniform(wvpUni, gameCamera.matrix() * objItr->geometry.matrix());
+						engineShaders->setUniform(wUni, objItr->geometry.matrix());
 						objItr->render();
 					}
 				}
@@ -119,8 +137,11 @@ namespace kl {
 		kl::window gameWindow = kl::window();
 
 		// Shader data
-		int wvpUni = NULL;
+		int wUni = NULL;
+		int vpUni = NULL;
 		int ambientUni = NULL;
+		int directUni = NULL;
+		int directDirUni = NULL;
 		kl::shaders* engineShaders = nullptr;
 
 		// Object buffer

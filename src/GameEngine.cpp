@@ -54,14 +54,14 @@ int main() {
 		/* Object prop setting */
 		table->geometry.size = kl::vec3(1, 1, 1);
 		table->geometry.position = kl::vec3(0, -0.5, 2);
-		table->physics.enabled = false;
+		table->physics.enabled = true;
 		table->physics.angular.y = 18;
 		table->physics.gravity = 0;
 
 		pyramid->geometry.size = kl::vec3(0.35, 0.35, 0.35);
 		pyramid->geometry.position = kl::vec3(0, 0.47, 2);
 		pyramid->visible = true;
-		pyramid->physics.enabled = false;
+		pyramid->physics.enabled = true;
 		pyramid->physics.angular.y = 18;
 		pyramid->physics.gravity = 0;
 

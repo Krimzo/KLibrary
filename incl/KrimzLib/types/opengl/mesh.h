@@ -55,10 +55,12 @@ namespace kl {
 			// Enabling the attributes
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
+			glEnableVertexAttribArray(2);
 
 			// Setting the data parsing type
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(kl::vertex), (void*)0);
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(kl::vertex), (void*)sizeof(kl::vec3));
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(kl::vertex), (void*)(sizeof(kl::vec3) + sizeof(kl::vec2)));
 
 			// Unbinding the vao
 			glBindVertexArray(NULL);
@@ -66,6 +68,7 @@ namespace kl {
 			// Disabling the attributes
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
+			glDisableVertexAttribArray(2);
 
 			// Unbinding the vbo
 			glBindBuffer(GL_ARRAY_BUFFER, NULL);
@@ -76,40 +79,59 @@ namespace kl {
 			// Temp vertex buffer
 			std::vector<kl::vertex> vertexData;
 
-			// File opening
-			FILE* fileStream = fopen(filePath.c_str(), "r");
-			if (!fileStream) exit(69);
+			// Opening the file
+			std::fstream fileStream;
+			fileStream.open(filePath, std::ios::in);
+			if (!fileStream.is_open()) exit(69);
 
 			// Temp load buffers
 			std::vector<kl::vec3> xyzBuffer;
 			std::vector<kl::vec2> uvBuffer;
+			std::vector<kl::vec3> normBuffer;
 
 			// Parsing data
-			int scanStatus = 0;
-			while (scanStatus != -1) {
-				// Temp buffers
-				int wi0, ti0, ni0, wi1, ti1, ni1, wi2, ti2, ni2;
-				kl::vec3 tempXYZ;
-				kl::vec2 tempUV;
-				char trashBuff[256];
+			std::string fileLine;
+			while (std::getline(fileStream, fileLine)) {
+				// Splitting the string by spaces
+				std::vector<std::string> lineParts;
+				std::stringstream lineStream(fileLine);
+				for (std::string linePart; std::getline(lineStream, linePart, ' ');) {
+					lineParts.push_back(linePart);
+				}
 
-				// Reading data
-				if ((scanStatus = fscanf(fileStream, "v %f %f %f", &tempXYZ.x, &tempXYZ.y, &tempXYZ.z)) == 3) {
-					xyzBuffer.push_back(tempXYZ);
+				// Parsing the data
+				if (lineParts[0] == "v") {
+					xyzBuffer.push_back(kl::vec3(std::stof(lineParts[1]), std::stof(lineParts[2]), std::stof(lineParts[3])));
 				}
-				else if ((scanStatus = fscanf(fileStream, "t %f %f", &tempUV.x, &tempUV.y)) == 2) {
-					uvBuffer.push_back(tempUV);
+				else if (lineParts[0] == "vt") {
+					uvBuffer.push_back(kl::vec2(std::stof(lineParts[1]), std::stof(lineParts[2])));
 				}
-				else if ((scanStatus = fscanf(fileStream, "f %d/%d/%d %d/%d/%d %d/%d/%d", &wi0, &ti0, &ni0, &wi1, &ti1, &ni1, &wi2, &ti2, &ni2)) == 9) {
-					vertexData.push_back(kl::vertex(xyzBuffer[--wi0], uvBuffer[--ti0]));
-					vertexData.push_back(kl::vertex(xyzBuffer[--wi1], uvBuffer[--ti1]));
-					vertexData.push_back(kl::vertex(xyzBuffer[--wi2], uvBuffer[--ti2]));
+				else if (lineParts[0] == "vn") {
+					normBuffer.push_back(kl::vec3(std::stof(lineParts[1]), std::stof(lineParts[2]), std::stof(lineParts[3])));
 				}
-				else {
-					fgets(trashBuff, 256, fileStream);
+				else if (lineParts[0] == "f") {
+					for (int i = 1; i < 4; i++) {
+						// Getting the world, texture and normal indexes
+						std::vector<std::string> linePartParts;
+						std::stringstream linePartStream(lineParts[i]);
+						for (std::string linePartPart; std::getline(linePartStream, linePartPart, '/');) {
+							linePartParts.push_back(linePartPart);
+						}
+
+						// Saving the data
+						vertexData.push_back(
+							kl::vertex(
+								xyzBuffer[std::stoi(linePartParts[0]) - 1],
+								uvBuffer[std::stoi(linePartParts[1]) - 1],
+								normBuffer[std::stoi(linePartParts[2]) - 1]
+							)
+						);
+					}
 				}
 			}
-			fclose(fileStream);
+
+			// Closing the file
+			fileStream.close();
 
 			// Sending the data
 			loadData(vertexData);

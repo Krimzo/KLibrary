@@ -1,13 +1,25 @@
 #version 330
 
-layout (location = 0) in vec3 xyz;
-layout (location = 1) in vec2 uv;
+// Input arrays
+layout (location = 0) in vec3 world;
+layout (location = 1) in vec2 tex;
+layout (location = 2) in vec3 norm;
 
-uniform mat4 wvp;
+// Transformation matrices
+uniform mat4 w;
+uniform mat4 vp;
 
-out vec2 interUV;
+// Interpolated values output
+out vec2 interTex;
+out vec3 interNorm;
 
 void main() {
-    gl_Position = wvp * vec4(xyz, 1);
-    interUV = uv;
+    // Outputting the transformed world coords
+    gl_Position = vp * w * vec4(world, 1);
+
+    // Outputting the texture coords
+    interTex = tex;
+
+    // Outputting the transformed normal
+    interNorm = (w * vec4(norm, 0)).xyz;
 }
