@@ -25,6 +25,7 @@ namespace kl {
 			kl::time timer = kl::time();
 
 			/* Shader uniforms */
+			kl::shaders* engineShaders = nullptr;
 			kl::uniform wUni = kl::uniform();
 			kl::uniform vpUni = kl::uniform();
 			kl::uniform ambientUni = kl::uniform();
@@ -51,17 +52,17 @@ namespace kl {
 				directional.direction = kl::vec3(0, -1, 1);
 
 				/* Compiling engine shaders */
-				kl::shaders engineShaders = kl::shaders(
+				engineShaders = new kl::shaders(
 					kl::file::readText("res/shaders/engine.vs"),
 					kl::file::readText("res/shaders/engine.fs")
 				);
 
 				/* Getting shader uniforms */
-				wUni = engineShaders.getUniform("w");
-				vpUni = engineShaders.getUniform("vp");
-				ambientUni = engineShaders.getUniform("ambientLight");
-				directUni = engineShaders.getUniform("directLight");
-				directDirUni = engineShaders.getUniform("directDirec");
+				wUni = engineShaders->getUniform("w");
+				vpUni = engineShaders->getUniform("vp");
+				ambientUni = engineShaders->getUniform("ambientLight");
+				directUni = engineShaders->getUniform("directLight");
+				directDirUni = engineShaders->getUniform("directDirec");
 
 				/* Calling the user start */
 				start();
