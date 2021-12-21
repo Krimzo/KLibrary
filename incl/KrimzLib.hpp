@@ -1,7 +1,5 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
-#define FREEGLUT_STATIC
-#define GLEW_STATIC
 
 
 /* Including cpp headers */
@@ -36,6 +34,7 @@
 #include "KrimzLib/types/color.h"
 #include "KrimzLib/types/array.h"
 #include "KrimzLib/types/stack.h"
+#include "KrimzLib/types/time.h"
 
 // Including vector math headers
 #include "KrimzLib/types/vecmath/vec2.h"
@@ -50,7 +49,6 @@
 #include "KrimzLib/convert.h"
 #include "KrimzLib/math.h"
 #include "KrimzLib/random.h"
-#include "KrimzLib/time.h"
 #include "KrimzLib/console.h"
 #include "KrimzLib/binary.h"
 #include "KrimzLib/file.h"
@@ -65,15 +63,18 @@
 #include "KrimzLib/types/opengl/shaders.h"
 #include "KrimzLib/opengl.h"
 
+// Including the window types
+#include "KrimzLib/types/window/keys.h"
+#include "KrimzLib/types/window/mouse.h"
+#include "KrimzLib/types/window.h"
+
 // Including engine types
-#include "KrimzLib/types/engine/keys.h"
-#include "KrimzLib/types/engine/mouse.h"
 #include "KrimzLib/types/engine/camera.h"
 #include "KrimzLib/types/engine/gameobject/geometry.h"
 #include "KrimzLib/types/engine/gameobject/physics.h"
 #include "KrimzLib/types/engine/gameobject.h"
 #include "KrimzLib/types/engine/light.h"
-#include "KrimzLib/types/window.h"
+#include "KrimzLib/types/engine/skybox.h"
 #include "KrimzLib/types/engine.h"
 
 /* Linking libs */

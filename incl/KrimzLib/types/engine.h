@@ -11,7 +11,7 @@ namespace kl {
 		kl::color background = kl::constant::colors::gray;
 		kl::camera gameCamera = kl::camera();
 		
-		// Light
+		// Ambient and directional lights
 		kl::light ambient = kl::light();
 		kl::light directional = kl::light();
 
@@ -82,7 +82,7 @@ namespace kl {
 				update();
 
 				/* Calling the physics update */
-				computePhysics();
+				updatePhysics();
 
 				/* Setting the camera uniforms */
 				vpUni.setData(gameCamera.matrix());
@@ -92,13 +92,16 @@ namespace kl {
 				directUni.setData(directional.getLight());
 				directDirUni.setData(directional.getDirection());
 
-				/* Rendering */
+				/* Rendering objects */
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 					if (objItr->visible) {
 						wUni.setData(objItr->geometry.matrix());
 						objItr->render();
 					}
 				}
+
+				/* Rendering skybox */
+
 
 				/* Updating the fps display */
 				gameWindow.setTitle(std::to_string(int(1 / deltaTime)));
@@ -155,7 +158,7 @@ namespace kl {
 		std::list<kl::gameobject>::iterator objItr = {};
 
 		// Computing object physics 
-		void computePhysics() {
+		void updatePhysics() {
 			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 				if (objItr->physics.enabled) {
 					// Applying gravity

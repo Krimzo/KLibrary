@@ -133,7 +133,7 @@ namespace kl {
 			// Closing the file
 			fileStream.close();
 
-			// Sending the data
+			// Loading the data
 			loadData(vertexData);
 		}
 	};
