@@ -51,7 +51,7 @@ int main() {
 		katanaL->texture = katanaTex;
 		katanaR->texture = katanaTex;
 
-		/* Object prop setting */
+		/* Object properties setup */
 		table->geometry.size = kl::vec3(1, 1, 1);
 		table->geometry.position = kl::vec3(0, -0.5, 2);
 		table->physics.enabled = true;
@@ -128,7 +128,7 @@ int main() {
 		}
 	};
 
-	/* Window creation */
+	/* Engine creation */
 	testEngine.startNew(kl::size(1600, 900));
 
 	/* Cleanup */

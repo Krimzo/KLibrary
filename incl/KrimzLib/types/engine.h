@@ -19,7 +19,7 @@ namespace kl {
 		std::function<void()> start = []() {};
 		std::function<void()> update = []() {};
 
-		// Creates the engine
+		// Start a new engine
 		void startNew(kl::size frameSize) {
 			/* Engine timer */
 			kl::time timer = kl::time();
@@ -32,6 +32,7 @@ namespace kl {
 			kl::uniform directUni = kl::uniform();
 			kl::uniform directDirUni = kl::uniform();
 
+			/* Window start definition */
 			gameWindow.start = [&]() {
 				/* Setting up the face culling */
 				kl::opengl::setCulling(false);
@@ -68,6 +69,7 @@ namespace kl {
 				start();
 			};
 
+			/* Window update definition */
 			gameWindow.update = [&]() {
 				/* Clearing the buffers */
 				kl::opengl::clearBuffers(background);
@@ -105,7 +107,12 @@ namespace kl {
 				gameWindow.swapFrameBuffers();
 			};
 
-			// Starting the window
+			/* Window end definition */
+			gameWindow.end = [&]() {
+				delete engineShaders;
+			};
+
+			/* Window creation */
 			timer.getElapsed();
 			timer.stopwatchReset();
 			gameWindow.startNew(frameSize, kl::random::getString(6), false, true, true);
