@@ -54,8 +54,8 @@ namespace kl {
 
 				/* Compiling engine shaders */
 				objectShaders = new kl::shaders(
-					kl::file::readText("res/shaders/object.vs"),
-					kl::file::readText("res/shaders/object.fs")
+					kl::file::readText("res/shaders/object.vert"),
+					kl::file::readText("res/shaders/object.frag")
 				);
 
 				/* Getting shader uniforms */
