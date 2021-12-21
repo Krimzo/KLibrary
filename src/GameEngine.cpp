@@ -29,9 +29,9 @@ int main() {
 		katanaMes = new kl::mesh("res/objects/katana.obj");
 
 		/* Texture creation */
-		tableTex = new kl::texture("res/textures/table.png");
-		checkersTex = new kl::texture("res/textures/checkers.png");
-		katanaTex = new kl::texture("res/textures/katana.png");
+		tableTex = new kl::texture("res/textures/table.png", true);
+		checkersTex = new kl::texture("res/textures/checkers.png", true);
+		katanaTex = new kl::texture("res/textures/katana.png", true);
 
 		/* Object creation */
 		table = testEngine.newObject();

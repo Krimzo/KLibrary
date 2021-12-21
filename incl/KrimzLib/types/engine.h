@@ -25,7 +25,7 @@ namespace kl {
 			kl::time timer = kl::time();
 
 			/* Shader uniforms */
-			kl::shaders* engineShaders = nullptr;
+			kl::shaders* objectShaders = nullptr;
 			kl::uniform wUni = kl::uniform();
 			kl::uniform vpUni = kl::uniform();
 			kl::uniform ambientUni = kl::uniform();
@@ -53,17 +53,17 @@ namespace kl {
 				directional.direction = kl::vec3(0, -1, 1);
 
 				/* Compiling engine shaders */
-				engineShaders = new kl::shaders(
-					kl::file::readText("res/shaders/engine.vs"),
-					kl::file::readText("res/shaders/engine.fs")
+				objectShaders = new kl::shaders(
+					kl::file::readText("res/shaders/object.vs"),
+					kl::file::readText("res/shaders/object.fs")
 				);
 
 				/* Getting shader uniforms */
-				wUni = engineShaders->getUniform("w");
-				vpUni = engineShaders->getUniform("vp");
-				ambientUni = engineShaders->getUniform("ambientLight");
-				directUni = engineShaders->getUniform("directLight");
-				directDirUni = engineShaders->getUniform("directDirec");
+				wUni = objectShaders->getUniform("w");
+				vpUni = objectShaders->getUniform("vp");
+				ambientUni = objectShaders->getUniform("ambientLight");
+				directUni = objectShaders->getUniform("directLight");
+				directDirUni = objectShaders->getUniform("directDirec");
 
 				/* Calling the user start */
 				start();
@@ -109,7 +109,7 @@ namespace kl {
 
 			/* Window end definition */
 			gameWindow.end = [&]() {
-				delete engineShaders;
+				delete objectShaders;
 			};
 
 			/* Window creation */

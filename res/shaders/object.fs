@@ -14,7 +14,7 @@ uniform vec3 directDirec;
 in vec2 interTex;
 in vec3 interNorm;
 
-// Output pixel color
+// Pixel color output
 out vec4 pixelColor;
 
 void main () {
