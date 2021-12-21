@@ -3,9 +3,9 @@
 
 namespace kl {
 	struct light {
-		kl::vec3 color = kl::vec3();
-		kl::vec3 position = kl::vec3();
-		kl::vec3 direction = kl::vec3();
+		kl::vec3 color;
+		kl::vec3 position;
+		kl::vec3 direction;
 		float intensity = 0;
 
 		// Returns the true light color

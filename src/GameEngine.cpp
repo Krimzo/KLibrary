@@ -5,6 +5,9 @@ int main() {
 	/* Engine */
 	kl::engine testEngine;
 
+	/* Skybox */
+	kl::skybox* cloudsBox = nullptr;
+
 	/* Textures */
 	kl::texture* tableTex = nullptr;
 	kl::texture* checkersTex = nullptr;
@@ -23,6 +26,19 @@ int main() {
 
 	/* User start */
 	testEngine.start = [&]() {
+		/* Skybox creation */
+		cloudsBox = new kl::skybox(
+			"res/skybox/front.jpg",
+			"res/skybox/back.jpg",
+			"res/skybox/left.jpg",
+			"res/skybox/right.jpg",
+			"res/skybox/top.jpg",
+			"res/skybox/bottom.jpg",
+			kl::file::readText("res/shaders/skybox.vert"),
+			kl::file::readText("res/shaders/skybox.frag")
+		);
+		testEngine.sky = cloudsBox;
+
 		/* Mesh creation */
 		tableMes = new kl::mesh("res/objects/table.obj");
 		pyramidMes = new kl::mesh("res/objects/pyramid.obj");
@@ -85,28 +101,28 @@ int main() {
 	testEngine.update = [&]() {
 		/* Keyboard input */
 		if (testEngine.getWindow().keys.w) {
-			testEngine.gameCamera.moveForward(testEngine.deltaTime);
+			testEngine.cam.moveForward(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.s) {
-			testEngine.gameCamera.moveBack(testEngine.deltaTime);
+			testEngine.cam.moveBack(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.d) {
-			testEngine.gameCamera.moveRight(testEngine.deltaTime);
+			testEngine.cam.moveRight(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.a) {
-			testEngine.gameCamera.moveLeft(testEngine.deltaTime);
+			testEngine.cam.moveLeft(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.space) {
-			testEngine.gameCamera.moveUp(testEngine.deltaTime);
+			testEngine.cam.moveUp(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.c) {
-			testEngine.gameCamera.moveDown(testEngine.deltaTime);
+			testEngine.cam.moveDown(testEngine.deltaTime);
 		}
 		if (testEngine.getWindow().keys.shift) {
-			testEngine.gameCamera.speed = 5;
+			testEngine.cam.speed = 5;
 		}
 		else {
-			testEngine.gameCamera.speed = 2;
+			testEngine.cam.speed = 2;
 		}
 
 		/* Mouse input */
@@ -123,7 +139,7 @@ int main() {
 		}
 		if (camMoving) {
 			kl::point frameCenter = testEngine.getWindow().getCenter();
-			testEngine.gameCamera.rotate(testEngine.getWindow().mouse.position, frameCenter);
+			testEngine.cam.rotate(testEngine.getWindow().mouse.position, frameCenter);
 			testEngine.getWindow().mouse.move(frameCenter);
 		}
 	};
@@ -132,6 +148,7 @@ int main() {
 	testEngine.startNew(kl::size(1600, 900));
 
 	/* Cleanup */
+	delete cloudsBox;
 	delete tableTex;
 	delete checkersTex;
 	delete katanaTex;

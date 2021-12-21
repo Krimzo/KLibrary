@@ -25,7 +25,7 @@ void main () {
     vec4 ambientColor = vec4(ambientLight, 1);
 
     // Directional light color
-    vec4 directColor = vec4(0);
+    vec4 directColor = vec4(0, 0, 0, 1);
 
     // Calculating the directional light intensity
     float diffuseFactor = dot(normalize(interNorm), -directDirec);

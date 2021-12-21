@@ -11,7 +11,7 @@ out vec3 interTex;
 
 void main() {
     // Outputting the transformed world coords
-    gl_Position = (vp * vec4(world, 1)).xyww;
+    gl_Position = (vp * vec4(world, 0)).xyww;
     
     // Outputting the interpolated texture coords
     interTex = world;

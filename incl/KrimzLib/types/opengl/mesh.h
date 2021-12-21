@@ -20,7 +20,7 @@ namespace kl {
 			// Binding the vao
 			glBindVertexArray(vao);
 
-			// Rendering
+			// Drawing vertices
 			glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
 			// Unbinding the vao

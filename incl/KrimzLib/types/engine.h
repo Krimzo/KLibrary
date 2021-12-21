@@ -7,13 +7,16 @@ namespace kl {
 		// Engine properties
 		float deltaTime = 0;
 		float elapsedTime = 0;
-		float gravity = 9.81f;
+		float gravity = 9.81;
+
+		// View properties
+		kl::skybox* sky = nullptr;
 		kl::color background = kl::constant::colors::gray;
-		kl::camera gameCamera = kl::camera();
+		kl::camera cam;
 		
 		// Ambient and directional lights
-		kl::light ambient = kl::light();
-		kl::light directional = kl::light();
+		kl::light ambient;
+		kl::light directional;
 
 		// User defined functions
 		std::function<void()> start = []() {};
@@ -22,15 +25,15 @@ namespace kl {
 		// Start a new engine
 		void startNew(kl::size frameSize) {
 			/* Engine timer */
-			kl::time timer = kl::time();
+			kl::time timer;
 
-			/* Shader uniforms */
+			/* Object shaders */
 			kl::shaders* objectShaders = nullptr;
-			kl::uniform wUni = kl::uniform();
-			kl::uniform vpUni = kl::uniform();
-			kl::uniform ambientUni = kl::uniform();
-			kl::uniform directUni = kl::uniform();
-			kl::uniform directDirUni = kl::uniform();
+			kl::uniform objWUni;
+			kl::uniform objVPUni;
+			kl::uniform ambientUni;
+			kl::uniform directUni;
+			kl::uniform directDirUni;
 
 			/* Window start definition */
 			gameWindow.start = [&]() {
@@ -41,26 +44,26 @@ namespace kl {
 				kl::opengl::setDepthTest(true);
 
 				/* Setting up the camera */
-				gameCamera.setAspect(frameSize);
-				gameCamera.setPlanes(0.01f, 100);
-				gameCamera.sensitivity = 0.025f;
+				cam.setAspect(frameSize);
+				cam.setPlanes(0.01, 100);
+				cam.sensitivity = 0.025;
 
 				/* Setting up the lights */
-				ambient.color = kl::color(255, 255, 255);
+				ambient.color = kl::constant::colors::white;
 				ambient.intensity = 0.1;
-				directional.color = kl::color(255, 255, 255);
+				directional.color = kl::constant::colors::white;
 				directional.intensity = 1;
-				directional.direction = kl::vec3(0, -1, 1);
+				directional.direction = kl::vec3(-0.2, -0.2, -1);
 
-				/* Compiling engine shaders */
+				/* Compiling object shaders */
 				objectShaders = new kl::shaders(
 					kl::file::readText("res/shaders/object.vert"),
 					kl::file::readText("res/shaders/object.frag")
 				);
 
-				/* Getting shader uniforms */
-				wUni = objectShaders->getUniform("w");
-				vpUni = objectShaders->getUniform("vp");
+				/* Getting object shader uniforms */
+				objWUni = objectShaders->getUniform("w");
+				objVPUni = objectShaders->getUniform("vp");
 				ambientUni = objectShaders->getUniform("ambientLight");
 				directUni = objectShaders->getUniform("directLight");
 				directDirUni = objectShaders->getUniform("directDirec");
@@ -85,7 +88,7 @@ namespace kl {
 				updatePhysics();
 
 				/* Setting the camera uniforms */
-				vpUni.setData(gameCamera.matrix());
+				objVPUni.setData(cam.matrix());
 
 				/* Setting the light uniforms */
 				ambientUni.setData(ambient.getLight());
@@ -95,13 +98,13 @@ namespace kl {
 				/* Rendering objects */
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 					if (objItr->visible) {
-						wUni.setData(objItr->geometry.matrix());
+						objWUni.setData(objItr->geometry.matrix());
 						objItr->render();
 					}
 				}
 
 				/* Rendering skybox */
-
+				if (sky) sky->render(cam.matrix());
 
 				/* Updating the fps display */
 				gameWindow.setTitle(std::to_string(int(1 / deltaTime)));
@@ -151,11 +154,11 @@ namespace kl {
 
 	private:
 		// Window
-		kl::window gameWindow = kl::window();
+		kl::window gameWindow;
 
 		// Object buffer
-		std::list<kl::gameobject> gObjects = {};
-		std::list<kl::gameobject>::iterator objItr = {};
+		std::list<kl::gameobject> gObjects;
+		std::list<kl::gameobject>::iterator objItr;
 
 		// Computing object physics 
 		void updatePhysics() {

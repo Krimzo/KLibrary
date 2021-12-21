@@ -4,22 +4,22 @@
 namespace kl {
 	struct texture {
 		// Constructor/destructor
-		texture(kl::image& image, bool flipY = true) {
+		texture(kl::image& image) {
 			glGenTextures(1, &textureID);
-			load(image, flipY);
+			load(image);
 		}
-		texture(kl::image&& image, bool flipY = true) {
+		texture(kl::image&& image) {
 			glGenTextures(1, &textureID);
-			load(image, flipY);
+			load(image);
 		}
 		~texture() {
 			glDeleteTextures(1, &textureID);
 		}
 
 		// Loads the image data to the texture
-		void load(kl::image& image, bool flipY = true) {
+		void load(kl::image& image) {
 			// Flipping the image verticaly
-			if (flipY) image.flipVertical();
+			image.flipVertical();
 
 			// Binding the texture object
 			glBindTexture(GL_TEXTURE_2D, textureID);
@@ -40,10 +40,7 @@ namespace kl {
 			glBindTexture(GL_TEXTURE_2D, NULL);
 
 			// Resetting the image
-			if (flipY) image.flipVertical();
-		}
-		void load(kl::image&& image, bool flipY = true) {
-			load(image, flipY);
+			image.flipVertical();
 		}
 
 		// Binds the texture to the texture unit
