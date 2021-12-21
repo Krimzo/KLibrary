@@ -17,9 +17,9 @@ void main() {
     // Outputting the transformed world coords
     gl_Position = vp * w * vec4(world, 1);
 
-    // Outputting the texture coords
+    // Outputting the interpolated texture coords
     interTex = tex;
 
-    // Outputting the transformed normal
+    // Outputting the interpolated normal
     interNorm = (w * vec4(norm, 0)).xyz;
 }
