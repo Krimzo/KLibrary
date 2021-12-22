@@ -194,8 +194,8 @@
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\basic.vs" />
-    <None Include="res\shaders\object.frag" />
-    <None Include="res\shaders\object.vert" />
+    <None Include="res\shaders\engine.frag" />
+    <None Include="res\shaders\engine.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameEngine.cpp" />

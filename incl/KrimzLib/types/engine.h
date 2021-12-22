@@ -65,8 +65,8 @@ namespace kl {
 
 				/* Compiling object shaders */
 				engineShaders = new kl::shaders(
-					kl::file::readText("res/shaders/object.vert"),
-					kl::file::readText("res/shaders/object.frag")
+					kl::file::readText("res/shaders/engine.vert"),
+					kl::file::readText("res/shaders/engine.frag")
 				);
 
 				/* Getting object shader uniforms */
@@ -86,8 +86,8 @@ namespace kl {
 				kl::opengl::clearBuffers(background);
 
 				/* Time calculations */
-				elapsed = timer.stopwatchElapsed();
 				delta = timer.getElapsed();
+				elapsed = timer.stopwatchElapsed();
 
 				/* Calling the user update */
 				update();
