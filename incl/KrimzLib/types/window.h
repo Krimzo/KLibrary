@@ -9,24 +9,9 @@ namespace kl {
 		kl::mouse mouse;
 
 		// User functions
-		std::function<void(void)> start;
-		std::function<void(void)> update;
-		std::function<void(void)> end;
-
-		// Constructor/destructor
-		window() {
-			keys = kl::keys();
-			mouse = kl::mouse();
-			start = []() {};
-			update = []() {};
-			end = []() {};
-			hInstance = GetModuleHandleW(nullptr);
-			hwnd = nullptr;
-			hdc = nullptr;
-			hglrc = nullptr;
-			bmpInfo = {};
-			wndMsg = {};
-		}
+		std::function<void(void)> start = []() {};
+		std::function<void(void)> update = []() {};
+		std::function<void(void)> end = []() {};
 
 		// Window creation
 		void startNew(kl::size size, std::string name, bool resizeable = true, bool continuous = false, bool opengl = false) {
@@ -48,7 +33,7 @@ namespace kl {
 			}
 
 			// Binding the mouse
-			mouse.bind(hwnd);
+			this->mouse.bind(hwnd);
 
 			// Starting the update loops
 			if (continuous) {
@@ -116,12 +101,12 @@ namespace kl {
 
 	private:
 		// Winapi variables
-		HINSTANCE hInstance;
-		HWND hwnd;
-		HDC hdc;
-		HGLRC hglrc;
-		BITMAPINFO bmpInfo;
-		MSG wndMsg;
+		HINSTANCE hInstance = GetModuleHandleW(nullptr);
+		HWND hwnd = nullptr;
+		HDC hdc = nullptr;
+		HGLRC hglrc = nullptr;
+		BITMAPINFO bmpInfo = {};
+		MSG wndMsg = {};
 
 		// Registers a new window class
 		void registerWindowClass(std::wstring name) {
@@ -206,39 +191,39 @@ namespace kl {
 		void handleMessage() {
 			switch (wndMsg.message) {
 			case WM_KEYDOWN:
-				keys.setKey(wndMsg.wParam, true);
+				this->keys.setKey(wndMsg.wParam, true);
 				break;
 
 			case WM_KEYUP:
-				keys.setKey(wndMsg.wParam, false);
+				this->keys.setKey(wndMsg.wParam, false);
 				break;
 
 			case WM_LBUTTONDOWN:
-				mouse.lmb = true;
+				this->mouse.lmb = true;
 				break;
 
 			case WM_LBUTTONUP:
-				mouse.lmb = false;
+				this->mouse.lmb = false;
 				break;
 
 			case WM_MBUTTONDOWN:
-				mouse.mmb = true;
+				this->mouse.mmb = true;
 				break;
 
 			case WM_MBUTTONUP:
-				mouse.mmb = false;
+				this->mouse.mmb = false;
 				break;
 
 			case WM_RBUTTONDOWN:
-				mouse.rmb = true;
+				this->mouse.rmb = true;
 				break;
 
 			case WM_RBUTTONUP:
-				mouse.rmb = false;
+				this->mouse.rmb = false;
 				break;
 
 			case WM_MOUSEMOVE:
-				mouse.position = kl::point(GET_X_LPARAM(wndMsg.lParam), GET_Y_LPARAM(wndMsg.lParam));
+				this->mouse.position = kl::point(GET_X_LPARAM(wndMsg.lParam), GET_Y_LPARAM(wndMsg.lParam));
 				break;
 
 			default:

@@ -136,9 +136,9 @@ namespace kl {
 
 		// Flips the pixel on x axis
 		void flipHorizontal() {
-			const int halfWidth = imageWidth / 2;
-			for (int y = 0; y < imageHeight; y++) {
-				for (int x = 0; x < halfWidth; x++) {
+			const kl::uint32 halfWidth = imageWidth / 2;
+			for (kl::uint32 y = 0; y < imageHeight; y++) {
+				for (kl::uint32 x = 0; x < halfWidth; x++) {
 					kl::color tempPixel = imagePixels[y * imageWidth + x];
 					imagePixels[y * imageWidth + x] = imagePixels[y * imageWidth + (imageWidth - 1 - x)];
 					imagePixels[y * imageWidth + (imageWidth - 1 - x)] = tempPixel;
@@ -148,9 +148,9 @@ namespace kl {
 
 		// Flips the pixel on y axis
 		void flipVertical() {
-			const int halfHeight = imageHeight / 2;
-			for (int x = 0; x < imageWidth; x++) {
-				for (int y = 0; y < halfHeight; y++) {
+			const kl::uint32 halfHeight = imageHeight / 2;
+			for (kl::uint32 x = 0; x < imageWidth; x++) {
+				for (kl::uint32 y = 0; y < halfHeight; y++) {
 					kl::color tempPixel = imagePixels[y * imageWidth + x];
 					imagePixels[y * imageWidth + x] = imagePixels[(imageHeight - 1 - y) * imageWidth + x];
 					imagePixels[(imageHeight - 1 - y) * imageWidth + x] = tempPixel;

@@ -4,39 +4,47 @@
 namespace kl {
 	class engine {
 	public:
+		// Input
+		kl::keys* keys = nullptr;
+		kl::mouse* mouse = nullptr;
+
 		// Engine properties
-		float deltaTime = 0;
-		float elapsedTime = 0;
+		float delta = 0;
+		float elapsed = 0;
 		float gravity = 9.81;
 
 		// View properties
-		kl::skybox* sky = nullptr;
+		kl::skybox* skybox = nullptr;
 		kl::color background = kl::constant::colors::gray;
-		kl::camera cam;
+		kl::camera camera;
 		
 		// Ambient and directional lights
 		kl::light ambient;
-		kl::light directional;
+		kl::light sun;
 
 		// User defined functions
-		std::function<void()> start = []() {};
+		std::function<void()> setup = []() {};
 		std::function<void()> update = []() {};
 
-		// Start a new engine
-		void startNew(kl::size frameSize) {
+		// Starts a new engine
+		void createNew(kl::size frameSize) {
 			/* Engine timer */
 			kl::time timer;
 
 			/* Object shaders */
-			kl::shaders* objectShaders = nullptr;
-			kl::uniform objWUni;
-			kl::uniform objVPUni;
-			kl::uniform ambientUni;
-			kl::uniform directUni;
-			kl::uniform directDirUni;
+			kl::shaders* engineShaders = nullptr;
+			kl::uniform w_uni;
+			kl::uniform vp_uni;
+			kl::uniform ambient_uni;
+			kl::uniform sun_uni;
+			kl::uniform sunDir_uni;
 
 			/* Window start definition */
-			gameWindow.start = [&]() {
+			win.start = [&]() {
+				/* Setting up input */
+				this->keys = &win.keys;
+				this->mouse = &win.mouse;
+
 				/* Setting up the face culling */
 				kl::opengl::setCulling(false);
 
@@ -44,42 +52,42 @@ namespace kl {
 				kl::opengl::setDepthTest(true);
 
 				/* Setting up the camera */
-				cam.setAspect(frameSize);
-				cam.setPlanes(0.01, 100);
-				cam.sensitivity = 0.025;
+				this->camera.setAspect(frameSize);
+				this->camera.setPlanes(0.01, 100);
+				this->camera.sensitivity = 0.025;
 
 				/* Setting up the lights */
 				ambient.color = kl::constant::colors::white;
 				ambient.intensity = 0.1;
-				directional.color = kl::constant::colors::white;
-				directional.intensity = 1;
-				directional.direction = kl::vec3(-0.2, -0.2, -1);
+				sun.color = kl::constant::colors::white;
+				sun.intensity = 1;
+				sun.direction = kl::vec3(-0.2, -0.2, -1);
 
 				/* Compiling object shaders */
-				objectShaders = new kl::shaders(
+				engineShaders = new kl::shaders(
 					kl::file::readText("res/shaders/object.vert"),
 					kl::file::readText("res/shaders/object.frag")
 				);
 
 				/* Getting object shader uniforms */
-				objWUni = objectShaders->getUniform("w");
-				objVPUni = objectShaders->getUniform("vp");
-				ambientUni = objectShaders->getUniform("ambientLight");
-				directUni = objectShaders->getUniform("directLight");
-				directDirUni = objectShaders->getUniform("directDirec");
+				w_uni = engineShaders->getUniform("w");
+				vp_uni = engineShaders->getUniform("vp");
+				ambient_uni = engineShaders->getUniform("ambientLight");
+				sun_uni = engineShaders->getUniform("sunLight");
+				sunDir_uni = engineShaders->getUniform("sunDirec");
 
 				/* Calling the user start */
-				start();
+				setup();
 			};
 
 			/* Window update definition */
-			gameWindow.update = [&]() {
+			win.update = [&]() {
 				/* Clearing the buffers */
 				kl::opengl::clearBuffers(background);
 
 				/* Time calculations */
-				elapsedTime = timer.stopwatchElapsed();
-				deltaTime = timer.getElapsed();
+				elapsed = timer.stopwatchElapsed();
+				delta = timer.getElapsed();
 
 				/* Calling the user update */
 				update();
@@ -88,51 +96,51 @@ namespace kl {
 				updatePhysics();
 
 				/* Setting the camera uniforms */
-				objVPUni.setData(cam.matrix());
+				vp_uni.setData(this->camera.matrix());
 
 				/* Setting the light uniforms */
-				ambientUni.setData(ambient.getLight());
-				directUni.setData(directional.getLight());
-				directDirUni.setData(directional.getDirection());
+				ambient_uni.setData(ambient.getLight());
+				sun_uni.setData(sun.getLight());
+				sunDir_uni.setData(sun.getDirection());
 
 				/* Rendering objects */
 				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 					if (objItr->visible) {
-						objWUni.setData(objItr->geometry.matrix());
+						w_uni.setData(objItr->geometry.matrix());
 						objItr->render();
 					}
 				}
 
 				/* Rendering skybox */
-				if (sky) sky->render(cam.matrix());
+				if (this->skybox) this->skybox->render(this->camera.matrix());
 
 				/* Updating the fps display */
-				gameWindow.setTitle(std::to_string(int(1 / deltaTime)));
+				win.setTitle(std::to_string(int(1 / delta)));
 
 				/* Swapping the frame buffers */
-				gameWindow.swapFrameBuffers();
+				win.swapFrameBuffers();
 			};
 
 			/* Window end definition */
-			gameWindow.end = [&]() {
-				delete objectShaders;
+			win.end = [&]() {
+				delete engineShaders;
 			};
 
 			/* Window creation */
 			timer.getElapsed();
 			timer.stopwatchReset();
-			gameWindow.startNew(frameSize, kl::random::getString(6), false, true, true);
+			win.startNew(frameSize, kl::random::getString(6), false, true, true);
 		}
 		~engine() {
 			stop();
 		}
 		void stop() {
-			gameWindow.stop();
+			win.stop();
 		}
 
-		// Returns a reference to engine window
-		kl::window& getWindow() {
-			return gameWindow;
+		// Returns the frame center
+		kl::point frameCenter() {
+			return win.getCenter();
 		}
 
 		// Creates a new game object
@@ -154,7 +162,7 @@ namespace kl {
 
 	private:
 		// Window
-		kl::window gameWindow;
+		kl::window win;
 
 		// Object buffer
 		std::list<kl::gameobject> gObjects;
@@ -165,17 +173,17 @@ namespace kl {
 			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
 				if (objItr->physics.enabled) {
 					// Applying gravity
-					objItr->physics.velocity.y -= gravity * objItr->physics.gravity * deltaTime;
+					objItr->physics.velocity.y -= gravity * objItr->physics.gravity * delta;
 
 					// Applying velocity
-					objItr->geometry.position.x += objItr->physics.velocity.x * deltaTime;
-					objItr->geometry.position.y += objItr->physics.velocity.y * deltaTime;
-					objItr->geometry.position.z += objItr->physics.velocity.z * deltaTime;
+					objItr->geometry.position.x += objItr->physics.velocity.x * delta;
+					objItr->geometry.position.y += objItr->physics.velocity.y * delta;
+					objItr->geometry.position.z += objItr->physics.velocity.z * delta;
 
 					// Applying angular momentum
-					objItr->geometry.rotation.x += objItr->physics.angular.x * deltaTime;
-					objItr->geometry.rotation.y += objItr->physics.angular.y * deltaTime;
-					objItr->geometry.rotation.z += objItr->physics.angular.z * deltaTime;
+					objItr->geometry.rotation.x += objItr->physics.angular.x * delta;
+					objItr->geometry.rotation.y += objItr->physics.angular.y * delta;
+					objItr->geometry.rotation.z += objItr->physics.angular.z * delta;
 				}
 			}
 		}

@@ -28,7 +28,7 @@ int main() {
 	kl::gameobject* horse = nullptr;
 
 	/* User start */
-	testEngine.start = [&]() {
+	testEngine.setup = [&]() {
 		/* Skybox creation */
 		cloudsBox = new kl::skybox(
 			"res/skybox/front.jpg",
@@ -38,7 +38,7 @@ int main() {
 			"res/skybox/top.jpg",
 			"res/skybox/bottom.jpg"
 		);
-		testEngine.sky = cloudsBox;
+		testEngine.skybox = cloudsBox;
 
 		/* Mesh creation */
 		tableMes = new kl::mesh("res/objects/table.obj");
@@ -114,52 +114,52 @@ int main() {
 	bool camMoving = false;
 	testEngine.update = [&]() {
 		/* Keyboard input */
-		if (testEngine.getWindow().keys.w) {
-			testEngine.cam.moveForward(testEngine.deltaTime);
+		if (testEngine.keys->w) {
+			testEngine.camera.moveForward(testEngine.delta);
 		}
-		if (testEngine.getWindow().keys.s) {
-			testEngine.cam.moveBack(testEngine.deltaTime);
+		if (testEngine.keys->s) {
+			testEngine.camera.moveBack(testEngine.delta);
 		}
-		if (testEngine.getWindow().keys.d) {
-			testEngine.cam.moveRight(testEngine.deltaTime);
+		if (testEngine.keys->d) {
+			testEngine.camera.moveRight(testEngine.delta);
 		}
-		if (testEngine.getWindow().keys.a) {
-			testEngine.cam.moveLeft(testEngine.deltaTime);
+		if (testEngine.keys->a) {
+			testEngine.camera.moveLeft(testEngine.delta);
 		}
-		if (testEngine.getWindow().keys.space) {
-			testEngine.cam.moveUp(testEngine.deltaTime);
+		if (testEngine.keys->space) {
+			testEngine.camera.moveUp(testEngine.delta);
 		}
-		if (testEngine.getWindow().keys.c) {
-			testEngine.cam.moveDown(testEngine.deltaTime);
+		if (testEngine.keys->c) {
+			testEngine.camera.moveDown(testEngine.delta);
 		}
-		if (testEngine.getWindow().keys.shift) {
-			testEngine.cam.speed = 5;
+		if (testEngine.keys->shift) {
+			testEngine.camera.speed = 5;
 		}
 		else {
-			testEngine.cam.speed = 2;
+			testEngine.camera.speed = 2;
 		}
 
 		/* Mouse input */
-		if (testEngine.getWindow().mouse.lmb) {
+		if (testEngine.mouse->lmb) {
 			camMoving = true;
-			testEngine.getWindow().mouse.hide();
+			testEngine.mouse->hide();
 
 			// Fixing the camera jump on the first click
-			testEngine.getWindow().mouse.position = testEngine.getWindow().getCenter();
+			testEngine.mouse->position = testEngine.frameCenter();
 		}
-		if (testEngine.getWindow().mouse.rmb) {
+		if (testEngine.mouse->rmb) {
 			camMoving = false;
-			testEngine.getWindow().mouse.show();
+			testEngine.mouse->show();
 		}
 		if (camMoving) {
-			kl::point frameCenter = testEngine.getWindow().getCenter();
-			testEngine.cam.rotate(testEngine.getWindow().mouse.position, frameCenter);
-			testEngine.getWindow().mouse.move(frameCenter);
+			kl::point frameCenter = testEngine.frameCenter();
+			testEngine.camera.rotate(testEngine.mouse->position, frameCenter);
+			testEngine.mouse->move(frameCenter);
 		}
 	};
 
 	/* Engine creation */
-	testEngine.startNew(kl::size(1600, 900));
+	testEngine.createNew(kl::size(1600, 900));
 
 	/* Deleting skybox */
 	delete cloudsBox;
