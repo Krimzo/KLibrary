@@ -36,9 +36,7 @@ int main() {
 			"res/skybox/left.jpg",
 			"res/skybox/right.jpg",
 			"res/skybox/top.jpg",
-			"res/skybox/bottom.jpg",
-			kl::file::readText("res/shaders/skybox.vert"),
-			kl::file::readText("res/shaders/skybox.frag")
+			"res/skybox/bottom.jpg"
 		);
 		testEngine.sky = cloudsBox;
 
@@ -79,7 +77,7 @@ int main() {
 		table->geometry.size = kl::vec3(1, 1, 1);
 		table->geometry.rotation = kl::vec3(0, 0, 0);
 		table->geometry.position = kl::vec3(0, -0.5, 2);
-		table->physics.enabled = true;
+		table->physics.enabled = false;
 		table->physics.angular.y = 18;
 		table->physics.gravity = 0;
 

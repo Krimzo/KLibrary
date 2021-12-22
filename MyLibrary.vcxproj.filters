@@ -168,8 +168,6 @@
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\object.frag" />
     <None Include="res\shaders\object.vert" />
-    <None Include="res\shaders\skybox.frag" />
-    <None Include="res\shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameEngine.cpp">

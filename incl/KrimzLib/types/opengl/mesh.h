@@ -30,7 +30,7 @@ namespace kl {
 	private:
 		kl::id vao = NULL;
 		kl::id vbo = NULL;
-		kl::uint32 vertexCount = 0;
+		int vertexCount = 0;
 
 		// Sets the vertex/index data
 		void loadData(std::vector<kl::vertex>& vertexData) {
