@@ -11,13 +11,13 @@ namespace kl {
 		}
 		~skybox() {
 			// Deleting the texture
-			delete boxTex;
+			delete box_tex;
 
 			// Deleting the mesh
-			delete boxMes;
+			delete box_mes;
 
 			// Deleting the shaders
-			delete boxSha;
+			delete box_sha;
 		}
 
 		// Renders the cubemap
@@ -29,8 +29,8 @@ namespace kl {
 			vp_uni.setData(vpMat);
 
 			// Drawing the cubemap
-			boxTex->bind();
-			boxMes->draw();
+			box_tex->bind();
+			box_mes->draw();
 
 			// Resetting the depth testing
 			glDepthFunc(GL_LESS);
@@ -40,9 +40,9 @@ namespace kl {
 		}
 
 	private:
-		kl::mesh* boxMes = nullptr;
-		kl::texture* boxTex = nullptr;
-		kl::shaders* boxSha = nullptr;
+		kl::mesh* box_mes = nullptr;
+		kl::texture* box_tex = nullptr;
+		kl::shaders* box_sha = nullptr;
 		kl::uniform vp_uni;
 
 		// Box vertices
@@ -55,16 +55,16 @@ namespace kl {
 		// Builds the skybox
 		void build(kl::image& front, kl::image& back, kl::image& left, kl::image& right, kl::image& top, kl::image& bottom) {
 			// Generating the box mesh
-			boxMes = new kl::mesh(boxVertices);
+			box_mes = new kl::mesh(boxVertices);
 
 			// Generating the box texture
-			boxTex = new kl::texture(front, back, left, right, top, bottom);
+			box_tex = new kl::texture(front, back, left, right, top, bottom);
 
 			// Compiling skybox shaders
-			boxSha = new shaders(vertSource, fragSource);
+			box_sha = new shaders(vertSource, fragSource);
 
 			// Getting the view/projection uniform
-			vp_uni = boxSha->getUniform("vp");
+			vp_uni = box_sha->getUniform("vp");
 		}
 	};
 

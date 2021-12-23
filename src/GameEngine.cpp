@@ -3,20 +3,20 @@
 
 int main() {
 	/* Engine */
-	kl::renderer testRenderer;
+	kl::renderer renderer;
 
 	/* Skybox */
 	kl::skybox* clouds = nullptr;
 
 	/* Meshes */
-	kl::mesh* tableMes = nullptr;
-	kl::mesh* katanaMes = nullptr;
-	kl::mesh* horseMes = nullptr;
+	kl::mesh* table_mes = nullptr;
+	kl::mesh* katana_mes = nullptr;
+	kl::mesh* horse_mes = nullptr;
 
 	/* Textures */
-	kl::texture* tableTex = nullptr;
-	kl::texture* katanaTex = nullptr;
-	kl::texture* horseTex = nullptr;
+	kl::texture* table_tex = nullptr;
+	kl::texture* katana_tex = nullptr;
+	kl::texture* horse_tex = nullptr;
 
 	/* Objects */
 	kl::renderable* table = nullptr;
@@ -25,7 +25,7 @@ int main() {
 	kl::renderable* horse = nullptr;
 
 	/* User start */
-	testRenderer.setup = [&]() {
+	renderer.setup = [&]() {
 		/* Skybox creation */
 		clouds = new kl::skybox(
 			"res/skybox/front.jpg",
@@ -35,35 +35,35 @@ int main() {
 			"res/skybox/top.jpg",
 			"res/skybox/bottom.jpg"
 		);
-		testRenderer.sky = clouds;
+		renderer.sky = clouds;
 
 		/* Mesh creation */
-		tableMes = new kl::mesh("res/objects/table.obj");
-		katanaMes = new kl::mesh("res/objects/katana.obj");
-		horseMes = new kl::mesh("res/objects/horse.obj");
+		table_mes = new kl::mesh("res/objects/table.obj");
+		katana_mes = new kl::mesh("res/objects/katana.obj");
+		horse_mes = new kl::mesh("res/objects/horse.obj");
 
 		/* Texture creation */
-		tableTex = new kl::texture("res/textures/table.png");
-		katanaTex = new kl::texture("res/textures/katana.png");
-		horseTex = new kl::texture("res/textures/horse.png");
+		table_tex = new kl::texture("res/textures/table.png");
+		katana_tex = new kl::texture("res/textures/katana.png");
+		horse_tex = new kl::texture("res/textures/horse.png");
 
 		/* Object creation */
-		table = testRenderer.newObject();
-		katanaL = testRenderer.newObject();
-		katanaR = testRenderer.newObject();
-		horse = testRenderer.newObject();
+		table = renderer.newObject();
+		katanaL = renderer.newObject();
+		katanaR = renderer.newObject();
+		horse = renderer.newObject();
 
 		/* Mesh binding */
-		table->mesh = tableMes;
-		katanaL->mesh = katanaMes;
-		katanaR->mesh = katanaMes;
-		horse->mesh = horseMes;
+		table->mesh = table_mes;
+		katanaL->mesh = katana_mes;
+		katanaR->mesh = katana_mes;
+		horse->mesh = horse_mes;
 
 		/* Texture binding */
-		table->texture = tableTex;
-		katanaL->texture = katanaTex;
-		katanaR->texture = katanaTex;
-		horse->texture = horseTex;
+		table->texture = table_tex;
+		katanaL->texture = katana_tex;
+		katanaR->texture = katana_tex;
+		horse->texture = horse_tex;
 
 		/* Object properties setup */
 		table->geometry.size = kl::vec3(1, 1, 1);
@@ -97,67 +97,67 @@ int main() {
 
 	/* User update */
 	bool camMoving = false;
-	testRenderer.update = [&]() {
+	renderer.update = [&]() {
 		/* Keyboard input */
-		if (testRenderer.keys->w) {
-			testRenderer.camera.moveForward(testRenderer.delta);
+		if (renderer.keys->w) {
+			renderer.cam.moveForward(renderer.delta);
 		}
-		if (testRenderer.keys->s) {
-			testRenderer.camera.moveBack(testRenderer.delta);
+		if (renderer.keys->s) {
+			renderer.cam.moveBack(renderer.delta);
 		}
-		if (testRenderer.keys->d) {
-			testRenderer.camera.moveRight(testRenderer.delta);
+		if (renderer.keys->d) {
+			renderer.cam.moveRight(renderer.delta);
 		}
-		if (testRenderer.keys->a) {
-			testRenderer.camera.moveLeft(testRenderer.delta);
+		if (renderer.keys->a) {
+			renderer.cam.moveLeft(renderer.delta);
 		}
-		if (testRenderer.keys->space) {
-			testRenderer.camera.moveUp(testRenderer.delta);
+		if (renderer.keys->space) {
+			renderer.cam.moveUp(renderer.delta);
 		}
-		if (testRenderer.keys->c) {
-			testRenderer.camera.moveDown(testRenderer.delta);
+		if (renderer.keys->c) {
+			renderer.cam.moveDown(renderer.delta);
 		}
-		if (testRenderer.keys->shift) {
-			testRenderer.camera.speed = 5;
+		if (renderer.keys->shift) {
+			renderer.cam.speed = 5;
 		}
 		else {
-			testRenderer.camera.speed = 2;
+			renderer.cam.speed = 2;
 		}
 
 		/* Mouse input */
-		if (testRenderer.mouse->lmb) {
+		if (renderer.mouse->lmb) {
 			camMoving = true;
-			testRenderer.mouse->hide();
+			renderer.mouse->hide();
 
 			// Fixing the camera jump on the first click
-			testRenderer.mouse->position = testRenderer.frameCenter();
+			renderer.mouse->position = renderer.frameCenter();
 		}
-		if (testRenderer.mouse->rmb) {
+		if (renderer.mouse->rmb) {
 			camMoving = false;
-			testRenderer.mouse->show();
+			renderer.mouse->show();
 		}
 		if (camMoving) {
-			kl::point frameCenter = testRenderer.frameCenter();
-			testRenderer.camera.rotate(testRenderer.mouse->position, frameCenter);
-			testRenderer.mouse->move(frameCenter);
+			kl::point frameCenter = renderer.frameCenter();
+			renderer.cam.rotate(renderer.mouse->position, frameCenter);
+			renderer.mouse->move(frameCenter);
 		}
 	};
 
 	/* Renderer creation */
-	testRenderer.createNew(kl::size(1600, 900));
+	renderer.createNew(kl::size(1600, 900));
 
 	/* Deleting skybox */
 	delete clouds;
 
 	/* Deleting meshes */
-	delete tableMes;
-	delete katanaMes;
-	delete horseMes;
+	delete table_mes;
+	delete katana_mes;
+	delete horse_mes;
 
 	/* Deleting textures */
-	delete tableTex;
-	delete katanaTex;
-	delete horseTex;
+	delete table_tex;
+	delete katana_tex;
+	delete horse_tex;
 
 	return 0;
 }

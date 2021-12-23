@@ -67,7 +67,7 @@ namespace kl {
 
 			// Setting and compiling the shader source
 			const char* sourcePointer = shaderSource.c_str();
-			const int sourceSize = (int)shaderSource.size();
+			const int sourceSize = shaderSource.size();
 			glShaderSource(shader, 1, &sourcePointer, &sourceSize);
 			glCompileShader(shader);
 

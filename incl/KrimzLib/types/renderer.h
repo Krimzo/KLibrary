@@ -15,7 +15,7 @@ namespace kl {
 		// View properties
 		kl::skybox* sky = nullptr;
 		kl::color background = kl::constant::colors::gray;
-		kl::camera camera;
+		kl::camera cam;
 		
 		// Ambient and directional lights
 		kl::ambient dark;
@@ -31,7 +31,7 @@ namespace kl {
 			kl::time timer;
 
 			/* Object shaders */
-			kl::shaders* engineShaders = nullptr;
+			kl::shaders* default_sha = nullptr;
 			kl::uniform w_uni;
 			kl::uniform vp_uni;
 			kl::uniform dark_uni;
@@ -51,9 +51,9 @@ namespace kl {
 				kl::opengl::setDepthTest(true);
 
 				/* Setting up the camera */
-				this->camera.setAspect(frameSize);
-				this->camera.setPlanes(0.01, 100);
-				this->camera.sensitivity = 0.025;
+				cam.setAspect(frameSize);
+				cam.setPlanes(0.01, 100);
+				cam.sensitivity = 0.025;
 
 				/* Setting up the lights */
 				dark.color = kl::constant::colors::white;
@@ -63,17 +63,17 @@ namespace kl {
 				sun.direction = kl::vec3(-0.2, -0.2, -1);
 
 				/* Compiling object shaders */
-				engineShaders = new kl::shaders(
+				default_sha = new kl::shaders(
 					kl::file::readText("res/shaders/renderer.vert"),
 					kl::file::readText("res/shaders/renderer.frag")
 				);
 
 				/* Getting object shader uniforms */
-				w_uni = engineShaders->getUniform("w");
-				vp_uni = engineShaders->getUniform("vp");
-				dark_uni = engineShaders->getUniform("dark");
-				sunL_uni = engineShaders->getUniform("sunL");
-				sunD_uni = engineShaders->getUniform("sunD");
+				w_uni = default_sha->getUniform("w");
+				vp_uni = default_sha->getUniform("vp");
+				dark_uni = default_sha->getUniform("dark");
+				sunL_uni = default_sha->getUniform("sunL");
+				sunD_uni = default_sha->getUniform("sunD");
 
 				/* Calling the user start */
 				setup();
@@ -95,7 +95,7 @@ namespace kl {
 				updatePhysics();
 
 				/* Setting the camera uniforms */
-				vp_uni.setData(this->camera.matrix());
+				vp_uni.setData(cam.matrix());
 
 				/* Setting the light uniforms */
 				dark_uni.setData(dark.getColor());
@@ -111,7 +111,7 @@ namespace kl {
 				}
 
 				/* Rendering skybox */
-				if (sky) sky->render(this->camera.matrix());
+				if (sky) sky->render(cam.matrix());
 
 				/* Updating the fps display */
 				win.setTitle(std::to_string(int(1 / delta)));
@@ -122,7 +122,7 @@ namespace kl {
 
 			/* Window end definition */
 			win.end = [&]() {
-				delete engineShaders;
+				delete default_sha;
 			};
 
 			/* Window creation */
@@ -160,7 +160,7 @@ namespace kl {
 		// Window
 		kl::window win;
 
-		// Object buffer
+		// Object(renderable) buffer
 		std::list<kl::renderable> gObjects;
 		std::list<kl::renderable>::iterator objItr;
 
