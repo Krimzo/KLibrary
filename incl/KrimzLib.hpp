@@ -33,7 +33,6 @@
 #include "KrimzLib/types/size.h"
 #include "KrimzLib/types/color.h"
 #include "KrimzLib/types/array.h"
-#include "KrimzLib/types/stack.h"
 #include "KrimzLib/types/time.h"
 
 // Including vector math headers
@@ -52,7 +51,6 @@
 #include "KrimzLib/console.h"
 #include "KrimzLib/binary.h"
 #include "KrimzLib/file.h"
-#include "KrimzLib/thread.h"
 #include "KrimzLib/web.h"
 
 // Including opengl types

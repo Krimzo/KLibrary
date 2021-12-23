@@ -105,7 +105,7 @@ namespace kl {
 		}
 
 		// Outputs a progress bar on the console
-		static void progressBar(std::string message, kl::uint32 outputY, float percentage) {
+		static void progressBar(std::string message, int outputY, float percentage) {
 			// Prep
 			percentage = std::max(std::min(percentage, 1.0f), 0.0f);
 			int barLen = console::getSize().width - int(message.length() - 11);
@@ -141,7 +141,7 @@ namespace kl {
 		static void print(int data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(kl::int64 data, kl::color textColor = constant::colors::white) {
+		static void print(long long data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lld\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void print(float data, kl::color textColor = constant::colors::white) {
@@ -153,32 +153,11 @@ namespace kl {
 		static void print(kl::byte data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(kl::size data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmw: %u h: %u\033[0m", textColor.r, textColor.g, textColor.b, data.width, data.height);
-		}
-		static void print(kl::point data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
-		}
-		static void print(kl::vec2 data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y);
-		}
-		static void print(kl::vec3 data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
-		}
-		static void print(kl::color data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmr: %d g: %d b: %d\033[0m", textColor.r, textColor.g, textColor.b, data.r, data.g, data.b);
-		}
 		static void print(std::string& data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 		static void print(std::string&& data, kl::color textColor = constant::colors::white) {
 			print(data, textColor);
-		}
-		static void print(kl::bytes& data, kl::color textColor = constant::colors::white) {
-			print(kl::convert::toString(data), textColor);
-		}
-		static void print(kl::bytes&& data, kl::color textColor = constant::colors::white) {
-			print(kl::convert::toString(data), textColor);
 		}
 
 		// Prints RGB data with new line at the end
@@ -188,7 +167,7 @@ namespace kl {
 		static void println(int data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(kl::int64 data, kl::color textColor = constant::colors::white) {
+		static void println(long long data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lld\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
 		static void println(float data, kl::color textColor = constant::colors::white) {
@@ -200,32 +179,11 @@ namespace kl {
 		static void println(kl::byte data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(kl::size data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmw: %u h: %u\033[0m\n", textColor.r, textColor.g, textColor.b, data.width, data.height);
-		}
-		static void println(kl::point data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %d y: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
-		}
-		static void println(kl::vec2 data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y);
-		}
-		static void println(kl::vec3 data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmx: %lf y: %lf z: %lf\033[0m\n", textColor.r, textColor.g, textColor.b, data.x, data.y, data.z);
-		}
-		static void println(kl::color data, kl::color textColor = constant::colors::white) {
-			printf("\033[38;2;%d;%d;%dmr: %d g: %d b: %d\033[0m\n", textColor.r, textColor.g, textColor.b, data.r, data.g, data.b);
-		}
 		static void println(std::string& data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 		static void println(std::string&& data, kl::color textColor = constant::colors::white) {
 			println(data, textColor);
-		}
-		static void println(kl::bytes& data, kl::color textColor = constant::colors::white) {
-			println(kl::convert::toString(data), textColor);
-		}
-		static void println(kl::bytes&& data, kl::color textColor = constant::colors::white) {
-			println(kl::convert::toString(data), textColor);
 		}
 
 	protected:

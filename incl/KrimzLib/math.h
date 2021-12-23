@@ -14,13 +14,13 @@ namespace kl {
 		}
 
 		// Checks if the given number is prime
-		bool isPrime(kl::uint64 num) {
+		bool isPrime(uint64_t num) {
 			if (num == 0 || num == 1) {
 				return false;
 			}
 
-			kl::uint64 half = num / 2;
-			for (kl::uint64 i = 2; i <= half; i++) {
+			uint64_t half = num / 2;
+			for (uint64_t i = 2; i <= half; i++) {
 				if (num % i == 0) {
 					return false;
 				}

@@ -27,5 +27,10 @@ namespace kl {
 		bool operator != (kl::color obj) {
 			return (r != obj.r || g != obj.g || b != obj.b);
 		}
+
+		// Prints the color
+		void print() {
+			printf("%d %d %d\n", r, g, b);
+		}
 	};
 }

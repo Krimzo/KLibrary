@@ -23,7 +23,7 @@ namespace kl {
 		// Converts a byte array to a string
 		std::string toString(kl::bytes& data) {
 			std::stringstream ss;
-			for (kl::uint64 i = 0; i < data.size(); i++) {
+			for (uint64_t i = 0; i < data.size(); i++) {
 				ss << (char)data[i];
 			}
 			return ss.str();
@@ -35,7 +35,7 @@ namespace kl {
 		// Converts a string to a bytes array
 		kl::bytes toBytes(std::string& data) {
 			kl::bytes tempBytes(data.size());
-			for (kl::uint64 i = 0; i < data.size(); i++) {
+			for (uint64_t i = 0; i < data.size(); i++) {
 				tempBytes[i] = (byte)data[i];
 			}
 			return tempBytes;

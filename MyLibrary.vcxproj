@@ -160,7 +160,6 @@
     <ClInclude Include="incl\KrimzLib\math.h" />
     <ClInclude Include="incl\KrimzLib\opengl.h" />
     <ClInclude Include="incl\KrimzLib\random.h" />
-    <ClInclude Include="incl\KrimzLib\thread.h" />
     <ClInclude Include="incl\KrimzLib\types\renderer\light\ambient.h" />
     <ClInclude Include="incl\KrimzLib\types\renderer\light\direct.h" />
     <ClInclude Include="incl\KrimzLib\types\time.h" />
@@ -177,7 +176,6 @@
     <ClInclude Include="incl\KrimzLib\types\opengl\mesh.h" />
     <ClInclude Include="incl\KrimzLib\types\window\mouse.h" />
     <ClInclude Include="incl\KrimzLib\types\opengl\uniform.h" />
-    <ClInclude Include="incl\KrimzLib\types\stack.h" />
     <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h" />
     <ClInclude Include="incl\KrimzLib\types\window.h" />
     <ClInclude Include="incl\KrimzLib\types\image.h" />
@@ -199,7 +197,7 @@
     <None Include="res\shaders\renderer.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameEngine.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,19 +2,21 @@
 
 
 int main() {
-	kl::stack<int> pecanje;
+	kl::array<kl::array<std::string>> a;
 
-	for (int i = 0; i < 10; i++) {
-		pecanje.push(i);
+	for (int i = 0; i < 7; i++) {
+		a <= kl::array<std::string>();
+		for (int j = 0; j < 3; j++) {
+			a[i] <= kl::random::getString(kl::random::getInt(1, 13));
+		}
 	}
 
-	kl::uint64 stackSize = 0;
-	for (int i = 0; i < 10; i++) {
-		std::cout << "value: " << pecanje.pop(&stackSize) << ", size: " << stackSize << "\n";
-	}
+	a.forEach([](auto* elem) {
+		elem->forEach([](auto* str) {
+			kl::console::println(*str, kl::random::getColor());
+		});
+	});
 
-	pecanje.push(42069);
-	std::cout << "value: " << pecanje.pop() << ", size: " << stackSize << "\n";
 
 	kl::console::waitFor(' ');
 	return 0;

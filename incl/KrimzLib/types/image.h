@@ -17,10 +17,10 @@ namespace kl {
 		}
 
 		// Getters
-		kl::uint32 getWidth() {
+		int getWidth() {
 			return imageWidth;
 		}
-		kl::uint32 getHeight() {
+		int getHeight() {
 			return imageHeight;
 		}
 		kl::size getSize() {
@@ -32,7 +32,7 @@ namespace kl {
 			}
 			return kl::color();
 		}
-		kl::uint64 getPixelCount() {
+		int getPixelCount() {
 			return imagePixels.size();
 		}
 		kl::byte* pointer() {
@@ -40,10 +40,10 @@ namespace kl {
 		}
 
 		// Setters
-		void setWidth(kl::uint32 width) {
+		void setWidth(int width) {
 			setSize(kl::size(width, imageHeight));
 		}
-		void setHeight(kl::uint32 height) {
+		void setHeight(int height) {
 			setSize(kl::size(imageWidth, height));
 		}
 		void setSize(kl::size size) {
@@ -70,10 +70,10 @@ namespace kl {
 
 			// Pixel data loading
 			setSize(kl::size(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
-			for (kl::uint32 y = 0; y < imageHeight; y++) {
-				for (kl::uint32 x = 0; x < imageWidth; x++) {
+			for (int y = 0; y < imageHeight; y++) {
+				for (int x = 0; x < imageWidth; x++) {
 					Gdiplus::Color tempPixel;
-					loadedBitmap.GetPixel((int)x, (int)y, &tempPixel);
+					loadedBitmap.GetPixel(x, y, &tempPixel);
 					setPixel(kl::point(x, y), kl::color(tempPixel.GetR(), tempPixel.GetG() , tempPixel.GetB()));
 				}
 			}
@@ -99,8 +99,8 @@ namespace kl {
 			}
 			else if (fileExtension == "txt") {
 				std::stringstream ss;
-				for (kl::uint32 y = 0; y < imageHeight; y++) {
-					for (kl::uint32 x = 0; x < imageWidth; x++) {
+				for (int y = 0; y < imageHeight; y++) {
+					for (int x = 0; x < imageWidth; x++) {
 						ss <<
 							x << " " << y << " => " <<
 							int(imagePixels[y * imageWidth + x].r) << " " <<
@@ -118,8 +118,8 @@ namespace kl {
 
 			// Pixel data transfer and saving to file
 			Gdiplus::Bitmap tempBitmap(imageWidth, imageHeight, PixelFormat24bppRGB);
-			for (kl::uint32 y = 0; y < imageHeight; y++) {
-				for (kl::uint32 x = 0; x < imageWidth; x++) {
+			for (int y = 0; y < imageHeight; y++) {
+				for (int x = 0; x < imageWidth; x++) {
 					kl::color tempPixel = getPixel(kl::point(x, y));
 					tempBitmap.SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.r, tempPixel.g, tempPixel.b));
 				}
@@ -129,16 +129,16 @@ namespace kl {
 
 		// Fils the image with solid color
 		void fillSolid(kl::color color) {
-			for (kl::uint32 i = 0; i < imagePixels.size(); i++) {
+			for (int i = 0; i < imagePixels.size(); i++) {
 				imagePixels[i] = color;
 			}
 		}
 
 		// Flips the pixel on x axis
 		void flipHorizontal() {
-			const kl::uint32 halfWidth = imageWidth / 2;
-			for (kl::uint32 y = 0; y < imageHeight; y++) {
-				for (kl::uint32 x = 0; x < halfWidth; x++) {
+			const int halfWidth = imageWidth / 2;
+			for (int y = 0; y < imageHeight; y++) {
+				for (int x = 0; x < halfWidth; x++) {
 					kl::color tempPixel = imagePixels[y * imageWidth + x];
 					imagePixels[y * imageWidth + x] = imagePixels[y * imageWidth + (imageWidth - 1 - x)];
 					imagePixels[y * imageWidth + (imageWidth - 1 - x)] = tempPixel;
@@ -148,9 +148,9 @@ namespace kl {
 
 		// Flips the pixel on y axis
 		void flipVertical() {
-			const kl::uint32 halfHeight = imageHeight / 2;
-			for (kl::uint32 x = 0; x < imageWidth; x++) {
-				for (kl::uint32 y = 0; y < halfHeight; y++) {
+			const int halfHeight = imageHeight / 2;
+			for (int x = 0; x < imageWidth; x++) {
+				for (int y = 0; y < halfHeight; y++) {
 					kl::color tempPixel = imagePixels[y * imageWidth + x];
 					imagePixels[y * imageWidth + x] = imagePixels[(imageHeight - 1 - y) * imageWidth + x];
 					imagePixels[(imageHeight - 1 - y) * imageWidth + x] = tempPixel;
@@ -261,19 +261,19 @@ namespace kl {
 			static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 
 			// Calculations
-			kl::uint32 pixelWidthIncrement = imageWidth / frameSize.width;
-			kl::uint32 pixelHeightIncrement = imageHeight / frameSize.height;
+			int pixelWidthIncrement = imageWidth / frameSize.width;
+			int pixelHeightIncrement = imageHeight / frameSize.height;
 
 			// Processing
 			std::stringstream frame;
-			for (kl::uint32 y = 0; y < frameSize.height; y++) {
-				for (kl::uint32 x = 0; x < frameSize.width; x++) {
+			for (int y = 0; y < frameSize.height; y++) {
+				for (int x = 0; x < frameSize.width; x++) {
 					// Pixels to grayscale
 					kl::color currentPixel = getPixel(kl::point(x * pixelWidthIncrement, y * pixelHeightIncrement));
-					kl::uint32 grayScaledPixel = kl::uint32(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
+					int grayScaledPixel = int(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
 
 					// Grayscaled values to ASCII
-					kl::uint32 saturationLevel = kl::uint32((grayScaledPixel / 255.0) * 9);
+					int saturationLevel = int((grayScaledPixel / 255.0) * 9);
 					frame << asciiPixelTable[saturationLevel];
 				}
 				frame << '\n';
@@ -286,13 +286,13 @@ namespace kl {
 		void genPerlinNoise(int octaveCount, float bias = 1) {
 			// Generating random seed array
 			std::vector<float> seedArray(imageWidth * imageHeight);
-			for (kl::uint32 i = 0; i < imageWidth * imageHeight; i++) {
+			for (int i = 0; i < imageWidth * imageHeight; i++) {
 				seedArray[i] = kl::random::getFloat(0, 1);
 			}
 
 			// Generating noise
-			for (kl::uint32 y = 0; y < imageHeight; y++) {
-				for (kl::uint32 x = 0; x < imageWidth; x++) {
+			for (int y = 0; y < imageHeight; y++) {
+				for (int x = 0; x < imageWidth; x++) {
 					float noise = 0;
 					float scale = 1;
 					float scaleSum = 0;
@@ -323,8 +323,8 @@ namespace kl {
 
 		// Executes a function on each pixel
 		void runOnEach(std::function<void(kl::color* pixelColor, kl::point pixelPosition)> toExecute) {
-			for (kl::uint32 y = 0; y < imageHeight; y++) {
-				for (kl::uint32 x = 0; x < imageWidth; x++) {
+			for (int y = 0; y < imageHeight; y++) {
+				for (int x = 0; x < imageWidth; x++) {
 					toExecute(&imagePixels[y * imageWidth + x], kl::point(x, y));
 				}
 			}
@@ -348,8 +348,8 @@ namespace kl {
 	private:
 		static ULONG_PTR gdiplusToken;
 		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-		kl::uint32 imageWidth;
-		kl::uint32 imageHeight;
+		int imageWidth;
+		int imageHeight;
 		std::vector<kl::color> imagePixels;
 	};
 	ULONG_PTR image::gdiplusToken = NULL;

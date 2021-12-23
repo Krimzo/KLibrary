@@ -23,5 +23,10 @@ namespace kl {
 		bool operator != (kl::point obj) {
 			return (x != obj.x || y != obj.y);
 		}
+
+		// Prints the point
+		void print() {
+			printf("%d %d\n", x, y);
+		}
 	};
 }

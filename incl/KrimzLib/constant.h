@@ -11,7 +11,7 @@ namespace kl {
 
 		// Floats
 		namespace floats {
-			const float pi = 3.14159265358979f;
+			const float pi = 3.14159265358979;
 		}
 
 		// Colors

@@ -3,15 +3,15 @@
 
 namespace kl {
     struct size {
-		kl::uint32 width;
-		kl::uint32 height;
+		int width;
+		int height;
 
 		// Constructors
 		size() {
 			width = 0;
 			height = 0;
 		}
-		size(kl::uint32 width, kl::uint32 height) {
+		size(int width, int height) {
 			this->width = width;
 			this->height = height;
 		}
@@ -22,6 +22,11 @@ namespace kl {
 		}
 		bool operator != (kl::size obj) {
 			return (width != obj.width || height != obj.height);
+		}
+
+		// Prints the size
+		void print() {
+			printf("%d %d\n", width, height);
 		}
 	};
 }

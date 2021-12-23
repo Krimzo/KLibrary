@@ -39,9 +39,9 @@ namespace kl {
 		}
 
 		// Returns a random string
-		static std::string getString(kl::uint32 size) {
+		static std::string getString(int len) {
 			std::stringstream ss;
-			for (kl::uint32 i = 0; i < size; i++) {
+			for (int i = 0; i < len; i++) {
 				ss << kl::random::getLetter(kl::random::getBool());
 			}
 			return ss.str();
@@ -59,7 +59,7 @@ namespace kl {
 	protected:
 		// Sets the seed for random number generation
 		static void newSeed() {
-			srand((unsigned)std::time(nullptr));
+			srand((unsigned int)std::time(nullptr));
 		}
 	};
 }
