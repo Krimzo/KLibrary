@@ -9,10 +9,10 @@ namespace kl {
 		}
 
 		// Pops the last item
-		T pop(kl::uint64* updateSize = nullptr) {
+		T pop(kl::uint64* updatedSize = nullptr) {
 			T tempVal = data.back();
 			kl::uint64 newSize = data--;
-			if (updateSize) *updateSize = newSize;
+			if (updatedSize) *updatedSize = newSize;
 			return tempVal;
 		}
 

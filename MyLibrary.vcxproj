@@ -161,17 +161,18 @@
     <ClInclude Include="incl\KrimzLib\opengl.h" />
     <ClInclude Include="incl\KrimzLib\random.h" />
     <ClInclude Include="incl\KrimzLib\thread.h" />
+    <ClInclude Include="incl\KrimzLib\types\renderer\light\ambient.h" />
+    <ClInclude Include="incl\KrimzLib\types\renderer\light\direct.h" />
     <ClInclude Include="incl\KrimzLib\types\time.h" />
     <ClInclude Include="incl\KrimzLib\type.h" />
     <ClInclude Include="incl\KrimzLib\types\array.h" />
     <ClInclude Include="incl\KrimzLib\types\color.h" />
-    <ClInclude Include="incl\KrimzLib\types\engine\light.h" />
-    <ClInclude Include="incl\KrimzLib\types\engine\camera.h" />
-    <ClInclude Include="incl\KrimzLib\types\engine.h" />
-    <ClInclude Include="incl\KrimzLib\types\engine\gameobject.h" />
-    <ClInclude Include="incl\KrimzLib\types\engine\gameobject\geometry.h" />
-    <ClInclude Include="incl\KrimzLib\types\engine\gameobject\physics.h" />
-    <ClInclude Include="incl\KrimzLib\types\engine\skybox.h" />
+    <ClInclude Include="incl\KrimzLib\types\renderer\camera.h" />
+    <ClInclude Include="incl\KrimzLib\types\renderer.h" />
+    <ClInclude Include="incl\KrimzLib\types\renderer\renderable.h" />
+    <ClInclude Include="incl\KrimzLib\types\renderer\renderable\geometry.h" />
+    <ClInclude Include="incl\KrimzLib\types\renderer\renderable\physics.h" />
+    <ClInclude Include="incl\KrimzLib\types\renderer\skybox.h" />
     <ClInclude Include="incl\KrimzLib\types\window\keys.h" />
     <ClInclude Include="incl\KrimzLib\types\opengl\mesh.h" />
     <ClInclude Include="incl\KrimzLib\types\window\mouse.h" />
@@ -194,8 +195,8 @@
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\basic.vs" />
-    <None Include="res\shaders\engine.frag" />
-    <None Include="res\shaders\engine.vert" />
+    <None Include="res\shaders\renderer.frag" />
+    <None Include="res\shaders\renderer.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameEngine.cpp" />

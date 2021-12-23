@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="incl\KrimzLib\types\engine\camera.h">
+    <ClInclude Include="incl\KrimzLib\types\renderer\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine.h">
+    <ClInclude Include="incl\KrimzLib\types\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine\gameobject.h">
+    <ClInclude Include="incl\KrimzLib\types\renderer\renderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\window\mouse.h">
@@ -147,27 +147,30 @@
     <ClInclude Include="incl\KrimzLib\types\opengl\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine\gameobject\geometry.h">
+    <ClInclude Include="incl\KrimzLib\types\renderer\renderable\geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine\gameobject\physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine\light.h">
+    <ClInclude Include="incl\KrimzLib\types\renderer\renderable\physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\types\opengl\uniform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\types\engine\skybox.h">
+    <ClInclude Include="incl\KrimzLib\types\renderer\skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\renderer\light\ambient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\types\renderer\light\direct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\basic.fs" />
-    <None Include="res\shaders\engine.frag" />
-    <None Include="res\shaders\engine.vert" />
+    <None Include="res\shaders\renderer.frag" />
+    <None Include="res\shaders\renderer.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameEngine.cpp">

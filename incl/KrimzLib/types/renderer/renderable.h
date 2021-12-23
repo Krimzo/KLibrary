@@ -2,7 +2,7 @@
 
 
 namespace kl {
-    struct gameobject {
+    struct renderable {
 		// Object data
 		bool visible = true;
 		kl::geometry geometry = kl::geometry();

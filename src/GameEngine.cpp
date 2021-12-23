@@ -3,10 +3,10 @@
 
 int main() {
 	/* Engine */
-	kl::engine testEngine;
+	kl::renderer testRenderer;
 
 	/* Skybox */
-	kl::skybox* cloudsBox = nullptr;
+	kl::skybox* clouds = nullptr;
 
 	/* Meshes */
 	kl::mesh* tableMes = nullptr;
@@ -19,15 +19,15 @@ int main() {
 	kl::texture* horseTex = nullptr;
 
 	/* Objects */
-	kl::gameobject* table = nullptr;
-	kl::gameobject* katanaL = nullptr;
-	kl::gameobject* katanaR = nullptr;
-	kl::gameobject* horse = nullptr;
+	kl::renderable* table = nullptr;
+	kl::renderable* katanaL = nullptr;
+	kl::renderable* katanaR = nullptr;
+	kl::renderable* horse = nullptr;
 
 	/* User start */
-	testEngine.setup = [&]() {
+	testRenderer.setup = [&]() {
 		/* Skybox creation */
-		cloudsBox = new kl::skybox(
+		clouds = new kl::skybox(
 			"res/skybox/front.jpg",
 			"res/skybox/back.jpg",
 			"res/skybox/left.jpg",
@@ -35,7 +35,7 @@ int main() {
 			"res/skybox/top.jpg",
 			"res/skybox/bottom.jpg"
 		);
-		testEngine.skybox = cloudsBox;
+		testRenderer.sky = clouds;
 
 		/* Mesh creation */
 		tableMes = new kl::mesh("res/objects/table.obj");
@@ -48,10 +48,10 @@ int main() {
 		horseTex = new kl::texture("res/textures/horse.png");
 
 		/* Object creation */
-		table = testEngine.newObject();
-		katanaL = testEngine.newObject();
-		katanaR = testEngine.newObject();
-		horse = testEngine.newObject();
+		table = testRenderer.newObject();
+		katanaL = testRenderer.newObject();
+		katanaR = testRenderer.newObject();
+		horse = testRenderer.newObject();
 
 		/* Mesh binding */
 		table->mesh = tableMes;
@@ -97,57 +97,57 @@ int main() {
 
 	/* User update */
 	bool camMoving = false;
-	testEngine.update = [&]() {
+	testRenderer.update = [&]() {
 		/* Keyboard input */
-		if (testEngine.keys->w) {
-			testEngine.camera.moveForward(testEngine.delta);
+		if (testRenderer.keys->w) {
+			testRenderer.camera.moveForward(testRenderer.delta);
 		}
-		if (testEngine.keys->s) {
-			testEngine.camera.moveBack(testEngine.delta);
+		if (testRenderer.keys->s) {
+			testRenderer.camera.moveBack(testRenderer.delta);
 		}
-		if (testEngine.keys->d) {
-			testEngine.camera.moveRight(testEngine.delta);
+		if (testRenderer.keys->d) {
+			testRenderer.camera.moveRight(testRenderer.delta);
 		}
-		if (testEngine.keys->a) {
-			testEngine.camera.moveLeft(testEngine.delta);
+		if (testRenderer.keys->a) {
+			testRenderer.camera.moveLeft(testRenderer.delta);
 		}
-		if (testEngine.keys->space) {
-			testEngine.camera.moveUp(testEngine.delta);
+		if (testRenderer.keys->space) {
+			testRenderer.camera.moveUp(testRenderer.delta);
 		}
-		if (testEngine.keys->c) {
-			testEngine.camera.moveDown(testEngine.delta);
+		if (testRenderer.keys->c) {
+			testRenderer.camera.moveDown(testRenderer.delta);
 		}
-		if (testEngine.keys->shift) {
-			testEngine.camera.speed = 5;
+		if (testRenderer.keys->shift) {
+			testRenderer.camera.speed = 5;
 		}
 		else {
-			testEngine.camera.speed = 2;
+			testRenderer.camera.speed = 2;
 		}
 
 		/* Mouse input */
-		if (testEngine.mouse->lmb) {
+		if (testRenderer.mouse->lmb) {
 			camMoving = true;
-			testEngine.mouse->hide();
+			testRenderer.mouse->hide();
 
 			// Fixing the camera jump on the first click
-			testEngine.mouse->position = testEngine.frameCenter();
+			testRenderer.mouse->position = testRenderer.frameCenter();
 		}
-		if (testEngine.mouse->rmb) {
+		if (testRenderer.mouse->rmb) {
 			camMoving = false;
-			testEngine.mouse->show();
+			testRenderer.mouse->show();
 		}
 		if (camMoving) {
-			kl::point frameCenter = testEngine.frameCenter();
-			testEngine.camera.rotate(testEngine.mouse->position, frameCenter);
-			testEngine.mouse->move(frameCenter);
+			kl::point frameCenter = testRenderer.frameCenter();
+			testRenderer.camera.rotate(testRenderer.mouse->position, frameCenter);
+			testRenderer.mouse->move(frameCenter);
 		}
 	};
 
-	/* Engine creation */
-	testEngine.createNew(kl::size(1600, 900));
+	/* Renderer creation */
+	testRenderer.createNew(kl::size(1600, 900));
 
 	/* Deleting skybox */
-	delete cloudsBox;
+	delete clouds;
 
 	/* Deleting meshes */
 	delete tableMes;

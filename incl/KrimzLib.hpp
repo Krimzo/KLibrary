@@ -69,13 +69,14 @@
 #include "KrimzLib/types/window.h"
 
 // Including engine types
-#include "KrimzLib/types/engine/camera.h"
-#include "KrimzLib/types/engine/gameobject/geometry.h"
-#include "KrimzLib/types/engine/gameobject/physics.h"
-#include "KrimzLib/types/engine/gameobject.h"
-#include "KrimzLib/types/engine/light.h"
-#include "KrimzLib/types/engine/skybox.h"
-#include "KrimzLib/types/engine.h"
+#include "KrimzLib/types/renderer/camera.h"
+#include "KrimzLib/types/renderer/renderable/geometry.h"
+#include "KrimzLib/types/renderer/renderable/physics.h"
+#include "KrimzLib/types/renderer/renderable.h"
+#include "KrimzLib/types/renderer/light/ambient.h"
+#include "KrimzLib/types/renderer/light/direct.h"
+#include "KrimzLib/types/renderer/skybox.h"
+#include "KrimzLib/types/renderer.h"
 
 /* Linking libs */
 #pragma comment(lib, "kernel32.lib")
