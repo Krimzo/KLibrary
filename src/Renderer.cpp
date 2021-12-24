@@ -47,10 +47,10 @@ int main() {
 		tv_mes = new kl::mesh("res/objects/tv.obj");
 
 		/* Texture creation */
-		table_tex = new kl::texture("res/textures/table.png");
-		katana_tex = new kl::texture("res/textures/katana.png");
-		horse_tex = new kl::texture("res/textures/horse.png");
-		tv_tex = new kl::texture("res/textures/kv.png");
+		table_tex = new kl::texture("res/textures/table.jpg");
+		katana_tex = new kl::texture("res/textures/katana.jpg");
+		horse_tex = new kl::texture("res/textures/horse.jpg");
+		tv_tex = new kl::texture("res/textures/tv.jpg");
 
 		/* Object creation */
 		table = renderer.newObject();
