@@ -12,17 +12,20 @@ int main() {
 	kl::mesh* table_mes = nullptr;
 	kl::mesh* katana_mes = nullptr;
 	kl::mesh* horse_mes = nullptr;
+	kl::mesh* tv_mes = nullptr;
 
 	/* Textures */
 	kl::texture* table_tex = nullptr;
 	kl::texture* katana_tex = nullptr;
 	kl::texture* horse_tex = nullptr;
+	kl::texture* tv_tex = nullptr;
 
 	/* Objects */
 	kl::renderable* table = nullptr;
 	kl::renderable* katanaL = nullptr;
 	kl::renderable* katanaR = nullptr;
 	kl::renderable* horse = nullptr;
+	kl::array<kl::renderable*> tvs(101);
 
 	/* User start */
 	renderer.setup = [&]() {
@@ -41,11 +44,13 @@ int main() {
 		table_mes = new kl::mesh("res/objects/table.obj");
 		katana_mes = new kl::mesh("res/objects/katana.obj");
 		horse_mes = new kl::mesh("res/objects/horse.obj");
+		tv_mes = new kl::mesh("res/objects/tv.obj");
 
 		/* Texture creation */
 		table_tex = new kl::texture("res/textures/table.png");
 		katana_tex = new kl::texture("res/textures/katana.png");
 		horse_tex = new kl::texture("res/textures/horse.png");
+		tv_tex = new kl::texture("res/textures/kv.png");
 
 		/* Object creation */
 		table = renderer.newObject();
@@ -93,6 +98,20 @@ int main() {
 		horse->physics.enabled = true;
 		horse->physics.angular.y = 18;
 		horse->physics.gravity = 0;
+
+		/* Object array creation */
+		int tvCounter = 0;
+		float tvsStartPos = -tvs.size() / 2.0;
+		tvs.forEach([&](auto tv) {
+			*tv = renderer.newObject();
+
+			(*tv)->mesh = tv_mes;
+			(*tv)->texture = tv_tex;
+
+			(*tv)->geometry.size = kl::vec3(2, 2, 2);
+			(*tv)->geometry.rotation = kl::vec3(0, 180, 0);
+			(*tv)->geometry.position = kl::vec3(tvsStartPos + tvCounter++, 0, -1);
+		});
 	};
 
 	/* User update */
@@ -141,6 +160,13 @@ int main() {
 			renderer.cam.rotate(renderer.mouse->position, frameCenter);
 			renderer.mouse->move(frameCenter);
 		}
+
+		/* Object updating */
+		tvs.forEach([&](auto tv) {
+			const float tvx = (*tv)->geometry.position.x;
+
+			(*tv)->geometry.position.y = 1.5 * (sin((0.5 * tvx) + (3 * renderer.elapsed)) + 1);
+		});
 	};
 
 	/* Renderer creation */

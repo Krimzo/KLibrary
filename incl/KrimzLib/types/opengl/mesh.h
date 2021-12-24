@@ -7,8 +7,8 @@ namespace kl {
 		mesh(std::vector<kl::vertex>& vertexData) {
 			loadData(vertexData);
 		}
-		mesh(std::string filePath) {
-			loadFromFile(filePath);
+		mesh(std::string filePath, bool flipZ = true) {
+			loadFromFile(filePath, flipZ);
 		}
 		~mesh() {
 			glDeleteVertexArrays(1, &vao);
@@ -75,7 +75,7 @@ namespace kl {
 		}
 
 		// Loads the vertex data from a .obj file 
-		void loadFromFile(std::string filePath) {
+		void loadFromFile(std::string filePath, bool flipZ) {
 			// Temp vertex buffer
 			std::vector<kl::vertex> vertexData;
 
@@ -89,6 +89,9 @@ namespace kl {
 			std::vector<kl::vec2> uvBuffer;
 			std::vector<kl::vec3> normBuffer;
 
+			// Z flipper
+			const int zFlip = flipZ ? -1 : 1;
+
 			// Parsing data
 			std::string fileLine;
 			while (std::getline(fileStream, fileLine)) {
@@ -101,13 +104,13 @@ namespace kl {
 
 				// Parsing the data
 				if (lineParts[0] == "v") {
-					xyzBuffer.push_back(kl::vec3(std::stof(lineParts[1]), std::stof(lineParts[2]), std::stof(lineParts[3])));
+					xyzBuffer.push_back(kl::vec3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
 				}
 				else if (lineParts[0] == "vt") {
 					uvBuffer.push_back(kl::vec2(std::stof(lineParts[1]), std::stof(lineParts[2])));
 				}
 				else if (lineParts[0] == "vn") {
-					normBuffer.push_back(kl::vec3(std::stof(lineParts[1]), std::stof(lineParts[2]), std::stof(lineParts[3])));
+					normBuffer.push_back(kl::vec3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
 				}
 				else if (lineParts[0] == "f") {
 					for (int i = 1; i < 4; i++) {
