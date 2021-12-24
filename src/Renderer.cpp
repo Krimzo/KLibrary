@@ -28,12 +28,12 @@ int main() {
 	renderer.setup = [&]() {
 		/* Skybox creation */
 		renderer.newSkybox(
-			"res/skybox/front.jpg",
-			"res/skybox/back.jpg",
-			"res/skybox/left.jpg",
-			"res/skybox/right.jpg",
-			"res/skybox/top.jpg",
-			"res/skybox/bottom.jpg"
+			"res/skyboxes/clouds/front.jpg",
+			"res/skyboxes/clouds/back.jpg",
+			"res/skyboxes/clouds/left.jpg",
+			"res/skyboxes/clouds/right.jpg",
+			"res/skyboxes/clouds/top.jpg",
+			"res/skyboxes/clouds/bottom.jpg"
 		);
 
 		/* Mesh creation */

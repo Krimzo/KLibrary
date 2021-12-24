@@ -154,9 +154,11 @@ namespace kl {
 
 		// Creates a new skybox
 		void newSkybox(kl::image& front, kl::image& back, kl::image& left, kl::image& right, kl::image& top, kl::image& bottom) {
+			delSkybox();
 			sky = new kl::skybox(front, back, left, right, top, bottom);
 		}
 		void newSkybox(kl::image&& front, kl::image&& back, kl::image&& left, kl::image&& right, kl::image&& top, kl::image&& bottom) {
+			delSkybox();
 			sky = new kl::skybox(front, back, left, right, top, bottom);
 		}
 
