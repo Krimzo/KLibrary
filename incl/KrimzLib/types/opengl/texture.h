@@ -3,7 +3,7 @@
 
 namespace kl {
 	struct texture {
-		// Constructor/destructor
+		// Constructors/destructor
 		texture(kl::image& image) {
 			load2D(image);
 		}

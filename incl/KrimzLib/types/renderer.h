@@ -8,12 +8,10 @@ namespace kl {
 		kl::mouse* mouse = nullptr;
 
 		// Engine properties
-		float delta = 0;
-		float elapsed = 0;
-		float gravity = 9.81;
+		float deltaT = 0;
+		float elapsedT = 0;
 
 		// View properties
-		kl::skybox* sky = nullptr;
 		kl::color background = kl::constant::colors::gray;
 		kl::camera cam;
 		
@@ -85,14 +83,16 @@ namespace kl {
 				kl::opengl::clearBuffers(background);
 
 				/* Time calculations */
-				delta = timer.getElapsed();
-				elapsed = timer.stopwatchElapsed();
+				deltaT = timer.getElapsed();
+				elapsedT = timer.stopwatchElapsed();
 
 				/* Calling the user update */
 				update();
 
 				/* Calling the physics update */
-				updatePhysics();
+				for (int i = 0; i < objects.size(); i++) {
+					objects[i]->upPhys(deltaT);
+				}
 
 				/* Setting the camera uniforms */
 				vp_uni.setData(cam.matrix());
@@ -103,10 +103,10 @@ namespace kl {
 				sunD_uni.setData(sun.getDirection());
 
 				/* Rendering objects */
-				for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
-					if (objItr->visible) {
-						w_uni.setData(objItr->geometry.matrix());
-						objItr->render();
+				for (int i = 0; i < objects.size(); i++) {
+					if (objects[i]->visible) {
+						w_uni.setData(objects[i]->geometry.matrix());
+						objects[i]->render();
 					}
 				}
 
@@ -114,15 +114,28 @@ namespace kl {
 				if (sky) sky->render(cam.matrix());
 
 				/* Updating the fps display */
-				win.setTitle(std::to_string(int(1 / delta)));
+				win.setTitle(std::to_string(int(1 / deltaT)));
 
 				/* Swapping the frame buffers */
-				win.swapFrameBuffers();
+				win.swapFrames();
 			};
 
 			/* Window end definition */
 			win.end = [&]() {
+				// Deleting shaders
 				delete default_sha;
+
+				// Deleting meshes
+				for (int i = 0; i < meshes.size(); i++) {
+					delete meshes[i];
+				}
+				meshes.clear();
+
+				// Deleting textures
+				for (int i = 0; i < textures.size(); i++) {
+					delete textures[i];
+				}
+				textures.clear();
 			};
 
 			/* Window creation */
@@ -139,17 +152,78 @@ namespace kl {
 			return win.getCenter();
 		}
 
+		// Creates a new skybox
+		void newSkybox(kl::image& front, kl::image& back, kl::image& left, kl::image& right, kl::image& top, kl::image& bottom) {
+			sky = new kl::skybox(front, back, left, right, top, bottom);
+		}
+		void newSkybox(kl::image&& front, kl::image&& back, kl::image&& left, kl::image&& right, kl::image&& top, kl::image&& bottom) {
+			sky = new kl::skybox(front, back, left, right, top, bottom);
+		}
+
+		// Deletes an existing skybox
+		void delSkybox() {
+			if (sky) {
+				delete sky;
+				sky = nullptr;
+			}
+		}
+
+		// Creates a mesh
+		kl::mesh* newMesh(std::string filePath, bool flipZ = true) {
+			meshes.push_back(new kl::mesh(filePath, flipZ));
+			return meshes.back();
+		}
+		kl::mesh* newMesh(std::vector<kl::vertex>& vertexData) {
+			meshes.push_back(new kl::mesh(vertexData));
+			return meshes.back();
+		}
+
+		// Deletes a mesh
+		bool delMesh(kl::mesh* mesAddress) {
+			for (int i = 0; i < meshes.size(); i++) {
+				if (meshes[i] == mesAddress) {
+					delete meshes[i];
+					meshes.erase(meshes.begin() + i);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// Creates a texture
+		kl::texture* newTexture(kl::image& image) {
+			textures.push_back(new kl::texture(image));
+			return textures.back();
+		}
+		kl::texture* newTexture(kl::image&& image) {
+			textures.push_back(new kl::texture(image));
+			return textures.back();
+		}
+
+		// Deletes a texture
+		bool delTex(kl::texture* texAddress) {
+			for (int i = 0; i < textures.size(); i++) {
+				if (textures[i] == texAddress) {
+					delete textures[i];
+					textures.erase(textures.begin() + i);
+					return true;
+				}
+			}
+			return false;
+		}
+
 		// Creates a new game object
-		kl::renderable* newObject() {
-			gObjects.push_back(kl::renderable());
-			return &gObjects.back();
+		kl::renderable* newObject(kl::mesh* mes, kl::texture* tex) {
+			objects.push_back(new kl::renderable(mes, tex));
+			return objects.back();
 		}
 
 		// Deletes a game object
 		bool delObject(kl::renderable* objectAddress) {
-			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
-				if (&*objItr == objectAddress) {
-					gObjects.erase(objItr);
+			for (int i = 0; i < objects.size(); i++) {
+				if (objects[i] == objectAddress) {
+					delete objects[i];
+					objects.erase(objects.begin() + i);
 					return true;
 				}
 			}
@@ -160,28 +234,16 @@ namespace kl {
 		// Window
 		kl::window win;
 
-		// Object(renderable) buffer
-		std::list<kl::renderable> gObjects;
-		std::list<kl::renderable>::iterator objItr;
+		// Engine skybox
+		kl::skybox* sky = nullptr;
 
-		// Computing object physics 
-		void updatePhysics() {
-			for (objItr = gObjects.begin(); objItr != gObjects.end(); objItr++) {
-				if (objItr->physics.enabled) {
-					// Applying gravity
-					objItr->physics.velocity.y -= gravity * objItr->physics.gravity * delta;
+		// Mesh buffer
+		std::vector<kl::mesh*> meshes;
 
-					// Applying velocity
-					objItr->geometry.position.x += objItr->physics.velocity.x * delta;
-					objItr->geometry.position.y += objItr->physics.velocity.y * delta;
-					objItr->geometry.position.z += objItr->physics.velocity.z * delta;
+		// Texture buffer
+		std::vector<kl::texture*> textures;
 
-					// Applying angular momentum
-					objItr->geometry.rotation.x += objItr->physics.angular.x * delta;
-					objItr->geometry.rotation.y += objItr->physics.angular.y * delta;
-					objItr->geometry.rotation.z += objItr->physics.angular.z * delta;
-				}
-			}
-		}
+		// Object buffer
+		std::vector<kl::renderable*> objects;
 	};
 }

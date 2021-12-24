@@ -7,7 +7,7 @@ namespace kl {
 		mesh(std::vector<kl::vertex>& vertexData) {
 			loadData(vertexData);
 		}
-		mesh(std::string filePath, bool flipZ = true) {
+		mesh(std::string filePath, bool flipZ) {
 			loadFromFile(filePath, flipZ);
 		}
 		~mesh() {

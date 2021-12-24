@@ -6,7 +6,7 @@ namespace kl {
 		bool lmb = false;
 		bool mmb = false;
 		bool rmb = false;
-		kl::point position = kl::point();
+		kl::point position;
 
 		// Binds the mouse to the window
 		void bind(HWND hwnd) {

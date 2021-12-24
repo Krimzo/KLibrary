@@ -7,7 +7,7 @@ namespace kl {
 		shaders(std::string vertexSource, std::string fragmentSource) {
 			// Shader program creation
 			programID = glCreateProgram();
-			if (programID == NULL) {
+			if (!programID) {
 				printf("Shader program creation error!\n");
 				exit(69);
 			}
@@ -60,7 +60,7 @@ namespace kl {
 		kl::id compileShader(std::string& shaderSource, kl::id shaderType) {
 			// Creating the shader buffer
 			kl::id shader = glCreateShader(shaderType);
-			if (shader == NULL) {
+			if (!shader) {
 				printf("'%d' shader creation error\n", shaderType);
 				exit(69);
 			}
@@ -74,7 +74,7 @@ namespace kl {
 			// Checking the compilation
 			int compilationStatus;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &compilationStatus);
-			if (compilationStatus == NULL) {
+			if (!compilationStatus) {
 				char compilationInfo[1024];
 				glGetShaderInfoLog(shader, sizeof(compilationInfo), NULL, compilationInfo);
 				printf("'%d' shader compilation error: '%s'\n", shaderType, compilationInfo);
@@ -91,7 +91,7 @@ namespace kl {
 			glLinkProgram(programID);
 			int linkStatus;
 			glGetProgramiv(programID, GL_LINK_STATUS, &linkStatus);
-			if (linkStatus == NULL) {
+			if (!linkStatus) {
 				char linkingInfo[1024];
 				glGetProgramInfoLog(programID, sizeof(linkingInfo), NULL, linkingInfo);
 				printf("Shader program linking error: '%s'\n", linkingInfo);
@@ -102,7 +102,7 @@ namespace kl {
 			glValidateProgram(programID);
 			int validateStatus;
 			glGetProgramiv(programID, GL_VALIDATE_STATUS, &validateStatus);
-			if (validateStatus == NULL) {
+			if (!validateStatus) {
 				char validateInfo[1024];
 				glGetProgramInfoLog(programID, sizeof(validateInfo), NULL, validateInfo);
 				printf("Shader program validation error: '%s'\n", validateInfo);

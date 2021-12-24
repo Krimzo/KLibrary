@@ -95,7 +95,7 @@ namespace kl {
 		}
 
 		// Swaps the front and back buffers
-		void swapFrameBuffers() {
+		void swapFrames() {
 			SwapBuffers(hdc);
 		}
 

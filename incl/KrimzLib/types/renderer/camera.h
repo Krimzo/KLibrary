@@ -3,7 +3,7 @@
 
 namespace kl {
     struct camera {
-		kl::vec3 position = kl::vec3();
+		kl::vec3 position;
 		float sensitivity = 0.05f;
 		float speed = 2;
 
