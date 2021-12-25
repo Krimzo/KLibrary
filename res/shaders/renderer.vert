@@ -14,7 +14,7 @@ out vec2 interTex;
 out vec3 interNorm;
 
 void main() {
-    // Outputting the transformed world coords
+    // Outputting the object fragment position
     gl_Position = vp * w * vec4(world, 1);
 
     // Outputting the interpolated texture coords

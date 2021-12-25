@@ -27,8 +27,11 @@ void main () {
     // Directional light color
     vec4 directColor = vec4(0, 0, 0, 1);
 
+    // Normalizing the normal
+    vec3 normal = normalize(interNorm);
+
     // Calculating the directional light intensity
-    float diffuseFactor = dot(normalize(interNorm), -sunD);
+    float diffuseFactor = dot(normal, -sunD);
 
     // Checking the diffuse factor
     if (diffuseFactor > 0) {

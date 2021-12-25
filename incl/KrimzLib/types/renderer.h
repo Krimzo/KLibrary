@@ -3,32 +3,32 @@
 
 namespace kl {
 	struct renderer {
-		// Input
+		/* Time */
 		kl::keys* keys = nullptr;
 		kl::mouse* mouse = nullptr;
 
-		// Engine properties
+		/* Time */
 		float deltaT = 0;
 		float elapsedT = 0;
 
-		// View properties
+		/* View */
 		kl::color background = kl::constant::colors::gray;
 		kl::camera cam;
-		
-		// Ambient and directional lights
+
+		/* Lighting */
 		kl::ambient dark;
 		kl::direct sun;
 
-		// User defined functions
+		/* User functions */
 		std::function<void()> setup = []() {};
 		std::function<void()> update = []() {};
 
-		// Starts a new engine
+		// Creates and runs a new engine
 		void createNew(kl::size frameSize) {
 			/* Engine timer */
 			kl::time timer;
 
-			/* Object shaders */
+			/* Default shaders */
 			kl::shaders* default_sha = nullptr;
 			kl::uniform w_uni;
 			kl::uniform vp_uni;
@@ -58,7 +58,7 @@ namespace kl {
 				dark.intensity = 0.1;
 				sun.color = kl::constant::colors::white;
 				sun.intensity = 1;
-				sun.direction = kl::vec3(-0.2, -0.2, -1);
+				sun.direction = kl::vec3(0, -1, -1);
 
 				/* Compiling object shaders */
 				default_sha = new kl::shaders(
@@ -79,9 +79,6 @@ namespace kl {
 
 			/* Window update definition */
 			win.update = [&]() {
-				/* Clearing the buffers */
-				kl::opengl::clearBuffers(background);
-
 				/* Time calculations */
 				deltaT = timer.getElapsed();
 				elapsedT = timer.stopwatchElapsed();
@@ -101,6 +98,9 @@ namespace kl {
 				dark_uni.setData(dark.getColor());
 				sunL_uni.setData(sun.getColor());
 				sunD_uni.setData(sun.getDirection());
+
+				/* Clearing the buffers */
+				kl::opengl::clearBuffers(background);
 
 				/* Rendering objects */
 				for (int i = 0; i < objects.size(); i++) {

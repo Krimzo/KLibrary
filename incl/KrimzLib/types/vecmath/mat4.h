@@ -177,6 +177,40 @@ namespace kl {
 			return temp;
 		}
 
+		// Returns the ortho
+		static kl::mat4 ortho(float left, float right, float bottom, float top, float zNear, float zFar) {
+			kl::mat4 res;
+			res[ 0] = 2 / (right - left);
+			res[ 5] = 2 / (top - bottom);
+			res[10] = 2 / (zFar - zNear);
+			res[ 3] = -(right + left) / (right - left);
+			res[ 7] = -(top + bottom) / (top - bottom);
+			res[11] = -(zFar + zNear) / (zFar - zNear);
+			return res;
+		}
+
+		// Returns the "look at" matrix
+		static kl::mat4 lookAt(kl::vec3 eye, kl::vec3 center, kl::vec3 up) {
+			kl::vec3 f = (center - eye).normalize();
+			kl::vec3 s = f.cross(up.normalize()).normalize();
+			kl::vec3 u = s.cross(f);
+			
+			kl::mat4 res;
+			res[ 0] = s.x;
+			res[ 1] = u.x;
+			res[ 2] = f.x;
+			res[ 4] = s.y;
+			res[ 5] = u.y;
+			res[ 6] = f.y;
+			res[ 8] = s.z;
+			res[ 9] = u.z;
+			res[10] = f.z;
+			res[12] = -s.dot(eye);
+			res[13] = -u.dot(eye);
+			res[14] = -f.dot(eye);
+			return res;
+		}
+
 	private:
 		// Variables
 		float data[16];
