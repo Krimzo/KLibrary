@@ -6,18 +6,21 @@ int main() {
 	kl::renderer renderer;
 
 	/* Meshes */
+	kl::mesh* cube_mes = nullptr;
 	kl::mesh* table_mes = nullptr;
 	kl::mesh* katana_mes = nullptr;
 	kl::mesh* horse_mes = nullptr;
 	kl::mesh* tv_mes = nullptr;
 
 	/* Textures */
+	kl::texture* solid_tex = nullptr;
 	kl::texture* table_tex = nullptr;
 	kl::texture* katana_tex = nullptr;
 	kl::texture* horse_tex = nullptr;
 	kl::texture* tv_tex = nullptr;
 
 	/* Objects */
+	kl::renderable* wall = nullptr;
 	kl::renderable* table = nullptr;
 	kl::renderable* katanaL = nullptr;
 	kl::renderable* katanaR = nullptr;
@@ -37,24 +40,30 @@ int main() {
 		);
 
 		/* Mesh creation */
+		cube_mes = renderer.newMesh("res/objects/cube.obj");
 		table_mes = renderer.newMesh("res/objects/table.obj");
 		katana_mes = renderer.newMesh("res/objects/katana.obj");
 		horse_mes = renderer.newMesh("res/objects/horse.obj");
 		tv_mes = renderer.newMesh("res/objects/tv.obj");
 
 		/* Texture creation */
+		solid_tex = renderer.newTexture(kl::image(kl::size(1, 1), kl::color(255, 255, 255)));
 		table_tex = renderer.newTexture("res/textures/table.jpg");
 		katana_tex = renderer.newTexture("res/textures/katana.jpg");
 		horse_tex = renderer.newTexture("res/textures/horse.jpg");
 		tv_tex = renderer.newTexture("res/textures/tv.jpg");
 
 		/* Object creation */
+		wall = renderer.newObject(cube_mes, solid_tex);
 		table = renderer.newObject(table_mes, table_tex);
 		katanaL = renderer.newObject(katana_mes, katana_tex);
 		katanaR = renderer.newObject(katana_mes, katana_tex);
 		horse = renderer.newObject(horse_mes, horse_tex);
 
 		/* Object properties setup */
+		wall->geometry.size = kl::vec3(50, 10, 0.1);
+		wall->geometry.position = kl::vec3(0, 0, -2);
+
 		table->geometry.size = kl::vec3(1, 1, 1);
 		table->geometry.rotation = kl::vec3(0, 45, 0);
 		table->geometry.position = kl::vec3(0, -0.5, 2);
@@ -148,6 +157,21 @@ int main() {
 
 			(*tv)->geometry.position.y = 1.5 * (sin((0.5 * tvx) + (3 * renderer.elapsedT)) + 1);
 		});
+
+		const float movementSpeed = 0.5;
+		if (renderer.keys->i) {
+			wall->geometry.position.z += movementSpeed * renderer.deltaT;
+		}
+		if (renderer.keys->k) {
+			wall->geometry.position.z -= movementSpeed * renderer.deltaT;
+		}
+
+		if (renderer.keys->comma) {
+			wall->visible = false;
+		}
+		if (renderer.keys->period) {
+			wall->visible = true;
+		}
 	};
 
 	/* Renderer creation */

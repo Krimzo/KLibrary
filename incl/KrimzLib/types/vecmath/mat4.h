@@ -177,38 +177,38 @@ namespace kl {
 			return temp;
 		}
 
-		// Returns the ortho
-		static kl::mat4 ortho(float left, float right, float bottom, float top, float zNear, float zFar) {
-			kl::mat4 res;
-			res[ 0] = 2 / (right - left);
-			res[ 5] = 2 / (top - bottom);
-			res[10] = 2 / (zFar - zNear);
-			res[ 3] = -(right + left) / (right - left);
-			res[ 7] = -(top + bottom) / (top - bottom);
-			res[11] = -(zFar + zNear) / (zFar - zNear);
-			return res;
+		// Returns the orthographics projection matrix
+		static kl::mat4 ortho(float left, float right, float bottom, float top, float nearZ, float farZ) {
+			kl::mat4 temp;
+			temp[0] = 2 / (right - left);
+			temp[5] = 2 / (top - bottom);
+			temp[10] = -2 / (farZ - nearZ);
+			temp[3] = -(right + left) / (right - left);
+			temp[7] = -(top + bottom) / (top - bottom);
+			temp[11] = -(farZ + nearZ) / (farZ - nearZ);
+			return temp;
 		}
 
 		// Returns the "look at" matrix
 		static kl::mat4 lookAt(kl::vec3 eye, kl::vec3 center, kl::vec3 up) {
 			kl::vec3 f = (center - eye).normalize();
-			kl::vec3 s = f.cross(up.normalize()).normalize();
+			kl::vec3 s = f.cross(up).normalize();
 			kl::vec3 u = s.cross(f);
-			
-			kl::mat4 res;
-			res[ 0] = s.x;
-			res[ 1] = u.x;
-			res[ 2] = f.x;
-			res[ 4] = s.y;
-			res[ 5] = u.y;
-			res[ 6] = f.y;
-			res[ 8] = s.z;
-			res[ 9] = u.z;
-			res[10] = f.z;
-			res[12] = -s.dot(eye);
-			res[13] = -u.dot(eye);
-			res[14] = -f.dot(eye);
-			return res;
+
+			kl::mat4 temp;
+			temp[0] = s.x;
+			temp[1] = s.y;
+			temp[2] = s.z;
+			temp[4] = u.x;
+			temp[5] = u.y;
+			temp[6] = u.z;
+			temp[8] = -f.x;
+			temp[9] = -f.y;
+			temp[10] = -f.z;
+			temp[3] = -s.dot(eye);
+			temp[7] = -u.dot(eye);
+			temp[11] = f.dot(eye);
+			return temp;
 		}
 
 	private:

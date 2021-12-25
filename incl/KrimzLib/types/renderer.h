@@ -35,6 +35,7 @@ namespace kl {
 			kl::uniform dark_uni;
 			kl::uniform sunL_uni;
 			kl::uniform sunD_uni;
+			kl::uniform sunVP_uni;
 
 			/* Window start definition */
 			win.start = [&]() {
@@ -58,7 +59,7 @@ namespace kl {
 				dark.intensity = 0.1;
 				sun.color = kl::constant::colors::white;
 				sun.intensity = 1;
-				sun.direction = kl::vec3(0, -1, -1);
+				sun.direction = kl::vec3(0, -2, -2);
 
 				/* Compiling object shaders */
 				default_sha = new kl::shaders(
@@ -72,6 +73,11 @@ namespace kl {
 				dark_uni = default_sha->getUniform("dark");
 				sunL_uni = default_sha->getUniform("sunL");
 				sunD_uni = default_sha->getUniform("sunD");
+				sunVP_uni = default_sha->getUniform("sunVP");
+				default_sha->getUniform("shadowMap").setData(1);
+
+				/* Generating sun buffers */
+				sun.genBuff();
 
 				/* Calling the user start */
 				setup();
@@ -91,21 +97,38 @@ namespace kl {
 					objects[i]->upPhys(deltaT);
 				}
 
+				/* Rendering the shadows */
+				sun.renderStart();
+				for (int i = 0; i < objects.size(); i++) {
+					if (objects[i]->visible) {
+						// Setting the world matrix
+						sun.setWMat(objects[i]->geometry.matrix());
+				
+						// Rendering the object
+						objects[i]->render();
+					}
+				}
+				sun.renderEnd(frameSize);
+
 				/* Setting the camera uniforms */
 				vp_uni.setData(cam.matrix());
-
+				
 				/* Setting the light uniforms */
-				dark_uni.setData(dark.getColor());
-				sunL_uni.setData(sun.getColor());
-				sunD_uni.setData(sun.getDirection());
+				dark_uni.setData(dark.getCol());
+				sunL_uni.setData(sun.getCol());
+				sunD_uni.setData(sun.getDir());
+				sunVP_uni.setData(sun.matrix());
 
-				/* Clearing the buffers */
+				/* Clearing the default buffers */
 				kl::opengl::clearBuffers(background);
 
 				/* Rendering objects */
 				for (int i = 0; i < objects.size(); i++) {
 					if (objects[i]->visible) {
+						// Setting the world matrix
 						w_uni.setData(objects[i]->geometry.matrix());
+				
+						// Rendering the object
 						objects[i]->render();
 					}
 				}
@@ -124,6 +147,9 @@ namespace kl {
 			win.end = [&]() {
 				// Deleting shaders
 				delete default_sha;
+
+				// Deleting the sun shadow buffers
+				sun.delBuff();
 
 				// Deleting meshes
 				for (int i = 0; i < meshes.size(); i++) {

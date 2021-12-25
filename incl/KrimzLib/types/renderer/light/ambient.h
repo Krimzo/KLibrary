@@ -7,7 +7,7 @@ namespace kl {
 		float intensity = 0;
 
 		// Returns the true light color
-		kl::vec3 getColor() {
+		kl::vec3 getCol() {
 			return color * intensity;
 		}
 	};
