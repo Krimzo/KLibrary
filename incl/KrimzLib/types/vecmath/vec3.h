@@ -39,14 +39,26 @@ namespace kl {
 		kl::vec3 operator + (kl::vec3 obj) {
 			return kl::vec3(x + obj.x, y + obj.y, z + obj.z);
 		}
+		void operator += (kl::vec3 obj) {
+			x += obj.x; y += obj.y; z += obj.z;
+		}
 		kl::vec3 operator - (kl::vec3 obj) {
 			return kl::vec3(x - obj.x, y - obj.y, z - obj.z);
+		}
+		void operator -= (kl::vec3 obj) {
+			x -= obj.x; y -= obj.y; z -= obj.z;
 		}
 		kl::vec3 operator * (float a) {
 			return kl::vec3(x * a, y * a, z * a);
 		}
+		void operator *= (float a) {
+			x *= a; y *= a; z *= a;
+		}
 		kl::vec3 operator / (float a) {
 			return operator*(1 / a);
+		}
+		void operator /= (float a) {
+			operator*=(1 / a);
 		}
 		bool operator == (kl::vec3 obj) {
 			return (x == obj.x && y == obj.y && z == obj.z);
@@ -82,7 +94,7 @@ namespace kl {
 
 		// Returns the angle between the given vector and self
 		float angle(kl::vec3 a) {
-			return acos(normalize().dot(a.normalize()));
+			return acos(this->normalize().dot(a.normalize()));
 		}
 
 		// Returns the rotated vector around custom axis

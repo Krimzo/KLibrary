@@ -4,10 +4,6 @@
 namespace kl {
 	struct renderer {
 		/* Time */
-		kl::keys* keys = nullptr;
-		kl::mouse* mouse = nullptr;
-
-		/* Time */
 		float deltaT = 0;
 		float elapsedT = 0;
 
@@ -21,6 +17,7 @@ namespace kl {
 
 		/* User functions */
 		std::function<void()> setup = []() {};
+		std::function<void(kl::keys*, kl::mouse*)> input = [](kl::keys* k, kl::mouse* m) {};
 		std::function<void()> update = []() {};
 
 		// Creates and runs a new engine
@@ -39,10 +36,6 @@ namespace kl {
 
 			/* Window start definition */
 			win.start = [&]() {
-				/* Setting up input */
-				this->keys = &win.keys;
-				this->mouse = &win.mouse;
-
 				/* Setting up the face culling */
 				kl::opengl::setCulling(false);
 
@@ -89,6 +82,9 @@ namespace kl {
 				/* Time calculations */
 				deltaT = timer.getElapsed();
 				elapsedT = timer.stopwatchElapsed();
+
+				/* Calling the user input */
+				input(&win.keys, &win.mouse);
 
 				/* Calling the user update */
 				update();

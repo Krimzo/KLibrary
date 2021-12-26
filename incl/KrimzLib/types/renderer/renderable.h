@@ -25,14 +25,10 @@ namespace kl {
 				physics.velocity.y -= physics.gravity * deltaT;
 
 				// Applying velocity
-				geometry.position.x += physics.velocity.x * deltaT;
-				geometry.position.y += physics.velocity.y * deltaT;
-				geometry.position.z += physics.velocity.z * deltaT;
+				geometry.position += physics.velocity * deltaT;
 
 				// Applying angular momentum
-				geometry.rotation.x += physics.angular.x * deltaT;
-				geometry.rotation.y += physics.angular.y * deltaT;
-				geometry.rotation.z += physics.angular.z * deltaT;
+				geometry.rotation += physics.angular * deltaT;
 			}
 		}
 

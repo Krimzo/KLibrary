@@ -68,14 +68,26 @@ namespace kl {
 		kl::vec4 operator + (kl::vec4 obj) {
 			return kl::vec4(x + obj.x, y + obj.y, z + obj.z, w + obj.w);
 		}
+		void operator += (kl::vec4 obj) {
+			x += obj.x; y += obj.y; z += obj.z; w += obj.w;
+		}
 		kl::vec4 operator - (kl::vec4 obj) {
 			return kl::vec4(x - obj.x, y - obj.y, z - obj.z, w - obj.w);
+		}
+		void operator -= (kl::vec4 obj) {
+			x -= obj.x; y -= obj.y; z -= obj.z; w -= obj.w;
 		}
 		kl::vec4 operator * (float a) {
 			return kl::vec4(x * a, y * a, z * a, w * a);
 		}
+		void operator *= (float a) {
+			x *= a; y *= a; z *= a; w *= a;
+		}
 		kl::vec4 operator / (float a) {
 			return operator*(1 / a);
+		}
+		void operator /= (float a) {
+			operator*=(1 / a);
 		}
 		bool operator == (kl::vec4 obj) {
 			return (x == obj.x && y == obj.y && z == obj.z && w == obj.w);

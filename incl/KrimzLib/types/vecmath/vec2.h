@@ -28,14 +28,26 @@ namespace kl {
 		kl::vec2 operator + (kl::vec2 obj) {
 			return kl::vec2(x + obj.x, y + obj.y);
 		}
+		void operator += (kl::vec2 obj) {
+			x += obj.x; y += obj.y;
+		}
 		kl::vec2 operator - (kl::vec2 obj) {
 			return kl::vec2(x - obj.x, y - obj.y);
+		}
+		void operator -= (kl::vec2 obj) {
+			x -= obj.x; y -= obj.y;
 		}
 		kl::vec2 operator * (float a) {
 			return kl::vec2(x * a, y * a);
 		}
+		void operator *= (float a) {
+			x *= a; y *= a;
+		}
 		kl::vec2 operator / (float a) {
 			return operator*(1 / a);
+		}
+		void operator /= (float a) {
+			operator*=(1 / a);
 		}
 		bool operator == (kl::vec2 obj) {
 			return (x == obj.x && y == obj.y);
