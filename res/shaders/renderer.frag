@@ -41,7 +41,7 @@ float computeShadow() {
 		    for(int x = -sampleRadius; x <= sampleRadius; x++) {
 		        float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
 				if (lightCoords.z > closestDepth + bias) {
-					shadow++;  
+					shadow++;
 				}
 		    }
 		}

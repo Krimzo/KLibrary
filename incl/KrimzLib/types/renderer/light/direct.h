@@ -79,9 +79,9 @@ namespace kl {
 
 		// Returns the light vp matrix
 		kl::mat4 matrix() {
-			const float horizRange = 10;
+			const float horizRange = 5;
 			const float vertRange = 10;
-			const float nearRange = 0.1;
+			const float nearRange = 0.01;
 			const float farRange = 10;
 
 			kl::vec3 eye = direction.negate();
@@ -92,8 +92,7 @@ namespace kl {
 			return kl::mat4::ortho(-horizRange, horizRange, -vertRange, vertRange, nearRange, farRange) * kl::mat4::lookAt(eye, center, up);
 		}
 
-		// Setups the depth rendering
-		void renderStart() {
+		void render(kl::size frameSize, std::function<void()> toRender) {
 			// Setting the viewport size
 			glViewport(0, 0, mapSize, mapSize);
 
@@ -105,10 +104,10 @@ namespace kl {
 
 			// Setting the light vp uni
 			light_vp_uni.setData(this->matrix());
-		}
 
-		// Finishes the depth rendering
-		void renderEnd(kl::size frameSize) {
+			// Rendering 
+			toRender();
+
 			// Binding the defualt frame buffer
 			glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 

@@ -59,7 +59,7 @@ namespace kl {
 				dark.intensity = 0.1;
 				sun.color = kl::constant::colors::white;
 				sun.intensity = 1;
-				sun.direction = kl::vec3(0, -2, -2);
+				sun.direction = kl::vec3(0, -1, -2);
 
 				/* Compiling object shaders */
 				default_sha = new kl::shaders(
@@ -97,27 +97,27 @@ namespace kl {
 					objects[i]->upPhys(deltaT);
 				}
 
-				/* Rendering the shadows */
-				sun.renderStart();
-				for (int i = 0; i < objects.size(); i++) {
-					if (objects[i]->visible) {
-						// Setting the world matrix
-						sun.setWMat(objects[i]->geometry.matrix());
-				
-						// Rendering the object
-						objects[i]->render();
-					}
-				}
-				sun.renderEnd(frameSize);
-
 				/* Setting the camera uniforms */
 				vp_uni.setData(cam.matrix());
-				
+
 				/* Setting the light uniforms */
 				dark_uni.setData(dark.getCol());
 				sunL_uni.setData(sun.getCol());
 				sunD_uni.setData(sun.getDir());
 				sunVP_uni.setData(sun.matrix());
+
+				/* Rendering the shadows */
+				sun.render(frameSize, [&]() {
+					for (int i = 0; i < objects.size(); i++) {
+						if (objects[i]->visible) {
+							// Setting the world matrix
+							sun.setWMat(objects[i]->geometry.matrix());
+
+							// Rendering the object
+							objects[i]->render();
+						}
+					}
+				});
 
 				/* Clearing the default buffers */
 				kl::opengl::clearBuffers(background);
