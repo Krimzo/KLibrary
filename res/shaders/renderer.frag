@@ -32,7 +32,7 @@ float computeShadow() {
 		lightCoords = lightCoords * 0.5 + 0.5;
 
 		// Prevents shadow acne
-		float bias = max(0.025 * (1 - dot(normalize(interNorm), -sunD)), 0.0005);
+		float bias = max(0.02 * (1 - dot(normalize(interNorm), -sunD)), 0.0005);
 
 		// Smoothing the shadow
 		int sampleRadius = 2;
@@ -46,9 +46,12 @@ float computeShadow() {
 		    }
 		}
 
-		// Returning the average shadow
-		return shadow / pow((sampleRadius * 2 + 1), 2);
+		// Calculating the average shadow
+		shadow /= pow((sampleRadius * 2 + 1), 2);
 	}
+
+	// Returning the shadow value
+	return shadow;
 }
 
 void main () {

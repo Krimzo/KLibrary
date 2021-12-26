@@ -18,8 +18,11 @@ namespace kl {
 		}
 
 		// Generates the shadow buffers
-		void genBuff() {
+		void genBuff(int mapSize) {
 			if (!depthFB) {
+				// Upadating the map size
+				this->mapSize = mapSize;
+
 				// Generating the shadow frame buffer
 				glGenFramebuffers(1, &depthFB);
 
@@ -78,18 +81,79 @@ namespace kl {
 		}
 
 		// Calculates the light vp matrix
-		void calcMat() {
-			const float horizRange = 5;
-			const float vertRange = 10;
-			const float nearRange = 0.01;
-			const float farRange = 10;
+		void calcMat(kl::camera& cam) {
+			// Calculating the near points
+			const float nearDist = cam.nearPlane;
+			const float Hnear = 2 * tan(kl::convert::toRadians(cam.fov) * 0.5) * nearDist;
+			const float Wnear = Hnear * cam.aspect;
+			kl::vec3 un = cam.getUp() * Hnear * 0.5;
+			kl::vec3 rn = cam.getRight() * Wnear * 0.5;
+			kl::vec3 centerNear = cam.position + cam.getForward() * nearDist;
+			kl::vec3 topLeftNear = centerNear + un - rn;
+			kl::vec3 topRightNear = centerNear + un + rn;
+			kl::vec3 bottomLeftNear = centerNear - un - rn;
+			kl::vec3 bottomRightNear = centerNear - un + rn;
 
-			kl::vec3 eye = direction.negate();
-			kl::vec3 center = kl::vec3(0, 0, 0);
-			kl::vec3 up = kl::vec3(0, 1, 0);
+			// Calculating the far points
+			const float farDist = cam.shadowD;
+			const float Hfar = 2 * tan(kl::convert::toRadians(cam.fov) * 0.5) * farDist;
+			const float Wfar = Hfar * cam.aspect;
+			kl::vec3 uf = cam.getUp() * Hfar * 0.5;
+			kl::vec3 rf = cam.getRight() * Wfar * 0.5;
+			kl::vec3 centerFar = cam.position + cam.getForward() * farDist;
+			kl::vec3 topLeftFar = centerFar + uf - rf;
+			kl::vec3 topRightFar = centerFar + uf + rf;
+			kl::vec3 bottomLeftFar = centerFar - uf - rf;
+			kl::vec3 bottomRightFar = centerFar - uf + rf;
 
-			// Sets the sun view/projection matrix
-			sunVP =  kl::mat4::ortho(-horizRange, horizRange, -vertRange, vertRange, nearRange, farRange) * kl::mat4::lookAt(eye, center, up);
+			// Calculating the view center
+			kl::vec3 frustumCenter = (centerFar - centerNear) * 0.5;
+
+			// Calculating the light view matrix
+			kl::mat4 view = kl::mat4::lookAt(direction.negate().normalize(), vec3(0, 0, 0), vec3(0, 0, 1));
+
+			// Transforming the frustum points to the light view space
+			std::vector<vec4> lightViewFrust {
+				view * kl::vec4(bottomRightNear, 1),
+				view * kl::vec4(topRightNear, 1),
+				view * kl::vec4(bottomLeftNear, 1),
+				view * kl::vec4(topLeftNear, 1),
+				view * kl::vec4(bottomRightFar, 1),
+				view * kl::vec4(topRightFar, 1),
+				view * kl::vec4(bottomLeftFar, 1),
+				view * kl::vec4(topLeftFar, 1)
+			};
+
+			// Finding the min and max points that generate the bounding box
+			kl::vec3 min( INFINITY,  INFINITY,  INFINITY);
+			kl::vec3 max(-INFINITY, -INFINITY, -INFINITY);
+			for (int i = 0; i < lightViewFrust.size(); i++) {
+				if (lightViewFrust[i].x < min.x) {
+					min.x = lightViewFrust[i].x;
+				}
+				if (lightViewFrust[i].y < min.y) {
+					min.y = lightViewFrust[i].y;
+				}
+				if (lightViewFrust[i].z < min.z) {
+					min.z = lightViewFrust[i].z;
+				}
+
+				if (lightViewFrust[i].x > max.x) {
+					max.x = lightViewFrust[i].x;
+				}
+				if (lightViewFrust[i].y > max.y) {
+					max.y = lightViewFrust[i].y;
+				}
+				if (lightViewFrust[i].z > max.z) {
+					max.z = lightViewFrust[i].z;
+				}
+			}
+
+			// Calculating the ortho projection matrix
+			kl::mat4 proj = kl::mat4::ortho(min.x, max.x, min.y, max.y, -max.z, -min.z);
+
+			// Setting the sun view/projection matrix
+			sunVP = proj * view;
 		}
 
 		// Returns the light vp matrix
@@ -146,7 +210,7 @@ namespace kl {
 		kl::mat4 sunVP;
 
 		// Shadow map size
-		static const int mapSize = 2048;
+		int mapSize = 0;
 
 		// Shadow shaders
 		kl::shaders* depth_sha = nullptr;

@@ -51,7 +51,7 @@ void setup() {
 
 	// Object properties setup
 	wall->visible = false;
-	wall->geometry.size = kl::vec3(50, 10, 0.1);
+	wall->geometry.size = kl::vec3(50, 10, 0.05);
 	wall->geometry.position = kl::vec3(0, 0, -6);
 
 	table->geometry.size = kl::vec3(1, 1, 1);
@@ -149,6 +149,12 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	}
 
 	// Other
+	if (keys->v) {
+		kl::opengl::setWireframe(true);
+	}
+	if (keys->f) {
+		kl::opengl::setWireframe(false);
+	}
 	if (keys->comma) {
 		wall->visible = false;
 
@@ -171,9 +177,9 @@ void update() {
 	sphere1->physics.velocity += (horse->geometry.position - sphere1->geometry.position) * horseGravity * renderer.deltaT;
 
 	tvs.forEach([&](auto tv) {
-		const float x = (*tv)->geometry.position.x;
+		const float x = -(*tv)->geometry.position.x;
 
-		const float y = -x;//1.5 * (sin((0.5 * x) + (3 * renderer.elapsedT)) + 1);
+		const float y = pow(x * 0.1, 3); //1.5 * (sin((0.5 * x) - (3 * renderer.elapsedT)) + 1);
 		(*tv)->geometry.position.y = y;
 	});
 }

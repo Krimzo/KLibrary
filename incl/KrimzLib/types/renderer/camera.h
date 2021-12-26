@@ -10,6 +10,7 @@ namespace kl {
 		float fov = 75;
 		float speed = 2;
 		float sens = 0.05;
+		float shadowD = 25;
 
 		// Camera direction getters
 		kl::vec3 getForward() {

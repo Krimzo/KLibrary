@@ -47,6 +47,7 @@ namespace kl {
 				cam.nearPlane = 0.01;
 				cam.farPlane = 100;
 				cam.sens = 0.025;
+				cam.shadowD = 10;
 
 				/* Setting up the lights */
 				dark.color = kl::constant::colors::white;
@@ -71,7 +72,7 @@ namespace kl {
 				default_sha->getUniform("shadowMap").setData(1);
 
 				/* Generating sun buffers */
-				sun.genBuff();
+				sun.genBuff(2048);
 
 				/* Calling the user start */
 				setup();
@@ -97,6 +98,9 @@ namespace kl {
 				/* Setting the camera uniforms */
 				vp_uni.setData(cam.matrix());
 
+				/* Calculating the light vp matrix */
+				sun.calcMat(cam);
+
 				/* Setting the light uniforms */
 				dark_uni.setData(dark.getCol());
 				sunL_uni.setData(sun.getCol());
@@ -104,7 +108,6 @@ namespace kl {
 				sunVP_uni.setData(sun.matrix());
 
 				/* Rendering the shadows */
-				sun.calcMat();
 				sun.render(frameSize, [&]() {
 					for (int i = 0; i < objects.size(); i++) {
 						if (objects[i]->visible) {
