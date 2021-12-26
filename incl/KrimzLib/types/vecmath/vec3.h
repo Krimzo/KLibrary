@@ -29,7 +29,7 @@ namespace kl {
 			z = v.y;
 		}
 		vec3(kl::color color) {
-			static const float toFloatColor = 1.0f / 255;
+			static const float toFloatColor = 1.0 / 255;
 			x = color.r * toFloatColor;
 			y = color.g * toFloatColor;
 			z = color.b * toFloatColor;

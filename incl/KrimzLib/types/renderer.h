@@ -50,9 +50,10 @@ namespace kl {
 				kl::opengl::setDepthTest(true);
 
 				/* Setting up the camera */
-				cam.setAspect(frameSize);
-				cam.setPlanes(0.01, 100);
-				cam.sensitivity = 0.025;
+				cam.aspect = (float)frameSize.width / frameSize.height;
+				cam.nearPlane = 0.01;
+				cam.farPlane = 100;
+				cam.sens = 0.025;
 
 				/* Setting up the lights */
 				dark.color = kl::constant::colors::white;
@@ -107,6 +108,7 @@ namespace kl {
 				sunVP_uni.setData(sun.matrix());
 
 				/* Rendering the shadows */
+				sun.calcMat();
 				sun.render(frameSize, [&]() {
 					for (int i = 0; i < objects.size(); i++) {
 						if (objects[i]->visible) {

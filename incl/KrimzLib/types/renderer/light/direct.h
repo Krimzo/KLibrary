@@ -55,7 +55,7 @@ namespace kl {
 
 				// Compiling the shaders and getting uniforms
 				depth_sha = new kl::shaders(vertSource, fragSource);
-				light_vp_uni = depth_sha->getUniform("light_vp");
+				sunVP_uni = depth_sha->getUniform("sunVP");
 				w_uni = depth_sha->getUniform("w");
 			}
 		}
@@ -77,8 +77,8 @@ namespace kl {
 			}
 		}
 
-		// Returns the light vp matrix
-		kl::mat4 matrix() {
+		// Calculates the light vp matrix
+		void calcMat() {
 			const float horizRange = 5;
 			const float vertRange = 10;
 			const float nearRange = 0.01;
@@ -88,8 +88,13 @@ namespace kl {
 			kl::vec3 center = kl::vec3(0, 0, 0);
 			kl::vec3 up = kl::vec3(0, 1, 0);
 
-			// Return the vp matrix
-			return kl::mat4::ortho(-horizRange, horizRange, -vertRange, vertRange, nearRange, farRange) * kl::mat4::lookAt(eye, center, up);
+			// Sets the sun view/projection matrix
+			sunVP =  kl::mat4::ortho(-horizRange, horizRange, -vertRange, vertRange, nearRange, farRange) * kl::mat4::lookAt(eye, center, up);
+		}
+
+		// Returns the light vp matrix
+		kl::mat4 matrix() {
+			return sunVP;
 		}
 
 		void render(kl::size frameSize, std::function<void()> toRender) {
@@ -103,7 +108,7 @@ namespace kl {
 			glClear(GL_DEPTH_BUFFER_BIT);
 
 			// Setting the light vp uni
-			light_vp_uni.setData(this->matrix());
+			sunVP_uni.setData(this->matrix());
 
 			// Rendering 
 			toRender();
@@ -137,12 +142,15 @@ namespace kl {
 		kl::id depthFB = NULL;
 		kl::id depthMap = NULL;
 
+		// Light vp matrix
+		kl::mat4 sunVP;
+
 		// Shadow map size
 		static const int mapSize = 2048;
 
 		// Shadow shaders
 		kl::shaders* depth_sha = nullptr;
-		kl::uniform light_vp_uni;
+		kl::uniform sunVP_uni;
 		kl::uniform w_uni;
 
 		// Shadow shader sources
@@ -156,11 +164,11 @@ namespace kl {
 
 		layout (location = 0) in vec3 world;
 
-		uniform mat4 light_vp;
+		uniform mat4 sunVP;
 		uniform mat4 w;
 
 		void main() {
-			gl_Position = light_vp * w * vec4(world, 1);
+			gl_Position = sunVP * w * vec4(world, 1);
 		}
 	)";
 

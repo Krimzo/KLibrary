@@ -4,15 +4,12 @@
 namespace kl {
     struct camera {
 		kl::vec3 position;
-		float sensitivity = 0.05f;
+		float nearPlane = 1;
+		float farPlane = 10;
+		float aspect = 16.0 / 9;
+		float fov = 75;
 		float speed = 2;
-
-		// Constructors
-		camera() {
-			setFOV(75);
-			setAspect(1);
-			setPlanes(1, 10);
-		}
+		float sens = 0.05;
 
 		// Camera direction getters
 		kl::vec3 getForward() {
@@ -52,8 +49,8 @@ namespace kl {
 			const int dy = mousePos.y - frameCenter.y;
 
 			// Calculating the x and y rotation
-			const float xRotation = dx * sensitivity;
-			const float yRotation = dy * sensitivity;
+			const float xRotation = dx * sens;
+			const float yRotation = dy * sens;
 
 			// Calculating the vertically rotated forward vector
 			kl::vec3 forwardVert = getForward().rotate(yRotation, getRight());
@@ -67,42 +64,24 @@ namespace kl {
 			forward = getForward().rotate(xRotation, kl::vec3(0, 1, 0));
 		}
 
-		// Computes and stores the tan const
-		void setFOV(float fov) {
-			tanHalf = 1 / tan(kl::convert::toRadians(fov * 0.5f));
-		}
-
-		// Computes and stores the aspect ratio
-		void setAspect(float a) {
-			aspectRec = 1 / a;
-		}
-		void setAspect(kl::size frameSize) {
-			aspectRec = (float)frameSize.height / frameSize.width;
-		}
-
-		// Computes and stores the near and far plane calculations
-		void setPlanes(float nearPlane, float farPlane) {
-			planesA = (-farPlane - nearPlane) / (nearPlane - farPlane);
-			planesB = (2 * nearPlane * farPlane) / (nearPlane - farPlane);
-		}
-
 		// Computes and returns the camera matrix
 		kl::mat4 matrix() {
 			// Building the proj matrix
+			const float tanHalf = 1 / tan(kl::convert::toRadians(fov * 0.5));
+			const float planesA = (-farPlane - nearPlane) / (nearPlane - farPlane);
+			const float planesB = (2 * nearPlane * farPlane) / (nearPlane - farPlane);
 			kl::mat4 proj;
-			proj[ 0] = tanHalf * aspectRec;
+			proj[ 0] = tanHalf / aspect;
 			proj[ 5] = tanHalf;
 			proj[10] = planesA;
 			proj[11] = planesB;
 			proj[14] = 1;
 			proj[15] = 0;
 
-			// Getting the direction vectors
+			// Building the view matrix
 			const kl::vec3 u = getRight();
 			const kl::vec3 v = getUp();
 			const kl::vec3 n = getForward();
-
-			// Building the view matrix
 			kl::mat4 view;
 			view[ 0] = u.x;
 			view[ 1] = u.y;
@@ -123,10 +102,6 @@ namespace kl {
 		// Variables
 		static kl::vec3 yAxis;
 		kl::vec3 forward = kl::vec3(0, 0, 1);
-		float tanHalf = 0;
-		float aspectRec = 0;
-		float planesA = 0;
-		float planesB = 0;
 	};
 	kl::vec3 camera::yAxis = kl::vec3(0, 1, 0);
 }
