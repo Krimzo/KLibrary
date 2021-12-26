@@ -179,7 +179,7 @@ void update() {
 	tvs.forEach([&](auto tv) {
 		const float x = -(*tv)->geometry.position.x;
 
-		const float y = pow(x * 0.1, 3); //1.5 * (sin((0.5 * x) - (3 * renderer.elapsedT)) + 1);
+		const float y = pow(x * 0.1, 3) + 1.5 * sin(renderer.elapsedT); //1.5 * (sin((0.5 * x) - (3 * renderer.elapsedT)) + 1);
 		(*tv)->geometry.position.y = y;
 	});
 }

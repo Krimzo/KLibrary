@@ -4,7 +4,7 @@
 namespace kl {
 	namespace opengl {
 		// Enables/disables face culling
-		void setCulling(bool enabled, bool cullBack = true, bool clockWise = true) {
+		void setCulling(bool enabled, bool cullBack = true, bool clockWise = false) {
 			if (enabled) {
 				glEnable(GL_CULL_FACE);
 				glFrontFace(clockWise ? GL_CW : GL_CCW);

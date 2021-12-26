@@ -150,7 +150,7 @@ namespace kl {
 			}
 
 			// Calculating the ortho projection matrix
-			kl::mat4 proj = kl::mat4::ortho(min.x, max.x, min.y, max.y, -max.z, -min.z);
+			kl::mat4 proj = kl::mat4::ortho(min.x, max.x, min.y, max.y, -max.z - cam.shadowD, -min.z);
 
 			// Setting the sun view/projection matrix
 			sunVP = proj * view;
@@ -174,7 +174,7 @@ namespace kl {
 			// Setting the light vp uni
 			sunVP_uni.setData(this->matrix());
 
-			// Rendering 
+			// Rendering
 			toRender();
 
 			// Binding the defualt frame buffer

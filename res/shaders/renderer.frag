@@ -19,7 +19,7 @@ in vec4 interSunPos;
 // Pixel color output
 out vec4 pixelColor;
 
-float computeShadow() {
+float computeShadow(float dotLN) {
     // Shadow value
 	float shadow = 0;
 
@@ -32,26 +32,28 @@ float computeShadow() {
 		lightCoords = lightCoords * 0.5 + 0.5;
 
 		// Prevents shadow acne
-		float bias = max(0.02 * (1 - dot(normalize(interNorm), -sunD)), 0.0005);
+		float bias = 0.0025;
+		float biasMin = 0.0005;
+		bias = max(bias * (1 - dotLN), biasMin);
 
 		// Smoothing the shadow
-		int sampleRadius = 2;
+		int smoothRadius = 2;
 		vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
-		for(int y = -sampleRadius; y <= sampleRadius; y++) {
-		    for(int x = -sampleRadius; x <= sampleRadius; x++) {
-		        float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
-				if (lightCoords.z > closestDepth + bias) {
+		for(int y = -smoothRadius; y <= smoothRadius; y++) {
+		    for(int x = -smoothRadius; x <= smoothRadius; x++) {
+		        float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r + bias;
+				if (lightCoords.z > closestDepth) {
 					shadow++;
 				}
 		    }
 		}
 
 		// Calculating the average shadow
-		shadow /= pow((sampleRadius * 2 + 1), 2);
+		shadow /= pow((smoothRadius * 2 + 1), 2);
 	}
 
 	// Returning the shadow value
-	return shadow;
+	return (1 - shadow);
 }
 
 void main () {
@@ -65,7 +67,7 @@ void main () {
     vec3 directColor = vec3(0);
 
     // Calculating the directional light intensity
-    float diffuseFactor = dot(normalize(interNorm), -sunD);
+    float diffuseFactor = dot(-sunD, normalize(interNorm));
 
     // Checking the diffuse factor
     if (diffuseFactor > 0) {
@@ -73,8 +75,8 @@ void main () {
     }
 
 	// Computing the shadow factor
-	float shadowFac = computeShadow();
+	float shadowFac = computeShadow(diffuseFactor);
 
     // Setting the pixel color
-    pixelColor = vec4(textureColor * ((1 - shadowFac) * directColor + ambientColor), 1);
+    pixelColor = vec4(textureColor * (shadowFac * directColor + ambientColor), 1);
 }

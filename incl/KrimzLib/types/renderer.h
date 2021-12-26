@@ -36,9 +36,6 @@ namespace kl {
 
 			/* Window start definition */
 			win.start = [&]() {
-				/* Setting up the face culling */
-				kl::opengl::setCulling(false);
-
 				/* Setting up the depth testing */
 				kl::opengl::setDepthTest(true);
 
@@ -47,7 +44,7 @@ namespace kl {
 				cam.nearPlane = 0.01;
 				cam.farPlane = 100;
 				cam.sens = 0.025;
-				cam.shadowD = 10;
+				cam.shadowD = 15;
 
 				/* Setting up the lights */
 				dark.color = kl::constant::colors::white;
@@ -72,7 +69,7 @@ namespace kl {
 				default_sha->getUniform("shadowMap").setData(1);
 
 				/* Generating sun buffers */
-				sun.genBuff(2048);
+				sun.genBuff(4096);
 
 				/* Calling the user start */
 				setup();
