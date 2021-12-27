@@ -110,7 +110,7 @@ namespace kl {
 			kl::vec3 frustumCenter = (centerFar - centerNear) * 0.5;
 
 			// Calculating the light view matrix
-			kl::mat4 view = kl::mat4::lookAt(direction.negate().normalize(), vec3(0, 0, 0), vec3(0, 0, 1));
+			kl::mat4 view = kl::mat4::lookAt(getDir().negate(), vec3(0, 0, 0), vec3(0, 0, 1));
 
 			// Transforming the frustum points to the light view space
 			std::vector<vec4> lightViewFrust {

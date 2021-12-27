@@ -57,7 +57,7 @@ namespace kl {
 			kl::vec3 forwardVert = getForward().rotate(yRotation, getRight());
 
 			// Checking if the vertical rotation is goin to be inside the bounds
-			if (std::abs(kl::convert::toDegrees(forwardVert.angle(yAxis)) - 90) <= verticalAngleLimit) {
+			if (std::abs(forwardVert.angle(yAxis) - 90) <= verticalAngleLimit) {
 				forward = forwardVert;
 			}
 

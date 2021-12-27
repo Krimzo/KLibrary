@@ -6,11 +6,13 @@ kl::renderer renderer;
 
 // Game objects
 kl::renderable* wall = nullptr;
-kl::renderable * table = nullptr;
-kl::renderable * katanaL = nullptr;
-kl::renderable * katanaR = nullptr;
-kl::renderable * horse = nullptr;
-kl::renderable * sphere1 = nullptr;
+kl::renderable* table = nullptr;
+kl::renderable* katanaL = nullptr;
+kl::renderable* katanaR = nullptr;
+kl::renderable* horse = nullptr;
+kl::renderable* sphere1 = nullptr;
+kl::renderable* metalcube1 = nullptr;
+kl::renderable* metalcube2 = nullptr;
 kl::array<kl::renderable*> tvs(101);
 
 // Renderer setup
@@ -40,6 +42,8 @@ void setup() {
 	kl::texture* katana_tex = renderer.newTexture("res/textures/katana.jpg");
 	kl::texture* horse_tex = renderer.newTexture("res/textures/horse.jpg");
 	kl::texture* tv_tex = renderer.newTexture("res/textures/tv.jpg");
+	kl::texture* peace_tex = renderer.newTexture("res/textures/peace.jpg");
+	kl::texture* fp_tex = renderer.newTexture("res/textures/firepower.jpg");
 
 	// Object creation
 	wall = renderer.newObject(cube_mes, solid1_tex);
@@ -48,32 +52,25 @@ void setup() {
 	katanaR = renderer.newObject(katana_mes, katana_tex);
 	horse = renderer.newObject(horse_mes, horse_tex);
 	sphere1 = renderer.newObject(sphere_mes, solid2_tex);
+	metalcube1 = renderer.newObject(cube_mes, peace_tex);
+	metalcube2 = renderer.newObject(cube_mes, fp_tex);
 
 	// Object properties setup
-	wall->visible = false;
 	wall->geometry.size = kl::vec3(50, 10, 0.05);
-	wall->geometry.position = kl::vec3(0, 0, -6);
+	wall->geometry.rotation = kl::vec3(0, 0, 0);
+	wall->geometry.position = kl::vec3(0, 0, -7);
 
 	table->geometry.size = kl::vec3(1, 1, 1);
 	table->geometry.rotation = kl::vec3(0, 45, 0);
 	table->geometry.position = kl::vec3(0, -0.5, 2);
-	table->physics.enabled = false;
-	table->physics.angular.y = 18;
-	table->physics.gravity = 0;
 
 	katanaL->geometry.size = kl::vec3(2, 2, 2);
 	katanaL->geometry.rotation = kl::vec3(0, 180, -42);
 	katanaL->geometry.position = kl::vec3(-1, 0, 2);
-	katanaL->physics.enabled = false;
-	katanaL->physics.angular.y = 36;
-	katanaL->physics.gravity = 0;
 
 	katanaR->geometry.size = kl::vec3(2, 2, 2);
 	katanaR->geometry.rotation = kl::vec3(0, 0, 42);
 	katanaR->geometry.position = kl::vec3(1, 0, 2);
-	katanaR->physics.enabled = false;
-	katanaR->physics.angular.y = -36;
-	katanaR->physics.gravity = 0;
 
 	horse->geometry.size = kl::vec3(4, 4, 4);
 	horse->geometry.rotation = kl::vec3(0, 0, 0);
@@ -89,20 +86,33 @@ void setup() {
 	sphere1->physics.velocity.x = 1;
 	sphere1->physics.gravity = 0;
 
+	metalcube1->geometry.size = kl::vec3(0.5, 0.5, 0.5);
+	metalcube1->geometry.rotation = kl::vec3(45, 45, 0);
+	metalcube1->geometry.position = kl::vec3(0, 4, -2);
+	metalcube1->physics.enabled = true;
+	metalcube1->physics.angular = kl::vec3(kl::random::getInt(-32, 32), kl::random::getInt(-32, 32), kl::random::getInt(-32, 32));
+	metalcube1->physics.gravity = 0;
+
+	metalcube2->geometry.size = kl::vec3(0.5, 0.5, 0.5);
+	metalcube2->geometry.rotation = kl::vec3(45, 45, 0);
+	metalcube2->geometry.position = kl::vec3(0, -4, -2);
+	metalcube2->physics.enabled = true;
+	metalcube2->physics.angular = kl::vec3(kl::random::getInt(-32, 32), kl::random::getInt(-32, 32), kl::random::getInt(-32, 32));
+	metalcube2->physics.gravity = 0;
+
 	int tvCounter = 0;
 	float tvsStartPos = -tvs.size() / 2.0;
 	tvs.forEach([&](auto tv) {
 		*tv = renderer.newObject(tv_mes, tv_tex);
 
-		(*tv)->visible = false;
 		(*tv)->geometry.size = kl::vec3(2, 2, 2);
 		(*tv)->geometry.rotation = kl::vec3(0, 180, 0);
-		(*tv)->geometry.position = kl::vec3(tvsStartPos + tvCounter++, 0, -5);
+		(*tv)->geometry.position = kl::vec3(tvsStartPos + tvCounter++, 0, -6);
 	});
 }
 
 // Renderer input
-bool camMoving = false;
+bool movingCam = false;
 void input(kl::keys* keys, kl::mouse* mouse) {
 	// Keyboard input
 	if (keys->w) {
@@ -132,17 +142,17 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 
 	// Mouse input
 	if (mouse->lmb) {
-		camMoving = true;
+		movingCam = true;
 		mouse->hide();
 
 		// Fixing the camera jump on the first click
 		mouse->position = renderer.frameCenter();
 	}
 	if (mouse->rmb) {
-		camMoving = false;
+		movingCam = false;
 		mouse->show();
 	}
-	if (camMoving) {
+	if (movingCam) {
 		kl::point frameCenter = renderer.frameCenter();
 		renderer.cam.rotate(mouse->position, frameCenter);
 		mouse->move(frameCenter);
@@ -155,33 +165,28 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	if (keys->f) {
 		kl::opengl::setWireframe(false);
 	}
-	if (keys->comma) {
-		wall->visible = false;
-
-		tvs.forEach([&](auto tv) {
-			(*tv)->visible = false;
-		});
-	}
-	if (keys->period) {
-		wall->visible = true;
-
-		tvs.forEach([&](auto tv) {
-			(*tv)->visible = true;
-		});
-	}
 }
 
 // Renderer update
 void update() {
-	const float horseGravity = 0.1;
-	sphere1->physics.velocity += (horse->geometry.position - sphere1->geometry.position) * horseGravity * renderer.deltaT;
-
 	tvs.forEach([&](auto tv) {
 		const float x = -(*tv)->geometry.position.x;
 
-		const float y = pow(x * 0.1, 3) + 1.5 * sin(renderer.elapsedT); //1.5 * (sin((0.5 * x) - (3 * renderer.elapsedT)) + 1);
-		(*tv)->geometry.position.y = y;
+		(*tv)->geometry.position.y = pow(x * 0.1, 3) + 1.5 * sin(renderer.elapsedT);
 	});
+
+	const float horseGrav = 0.1;
+	sphere1->physics.velocity += (horse->geometry.position - sphere1->geometry.position) * horseGrav * renderer.deltaT;
+
+	const float r = 2;
+	const float sinT = sin(renderer.elapsedT);
+	const float cosT = cos(renderer.elapsedT);
+	metalcube1->geometry.position.x = sphere1->geometry.position.x + r * sinT;
+	metalcube1->geometry.position.y = sphere1->geometry.position.y + r * sinT;
+	metalcube1->geometry.position.z = sphere1->geometry.position.z + r * cosT;
+	metalcube2->geometry.position.x = sphere1->geometry.position.x - r * sinT;
+	metalcube2->geometry.position.y = sphere1->geometry.position.y - r * sinT;
+	metalcube2->geometry.position.z = sphere1->geometry.position.z - r * cosT;
 }
 
 int main() {

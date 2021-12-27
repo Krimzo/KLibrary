@@ -94,7 +94,7 @@ namespace kl {
 
 		// Returns the angle between the given vector and self
 		float angle(kl::vec3 a) {
-			return acos(this->normalize().dot(a.normalize()));
+			return acos(this->normalize().dot(a.normalize())) * 57.2957795131;
 		}
 
 		// Returns the rotated vector around custom axis

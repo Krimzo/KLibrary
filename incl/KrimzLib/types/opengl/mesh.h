@@ -27,6 +27,11 @@ namespace kl {
 			glBindVertexArray(NULL);
 		}
 
+		// Returns the triangle count
+		int triangles() {
+			return vertexCount / 3;
+		}
+
 	private:
 		kl::id vao = NULL;
 		kl::id vbo = NULL;

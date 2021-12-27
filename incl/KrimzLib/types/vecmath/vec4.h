@@ -116,6 +116,11 @@ namespace kl {
 			return x * a.x + y * a.y + z * a.z + w * a.w;
 		}
 
+		// Returns the angle between the given vector and self
+		float angle(kl::vec4 a) {
+			return acos(this->normalize().dot(a.normalize())) * 57.2957795131;
+		}
+
 		// Prints the data to the console
 		void print() {
 			printf("%.2f %.2f %.2f %.2f\n", x, y, z, w);

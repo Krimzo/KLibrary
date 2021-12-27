@@ -55,8 +55,8 @@ namespace kl {
 
 				/* Compiling object shaders */
 				default_sha = new kl::shaders(
-					kl::file::readText("res/shaders/renderer.vert"),
-					kl::file::readText("res/shaders/renderer.frag")
+					kl::file::readText("res/shaders/default.vert"),
+					kl::file::readText("res/shaders/default.frag")
 				);
 
 				/* Getting object shader uniforms */
@@ -169,6 +169,17 @@ namespace kl {
 		}
 		void stop() {
 			win.stop();
+		}
+		
+		// Returns the visible triangle count
+		int triangles() {
+			int trCount = 0;
+			for (int i = 0; i < objects.size(); i++) {
+				if (objects[i]->visible) {
+					trCount += objects[i]->mesh->triangles();
+				}
+			}
+			return trCount;
 		}
 
 		// Returns the frame center
