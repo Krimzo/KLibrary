@@ -40,7 +40,8 @@ namespace kl {
 				kl::opengl::setDepthTest(true);
 
 				/* Setting up the camera */
-				cam.aspect = (float)frameSize.width / frameSize.height;
+				cam.width = frameSize.width;
+				cam.height = frameSize.height;
 				cam.nearPlane = 0.01;
 				cam.farPlane = 100;
 				cam.sens = 0.025;

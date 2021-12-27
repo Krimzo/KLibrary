@@ -6,7 +6,8 @@ namespace kl {
 		kl::vec3 position;
 		float nearPlane = 1;
 		float farPlane = 10;
-		float aspect = 16.0 / 9;
+		float width = 600;
+		float height = 600;
 		float fov = 75;
 		float speed = 2;
 		float sens = 0.05;
@@ -68,21 +69,12 @@ namespace kl {
 		// Computes and returns the camera matrix
 		kl::mat4 matrix() {
 			// Building the proj matrix
-			const float tanHalf = 1 / tan(kl::convert::toRadians(fov * 0.5));
-			const float planesA = (-farPlane - nearPlane) / (nearPlane - farPlane);
-			const float planesB = (2 * nearPlane * farPlane) / (nearPlane - farPlane);
-			kl::mat4 proj;
-			proj[ 0] = tanHalf / aspect;
-			proj[ 5] = tanHalf;
-			proj[10] = planesA;
-			proj[11] = planesB;
-			proj[14] = 1;
-			proj[15] = 0;
+			kl::mat4 proj = kl::mat4::perspective(fov, width, height, nearPlane, farPlane);
 
 			// Building the view matrix
-			const kl::vec3 u = getRight();
-			const kl::vec3 v = getUp();
-			const kl::vec3 n = getForward();
+			kl::vec3 u = getRight();
+			kl::vec3 v = getUp();
+			kl::vec3 n = getForward();
 			kl::mat4 view;
 			view[ 0] = u.x;
 			view[ 1] = u.y;

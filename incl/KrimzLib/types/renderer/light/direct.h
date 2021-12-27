@@ -85,7 +85,7 @@ namespace kl {
 			// Calculating the near points
 			const float nearDist = cam.nearPlane;
 			const float Hnear = 2 * tan(kl::convert::toRadians(cam.fov) * 0.5) * nearDist;
-			const float Wnear = Hnear * cam.aspect;
+			const float Wnear = Hnear * (cam.width / cam.height);
 			kl::vec3 un = cam.getUp() * Hnear * 0.5;
 			kl::vec3 rn = cam.getRight() * Wnear * 0.5;
 			kl::vec3 centerNear = cam.position + cam.getForward() * nearDist;
@@ -97,7 +97,7 @@ namespace kl {
 			// Calculating the far points
 			const float farDist = cam.shadowD;
 			const float Hfar = 2 * tan(kl::convert::toRadians(cam.fov) * 0.5) * farDist;
-			const float Wfar = Hfar * cam.aspect;
+			const float Wfar = Hfar * (cam.width / cam.height);
 			kl::vec3 uf = cam.getUp() * Hfar * 0.5;
 			kl::vec3 rf = cam.getRight() * Wfar * 0.5;
 			kl::vec3 centerFar = cam.position + cam.getForward() * farDist;
@@ -150,7 +150,7 @@ namespace kl {
 			}
 
 			// Calculating the ortho projection matrix
-			kl::mat4 proj = kl::mat4::ortho(min.x, max.x, min.y, max.y, -max.z - cam.shadowD, -min.z);
+			kl::mat4 proj = kl::mat4::ortho(min.x, max.x, min.y, max.y, -max.z - 3 * cam.shadowD, -min.z);
 
 			// Setting the sun view/projection matrix
 			sunVP = proj * view;

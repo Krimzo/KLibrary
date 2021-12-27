@@ -5,7 +5,7 @@ namespace kl {
 	struct mat4 {
 		// Constructor
 		mat4() {
-			loadIdentity();
+			setIdentity();
 		}
 		mat4(kl::vec4 row0, kl::vec4 row1, kl::vec4 row2, kl::vec4 row3) {
 			data[ 0] = row0.x; data[ 1] = row0.y; data[ 2] = row0.z; data[ 3] = row0.w;
@@ -108,7 +108,7 @@ namespace kl {
 		}
 
 		// Loads the identity matrix
-		void loadIdentity() {
+		void setIdentity() {
 			data[ 0] = 1; data[ 1] = 0; data[ 2] = 0; data[ 3] = 0;
 			data[ 4] = 0; data[ 5] = 1; data[ 6] = 0; data[ 7] = 0;
 			data[ 8] = 0; data[ 9] = 0; data[10] = 1; data[11] = 0;
@@ -138,8 +138,8 @@ namespace kl {
 		// Returns a rotation matrix
 		static kl::mat4 rotate(kl::vec3 rotation) {
 			// Computing x rotation matrix
-			const float xSin = sin(rotation.x * 0.01745329251f);
-			const float xCos = cos(rotation.x * 0.01745329251f);
+			const float xSin = sin(rotation.x * 0.01745329251);
+			const float xCos = cos(rotation.x * 0.01745329251);
 			kl::mat4 xRot;
 			xRot[ 5] =  xCos;
 			xRot[ 6] = -xSin;
@@ -147,8 +147,8 @@ namespace kl {
 			xRot[10] =  xCos;
 
 			// Computing y rotation matrix
-			const float ySin = sin(rotation.y * 0.01745329251f);
-			const float yCos = cos(rotation.y * 0.01745329251f);
+			const float ySin = sin(rotation.y * 0.01745329251);
+			const float yCos = cos(rotation.y * 0.01745329251);
 			kl::mat4 yRot;
 			yRot[ 0] =  yCos;
 			yRot[ 2] =  ySin;
@@ -156,8 +156,8 @@ namespace kl {
 			yRot[10] =  yCos;
 
 			// Computing z rotation matrix
-			const float zSin = sin(rotation.z * 0.01745329251f);
-			const float zCos = cos(rotation.z * 0.01745329251f);
+			const float zSin = sin(rotation.z * 0.01745329251);
+			const float zCos = cos(rotation.z * 0.01745329251);
 			kl::mat4 zRot;
 			zRot[0] =  zCos;
 			zRot[1] = -zSin;
@@ -177,14 +177,27 @@ namespace kl {
 			return temp;
 		}
 
+		// Returns the perspective projection matrix
+		static kl::mat4 perspective(float fov, float width, float height, float zNear, float zFar) {
+			const float tanHalf = 1 / tan(fov * 0.00872664625);
+			kl::mat4 temp;
+			temp[ 0] = tanHalf * (height / width);
+			temp[ 5] = tanHalf;
+			temp[10] = (-zFar - zNear) / (zNear - zFar);
+			temp[11] = (2 * zNear * zFar) / (zNear - zFar);
+			temp[14] = 1;
+			temp[15] = 0;
+			return temp;
+		}
+
 		// Returns the orthographics projection matrix
 		static kl::mat4 ortho(float left, float right, float bottom, float top, float nearZ, float farZ) {
 			kl::mat4 temp;
-			temp[0] = 2 / (right - left);
-			temp[5] = 2 / (top - bottom);
+			temp[ 0] = 2 / (right - left);
+			temp[ 5] = 2 / (top - bottom);
 			temp[10] = -2 / (farZ - nearZ);
-			temp[3] = -(right + left) / (right - left);
-			temp[7] = -(top + bottom) / (top - bottom);
+			temp[ 3] = -(right + left) / (right - left);
+			temp[ 7] = -(top + bottom) / (top - bottom);
 			temp[11] = -(farZ + nearZ) / (farZ - nearZ);
 			return temp;
 		}
@@ -196,17 +209,17 @@ namespace kl {
 			kl::vec3 u = s.cross(f);
 
 			kl::mat4 temp;
-			temp[0] = s.x;
-			temp[1] = s.y;
-			temp[2] = s.z;
-			temp[4] = u.x;
-			temp[5] = u.y;
-			temp[6] = u.z;
-			temp[8] = -f.x;
-			temp[9] = -f.y;
+			temp[ 0] = s.x;
+			temp[ 1] = s.y;
+			temp[ 2] = s.z;
+			temp[ 4] = u.x;
+			temp[ 5] = u.y;
+			temp[ 6] = u.z;
+			temp[ 8] = -f.x;
+			temp[ 9] = -f.y;
 			temp[10] = -f.z;
-			temp[3] = -s.dot(eye);
-			temp[7] = -u.dot(eye);
+			temp[ 3] = -s.dot(eye);
+			temp[ 7] = -u.dot(eye);
 			temp[11] = f.dot(eye);
 			return temp;
 		}

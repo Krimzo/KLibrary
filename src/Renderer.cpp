@@ -13,7 +13,7 @@ kl::renderable* horse = nullptr;
 kl::renderable* sphere1 = nullptr;
 kl::renderable* metalcube1 = nullptr;
 kl::renderable* metalcube2 = nullptr;
-kl::array<kl::renderable*> tvs(101);
+kl::renderable* kerv = nullptr;
 
 // Renderer setup
 void setup() {
@@ -54,10 +54,10 @@ void setup() {
 	sphere1 = renderer.newObject(sphere_mes, solid2_tex);
 	metalcube1 = renderer.newObject(cube_mes, peace_tex);
 	metalcube2 = renderer.newObject(cube_mes, fp_tex);
+	kerv = renderer.newObject(tv_mes, tv_tex);
 
 	// Object properties setup
 	wall->geometry.size = kl::vec3(50, 10, 0.05);
-	wall->geometry.rotation = kl::vec3(0, 0, 0);
 	wall->geometry.position = kl::vec3(0, 0, -7);
 
 	table->geometry.size = kl::vec3(1, 1, 1);
@@ -73,14 +73,12 @@ void setup() {
 	katanaR->geometry.position = kl::vec3(1, 0, 2);
 
 	horse->geometry.size = kl::vec3(4, 4, 4);
-	horse->geometry.rotation = kl::vec3(0, 0, 0);
 	horse->geometry.position = kl::vec3(0, -0.02, 2);
 	horse->physics.enabled = true;
 	horse->physics.angular.y = 18;
 	horse->physics.gravity = 0;
 
 	sphere1->geometry.size = kl::vec3(1, 1, 1);
-	sphere1->geometry.rotation = kl::vec3(0, 0, 0);
 	sphere1->geometry.position = kl::vec3(0, 2, -2);
 	sphere1->physics.enabled = true;
 	sphere1->physics.velocity.x = 1;
@@ -100,15 +98,12 @@ void setup() {
 	metalcube2->physics.angular = kl::vec3(kl::random::getInt(-32, 32), kl::random::getInt(-32, 32), kl::random::getInt(-32, 32));
 	metalcube2->physics.gravity = 0;
 
-	int tvCounter = 0;
-	float tvsStartPos = -tvs.size() / 2.0;
-	tvs.forEach([&](auto tv) {
-		*tv = renderer.newObject(tv_mes, tv_tex);
+	kerv->geometry.size = kl::vec3(5, 5, 5);
+	kerv->geometry.rotation = kl::vec3(0, 180, 0);
+	kerv->geometry.position = kl::vec3(0, 3, -6);
 
-		(*tv)->geometry.size = kl::vec3(2, 2, 2);
-		(*tv)->geometry.rotation = kl::vec3(0, 180, 0);
-		(*tv)->geometry.position = kl::vec3(tvsStartPos + tvCounter++, 0, -6);
-	});
+	// Sun setup
+	renderer.sun.direction = kl::vec3(-0.575, -0.75, -2);
 }
 
 // Renderer input
@@ -169,12 +164,6 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 
 // Renderer update
 void update() {
-	tvs.forEach([&](auto tv) {
-		const float x = -(*tv)->geometry.position.x;
-
-		(*tv)->geometry.position.y = pow(x * 0.1, 3) + 1.5 * sin(renderer.elapsedT);
-	});
-
 	const float horseGrav = 0.1;
 	sphere1->physics.velocity += (horse->geometry.position - sphere1->geometry.position) * horseGrav * renderer.deltaT;
 
