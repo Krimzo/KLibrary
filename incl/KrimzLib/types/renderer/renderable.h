@@ -5,6 +5,7 @@ namespace kl {
     struct renderable {
 		// Object data
 		bool visible = true;
+		bool shadows = true;
 		kl::geometry geometry;
 		kl::physics physics;
 		

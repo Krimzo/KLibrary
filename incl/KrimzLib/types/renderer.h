@@ -108,7 +108,7 @@ namespace kl {
 				/* Rendering the shadows */
 				sun.render(frameSize, [&]() {
 					for (int i = 0; i < objects.size(); i++) {
-						if (objects[i]->visible) {
+						if (objects[i]->shadows) {
 							// Setting the world matrix
 							sun.setWMat(objects[i]->geometry.matrix());
 

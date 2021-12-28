@@ -81,6 +81,13 @@ namespace kl {
 			return acos(this->normalize().dot(a.normalize())) * 57.2957795131;
 		}
 
+		// Returns a rotated vector around the given point
+		kl::vec2 rotate(float angle) {
+			const float sinA = sin(angle * 0.01745329251);
+			const float cosA = cos(angle * 0.01745329251);
+			return kl::vec2(cosA * x - sinA * y, sinA * x + cosA * y);
+		}
+
 		// Prints the data to the console
 		void print() {
 			printf("%.2f %.2f\n", x, y);

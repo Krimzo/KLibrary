@@ -97,7 +97,7 @@ namespace kl {
 			return acos(this->normalize().dot(a.normalize())) * 57.2957795131;
 		}
 
-		// Returns the rotated vector around custom axis
+		// Returns a rotated vector around the given axis
 		kl::vec3 rotate(float angle, kl::vec3 axis) {
 			// Calculating trig funcs
 			static const float halfeAngleRadians = 0.00872664625f;

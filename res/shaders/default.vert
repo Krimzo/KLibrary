@@ -19,12 +19,12 @@ void main() {
     // Outputting the object fragment position
     gl_Position = vp * w * vec4(world, 1);
 
-    // Outputting the sun fragment position
-    interSunPos = sunVP * w * vec4(world, 1);
-
     // Outputting the interpolated texture coords
     interTex = tex;
 
     // Outputting the interpolated normal
     interNorm = (w * vec4(norm, 0)).xyz;
+
+    // Outputting the sun fragment position
+    interSunPos = sunVP * w * vec4(world, 1);
 }

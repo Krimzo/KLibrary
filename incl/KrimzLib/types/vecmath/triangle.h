@@ -3,11 +3,7 @@
 
 namespace kl {
 	struct triangle {
-		kl::vertex vertices[3] = {
-			kl::vertex(),
-			kl::vertex(),
-			kl::vertex()
-		};
+		kl::vertex vertices[3] = {};
 
 		// Returns raw data pointer
 		void* pointer() {
