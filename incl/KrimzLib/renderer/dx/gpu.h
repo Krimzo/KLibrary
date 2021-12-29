@@ -29,7 +29,7 @@ namespace kl {
                     &devcon
                 );
                 if (!dev || !devcon || !swapchain) exit(69);
-
+                
                 // Getting the backbuffer address
                 ID3D11Texture2D* backbufferAddr = nullptr;
                 swapchain->GetBuffer(NULL, __uuidof(ID3D11Texture2D), (void**)&backbufferAddr);
@@ -81,7 +81,7 @@ namespace kl {
 
             // Compiles and returns shaders
             kl::dx::shaders* newShaders(std::string filePath, std::string vertName, std::string pixlName) {
-                return new kl::dx::shaders(dev, kl::convert::toWString(filePath), vertName, pixlName);
+                return new kl::dx::shaders(dev, devcon, kl::convert::toWString(filePath), vertName, pixlName);
             }
 
             // Binds the shaders to the gpu
@@ -92,40 +92,31 @@ namespace kl {
                 pixlBlob = sha->getPixlBlob();
             }
 
-            // Creates and returns a new buffer
-            kl::dx::buffer* newBuffer(void* data, int byteSize, D3D11_USAGE usage) {
-                return new kl::dx::buffer(dev, data, byteSize, usage);
+            // Creates and returns a new mesh
+            kl::dx::mesh* newMesh(std::vector<kl::vertex>& vertexData) {
+                return new kl::dx::mesh(dev, vertexData);
+            }
+            kl::dx::mesh* newMesh(std::string filePath, bool flipZ) {
+                return new kl::dx::mesh(dev, filePath, flipZ);
             }
 
             // Binds a buffer as a vertex buffer
-            void bindVertBuff(kl::dx::buffer* buff, int stride, int offset) {
-                UINT tempStride = stride;
-                UINT tempOffset = offset;
-                ID3D11Buffer* tempBuff = buff->getBuff();
+            void bindMesh(kl::dx::mesh* mesh) {
+                UINT tempStride = sizeof(kl::vertex);
+                UINT tempOffset = 0;
+                ID3D11Buffer* tempBuff = mesh->getBuff();
                 devcon->IASetVertexBuffers(0, 1, &tempBuff, &tempStride, &tempOffset);
             }
 
-            // Sets the buffer layout
-            void setLayouts(std::vector<kl::dx::layout>& layouts) {
-                // Input descriptor buffer
-                D3D11_INPUT_ELEMENT_DESC* inputDescriptor = new D3D11_INPUT_ELEMENT_DESC[layouts.size()];
+            // Creates and returns a new constant buffer
+            kl::dx::cbuffer* newCBuffer(int byteSize) {
+                return new kl::dx::cbuffer(dev, devcon, byteSize);
+            }
 
-                // Setting up descriptor buffer
-                for (int i = 0; i < layouts.size(); i++) {
-                    inputDescriptor[i].SemanticName = layouts[i].name.c_str();
-                    inputDescriptor[i].SemanticIndex = 0;
-                    inputDescriptor[i].Format = layouts[i].floats == 3 ? DXGI_FORMAT_R32G32B32_FLOAT : (layouts[i].floats == 2 ? DXGI_FORMAT_R32G32_FLOAT : DXGI_FORMAT_R32_FLOAT);
-                    inputDescriptor[i].InputSlot = 0;
-                    inputDescriptor[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-                    inputDescriptor[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-                    inputDescriptor[i].InstanceDataStepRate = 0;
-                }
-
-                // Setting the buffer layout
-                ID3D11InputLayout* bufferLayout = nullptr;
-                dev->CreateInputLayout(inputDescriptor, 3, vertBlob->GetBufferPointer(), vertBlob->GetBufferSize(), &bufferLayout);
-                if (!bufferLayout) exit(69);
-                devcon->IASetInputLayout(bufferLayout);
+            // Binds a buffer as a constant buffer
+            void bindCBuff(kl::dx::cbuffer* cbuff) {
+                ID3D11Buffer* tempCBuff = cbuff->getBuff();
+                devcon->VSSetConstantBuffers(0, 1, &tempCBuff);
             }
 
         private:

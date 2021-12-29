@@ -5,15 +5,15 @@
 kl::gl::renderer renderer;
 
 // Game objects
-kl::gl::renderable* wall = nullptr;
-kl::gl::renderable* table = nullptr;
-kl::gl::renderable* katanaL = nullptr;
-kl::gl::renderable* katanaR = nullptr;
-kl::gl::renderable* horse = nullptr;
-kl::gl::renderable* sphere1 = nullptr;
-kl::gl::renderable* metalcube1 = nullptr;
-kl::gl::renderable* metalcube2 = nullptr;
-kl::gl::renderable* kerv = nullptr;
+kl::renderable* wall = nullptr;
+kl::renderable* table = nullptr;
+kl::renderable* katanaL = nullptr;
+kl::renderable* katanaR = nullptr;
+kl::renderable* horse = nullptr;
+kl::renderable* sphere1 = nullptr;
+kl::renderable* metalcube1 = nullptr;
+kl::renderable* metalcube2 = nullptr;
+kl::renderable* kerv = nullptr;
 
 // Renderer setup
 void setup() {

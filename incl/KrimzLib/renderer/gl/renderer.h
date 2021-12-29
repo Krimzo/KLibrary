@@ -10,7 +10,7 @@ namespace kl {
 
 			/* View */
 			kl::color background = kl::constant::colors::gray;
-			kl::gl::camera cam;
+			kl::camera cam;
 
 			/* Lighting */
 			kl::gl::ambient dark;
@@ -114,10 +114,10 @@ namespace kl {
 								sun.setWMat(objects[i]->geometry.matrix());
 
 								// Rendering the object
-								objects[i]->render();
+								objects[i]->gl_render();
 							}
 						}
-						});
+					});
 
 					/* Clearing the default buffers */
 					kl::gl::clearBuffers(background);
@@ -129,7 +129,7 @@ namespace kl {
 							w_uni.setData(objects[i]->geometry.matrix());
 
 							// Rendering the object
-							objects[i]->render();
+							objects[i]->gl_render();
 						}
 					}
 
@@ -171,17 +171,6 @@ namespace kl {
 			}
 			void stop() {
 				win.stop();
-			}
-
-			// Returns the visible triangle count
-			int triangles() {
-				int trCount = 0;
-				for (int i = 0; i < objects.size(); i++) {
-					if (objects[i]->visible) {
-						trCount += objects[i]->mesh->triangles();
-					}
-				}
-				return trCount;
 			}
 
 			// Returns the frame center
@@ -252,13 +241,13 @@ namespace kl {
 			}
 
 			// Creates a new game object
-			kl::gl::renderable* newObject(kl::gl::mesh* mes, kl::gl::texture* tex) {
-				objects.push_back(new kl::gl::renderable(mes, tex));
+			kl::renderable* newObject(kl::gl::mesh* mes, kl::gl::texture* tex) {
+				objects.push_back(new kl::renderable(mes, tex));
 				return objects.back();
 			}
 
 			// Deletes a game object
-			bool delObject(kl::gl::renderable* objectAddress) {
+			bool delObject(kl::renderable* objectAddress) {
 				for (int i = 0; i < objects.size(); i++) {
 					if (objects[i] == objectAddress) {
 						delete objects[i];
@@ -283,7 +272,7 @@ namespace kl {
 			std::vector<kl::gl::texture*> textures;
 
 			// Object buffer
-			std::vector<kl::gl::renderable*> objects;
+			std::vector<kl::renderable*> objects;
 		};
 	}
 }

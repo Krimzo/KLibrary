@@ -51,34 +51,36 @@
 
 // Including special
 #include "KrimzLib/graphics/image.h"
-
-// Including opengl types
-#include "KrimzLib/gl/glad.h"
-#include "KrimzLib/gl/mesh.h"
-#include "KrimzLib/gl/texture.h"
-#include "KrimzLib/gl/uniform.h"
-#include "KrimzLib/gl/shaders.h"
-#include "KrimzLib/gl/gl.h"
+#include "KrimzLib/renderer/camera.h"
 
 // Including the window types
+#include "KrimzLib/renderer/gl/glad.h"
 #include "KrimzLib/window/keys.h"
 #include "KrimzLib/window/mouse.h"
 #include "KrimzLib/window/window.h"
 
-// Including directx types
-#include "KrimzLib/dx/shaders.h"
-#include "KrimzLib/dx/buffer.h"
-#include "KrimzLib/dx/gpu.h"
+// Including kl opengl
+#include "KrimzLib/renderer/gl/gl.h"
+#include "KrimzLib/renderer/gl/mesh.h"
+#include "KrimzLib/renderer/gl/texture.h"
+#include "KrimzLib/renderer/gl/uniform.h"
+#include "KrimzLib/renderer/gl/shaders.h"
+#include "KrimzLib/renderer/gl/skybox.h"
+#include "KrimzLib/renderer/gl/light/ambient.h"
+#include "KrimzLib/renderer/gl/light/direct.h"
 
-// Including engine types
-#include "KrimzLib/gl/renderer/camera.h"
-#include "KrimzLib/gl/renderer/renderable/geometry.h"
-#include "KrimzLib/gl/renderer/renderable/physics.h"
-#include "KrimzLib/gl/renderer/renderable.h"
-#include "KrimzLib/gl/renderer/light/ambient.h"
-#include "KrimzLib/gl/renderer/light/direct.h"
-#include "KrimzLib/gl/renderer/skybox.h"
-#include "KrimzLib/gl/renderer.h"
+// Including kl directx
+#include "KrimzLib/renderer/dx/mesh.h"
+#include "KrimzLib/renderer/dx/cbuffer.h"
+#include "KrimzLib/renderer/dx/shaders.h"
+#include "KrimzLib/renderer/dx/gpu.h"
+
+// Including rendering headers
+#include "KrimzLib/renderer/renderable/geometry.h"
+#include "KrimzLib/renderer/renderable/physics.h"
+#include "KrimzLib/renderer/renderable/renderable.h"
+#include "KrimzLib/renderer/gl/renderer.h"
+#include "KrimzLib/renderer/dx/renderer.h"
 
 /* Linking libs */
 #pragma comment(lib, "kernel32.lib")

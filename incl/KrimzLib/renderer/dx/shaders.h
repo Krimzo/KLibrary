@@ -4,7 +4,7 @@
 namespace kl {
 	namespace dx {
         struct shaders {
-            shaders(ID3D11Device* dev, std::wstring shaderFile, std::string vertName, std::string pixlName) {
+            shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, std::wstring shaderFile, std::string vertName, std::string pixlName) {
                 // Vertex shader compilation
                 D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, vertName.c_str(), "vs_4_0", NULL, NULL, &vertBlob, nullptr);
                 if (!vertBlob) exit(69);
@@ -14,6 +14,19 @@ namespace kl {
                 D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, pixlName.c_str(), "ps_4_0", NULL, NULL, &pixlBlob, nullptr);
                 if (!pixlBlob) exit(69);
                 dev->CreatePixelShader(pixlBlob->GetBufferPointer(), pixlBlob->GetBufferSize(), NULL, &pixelShader);
+
+                // Input descriptor buffer
+                D3D11_INPUT_ELEMENT_DESC inputDescriptor[3] = {
+                    {  "POSIN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    {  "TEXIN", 0,    DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "NORMIN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+                };
+
+                // Setting the buffer layout
+                ID3D11InputLayout* bufferLayout = nullptr;
+                dev->CreateInputLayout(inputDescriptor, 3, vertBlob->GetBufferPointer(), vertBlob->GetBufferSize(), &bufferLayout);
+                if (!bufferLayout) exit(69);
+                devcon->IASetInputLayout(bufferLayout);
             }
             ~shaders() {
                 vertexShader->Release();

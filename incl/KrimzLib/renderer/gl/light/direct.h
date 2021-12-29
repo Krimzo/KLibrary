@@ -82,7 +82,7 @@ namespace kl {
 			}
 
 			// Calculates the light vp matrix
-			void calcMat(kl::gl::camera& cam) {
+			void calcMat(kl::camera& cam) {
 				// Calculating the near points
 				const float nearDist = cam.nearPlane;
 				const float Hnear = 2 * tan(kl::convert::toRadians(cam.fov) * 0.5) * nearDist;

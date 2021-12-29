@@ -15,13 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="incl\KrimzLib\gl\renderer\camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\renderer\renderable.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\window\mouse.h">
@@ -30,7 +24,7 @@
     <ClInclude Include="incl\KrimzLib\window\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\shaders.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\vecmath\vec2.h">
@@ -63,7 +57,7 @@
     <ClInclude Include="incl\KrimzLib\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\gl.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\gl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\random.h">
@@ -114,7 +108,7 @@
     <ClInclude Include="incl\KrimzLib\vecmath\mat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\texture.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\window\keys.h">
@@ -123,40 +117,52 @@
     <ClInclude Include="incl\KrimzLib\vecmath\triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\mesh.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\renderer\renderable\geometry.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\uniform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\renderer\renderable\physics.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\uniform.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\light\ambient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\renderer\skybox.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\light\direct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\renderer\light\ambient.h">
+    <ClInclude Include="incl\KrimzLib\renderer\dx\gpu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\renderer\light\direct.h">
+    <ClInclude Include="incl\KrimzLib\renderer\dx\shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\dx\gpu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\dx\shaders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\dx\buffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="incl\KrimzLib\gl\glad.h">
+    <ClInclude Include="incl\KrimzLib\renderer\gl\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\vecmath\ivec2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\renderer\dx\cbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\renderer\dx\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\renderer\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\renderer\renderable\geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\renderer\renderable\physics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\renderer\renderable\renderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\renderer\dx\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,86 +1,200 @@
 #include "KrimzLib.hpp"
 
 
-// Window
-kl::window engineWindow;
+// Rendering engine
+kl::dx::renderer renderer;
 
-// Gpu
-kl::dx::gpu* gpu = nullptr;
+// Game objects
+kl::renderable* wall = nullptr;
+kl::renderable* table = nullptr;
+kl::renderable* katanaL = nullptr;
+kl::renderable* katanaR = nullptr;
+kl::renderable* horse = nullptr;
+kl::renderable* sphere1 = nullptr;
+kl::renderable* metalcube1 = nullptr;
+kl::renderable* metalcube2 = nullptr;
+kl::renderable* kerv = nullptr;
 
-// Shaders
-kl::dx::shaders* defSha = nullptr;
+// Renderer setup
+void setup() {
+	// Skybox creation
+	//renderer.newSkybox(
+	//	"res/skyboxes/clouds/front.jpg",
+	//	"res/skyboxes/clouds/back.jpg",
+	//	"res/skyboxes/clouds/left.jpg",
+	//	"res/skyboxes/clouds/right.jpg",
+	//	"res/skyboxes/clouds/top.jpg",
+	//	"res/skyboxes/clouds/bottom.jpg"
+	//);
 
-// Buffers
-kl::dx::buffer* vertBuff = nullptr;
+	// Mesh creation
+	kl::dx::mesh* cube_mes = renderer.newMesh("res/objects/cube.obj");
+	kl::dx::mesh* table_mes = renderer.newMesh("res/objects/table.obj");
+	kl::dx::mesh* katana_mes = renderer.newMesh("res/objects/katana.obj");
+	kl::dx::mesh* horse_mes = renderer.newMesh("res/objects/horse.obj");
+	kl::dx::mesh* sphere_mes = renderer.newMesh("res/objects/sphere.obj");
+	kl::dx::mesh* tv_mes = renderer.newMesh("res/objects/tv.obj");
 
-// Engine start function
-void start() {
-    // Gpu creation
-    gpu = new kl::dx::gpu(engineWindow);
+	// Texture creation
+	//kl::dx::texture* solid1_tex = renderer.newTexture(kl::image(kl::ivec2(1, 1), kl::color(235, 180, 120)));
+	//kl::dx::texture* solid2_tex = renderer.newTexture(kl::image(kl::ivec2(1, 1), kl::color(120, 180, 200)));
+	//kl::dx::texture* table_tex = renderer.newTexture("res/textures/table.jpg");
+	//kl::dx::texture* katana_tex = renderer.newTexture("res/textures/katana.jpg");
+	//kl::dx::texture* horse_tex = renderer.newTexture("res/textures/horse.jpg");
+	//kl::dx::texture* tv_tex = renderer.newTexture("res/textures/tv.jpg");
+	//kl::dx::texture* peace_tex = renderer.newTexture("res/textures/peace.jpg");
+	//kl::dx::texture* fp_tex = renderer.newTexture("res/textures/firepower.jpg");
 
-    // Loading and compiling shaders
-    defSha = gpu->newShaders("res/shaders/dx/default.hlsl", "vShader", "pShader");
+	// Object creation
+	wall = renderer.newObject(cube_mes);
+	table = renderer.newObject(table_mes);
+	katanaL = renderer.newObject(katana_mes);
+	katanaR = renderer.newObject(katana_mes);
+	horse = renderer.newObject(horse_mes);
+	sphere1 = renderer.newObject(sphere_mes);
+	metalcube1 = renderer.newObject(cube_mes);
+	metalcube2 = renderer.newObject(cube_mes);
+	kerv = renderer.newObject(tv_mes);
 
-    // Binding shaders
-    gpu->bindShaders(defSha);
+	// Object properties setup
+	wall->geometry.size = kl::vec3(50, 10, 0.05);
+	wall->geometry.position = kl::vec3(0, 0, -7);
 
-    // Test data
-    kl::vertex testVertices[3] = {
-        kl::vertex(kl::vec3(-0.5, -0.5, 0), kl::vec2(), kl::vec3(1, 0, 0)),
-        kl::vertex(kl::vec3(   0,  0.5, 0), kl::vec2(), kl::vec3(0, 1, 0)),
-        kl::vertex(kl::vec3( 0.5, -0.5, 0), kl::vec2(), kl::vec3(0, 0, 1))
-    };
+	table->geometry.size = kl::vec3(1, 1, 1);
+	table->geometry.rotation = kl::vec3(0, 45, 0);
+	table->geometry.position = kl::vec3(0, -0.5, 2);
 
-    // Vertex buffer creation
-    vertBuff = gpu->newBuffer(testVertices, sizeof(testVertices), D3D11_USAGE_DYNAMIC);
+	katanaL->geometry.size = kl::vec3(2, 2, 2);
+	katanaL->geometry.rotation = kl::vec3(0, 180, -42);
+	katanaL->geometry.position = kl::vec3(-1, 0, 2);
 
-    // Assigning the vertex buffer
-    gpu->bindVertBuff(vertBuff, sizeof(kl::vertex), 0);
+	katanaR->geometry.size = kl::vec3(2, 2, 2);
+	katanaR->geometry.rotation = kl::vec3(0, 0, 42);
+	katanaR->geometry.position = kl::vec3(1, 0, 2);
 
-    // Setting up the data parsing
-    std::vector<kl::dx::layout> layouts {
-        kl::dx::layout( "POSIN", 3),
-        kl::dx::layout( "TEXIN", 2),
-        kl::dx::layout("NORMIN", 3)
-    };
-    gpu->setLayouts(layouts);
+	horse->geometry.size = kl::vec3(4, 4, 4);
+	horse->geometry.position = kl::vec3(0, -0.02, 2);
+	horse->physics.enabled = true;
+	horse->physics.angular.y = 18;
+	horse->physics.gravity = 0;
+
+	sphere1->geometry.size = kl::vec3(1, 1, 1);
+	sphere1->geometry.position = kl::vec3(0, 2, -2);
+	sphere1->physics.enabled = true;
+	sphere1->physics.velocity.x = 1;
+	sphere1->physics.gravity = 0;
+
+	metalcube1->geometry.size = kl::vec3(0.5, 0.5, 0.5);
+	metalcube1->geometry.rotation = kl::vec3(45, 45, 0);
+	metalcube1->geometry.position = kl::vec3(0, 4, -2);
+	metalcube1->physics.enabled = true;
+	metalcube1->physics.angular = kl::vec3(kl::random::getInt(-32, 32), kl::random::getInt(-32, 32), kl::random::getInt(-32, 32));
+	metalcube1->physics.gravity = 0;
+
+	metalcube2->geometry.size = kl::vec3(0.5, 0.5, 0.5);
+	metalcube2->geometry.rotation = kl::vec3(45, 45, 0);
+	metalcube2->geometry.position = kl::vec3(0, -4, -2);
+	metalcube2->physics.enabled = true;
+	metalcube2->physics.angular = kl::vec3(kl::random::getInt(-32, 32), kl::random::getInt(-32, 32), kl::random::getInt(-32, 32));
+	metalcube2->physics.gravity = 0;
+
+	kerv->geometry.size = kl::vec3(5, 5, 5);
+	kerv->geometry.rotation = kl::vec3(0, 180, 0);
+	kerv->geometry.position = kl::vec3(0, 3, -6);
+
+	// Sun setup
+
 }
 
-// Engine update function
-kl::time timer;
+// Renderer input
+bool movingCam = false;
+void input(kl::keys* keys, kl::mouse* mouse) {
+	// Keyboard input
+	if (keys->w) {
+		renderer.cam.moveForward(renderer.deltaT);
+	}
+	if (keys->s) {
+		renderer.cam.moveBack(renderer.deltaT);
+	}
+	if (keys->d) {
+		renderer.cam.moveRight(renderer.deltaT);
+	}
+	if (keys->a) {
+		renderer.cam.moveLeft(renderer.deltaT);
+	}
+	if (keys->space) {
+		renderer.cam.moveUp(renderer.deltaT);
+	}
+	if (keys->c) {
+		renderer.cam.moveDown(renderer.deltaT);
+	}
+	if (keys->shift) {
+		renderer.cam.speed = 5;
+	}
+	else {
+		renderer.cam.speed = 2;
+	}
+
+	// Mouse input
+	if (mouse->lmb) {
+		movingCam = true;
+		mouse->hide();
+
+		// Fixing the camera jump on the first click
+		mouse->position = renderer.frameCenter();
+	}
+	if (mouse->rmb) {
+		movingCam = false;
+		mouse->show();
+	}
+	if (movingCam) {
+		kl::ivec2 frameCenter = renderer.frameCenter();
+		renderer.cam.rotate(mouse->position, frameCenter);
+		mouse->move(frameCenter);
+	}
+
+	if (keys->i) {
+		horse->geometry.position.z += 0.25 * renderer.deltaT;
+	}
+	if (keys->k) {
+		horse->geometry.position.z -= 0.25 * renderer.deltaT;
+	}
+	if (keys->u) {
+		horse->geometry.position.y += 0.25 * renderer.deltaT;
+	}
+	if (keys->o) {
+		horse->geometry.position.y -= 0.25 * renderer.deltaT;
+	}
+}
+
+// Renderer update
 void update() {
-    // Clearing the framebuffer
-    gpu->clear(kl::constant::colors::gray);
+	const float horseGrav = 0.1;
+	sphere1->physics.velocity += (horse->geometry.position - sphere1->geometry.position) * horseGrav * renderer.deltaT;
 
-    // Time calculations
-    const float deltaT = timer.getElapsed();
-    const float elapsedT = timer.stopwatchElapsed();
-
-    // Rendering
-    gpu->render(3);
-
-    // Updating the title fps
-    engineWindow.setTitle(std::to_string(int(1 / kl::time::staticGetElapsed())));
-
-    // Swapping the buffers
-    gpu->swap();
+	const float r = 2;
+	const float sinT = sin(renderer.elapsedT);
+	const float cosT = cos(renderer.elapsedT);
+	metalcube1->geometry.position.x = sphere1->geometry.position.x + r * sinT;
+	metalcube1->geometry.position.y = sphere1->geometry.position.y + r * sinT;
+	metalcube1->geometry.position.z = sphere1->geometry.position.z + r * cosT;
+	metalcube2->geometry.position.x = sphere1->geometry.position.x - r * sinT;
+	metalcube2->geometry.position.y = sphere1->geometry.position.y - r * sinT;
+	metalcube2->geometry.position.z = sphere1->geometry.position.z - r * cosT;
 }
 
 int main() {
-    // Engine callback assigning
-    engineWindow.start = start;
-    engineWindow.update = update;
+	// User start
+	renderer.setup = setup;
 
-    // Engine creation
-    timer.getElapsed();
-    timer.stopwatchReset();
-    engineWindow.startNew(kl::ivec2(1600, 900), "lol", false, true);
+	// User input
+	renderer.input = input;
 
-    // Cleanup
-    delete vertBuff;
-    delete defSha;
-    delete gpu;
+	// User update
+	renderer.update = update;
+	
+	// Renderer creation
+	renderer.createNew(kl::ivec2(1600, 900));
 
-    // Exit
 	return 0;
 }
