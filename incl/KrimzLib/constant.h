@@ -5,8 +5,8 @@ namespace kl {
 	namespace constant {
 		// Ints
 		namespace ints {
-			const int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-			const int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+			const int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+			const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 		}
 
 		// Floats

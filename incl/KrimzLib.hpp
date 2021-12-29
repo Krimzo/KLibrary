@@ -20,61 +20,65 @@
 #include <windowsx.h>
 #include <wininet.h>
 #include <gdiplus.h>
-#include <GL/glad.h>
+#include <d3d11.h>
+#include <d3dcompiler.h>
 
-/* Fixing external macros */
+/* Fixing external defines */
 #undef min
 #undef max
 
 /* Including kl headers */
-// Including misc types
+// Including kl types
 #include "KrimzLib/type.h"
-#include "KrimzLib/types/point.h"
-#include "KrimzLib/types/size.h"
-#include "KrimzLib/types/color.h"
-#include "KrimzLib/types/array.h"
-#include "KrimzLib/types/time.h"
+#include "KrimzLib/time.h"
+#include "KrimzLib/graphics/color.h"
+#include "KrimzLib/vecmath/ivec2.h"
+#include "KrimzLib/vecmath/vec2.h"
+#include "KrimzLib/vecmath/vec3.h"
+#include "KrimzLib/vecmath/vec4.h"
+#include "KrimzLib/vecmath/mat4.h"
+#include "KrimzLib/vecmath/vertex.h"
+#include "KrimzLib/vecmath/triangle.h"
 
-// Including vector math headers
-#include "KrimzLib/types/vecmath/vec2.h"
-#include "KrimzLib/types/vecmath/vec3.h"
-#include "KrimzLib/types/vecmath/vec4.h"
-#include "KrimzLib/types/vecmath/mat4.h"
-#include "KrimzLib/types/vecmath/vertex.h"
-#include "KrimzLib/types/vecmath/triangle.h"
-
-// Including misc headers
+// Including utility headers
 #include "KrimzLib/constant.h"
 #include "KrimzLib/convert.h"
 #include "KrimzLib/math.h"
 #include "KrimzLib/random.h"
 #include "KrimzLib/console.h"
-#include "KrimzLib/binary.h"
 #include "KrimzLib/file.h"
 #include "KrimzLib/web.h"
 
+// Including special
+#include "KrimzLib/graphics/image.h"
+
 // Including opengl types
-#include "KrimzLib/types/image.h"
-#include "KrimzLib/types/opengl/mesh.h"
-#include "KrimzLib/types/opengl/texture.h"
-#include "KrimzLib/types/opengl/uniform.h"
-#include "KrimzLib/types/opengl/shaders.h"
-#include "KrimzLib/opengl.h"
+#include "KrimzLib/gl/glad.h"
+#include "KrimzLib/gl/mesh.h"
+#include "KrimzLib/gl/texture.h"
+#include "KrimzLib/gl/uniform.h"
+#include "KrimzLib/gl/shaders.h"
+#include "KrimzLib/gl/gl.h"
 
 // Including the window types
-#include "KrimzLib/types/window/keys.h"
-#include "KrimzLib/types/window/mouse.h"
-#include "KrimzLib/types/window.h"
+#include "KrimzLib/window/keys.h"
+#include "KrimzLib/window/mouse.h"
+#include "KrimzLib/window/window.h"
+
+// Including directx types
+#include "KrimzLib/dx/shaders.h"
+#include "KrimzLib/dx/buffer.h"
+#include "KrimzLib/dx/gpu.h"
 
 // Including engine types
-#include "KrimzLib/types/renderer/camera.h"
-#include "KrimzLib/types/renderer/renderable/geometry.h"
-#include "KrimzLib/types/renderer/renderable/physics.h"
-#include "KrimzLib/types/renderer/renderable.h"
-#include "KrimzLib/types/renderer/light/ambient.h"
-#include "KrimzLib/types/renderer/light/direct.h"
-#include "KrimzLib/types/renderer/skybox.h"
-#include "KrimzLib/types/renderer.h"
+#include "KrimzLib/gl/renderer/camera.h"
+#include "KrimzLib/gl/renderer/renderable/geometry.h"
+#include "KrimzLib/gl/renderer/renderable/physics.h"
+#include "KrimzLib/gl/renderer/renderable.h"
+#include "KrimzLib/gl/renderer/light/ambient.h"
+#include "KrimzLib/gl/renderer/light/direct.h"
+#include "KrimzLib/gl/renderer/skybox.h"
+#include "KrimzLib/gl/renderer.h"
 
 /* Linking libs */
 #pragma comment(lib, "kernel32.lib")
@@ -92,6 +96,8 @@
 #pragma comment(lib, "wininet.lib")
 #pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 
 /* Library intializer and unintializer */
 namespace _kl_dont_use_ {

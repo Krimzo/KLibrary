@@ -10,7 +10,7 @@ namespace kl {
 		}
 
 		// Sets the console cursor position
-		static void setCursor(kl::point position) {
+		static void setCursor(kl::ivec2 position) {
 			SetConsoleCursorPosition(stdConsoleHandle, { short(position.x), short(position.y) });
 		}
 
@@ -18,7 +18,7 @@ namespace kl {
 		static void hideCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
 			GetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
-			cursorInfo.bVisible = FALSE;
+			cursorInfo.bVisible = false;
 			SetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
 		}
 
@@ -26,7 +26,7 @@ namespace kl {
 		static void showCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
 			GetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
-			cursorInfo.bVisible = TRUE;
+			cursorInfo.bVisible = true;
 			SetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
 		}
 
@@ -36,42 +36,42 @@ namespace kl {
 		}
 
 		// Returns the current console size
-		static kl::size getSize() {
+		static kl::ivec2 getSize() {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
-			return kl::size(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
+			return kl::ivec2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 		}
 
 		// Returns screen buffer size
-		static kl::size getBufferSize() {
+		static kl::ivec2 getBufferSize() {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
-			return kl::size(csbi.dwSize.X, csbi.dwSize.Y);
+			return kl::ivec2(csbi.dwSize.X, csbi.dwSize.Y);
 		}
 
 		// Changes the console size
-		static void setSize(kl::size size) {
+		static void setSize(kl::ivec2 size) {
 			setBufferSize(size);
-			SMALL_RECT consoleRect = { 0, 0, SHORT(size.width - 1), SHORT(size.height - 1) };
-			SetConsoleWindowInfo(stdConsoleHandle, TRUE, &consoleRect);
+			SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
+			SetConsoleWindowInfo(stdConsoleHandle, true, &consoleRect);
 		}
 
 		// Changes the console buffer size
-		static void setBufferSize(kl::size size) {
-			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)size.width, (short)size.height });
+		static void setBufferSize(kl::ivec2 size) {
+			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)size.x, (short)size.y });
 		}
 
 		// Changes the console font size
-		static void setFont(kl::size size, std::string fontName = "Consolas") {
+		static void setFont(kl::ivec2 size, std::string fontName = "Consolas") {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
-			cfi.dwFontSize.X = SHORT(size.width);
-			cfi.dwFontSize.Y = SHORT(size.height);
+			cfi.dwFontSize.X = SHORT(size.x);
+			cfi.dwFontSize.Y = SHORT(size.y);
 			cfi.FontFamily = FF_DONTCARE;
 			cfi.FontWeight = FW_NORMAL;
 			wcscpy(cfi.FaceName, kl::convert::toWString(fontName).c_str());
-			SetCurrentConsoleFontEx(stdConsoleHandle, FALSE, &cfi);
+			SetCurrentConsoleFontEx(stdConsoleHandle, false, &cfi);
 		}
 
 		// Returns a pressed key
@@ -108,7 +108,7 @@ namespace kl {
 		static void progressBar(std::string message, int outputY, float percentage) {
 			// Prep
 			percentage = std::max(std::min(percentage, 1.0f), 0.0f);
-			int barLen = console::getSize().width - int(message.length() - 11);
+			int barLen = console::getSize().x - int(message.length() - 11);
 			int doneLen = int(barLen * percentage);
 			int emptyLen = barLen - doneLen;
 
@@ -121,16 +121,16 @@ namespace kl {
 			for (int i = 0; i < emptyLen; i++) {
 				ss << ' ';
 			}
-			console::setCursor(kl::point(0, outputY));
+			console::setCursor(kl::ivec2(0, outputY));
 			printf("%s] %3d%% \n", ss.str().c_str(), int(percentage * 100));
 		}
 
 		// Fast console writing
-		static void fastOut(std::string& data, kl::point location = { 0, 0 }) {
+		static void fastOut(std::string& data, kl::ivec2 location = { 0, 0 }) {
 			static DWORD ignore = 0;
 			WriteConsoleOutputCharacterA(stdConsoleHandle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 		}
-		static void fastOut(std::string&& data, kl::point location = { 0, 0 }) {
+		static void fastOut(std::string&& data, kl::ivec2 location = { 0, 0 }) {
 			fastOut(data, location);
 		}
 

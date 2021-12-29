@@ -131,6 +131,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)incl\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,58 +147,63 @@
     <ClInclude Include="incl\GL\freeglut_ext.h" />
     <ClInclude Include="incl\GL\freeglut_std.h" />
     <ClInclude Include="incl\GL\freeglut_ucall.h" />
-    <ClInclude Include="incl\GL\glad.h" />
     <ClInclude Include="incl\GL\glew.h" />
     <ClInclude Include="incl\GL\glut.h" />
     <ClInclude Include="incl\GL\glxew.h" />
     <ClInclude Include="incl\GL\wglew.h" />
     <ClInclude Include="incl\KrimzLib.hpp" />
-    <ClInclude Include="incl\KrimzLib\binary.h" />
     <ClInclude Include="incl\KrimzLib\console.h" />
     <ClInclude Include="incl\KrimzLib\constant.h" />
     <ClInclude Include="incl\KrimzLib\convert.h" />
     <ClInclude Include="incl\KrimzLib\file.h" />
     <ClInclude Include="incl\KrimzLib\math.h" />
-    <ClInclude Include="incl\KrimzLib\opengl.h" />
+    <ClInclude Include="incl\KrimzLib\gl\gl.h" />
     <ClInclude Include="incl\KrimzLib\random.h" />
-    <ClInclude Include="incl\KrimzLib\types\renderer\light\ambient.h" />
-    <ClInclude Include="incl\KrimzLib\types\renderer\light\direct.h" />
-    <ClInclude Include="incl\KrimzLib\types\time.h" />
+    <ClInclude Include="incl\KrimzLib\dx\buffer.h" />
+    <ClInclude Include="incl\KrimzLib\dx\gpu.h" />
+    <ClInclude Include="incl\KrimzLib\dx\shaders.h" />
+    <ClInclude Include="incl\KrimzLib\gl\glad.h" />
+    <ClInclude Include="incl\KrimzLib\gl\renderer\light\ambient.h" />
+    <ClInclude Include="incl\KrimzLib\gl\renderer\light\direct.h" />
+    <ClInclude Include="incl\KrimzLib\time.h" />
     <ClInclude Include="incl\KrimzLib\type.h" />
-    <ClInclude Include="incl\KrimzLib\types\array.h" />
-    <ClInclude Include="incl\KrimzLib\types\color.h" />
-    <ClInclude Include="incl\KrimzLib\types\renderer\camera.h" />
-    <ClInclude Include="incl\KrimzLib\types\renderer.h" />
-    <ClInclude Include="incl\KrimzLib\types\renderer\renderable.h" />
-    <ClInclude Include="incl\KrimzLib\types\renderer\renderable\geometry.h" />
-    <ClInclude Include="incl\KrimzLib\types\renderer\renderable\physics.h" />
-    <ClInclude Include="incl\KrimzLib\types\renderer\skybox.h" />
-    <ClInclude Include="incl\KrimzLib\types\window\keys.h" />
-    <ClInclude Include="incl\KrimzLib\types\opengl\mesh.h" />
-    <ClInclude Include="incl\KrimzLib\types\window\mouse.h" />
-    <ClInclude Include="incl\KrimzLib\types\opengl\uniform.h" />
-    <ClInclude Include="incl\KrimzLib\types\vecmath\triangle.h" />
-    <ClInclude Include="incl\KrimzLib\types\window.h" />
-    <ClInclude Include="incl\KrimzLib\types\image.h" />
-    <ClInclude Include="incl\KrimzLib\types\opengl\shaders.h" />
-    <ClInclude Include="incl\KrimzLib\types\opengl\texture.h" />
-    <ClInclude Include="incl\KrimzLib\types\point.h" />
-    <ClInclude Include="incl\KrimzLib\types\size.h" />
-    <ClInclude Include="incl\KrimzLib\types\vecmath\mat4.h" />
-    <ClInclude Include="incl\KrimzLib\types\vecmath\vec2.h" />
-    <ClInclude Include="incl\KrimzLib\types\vecmath\vec3.h" />
-    <ClInclude Include="incl\KrimzLib\types\vecmath\vec4.h" />
-    <ClInclude Include="incl\KrimzLib\types\vecmath\vertex.h" />
+    <ClInclude Include="incl\KrimzLib\graphics\color.h" />
+    <ClInclude Include="incl\KrimzLib\gl\renderer\camera.h" />
+    <ClInclude Include="incl\KrimzLib\gl\renderer.h" />
+    <ClInclude Include="incl\KrimzLib\gl\renderer\renderable.h" />
+    <ClInclude Include="incl\KrimzLib\gl\renderer\renderable\geometry.h" />
+    <ClInclude Include="incl\KrimzLib\gl\renderer\renderable\physics.h" />
+    <ClInclude Include="incl\KrimzLib\gl\renderer\skybox.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\ivec2.h" />
+    <ClInclude Include="incl\KrimzLib\window\keys.h" />
+    <ClInclude Include="incl\KrimzLib\gl\mesh.h" />
+    <ClInclude Include="incl\KrimzLib\window\mouse.h" />
+    <ClInclude Include="incl\KrimzLib\gl\uniform.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\triangle.h" />
+    <ClInclude Include="incl\KrimzLib\window\window.h" />
+    <ClInclude Include="incl\KrimzLib\graphics\image.h" />
+    <ClInclude Include="incl\KrimzLib\gl\shaders.h" />
+    <ClInclude Include="incl\KrimzLib\gl\texture.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\mat4.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\vec2.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\vec3.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\vec4.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\vertex.h" />
     <ClInclude Include="incl\KrimzLib\web.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\basic.vs" />
-    <None Include="res\shaders\default.frag" />
-    <None Include="res\shaders\default.vert" />
+    <None Include="res\shaders\gl\default.frag" />
+    <None Include="res\shaders\gl\default.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Renderer.cpp" />
+    <Text Include="res\shaders\dx\default.hlsl">
+      <FileType>Document</FileType>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Renderer_DX.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
