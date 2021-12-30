@@ -39,15 +39,15 @@ namespace kl {
 				/* Window start definition */
 				win.start = [&]() {
 					/* Gpu creation */
-					this->gpu = new kl::dx::gpu(win);
+					dx_gpu = new kl::dx::gpu(&win, 4);
 
 					/* Default shaders */
-					defSha = this->gpu->newShaders("res/shaders/dx/default.hlsl", "vShader", "pShader");
-					this->gpu->bindShaders(defSha);
+					defSha = dx_gpu->newShaders("res/shaders/dx/default.hlsl", "vShader", "pShader");
+					dx_gpu->bindShaders(defSha);
 
 					/* Creating a vertex cbuffer */
-					vertCBuff = this->gpu->newCBuffer(sizeof(vertCBuffStruc));
-					this->gpu->bindCBuff(vertCBuff);
+					vertCBuff = dx_gpu->newCBuffer(sizeof(vertCBuffStruc));
+					dx_gpu->bindCBuff(vertCBuff);
 
 					/* Setting up the depth testing */
 					
@@ -103,7 +103,7 @@ namespace kl {
 
 
 					/* Clearing the default buffers */
-					this->gpu->clear(background);
+					dx_gpu->clear(background);
 
 					/* Rendering objects */
 					for (int i = 0; i < objects.size(); i++) {
@@ -126,7 +126,7 @@ namespace kl {
 					win.setTitle(std::to_string(int(1 / deltaT)));
 
 					/* Swapping the frame buffers */
-					this->gpu->swap();
+					dx_gpu->swap();
 				};
 
 				/* Window end definition */
@@ -138,7 +138,7 @@ namespace kl {
 					delete vertCBuff;
 
 					// Deleting the gpu
-					delete this->gpu;
+					delete dx_gpu;
 
 					// Deleting the sun shadow buffers
 
@@ -185,11 +185,11 @@ namespace kl {
 
 			// Creates a mesh
 			kl::dx::mesh* newMesh(std::string filePath, bool flipZ = true) {
-				meshes.push_back(this->gpu->newMesh(filePath, flipZ));
+				meshes.push_back(dx_gpu->newMesh(filePath, flipZ));
 				return meshes.back();
 			}
 			kl::dx::mesh* newMesh(std::vector<kl::vertex>& vertexData) {
-				meshes.push_back(this->gpu->newMesh(vertexData));
+				meshes.push_back(dx_gpu->newMesh(vertexData));
 				return meshes.back();
 			}
 
@@ -227,7 +227,7 @@ namespace kl {
 
 			// Creates a new game object
 			kl::renderable* newObject(kl::dx::mesh* mes) {
-				objects.push_back(new kl::renderable(this->gpu, mes));
+				objects.push_back(new kl::renderable(dx_gpu, mes));
 				return objects.back();
 			}
 
@@ -248,7 +248,7 @@ namespace kl {
 			kl::window win;
 
 			// GPU
-			kl::dx::gpu* gpu = nullptr;
+			kl::dx::gpu* dx_gpu = nullptr;
 
 			// Engine skybox
 

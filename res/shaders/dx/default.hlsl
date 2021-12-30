@@ -23,7 +23,7 @@ vOut vShader(vIn dataIn) {
     dataOut.wPos = mul(float4(dataIn.pos, 1), world);
     dataOut.pos = mul(float4(dataOut.wPos, 1), viewProj);
     dataOut.tex = dataIn.tex;
-    dataOut.norm = dataIn.norm;
+    dataOut.norm = mul(float4(dataIn.norm, 0), world);
 
 	return dataOut;
 }
