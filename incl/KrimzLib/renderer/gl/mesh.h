@@ -88,7 +88,7 @@ namespace kl {
 				// Opening the file
 				std::fstream fileStream;
 				fileStream.open(filePath, std::ios::in);
-				if (!fileStream.is_open()) exit(69);
+				if (!fileStream.is_open()) kl::console::error("OpenGL: Could not open an object file!");
 
 				// Temp load buffers
 				std::vector<kl::vec3> xyzBuffer;

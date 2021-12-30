@@ -1,10 +1,4 @@
 
-struct vIn {
-    float3 pos : POSIN;
-	float2 tex : TEXIN;
-    float3 norm : NORMIN;
-};
-
 struct vOut {
     float4 pos : SV_POSITION;
     float3 wPos : WORLD;
@@ -17,30 +11,26 @@ cbuffer VS_CBUFFER : register(b0) {
     matrix viewProj;
 }
 
-vOut vShader(vIn dataIn) {
+vOut vShader(float3 pos : POSIN, float2 tex : TEXIN, float3 norm : NORMIN) {
     vOut dataOut;
 
-    dataOut.wPos = mul(float4(dataIn.pos, 1), world);
+    dataOut.wPos = mul(float4(pos, 1), world);
     dataOut.pos = mul(float4(dataOut.wPos, 1), viewProj);
-    dataOut.tex = dataIn.tex;
-    dataOut.norm = mul(float4(dataIn.norm, 0), world);
+    dataOut.tex = tex;
+    dataOut.norm = mul(float4(norm, 0), world);
 
 	return dataOut;
 }
+
+SamplerState samp : register(s0);
+Texture2D tex : register(t0);
 
 float4 pShader(vOut dataIn) : SV_TARGET {
     float4 pixel;
 
     dataIn.norm = normalize(dataIn.norm);
 
-    //if (dataIn.wPos.y > 0) {
-    //    pixel = float4(1, 1, 1, 1);
-    //}
-    //else {
-    //    pixel = float4(0.0784313, 0.862745, 0.627450, 1);
-    //}
-
-    pixel = float4(dataIn.norm, 1);
+    pixel = tex.Sample(samp, dataIn.tex);
 
 	return pixel;
 }

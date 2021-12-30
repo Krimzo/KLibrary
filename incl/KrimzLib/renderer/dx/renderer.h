@@ -47,7 +47,7 @@ namespace kl {
 
 					/* Creating a vertex cbuffer */
 					vertCBuff = dx_gpu->newCBuffer(sizeof(vertCBuffStruc));
-					dx_gpu->bindCBuff(vertCBuff);
+					dx_gpu->bindCBuff(vertCBuff, 0);
 
 					/* Setting up the depth testing */
 					
@@ -115,7 +115,7 @@ namespace kl {
 							vertCBuff->setData(&CBuffData);
 
 							// Rendering the object
-							objects[i]->dx_render();
+							objects[i]->dx_render(dx_gpu);
 						}
 					}
 
@@ -150,10 +150,10 @@ namespace kl {
 					meshes.clear();
 
 					// Deleting textures
-					//for (int i = 0; i < textures.size(); i++) {
-					//	delete textures[i];
-					//}
-					//textures.clear();
+					for (int i = 0; i < textures.size(); i++) {
+						delete textures[i];
+					}
+					textures.clear();
 				};
 
 				/* Window creation */
@@ -171,17 +171,17 @@ namespace kl {
 			}
 
 			// Creates a new skybox
-			//void newSkybox(kl::image& front, kl::image& back, kl::image& left, kl::image& right, kl::image& top, kl::image& bottom) {
-			//
-			//}
-			//void newSkybox(kl::image&& front, kl::image&& back, kl::image&& left, kl::image&& right, kl::image&& top, kl::image&& bottom) {
-			//
-			//}
+			void newSkybox(kl::image& front, kl::image& back, kl::image& left, kl::image& right, kl::image& top, kl::image& bottom) {
+			
+			}
+			void newSkybox(kl::image&& front, kl::image&& back, kl::image&& left, kl::image&& right, kl::image&& top, kl::image&& bottom) {
+			
+			}
 
 			// Deletes an existing skybox
-			//void delSkybox() {
-			//
-			//}
+			void delSkybox() {
+			
+			}
 
 			// Creates a mesh
 			kl::dx::mesh* newMesh(std::string filePath, bool flipZ = true) {
@@ -206,28 +206,30 @@ namespace kl {
 			}
 
 			// Creates a texture
-			//void newTexture(kl::image& image) {
-			//
-			//}
-			//void newTexture(kl::image&& image) {
-			//
-			//}
+			kl::dx::texture* newTexture(kl::image& image) {
+				textures.push_back(dx_gpu->newTexture(image));
+				return textures.back();
+			}
+			kl::dx::texture* newTexture(kl::image&& image) {
+				textures.push_back(dx_gpu->newTexture(image));
+				return textures.back();
+			}
 
 			// Deletes a texture
-			//bool delTex(kl::dx::texture* texAddress) {
-			//	for (int i = 0; i < textures.size(); i++) {
-			//		if (textures[i] == texAddress) {
-			//			delete textures[i];
-			//			textures.erase(textures.begin() + i);
-			//			return true;
-			//		}
-			//	}
-			//	return false;
-			//}
+			bool delTex(kl::dx::texture* texAddress) {
+				for (int i = 0; i < textures.size(); i++) {
+					if (textures[i] == texAddress) {
+						delete textures[i];
+						textures.erase(textures.begin() + i);
+						return true;
+					}
+				}
+				return false;
+			}
 
 			// Creates a new game object
-			kl::renderable* newObject(kl::dx::mesh* mes) {
-				objects.push_back(new kl::renderable(dx_gpu, mes));
+			kl::renderable* newObject(kl::dx::mesh* mes, kl::dx::texture* tex) {
+				objects.push_back(new kl::renderable(mes, tex));
 				return objects.back();
 			}
 
@@ -257,7 +259,7 @@ namespace kl {
 			std::vector<kl::dx::mesh*> meshes;
 
 			// Texture buffer
-			//std::vector<kl::dx::texture*> textures;
+			std::vector<kl::dx::texture*> textures;
 
 			// Object buffer
 			std::vector<kl::renderable*> objects;

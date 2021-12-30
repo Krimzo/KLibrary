@@ -104,6 +104,13 @@ namespace kl {
 			char iHateWarnings = _getch();
 		}
 
+		// Prints an error message and waits for a key to exit
+		static void error(std::string mess, char waitFor = ' ', int exitCode = 69) {
+			printf("%s\n", mess.c_str());
+			kl::console::waitFor(waitFor);
+			exit(exitCode);
+		}
+
 		// Outputs a progress bar on the console
 		static void progressBar(std::string message, int outputY, float percentage) {
 			// Prep

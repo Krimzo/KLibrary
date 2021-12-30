@@ -15,16 +15,16 @@ namespace kl {
 
 		// Texture pointers
 		kl::gl::texture* gl_tex = nullptr;
-		//kl::dx::texture* dx_tex = nullptr;
+		kl::dx::texture* dx_tex = nullptr;
 
 		// Constructor
 		renderable(kl::gl::mesh* mesh, kl::gl::texture* tex) {
 			gl_mesh = mesh;
 			gl_tex = tex;
 		}
-		renderable(kl::dx::gpu* gpu, kl::dx::mesh* mesh) {
-			dx_gpu = gpu;
+		renderable(kl::dx::mesh* mesh, kl::dx::texture* tex) {
 			dx_mesh = mesh;
+			dx_tex = tex;
 		}
 
 		// Renders a opengl mesh
@@ -34,9 +34,12 @@ namespace kl {
 		}
 
 		// Renders a directx mesh
-		void dx_render() {
+		void dx_render(kl::dx::gpu* dx_gpu) {
 			// Binding the mesh
 			dx_gpu->bindMesh(dx_mesh);
+
+			// Binding the texture
+			dx_gpu->bindTexture(dx_tex, 0);
 
 			// Rendering
 			dx_gpu->render(dx_mesh->vertCount());
@@ -55,8 +58,5 @@ namespace kl {
 				geometry.rotation += physics.angular * deltaT;
 			}
 		}
-
-	private:
-		kl::dx::gpu* dx_gpu = nullptr;
 	};
 }

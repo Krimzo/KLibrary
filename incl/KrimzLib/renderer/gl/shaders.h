@@ -8,10 +8,7 @@ namespace kl {
 			shaders(std::string vertexSource, std::string fragmentSource) {
 				// Shader program creation
 				programID = glCreateProgram();
-				if (!programID) {
-					printf("Shader program creation error!\n");
-					exit(69);
-				}
+				if (!programID) kl::console::error("OpenGL: Could not create a shader program!");
 
 				// Compiling the shaders
 				kl::id vertexShader = compileShader(vertexSource, GL_VERTEX_SHADER);
@@ -61,10 +58,7 @@ namespace kl {
 			kl::id compileShader(std::string& shaderSource, kl::id shaderType) {
 				// Creating the shader buffer
 				kl::id shader = glCreateShader(shaderType);
-				if (!shader) {
-					printf("'%d' shader creation error\n", shaderType);
-					exit(69);
-				}
+				if (!shader) kl::console::error("OpenGL: Could not create a shader buffer!");
 
 				// Setting and compiling the shader source
 				const char* sourcePointer = shaderSource.c_str();

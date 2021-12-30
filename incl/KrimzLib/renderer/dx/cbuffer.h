@@ -17,7 +17,7 @@ namespace kl {
 
                 // Buffer creation
                 dev->CreateBuffer(&bufferDescriptor, nullptr, &buff);
-                if (!buff) exit(69);
+                if (!buff) kl::console::error("DirectX: Could not create a constant buffer!");
 
                 // Saving the devcon for later data setting
                 this->devcon = devcon;

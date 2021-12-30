@@ -60,7 +60,6 @@
 #include "KrimzLib/window/window.h"
 
 // Including kl opengl
-#include "KrimzLib/renderer/gl/gl.h"
 #include "KrimzLib/renderer/gl/mesh.h"
 #include "KrimzLib/renderer/gl/texture.h"
 #include "KrimzLib/renderer/gl/uniform.h"
@@ -68,9 +67,11 @@
 #include "KrimzLib/renderer/gl/skybox.h"
 #include "KrimzLib/renderer/gl/light/ambient.h"
 #include "KrimzLib/renderer/gl/light/direct.h"
+#include "KrimzLib/renderer/gl/gl.h"
 
 // Including kl directx
 #include "KrimzLib/renderer/dx/mesh.h"
+#include "KrimzLib/renderer/dx/texture.h"
 #include "KrimzLib/renderer/dx/cbuffer.h"
 #include "KrimzLib/renderer/dx/shaders.h"
 #include "KrimzLib/renderer/dx/gpu.h"
