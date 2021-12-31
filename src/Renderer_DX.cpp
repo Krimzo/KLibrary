@@ -18,14 +18,14 @@ kl::renderable* kerv = nullptr;
 // Renderer setup
 void setup() {
 	// Skybox creation
-	//renderer.newSkybox(
-	//	"res/skyboxes/clouds/front.jpg",
-	//	"res/skyboxes/clouds/back.jpg",
-	//	"res/skyboxes/clouds/left.jpg",
-	//	"res/skyboxes/clouds/right.jpg",
-	//	"res/skyboxes/clouds/top.jpg",
-	//	"res/skyboxes/clouds/bottom.jpg"
-	//);
+	renderer.newSkybox(
+		"res/skyboxes/clouds/front.jpg",
+		"res/skyboxes/clouds/back.jpg",
+		"res/skyboxes/clouds/left.jpg",
+		"res/skyboxes/clouds/right.jpg",
+		"res/skyboxes/clouds/top.jpg",
+		"res/skyboxes/clouds/bottom.jpg"
+	);
 
 	// Mesh creation
 	kl::dx::mesh* cube_mes = renderer.newMesh("res/objects/cube.obj");
@@ -101,9 +101,6 @@ void setup() {
 	kerv->geometry.size = kl::vec3(5, 5, 5);
 	kerv->geometry.rotation = kl::vec3(0, 180, 0);
 	kerv->geometry.position = kl::vec3(0, 3, -6);
-
-	// Sun setup
-
 }
 
 // Renderer input
@@ -151,6 +148,14 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 		kl::ivec2 frameCenter = renderer.frameCenter();
 		renderer.cam.rotate(mouse->position, frameCenter);
 		mouse->move(frameCenter);
+	}
+
+	// Other
+	if (keys->v) {
+		renderer.wireframe(true);
+	}
+	if (keys->f) {
+		renderer.wireframe(false);
 	}
 
 	if (keys->i) {

@@ -28,6 +28,14 @@ namespace kl {
 		kl::mat4 operator + (kl::mat4&& obj) {
 			operator+(obj);
 		}
+		void operator += (kl::mat4& obj) {
+			for (int i = 0; i < 16; i++) {
+				data[i] += obj[i];
+			}
+		}
+		void operator += (kl::mat4&& obj) {
+			operator+=(obj);
+		}
 		kl::mat4 operator - (kl::mat4& obj) {
 			kl::mat4 temp;
 			for (int i = 0; i < 16; i++) {
@@ -38,12 +46,25 @@ namespace kl {
 		kl::mat4 operator - (kl::mat4&& obj) {
 			operator-(obj);
 		}
+		void operator -= (kl::mat4& obj) {
+			for (int i = 0; i < 16; i++) {
+				data[i] -= obj[i];
+			}
+		}
+		void operator -= (kl::mat4&& obj) {
+			operator-=(obj);
+		}
 		kl::mat4 operator * (float a) {
 			kl::mat4 temp;
 			for (int i = 0; i < 16; i++) {
 				temp[i] = data[i] * a;
 			}
 			return temp;
+		}
+		void operator *= (float a) {
+			for (int i = 0; i < 16; i++) {
+				data[i] *= a;
+			}
 		}
 		kl::vec4 operator * (kl::vec4 obj) {
 			kl::vec4 temp;
@@ -76,13 +97,20 @@ namespace kl {
 		kl::mat4 operator * (kl::mat4&& obj) {
 			return operator*(obj);
 		}
-		kl::mat4 operator / (float a) {
-			kl::mat4 temp;
-			const float aInv = 1 / a;
+		void operator *= (kl::mat4& obj) {
+			kl::mat4 temp = operator*(obj);
 			for (int i = 0; i < 16; i++) {
-				temp[i] = data[i] * aInv;
+				data[i] = temp[i];
 			}
-			return temp;
+		}
+		void operator *= (kl::mat4&& obj) {
+			operator*=(obj);
+		}
+		kl::mat4 operator / (float a) {
+			return operator*(1 / a);
+		}
+		void operator /= (float a) {
+			operator*=(1 / a);
 		}
 		bool operator == (kl::mat4& obj) {
 			for (int i = 0; i < 16; i++) {
@@ -118,7 +146,10 @@ namespace kl {
 		// Prints the matrix to the screen
 		void print() {
 			printf(
-				"%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n",
+				"%.2f %.2f %.2f %.2f\n"
+				"%.2f %.2f %.2f %.2f\n"
+				"%.2f %.2f %.2f %.2f\n"
+				"%.2f %.2f %.2f %.2f\n",
 				data[ 0], data[ 1], data[ 2], data[ 3],
 				data[ 4], data[ 5], data[ 6], data[ 7],
 				data[ 8], data[ 9], data[10], data[11],
@@ -200,6 +231,21 @@ namespace kl {
 			temp[ 7] = -(top + bottom) / (top - bottom);
 			temp[11] = -(farZ + nearZ) / (farZ - nearZ);
 			return temp;
+		}
+
+		// Returns the camera view matrix
+		static kl::mat4 view(kl::vec3 forward, kl::vec3 right, kl::vec3 up, kl::vec3 position) {
+			kl::mat4 view;
+			view[ 0] = right.x;
+			view[ 1] = right.y;
+			view[ 2] = right.z;
+			view[ 4] = up.x;
+			view[ 5] = up.y;
+			view[ 6] = up.z;
+			view[ 8] = forward.x;
+			view[ 9] = forward.y;
+			view[10] = forward.z;
+			return view * translate(position.negate());
 		}
 
 		// Returns the "look at" matrix

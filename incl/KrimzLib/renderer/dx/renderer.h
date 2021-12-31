@@ -17,6 +17,9 @@ namespace kl {
 			kl::color background = kl::constant::colors::gray;
 			kl::camera cam;
 
+			/* Rendering */
+			bool vSync = false;
+
 			/* Lighting */
 
 
@@ -33,24 +36,28 @@ namespace kl {
 				/* Shader constant buffers */
 				kl::dx::cbuffer* vertCBuff = nullptr;
 
+				/* Texture sampler */
+				kl::dx::sampler* defSamp = nullptr;
+
 				/* Engine timer */
 				kl::time timer;
 				
 				/* Window start definition */
 				win.start = [&]() {
 					/* Gpu creation */
-					dx_gpu = new kl::dx::gpu(&win, 4);
+					GPU = new kl::dx::gpu(&win, 4);
 
-					/* Default shaders */
-					defSha = dx_gpu->newShaders("res/shaders/dx/default.hlsl", "vShader", "pShader");
-					dx_gpu->bindShaders(defSha);
+					/* Creating default shaders */
+					defSha = GPU->newShaders("res/shaders/dx/default.hlsl", "vShader", "pShader");
+					GPU->bindShaders(defSha);
 
 					/* Creating a vertex cbuffer */
-					vertCBuff = dx_gpu->newCBuffer(sizeof(vertCBuffStruc));
-					dx_gpu->bindCBuff(vertCBuff, 0);
+					vertCBuff = GPU->newCBuffer(sizeof(vertCBuffStruc));
+					GPU->bindCBuff(vertCBuff, 0);
 
-					/* Setting up the depth testing */
-					
+					/* Creating default texture sampler */
+					defSamp = GPU->newSampler();
+					GPU->bindSampler(defSamp, 0);					
 
 					/* Setting up the camera */
 					cam.width = frameSize.x;
@@ -59,12 +66,6 @@ namespace kl {
 					cam.farPlane = 100;
 					cam.sens = 0.025;
 					cam.shadowD = 15;
-
-					/* Setting up the lights */
-
-
-					/* Generating sun buffers */
-
 
 					/* Calling the user start */
 					setup();
@@ -93,17 +94,8 @@ namespace kl {
 					/* Setting the camera matrices */
 					CBuffData.viewProj = cam.matrix();
 
-					/* Calculating the light vp matrix */
-
-
-					/* Setting the light uniforms */
-
-
-					/* Rendering the shadows */
-
-
 					/* Clearing the default buffers */
-					dx_gpu->clear(background);
+					GPU->clear(background);
 
 					/* Rendering objects */
 					for (int i = 0; i < objects.size(); i++) {
@@ -115,22 +107,22 @@ namespace kl {
 							vertCBuff->setData(&CBuffData);
 
 							// Rendering the object
-							objects[i]->dx_render(dx_gpu);
+							objects[i]->dx_render(GPU);
 						}
 					}
-
-					/* Rendering skybox */
-
 
 					/* Updating the fps display */
 					win.setTitle(std::to_string(int(1 / deltaT)));
 
 					/* Swapping the frame buffers */
-					dx_gpu->swap();
+					GPU->swap(vSync);
 				};
 
 				/* Window end definition */
 				win.end = [&]() {
+					// Deleting sampler
+					delete defSamp;
+
 					// Deleting shaders
 					delete defSha;
 
@@ -138,10 +130,7 @@ namespace kl {
 					delete vertCBuff;
 
 					// Deleting the gpu
-					delete dx_gpu;
-
-					// Deleting the sun shadow buffers
-
+					delete GPU;
 
 					// Deleting meshes
 					for (int i = 0; i < meshes.size(); i++) {
@@ -165,6 +154,11 @@ namespace kl {
 				win.stop();
 			}
 
+			// Sets the render mode
+			void wireframe(bool enabled) {
+				GPU->setRaster(enabled);
+			}
+
 			// Returns the frame center
 			kl::ivec2 frameCenter() {
 				return win.getCenter();
@@ -172,24 +166,29 @@ namespace kl {
 
 			// Creates a new skybox
 			void newSkybox(kl::image& front, kl::image& back, kl::image& left, kl::image& right, kl::image& top, kl::image& bottom) {
-			
+				delSkybox();
+				sky = new kl::dx::skybox(front, back, left, right, top, bottom);
 			}
 			void newSkybox(kl::image&& front, kl::image&& back, kl::image&& left, kl::image&& right, kl::image&& top, kl::image&& bottom) {
-			
+				delSkybox();
+				sky = new kl::dx::skybox(front, back, left, right, top, bottom);
 			}
 
 			// Deletes an existing skybox
 			void delSkybox() {
-			
+				if (sky) {
+					delete sky;
+					sky = nullptr;
+				}
 			}
 
 			// Creates a mesh
 			kl::dx::mesh* newMesh(std::string filePath, bool flipZ = true) {
-				meshes.push_back(dx_gpu->newMesh(filePath, flipZ));
+				meshes.push_back(GPU->newMesh(filePath, flipZ));
 				return meshes.back();
 			}
 			kl::dx::mesh* newMesh(std::vector<kl::vertex>& vertexData) {
-				meshes.push_back(dx_gpu->newMesh(vertexData));
+				meshes.push_back(GPU->newMesh(vertexData));
 				return meshes.back();
 			}
 
@@ -207,11 +206,11 @@ namespace kl {
 
 			// Creates a texture
 			kl::dx::texture* newTexture(kl::image& image) {
-				textures.push_back(dx_gpu->newTexture(image));
+				textures.push_back(GPU->newTexture(image));
 				return textures.back();
 			}
 			kl::dx::texture* newTexture(kl::image&& image) {
-				textures.push_back(dx_gpu->newTexture(image));
+				textures.push_back(GPU->newTexture(image));
 				return textures.back();
 			}
 
@@ -250,10 +249,10 @@ namespace kl {
 			kl::window win;
 
 			// GPU
-			kl::dx::gpu* dx_gpu = nullptr;
+			kl::dx::gpu* GPU = nullptr;
 
 			// Engine skybox
-
+			kl::dx::skybox* sky = nullptr;
 
 			// Mesh buffer
 			std::vector<kl::dx::mesh*> meshes;

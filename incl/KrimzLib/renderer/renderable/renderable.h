@@ -9,40 +9,41 @@ namespace kl {
 		kl::geometry geometry;
 		kl::physics physics;
 
-		// Mesh pointers
-		kl::gl::mesh* gl_mesh = nullptr;
-		kl::dx::mesh* dx_mesh = nullptr;
+		// Mesh pointer
+		void* mesh = nullptr;
 
-		// Texture pointers
-		kl::gl::texture* gl_tex = nullptr;
-		kl::dx::texture* dx_tex = nullptr;
+		// Texture pointer
+		void* texture = nullptr;
 
 		// Constructor
-		renderable(kl::gl::mesh* mesh, kl::gl::texture* tex) {
-			gl_mesh = mesh;
-			gl_tex = tex;
+		renderable(kl::gl::mesh* mes, kl::gl::texture* tex) {
+			mesh = mes;
+			texture = tex;
 		}
-		renderable(kl::dx::mesh* mesh, kl::dx::texture* tex) {
-			dx_mesh = mesh;
-			dx_tex = tex;
+		renderable(kl::dx::mesh* mes, kl::dx::texture* tex) {
+			mesh = mes;
+			texture = tex;
 		}
 
 		// Renders a opengl mesh
 		void gl_render() {
-			gl_tex->bind();
-			gl_mesh->draw();
+			// Binding the texture
+			((kl::gl::texture*)texture)->bind();
+
+			// Rendering
+			((kl::gl::mesh*)mesh)->draw();
 		}
 
 		// Renders a directx mesh
-		void dx_render(kl::dx::gpu* dx_gpu) {
+		void dx_render(kl::dx::gpu* gpu) {
 			// Binding the mesh
-			dx_gpu->bindMesh(dx_mesh);
+			gpu->bindMesh((kl::dx::mesh*)mesh);
 
 			// Binding the texture
-			dx_gpu->bindTexture(dx_tex);
+			gpu->bindTexture((kl::dx::texture*)texture, 0);
 
 			// Rendering
-			dx_gpu->render(dx_mesh->vertCount());
+			gpu->render(((kl::dx::mesh*)mesh)->vertCount());
 		}
 
 		// Updates the object physics

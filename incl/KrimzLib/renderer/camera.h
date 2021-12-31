@@ -72,20 +72,7 @@ namespace kl {
 			kl::mat4 proj = kl::mat4::perspective(fov, width, height, nearPlane, farPlane);
 
 			// Building the view matrix
-			kl::vec3 u = getRight();
-			kl::vec3 v = getUp();
-			kl::vec3 n = getForward();
-			kl::mat4 view;
-			view[0] = u.x;
-			view[1] = u.y;
-			view[2] = u.z;
-			view[4] = v.x;
-			view[5] = v.y;
-			view[6] = v.z;
-			view[8] = n.x;
-			view[9] = n.y;
-			view[10] = n.z;
-			view = view * kl::mat4::translate(position.negate());
+			kl::mat4 view = kl::mat4::view(getForward(), getRight(), getUp(), position);
 
 			// Multiplying and returning
 			return proj * view;

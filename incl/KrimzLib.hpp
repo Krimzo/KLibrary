@@ -71,9 +71,11 @@
 
 // Including kl directx
 #include "KrimzLib/renderer/dx/mesh.h"
+#include "KrimzLib/renderer/dx/sampler.h"
 #include "KrimzLib/renderer/dx/texture.h"
 #include "KrimzLib/renderer/dx/cbuffer.h"
 #include "KrimzLib/renderer/dx/shaders.h"
+#include "KrimzLib/renderer/dx/skybox.h"
 #include "KrimzLib/renderer/dx/gpu.h"
 
 // Including rendering headers

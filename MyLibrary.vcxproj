@@ -158,6 +158,8 @@
     <ClInclude Include="incl\KrimzLib\renderer\dx\cbuffer.h" />
     <ClInclude Include="incl\KrimzLib\renderer\dx\mesh.h" />
     <ClInclude Include="incl\KrimzLib\renderer\camera.h" />
+    <ClInclude Include="incl\KrimzLib\renderer\dx\sampler.h" />
+    <ClInclude Include="incl\KrimzLib\renderer\dx\skybox.h" />
     <ClInclude Include="incl\KrimzLib\renderer\dx\texture.h" />
     <ClInclude Include="incl\KrimzLib\renderer\renderable\renderable.h" />
     <ClInclude Include="incl\KrimzLib\renderer\renderable\geometry.h" />

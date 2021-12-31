@@ -7,9 +7,6 @@ namespace kl {
 			skybox(kl::image& front, kl::image& back, kl::image& left, kl::image& right, kl::image& top, kl::image& bottom) {
 				build(front, back, left, right, top, bottom);
 			}
-			skybox(kl::image&& front, kl::image&& back, kl::image&& left, kl::image&& right, kl::image&& top, kl::image&& bottom) {
-				build(front, back, left, right, top, bottom);
-			}
 			~skybox() {
 				// Deleting the texture
 				delete box_tex;

@@ -13,7 +13,7 @@ namespace kl {
                 newViewport(win->getSize());
 
                 // Setting a new raster state
-                newRaster(false);
+                setRaster(false);
                 
                 // Creating buffers
                 newBuffers(win->getSize(), AA);
@@ -26,6 +26,23 @@ namespace kl {
                 swapchain->Release();
                 devcon->Release();
                 dev->Release();
+            }
+
+            // Sets a new rasterizer state
+            void setRaster(bool wireframe) {
+                // Creating a raster state
+                D3D11_RASTERIZER_DESC rasterStateDesc = {};
+                rasterStateDesc.FillMode = wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
+                rasterStateDesc.CullMode = D3D11_CULL_NONE;
+                rasterStateDesc.FrontCounterClockwise = true;
+                rasterStateDesc.MultisampleEnable = true;
+                rasterStateDesc.AntialiasedLineEnable = true;
+                ID3D11RasterizerState* rasterState = nullptr;
+                dev->CreateRasterizerState(&rasterStateDesc, &rasterState);
+
+                // Setting the raster state and cleanup
+                devcon->RSSetState(rasterState);
+                rasterState->Release();
             }
 
             // Clears the frame buffers
@@ -41,8 +58,8 @@ namespace kl {
             }
 
             // Swaps the frame buffers
-            void swap() {
-                swapchain->Present(0, NULL);
+            void swap(bool vSync) {
+                swapchain->Present(vSync, NULL);
             }
 
             // Compiles and returns shaders
@@ -52,8 +69,8 @@ namespace kl {
 
             // Binds the shaders to the gpu
             void bindShaders(kl::dx::shaders* sha) {
-                devcon->VSSetShader(sha->getVert(), 0, 0);
-                devcon->PSSetShader(sha->getPixl(), 0, 0);
+                devcon->VSSetShader(sha->getVert(), nullptr, 0);
+                devcon->PSSetShader(sha->getPixl(), nullptr, 0);
             }
 
             // Creates and returns a new mesh
@@ -72,6 +89,17 @@ namespace kl {
                 devcon->IASetVertexBuffers(0, 1, &tempBuff, &tempStride, &tempOffset);
             }
 
+            // Creates a new texture sampler
+            kl::dx::sampler* newSampler() {
+                return new kl::dx::sampler(dev);
+            }
+            
+            // Binds a pixel shader texture sampler
+            void bindSampler(kl::dx::sampler* samp, int slot) {
+                ID3D11SamplerState* tempState = samp->getState();
+                devcon->PSSetSamplers(slot, 1, &tempState);
+            }
+
             // Creates and returns a new texture
             kl::dx::texture* newTexture(kl::image& image) {
                 return new kl::dx::texture(dev, image);
@@ -81,14 +109,10 @@ namespace kl {
             }
 
             // Binds a texture to the pixel shader
-            void bindTexture(kl::dx::texture* tex) {
-                // Binding the sampler
-                ID3D11SamplerState* tempSampler = tex->getSampler();
-                devcon->PSSetSamplers(0, 1, &tempSampler);
-
+            void bindTexture(kl::dx::texture* tex, int slot) {
                 // Binding the texture view
                 ID3D11ShaderResourceView* tempView = tex->getView();
-                devcon->PSSetShaderResources(0, 1, &tempView);
+                devcon->PSSetShaderResources(slot, 1, &tempView);
             }
 
             // Creates and returns a new constant buffer
@@ -112,11 +136,6 @@ namespace kl {
 
             // Creates a new device and swapchain
             void newSwapChain(HWND win, unsigned int AA) {
-                // Releasing memory
-                if (dev) dev->Release();
-                if (devcon) devcon->Release();
-                if (swapchain) swapchain->Release();
-
                 // Swapchain data buffer
                 DXGI_SWAP_CHAIN_DESC scd = {};
                 scd.BufferCount = 1;
@@ -141,6 +160,8 @@ namespace kl {
                     nullptr,
                     &devcon
                 );
+
+                // Error checking
                 kl::console::error(!dev, "DirectX: Could not create a device!");
                 kl::console::error(!devcon, "DirectX: Could not create a device context!");
                 kl::console::error(!swapchain, "DirectX: Could not create a swapchain!");
@@ -165,7 +186,7 @@ namespace kl {
                 swapchain->GetBuffer(NULL, __uuidof(ID3D11Texture2D), (void**)&backbufferAddr);
                 kl::console::error(!backbufferAddr, "DirectX: Could not get a backbuffer address!");
 
-                // Creating the backbuffer
+                // Creating the backbuffer and cleanup
                 dev->CreateRenderTargetView(backbufferAddr, nullptr, &backbuffer);
                 kl::console::error(!backbuffer, "DirectX: Could not create a render target view!");
                 backbufferAddr->Release();
@@ -180,7 +201,7 @@ namespace kl {
                 dev->CreateDepthStencilState(&depthDesc, &depthState);
                 kl::console::error(!depthState, "DirectX: Could not create a depth/stencil state!");
 
-                // Setting the depth/stencil state
+                // Setting the depth/stencil state and cleanup
                 devcon->OMSetDepthStencilState(depthState, 1);
                 depthState->Release();
 
@@ -198,7 +219,7 @@ namespace kl {
                 dev->CreateTexture2D(&depthTexDesc, NULL, &depthTex);
                 kl::console::error(!depthTex, "DirectX: Could not create a depth/stencil buffer texture!");
 
-                // Creating depth/stencil buffers
+                // Creating depth/stencil buffers and cleanup
                 D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
                 dsvDesc.Format = depthTexDesc.Format;
                 dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
@@ -208,25 +229,6 @@ namespace kl {
 
                 // Setting the render targets
                 devcon->OMSetRenderTargets(1, &backbuffer, depthbuffer);
-            }
-
-            // Sets a new rasterizer state
-            void newRaster(bool wireframe) {
-                D3D11_RASTERIZER_DESC rasterStateDesc = {};
-                rasterStateDesc.FillMode = wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
-                rasterStateDesc.CullMode = D3D11_CULL_NONE;
-                rasterStateDesc.FrontCounterClockwise = true;
-                rasterStateDesc.DepthBias = false;
-                rasterStateDesc.DepthBiasClamp = 0;
-                rasterStateDesc.SlopeScaledDepthBias = 0;
-                rasterStateDesc.DepthClipEnable = false;
-                rasterStateDesc.ScissorEnable = false;
-                rasterStateDesc.MultisampleEnable = true;
-                rasterStateDesc.AntialiasedLineEnable = true;
-                ID3D11RasterizerState* rasterState = nullptr;
-                dev->CreateRasterizerState(&rasterStateDesc, &rasterState);
-                devcon->RSSetState(rasterState);
-                rasterState->Release();
             }
         };
 	}

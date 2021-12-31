@@ -45,8 +45,8 @@ namespace kl {
 					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 
 					// Disabling the color buffers
-					glDrawBuffer(GL_NONE);
-					glReadBuffer(GL_NONE);
+					glDrawBuffer(NULL);
+					glReadBuffer(NULL);
 
 					// Chechink the frame buffer status
 					kl::id checkStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);

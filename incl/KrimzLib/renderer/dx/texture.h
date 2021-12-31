@@ -6,38 +6,19 @@ namespace kl {
 		struct texture {
 			// Constructors/destructor
 			texture(ID3D11Device* dev, kl::image& image) {
-				newSampler(dev);
 				load2D(dev, image);
 			}
 			~texture() {
-				sampState->Release();
-				texView->Release();
-			}
-
-			// Returns a pointer to the sampler state
-			ID3D11SamplerState* getSampler() {
-				return sampState;
+				view->Release();
 			}
 
 			// Returns a pointer to the texture view
 			ID3D11ShaderResourceView* getView() {
-				return texView;
+				return view;
 			}
 
 		private:
-			ID3D11SamplerState* sampState = nullptr;
-			ID3D11ShaderResourceView* texView = nullptr;
-
-			// Creating a new texture sampler
-			void newSampler(ID3D11Device* dev) {
-				D3D11_SAMPLER_DESC sampDesc = {};
-				sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-				sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-				sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-				sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-				dev->CreateSamplerState(&sampDesc, &sampState);
-				kl::console::error(!sampState, "DirectX: Could not create a sampler state!");
-			}
+			ID3D11ShaderResourceView* view = nullptr;
 
 			// Loads the image data to a texture view
 			void load2D(ID3D11Device* dev, kl::image& image) {
@@ -81,17 +62,18 @@ namespace kl {
 				dev->CreateTexture2D(&texDesc, &texData, &tex);
 				kl::console::error(!tex, "DirectX: Could not create a 2D texture!");
 
-				// Creating a resource view on the texture
+				// Deleting temp pixel data
+				delete pixelData;
+
+				// Creating a resource view on the texture and cleanup
 				D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
 				viewDesc.Format = texDesc.Format;
 				viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 				viewDesc.Texture2D.MipLevels = 1;
 				viewDesc.Texture2D.MostDetailedMip = 0;
-				dev->CreateShaderResourceView(tex, &viewDesc, &texView);
-				kl::console::error(!texView, "DirectX: Could not create a 2D texture view!");
-
-				// Deleting temp pixel data
-				delete pixelData;
+				dev->CreateShaderResourceView(tex, &viewDesc, &view);
+				kl::console::error(!view, "DirectX: Could not create a 2D texture view!");
+				tex->Release();
 			}
 		};
 	}
