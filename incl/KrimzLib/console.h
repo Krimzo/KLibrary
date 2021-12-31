@@ -126,12 +126,9 @@ namespace kl {
 		}
 
 		// Fast console writing
-		static void fastOut(std::string& data, kl::ivec2 location = { 0, 0 }) {
+		static void fastOut(const std::string& data, kl::ivec2 location = { 0, 0 }) {
 			static DWORD ignore = 0;
 			WriteConsoleOutputCharacterA(stdConsoleHandle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
-		}
-		static void fastOut(std::string&& data, kl::ivec2 location = { 0, 0 }) {
-			fastOut(data, location);
 		}
 
 		// Prints RGB data
@@ -153,11 +150,8 @@ namespace kl {
 		static void print(kl::byte data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(std::string& data, kl::color textColor = constant::colors::white) {
+		static void print(const std::string& data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
-		}
-		static void print(std::string&& data, kl::color textColor = constant::colors::white) {
-			print(data, textColor);
 		}
 
 		// Prints RGB data with new line at the end
@@ -179,11 +173,8 @@ namespace kl {
 		static void println(kl::byte data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(std::string& data, kl::color textColor = constant::colors::white) {
+		static void println(const std::string& data, kl::color textColor = constant::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
-		}
-		static void println(std::string&& data, kl::color textColor = constant::colors::white) {
-			println(data, textColor);
 		}
 
 		// Prints an error message and waits for a key to exit

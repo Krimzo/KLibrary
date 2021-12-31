@@ -20,9 +20,6 @@ namespace kl {
 			/* Rendering */
 			bool vSync = false;
 
-			/* Lighting */
-
-
 			/* User functions */
 			std::function<void()> setup = []() {};
 			std::function<void(kl::keys*, kl::mouse*)> input = [](kl::keys* k, kl::mouse* m) {};
