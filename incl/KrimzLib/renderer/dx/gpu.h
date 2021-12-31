@@ -5,7 +5,7 @@ namespace kl {
 	namespace dx {
         struct gpu {
             // Constructor/destructor
-            gpu(kl::window* win, int AA = 4) {
+            gpu(kl::window* win, int AA = 1) {
                 // Device and swapchain creation
                 newSwapChain(win->getHWND(), AA);
 
@@ -54,8 +54,6 @@ namespace kl {
             void bindShaders(kl::dx::shaders* sha) {
                 devcon->VSSetShader(sha->getVert(), 0, 0);
                 devcon->PSSetShader(sha->getPixl(), 0, 0);
-                vertBlob = sha->getVertBlob();
-                pixlBlob = sha->getPixlBlob();
             }
 
             // Creates and returns a new mesh
@@ -83,14 +81,14 @@ namespace kl {
             }
 
             // Binds a texture to the pixel shader
-            void bindTexture(kl::dx::texture* tex, int slot) {
+            void bindTexture(kl::dx::texture* tex) {
                 // Binding the sampler
                 ID3D11SamplerState* tempSampler = tex->getSampler();
                 devcon->PSSetSamplers(0, 1, &tempSampler);
 
                 // Binding the texture view
                 ID3D11ShaderResourceView* tempView = tex->getView();
-                devcon->PSGetShaderResources(slot, 1, &tempView);
+                devcon->PSSetShaderResources(0, 1, &tempView);
             }
 
             // Creates and returns a new constant buffer
@@ -111,10 +109,6 @@ namespace kl {
             IDXGISwapChain* swapchain = nullptr;
             ID3D11RenderTargetView* backbuffer = nullptr;
             ID3D11DepthStencilView* depthbuffer = nullptr;
-
-            // Shader pointers
-            ID3D10Blob* vertBlob = nullptr;
-            ID3D10Blob* pixlBlob = nullptr;
 
             // Creates a new device and swapchain
             void newSwapChain(HWND win, unsigned int AA) {
@@ -147,9 +141,9 @@ namespace kl {
                     nullptr,
                     &devcon
                 );
-                if (!dev) kl::console::error("DirectX: Could not create a device!");
-                if (!devcon) kl::console::error("DirectX: Could not create a device context!");
-                if (!swapchain) kl::console::error("DirectX: Could not create a swapchain!");
+                kl::console::error(!dev, "DirectX: Could not create a device!");
+                kl::console::error(!devcon, "DirectX: Could not create a device context!");
+                kl::console::error(!swapchain, "DirectX: Could not create a swapchain!");
             }
 
             // Sets the gpu viewport
@@ -165,15 +159,15 @@ namespace kl {
             }
 
             // Creates and sets the frame, depth and stencil buffers
-            void newBuffers(kl::ivec2 size, unsigned int AA) {
+            void newBuffers(kl::ivec2 size, int AA) {
                 // Getting the backbuffer address
                 ID3D11Texture2D* backbufferAddr = nullptr;
                 swapchain->GetBuffer(NULL, __uuidof(ID3D11Texture2D), (void**)&backbufferAddr);
-                if (!backbufferAddr) kl::console::error("DirectX: Could not get a backbuffer address!");
+                kl::console::error(!backbufferAddr, "DirectX: Could not get a backbuffer address!");
 
                 // Creating the backbuffer
                 dev->CreateRenderTargetView(backbufferAddr, nullptr, &backbuffer);
-                if (!backbuffer) kl::console::error("DirectX: Could not create a render target view!");
+                kl::console::error(!backbuffer, "DirectX: Could not create a render target view!");
                 backbufferAddr->Release();
 
                 // Creating depth/stencil state
@@ -184,7 +178,7 @@ namespace kl {
                 depthDesc.StencilEnable = false;
                 ID3D11DepthStencilState* depthState = nullptr;
                 dev->CreateDepthStencilState(&depthDesc, &depthState);
-                if (!depthState) kl::console::error("DirectX: Could not create a depth/stencil state!");
+                kl::console::error(!depthState, "DirectX: Could not create a depth/stencil state!");
 
                 // Setting the depth/stencil state
                 devcon->OMSetDepthStencilState(depthState, 1);
@@ -198,19 +192,18 @@ namespace kl {
                 depthTexDesc.ArraySize = 1;
                 depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
                 depthTexDesc.SampleDesc.Count = AA;
-                depthTexDesc.SampleDesc.Quality = 0;
                 depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
                 depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
                 ID3D11Texture2D* depthTex = nullptr;
                 dev->CreateTexture2D(&depthTexDesc, NULL, &depthTex);
-                if (!depthTex) kl::console::error("DirectX: Could not create a depth/stencil buffer texture!");
+                kl::console::error(!depthTex, "DirectX: Could not create a depth/stencil buffer texture!");
 
                 // Creating depth/stencil buffers
                 D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
                 dsvDesc.Format = depthTexDesc.Format;
                 dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
                 dev->CreateDepthStencilView(depthTex, &dsvDesc, &depthbuffer);
-                if (!depthbuffer) kl::console::error("DirectX: Could not create a depth/stencil buffer view!");
+                kl::console::error(!depthbuffer, "DirectX: Could not create a depth/stencil buffer view!");
                 depthTex->Release();
 
                 // Setting the render targets

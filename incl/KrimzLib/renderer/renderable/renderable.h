@@ -39,7 +39,7 @@ namespace kl {
 			dx_gpu->bindMesh(dx_mesh);
 
 			// Binding the texture
-			dx_gpu->bindTexture(dx_tex, 0);
+			dx_gpu->bindTexture(dx_tex);
 
 			// Rendering
 			dx_gpu->render(dx_mesh->vertCount());

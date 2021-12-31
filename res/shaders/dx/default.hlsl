@@ -23,14 +23,14 @@ vOut vShader(float3 pos : POSIN, float2 tex : TEXIN, float3 norm : NORMIN) {
 }
 
 SamplerState samp : register(s0);
-Texture2D tex : register(t0);
+Texture2D tex0 : register(t0);
 
 float4 pShader(vOut dataIn) : SV_TARGET {
     float4 pixel;
 
     dataIn.norm = normalize(dataIn.norm);
 
-    pixel = tex.Sample(samp, dataIn.tex);
+    pixel = tex0.Sample(samp, dataIn.tex);
 
 	return pixel;
 }

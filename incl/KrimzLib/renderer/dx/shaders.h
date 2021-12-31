@@ -7,12 +7,12 @@ namespace kl {
             shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, std::wstring shaderFile, std::string vertName, std::string pixlName) {
                 // Vertex shader compilation
                 D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, vertName.c_str(), "vs_4_0", NULL, NULL, &vertBlob, nullptr);
-                if (!vertBlob) kl::console::error("DirectX: Could not compile a vertex shader!");
+                kl::console::error(!vertBlob, "DirectX: Could not compile a vertex shader!");
                 dev->CreateVertexShader(vertBlob->GetBufferPointer(), vertBlob->GetBufferSize(), NULL, &vertexShader);
 
                 // Pixel shader compilation
                 D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, pixlName.c_str(), "ps_4_0", NULL, NULL, &pixlBlob, nullptr);
-                if (!pixlBlob) kl::console::error("DirectX: Could not compile a pixel shader!");
+                kl::console::error(!pixlBlob, "DirectX: Could not compile a pixel shader!");
                 dev->CreatePixelShader(pixlBlob->GetBufferPointer(), pixlBlob->GetBufferSize(), NULL, &pixelShader);
 
                 // Input descriptor buffer
@@ -25,7 +25,7 @@ namespace kl {
                 // Setting the buffer layout
                 ID3D11InputLayout* bufferLayout = nullptr;
                 dev->CreateInputLayout(inputDescriptor, 3, vertBlob->GetBufferPointer(), vertBlob->GetBufferSize(), &bufferLayout);
-                if (!bufferLayout) kl::console::error("DirectX: Could not create an input layout!");
+                kl::console::error(!bufferLayout, "DirectX: Could not create an input layout!");
                 devcon->IASetInputLayout(bufferLayout);
             }
             ~shaders() {
