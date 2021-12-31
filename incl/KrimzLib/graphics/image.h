@@ -294,7 +294,7 @@ namespace kl {
 			// Generating random seed array
 			std::vector<float> seedArray(width * height);
 			for (int i = 0; i < width * height; i++) {
-				seedArray[i] = kl::random::getFloat(0, 1);
+				seedArray[i] = kl::random::FLOAT(0, 1);
 			}
 
 			// Generating noise

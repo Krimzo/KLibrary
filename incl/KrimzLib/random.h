@@ -5,44 +5,44 @@ namespace kl {
 	class random {
 	public:
 		// Returns a random bool
-		static bool getBool() {
+		static bool BOOL() {
 			return rand() % 2;
 		}
 
 		// Returns a random byte
-		static kl::byte getByte() {
+		static kl::byte BYTE() {
 			return kl::byte(rand() % 256);
 		}
 
 		// Returns a random integer
-		static int getInt(int startInclusive, int endExclusive) {
+		static int INT(int startInclusive, int endExclusive) {
 			return rand() % (endExclusive - startInclusive) + startInclusive;
 		}
-		static int getInt(int endExclusive) {
-			return getInt(0, endExclusive);
+		static int INT(int endExclusive) {
+			return INT(0, endExclusive);
 		}
 
 		// Returns a random float
-		static float getFloat(float startInclusive, float endExclusive) {
+		static float FLOAT(float startInclusive, float endExclusive) {
 			return startInclusive + float(rand()) / float(RAND_MAX / (endExclusive - startInclusive));
 		}
-		static float getFloat(float endExclusive) {
-			return getFloat(0, endExclusive);
+		static float FLOAT(float endExclusive) {
+			return FLOAT(0, endExclusive);
 		}
 
 		// Returns a random letter
-		static char getLetter(bool upperCase = false) {
+		static char LETTER(bool upperCase = false) {
 			if (upperCase) {
-				return char(kl::random::getInt(65, 91));
+				return char(kl::random::INT(65, 91));
 			}
-			return char(kl::random::getInt(97, 123));
+			return char(kl::random::INT(97, 123));
 		}
 
 		// Returns a random string
-		static std::string getString(int len) {
+		static std::string STRING(int len) {
 			std::stringstream ss;
 			for (int i = 0; i < len; i++) {
-				ss << kl::random::getLetter(kl::random::getBool());
+				ss << kl::random::LETTER(kl::random::BOOL());
 			}
 			return ss.str();
 		}
@@ -50,10 +50,10 @@ namespace kl {
 		// Returns a random color
 		static kl::color getColor(bool grayScaled = false) {
 			if (grayScaled) {
-				kl::byte randGray = kl::random::getByte();
+				kl::byte randGray = kl::random::BYTE();
 				return kl::color(randGray, randGray, randGray);
 			}
-			return kl::color(kl::random::getByte(), kl::random::getByte(), kl::random::getByte());
+			return kl::color(kl::random::BYTE(), kl::random::BYTE(), kl::random::BYTE());
 		}
 
 	protected:

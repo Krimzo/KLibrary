@@ -167,7 +167,7 @@ namespace kl {
 				/* Window creation */
 				timer.getElapsed();
 				timer.stopwatchReset();
-				win.startNew(frameSize, kl::random::getString(6), false, true, true);
+				win.startNew(frameSize, kl::random::STRING(6), false, true, true);
 			}
 			void stop() {
 				win.stop();
