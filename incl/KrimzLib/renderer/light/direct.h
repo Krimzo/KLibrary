@@ -85,7 +85,7 @@ namespace kl {
 			// Calculating the near points
 			const float nearDist = cam.nearPlane;
 			const float Hnear = 2 * tan(kl::convert::toRadians(cam.fov) * 0.5f) * nearDist;
-			const float Wnear = Hnear * (cam.width / cam.height);
+			const float Wnear = Hnear * cam.aspect;
 			kl::vec3 un = cam.getUp() * Hnear * 0.5;
 			kl::vec3 rn = cam.getRight() * Wnear * 0.5;
 			kl::vec3 centerNear = cam.position + cam.getForward() * nearDist;
@@ -97,7 +97,7 @@ namespace kl {
 			// Calculating the far points
 			const float farDist = cam.shadowD;
 			const float Hfar = 2 * tan(kl::convert::toRadians(cam.fov) * 0.5f) * farDist;
-			const float Wfar = Hfar * (cam.width / cam.height);
+			const float Wfar = Hfar * cam.aspect;
 			kl::vec3 uf = cam.getUp() * Hfar * 0.5f;
 			kl::vec3 rf = cam.getRight() * Wfar * 0.5f;
 			kl::vec3 centerFar = cam.position + cam.getForward() * farDist;
@@ -161,7 +161,7 @@ namespace kl {
 			return sunVP;
 		}
 
-		void render(kl::ivec2 frameSize, std::function<void()> toRender) {
+		void render(kl::window* win, std::function<void()> toRender) {
 			// Setting the viewport size
 			glViewport(0, 0, mapSize, mapSize);
 
@@ -181,7 +181,7 @@ namespace kl {
 			glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 			// Resetting the viewport
-			glViewport(0, 0, frameSize.x, frameSize.y);
+			win->resetViewport();
 
 			// Binding the shadow map
 			this->bindMap(GL_TEXTURE1);

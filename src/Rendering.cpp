@@ -88,14 +88,14 @@ void setup() {
 	metalcube1->geometry.rotation = kl::vec3(45, 45, 0);
 	metalcube1->geometry.position = kl::vec3(0, 4, -2);
 	metalcube1->physics.enabled = true;
-	metalcube1->physics.angular = kl::vec3(kl::random::INT(-32, 32), kl::random::INT(-32, 32), kl::random::INT(-32, 32));
+	metalcube1->physics.angular = kl::vec3((float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32));
 	metalcube1->physics.gravity = 0;
 
 	metalcube2->geometry.size = kl::vec3(0.5, 0.5, 0.5);
 	metalcube2->geometry.rotation = kl::vec3(45, 45, 0);
 	metalcube2->geometry.position = kl::vec3(0, -4, -2);
 	metalcube2->physics.enabled = true;
-	metalcube2->physics.angular = kl::vec3(kl::random::INT(-32, 32), kl::random::INT(-32, 32), kl::random::INT(-32, 32));
+	metalcube2->physics.angular = kl::vec3((float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32));
 	metalcube2->physics.gravity = 0;
 
 	kerv->geometry.size = kl::vec3(5, 5, 5);
@@ -104,6 +104,9 @@ void setup() {
 
 	// Sun setup
 	renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
+
+	// Going into fullscreen
+	renderer.setFullscreen(true);
 }
 
 // Renderer input
@@ -156,6 +159,12 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	// Other
 	if (keys->esc) {
 		renderer.stop();
+	}
+	if (keys->insert) {
+		renderer.setFullscreen(true);
+	}
+	if (keys->delet) {
+		renderer.setFullscreen(false);
 	}
 	if (keys->v) {
 		kl::gl::setWireframe(true);

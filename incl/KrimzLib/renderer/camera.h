@@ -6,8 +6,7 @@ namespace kl {
 		kl::vec3 position;
 		float nearPlane = 1;
 		float farPlane = 10;
-		float width = 600;
-		float height = 600;
+		float aspect = 16.0f / 9;
 		float fov = 75;
 		float speed = 2;
 		float sens = 0.05f;
@@ -74,7 +73,7 @@ namespace kl {
 		// Computes and returns the camera matrix
 		kl::mat4 matrix() {
 			// Building the proj matrix
-			kl::mat4 proj = kl::mat4::perspective(fov, width, height, nearPlane, farPlane);
+			kl::mat4 proj = kl::mat4::perspective(fov, aspect, nearPlane, farPlane);
 
 			// Building the view matrix
 			kl::mat4 view = kl::mat4::view(getForward(), getRight(), getUp(), position);

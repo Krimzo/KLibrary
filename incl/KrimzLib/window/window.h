@@ -75,6 +75,30 @@ namespace kl {
 			return hwnd;
 		}
 
+		// Sets the fullscreen mode
+		void setFullscreen(bool enable) {
+			if (!inFull && enable) {
+				// Saving old window position
+				GetWindowPlacement(hwnd, &winPlace);
+
+				// Enabling the fullscreen
+				SetWindowLong(hwnd, GWL_STYLE, winStyle & ~WS_OVERLAPPEDWINDOW);
+				SetWindowPos(hwnd, HWND_TOP, 0, 0, kl::screen::width, kl::screen::height, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+
+				// Setting info
+				inFull = true;
+			}
+			else if (inFull && !enable) {
+				// Resetting the size
+				SetWindowLong(hwnd, GWL_STYLE, winStyle);
+				SetWindowPlacement(hwnd, &winPlace);
+				SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+
+				// Setting info
+				inFull = false;
+			}
+		}
+
 		// Returns the window size
 		kl::ivec2 getSize() {
 			RECT clientArea;
@@ -123,6 +147,11 @@ namespace kl {
 		BITMAPINFO bmpInfo = {};
 		MSG wndMsg = {};
 
+		// Fullscreen data
+		bool inFull = false;
+		DWORD winStyle = NULL;
+		WINDOWPLACEMENT winPlace = {};
+
 		// Registers a new window class
 		void registerWindowClass(std::wstring name) {
 			WNDCLASSEXW windowClass = {};
@@ -144,19 +173,22 @@ namespace kl {
 		// Creates a new window
 		void createWindow(kl::ivec2 size, std::wstring name, bool resizeable) {
 			// Setting the window properties
-			DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+			winStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 			RECT adjustedWindowSize = { 0, 0, (LONG)size.x, (LONG)size.y };
-			AdjustWindowRect(&adjustedWindowSize, windowStyle, FALSE);
+			AdjustWindowRect(&adjustedWindowSize, winStyle, FALSE);
 			size.x = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.y = (adjustedWindowSize.bottom - adjustedWindowSize.top);
 
 			// Creating the window
-			hwnd = CreateWindowExW(0, name.c_str(), name.c_str(), windowStyle, (kl::screen::width / 2 - size.x / 2), (kl::screen::height / 2 - size.y / 2), size.x, size.y, nullptr, nullptr, hInstance, nullptr);
+			hwnd = CreateWindowExW(0, name.c_str(), name.c_str(), winStyle, (kl::screen::width / 2 - size.x / 2), (kl::screen::height / 2 - size.y / 2), size.x, size.y, nullptr, nullptr, hInstance, nullptr);
 			kl::console::error(!hwnd, "WinApi: Could not create a window!");
 
 			// Setting and getting window info
 			ShowWindow(hwnd, SW_SHOW);
 			hdc = GetDC(hwnd);
+
+			// Saving a complete window style
+			winStyle = GetWindowLong(hwnd, GWL_STYLE);
 		}
 
 		// Sets up the bitmap properties

@@ -59,10 +59,26 @@ namespace kl {
 		bool alt = false;
 		bool space = false;
 		bool enter = false;
+		bool insert = false;
+		bool delet = false;
 		bool up = false;
 		bool left = false;
 		bool down = false;
 		bool right = false;
+
+		// Function
+		bool f1 = false;
+		bool f2 = false;
+		bool f3 = false;
+		bool f4 = false;
+		bool f5 = false;
+		bool f6 = false;
+		bool f7 = false;
+		bool f8 = false;
+		bool f9 = false;
+		bool f10 = false;
+		bool f11 = false;
+		bool f12 = false;
 
 		// Unknown
 		kl::key unknown = NULL;
@@ -221,6 +237,12 @@ namespace kl {
 			case VK_RETURN:
 				enter = state;
 				break;
+			case VK_INSERT:
+				insert = state;
+				break;
+			case VK_DELETE:
+				delet = state;
+				break;
 			case VK_UP:
 				up = state;
 				break;
@@ -234,6 +256,45 @@ namespace kl {
 				right = state;
 				break;
 
+			// Function
+			case VK_F1:
+				f1 = state;
+				break;
+			case VK_F2:
+				f2 = state;
+				break;
+			case VK_F3:
+				f3 = state;
+				break;
+			case VK_F4:
+				f4 = state;
+				break;
+			case VK_F5:
+				f5 = state;
+				break;
+			case VK_F6:
+				f6 = state;
+				break;
+			case VK_F7:
+				f7 = state;
+				break;
+			case VK_F8:
+				f8 = state;
+				break;
+			case VK_F9:
+				f9 = state;
+				break;
+			case VK_F10:
+				f10 = state;
+				break;
+			case VK_F11:
+				f11 = state;
+				break;
+			case VK_F12:
+				f12 = state;
+				break;
+
+			// Unknow
 			default:
 				unknown = key;
 				break;

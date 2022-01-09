@@ -209,10 +209,10 @@ namespace kl {
 		}
 
 		// Returns the perspective projection matrix
-		static kl::mat4 perspective(float fov, float width, float height, float zNear, float zFar) {
+		static kl::mat4 perspective(float fov, float ar, float zNear, float zFar) {
 			const float tanHalf = 1 / tan(fov * 0.00872664625f);
 			kl::mat4 temp;
-			temp[ 0] = tanHalf * (height / width);
+			temp[ 0] = tanHalf / ar;
 			temp[ 5] = tanHalf;
 			temp[10] = (-zFar - zNear) / (zNear - zFar);
 			temp[11] = (2 * zNear * zFar) / (zNear - zFar);

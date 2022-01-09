@@ -40,8 +40,6 @@ namespace kl {
 				kl::gl::setDepthTest(true);
 
 				/* Setting up the camera */
-				cam.width = (float)frameSize.x;
-				cam.height = (float)frameSize.y;
 				cam.nearPlane = 0.01f;
 				cam.farPlane = 100;
 				cam.sens = 0.025f;
@@ -105,7 +103,7 @@ namespace kl {
 				sunVP_uni.setData(sun.matrix());
 
 				/* Rendering the shadows */
-				sun.render(frameSize, [&]() {
+				sun.render(&win, [&]() {
 					for (int i = 0; i < objects.size(); i++) {
 						if (objects[i]->shadows) {
 							// Setting the world matrix
@@ -165,10 +163,16 @@ namespace kl {
 			/* Window creation */
 			timer.getElapsed();
 			timer.stopwatchReset();
-			win.startNew(frameSize, kl::random::STRING(6), true, true, true);
+			win.startNew(frameSize, kl::random::STRING(6), false, true, true);
 		}
 		void stop() {
 			win.stop();
+		}
+
+		// Sets the fullscreen mode
+		void setFullscreen(bool enable) {
+			win.setFullscreen(enable);
+			win.resetViewport();
 		}
 
 		// Returns the frame center
