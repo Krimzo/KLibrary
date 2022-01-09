@@ -189,11 +189,13 @@
   <ItemGroup>
     <None Include="res\shaders\basic.fs" />
     <None Include="res\shaders\basic.vs" />
-    <None Include="res\shaders\default.frag" />
-    <None Include="res\shaders\default.vert" />
+    <None Include="res\shaders\renderer.frag" />
+    <None Include="res\shaders\renderer.vert" />
+    <None Include="res\shaders\mandelbrot.frag" />
+    <None Include="res\shaders\mandelbrot.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Rendering.cpp" />
+    <ClCompile Include="src\Misc\Mandelbrot.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

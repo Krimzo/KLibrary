@@ -2,67 +2,82 @@
 
 
 namespace kl {
-	class console {
-	public:
+	namespace _kl_dont_use_ {
+		HANDLE stdConsoleHandle = nullptr;
+		struct _kl_console_initialization_ {
+			_kl_console_initialization_() {
+				// Getting the standard console handle
+				stdConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+				// Enabling the RGB
+				DWORD consoleMode;
+				GetConsoleMode(stdConsoleHandle, &consoleMode);
+				SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+			}
+		};
+		_kl_console_initialization_ _console_init_;
+	}
+
+	namespace console {
 		// Clears the console screen
-		static void clear() {
+		void clear() {
 			system("cls");
 		}
 
 		// Sets the console cursor position
-		static void setCursor(kl::ivec2 position) {
-			SetConsoleCursorPosition(stdConsoleHandle, { short(position.x), short(position.y) });
+		void setCursor(kl::ivec2 position) {
+			SetConsoleCursorPosition(_kl_dont_use_::stdConsoleHandle, { short(position.x), short(position.y) });
 		}
 
 		// Hides the console cursor
-		static void hideCursor() {
+		void hideCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
-			GetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
+			GetConsoleCursorInfo(_kl_dont_use_::stdConsoleHandle, &cursorInfo);
 			cursorInfo.bVisible = false;
-			SetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
+			SetConsoleCursorInfo(_kl_dont_use_::stdConsoleHandle, &cursorInfo);
 		}
 
 		// Shows the console cursor
-		static void showCursor() {
+		void showCursor() {
 			CONSOLE_CURSOR_INFO cursorInfo;
-			GetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
+			GetConsoleCursorInfo(_kl_dont_use_::stdConsoleHandle, &cursorInfo);
 			cursorInfo.bVisible = true;
-			SetConsoleCursorInfo(stdConsoleHandle, &cursorInfo);
+			SetConsoleCursorInfo(_kl_dont_use_::stdConsoleHandle, &cursorInfo);
 		}
 
 		// Sets the console title
-		static void setTitle(std::string text) {
+		void setTitle(std::string text) {
 			SetConsoleTitleA(text.c_str());
 		}
 
-		// Returns the current console size
-		static kl::ivec2 getSize() {
-			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
-			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
-			return kl::ivec2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
-		}
-
 		// Returns screen buffer size
-		static kl::ivec2 getBufferSize() {
+		kl::ivec2 getBufferSize() {
 			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
-			GetConsoleScreenBufferInfo(stdConsoleHandle, &csbi);
+			GetConsoleScreenBufferInfo(_kl_dont_use_::stdConsoleHandle, &csbi);
 			return kl::ivec2(csbi.dwSize.X, csbi.dwSize.Y);
 		}
 
-		// Changes the console size
-		static void setSize(kl::ivec2 size) {
-			setBufferSize(size);
-			SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
-			SetConsoleWindowInfo(stdConsoleHandle, true, &consoleRect);
+		// Returns the current console size
+		kl::ivec2 getSize() {
+			CONSOLE_SCREEN_BUFFER_INFO csbi = {};
+			GetConsoleScreenBufferInfo(_kl_dont_use_::stdConsoleHandle, &csbi);
+			return kl::ivec2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 		}
 
 		// Changes the console buffer size
-		static void setBufferSize(kl::ivec2 size) {
-			SetConsoleScreenBufferSize(stdConsoleHandle, { (short)size.x, (short)size.y });
+		void setBufferSize(kl::ivec2 size) {
+			SetConsoleScreenBufferSize(_kl_dont_use_::stdConsoleHandle, { (short)size.x, (short)size.y });
 		}
 
+		// Changes the console size
+		void setSize(kl::ivec2 size) {
+			setBufferSize(size);
+			SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
+			SetConsoleWindowInfo(_kl_dont_use_::stdConsoleHandle, true, &consoleRect);
+		}		
+
 		// Changes the console font size
-		static void setFont(kl::ivec2 size, std::string fontName = "Consolas") {
+		void setFont(kl::ivec2 size, std::string fontName = "Consolas") {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
@@ -71,11 +86,11 @@ namespace kl {
 			cfi.FontFamily = FF_DONTCARE;
 			cfi.FontWeight = FW_NORMAL;
 			wcscpy(cfi.FaceName, kl::convert::toWString(fontName).c_str());
-			SetCurrentConsoleFontEx(stdConsoleHandle, false, &cfi);
+			SetCurrentConsoleFontEx(_kl_dont_use_::stdConsoleHandle, false, &cfi);
 		}
 
 		// Returns a pressed key
-		static char getInput() {
+		char getInput() {
 			char input = 0;
 			while (_kbhit()) {
 				input = _getch();
@@ -84,7 +99,7 @@ namespace kl {
 		}
 
 		// Waits until the wanted key is pressed
-		static void waitFor(char toWaitFor, bool echo = false) {
+		void waitFor(char toWaitFor, bool echo = false) {
 			if (echo) {
 				if (toWaitFor > 31 && toWaitFor < 127) {
 					printf("Press '%c' to continue\n", toWaitFor);
@@ -97,7 +112,7 @@ namespace kl {
 		}
 
 		// Waits for any key to be pressed
-		static void waitForAny(bool echo = false) {
+		void waitForAny(bool echo = false) {
 			if (echo) {
 				printf("Press any key to continue\n");
 			}
@@ -105,7 +120,7 @@ namespace kl {
 		}
 
 		// Outputs a progress bar on the console
-		static void progressBar(std::string message, int outputY, float percentage) {
+		void progressBar(std::string message, int outputY, float percentage) {
 			// Prep
 			percentage = std::max(std::min(percentage, 1.0f), 0.0f);
 			int barLen = console::getSize().x - int(message.length() - 11);
@@ -126,76 +141,64 @@ namespace kl {
 		}
 
 		// Fast console writing
-		static void fastOut(const std::string& data, kl::ivec2 location = { 0, 0 }) {
+		void fastOut(const std::string& data, kl::ivec2 location = { 0, 0 }) {
 			static DWORD ignore = 0;
-			WriteConsoleOutputCharacterA(stdConsoleHandle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
+			WriteConsoleOutputCharacterA(_kl_dont_use_::stdConsoleHandle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 		}
 
 		// Prints RGB data
-		static void print(char data, kl::color textColor = kl::colors::white) {
+		void print(char data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(int data, kl::color textColor = kl::colors::white) {
+		void print(int data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(long long data, kl::color textColor = kl::colors::white) {
+		void print(long long data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lld\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(float data, kl::color textColor = kl::colors::white) {
+		void print(float data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%f\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(double data, kl::color textColor = kl::colors::white) {
+		void print(double data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(kl::byte data, kl::color textColor = kl::colors::white) {
+		void print(kl::byte data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(const std::string& data, kl::color textColor = kl::colors::white) {
+		void print(const std::string& data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 
 		// Prints RGB data with new line at the end
-		static void println(char data, kl::color textColor = kl::colors::white) {
+		void println(char data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(int data, kl::color textColor = kl::colors::white) {
+		void println(int data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(long long data, kl::color textColor = kl::colors::white) {
+		void println(long long data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lld\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(float data, kl::color textColor = kl::colors::white) {
+		void println(float data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%f\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(double data, kl::color textColor = kl::colors::white) {
+		void println(double data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(kl::byte data, kl::color textColor = kl::colors::white) {
+		void println(kl::byte data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(const std::string& data, kl::color textColor = kl::colors::white) {
+		void println(const std::string& data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 
 		// Prints an error message and waits for a key to exit
-		static void error(bool check, std::string mess, char waitFor = ' ', bool quit = true, int exitCode = 69) {
+		void error(bool check, std::string mess, char waitFor = ' ', bool quit = true, int exitCode = 69) {
 			if (check) {
 				println(mess, kl::color(255, 50, 50));
 				kl::console::waitFor(waitFor);
 				if (quit) exit(exitCode);
 			}
 		}
-
-	protected:
-		// Enables RGB support for the console
-		static void enableRGB() {
-			DWORD consoleMode;
-			GetConsoleMode(stdConsoleHandle, &consoleMode);
-			SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-		}
-
-	private:
-		static HANDLE stdConsoleHandle;
 	};
-	HANDLE console::stdConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 }

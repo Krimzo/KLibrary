@@ -87,30 +87,3 @@
 #pragma comment(lib, "wininet.lib")
 #pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib, "opengl32.lib")
-
-/* Library intializer and unintializer */
-namespace _kl_dont_use_ {
-	class _kl_initialization_ : private kl::random, private kl::time, private kl::console, private kl::image {
-	public:
-		_kl_initialization_() {
-			// random.h
-			newSeed();
-
-			// time.h
-			loadPCFrequency();
-			staticGetElapsed();
-			staticStopwatchReset();
-
-			// console.h
-			enableRGB();
-
-			// image.h
-			initGdiPlus();
-		}
-		~_kl_initialization_() {
-			// image.h
-			uninitGdiPlus();
-		}
-	};
-	_kl_initialization_ _lib_init_;
-}

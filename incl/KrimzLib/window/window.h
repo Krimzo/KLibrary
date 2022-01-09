@@ -40,6 +40,7 @@ namespace kl {
 			this->mouse.bind(hwnd);
 
 			// Starting the update loops
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
 			if (continuous) {
 				start();
 				while (IsWindow(hwnd)) {
@@ -202,24 +203,33 @@ namespace kl {
 		// Sets up OpenGL context
 		void setupOpenGL() {
 			// Creating and setting a pixel format
-			PIXELFORMATDESCRIPTOR pfd = {
-				sizeof(PIXELFORMATDESCRIPTOR),
-				1,
-				PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    // Flags
-				PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
-				32,                   // Colordepth of the framebuffer.
-				0, 0, 0, 0, 0, 0,
-				0,
-				0,
-				0,
-				0, 0, 0, 0,
-				24,                   // Number of bits for the depthbuffer
-				8,                    // Number of bits for the stencilbuffer
-				0,                    // Number of Aux buffers in the framebuffer.
-				PFD_MAIN_PLANE,
-				0,
-				0, 0, 0
-			};
+			PIXELFORMATDESCRIPTOR pfd = {};
+			pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+			pfd.nVersion = 1;
+			pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+			pfd.iPixelType = PFD_TYPE_RGBA;
+			pfd.cColorBits = 32;
+			pfd.cRedBits = 0;
+			pfd.cRedShift = 0;
+			pfd.cGreenBits = 0;
+			pfd.cGreenShift = 0;
+			pfd.cBlueBits = 0;
+			pfd.cBlueShift = 0;
+			pfd.cAlphaBits = 0;
+			pfd.cAlphaShift = 0;
+			pfd.cAccumBits = 0;
+			pfd.cAccumRedBits = 0;
+			pfd.cAccumGreenBits = 0;
+			pfd.cAccumBlueBits = 0;
+			pfd.cAccumAlphaBits = 0;
+			pfd.cDepthBits = 24;
+			pfd.cStencilBits = 8;
+			pfd.cAuxBuffers = 0;
+			pfd.iLayerType = PFD_MAIN_PLANE;
+			pfd.bReserved = 0;
+			pfd.dwLayerMask = 0;
+			pfd.dwVisibleMask = 0;
+			pfd.dwDamageMask = 0;
 			const int pixelFormat = ChoosePixelFormat(hdc, &pfd);
 			kl::console::error(!pixelFormat, "OpenGL: Could not choose a pixel format!");
 			SetPixelFormat(hdc, pixelFormat, &pfd);

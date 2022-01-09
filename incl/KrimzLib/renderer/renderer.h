@@ -23,7 +23,7 @@ namespace kl {
 		// Creates and runs a new engine
 		void createNew(kl::ivec2 frameSize) {
 			/* Engine timer */
-			kl::time timer;
+			kl::timer timer;
 
 			/* Default shaders */
 			kl::shaders* default_sha = nullptr;
@@ -53,8 +53,8 @@ namespace kl {
 
 				/* Compiling object shaders */
 				default_sha = new kl::shaders(
-					kl::file::read("res/shaders/default.vert"),
-					kl::file::read("res/shaders/default.frag")
+					kl::file::read("res/shaders/renderer.vert"),
+					kl::file::read("res/shaders/renderer.frag")
 				);
 
 				/* Getting object shader uniforms */
@@ -76,8 +76,8 @@ namespace kl {
 			/* Window update definition */
 			win.update = [&]() {
 				/* Time calculations */
-				deltaT = timer.getElapsed();
-				elapsedT = timer.stopwatchElapsed();
+				deltaT = timer.interval();
+				elapsedT = timer.swElapsed();
 
 				/* Calling the user input */
 				input(&win.keys, &win.mouse);
@@ -161,8 +161,7 @@ namespace kl {
 			};
 
 			/* Window creation */
-			timer.getElapsed();
-			timer.stopwatchReset();
+			timer.reset();
 			win.startNew(frameSize, kl::random::STRING(6), false, true, true);
 		}
 		void stop() {

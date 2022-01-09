@@ -2,6 +2,20 @@
 
 
 namespace kl {
+	namespace _kl_dont_use_ {
+		ULONG_PTR gdiplusToken = NULL;
+		Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
+		struct _kl_image_initialization_ {
+			_kl_image_initialization_() {
+				kl::console::error(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "GdiPlus: Failed to init!");
+			}
+			~_kl_image_initialization_() {
+				Gdiplus::GdiplusShutdown(gdiplusToken);
+			}
+		};
+		_kl_image_initialization_ _image_init_;
+	}
+
 	class image {
 	public:
 		// Constructor
@@ -337,30 +351,9 @@ namespace kl {
 			}
 		}
 
-	protected:
-		// Initalises gdiplus
-		static void initGdiPlus() {
-			if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
-				printf("Failed to initalise gdiplus\n");
-				exit(69);
-			}
-		}
-
-		// Uninitalises gdiplus
-		static void uninitGdiPlus() {
-			Gdiplus::GdiplusShutdown(gdiplusToken);
-		}
-
 	private:
-		// Image properties
 		int width;
 		int height;
 		std::vector<kl::color> pixels;
-
-		// Gdi properties
-		static ULONG_PTR gdiplusToken;
-		static Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	};
-	ULONG_PTR image::gdiplusToken = NULL;
-	Gdiplus::GdiplusStartupInput image::gdiplusStartupInput = {};
 }
