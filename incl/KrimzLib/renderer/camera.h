@@ -10,8 +10,13 @@ namespace kl {
 		float height = 600;
 		float fov = 75;
 		float speed = 2;
-		float sens = 0.05;
-		float shadowD = 25;
+		float sens = 0.05f;
+		float shadowD = 20;
+
+		// Sets the forward vector
+		void setForward(kl::vec3 vec) {
+			forward = vec.normalize();
+		}
 
 		// Camera direction getters
 		kl::vec3 getForward() {

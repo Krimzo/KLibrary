@@ -29,7 +29,7 @@ namespace kl {
 			z = v.y;
 		}
 		vec3(kl::color color) {
-			static const float toFloatColor = 1.0 / 255;
+			static const float toFloatColor = 1.0f / 255;
 			x = color.r * toFloatColor;
 			y = color.g * toFloatColor;
 			z = color.b * toFloatColor;
@@ -94,15 +94,15 @@ namespace kl {
 
 		// Returns the angle between the given vector and self
 		float angle(kl::vec3 a) {
-			return acos(this->normalize().dot(a.normalize())) * 57.2957795131;
+			return acos(this->normalize().dot(a.normalize())) * 57.2957795131f;
 		}
 
 		// Returns a rotated vector around the given axis
 		kl::vec3 rotate(float angle, kl::vec3 axis) {
 			// Calculating trig funcs
-			static const float halfeAngleRadians = 0.00872664625f;
-			const float angleSin = sin(angle * halfeAngleRadians);
-			const float angleCos = cos(angle * halfeAngleRadians);
+			static const float halfAngleRad = 0.00872664625f;
+			const float angleSin = sin(angle * halfAngleRad);
+			const float angleCos = cos(angle * halfAngleRad);
 			
 			// Calculating quaternion consts
 			const float qx = axis.x * angleSin;

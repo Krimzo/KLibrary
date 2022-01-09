@@ -118,7 +118,7 @@ namespace kl {
 
 		// Returns the angle between the given vector and self
 		float angle(kl::vec4 a) {
-			return acos(this->normalize().dot(a.normalize())) * 57.2957795131;
+			return acos(this->normalize().dot(a.normalize())) * 57.2957795131f;
 		}
 
 		// Prints the data to the console

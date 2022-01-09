@@ -132,53 +132,53 @@ namespace kl {
 		}
 
 		// Prints RGB data
-		static void print(char data, kl::color textColor = constant::colors::white) {
+		static void print(char data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(int data, kl::color textColor = constant::colors::white) {
+		static void print(int data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(long long data, kl::color textColor = constant::colors::white) {
+		static void print(long long data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lld\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(float data, kl::color textColor = constant::colors::white) {
+		static void print(float data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%f\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(double data, kl::color textColor = constant::colors::white) {
+		static void print(double data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(kl::byte data, kl::color textColor = constant::colors::white) {
+		static void print(kl::byte data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void print(const std::string& data, kl::color textColor = constant::colors::white) {
+		static void print(const std::string& data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 
 		// Prints RGB data with new line at the end
-		static void println(char data, kl::color textColor = constant::colors::white) {
+		static void println(char data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%c\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(int data, kl::color textColor = constant::colors::white) {
+		static void println(int data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%d\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(long long data, kl::color textColor = constant::colors::white) {
+		static void println(long long data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lld\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(float data, kl::color textColor = constant::colors::white) {
+		static void println(float data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%f\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(double data, kl::color textColor = constant::colors::white) {
+		static void println(double data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%lf\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(kl::byte data, kl::color textColor = constant::colors::white) {
+		static void println(kl::byte data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		static void println(const std::string& data, kl::color textColor = constant::colors::white) {
+		static void println(const std::string& data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 
 		// Prints an error message and waits for a key to exit
-		static void error(int check, std::string mess, char waitFor = ' ', bool quit = true, int exitCode = 69) {
+		static void error(bool check, std::string mess, char waitFor = ' ', bool quit = true, int exitCode = 69) {
 			if (check) {
 				println(mess, kl::color(255, 50, 50));
 				kl::console::waitFor(waitFor);
@@ -191,7 +191,7 @@ namespace kl {
 		static void enableRGB() {
 			DWORD consoleMode;
 			GetConsoleMode(stdConsoleHandle, &consoleMode);
-			SetConsoleMode(stdConsoleHandle, consoleMode | 0x04 /*ENABLE_VIRTUAL_TERMINAL_PROCESSING*/);
+			SetConsoleMode(stdConsoleHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		}
 
 	private:

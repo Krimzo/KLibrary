@@ -2,6 +2,7 @@
 
 
 namespace kl {
+	typedef unsigned long long key;
 	struct keys {
 		// Letters
 		bool q = false;

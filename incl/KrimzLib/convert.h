@@ -5,13 +5,13 @@ namespace kl {
 	namespace convert {
 		// Converts degrees to radians
 		float toRadians(float degrees) {
-			static float toRadians = kl::constant::floats::pi / 180;
+			static float toRadians = kl::math::pi / 180;
 			return degrees * toRadians;
 		}
 
 		// Converts radians to degrees
 		float toDegrees(float radians) {
-			static float toDegrees = 180 / kl::constant::floats::pi;
+			static float toDegrees = 180 / kl::math::pi;
 			return radians * toDegrees;
 		}
 

@@ -3,6 +3,9 @@
 
 namespace kl {
 	namespace math {
+		// PI
+		static const float pi = 3.14159265358979f;
+
 		// Returns x from the given y of the line that goes through points a and b
 		float lineX(kl::vec2 a, kl::vec2 b, float y) {
 			return ((y - a.y) * (b.x - a.x)) / (b.y - a.y) + a.x;
@@ -30,10 +33,9 @@ namespace kl {
 
 		// Fast inverse sqrt
 		float invSqrt(float number) {
-			int i = 0x5f3759df - (*(int*)&number >> 1);
+			int i = 0x5F3759DF - (*(int*)&number >> 1);
 			float y = *(float*)&i;
-			y = y * (1.5f - ((number * 0.5f) * y * y));
-			return y;
+			return y * (1.5f - ((number * 0.5f) * y * y));
 		}
 	};
 }

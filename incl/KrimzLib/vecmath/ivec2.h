@@ -38,7 +38,7 @@ namespace kl {
 		kl::ivec2 operator / (int a) {
 			return kl::ivec2(x / a, y / a);
 		}
-		void operator /= (float a) {
+		void operator /= (int a) {
 			x /= a; y /= a;
 		}
 		bool operator == (kl::ivec2 obj) {
@@ -50,7 +50,7 @@ namespace kl {
 
 		// Prints the data to the console
 		void print() {
-			printf("%d %d\n", x, y);
+			printf("% d % d\n", x, y);
 		}
 	};
 }

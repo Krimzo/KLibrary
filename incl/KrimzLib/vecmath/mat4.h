@@ -169,8 +169,8 @@ namespace kl {
 		// Returns a rotation matrix
 		static kl::mat4 rotate(kl::vec3 rotation) {
 			// Computing x rotation matrix
-			const float xSin = sin(rotation.x * 0.01745329251);
-			const float xCos = cos(rotation.x * 0.01745329251);
+			const float xSin = sin(rotation.x * 0.01745329251f);
+			const float xCos = cos(rotation.x * 0.01745329251f);
 			kl::mat4 xRot;
 			xRot[ 5] =  xCos;
 			xRot[ 6] = -xSin;
@@ -178,8 +178,8 @@ namespace kl {
 			xRot[10] =  xCos;
 
 			// Computing y rotation matrix
-			const float ySin = sin(rotation.y * 0.01745329251);
-			const float yCos = cos(rotation.y * 0.01745329251);
+			const float ySin = sin(rotation.y * 0.01745329251f);
+			const float yCos = cos(rotation.y * 0.01745329251f);
 			kl::mat4 yRot;
 			yRot[ 0] =  yCos;
 			yRot[ 2] =  ySin;
@@ -187,8 +187,8 @@ namespace kl {
 			yRot[10] =  yCos;
 
 			// Computing z rotation matrix
-			const float zSin = sin(rotation.z * 0.01745329251);
-			const float zCos = cos(rotation.z * 0.01745329251);
+			const float zSin = sin(rotation.z * 0.01745329251f);
+			const float zCos = cos(rotation.z * 0.01745329251f);
 			kl::mat4 zRot;
 			zRot[0] =  zCos;
 			zRot[1] = -zSin;
@@ -210,7 +210,7 @@ namespace kl {
 
 		// Returns the perspective projection matrix
 		static kl::mat4 perspective(float fov, float width, float height, float zNear, float zFar) {
-			const float tanHalf = 1 / tan(fov * 0.00872664625);
+			const float tanHalf = 1 / tan(fov * 0.00872664625f);
 			kl::mat4 temp;
 			temp[ 0] = tanHalf * (height / width);
 			temp[ 5] = tanHalf;

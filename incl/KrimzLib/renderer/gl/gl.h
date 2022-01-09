@@ -2,6 +2,7 @@
 
 
 namespace kl {
+	typedef unsigned int id;
 	namespace gl {
 		// Enables/disables face culling
 		void setCulling(bool enabled, bool cullBack = true, bool clockWise = false) {

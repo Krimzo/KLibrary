@@ -2,7 +2,7 @@
 
 
 // Rendering engine
-kl::gl::renderer renderer;
+kl::renderer renderer;
 
 // Game objects
 kl::renderable* wall = nullptr;
@@ -28,22 +28,22 @@ void setup() {
 	);
 
 	// Mesh creation
-	kl::gl::mesh* cube_mes = renderer.newMesh("res/objects/cube.obj");
-	kl::gl::mesh* table_mes = renderer.newMesh("res/objects/table.obj");
-	kl::gl::mesh* katana_mes = renderer.newMesh("res/objects/katana.obj");
-	kl::gl::mesh* horse_mes = renderer.newMesh("res/objects/horse.obj");
-	kl::gl::mesh* sphere_mes = renderer.newMesh("res/objects/sphere.obj");
-	kl::gl::mesh* tv_mes = renderer.newMesh("res/objects/tv.obj");
+	kl::mesh* cube_mes = renderer.newMesh("res/objects/cube.obj");
+	kl::mesh* table_mes = renderer.newMesh("res/objects/table.obj");
+	kl::mesh* katana_mes = renderer.newMesh("res/objects/katana.obj");
+	kl::mesh* horse_mes = renderer.newMesh("res/objects/horse.obj");
+	kl::mesh* sphere_mes = renderer.newMesh("res/objects/sphere.obj");
+	kl::mesh* tv_mes = renderer.newMesh("res/objects/tv.obj");
 
 	// Texture creation
-	kl::gl::texture* solid1_tex = renderer.newTexture(kl::image(kl::ivec2(1, 1), kl::color(235, 180, 120)));
-	kl::gl::texture* solid2_tex = renderer.newTexture(kl::image(kl::ivec2(1, 1), kl::color(120, 180, 200)));
-	kl::gl::texture* table_tex = renderer.newTexture("res/textures/table.jpg");
-	kl::gl::texture* katana_tex = renderer.newTexture("res/textures/katana.jpg");
-	kl::gl::texture* horse_tex = renderer.newTexture("res/textures/horse.jpg");
-	kl::gl::texture* tv_tex = renderer.newTexture("res/textures/tv.jpg");
-	kl::gl::texture* peace_tex = renderer.newTexture("res/textures/peace.jpg");
-	kl::gl::texture* fp_tex = renderer.newTexture("res/textures/firepower.jpg");
+	kl::texture* solid1_tex = renderer.newTexture(kl::image(kl::ivec2(1, 1), kl::color(235, 180, 120)));
+	kl::texture* solid2_tex = renderer.newTexture(kl::image(kl::ivec2(1, 1), kl::color(120, 180, 200)));
+	kl::texture* table_tex = renderer.newTexture("res/textures/table.jpg");
+	kl::texture* katana_tex = renderer.newTexture("res/textures/katana.jpg");
+	kl::texture* horse_tex = renderer.newTexture("res/textures/horse.jpg");
+	kl::texture* tv_tex = renderer.newTexture("res/textures/tv.jpg");
+	kl::texture* peace_tex = renderer.newTexture("res/textures/peace.jpg");
+	kl::texture* fp_tex = renderer.newTexture("res/textures/firepower.jpg");
 
 	// Object creation
 	wall = renderer.newObject(cube_mes, solid1_tex);
@@ -57,7 +57,7 @@ void setup() {
 	kerv = renderer.newObject(tv_mes, tv_tex);
 
 	// Object properties setup
-	wall->geometry.size = kl::vec3(50, 10, 0.05);
+	wall->geometry.size = kl::vec3(50, 10, 0.05f);
 	wall->geometry.position = kl::vec3(0, 0, -7);
 
 	table->geometry.size = kl::vec3(1, 1, 1);
@@ -73,7 +73,7 @@ void setup() {
 	katanaR->geometry.position = kl::vec3(1, 0, 2);
 
 	horse->geometry.size = kl::vec3(4, 4, 4);
-	horse->geometry.position = kl::vec3(0, -0.02, 2);
+	horse->geometry.position = kl::vec3(0, -0.02f, 2);
 	horse->physics.enabled = true;
 	horse->physics.angular.y = 18;
 	horse->physics.gravity = 0;
@@ -103,7 +103,7 @@ void setup() {
 	kerv->geometry.position = kl::vec3(0, 3, -6);
 
 	// Sun setup
-	renderer.sun.direction = kl::vec3(-0.575, -0.75, -2);
+	renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
 }
 
 // Renderer input
@@ -154,6 +154,9 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	}
 
 	// Other
+	if (keys->esc) {
+		renderer.stop();
+	}
 	if (keys->v) {
 		kl::gl::setWireframe(true);
 	}
@@ -164,7 +167,7 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 
 // Renderer update
 void update() {
-	const float horseGrav = 0.1;
+	const float horseGrav = 0.1f;
 	sphere1->physics.velocity += (horse->geometry.position - sphere1->geometry.position) * horseGrav * renderer.deltaT;
 
 	const float r = 2;

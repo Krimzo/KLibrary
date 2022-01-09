@@ -69,6 +69,7 @@ namespace kl {
 		// Retruns a normalized vector
 		kl::vec2 normalize() {
 			return operator/(length());
+			//return operator*(kl::math::invSqrt(x * x + y * y));
 		}
 
 		// Returns the dot product
@@ -78,13 +79,13 @@ namespace kl {
 
 		// Returns the angle between the given vector and self
 		float angle(kl::vec2 a) {
-			return acos(this->normalize().dot(a.normalize())) * 57.2957795131;
+			return acos(this->normalize().dot(a.normalize())) * 57.2957795131f;
 		}
 
 		// Returns a rotated vector around the given point
 		kl::vec2 rotate(float angle) {
-			const float sinA = sin(angle * 0.01745329251);
-			const float cosA = cos(angle * 0.01745329251);
+			const float sinA = sin(angle * 0.01745329251f);
+			const float cosA = cos(angle * 0.01745329251f);
 			return kl::vec2(cosA * x - sinA * y, sinA * x + cosA * y);
 		}
 

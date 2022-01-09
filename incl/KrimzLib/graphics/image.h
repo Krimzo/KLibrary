@@ -28,12 +28,12 @@ namespace kl {
 		}
 		kl::color getPixel(kl::ivec2 point) {
 			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
-				return pixels[point.y * width + point.x];
+				return pixels[(uint64_t)point.y * width + point.x];
 			}
 			return kl::color();
 		}
 		int getPixelCount() {
-			return pixels.size();
+			return (int)pixels.size();
 		}
 		kl::byte* pointer() {
 			return (kl::byte*)&pixels[0];
@@ -49,11 +49,11 @@ namespace kl {
 		void setSize(kl::ivec2 size) {
 			width = size.x;
 			height = size.y;
-			pixels.resize(width * height);
+			pixels.resize((uint64_t)width * height);
 		}
 		void setPixel(kl::ivec2 point, kl::color color) {
 			if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
-				pixels[point.y * width + point.x] = color;
+				pixels[(uint64_t)point.y * width + point.x] = color;
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace kl {
 			const uint32_t* bmPixels = (uint32_t*)bitmapData.Scan0;
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					pixels[y * width + x] = *(kl::color*)(bmPixels + y * bitmapStride + x);
+					pixels[(uint64_t)y * width + x] = *(kl::color*)(bmPixels + y * bitmapStride + x);
 				}
 			}
 		}
@@ -110,9 +110,9 @@ namespace kl {
 					for (int x = 0; x < width; x++) {
 						ss <<
 							x << " " << y << " => " <<
-							int(pixels[y * width + x].r) << " " <<
-							int(pixels[y * width + x].g) << " " <<
-							int(pixels[y * width + x].b) << "\n";
+							int(pixels[(uint64_t)y * width + x].r) << " " <<
+							int(pixels[(uint64_t)y * width + x].g) << " " <<
+							int(pixels[(uint64_t)y * width + x].b) << "\n";
 					}
 				}
 				kl::file::write(fileName, ss.str());
@@ -146,9 +146,9 @@ namespace kl {
 			const int halfWidth = width / 2;
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < halfWidth; x++) {
-					kl::color tempPixel = pixels[y * width + x];
-					pixels[y * width + x] = pixels[y * width + (width - 1 - x)];
-					pixels[y * width + (width - 1 - x)] = tempPixel;
+					kl::color tempPixel = pixels[(uint64_t)y * width + x];
+					pixels[(uint64_t)y * width + x] = pixels[(uint64_t)y * width + uint64_t(width - 1 - x)];
+					pixels[(uint64_t)y * width + uint64_t(width - 1 - x)] = tempPixel;
 				}
 			}
 		}
@@ -158,9 +158,9 @@ namespace kl {
 			const int halfHeight = height / 2;
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < halfHeight; y++) {
-					kl::color tempPixel = pixels[y * width + x];
-					pixels[y * width + x] = pixels[(height - 1 - y) * width + x];
-					pixels[(height - 1 - y) * width + x] = tempPixel;
+					kl::color tempPixel = pixels[(uint64_t)y * width + x];
+					pixels[(uint64_t)y * width + x] = pixels[uint64_t(height - 1 - y) * width + x];
+					pixels[uint64_t(height - 1 - y) * width + x] = tempPixel;
 				}
 			}
 		}
@@ -172,9 +172,9 @@ namespace kl {
 			kl::vec2 incr(((float)b.x - a.x) / len, ((float)b.y - a.y) / len);
 
 			// Drawing
-			kl::vec2 drawPoint(a.x, a.y);
+			kl::vec2 drawPoint((float)a.x, (float)a.y);
 			for (int i = 0; i <= len; i++) {
-				setPixel(kl::ivec2(drawPoint.x, drawPoint.y), col);
+				setPixel(kl::ivec2((int)drawPoint.x, (int)drawPoint.y), col);
 				drawPoint = drawPoint + incr;
 			}
 		}
@@ -201,7 +201,7 @@ namespace kl {
 
 				// Drawing
 				for (int y = a.y; y < c.y; y++) {
-					drawLine(kl::ivec2(kl::math::lineX((y < b.y) ? a : c, b, y), y), kl::ivec2(kl::math::lineX(a, c, y), y), col);
+					drawLine(kl::ivec2((int)kl::math::lineX((y < b.y) ? a : c, b, (float)y), (int)y), kl::ivec2((int)kl::math::lineX(a, c, (float)y), (int)y), col);
 				}
 			}
 			else {
@@ -312,8 +312,8 @@ namespace kl {
 						int y2 = (y1 + pitch) % width;
 						float blendX = float(x - x1) / pitch;
 						float blendY = float(y - y1) / pitch;
-						float sampleT = (1 - blendX) * seedArray[y1 * width + x1] + blendX * seedArray[y1 * width + x2];
-						float sampleB = (1 - blendX) * seedArray[y2 * width + x1] + blendX * seedArray[y2 * width + x2];
+						float sampleT = (1 - blendX) * seedArray[(uint64_t)y1 * width + x1] + blendX * seedArray[(uint64_t)y1 * width + x2];
+						float sampleB = (1 - blendX) * seedArray[(uint64_t)y2 * width + x1] + blendX * seedArray[(uint64_t)y2 * width + x2];
 
 						scaleSum += scale;
 						noise += (blendY * (sampleB - sampleT) + sampleT) * scale;
@@ -321,9 +321,9 @@ namespace kl {
 					}
 
 					byte grayValue = byte((noise / scaleSum) * 255);
-					pixels[y * width + x].r = grayValue;
-					pixels[y * width + x].g = grayValue;
-					pixels[y * width + x].b = grayValue;
+					pixels[(uint64_t)y * width + x].r = grayValue;
+					pixels[(uint64_t)y * width + x].g = grayValue;
+					pixels[(uint64_t)y * width + x].b = grayValue;
 				}
 			}
 		}
@@ -332,7 +332,7 @@ namespace kl {
 		void runOnEach(std::function<void(kl::color* pixelColor, kl::ivec2 pixelPosition)> toExecute) {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					toExecute(&pixels[y * width + x], kl::ivec2(x, y));
+					toExecute(&pixels[(uint64_t)y * width + x], kl::ivec2(x, y));
 				}
 			}
 		}

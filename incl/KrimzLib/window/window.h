@@ -2,6 +2,10 @@
 
 
 namespace kl {
+	namespace screen {
+		static const int width = GetSystemMetrics(SM_CXSCREEN);
+		static const int height = GetSystemMetrics(SM_CYSCREEN);
+	}
 	class window {
 	public:
 		// Input
@@ -98,8 +102,15 @@ namespace kl {
 			drawImage(toDraw, position);
 		}
 
+		// Resets the OpenGL viewport
+		void resetViewport() {
+			RECT clientArea = {};
+			GetClientRect(hwnd, &clientArea);
+			glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
+		}
+
 		// Swaps the front and back buffers
-		void swapFrames() {
+		void swapBuffers() {
 			SwapBuffers(hdc);
 		}
 
@@ -127,24 +138,23 @@ namespace kl {
 			windowClass.lpszMenuName = nullptr;
 			windowClass.lpszClassName = name.c_str();
 			windowClass.hIconSm = nullptr;
-			if (!RegisterClassExW(&windowClass)) {
-				printf("Could not register a window class! Error code: %d\n", GetLastError());
-				exit(69);
-			}
+			kl::console::error(!RegisterClassExW(&windowClass), "WinApi: Could not register a window class!");
 		}
 
 		// Creates a new window
 		void createWindow(kl::ivec2 size, std::wstring name, bool resizeable) {
+			// Setting the window properties
 			DWORD windowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 			RECT adjustedWindowSize = { 0, 0, (LONG)size.x, (LONG)size.y };
 			AdjustWindowRect(&adjustedWindowSize, windowStyle, FALSE);
 			size.x = (adjustedWindowSize.right - adjustedWindowSize.left);
 			size.y = (adjustedWindowSize.bottom - adjustedWindowSize.top);
-			hwnd = CreateWindowExW(0, name.c_str(), name.c_str(), windowStyle, (kl::constant::ints::screenWidth / 2 - size.x / 2), (kl::constant::ints::screenHeight / 2 - size.y / 2), size.x, size.y, nullptr, nullptr, hInstance, nullptr);
-			if (!hwnd) {
-				printf("Could not create a window! Error code: %d\n", GetLastError());
-				exit(69);
-			}
+
+			// Creating the window
+			hwnd = CreateWindowExW(0, name.c_str(), name.c_str(), windowStyle, (kl::screen::width / 2 - size.x / 2), (kl::screen::height / 2 - size.y / 2), size.x, size.y, nullptr, nullptr, hInstance, nullptr);
+			kl::console::error(!hwnd, "WinApi: Could not create a window!");
+
+			// Setting and getting window info
 			ShowWindow(hwnd, SW_SHOW);
 			hdc = GetDC(hwnd);
 		}
@@ -159,6 +169,7 @@ namespace kl {
 
 		// Sets up OpenGL context
 		void setupOpenGL() {
+			// Creating and setting a pixel format
 			PIXELFORMATDESCRIPTOR pfd = {
 				sizeof(PIXELFORMATDESCRIPTOR),
 				1,
@@ -177,18 +188,19 @@ namespace kl {
 				0,
 				0, 0, 0
 			};
-			int pixelFormat = ChoosePixelFormat(hdc, &pfd);
-			if (!pixelFormat) {
-				printf("Error, could not choose the pixel format %d\n", pixelFormat);
-				exit(69);
-			}
+			const int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+			kl::console::error(!pixelFormat, "OpenGL: Could not choose a pixel format!");
 			SetPixelFormat(hdc, pixelFormat, &pfd);
+
+			// Creating a OpenGL context
 			hglrc = wglCreateContext(hdc);
 			wglMakeCurrent(hdc, hglrc);
-			gladLoadGL(); /* Loading modern opengl functions */
-			RECT clientArea = {};
-			GetClientRect(hwnd, &clientArea);
-			glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
+
+			// Loading modern opengl functions
+			gladLoadGL();
+
+			// Setting the viewport size
+			resetViewport();
 		}
 
 		// Handles the windows message
