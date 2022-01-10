@@ -104,8 +104,6 @@ void update() {
 	pos_uni.setData(pos);
 	zoom_uni.setData(zoom);
 	startPos_uni.setData(std::min((elapsedT / 20) - 1, 0.0f));
-	//0.5f * cos(0.1f * (elapsedT - 15) + kl::math::pi) - 0.5f
-
 
 	/* Rendering the box */
 	box->draw();
