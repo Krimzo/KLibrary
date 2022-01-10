@@ -8,6 +8,7 @@ kl::shaders* shad;
 kl::uniform frameSize_uni;
 kl::uniform zoom_uni;
 kl::uniform pos_uni;
+kl::uniform startPos_uni;
 
 kl::timer timer;
 float deltaT = 0;
@@ -36,11 +37,13 @@ void start() {
 	frameSize_uni = shad->getUniform("frameSize");
 	zoom_uni = shad->getUniform("zoom");
 	pos_uni = shad->getUniform("pos");
+	startPos_uni = shad->getUniform("startPos");
 }
 
 void update() {
 	/* Time calculations */
 	deltaT = timer.interval();
+	elapsedT = timer.swElapsed();
 
 	/* Getting the screen size */
 	kl::vec2 frameSize = win.getSize();
@@ -100,6 +103,9 @@ void update() {
 	frameSize_uni.setData(frameSize);
 	pos_uni.setData(pos);
 	zoom_uni.setData(zoom);
+	startPos_uni.setData(std::min((elapsedT / 20) - 1, 0.0f));
+	//0.5f * cos(0.1f * (elapsedT - 15) + kl::math::pi) - 0.5f
+
 
 	/* Rendering the box */
 	box->draw();

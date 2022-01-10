@@ -4,6 +4,7 @@
 uniform vec2 frameSize;
 uniform float zoom;
 uniform vec2 pos;
+uniform float startPos;
 
 // Pixel color output
 out vec4 pixelColor;
@@ -17,9 +18,6 @@ vec2 complexPow(vec2 a, int n) {
 }
 
 void main() {
-    // Setting the default color
-    pixelColor = vec4(1);
-
     // Getting the uv coordinates
     vec2 uv = ((gl_FragCoord.xy / frameSize) * 2 - 1) * vec2(frameSize.x / frameSize.y, 1);
 
@@ -29,12 +27,16 @@ void main() {
     // Setting the position
     uv += pos;
 
+    // Setting the default color
+    pixelColor = vec4(1);
+
     // Calculating the reaction
-    vec2 num = uv;
-    for(int i = 0; i < 256; i++) {
+    float n = 64;
+    vec2 num = startPos + uv;
+    for(int i = 0; i < n; i++) {
         // Checking the distance
         if(length(num) > 2) {
-            pixelColor = vec4(vec3(i / 64.0), 1);
+            pixelColor *= i / n;
             break;
         }
 

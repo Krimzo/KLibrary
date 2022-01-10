@@ -4,7 +4,7 @@
 namespace kl {
 	namespace math {
 		// PI
-		static const float pi = 3.14159265358979f;
+		const float pi = 3.14159265358979f;
 
 		// Returns x from the given y of the line that goes through points a and b
 		float lineX(kl::vec2 a, kl::vec2 b, float y) {
