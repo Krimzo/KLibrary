@@ -51,6 +51,7 @@
 #include "KrimzLib/graphics/image.h"
 #include "KrimzLib/renderer/camera.h"
 #include "KrimzLib/renderer/gl/glad.h"
+#include "KrimzLib/renderer/gl/gl.h"
 
 // Including the window types
 #include "KrimzLib/window/keys.h"
@@ -58,7 +59,6 @@
 #include "KrimzLib/window/window.h"
 
 // Including the renderer headers
-#include "KrimzLib/renderer/gl/gl.h"
 #include "KrimzLib/renderer/mesh.h"
 #include "KrimzLib/renderer/texture.h"
 #include "KrimzLib/renderer/uniform.h"

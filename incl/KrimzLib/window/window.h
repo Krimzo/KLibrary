@@ -33,7 +33,7 @@ namespace kl {
 
 			// Setting up OpenGL context
 			if (opengl) {
-				setupOpenGL();
+				initOpenGL();
 			}
 
 			// Binding the mouse
@@ -127,11 +127,14 @@ namespace kl {
 			drawImage(toDraw, position);
 		}
 
+		// Binds the OpenGL contex of the window
+		void makeCurrentGL() {
+			wglMakeCurrent(hdc, hglrc);
+		}
+
 		// Resets the OpenGL viewport
 		void resetViewport() {
-			RECT clientArea = {};
-			GetClientRect(hwnd, &clientArea);
-			glViewport(clientArea.left, clientArea.top, clientArea.right, clientArea.bottom);
+			kl::gl::resetViewport(hwnd);
 		}
 
 		// Swaps the front and back buffers
@@ -201,48 +204,12 @@ namespace kl {
 		}
 
 		// Sets up OpenGL context
-		void setupOpenGL() {
-			// Creating and setting a pixel format
-			PIXELFORMATDESCRIPTOR pfd = {};
-			pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-			pfd.nVersion = 1;
-			pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-			pfd.iPixelType = PFD_TYPE_RGBA;
-			pfd.cColorBits = 32;
-			pfd.cRedBits = 0;
-			pfd.cRedShift = 0;
-			pfd.cGreenBits = 0;
-			pfd.cGreenShift = 0;
-			pfd.cBlueBits = 0;
-			pfd.cBlueShift = 0;
-			pfd.cAlphaBits = 0;
-			pfd.cAlphaShift = 0;
-			pfd.cAccumBits = 0;
-			pfd.cAccumRedBits = 0;
-			pfd.cAccumGreenBits = 0;
-			pfd.cAccumBlueBits = 0;
-			pfd.cAccumAlphaBits = 0;
-			pfd.cDepthBits = 24;
-			pfd.cStencilBits = 8;
-			pfd.cAuxBuffers = 0;
-			pfd.iLayerType = PFD_MAIN_PLANE;
-			pfd.bReserved = 0;
-			pfd.dwLayerMask = 0;
-			pfd.dwVisibleMask = 0;
-			pfd.dwDamageMask = 0;
-			const int pixelFormat = ChoosePixelFormat(hdc, &pfd);
-			kl::console::error(!pixelFormat, "OpenGL: Could not choose a pixel format!");
-			SetPixelFormat(hdc, pixelFormat, &pfd);
-
-			// Creating a OpenGL context
-			hglrc = wglCreateContext(hdc);
-			wglMakeCurrent(hdc, hglrc);
-
-			// Loading modern opengl functions
-			gladLoadGL();
+		void initOpenGL() {
+			// Init OpenGL
+			hglrc = kl::gl::init(hwnd);
 
 			// Setting the viewport size
-			resetViewport();
+			kl::gl::resetViewport(hwnd);
 		}
 
 		// Handles the windows message
@@ -292,12 +259,9 @@ namespace kl {
 
 		// Destroys the contexts
 		void cleanup(std::wstring name, bool opengl) {
-			// Destroying the opengl contexts
+			// Destroying the opengl context
 			if (opengl) {
-				wglMakeCurrent(nullptr, nullptr);
-				ReleaseDC(hwnd, hdc);
-				wglDeleteContext(hglrc);
-				hglrc = nullptr;
+				kl::gl::uninit(&hglrc);
 			}
 
 			// Unregistering the window class

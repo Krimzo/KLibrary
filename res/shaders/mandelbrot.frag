@@ -1,4 +1,4 @@
-#version 330
+#version 460
 
 // Info
 uniform vec2 frameSize;

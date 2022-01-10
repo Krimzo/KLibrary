@@ -78,7 +78,7 @@ void update() {
 	}
 	if (win.mouse.lmb) {
 		// Calculating the zoom
-		zoom += zoom * zoomSpeed * deltaT;
+		zoom = std::min(zoom + zoom * zoomSpeed * deltaT, 40000.0f);
 
 		// Calculating the position
 		kl::vec2 uv(
