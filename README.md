@@ -1,2 +1,2 @@
 # My C++ library
-Full of random stuff
+Mostly focused on WIN32 and OpenGL.
