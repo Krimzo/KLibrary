@@ -29,7 +29,7 @@ int main() {
 	// Window update setup
 	int counter = 0;
 	const float timeToSleep = 1.0f / fpsLimit;
-	kl::time::staticStopwatchReset();
+	kl::timer timer;
 	window.update = [&]() {
 		// Setting x and y
 		int x = counter - windowSize.y;
@@ -52,17 +52,17 @@ int main() {
 				pixel.b = T2.interpolate(kl::vec3(colA.b, colD.b, colC.b), kl::vec2(x, y));
 			}
 			else {
-				pixel = kl::constant::colors::gray;
+				pixel = kl::colors::gray;
 			}
 
 			// Drawing the pixel to the frame
 			frame.setPixel(kl::ivec2(x, y), pixel);
 
 			// Drawing the rand scanline
-			frame.setPixel(kl::ivec2(x + 1, y), kl::random::getColor());
+			frame.setPixel(kl::ivec2(x + 1, y), kl::random::COLOR());
 
 			// Drawing the yellow scanlinepa
-			int yellowStrength = kl::random::getInt(0, 256);
+			int yellowStrength = kl::random::INT(0, 256);
 			frame.setPixel(kl::ivec2(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
 
 			// Updating x and y
@@ -83,8 +83,8 @@ int main() {
 		}
 
 		// Delta time calculation
-		while (kl::time::staticStopwatchElapsed() < timeToSleep);
-		kl::time::staticStopwatchReset();
+		while (timer.swElapsed() < timeToSleep);
+		timer.reset();
 	};
 
 	// Window start

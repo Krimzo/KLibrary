@@ -24,10 +24,10 @@ int main() {
 
 	// Window
 	kl::window window;
-	kl::image frame(windowSize, kl::constant::colors::gray);
+	kl::image frame(windowSize, kl::colors::gray);
 	window.update = [&]() {
 		// Clearing the frame
-		frame.fillSolid(kl::constant::colors::gray);
+		frame.fillSolid(kl::colors::gray);
 
 		// Circle position and size calculations
 		kl::ivec2 circleCenter(windowSize.x / 2, windowSize.y / 2);
@@ -63,12 +63,12 @@ int main() {
 		window.drawImage(frame);
 
 		// Incrementing m
-		m += mIncrement * kl::time::staticGetElapsed();
+		m += mIncrement * kl::time::getInterval();
 		window.setTitle("Times Table -> n: " + std::to_string(n) + " m: " + std::to_string(m));
 	};
 
-
 	// Creating the window
+	kl::time::getInterval();
 	window.startNew(windowSize, "Times Table", false, true);
 
 	return 0;

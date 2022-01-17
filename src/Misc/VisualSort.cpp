@@ -8,7 +8,7 @@ struct stick {
 
 void renderSticks(kl::image& frameBuffer, std::vector<stick>& stickArray) {
 	// Clearing the frame buffer
-	frameBuffer.fillSolid(kl::constant::colors::gray);
+	frameBuffer.fillSolid(kl::colors::gray);
 
 	// Drawing the sticks
 	for (int x = 0; x < stickArray.size(); x++) {
@@ -33,7 +33,7 @@ int main() {
 		// Setting the value
 		int randVal = 0;
 		do {
-			randVal = kl::random::getInt(frame.getHeight() + 1);
+			randVal = kl::random::INT(frame.getHeight() + 1);
 		} while ([&]() {
 			for (int i = 0; i < sticks.size(); i++) {
 				if (sticks[i].val == randVal) {
@@ -45,7 +45,7 @@ int main() {
 		stik.val = randVal;
 
 		// Setting the color
-		const kl::byte yellowGradient = kl::random::getByte();
+		const kl::byte yellowGradient = kl::random::BYTE();
 		stik.col = kl::color(yellowGradient, yellowGradient, 0);
 	}
 

@@ -15,6 +15,7 @@ int main() {
 	// Setting the viewport size
 	kl::gl::resetViewport(hwnd);
 
+	// WIP
 	while (1) {
 		//
 		kl::gl::clearBuffers(kl::colors::crimson);
