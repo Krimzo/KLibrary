@@ -24,6 +24,5 @@ int main() {
 		SwapBuffers(hdc);
 	}
 
-	getchar();
 	return 0;
 }

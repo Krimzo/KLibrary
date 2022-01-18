@@ -14,7 +14,7 @@ namespace kl {
 		_kl_time_initialization_ _time_init_;
 	}
 
-	static class time {
+	class time {
 	public:
 		// Returns a time since the the last staticGetElapsed() call
 		static float getInterval() {

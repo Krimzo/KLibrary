@@ -1,4 +1,4 @@
-#version 460
+#version 330
 
 // Object texture
 uniform sampler2D texture0;

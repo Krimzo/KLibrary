@@ -1,4 +1,4 @@
-#version 460
+#version 330
 
 // Input arrays
 layout (location = 0) in vec3 world;
