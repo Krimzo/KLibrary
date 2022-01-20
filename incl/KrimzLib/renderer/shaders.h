@@ -24,6 +24,23 @@ namespace kl {
 			glDeleteShader(vertexShader);
 			glDeleteShader(fragmentShader);
 		}
+		shaders(std::string computeSource) {
+			// Shader program creation
+			programID = glCreateProgram();
+			kl::console::error(!programID, "OpenGL: Could not create a shader program!");
+
+			// Compiling the shaders
+			kl::id computeShader = compileShader(computeSource, GL_COMPUTE_SHADER);
+
+			// Attaching the shaders
+			glAttachShader(programID, computeShader);
+
+			// Linking and validating the program
+			finalizeProgram();
+
+			// Cleanup
+			glDeleteShader(computeShader);
+		}
 		~shaders() {
 			glDeleteProgram(programID);
 		}

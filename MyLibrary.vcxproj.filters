@@ -154,7 +154,7 @@
     <None Include="res\shaders\mandelbrot.frag" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Rendering.cpp">
+    <ClCompile Include="src\Misc\ComputeShaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

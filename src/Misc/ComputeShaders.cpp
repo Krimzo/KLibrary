@@ -18,7 +18,7 @@ int main() {
 	// WIP
 	while (1) {
 		//
-		kl::gl::clearBuffers(kl::colors::crimson);
+		kl::gl::clearBuffers(kl::colors::orange);
 
 		//
 		SwapBuffers(hdc);
