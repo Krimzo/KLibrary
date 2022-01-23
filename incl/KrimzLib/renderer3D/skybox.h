@@ -43,7 +43,7 @@ namespace kl {
 		kl::uniform vp_uni;
 
 		// Box vertices
-		static std::vector<kl::vertex> boxVertices;
+		static std::vector<kl::vertex3D> boxVertices;
 
 		// Skybox shader sources
 		static std::string vertSource;
@@ -107,18 +107,18 @@ namespace kl {
 	)";
 
 	// Skybox box vertices
-	std::vector<kl::vertex> kl::skybox::boxVertices = {
-		kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3( 1, -1,  1)),
-		kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3( 1,  1, -1)),
-		kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3(-1, -1,  1)),
-		kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3(-1,  1, -1)),
-		kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3(-1,  1,  1)),
-		kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3( 1,  1, -1)),
-		kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3(-1, -1,  1)),
-		kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3( 1, -1, -1)),
-		kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3(-1, -1,  1)),
-		kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3( 1,  1,  1)),
-		kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3(-1, -1, -1)),
-		kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3( 1,  1, -1))
+	std::vector<kl::vertex3D> kl::skybox::boxVertices = {
+		kl::vertex3D(kl::vec3( 1,  1, -1)), kl::vertex3D(kl::vec3( 1, -1, -1)), kl::vertex3D(kl::vec3( 1, -1,  1)),
+		kl::vertex3D(kl::vec3( 1, -1,  1)), kl::vertex3D(kl::vec3( 1,  1,  1)), kl::vertex3D(kl::vec3( 1,  1, -1)),
+		kl::vertex3D(kl::vec3(-1,  1, -1)), kl::vertex3D(kl::vec3(-1,  1,  1)), kl::vertex3D(kl::vec3(-1, -1,  1)),
+		kl::vertex3D(kl::vec3(-1, -1,  1)), kl::vertex3D(kl::vec3(-1, -1, -1)), kl::vertex3D(kl::vec3(-1,  1, -1)),
+		kl::vertex3D(kl::vec3( 1,  1, -1)), kl::vertex3D(kl::vec3( 1,  1,  1)), kl::vertex3D(kl::vec3(-1,  1,  1)),
+		kl::vertex3D(kl::vec3(-1,  1,  1)), kl::vertex3D(kl::vec3(-1,  1, -1)), kl::vertex3D(kl::vec3( 1,  1, -1)),
+		kl::vertex3D(kl::vec3( 1, -1, -1)), kl::vertex3D(kl::vec3(-1, -1, -1)), kl::vertex3D(kl::vec3(-1, -1,  1)),
+		kl::vertex3D(kl::vec3(-1, -1,  1)), kl::vertex3D(kl::vec3( 1, -1,  1)), kl::vertex3D(kl::vec3( 1, -1, -1)),
+		kl::vertex3D(kl::vec3( 1,  1,  1)), kl::vertex3D(kl::vec3( 1, -1,  1)), kl::vertex3D(kl::vec3(-1, -1,  1)),
+		kl::vertex3D(kl::vec3(-1, -1,  1)), kl::vertex3D(kl::vec3(-1,  1,  1)), kl::vertex3D(kl::vec3( 1,  1,  1)),
+		kl::vertex3D(kl::vec3( 1,  1, -1)), kl::vertex3D(kl::vec3(-1,  1, -1)), kl::vertex3D(kl::vec3(-1, -1, -1)),
+		kl::vertex3D(kl::vec3(-1, -1, -1)), kl::vertex3D(kl::vec3( 1, -1, -1)), kl::vertex3D(kl::vec3( 1,  1, -1))
 	};
 }

@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="incl\KrimzLib\renderer\renderer.h">
+    <ClInclude Include="incl\KrimzLib\renderer3D\renderer3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\window\mouse.h">
@@ -24,7 +24,7 @@
     <ClInclude Include="incl\KrimzLib\window\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\shaders.h">
+    <ClInclude Include="incl\KrimzLib\gl\shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\vecmath\vec2.h">
@@ -33,7 +33,7 @@
     <ClInclude Include="incl\KrimzLib\vecmath\vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\vecmath\vertex.h">
+    <ClInclude Include="incl\KrimzLib\vecmath\vertex3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\graphics\color.h">
@@ -54,7 +54,7 @@
     <ClInclude Include="incl\KrimzLib\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\gl\gl.h">
+    <ClInclude Include="incl\KrimzLib\gl\gl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\random.h">
@@ -102,7 +102,7 @@
     <ClInclude Include="incl\KrimzLib\vecmath\mat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\texture.h">
+    <ClInclude Include="incl\KrimzLib\gl\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\window\keys.h">
@@ -111,50 +111,58 @@
     <ClInclude Include="incl\KrimzLib\vecmath\triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\mesh.h">
+    <ClInclude Include="incl\KrimzLib\gl\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\uniform.h">
+    <ClInclude Include="incl\KrimzLib\gl\uniform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\skybox.h">
+    <ClInclude Include="incl\KrimzLib\renderer3D\skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\light\ambient.h">
+    <ClInclude Include="incl\KrimzLib\renderer3D\light\ambient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\light\direct.h">
+    <ClInclude Include="incl\KrimzLib\renderer3D\light\direct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\gl\glad.h">
+    <ClInclude Include="incl\KrimzLib\gl\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\vecmath\ivec2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\camera.h">
+    <ClInclude Include="incl\KrimzLib\renderer3D\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\renderable\geometry.h">
+    <ClInclude Include="incl\KrimzLib\renderer3D\object3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\renderable\physics.h">
+    <ClInclude Include="incl\KrimzLib\renderer2D\object2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\renderable\renderable.h">
+    <ClInclude Include="incl\KrimzLib\renderer2D\renderer2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\vecmath\mat3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\vecmath\vertex2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\basic.fs" />
-    <None Include="res\shaders\renderer.frag" />
-    <None Include="res\shaders\renderer.vert" />
+    <None Include="res\shaders\renderer3D.frag" />
+    <None Include="res\shaders\renderer3D.vert" />
     <None Include="res\shaders\mandelbrot.vert" />
     <None Include="res\shaders\mandelbrot.frag" />
+    <None Include="res\shaders\renderer2D.vert" />
+    <None Include="res\shaders\renderer2D.frag" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Misc\ComputeShaders.cpp">
+    <ClCompile Include="src\Rendering2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -18,6 +18,9 @@ float zoomSpeed = 1;
 float zoom = 1;
 kl::vec2 pos(-0.5, 0);
 
+const float minZoom = 0.5f;
+const float maxZoom = 5000;
+
 void start() {
 	/* Compiling shaders */
 	shad = new kl::shaders(
@@ -78,32 +81,44 @@ void update() {
 	}
 	if (win.mouse.lmb) {
 		// Calculating the zoom
-		zoom = std::min(zoom + zoom * zoomSpeed * deltaT, 40000.0f);
+		zoom = zoom + zoom * zoomSpeed * deltaT;
 
-		// Calculating the position
-		kl::vec2 uv(
-			((win.mouse.position.x / frameSize.x) * 2 - 1) * (frameSize.x / frameSize.y),
-			(((frameSize.y - win.mouse.position.y) / frameSize.y) * 2 - 1)
-		);
-		pos += (uv / zoom) * deltaT;
+		// Checking the zoom
+		if (zoom < maxZoom) {
+			// Calculating the position
+			kl::vec2 uv(
+				((win.mouse.position.x / frameSize.x) * 2 - 1) * (frameSize.x / frameSize.y),
+				(((frameSize.y - win.mouse.position.y) / frameSize.y) * 2 - 1)
+			);
+			pos += (uv / zoom) * deltaT;
+		}
+		else {
+			zoom = maxZoom;
+		}
 	}
 	if (win.mouse.rmb) {
 		// Calculating the zoom
-		zoom = std::max(zoom - zoom * zoomSpeed * deltaT, 0.5f);
+		zoom = zoom - zoom * zoomSpeed * deltaT;
 
-		// Calculating the position
-		kl::vec2 uv(
-			((win.mouse.position.x / frameSize.x) * 2 - 1) * (frameSize.x / frameSize.y),
-			(((frameSize.y - win.mouse.position.y) / frameSize.y) * 2 - 1)
-		);
-		pos -= (uv / zoom) * deltaT;
+		// Checking the zoom
+		if (zoom > minZoom) {
+			// Calculating the position
+			kl::vec2 uv(
+				((win.mouse.position.x / frameSize.x) * 2 - 1) * (frameSize.x / frameSize.y),
+				(((frameSize.y - win.mouse.position.y) / frameSize.y) * 2 - 1)
+			);
+			pos -= (uv / zoom) * deltaT;
+		}
+		else {
+			zoom = minZoom;
+		}
 	}
 
 	/* Setting the uniforms */
 	frameSize_uni.setData(frameSize);
 	pos_uni.setData(pos);
 	zoom_uni.setData(zoom);
-	startPos_uni.setData(std::min((elapsedT / 20) - 1, 0.0f));
+	startPos_uni.setData(0);
 
 	/* Rendering the box */
 	box->draw();

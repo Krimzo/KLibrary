@@ -7,12 +7,6 @@ namespace kl {
 		mat4() {
 			setIdentity();
 		}
-		mat4(kl::vec4 row0, kl::vec4 row1, kl::vec4 row2, kl::vec4 row3) {
-			data[ 0] = row0.x; data[ 1] = row0.y; data[ 2] = row0.z; data[ 3] = row0.w;
-			data[ 4] = row1.x; data[ 5] = row1.y; data[ 6] = row1.z; data[ 7] = row1.w;
-			data[ 8] = row2.x; data[ 9] = row2.y; data[10] = row2.z; data[11] = row2.w;
-			data[12] = row3.x; data[13] = row3.y; data[14] = row3.z; data[15] = row3.w;
-		}
 
 		// Operator overloading
 		float& operator [] (int i) {
@@ -146,10 +140,10 @@ namespace kl {
 		// Prints the matrix to the screen
 		void print() {
 			printf(
-				"%.2f %.2f %.2f %.2f\n"
-				"%.2f %.2f %.2f %.2f\n"
-				"%.2f %.2f %.2f %.2f\n"
-				"%.2f %.2f %.2f %.2f\n",
+				"% .2f % .2f % .2f % .2f\n"
+				"% .2f % .2f % .2f % .2f\n"
+				"% .2f % .2f % .2f % .2f\n"
+				"% .2f % .2f % .2f % .2f\n",
 				data[ 0], data[ 1], data[ 2], data[ 3],
 				data[ 4], data[ 5], data[ 6], data[ 7],
 				data[ 8], data[ 9], data[10], data[11],

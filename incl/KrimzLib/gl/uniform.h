@@ -30,6 +30,13 @@ namespace kl {
 			glUseProgram(programID);
 			glUniform4f(uniformID, data.x, data.y, data.z, data.w);
 		}
+		void setData(kl::mat3& data) {
+			glUseProgram(programID);
+			glUniformMatrix3fv(uniformID, 1, true, data.pointer());
+		}
+		void setData(kl::mat3&& data) {
+			setData(data);
+		}
 		void setData(kl::mat4& data) {
 			glUseProgram(programID);
 			glUniformMatrix4fv(uniformID, 1, true, data.pointer());

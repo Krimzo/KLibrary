@@ -2,7 +2,7 @@
 
 
 namespace kl {
-	struct renderer {
+	struct renderer3D {
 		/* Time */
 		float deltaT = 0;
 		float elapsedT = 0;
@@ -51,10 +51,10 @@ namespace kl {
 				sun.intensity = 1;
 				sun.direction = kl::vec3(0, -1, -2);
 
-				/* Compiling object shaders */
+				/* Compiling default shaders */
 				default_sha = new kl::shaders(
-					kl::file::read("res/shaders/renderer.vert"),
-					kl::file::read("res/shaders/renderer.frag")
+					kl::file::read("res/shaders/renderer3D.vert"),
+					kl::file::read("res/shaders/renderer3D.frag")
 				);
 
 				/* Getting object shader uniforms */
@@ -79,16 +79,19 @@ namespace kl {
 				deltaT = timer.interval();
 				elapsedT = timer.swElapsed();
 
+				/* Clearing the default buffers */
+				kl::gl::clearBuffers(background);
+
 				/* Calling the user input */
 				input(&win.keys, &win.mouse);
-
-				/* Calling the user update */
-				update();
 
 				/* Calling the physics update */
 				for (int i = 0; i < objects.size(); i++) {
 					objects[i]->upPhys(deltaT);
 				}
+
+				/* Calling the user update */
+				update();
 
 				/* Setting the camera uniforms */
 				vp_uni.setData(cam.matrix());
@@ -107,7 +110,7 @@ namespace kl {
 					for (int i = 0; i < objects.size(); i++) {
 						if (objects[i]->shadows) {
 							// Setting the world matrix
-							sun.setWMat(objects[i]->geometry.matrix());
+							sun.setWMat(objects[i]->matrix());
 
 							// Rendering the object
 							objects[i]->render();
@@ -115,14 +118,11 @@ namespace kl {
 					}
 				});
 
-				/* Clearing the default buffers */
-				kl::gl::clearBuffers(background);
-
 				/* Rendering objects */
 				for (int i = 0; i < objects.size(); i++) {
 					if (objects[i]->visible) {
 						// Setting the world matrix
-						w_uni.setData(objects[i]->geometry.matrix());
+						w_uni.setData(objects[i]->matrix());
 
 						// Rendering the object
 						objects[i]->render();
@@ -199,10 +199,10 @@ namespace kl {
 
 		// Creates a mesh
 		kl::mesh* newMesh(std::string filePath, bool flipZ = true) {
-			meshes.push_back(new kl::mesh(filePath, flipZ));
+			meshes.push_back(new kl::mesh(filePath, flipZ, false));
 			return meshes.back();
 		}
-		kl::mesh* newMesh(std::vector<kl::vertex>& vertexData) {
+		kl::mesh* newMesh(std::vector<kl::vertex3D>& vertexData) {
 			meshes.push_back(new kl::mesh(vertexData));
 			return meshes.back();
 		}
@@ -242,13 +242,13 @@ namespace kl {
 		}
 
 		// Creates a new game object
-		kl::renderable* newObject(kl::mesh* mes, kl::texture* tex) {
-			objects.push_back(new kl::renderable(mes, tex));
+		kl::object3D* newObject(kl::mesh* mes, kl::texture* tex) {
+			objects.push_back(new kl::object3D(mes, tex));
 			return objects.back();
 		}
 
 		// Deletes a game object
-		bool delObject(kl::renderable* objectAddress) {
+		bool delObject(kl::object3D* objectAddress) {
 			for (int i = 0; i < objects.size(); i++) {
 				if (objects[i] == objectAddress) {
 					delete objects[i];
@@ -273,6 +273,6 @@ namespace kl {
 		std::vector<kl::texture*> textures;
 
 		// Object buffer
-		std::vector<kl::renderable*> objects;
+		std::vector<kl::object3D*> objects;
 	};
 }

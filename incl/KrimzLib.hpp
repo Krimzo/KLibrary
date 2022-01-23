@@ -34,12 +34,14 @@
 #include "KrimzLib/vecmath/vec2.h"
 #include "KrimzLib/vecmath/vec3.h"
 #include "KrimzLib/vecmath/vec4.h"
+#include "KrimzLib/vecmath/mat3.h"
 #include "KrimzLib/vecmath/mat4.h"
-#include "KrimzLib/vecmath/vertex.h"
+#include "KrimzLib/vecmath/vertex3D.h"
+#include "KrimzLib/vecmath/vertex2D.h"
 #include "KrimzLib/vecmath/triangle.h"
 #include "KrimzLib/math.h"
 
-// Including utility headers
+// Including utility
 #include "KrimzLib/time.h"
 #include "KrimzLib/convert.h"
 #include "KrimzLib/random.h"
@@ -49,27 +51,31 @@
 
 // Including special
 #include "KrimzLib/graphics/image.h"
-#include "KrimzLib/renderer/camera.h"
-#include "KrimzLib/renderer/gl/glad.h"
-#include "KrimzLib/renderer/gl/gl.h"
 
-// Including the window types
+// Including gl
+#include "KrimzLib/gl/glad.h"
+#include "KrimzLib/gl/gl.h"
+#include "KrimzLib/gl/mesh.h"
+#include "KrimzLib/gl/texture.h"
+#include "KrimzLib/gl/uniform.h"
+#include "KrimzLib/gl/shaders.h"
+
+// Including window
 #include "KrimzLib/window/keys.h"
 #include "KrimzLib/window/mouse.h"
 #include "KrimzLib/window/window.h"
 
-// Including the renderer headers
-#include "KrimzLib/renderer/mesh.h"
-#include "KrimzLib/renderer/texture.h"
-#include "KrimzLib/renderer/uniform.h"
-#include "KrimzLib/renderer/shaders.h"
-#include "KrimzLib/renderer/skybox.h"
-#include "KrimzLib/renderer/light/ambient.h"
-#include "KrimzLib/renderer/light/direct.h"
-#include "KrimzLib/renderer/renderable/geometry.h"
-#include "KrimzLib/renderer/renderable/physics.h"
-#include "KrimzLib/renderer/renderable/renderable.h"
-#include "KrimzLib/renderer/renderer.h"
+// Including 2D renderer
+#include "KrimzLib/renderer2D/object2D.h"
+#include "KrimzLib/renderer2D/renderer2D.h"
+
+// Including 3D renderer
+#include "KrimzLib/renderer3D/object3D.h"
+#include "KrimzLib/renderer3D/camera.h"
+#include "KrimzLib/renderer3D/skybox.h"
+#include "KrimzLib/renderer3D/light/ambient.h"
+#include "KrimzLib/renderer3D/light/direct.h"
+#include "KrimzLib/renderer3D/renderer3D.h"
 
 /* Linking libs */
 #pragma comment(lib, "kernel32.lib")

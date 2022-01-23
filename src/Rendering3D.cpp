@@ -2,18 +2,18 @@
 
 
 // Rendering engine
-kl::renderer renderer;
+kl::renderer3D renderer;
 
 // Game objects
-kl::renderable* wall = nullptr;
-kl::renderable* table = nullptr;
-kl::renderable* katanaL = nullptr;
-kl::renderable* katanaR = nullptr;
-kl::renderable* horse = nullptr;
-kl::renderable* sphere1 = nullptr;
-kl::renderable* metalcube1 = nullptr;
-kl::renderable* metalcube2 = nullptr;
-kl::renderable* kerv = nullptr;
+kl::object3D* wall = nullptr;
+kl::object3D* table = nullptr;
+kl::object3D* katanaL = nullptr;
+kl::object3D* katanaR = nullptr;
+kl::object3D* horse = nullptr;
+kl::object3D* sphere1 = nullptr;
+kl::object3D* metalcube1 = nullptr;
+kl::object3D* metalcube2 = nullptr;
+kl::object3D* kerv = nullptr;
 
 // Renderer setup
 void setup() {
@@ -57,50 +57,46 @@ void setup() {
 	kerv = renderer.newObject(tv_mes, tv_tex);
 
 	// Object properties setup
-	wall->geometry.size = kl::vec3(50, 10, 0.05f);
-	wall->geometry.position = kl::vec3(0, 0, -7);
+	wall->size = kl::vec3(50, 10, 0.05f);
+	wall->position = kl::vec3(0, 0, -7);
 
-	table->geometry.size = kl::vec3(1, 1, 1);
-	table->geometry.rotation = kl::vec3(0, 45, 0);
-	table->geometry.position = kl::vec3(0, -0.5, 2);
+	table->size = kl::vec3(1, 1, 1);
+	table->rotation = kl::vec3(0, 45, 0);
+	table->position = kl::vec3(0, -0.5, 2);
 
-	katanaL->geometry.size = kl::vec3(2, 2, 2);
-	katanaL->geometry.rotation = kl::vec3(0, 180, -42);
-	katanaL->geometry.position = kl::vec3(-1, 0, 2);
+	katanaL->size = kl::vec3(2, 2, 2);
+	katanaL->rotation = kl::vec3(0, 180, -42);
+	katanaL->position = kl::vec3(-1, 0, 2);
 
-	katanaR->geometry.size = kl::vec3(2, 2, 2);
-	katanaR->geometry.rotation = kl::vec3(0, 0, 42);
-	katanaR->geometry.position = kl::vec3(1, 0, 2);
+	katanaR->size = kl::vec3(2, 2, 2);
+	katanaR->rotation = kl::vec3(0, 0, 42);
+	katanaR->position = kl::vec3(1, 0, 2);
 
-	horse->geometry.size = kl::vec3(4, 4, 4);
-	horse->geometry.position = kl::vec3(0, -0.02f, 2);
-	horse->physics.enabled = true;
-	horse->physics.angular.y = 18;
-	horse->physics.gravity = 0;
+	horse->size = kl::vec3(4, 4, 4);
+	horse->position = kl::vec3(0, -0.02f, 2);
+	horse->physics = true;
+	horse->angular.y = 18;
 
-	sphere1->geometry.size = kl::vec3(1, 1, 1);
-	sphere1->geometry.position = kl::vec3(0, 2, -2);
-	sphere1->physics.enabled = true;
-	sphere1->physics.velocity.x = 1;
-	sphere1->physics.gravity = 0;
+	sphere1->size = kl::vec3(1, 1, 1);
+	sphere1->position = kl::vec3(0, 2, -2);
+	sphere1->physics = true;
+	sphere1->velocity.x = 1;
 
-	metalcube1->geometry.size = kl::vec3(0.5, 0.5, 0.5);
-	metalcube1->geometry.rotation = kl::vec3(45, 45, 0);
-	metalcube1->geometry.position = kl::vec3(0, 4, -2);
-	metalcube1->physics.enabled = true;
-	metalcube1->physics.angular = kl::vec3((float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32));
-	metalcube1->physics.gravity = 0;
+	metalcube1->size = kl::vec3(0.5, 0.5, 0.5);
+	metalcube1->rotation = kl::vec3(45, 45, 0);
+	metalcube1->position = kl::vec3(0, 4, -2);
+	metalcube1->physics = true;
+	metalcube1->angular = kl::vec3((float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32));
 
-	metalcube2->geometry.size = kl::vec3(0.5, 0.5, 0.5);
-	metalcube2->geometry.rotation = kl::vec3(45, 45, 0);
-	metalcube2->geometry.position = kl::vec3(0, -4, -2);
-	metalcube2->physics.enabled = true;
-	metalcube2->physics.angular = kl::vec3((float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32));
-	metalcube2->physics.gravity = 0;
+	metalcube2->size = kl::vec3(0.5, 0.5, 0.5);
+	metalcube2->rotation = kl::vec3(45, 45, 0);
+	metalcube2->position = kl::vec3(0, -4, -2);
+	metalcube2->physics = true;
+	metalcube2->angular = kl::vec3((float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32));
 
-	kerv->geometry.size = kl::vec3(5, 5, 5);
-	kerv->geometry.rotation = kl::vec3(0, 180, 0);
-	kerv->geometry.position = kl::vec3(0, 3, -6);
+	kerv->size = kl::vec3(5, 5, 5);
+	kerv->rotation = kl::vec3(0, 180, 0);
+	kerv->position = kl::vec3(0, 3, -6);
 
 	// Sun setup
 	renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
@@ -177,17 +173,17 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 // Renderer update
 void update() {
 	const float horseGrav = 0.1f;
-	sphere1->physics.velocity += (horse->geometry.position - sphere1->geometry.position) * horseGrav * renderer.deltaT;
+	sphere1->velocity += (horse->position - sphere1->position) * horseGrav * renderer.deltaT;
 
 	const float r = 2;
 	const float sinT = sin(renderer.elapsedT);
 	const float cosT = cos(renderer.elapsedT);
-	metalcube1->geometry.position.x = sphere1->geometry.position.x + r * sinT;
-	metalcube1->geometry.position.y = sphere1->geometry.position.y + r * sinT;
-	metalcube1->geometry.position.z = sphere1->geometry.position.z + r * cosT;
-	metalcube2->geometry.position.x = sphere1->geometry.position.x - r * sinT;
-	metalcube2->geometry.position.y = sphere1->geometry.position.y - r * sinT;
-	metalcube2->geometry.position.z = sphere1->geometry.position.z - r * cosT;
+	metalcube1->position.x = sphere1->position.x + r * sinT;
+	metalcube1->position.y = sphere1->position.y + r * sinT;
+	metalcube1->position.z = sphere1->position.z + r * cosT;
+	metalcube2->position.x = sphere1->position.x - r * sinT;
+	metalcube2->position.y = sphere1->position.y - r * sinT;
+	metalcube2->position.z = sphere1->position.z - r * cosT;
 }
 
 int main() {

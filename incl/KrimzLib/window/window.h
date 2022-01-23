@@ -107,6 +107,12 @@ namespace kl {
 			return kl::ivec2(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
 		}
 
+		// Returns the aspect ratio
+		float getAspect() {
+			kl::ivec2 winSize = getSize();
+			return (float)winSize.x / winSize.y;
+		}
+
 		// Returns the center point of the frame
 		kl::ivec2 getCenter() {
 			return getSize() / 2;

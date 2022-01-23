@@ -15,6 +15,12 @@ namespace kl {
 			z = 0;
 			w = 0;
 		}
+		vec4(float a) {
+			x = a;
+			y = a;
+			z = a;
+			w = a;
+		}
 		vec4(float x, float y, float z, float w) {
 			this->x = x;
 			this->y = y;
@@ -123,7 +129,7 @@ namespace kl {
 
 		// Prints the data to the console
 		void print() {
-			printf("%.2f %.2f %.2f %.2f\n", x, y, z, w);
+			printf("% .2f % .2f % .2f % .2f\n", x, y, z, w);
 		}
 	};
 }

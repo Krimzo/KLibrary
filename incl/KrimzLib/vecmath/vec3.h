@@ -13,6 +13,11 @@ namespace kl {
 			y = 0;
 			z = 0;
 		}
+		vec3(float a) {
+			x = a;
+			y = a;
+			z = a;
+		}
 		vec3(float x, float y, float z) {
 			this->x = x;
 			this->y = y;
@@ -129,7 +134,7 @@ namespace kl {
 
 		// Prints the data to the console
 		void print() {
-			printf("%.2f %.2f %.2f\n", x, y, z);
+			printf("% .2f % .2f % .2f\n", x, y, z);
 		}
 	}; 
 }

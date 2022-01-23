@@ -11,6 +11,10 @@ namespace kl {
 			x = 0;
 			y = 0;
 		}
+		vec2(float a) {
+			x = a;
+			y = a;
+		}
 		vec2(float x, float y) {
 			this->x = x;
 			this->y = y;
@@ -91,7 +95,7 @@ namespace kl {
 
 		// Prints the data to the console
 		void print() {
-			printf("%.2f %.2f\n", x, y);
+			printf("% .2f % .2f\n", x, y);
 		}
 	};   
 }
