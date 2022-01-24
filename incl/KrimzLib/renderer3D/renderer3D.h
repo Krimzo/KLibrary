@@ -53,8 +53,8 @@ namespace kl {
 
 				/* Compiling default shaders */
 				default_sha = new kl::shaders(
-					kl::file::read("res/shaders/renderer3D.vert"),
-					kl::file::read("res/shaders/renderer3D.frag")
+					kl::shaders::parse("res/shaders/renderer3D.sha", kl::shaders::Vertex),
+					kl::shaders::parse("res/shaders/renderer3D.sha", kl::shaders::Fragment)
 				);
 
 				/* Getting object shader uniforms */
@@ -174,9 +174,19 @@ namespace kl {
 			win.resetViewport();
 		}
 
+		// Returns the frame size
+		kl::ivec2 frameSize() {
+			return win.getSize();
+		}
+
 		// Returns the frame center
 		kl::ivec2 frameCenter() {
 			return win.getCenter();
+		}
+
+		// Returns the aspect ratio
+		float getAspect() {
+			return win.getAspect();
 		}
 
 		// Creates a new skybox

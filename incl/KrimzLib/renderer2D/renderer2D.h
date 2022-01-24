@@ -28,8 +28,8 @@ namespace kl {
 			win.start = [&]() {
 				/* Compiling default shaders */
 				default_sha = new kl::shaders(
-					kl::file::read("res/shaders/renderer2D.vert"),
-					kl::file::read("res/shaders/renderer2D.frag")
+					kl::shaders::parse("res/shaders/renderer2D.sha", kl::shaders::Vertex),
+					kl::shaders::parse("res/shaders/renderer2D.sha", kl::shaders::Fragment)
 				);
 
 				/* Getting object shader uniforms */
@@ -110,6 +110,11 @@ namespace kl {
 		void setFullscreen(bool enable) {
 			win.setFullscreen(enable);
 			win.resetViewport();
+		}
+
+		// Returns the frame size
+		kl::ivec2 frameSize() {
+			return win.getSize();
 		}
 
 		// Returns the frame center

@@ -24,15 +24,15 @@ const float maxZoom = 5000;
 void start() {
 	/* Compiling shaders */
 	shad = new kl::shaders(
-		kl::file::read("res/shaders/mandelbrot.vert"),
-		kl::file::read("res/shaders/mandelbrot.frag")
+		kl::shaders::parse("res/shaders/mandelbrot.sha", kl::shaders::Vertex),
+		kl::shaders::parse("res/shaders/mandelbrot.sha", kl::shaders::Fragment)
 	);
 	shad->use();
 
 	/* Creating the box mesh */
-	std::vector<kl::vertex> boxVertices = {
-		kl::vertex(kl::vec3(-1, -1, 0)), kl::vertex(kl::vec3(-1,  1, 0)), kl::vertex(kl::vec3(1, 1, 0)),
-		kl::vertex(kl::vec3(-1, -1, 0)), kl::vertex(kl::vec3( 1, -1, 0)), kl::vertex(kl::vec3(1, 1, 0))
+	std::vector<kl::vertex2D> boxVertices = {
+		kl::vertex2D(kl::vec2(-1)), kl::vertex2D(kl::vec2(-1,  1)), kl::vertex2D(kl::vec2(1)),
+		kl::vertex2D(kl::vec2(-1)), kl::vertex2D(kl::vec2( 1, -1)), kl::vertex2D(kl::vec2(1))
 	};
 	box = new kl::mesh(boxVertices);
 

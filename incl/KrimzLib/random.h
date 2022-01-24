@@ -31,11 +31,8 @@ namespace kl {
 		}
 
 		// Returns a random float
-		float FLOAT(float startInclusive, float endExclusive) {
-			return startInclusive + float(rand()) / float(RAND_MAX / (endExclusive - startInclusive));
-		}
-		float FLOAT(float endExclusive) {
-			return FLOAT(0, endExclusive);
+		float FLOAT(float startInclusive, float endInclusive, float precision = 100) {
+			return INT(startInclusive * precision, int(endInclusive * precision) + 1) / precision;
 		}
 
 		// Returns a random letter

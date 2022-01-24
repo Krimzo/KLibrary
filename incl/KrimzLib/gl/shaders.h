@@ -3,6 +3,13 @@
 
 namespace kl {
 	struct shaders {
+		// Shader types
+		enum type {
+			Vertex = 1,
+			Fragment = 2,
+			Compute = 3
+		};
+
 		// Constructor/destructor
 		shaders(std::string vertexSource, std::string fragmentSource) {
 			// Shader program creation
@@ -64,6 +71,63 @@ namespace kl {
 
 			// Returing a kl::uniform instance
 			return kl::uniform(programID, uniformID);
+		}
+
+		// Parses a shader from a file
+		static std::string parse(const std::string& filePath, int type) {
+			// Opening the file
+			std::ifstream file(filePath);
+
+			// Setting the types
+			std::string parsingType;
+			std::string nonParsingType1;
+			std::string nonParsingType2;
+			if (type == kl::shaders::Vertex) {
+				parsingType = "#shader vertex";
+				nonParsingType1 = "#shader fragment";
+				nonParsingType2 = "#shader compute";
+			}
+			else if (type == kl::shaders::Fragment) {
+				parsingType = "#shader fragment";
+				nonParsingType1 = "#shader vertex";
+				nonParsingType2 = "#shader compute";
+			}
+			else if (type == kl::shaders::Compute) {
+				parsingType = "#shader compute";
+				nonParsingType1 = "#shader vertex";
+				nonParsingType2 = "#shader fragment";
+			}
+			else {
+				kl::console::error(true, "Shaders: Bad shader type given to a parser!");
+			}
+
+			// Shader data
+			bool storingData = false;
+			std::stringstream shaderData;
+
+			// Looping through lines
+			std::string line;
+			while (std::getline(file, line)) {
+				if (!storingData) {
+					if (line.find(parsingType) != std::string::npos) {
+						storingData = true;
+					}
+				}
+				else {
+					if (line.find(nonParsingType1) != std::string::npos || line.find(nonParsingType2) != std::string::npos) {
+						break;
+					}
+					else {
+						shaderData << line << '\n';
+					}
+				}
+			}
+
+			// Closing the file
+			file.close();
+
+			// Returning the shader data
+			return shaderData.str();
 		}
 
 	private:

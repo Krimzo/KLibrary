@@ -33,6 +33,17 @@ namespace kl {
 			ClientToScreen(hwnd, &clientPos);
 			SetCursorPos(clientPos.x, clientPos.y);
 		}
+
+		// Return a normalized screen position
+		kl::vec2 normPos(kl::ivec2 frameSize) {
+			kl::vec2 pos(
+				float(position.x) / frameSize.x,
+				float(frameSize.y - position.y) / frameSize.y
+			);
+			pos *= 2;
+			pos -= 1;
+			return pos;
+		}
 		
 	private:
 		HWND hwnd = nullptr;
