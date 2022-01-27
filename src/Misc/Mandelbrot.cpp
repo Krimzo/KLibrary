@@ -24,8 +24,8 @@ const float maxZoom = 5000;
 void start() {
 	/* Compiling shaders */
 	shad = new kl::shaders(
-		kl::shaders::parse("res/shaders/mandelbrot.sha", kl::shaders::Vertex),
-		kl::shaders::parse("res/shaders/mandelbrot.sha", kl::shaders::Fragment)
+		kl::shaders::parse("res/shaders/mandelbrot.glsl", kl::shaders::Vertex),
+		kl::shaders::parse("res/shaders/mandelbrot.glsl", kl::shaders::Fragment)
 	);
 	shad->use();
 

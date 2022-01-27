@@ -53,8 +53,8 @@ namespace kl {
 
 				/* Compiling default shaders */
 				default_sha = new kl::shaders(
-					kl::shaders::parse("res/shaders/renderer3D.sha", kl::shaders::Vertex),
-					kl::shaders::parse("res/shaders/renderer3D.sha", kl::shaders::Fragment)
+					kl::shaders::parse("res/shaders/renderer3D.glsl", kl::shaders::Vertex),
+					kl::shaders::parse("res/shaders/renderer3D.glsl", kl::shaders::Fragment)
 				);
 
 				/* Getting object shader uniforms */

@@ -21,7 +21,7 @@ void setup() {
 		particles.push_back(renderer.newObject(circle_mes, orange_tex));
 
 		// Initial particle setup
-		particles.back()->size = kl::vec2(kl::random::FLOAT(0.01, 0.02, 1000));
+		particles.back()->size = kl::vec2(kl::random::FLOAT(0.01, 0.02));
 		particles.back()->position = kl::vec2(kl::random::FLOAT(-2, 2), 0);
 		particles.back()->velocity = kl::vec2(kl::random::FLOAT(-0.6, 0.6), kl::random::FLOAT(-2, 2));
 		particles.back()->acceler.y = -2;

@@ -31,8 +31,11 @@ namespace kl {
 		}
 
 		// Returns a random float
-		float FLOAT(float startInclusive, float endInclusive, float precision = 100) {
-			return INT(startInclusive * precision, int(endInclusive * precision) + 1) / precision;
+		float FLOAT(float startInclusive, float endInclusive) {
+			return INT(startInclusive * 1000, int(endInclusive * 1000) + 1) * 0.001;
+		}
+		float FLOAT(float endInclusive) {
+			return FLOAT(0, endInclusive);
 		}
 
 		// Returns a random letter

@@ -154,9 +154,9 @@
   <ItemGroup>
     <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\basic.fs" />
-    <None Include="res\shaders\renderer3D.sha" />
-    <None Include="res\shaders\mandelbrot.sha" />
-    <None Include="res\shaders\renderer2D.sha" />
+    <None Include="res\shaders\renderer3D.glsl" />
+    <None Include="res\shaders\mandelbrot.glsl" />
+    <None Include="res\shaders\renderer2D.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Rendering2D.cpp">
