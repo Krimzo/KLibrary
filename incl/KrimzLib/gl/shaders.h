@@ -11,7 +11,7 @@ namespace kl {
 		};
 
 		// Constructor/destructor
-		shaders(std::string vertexSource, std::string fragmentSource) {
+		shaders(String vertexSource, String fragmentSource) {
 			// Shader program creation
 			programID = glCreateProgram();
 			kl::console::error(!programID, "OpenGL: Could not create a shader program!");
@@ -31,7 +31,7 @@ namespace kl {
 			glDeleteShader(vertexShader);
 			glDeleteShader(fragmentShader);
 		}
-		shaders(std::string computeSource) {
+		shaders(String computeSource) {
 			// Shader program creation
 			programID = glCreateProgram();
 			kl::console::error(!programID, "OpenGL: Could not create a shader program!");
@@ -58,7 +58,7 @@ namespace kl {
 		}
 
 		// Returns the id of the given uniform name
-		kl::uniform getUniform(std::string name) {
+		kl::uniform getUniform(String name) {
 			// Binding the shader program
 			use();
 
@@ -74,14 +74,14 @@ namespace kl {
 		}
 
 		// Parses a shader from a file
-		static std::string parse(const std::string& filePath, int type) {
+		static String parse(const String& filePath, int type) {
 			// Opening the file
 			std::ifstream file(filePath);
 
 			// Setting the types
-			std::string parsingType;
-			std::string nonParsingType1;
-			std::string nonParsingType2;
+			String parsingType;
+			String nonParsingType1;
+			String nonParsingType2;
 			if (type == kl::shaders::Vertex) {
 				parsingType = "#shader vertex";
 				nonParsingType1 = "#shader fragment";
@@ -106,15 +106,15 @@ namespace kl {
 			std::stringstream shaderData;
 
 			// Looping through lines
-			std::string line;
+			String line;
 			while (std::getline(file, line)) {
 				if (!storingData) {
-					if (line.find(parsingType) != std::string::npos) {
+					if (line.find(parsingType) != String::npos) {
 						storingData = true;
 					}
 				}
 				else {
-					if (line.find(nonParsingType1) != std::string::npos || line.find(nonParsingType2) != std::string::npos) {
+					if (line.find(nonParsingType1) != String::npos || line.find(nonParsingType2) != String::npos) {
 						break;
 					}
 					else {
@@ -135,7 +135,7 @@ namespace kl {
 		kl::id programID = NULL;
 
 		// Returns a compiled shader
-		kl::id compileShader(std::string& shaderSource, kl::id shaderType) {
+		kl::id compileShader(String& shaderSource, kl::id shaderType) {
 			// Creating the shader buffer
 			kl::id shader = glCreateShader(shaderType);
 			kl::console::error(!shader, "OpenGL: Could not create a shader buffer!");

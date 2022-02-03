@@ -159,7 +159,7 @@
     <None Include="res\shaders\renderer2D.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Rendering2D.cpp">
+    <ClCompile Include="src\Testing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

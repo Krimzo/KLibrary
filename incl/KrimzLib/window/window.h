@@ -13,12 +13,12 @@ namespace kl {
 		kl::mouse mouse;
 
 		// User functions
-		std::function<void(void)> start = []() {};
-		std::function<void(void)> update = []() {};
-		std::function<void(void)> end = []() {};
+		Function<void(void)> start = []() {};
+		Function<void(void)> update = []() {};
+		Function<void(void)> end = []() {};
 
 		// Window creation
-		void startNew(kl::ivec2 size, std::string name, bool resizeable = true, bool continuous = false, bool opengl = false) {
+		void startNew(kl::ivec2 size, String name, bool resizeable = true, bool continuous = false, bool opengl = false) {
 			// Converting window name to a wstring
 			std::wstring wName = kl::convert::toWString(name);
 
@@ -119,7 +119,7 @@ namespace kl {
 		}
 
 		// Sets the window title
-		void setTitle(std::string data) {
+		void setTitle(String data) {
 			SetWindowTextA(hwnd, data.c_str());
 		}
 

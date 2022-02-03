@@ -46,7 +46,7 @@ namespace kl {
 		}
 
 		// Sets the console title
-		void setTitle(std::string text) {
+		void setTitle(String text) {
 			SetConsoleTitleA(text.c_str());
 		}
 
@@ -77,7 +77,7 @@ namespace kl {
 		}		
 
 		// Changes the console font size
-		void setFont(kl::ivec2 size, std::string fontName = "Consolas") {
+		void setFont(kl::ivec2 size, String fontName = "Consolas") {
 			CONSOLE_FONT_INFOEX cfi = {};
 			cfi.cbSize = sizeof(cfi);
 			cfi.nFont = 0;
@@ -120,7 +120,7 @@ namespace kl {
 		}
 
 		// Outputs a progress bar on the console
-		void progressBar(std::string message, int outputY, float percentage) {
+		void progressBar(String message, int outputY, float percentage) {
 			// Prep
 			percentage = std::max(std::min(percentage, 1.0f), 0.0f);
 			int barLen = console::getSize().x - int(message.length() - 11);
@@ -141,7 +141,7 @@ namespace kl {
 		}
 
 		// Fast console writing
-		void fastOut(const std::string& data, kl::ivec2 location = { 0, 0 }) {
+		void fastOut(const String& data, kl::ivec2 location = { 0, 0 }) {
 			static DWORD ignore = 0;
 			WriteConsoleOutputCharacterA(_kl_dont_use_::stdConsoleHandle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 		}
@@ -165,7 +165,7 @@ namespace kl {
 		void print(kl::byte data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m", textColor.r, textColor.g, textColor.b, data);
 		}
-		void print(const std::string& data, kl::color textColor = kl::colors::white) {
+		void print(const String& data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 
@@ -188,12 +188,12 @@ namespace kl {
 		void println(kl::byte data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm0x%02X\033[0m\n", textColor.r, textColor.g, textColor.b, data);
 		}
-		void println(const std::string& data, kl::color textColor = kl::colors::white) {
+		void println(const String& data, kl::color textColor = kl::colors::white) {
 			printf("\033[38;2;%d;%d;%dm%s\033[0m\n", textColor.r, textColor.g, textColor.b, data.c_str());
 		}
 
 		// Prints an error message and waits for a key to exit
-		void error(bool check, std::string mess, char waitFor = ' ', bool quit = true, int exitCode = 69) {
+		void error(bool check, String mess, char waitFor = ' ', bool quit = true, int exitCode = 69) {
 			if (check) {
 				println(mess, kl::color(255, 50, 50));
 				kl::console::waitFor(waitFor);

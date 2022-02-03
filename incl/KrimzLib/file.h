@@ -4,16 +4,16 @@
 namespace kl {
 	namespace file {
 		// Returns the file extension from the given file path
-		std::string getExtension(const std::string& filePath) {
+		String getExtension(const String& filePath) {
 			uint64_t lastDotPos = filePath.find_last_of(".");
-			if (lastDotPos == std::string::npos) {
+			if (lastDotPos == String::npos) {
 				return "";
 			}
 			return filePath.substr(lastDotPos + 1L);
 		}
 
 		// Returns a string from a given text file
-		std::string read(const std::string& filePath) {
+		String read(const String& filePath) {
 			std::ifstream fileStream(filePath);
 			std::stringstream textBuffer;
 			if (!fileStream.is_open()) {
@@ -26,14 +26,14 @@ namespace kl {
 		}
 
 		// Writes text to a text file
-		void write(const std::string& filePath, const std::string& data) {
+		void write(const String& filePath, const String& data) {
 			std::ofstream fileStream(filePath);
 			fileStream << data;
 			fileStream.close();
 		}
 
 		// Appends text to a text file
-		void append(const std::string& filePath, const std::string& data, int position = -1) {
+		void append(const String& filePath, const String& data, int position = -1) {
 			std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 			if (!fileStream.is_open()) {
 				printf("Could not load text file \"%s\".\n", filePath.c_str());

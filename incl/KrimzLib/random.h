@@ -32,7 +32,7 @@ namespace kl {
 
 		// Returns a random float
 		float FLOAT(float startInclusive, float endInclusive) {
-			return INT(startInclusive * 1000, int(endInclusive * 1000) + 1) * 0.001;
+			return INT(int(startInclusive * 1000), int(endInclusive * 1000) + 1) * 0.001f;
 		}
 		float FLOAT(float endInclusive) {
 			return FLOAT(0, endInclusive);
@@ -47,7 +47,7 @@ namespace kl {
 		}
 
 		// Returns a random string
-		std::string STRING(int len) {
+		String STRING(int len) {
 			std::stringstream ss;
 			for (int i = 0; i < len; i++) {
 				ss << kl::random::LETTER(kl::random::BOOL());

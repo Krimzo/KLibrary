@@ -10,7 +10,7 @@ namespace kl {
 		mesh(std::vector<kl::vertex3D>& vertexData) {
 			loadData(vertexData);
 		}
-		mesh(std::string filePath, bool flipZ, bool load2D) {
+		mesh(String filePath, bool flipZ, bool load2D) {
 			if (load2D) {
 				loadFromFile2D(filePath);
 			}
@@ -120,7 +120,7 @@ namespace kl {
 		}
 
 		// Loads the vertex data from a .obj file
-		void loadFromFile2D(std::string filePath) {
+		void loadFromFile2D(String filePath) {
 			// Temp vertex buffer
 			std::vector<kl::vertex2D> vertexData;
 
@@ -134,12 +134,12 @@ namespace kl {
 			std::vector<kl::vec2> uvBuffer;
 
 			// Parsing data
-			std::string fileLine;
+			String fileLine;
 			while (std::getline(fileStream, fileLine)) {
 				// Splitting the string by spaces
-				std::vector<std::string> lineParts;
+				std::vector<String> lineParts;
 				std::stringstream lineStream(fileLine);
-				for (std::string linePart; std::getline(lineStream, linePart, ' ');) {
+				for (String linePart; std::getline(lineStream, linePart, ' ');) {
 					lineParts.push_back(linePart);
 				}
 
@@ -153,9 +153,9 @@ namespace kl {
 				else if (lineParts[0] == "f") {
 					for (int i = 1; i < 4; i++) {
 						// Getting the world and texture
-						std::vector<std::string> linePartParts;
+						std::vector<String> linePartParts;
 						std::stringstream linePartStream(lineParts[i]);
-						for (std::string linePartPart; std::getline(linePartStream, linePartPart, '/');) {
+						for (String linePartPart; std::getline(linePartStream, linePartPart, '/');) {
 							linePartParts.push_back(linePartPart);
 						}
 
@@ -176,7 +176,7 @@ namespace kl {
 			// Loading the data
 			loadData(vertexData);
 		}
-		void loadFromFile3D(std::string filePath, bool flipZ) {
+		void loadFromFile3D(String filePath, bool flipZ) {
 			// Temp vertex buffer
 			std::vector<kl::vertex3D> vertexData;
 
@@ -194,12 +194,12 @@ namespace kl {
 			const int zFlip = flipZ ? -1 : 1;
 
 			// Parsing data
-			std::string fileLine;
+			String fileLine;
 			while (std::getline(fileStream, fileLine)) {
 				// Splitting the string by spaces
-				std::vector<std::string> lineParts;
+				std::vector<String> lineParts;
 				std::stringstream lineStream(fileLine);
-				for (std::string linePart; std::getline(lineStream, linePart, ' ');) {
+				for (String linePart; std::getline(lineStream, linePart, ' ');) {
 					lineParts.push_back(linePart);
 				}
 
@@ -216,9 +216,9 @@ namespace kl {
 				else if (lineParts[0] == "f") {
 					for (int i = 1; i < 4; i++) {
 						// Getting the world, texture and normal indexes
-						std::vector<std::string> linePartParts;
+						std::vector<String> linePartParts;
 						std::stringstream linePartStream(lineParts[i]);
-						for (std::string linePartPart; std::getline(linePartStream, linePartPart, '/');) {
+						for (String linePartPart; std::getline(linePartStream, linePartPart, '/');) {
 							linePartParts.push_back(linePartPart);
 						}
 

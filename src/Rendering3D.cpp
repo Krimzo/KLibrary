@@ -86,13 +86,13 @@ void setup() {
 	metalcube1->rotation = kl::vec3(45, 45, 0);
 	metalcube1->position = kl::vec3(0, 4, -2);
 	metalcube1->physics = true;
-	metalcube1->angular = kl::vec3((float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32));
+	metalcube1->angular = kl::vec3(kl::random::FLOAT(-32, 32), kl::random::FLOAT(-32, 32), kl::random::FLOAT(-32, 32));
 
 	metalcube2->size = kl::vec3(0.5, 0.5, 0.5);
 	metalcube2->rotation = kl::vec3(45, 45, 0);
 	metalcube2->position = kl::vec3(0, -4, -2);
 	metalcube2->physics = true;
-	metalcube2->angular = kl::vec3((float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32), (float)kl::random::INT(-32, 32));
+	metalcube2->angular = kl::vec3(kl::random::FLOAT(-32, 32), kl::random::FLOAT(-32, 32), kl::random::FLOAT(-32, 32));
 
 	kerv->size = kl::vec3(5, 5, 5);
 	kerv->rotation = kl::vec3(0, 180, 0);

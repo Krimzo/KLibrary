@@ -46,8 +46,8 @@ namespace kl {
 		static std::vector<kl::vertex3D> boxVertices;
 
 		// Skybox shader sources
-		static std::string vertSource;
-		static std::string fragSource;
+		static String vertSource;
+		static String fragSource;
 
 		// Builds the skybox
 		void build(kl::image& front, kl::image& back, kl::image& left, kl::image& right, kl::image& top, kl::image& bottom) {
@@ -66,7 +66,7 @@ namespace kl {
 	};
 
 	// Skybox vertex shader
-	std::string kl::skybox::vertSource = R"(
+	String kl::skybox::vertSource = R"(
 		#version 330
 
 		// Input arrays
@@ -88,7 +88,7 @@ namespace kl {
 	)";
 
 	// Skybox fragment shader
-	std::string kl::skybox::fragSource = R"(
+	String kl::skybox::fragSource = R"(
 		#version 330
 
 		// Skybox texture

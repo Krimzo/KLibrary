@@ -72,7 +72,7 @@ namespace kl {
 		}
 
 		// Reads an image file and stores it in the image instance
-		void fromFile(std::string filePath) {
+		void fromFile(String filePath) {
 			// Loads image file
 			Gdiplus::Bitmap loadedBitmap(kl::convert::toWString(filePath).c_str());
 
@@ -101,14 +101,14 @@ namespace kl {
 		}
 
 		// Saves the image to a file
-		void toFile(std::string fileName) {
+		void toFile(String fileName) {
 			static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 			static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 			static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 
 			// Checking the file extension is supported
 			const CLSID* formatToUse = nullptr;
-			std::string fileExtension = kl::file::getExtension(fileName);
+			String fileExtension = kl::file::getExtension(fileName);
 			if (fileExtension == "bmp") {
 				formatToUse = &bmpEncoderCLSID;
 			}
@@ -278,7 +278,7 @@ namespace kl {
 		}
 
 		// Converts an image to an ASCII frame
-		std::string toASCII(kl::ivec2 frameSize) {
+		String toASCII(kl::ivec2 frameSize) {
 			static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 
 			// Calculations
@@ -343,7 +343,7 @@ namespace kl {
 		}
 
 		// Executes a function on each pixel
-		void runOnEach(std::function<void(kl::color* pixelColor, kl::ivec2 pixelPosition)> toExecute) {
+		void runOnEach(Function<void(kl::color* pixelColor, kl::ivec2 pixelPosition)> toExecute) {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
 					toExecute(&pixels[(uint64_t)y * width + x], kl::ivec2(x, y));

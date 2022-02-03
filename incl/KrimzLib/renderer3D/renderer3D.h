@@ -16,9 +16,9 @@ namespace kl {
 		kl::direct sun;
 
 		/* User functions */
-		std::function<void()> setup = []() {};
-		std::function<void(kl::keys*, kl::mouse*)> input = [](kl::keys* k, kl::mouse* m) {};
-		std::function<void()> update = []() {};
+		Function<void()> setup = []() {};
+		Function<void(kl::keys*, kl::mouse*)> input = [](kl::keys* k, kl::mouse* m) {};
+		Function<void()> update = []() {};
 
 		// Creates and runs a new engine
 		void createNew(kl::ivec2 frameSize) {
@@ -77,7 +77,7 @@ namespace kl {
 			win.update = [&]() {
 				/* Time calculations */
 				deltaT = timer.interval();
-				elapsedT = timer.swElapsed();
+				elapsedT = timer.elapsed();
 
 				/* Clearing the default buffers */
 				kl::gl::clearBuffers(background);
@@ -208,7 +208,7 @@ namespace kl {
 		}
 
 		// Creates a mesh
-		kl::mesh* newMesh(std::string filePath, bool flipZ = true) {
+		kl::mesh* newMesh(String filePath, bool flipZ = true) {
 			meshes.push_back(new kl::mesh(filePath, flipZ, false));
 			return meshes.back();
 		}

@@ -21,7 +21,7 @@ namespace kl {
 		}
 		
 		// Converts a string to a wstring
-		std::wstring toWString(std::string data) {
+		std::wstring toWString(String data) {
 			std::wstring toReturn;
 			toReturn.resize(data.size());
 			mbstowcs(&toReturn[0], &data[0], data.size());

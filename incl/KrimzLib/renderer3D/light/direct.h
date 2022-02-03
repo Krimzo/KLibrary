@@ -161,7 +161,7 @@ namespace kl {
 			return sunVP;
 		}
 
-		void render(kl::window* win, std::function<void()> toRender) {
+		void render(kl::window* win, Function<void()> toRender) {
 			// Setting the viewport size
 			glViewport(0, 0, mapSize, mapSize);
 
@@ -218,12 +218,12 @@ namespace kl {
 		kl::uniform w_uni;
 
 		// Shadow shader sources
-		static std::string vertSource;
-		static std::string fragSource;
+		static String vertSource;
+		static String fragSource;
 	};
 
 	// Shadow vertex shader
-	std::string kl::direct::vertSource = R"(
+	String kl::direct::vertSource = R"(
 		#version 330
 
 		layout (location = 0) in vec3 world;
@@ -237,7 +237,7 @@ namespace kl {
 	)";
 
 	// Shadow fragment shader
-	std::string kl::direct::fragSource = R"(
+	String kl::direct::fragSource = R"(
 		#version 330
 
 		void main() {} 
