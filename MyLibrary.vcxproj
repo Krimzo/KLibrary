@@ -196,7 +196,21 @@
     <None Include="res\shaders\mandelbrot.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Testing.cpp" />
+    <ClCompile Include="src\console.cpp" />
+    <ClCompile Include="src\convert.cpp" />
+    <ClCompile Include="src\file.cpp" />
+    <ClCompile Include="src\gl\gl.cpp" />
+    <ClCompile Include="src\graphics\color.cpp" />
+    <ClCompile Include="src\graphics\image.cpp" />
+    <ClCompile Include="src\math.cpp" />
+    <ClCompile Include="src\random.cpp" />
+    <ClCompile Include="src\time.cpp" />
+    <ClCompile Include="src\vecmath\ivec2.cpp" />
+    <ClCompile Include="src\vecmath\vec2.cpp" />
+    <ClCompile Include="src\vecmath\vec3.cpp" />
+    <ClCompile Include="src\vecmath\vec4.cpp" />
+    <ClCompile Include="src\web.cpp" />
+    <ClCompile Include="test\Rendering3D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

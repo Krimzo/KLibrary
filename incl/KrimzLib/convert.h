@@ -1,31 +1,23 @@
 #pragma once
 
+#include <string>
+
+#include "KrimzLib/vecmath/vec3.h"
+#include "KrimzLib/graphics/color.h"
+
 
 namespace kl {
 	namespace convert {
 		// Converts degrees to radians
-		float toRadians(float degrees) {
-			static float toRadians = kl::math::pi / 180;
-			return degrees * toRadians;
-		}
+		float toRadians(float degrees);
 
 		// Converts radians to degrees
-		float toDegrees(float radians) {
-			static float toDegrees = 180 / kl::math::pi;
-			return radians * toDegrees;
-		}
+		float toDegrees(float radians);
 
 		// Converts a float color to color
-		kl::color toColor(kl::vec3 colf) {
-			return kl::color(kl::byte(colf.x * 255), kl::byte(colf.y * 255), kl::byte(colf.z * 255));
-		}
+		kl::color toColor(const kl::vec3& colf);
 		
 		// Converts a string to a wstring
-		std::wstring toWString(String data) {
-			std::wstring toReturn;
-			toReturn.resize(data.size());
-			mbstowcs(&toReturn[0], &data[0], data.size());
-			return toReturn;
-		}
+		std::wstring toWString(const std::string& data);
 	};
 }

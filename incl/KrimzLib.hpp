@@ -21,14 +21,6 @@
 #include <wininet.h>
 #include <gdiplus.h>
 
-/* Fixing external defines */
-#undef min
-#undef max
-
-/* Typedefs */
-typedef std::string String;
-template<typename T> using Function = std::function<T>;
-
 /* Including kl headers */
 // Including graphics
 #include "KrimzLib/graphics/color.h"

@@ -1,101 +1,71 @@
 #pragma once
 
+#include "KrimzLib/vecmath/ivec2.h"
+
 
 namespace kl {
-    struct vec2 {
+    class vec2 {
+	public:
 		float x;
 		float y;
 
 		// Constructors
-		vec2() {
-			x = 0;
-			y = 0;
-		}
-		vec2(float a) {
-			x = a;
-			y = a;
-		}
-		vec2(float x, float y) {
-			this->x = x;
-			this->y = y;
-		}
-		vec2(kl::ivec2 p) {
-			x = (float)p.x;
-			y = (float)p.y;
-		}
-		vec2(kl::ivec2 a, kl::ivec2 b) {
-			x = float(b.x - a.x);
-			y = float(b.y - a.y);
-		}
+		vec2();
+		vec2(float a);
+		vec2(float x, float y);
+		vec2(const kl::ivec2& p);
+		vec2(const kl::vec2& a, const kl::vec2& b);
 
-		// Operator overloading
-		kl::vec2 operator + (kl::vec2 obj) {
-			return kl::vec2(x + obj.x, y + obj.y);
-		}
-		void operator += (kl::vec2 obj) {
-			x += obj.x; y += obj.y;
-		}
-		kl::vec2 operator - (kl::vec2 obj) {
-			return kl::vec2(x - obj.x, y - obj.y);
-		}
-		void operator -= (kl::vec2 obj) {
-			x -= obj.x; y -= obj.y;
-		}
-		kl::vec2 operator * (float a) {
-			return kl::vec2(x * a, y * a);
-		}
-		void operator *= (float a) {
-			x *= a; y *= a;
-		}
-		kl::vec2 operator / (float a) {
-			return operator*(1 / a);
-		}
-		void operator /= (float a) {
-			operator*=(1 / a);
-		}
-		bool operator == (kl::vec2 obj) {
-			return (x == obj.x && y == obj.y);
-		}
-		bool operator != (kl::vec2 obj) {
-			return !operator==(obj);
-		}
+		// Addition
+		kl::vec2 add(const kl::vec2& obj) const;
+		kl::vec2 operator+(const kl::vec2& obj) const;
+		void operator+=(const kl::vec2& obj);
+
+		// Subtraction
+		kl::vec2 sub(const kl::vec2& obj) const;
+		kl::vec2 operator-(const kl::vec2& obj) const;
+		void operator-=(const kl::vec2& obj);
+
+		// Multiplication
+		kl::vec2 mul(float a) const;
+		kl::vec2 operator*(float a) const;
+		void operator*=(float a);
+		kl::vec2 mul(const kl::vec2& obj) const;
+		kl::vec2 operator*(const kl::vec2& obj) const;
+		void operator*=(const kl::vec2& obj);
+
+		// Division
+		kl::vec2 div(float a) const;
+		kl::vec2 operator/(float a) const;
+		void operator/=(float a);
+		kl::vec2 div(const kl::vec2& obj) const;
+		kl::vec2 operator/(const kl::vec2& obj) const;
+		void operator/=(const kl::vec2& obj);
+
+		// Comparison
+		bool equals(const kl::vec2& obj) const;
+		bool operator==(const kl::vec2& obj) const;
+		bool operator!=(const kl::vec2& obj) const;
 
 		// Returns a negated vector
-		kl::vec2 negate() {
-			return operator*(-1);
-		}
+		kl::vec2 negate() const;
 
 		// Returns the vectors length
-		float length() {
-			return sqrt(x * x + y * y);
-		}
+		float length() const;
 
 		// Retruns a normalized vector
-		kl::vec2 normalize() {
-			return operator/(length());
-			//return operator*(kl::math::invSqrt(x * x + y * y));
-		}
+		kl::vec2 normalize() const;
 
 		// Returns the dot product
-		float dot(vec2 a) {
-			return x * a.x + y * a.y;
-		}
+		float dot(const kl::vec2& a) const;
 
 		// Returns the angle between the given vector and self
-		float angle(kl::vec2 a) {
-			return acos(this->normalize().dot(a.normalize())) * 57.2957795131f;
-		}
+		float angle(const kl::vec2& a) const;
 
 		// Returns a rotated vector around the given point
-		kl::vec2 rotate(float angle) {
-			const float sinA = sin(angle * 0.01745329251f);
-			const float cosA = cos(angle * 0.01745329251f);
-			return kl::vec2(cosA * x - sinA * y, sinA * x + cosA * y);
-		}
+		kl::vec2 rotate(float angle) const;
 
 		// Prints the data to the console
-		void print() {
-			printf("% .2f % .2f\n", x, y);
-		}
+		void print() const;
 	};   
 }

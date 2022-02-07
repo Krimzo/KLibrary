@@ -1,5 +1,8 @@
 #pragma once
 
+#include "KrimzLib/vecmath/vec2.h"
+#include "KrimzLib/vecmath/vec3.h"
+
 
 namespace kl {
 	struct vec4 {

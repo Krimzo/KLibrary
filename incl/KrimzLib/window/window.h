@@ -119,7 +119,7 @@ namespace kl {
 		}
 
 		// Sets the window title
-		void setTitle(String data) {
+		void setTitle(const String& data) {
 			SetWindowTextA(hwnd, data.c_str());
 		}
 
@@ -150,7 +150,7 @@ namespace kl {
 
 	private:
 		// Winapi variables
-		HINSTANCE hInstance = GetModuleHandleW(nullptr);
+		HINSTANCE hInstance = GetModuleHandle(nullptr);
 		HWND hwnd = nullptr;
 		HDC hdc = nullptr;
 		HGLRC hglrc = nullptr;

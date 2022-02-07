@@ -1,46 +1,16 @@
 #pragma once
 
+#include <string>
+
+#include "KrimzLib/file.h"
+
 
 namespace kl {
 	namespace web {
 		// Downloads website data(bytes) from the given url
-		String getWebsiteData(String url, int bufferSize = 65536) {
-			// Create browser
-			HINTERNET connection = InternetOpenA("CoolBrowser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
-			if (!connection) {
-				printf("Failed to conenct\n");
-				return "";
-			}
-
-			// Open url
-			HINTERNET openAddress = InternetOpenUrlA(connection, url.c_str(), nullptr, 0, INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_KEEP_CONNECTION, 0);
-			if (!openAddress) {
-				printf("Failed to open website\n");
-				return "";
-			}
-
-			// Download data
-			String finalData;
-			String dataBuffer;
-			dataBuffer.resize(bufferSize);
-			DWORD byteReadCount = 0;
-			while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount) {
-				for (DWORD i = 0; i < byteReadCount; i++) {
-					finalData.push_back(dataBuffer[i]);
-				}
-			}
-
-			// Close browser and url
-			InternetCloseHandle(openAddress);
-			InternetCloseHandle(connection);
-
-			// Return data
-			return finalData;
-		}
+		std::string getWebsiteData(const std::string& url, int bufferSize = 65536);
 
 		// Downloads data from the website and saves it in a file
-		void downloadToFile(String url, String fileName) {
-			kl::file::write(fileName, getWebsiteData(url));
-		}
+		void downloadToFile(const std::string& url, const std::string& fileName);
 	};
 }

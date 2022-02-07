@@ -1,0 +1,170 @@
+#include "KrimzLib/console.h"
+
+#include <iostream>
+#include <sstream>
+#include <windows.h>
+
+#include "KrimzLib/vecmath/ivec2.h"
+#include "KrimzLib/graphics/color.h"
+#include "KrimzLib/convert.h"
+
+
+// Getting the console handle and rgb init
+HANDLE kl::console::handle = []() {
+	// Getting the standard console handle
+	HANDLE tempHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	// Enabling the console RGB
+	DWORD consoleMode = {};
+	GetConsoleMode(tempHandle, &consoleMode);
+	SetConsoleMode(tempHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+
+	// Returning the handle
+	return tempHandle;
+}();
+
+// Clears the console screen
+void kl::console::clear() {
+	system("cls");
+}
+
+// Sets the console cursor position
+void kl::console::setCursor(const kl::ivec2& position) {
+	SetConsoleCursorPosition(kl::console::handle, { short(position.x), short(position.y) });
+}
+
+// Hides the console cursor
+void kl::console::hideCursor() {
+	CONSOLE_CURSOR_INFO cursorInfo;
+	GetConsoleCursorInfo(kl::console::handle, &cursorInfo);
+	cursorInfo.bVisible = false;
+	SetConsoleCursorInfo(kl::console::handle, &cursorInfo);
+}
+
+// Shows the console cursor
+void kl::console::showCursor() {
+	CONSOLE_CURSOR_INFO cursorInfo;
+	GetConsoleCursorInfo(kl::console::handle, &cursorInfo);
+	cursorInfo.bVisible = true;
+	SetConsoleCursorInfo(kl::console::handle, &cursorInfo);
+}
+
+// Sets the console title
+void kl::console::setTitle(const std::string& text) {
+	SetConsoleTitleA(text.c_str());
+}
+
+// Returns screen buffer size
+kl::ivec2 kl::console::getBufferSize() {
+	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
+	GetConsoleScreenBufferInfo(kl::console::handle, &csbi);
+	return kl::ivec2(csbi.dwSize.X, csbi.dwSize.Y);
+}
+
+// Returns the current console size
+kl::ivec2 kl::console::getSize() {
+	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
+	GetConsoleScreenBufferInfo(kl::console::handle, &csbi);
+	return kl::ivec2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
+}
+
+// Changes the console buffer size
+void kl::console::setBufferSize(const kl::ivec2& size) {
+	SetConsoleScreenBufferSize(kl::console::handle, { (short)size.x, (short)size.y });
+}
+
+// Changes the console size
+void kl::console::setSize(const kl::ivec2& size) {
+	setBufferSize(size);
+	SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
+	SetConsoleWindowInfo(kl::console::handle, true, &consoleRect);
+}
+
+// Changes the console font size
+void kl::console::setFont(const kl::ivec2& size, const std::string& fontName = "Consolas") {
+	CONSOLE_FONT_INFOEX cfi = {};
+	cfi.cbSize = sizeof(cfi);
+	cfi.nFont = 0;
+	cfi.dwFontSize.X = SHORT(size.x);
+	cfi.dwFontSize.Y = SHORT(size.y);
+	cfi.FontFamily = FF_DONTCARE;
+	cfi.FontWeight = FW_NORMAL;
+	wcscpy(cfi.FaceName, kl::convert::toWString(fontName).c_str());
+	SetCurrentConsoleFontEx(kl::console::handle, false, &cfi);
+}
+
+// Returns a pressed key
+char kl::console::getInput() {
+	char input = 0;
+	while (_kbhit()) {
+		input = _getch();
+	}
+	return input;
+}
+
+// Waits until the wanted key is pressed
+void kl::console::waitFor(char toWaitFor, bool echo = false) {
+	if (echo) {
+		if (toWaitFor > 31 && toWaitFor < 127) {
+			printf("Press '%c' to continue\n", toWaitFor);
+		}
+		else {
+			printf("Press %d to continue\n", toWaitFor);
+		}
+	}
+	while (_getch() != toWaitFor);
+}
+
+// Waits for any key to be pressed
+void kl::console::waitForAny(bool echo = false) {
+	if (echo) {
+		printf("Press any key to continue\n");
+	}
+	char iHateWarnings = _getch();
+}
+
+// Outputs a progress bar on the console
+void kl::console::progressBar(const std::string& message, int outputY, float percentage) {
+	// Prep
+	percentage = max(min(percentage, 1), 0);
+	int barLen = console::getSize().x - int(message.length() - 11);
+	int doneLen = int(barLen * percentage);
+	int emptyLen = barLen - doneLen;
+
+	// Printing
+	std::stringstream ss;
+	ss << "  " << message << "[";
+	for (int i = 0; i < doneLen; i++) {
+		ss << '#';
+	}
+	for (int i = 0; i < emptyLen; i++) {
+		ss << ' ';
+	}
+	console::setCursor(kl::ivec2(0, outputY));
+	printf("%s] %3d%% \n", ss.str().c_str(), int(percentage * 100));
+}
+
+// Fast console writing
+void kl::console::fastOut(const std::string& data, const kl::ivec2& location = { 0, 0 }) {
+	static DWORD ignore = 0;
+	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
+}
+
+// Prints RGB data
+template<typename T> void kl::console::print(const T& data, const kl::color& textColor = kl::colors::white) {
+	std::cout << "\033[38;2;" << textColor.r << ";" << textColor.g << ";" << textColor.b << "m" << data << "\033[0m";
+}
+
+// Prints RGB data with new line at the end
+template<typename T> void kl::console::println(const T& data, const kl::color& textColor = kl::colors::white) {
+	std::cout << "\033[38;2;" << textColor.r << ";" << textColor.g << ";" << textColor.b << "m" << data << "\033[0m\n";
+}
+
+// Prints an error message and waits for a key to exit
+void kl::console::error(bool check, const std::string& mess, char waitFor = ' ', bool quit = true, int exitCode = 69) {
+	if (check) {
+		println(mess, kl::color(255, 50, 50));
+		kl::console::waitFor(waitFor);
+		if (quit) exit(exitCode);
+	}
+}

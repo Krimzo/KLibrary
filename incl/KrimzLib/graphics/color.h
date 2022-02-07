@@ -1,52 +1,43 @@
 #pragma once 
 
+#include <iostream>
+#include <windows.h>
+
 
 namespace kl {
-	typedef unsigned char byte;
-    struct color {
+    class color {
+	public:
 		// Had to flip R and B because the winapi uses BGR
-		kl::byte b;
-		kl::byte g;
-		kl::byte r;
+		byte b;
+		byte g;
+		byte r;
 
 		// Constructors
-		color() {
-			r = 0;
-			g = 0;
-			b = 0;
-		}
-		color(kl::byte r, kl::byte g, kl::byte b) {
-			this->r = r;
-			this->g = g;
-			this->b = b;
-		}
+		color();
+		color(byte r, byte g, byte b);
 
 		// Operator overloading
-		bool operator == (kl::color obj) {
-			return (r == obj.r && g == obj.g && b == obj.b);
-		}
-		bool operator != (kl::color obj) {
-			return (r != obj.r || g != obj.g || b != obj.b);
-		}
+		bool operator == (kl::color obj) const;
+		bool operator != (kl::color obj) const;
 
 		// Prints the color
-		void print() {
-			printf("%d %d %d\n", r, g, b);
-		}
+		void print() const;
 	};
+
+	// Predefined colors
 	namespace colors {
-		static const kl::color black(0, 0, 0);
-		static const kl::color white(255, 255, 255);
-		static const kl::color gray(50, 50, 50);
-		static const kl::color red(255, 0, 0);
-		static const kl::color green(0, 255, 0);
-		static const kl::color blue(0, 0, 255);
-		static const kl::color cyan(30, 180, 170);
-		static const kl::color purple(220, 0, 220);
-		static const kl::color yellow(220, 220, 0);
-		static const kl::color orange(255, 140, 0);
-		static const kl::color magenta(155, 0, 155);
-		static const kl::color crimson(100, 0, 0);
-		static const kl::color wheat(245, 220, 180);
+		static const kl::color black   = kl::color(  0,   0,   0);
+		static const kl::color white   = kl::color(255, 255, 255);
+		static const kl::color gray    = kl::color( 50,  50,  50);
+		static const kl::color red     = kl::color(255,   0,   0);
+		static const kl::color green   = kl::color(  0, 255,   0);
+		static const kl::color blue    = kl::color(  0,   0, 255);
+		static const kl::color cyan    = kl::color( 30, 180, 170);
+		static const kl::color purple  = kl::color(220,   0, 220);
+		static const kl::color yellow  = kl::color(220, 220,   0);
+		static const kl::color orange  = kl::color(255, 140,   0);
+		static const kl::color magenta = kl::color(155,   0, 155);
+		static const kl::color crimson = kl::color(100,   0,   0);
+		static const kl::color wheat   = kl::color(245, 220, 180);
 	};
 }
