@@ -21,12 +21,12 @@ namespace kl {
 		image(const char* fileName);
 
 		// Getters
-		int getWidth();
-		int getHeight();
-		kl::ivec2 getSize();
-		kl::color getPixel(const kl::ivec2& point);
-		int getPixelCount();
-		byte* pointer();
+		int getWidth() const;
+		int getHeight() const;
+		kl::ivec2 getSize() const;
+		kl::color getPixel(const kl::ivec2& point) const;
+		int getPixelCount() const;
+		byte* pointer() const;
 
 		// Setters
 		void setWidth(int width);

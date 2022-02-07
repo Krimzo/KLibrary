@@ -215,6 +215,7 @@
     <ClCompile Include="src\vecmath\vec3.cpp" />
     <ClCompile Include="src\vecmath\vec4.cpp" />
     <ClCompile Include="src\web.cpp" />
+    <ClCompile Include="src\window\window.cpp" />
     <ClCompile Include="test\Rendering3D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -25,25 +25,25 @@ kl::image::image(const char* fileName) {
 }
 
 // Getters
-int kl::image::getWidth() {
+int kl::image::getWidth() const {
 	return width;
 }
-int kl::image::getHeight() {
+int kl::image::getHeight() const {
 	return height;
 }
-kl::ivec2 kl::image::getSize() {
+kl::ivec2 kl::image::getSize() const {
 	return kl::ivec2(width, height);
 }
-kl::color kl::image::getPixel(const kl::ivec2& point) {
+kl::color kl::image::getPixel(const kl::ivec2& point) const {
 	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
 		return pixels[(uint64_t)point.y * width + point.x];
 	}
 	return kl::color();
 }
-int kl::image::getPixelCount() {
+int kl::image::getPixelCount() const {
 	return (int)pixels.size();
 }
-byte* kl::image::pointer() {
+byte* kl::image::pointer() const {
 	return (byte*)&pixels[0];
 }
 
@@ -284,7 +284,7 @@ void kl::image::drawCircle(const kl::ivec2& p, float r, const kl::color& col, bo
 }
 // Draws a circle between 1 center and 1 outer point
 void kl::image::drawCircle(const kl::ivec2& a, const kl::ivec2& b, const kl::color& col, bool fill = false) {
-	drawCircle(a, kl::vec2(a, b).length(), col, fill);
+	this->drawCircle(a, kl::vec2(a, b).length(), col, fill);
 }
 
 // Converts an image to an ASCII frame
