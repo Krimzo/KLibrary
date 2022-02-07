@@ -5,7 +5,7 @@
 
 
 // Downloads website data(bytes) from the given url
-std::string kl::web::getWebsiteData(const std::string& url, int bufferSize = 65536) {
+std::string kl::web::getWebsiteData(const std::string& url, int bufferSize) {
 	// Create browser
 	HINTERNET connection = InternetOpenA("Browser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
 	if (!connection) {

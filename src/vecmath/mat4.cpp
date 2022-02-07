@@ -131,8 +131,8 @@ bool kl::mat4::operator!=(const kl::mat4& obj) const {
 }
 
 // Returns pointer to raw data
-float* kl::mat4::pointer() {
-	return data;
+float* kl::mat4::pointer() const {
+	return (float*)data;
 }
 
 // Loads the identity matrix

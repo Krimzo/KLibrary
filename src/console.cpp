@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "KrimzLib/console.h"
 
 #include <iostream>
@@ -81,7 +82,7 @@ void kl::console::setSize(const kl::ivec2& size) {
 }
 
 // Changes the console font size
-void kl::console::setFont(const kl::ivec2& size, const std::string& fontName = "Consolas") {
+void kl::console::setFont(const kl::ivec2& size, const std::string& fontName) {
 	CONSOLE_FONT_INFOEX cfi = {};
 	cfi.cbSize = sizeof(cfi);
 	cfi.nFont = 0;
@@ -103,7 +104,7 @@ char kl::console::getInput() {
 }
 
 // Waits until the wanted key is pressed
-void kl::console::waitFor(char toWaitFor, bool echo = false) {
+void kl::console::waitFor(char toWaitFor, bool echo) {
 	if (echo) {
 		if (toWaitFor > 31 && toWaitFor < 127) {
 			printf("Press '%c' to continue\n", toWaitFor);
@@ -116,7 +117,7 @@ void kl::console::waitFor(char toWaitFor, bool echo = false) {
 }
 
 // Waits for any key to be pressed
-void kl::console::waitForAny(bool echo = false) {
+void kl::console::waitForAny(bool echo) {
 	if (echo) {
 		printf("Press any key to continue\n");
 	}
@@ -145,23 +146,23 @@ void kl::console::progressBar(const std::string& message, int outputY, float per
 }
 
 // Fast console writing
-void kl::console::fastOut(const std::string& data, const kl::ivec2& location = { 0, 0 }) {
+void kl::console::fastOut(const std::string& data, const kl::ivec2& location) {
 	static DWORD ignore = 0;
 	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 }
 
 // Prints RGB data
-template<typename T> void kl::console::print(const T& data, const kl::color& textColor = kl::colors::white) {
+template<typename T> void kl::console::print(const T& data, const kl::color& textColor) {
 	std::cout << "\033[38;2;" << textColor.r << ";" << textColor.g << ";" << textColor.b << "m" << data << "\033[0m";
 }
 
 // Prints RGB data with new line at the end
-template<typename T> void kl::console::println(const T& data, const kl::color& textColor = kl::colors::white) {
+template<typename T> void kl::console::println(const T& data, const kl::color& textColor) {
 	std::cout << "\033[38;2;" << textColor.r << ";" << textColor.g << ";" << textColor.b << "m" << data << "\033[0m\n";
 }
 
 // Prints an error message and waits for a key to exit
-void kl::console::error(bool check, const std::string& mess, char waitFor = ' ', bool quit = true, int exitCode = 69) {
+void kl::console::error(bool check, const std::string& mess, char waitFor, bool quit, int exitCode) {
 	if (check) {
 		println(mess, kl::color(255, 50, 50));
 		kl::console::waitFor(waitFor);

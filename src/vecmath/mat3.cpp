@@ -123,8 +123,8 @@ bool kl::mat3::operator!=(const kl::mat3& obj) const {
 }
 
 // Returns pointer to raw data
-float* kl::mat3::pointer() {
-	return data;
+float* kl::mat3::pointer() const {
+	return (float*)data;
 }
 
 // Loads the identity matrix

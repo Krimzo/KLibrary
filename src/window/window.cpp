@@ -36,7 +36,7 @@ kl::window::~window() {
 }
 
 // Window creation
-void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable = true, bool continuous = false, bool opengl = false) {
+void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool opengl) {
 	// Converting window name to a wstring
 	std::wstring wName = kl::convert::toWString(name);
 
@@ -99,7 +99,7 @@ void kl::window::setFullscreen(bool enable) {
 
 		// Enabling the fullscreen
 		SetWindowLong(hwnd, GWL_STYLE, winStyle & ~WS_OVERLAPPEDWINDOW);
-		SetWindowPos(hwnd, HWND_TOP, 0, 0, kl::screen::width, kl::screen::height, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+		SetWindowPos(hwnd, HWND_TOP, 0, 0, kl::window::screen::width, kl::window::screen::height, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
 		// Setting info
 		inFull = true;
@@ -139,7 +139,7 @@ void kl::window::setTitle(const std::string& data) {
 }
 
 // Sets the pixels of the window
-void kl::window::drawImage(const kl::image& toDraw, const kl::ivec2& position = { 0, 0 }) {
+void kl::window::drawImage(const kl::image& toDraw, const kl::ivec2& position) {
 	bmpInfo.bmiHeader.biWidth = toDraw.getWidth();
 	bmpInfo.bmiHeader.biHeight = toDraw.getHeight();
 	StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
@@ -187,7 +187,7 @@ void kl::window::createWindow(const kl::ivec2& size, const std::wstring& name, b
 	const kl::ivec2 adjSize(adjustedWindowSize.right - adjustedWindowSize.left, adjustedWindowSize.bottom - adjustedWindowSize.top);
 
 	// Creating the window
-	hwnd = CreateWindowExW(0, name.c_str(), name.c_str(), winStyle, (kl::screen::width / 2 - adjSize.x / 2), (kl::screen::height / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, hInstance, nullptr);
+	hwnd = CreateWindowExW(0, name.c_str(), name.c_str(), winStyle, (kl::window::screen::width / 2 - adjSize.x / 2), (kl::window::screen::height / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, hInstance, nullptr);
 	kl::console::error(!hwnd, "WinApi: Could not create a window!");
 
 	// Setting and getting window info

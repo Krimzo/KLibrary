@@ -1,9 +1,11 @@
 #pragma once
 
-#include "glad.h"
 #include <windows.h>
 
 #include "KrimzLib/vecmath/vec3.h"
+#include "KrimzLib/gl/glad.h"
+
+#pragma comment(lib, "opengl32.lib")
 
 
 namespace kl {

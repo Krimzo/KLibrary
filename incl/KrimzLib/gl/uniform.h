@@ -1,52 +1,32 @@
 #pragma once
 
+#include <iostream>
+
+#include "KrimzLib/gl/gl.h"
+#include "KrimzLib/vecmath/vec2.h"
+#include "KrimzLib/vecmath/vec3.h"
+#include "KrimzLib/vecmath/vec4.h"
+#include "KrimzLib/vecmath/mat3.h"
+#include "KrimzLib/vecmath/mat4.h"
+
 
 namespace kl {
-	struct uniform {
-		uniform() {}
-		uniform(kl::id programID, kl::id uniformID) {
-			this->programID = programID;
-			this->uniformID = uniformID;
-		}
-
-		// Setts the data of an uniform
-		void setData(int data) {
-			glUseProgram(programID);
-			glUniform1i(uniformID, data);
-		}
-		void setData(float data) {
-			glUseProgram(programID);
-			glUniform1f(uniformID, data);
-		}
-		void setData(kl::vec2 data) {
-			glUseProgram(programID);
-			glUniform2f(uniformID, data.x, data.y);
-		}
-		void setData(kl::vec3 data) {
-			glUseProgram(programID);
-			glUniform3f(uniformID, data.x, data.y, data.z);
-		}
-		void setData(kl::vec4 data) {
-			glUseProgram(programID);
-			glUniform4f(uniformID, data.x, data.y, data.z, data.w);
-		}
-		void setData(kl::mat3& data) {
-			glUseProgram(programID);
-			glUniformMatrix3fv(uniformID, 1, true, data.pointer());
-		}
-		void setData(kl::mat3&& data) {
-			setData(data);
-		}
-		void setData(kl::mat4& data) {
-			glUseProgram(programID);
-			glUniformMatrix4fv(uniformID, 1, true, data.pointer());
-		}
-		void setData(kl::mat4&& data) {
-			setData(data);
-		}
-
+	class uniform {
 	private:
 		kl::id programID = NULL;
 		kl::id uniformID = NULL;
+
+	public:
+		uniform();
+		uniform(kl::id programID, kl::id uniformID);
+
+		// Setts the data of an uniform
+		void setData(int data);
+		void setData(float data);
+		void setData(const kl::vec2& data);
+		void setData(const kl::vec3& data);
+		void setData(const kl::vec4& data);
+		void setData(const kl::mat3& data);
+		void setData(const kl::mat4& data);
 	};
 }

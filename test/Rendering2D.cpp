@@ -1,5 +1,5 @@
+//#include "KrimzLib.hpp"
 #include "KrimzLib.hpp"
-
 
 // Rendering engine
 kl::renderer2D renderer;
@@ -21,9 +21,9 @@ void setup() {
 		particles.push_back(renderer.newObject(circle_mes, orange_tex));
 
 		// Initial particle setup
-		particles.back()->size = kl::vec2(kl::random::FLOAT(0.01, 0.02));
+		particles.back()->size = kl::vec2(kl::random::FLOAT(0.01f, 0.02f));
 		particles.back()->position = kl::vec2(kl::random::FLOAT(-2, 2), 0);
-		particles.back()->velocity = kl::vec2(kl::random::FLOAT(-0.6, 0.6), kl::random::FLOAT(-2, 2));
+		particles.back()->velocity = kl::vec2(kl::random::FLOAT(-0.6f, 0.6f), kl::random::FLOAT(-2, 2));
 		particles.back()->acceler.y = -2;
 	}
 }
@@ -38,7 +38,7 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 
 		// Updating the particles
 		for (int i = 0; i < particles.size(); i++) {
-			particles[i]->velocity += (mpos - particles[i]->position) * 0.01;
+			particles[i]->velocity += (mpos - particles[i]->position) * 0.01f;
 		}
 	}
 }

@@ -34,7 +34,7 @@ void kl::file::write(const std::string& filePath, const std::string& data) {
 }
 
 // Appends text to a text file
-void kl::file::append(const std::string& filePath, const std::string& data, int position = -1) {
+void kl::file::append(const std::string& filePath, const std::string& data, int position) {
 	std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 	if (!fileStream.is_open()) {
 		printf("Could not load text file \"%s\".\n", filePath.c_str());

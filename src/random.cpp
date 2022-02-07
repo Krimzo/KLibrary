@@ -36,7 +36,7 @@ float kl::random::FLOAT(float endInclusive) {
 }
 
 // Returns a random letter
-char kl::random::LETTER(bool upperCase = false) {
+char kl::random::LETTER(bool upperCase) {
 	if (upperCase) {
 		return char(kl::random::INT(65, 91));
 	}
@@ -53,7 +53,7 @@ std::string kl::random::STRING(int len) {
 }
 
 // Returns a random color
-kl::color kl::random::COLOR(bool grayScaled = false) {
+kl::color kl::random::COLOR(bool grayScaled) {
 	if (grayScaled) {
 		byte randGray = kl::random::BYTE();
 		return kl::color(randGray, randGray, randGray);

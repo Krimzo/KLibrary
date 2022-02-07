@@ -14,9 +14,9 @@
 
 // Constructor
 kl::image::image() {
-	setSize(kl::ivec2(0, 0));
+	setSize(kl::ivec2());
 }
-kl::image::image(const kl::ivec2& size, const kl::color& color = {}) {
+kl::image::image(const kl::ivec2& size, const kl::color& color) {
 	setSize(size);
 	fillSolid(color);
 }
@@ -73,21 +73,21 @@ void kl::image::fromFile(const std::string& filePath) {
 	kl::console::error(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "GdiPlus: Failed to init!");
 
 	// Loads image file
-	Gdiplus::Bitmap loadedBitmap(kl::convert::toWString(filePath).c_str());
+	Gdiplus::Bitmap* loadedBitmap = new Gdiplus::Bitmap(kl::convert::toWString(filePath).c_str());
 
 	// Checks load status
-	if (loadedBitmap.GetLastStatus()) {
+	if (loadedBitmap->GetLastStatus()) {
 		printf("Could not load image file \"%s\".", filePath.c_str());
 		exit(69);
 	}
 
 	// Resizing the self
-	this->setSize(kl::ivec2(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
+	this->setSize(kl::ivec2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
 
 	// Locking the bitmap data
 	Gdiplus::BitmapData bitmapData;
 	Gdiplus::Rect bitmapRect(0, 0, width, height);
-	loadedBitmap.LockBits(&bitmapRect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
+	loadedBitmap->LockBits(&bitmapRect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
 
 	// Loading the pixel data
 	const int bitmapStride = bitmapData.Stride / 4;
@@ -98,20 +98,19 @@ void kl::image::fromFile(const std::string& filePath) {
 		}
 	}
 
+	// Bitmap deletion
+	delete loadedBitmap;
+
 	// Gdiplus cleanup
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
 
 // Saves the image to a file
 void kl::image::toFile(const std::string& fileName) {
+	// Static image type CLSID-s
 	static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 	static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 	static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-
-	// Gdiplus init
-	ULONG_PTR gdiplusToken = NULL;
-	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
-	kl::console::error(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "GdiPlus: Failed to init!");
 
 	// Checking the file extension is supported
 	const CLSID* formatToUse = nullptr;
@@ -144,15 +143,23 @@ void kl::image::toFile(const std::string& fileName) {
 		return;
 	}
 
+	// Gdiplus init
+	ULONG_PTR gdiplusToken = NULL;
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
+	kl::console::error(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "GdiPlus: Failed to init!");
+
 	// Pixel data transfer and saving to file
-	Gdiplus::Bitmap tempBitmap(width, height, PixelFormat24bppRGB);
+	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(width, height, PixelFormat24bppRGB);
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
 			kl::color tempPixel = getPixel(kl::ivec2(x, y));
-			tempBitmap.SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.r, tempPixel.g, tempPixel.b));
+			tempBitmap->SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.r, tempPixel.g, tempPixel.b));
 		}
 	}
-	tempBitmap.Save(kl::convert::toWString(fileName).c_str(), formatToUse, nullptr);
+	tempBitmap->Save(kl::convert::toWString(fileName).c_str(), formatToUse, nullptr);
+
+	// Bitmap deletion
+	delete tempBitmap;
 
 	// Gdiplus cleanup
 	Gdiplus::GdiplusShutdown(gdiplusToken);
@@ -204,7 +211,7 @@ void kl::image::drawLine(const kl::ivec2& a, const kl::ivec2& b, const kl::color
 }
 
 // Draws a triangle between 3 points
-void kl::image::drawTriangle(kl::ivec2 a, kl::ivec2 b, kl::ivec2 c, const kl::color& col, bool fill = false) {
+void kl::image::drawTriangle(kl::ivec2 a, kl::ivec2 b, kl::ivec2 c, const kl::color& col, bool fill) {
 	if (fill) {
 		// Sorting by y
 		if (a.y > b.y) {
@@ -236,7 +243,7 @@ void kl::image::drawTriangle(kl::ivec2 a, kl::ivec2 b, kl::ivec2 c, const kl::co
 }
 
 // Draws a rectangle between 2 points
-void kl::image::drawRectangle(kl::ivec2 a, kl::ivec2 b, const kl::color& col, bool fill = false) {
+void kl::image::drawRectangle(kl::ivec2 a, kl::ivec2 b, const kl::color& col, bool fill) {
 	if (fill) {
 		// Sorting by y
 		if (a.y > b.y) {
@@ -259,7 +266,7 @@ void kl::image::drawRectangle(kl::ivec2 a, kl::ivec2 b, const kl::color& col, bo
 }
 
 // Draws a circle with the given center point and radius
-void kl::image::drawCircle(const kl::ivec2& p, float r, const kl::color& col, bool fill = false) {
+void kl::image::drawCircle(const kl::ivec2& p, float r, const kl::color& col, bool fill) {
 	if (fill) {
 		for (int y = int(p.y - r); y <= int(p.y + r); y++) {
 			int x = int(p.x + sqrt(r * r - float(y - p.y) * float(y - p.y)));
@@ -283,7 +290,7 @@ void kl::image::drawCircle(const kl::ivec2& p, float r, const kl::color& col, bo
 	}
 }
 // Draws a circle between 1 center and 1 outer point
-void kl::image::drawCircle(const kl::ivec2& a, const kl::ivec2& b, const kl::color& col, bool fill = false) {
+void kl::image::drawCircle(const kl::ivec2& a, const kl::ivec2& b, const kl::color& col, bool fill) {
 	this->drawCircle(a, kl::vec2(a, b).length(), col, fill);
 }
 

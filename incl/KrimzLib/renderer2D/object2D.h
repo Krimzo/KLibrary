@@ -1,8 +1,14 @@
 #pragma once
 
+#include "KrimzLib/vecmath/vec2.h"
+#include "KrimzLib/gl/mesh.h"
+#include "KrimzLib/gl/texture.h"
+#include "KrimzLib/vecmath/mat3.h"
+
 
 namespace kl {
-	struct object2D {
+	class object2D {
+	public:
 		// View
 		bool visible = true;
 
@@ -24,37 +30,15 @@ namespace kl {
 		kl::texture* texture = nullptr;
 
 		// Constructor
-		object2D(kl::mesh* mes, kl::texture* tex) {
-			mesh = mes;
-			texture = tex;
-		}
+		object2D(kl::mesh* mes, kl::texture* tex);
 
 		// Updates the object physics
-		void upPhys(float deltaT) {
-			if (physics) {
-				// Applying acceleration
-				velocity += acceler * deltaT;
-
-				// Applying velocity
-				position += velocity * deltaT;
-
-				// Applying angular momentum
-				rotation += angular * deltaT;
-			}
-		}
+		void upPhys(float deltaT);
 
 		// Returns the world matrix
-		kl::mat3 matrix() {
-			return kl::mat3::translate(position) * kl::mat3::rotate(rotation) * kl::mat3::scale(size);
-		}
+		kl::mat3 matrix() const;
 
 		// Renders the mesh
-		void render() {
-			// Binding the texture
-			texture->bind();
-
-			// Rendering
-			mesh->draw();
-		}
+		void render() const;
 	};
 }

@@ -4,6 +4,8 @@
 
 #include "KrimzLib/file.h"
 
+#pragma comment(lib, "wininet.lib")
+
 
 namespace kl {
 	namespace web {

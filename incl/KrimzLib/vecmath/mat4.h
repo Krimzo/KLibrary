@@ -46,7 +46,7 @@ namespace kl {
 		bool operator!=(const kl::mat4& obj) const;
 
 		// Returns pointer to raw data
-		float* pointer();
+		float* pointer() const;
 
 		// Loads the identity matrix
 		void setIdentity();

@@ -69,7 +69,7 @@ void kl::gl::resetViewport(HWND hwnd) {
 }
 
 // Enables/disables face culling
-void kl::gl::setCulling(bool enabled, bool cullBack = true, bool clockWise = false) {
+void kl::gl::setCulling(bool enabled, bool cullBack, bool clockWise) {
 	if (enabled) {
 		glEnable(GL_CULL_FACE);
 		glFrontFace(clockWise ? GL_CW : GL_CCW);

@@ -200,10 +200,17 @@
     <ClCompile Include="src\convert.cpp" />
     <ClCompile Include="src\file.cpp" />
     <ClCompile Include="src\gl\gl.cpp" />
+    <ClCompile Include="src\gl\glad.cpp" />
+    <ClCompile Include="src\gl\mesh.cpp" />
+    <ClCompile Include="src\gl\shaders.cpp" />
+    <ClCompile Include="src\gl\texture.cpp" />
+    <ClCompile Include="src\gl\uniform.cpp" />
     <ClCompile Include="src\graphics\color.cpp" />
     <ClCompile Include="src\graphics\image.cpp" />
     <ClCompile Include="src\math.cpp" />
     <ClCompile Include="src\random.cpp" />
+    <ClCompile Include="src\renderer2D\object2D.cpp" />
+    <ClCompile Include="src\renderer2D\renderer2D.cpp" />
     <ClCompile Include="src\renderer2D\vertex2D.cpp" />
     <ClCompile Include="src\renderer3D\vertex3D.cpp" />
     <ClCompile Include="src\time.cpp" />
@@ -215,8 +222,10 @@
     <ClCompile Include="src\vecmath\vec3.cpp" />
     <ClCompile Include="src\vecmath\vec4.cpp" />
     <ClCompile Include="src\web.cpp" />
+    <ClCompile Include="src\window\keys.cpp" />
+    <ClCompile Include="src\window\mouse.cpp" />
     <ClCompile Include="src\window\window.cpp" />
-    <ClCompile Include="test\Rendering3D.cpp" />
+    <ClCompile Include="test\Rendering2D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

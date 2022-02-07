@@ -6,6 +6,8 @@
 #include "KrimzLib/vecmath/ivec2.h"
 #include "KrimzLib/graphics/color.h"
 
+#pragma comment(lib, "gdiplus.lib")
+
 
 namespace kl {
 	class image {

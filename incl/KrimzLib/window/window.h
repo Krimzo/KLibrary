@@ -11,18 +11,27 @@
 #include "KrimzLib/window/keys.h"
 #include "KrimzLib/window/mouse.h"
 
+#pragma comment(lib, "kernel32.lib")
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "winspool.lib")
+#pragma comment(lib, "comdlg32.lib")
+#pragma comment(lib, "advapi32.lib")
+#pragma comment(lib, "shell32.lib")
+#pragma comment(lib, "ole32.lib")
+#pragma comment(lib, "oleaut32.lib")
+#pragma comment(lib, "uuid.lib")
+#pragma comment(lib, "odbc32.lib")
+#pragma comment(lib, "odbccp32.lib")
+
 
 namespace kl {
-	// Screen size
-	namespace screen {
-		
-	}
-	
-	// Window class
 	class window {
 	public:
 		// Screen
-		static class screen {
+		class screen {
+		public:
+			screen() = delete;
 			static const int width;
 			static const int height;
 		};
