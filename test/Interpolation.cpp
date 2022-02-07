@@ -4,7 +4,7 @@
 int main() {
 	// Window size
 	const kl::ivec2 windowSize(900, 900);
-	const int fpsLimit = 60;
+	const int fpsLimit = 165;
 
 	// Triangle points
 	kl::vec2 A(50, (windowSize.y - 1) / 3);
@@ -39,7 +39,7 @@ int main() {
 		for (int i = 0; i < windowSize.y; i++) {
 			// Pixel buffer
 			kl::color pixel = {};
-
+			
 			// Checkig if the point inside a triangle and coloring the pixel
 			if (T1.inTriangle(kl::vec2(x, y))) {
 				pixel.r = T1.interpolate(kl::vec3(colA.r, colB.r, colC.r), kl::vec2(x, y));
@@ -83,12 +83,10 @@ int main() {
 		}
 
 		// Delta time calculation
-		while (timer.swElapsed() < timeToSleep);
+		while (timer.elapsed() < timeToSleep);
 		timer.reset();
 	};
 
 	// Window start
 	window.startNew(windowSize, "Triangle Interpolation", false, true);
-
-	return 0;
 }

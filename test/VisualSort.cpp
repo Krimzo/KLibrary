@@ -45,14 +45,14 @@ int main() {
 		stik.val = randVal;
 
 		// Setting the color
-		const kl::byte yellowGradient = kl::random::BYTE();
+		const byte yellowGradient = kl::random::BYTE();
 		stik.col = kl::color(yellowGradient, yellowGradient, 0);
 	}
 
 	testWindow.update = [&]() {
 		for (int i = 0; i <= sticks.size() / 2; i++) {
 			int min = i;
-			int max = sticks.size() - 1 - i;
+			int max = int(sticks.size()) - 1 - i;
 
 			// Finding min
 			for (int j = i + 1; j < sticks.size(); j++) {
@@ -87,7 +87,4 @@ int main() {
 	};
 
 	testWindow.startNew(frame.getSize(), "Bubble Sort", false, true);
-
-
-	return 0;
 }

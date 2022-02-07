@@ -31,7 +31,7 @@ int main() {
 
 		// Circle position and size calculations
 		kl::ivec2 circleCenter(windowSize.x / 2, windowSize.y / 2);
-		float circleRadius = std::min(windowSize.x / 2.0, windowSize.y / 2.0) - radiusBias;
+		float circleRadius = min(windowSize.x / 2.0, windowSize.y / 2.0) - radiusBias;
 
 		// Drawing the circle
 		frame.drawCircle(circleCenter, circleRadius, circleColor);
@@ -63,13 +63,10 @@ int main() {
 		window.drawImage(frame);
 
 		// Incrementing m
-		m += mIncrement * kl::time::getInterval();
+		m += mIncrement * kl::time::interval();
 		window.setTitle("Times Table -> n: " + std::to_string(n) + " m: " + std::to_string(m));
 	};
 
 	// Creating the window
-	kl::time::getInterval();
 	window.startNew(windowSize, "Times Table", false, true);
-
-	return 0;
 }

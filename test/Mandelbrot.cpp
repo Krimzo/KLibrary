@@ -46,7 +46,7 @@ void start() {
 void update() {
 	/* Time calculations */
 	deltaT = timer.interval();
-	elapsedT = timer.swElapsed();
+	elapsedT = timer.elapsed();
 
 	/* Getting the screen size */
 	kl::vec2 frameSize = win.getSize();
@@ -135,11 +135,8 @@ void update() {
 }
 
 int main() {
-
 	win.start = start;
 	win.update = update;
 	timer.reset();
 	win.startNew(kl::ivec2(1600, 900), "Mandelbrot", false, true, true);
-
-	return 0;
 }

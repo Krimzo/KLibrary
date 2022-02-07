@@ -1,4 +1,3 @@
-//#include "KrimzLib.hpp"
 #include "KrimzLib.hpp"
 
 // Rendering engine
@@ -81,7 +80,4 @@ int main() {
 
 	// Renderer creation
 	renderer.createNew(kl::ivec2(1600, 900));
-
-
-	return 0;
 }
