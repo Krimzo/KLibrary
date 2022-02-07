@@ -1,5 +1,7 @@
 #include "KrimzLib/vecmath/vec3.h"
 
+#include <iostream>
+
 #include "KrimzLib/convert.h"
 
 
@@ -121,7 +123,7 @@ float kl::vec3::length() const {
 
 // Retruns a normalized vector
 kl::vec3 kl::vec3::normalize() const {
-	return operator/(length());
+	return this->div(this->length());
 }
 
 // Returns the dot product

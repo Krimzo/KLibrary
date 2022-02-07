@@ -171,7 +171,7 @@
     <ClInclude Include="incl\KrimzLib\renderer3D\skybox.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\ivec2.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\mat3.h" />
-    <ClInclude Include="incl\KrimzLib\vecmath\vertex2D.h" />
+    <ClInclude Include="incl\KrimzLib\renderer2D\vertex2D.h" />
     <ClInclude Include="incl\KrimzLib\window\keys.h" />
     <ClInclude Include="incl\KrimzLib\gl\mesh.h" />
     <ClInclude Include="incl\KrimzLib\window\mouse.h" />
@@ -185,7 +185,7 @@
     <ClInclude Include="incl\KrimzLib\vecmath\vec2.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\vec3.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\vec4.h" />
-    <ClInclude Include="incl\KrimzLib\vecmath\vertex3D.h" />
+    <ClInclude Include="incl\KrimzLib\renderer3D\vertex3D.h" />
     <ClInclude Include="incl\KrimzLib\web.h" />
   </ItemGroup>
   <ItemGroup>
@@ -204,8 +204,13 @@
     <ClCompile Include="src\graphics\image.cpp" />
     <ClCompile Include="src\math.cpp" />
     <ClCompile Include="src\random.cpp" />
+    <ClCompile Include="src\renderer2D\vertex2D.cpp" />
+    <ClCompile Include="src\renderer3D\vertex3D.cpp" />
     <ClCompile Include="src\time.cpp" />
     <ClCompile Include="src\vecmath\ivec2.cpp" />
+    <ClCompile Include="src\vecmath\mat3.cpp" />
+    <ClCompile Include="src\vecmath\mat4.cpp" />
+    <ClCompile Include="src\vecmath\triangle.cpp" />
     <ClCompile Include="src\vecmath\vec2.cpp" />
     <ClCompile Include="src\vecmath\vec3.cpp" />
     <ClCompile Include="src\vecmath\vec4.cpp" />

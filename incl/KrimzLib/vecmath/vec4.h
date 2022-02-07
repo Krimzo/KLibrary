@@ -5,134 +5,72 @@
 
 
 namespace kl {
-	struct vec4 {
+	class vec4 {
+	public:
 		float x;
 		float y;
 		float z;
 		float w;
 
 		// Constructors
-		vec4() {
-			x = 0;
-			y = 0;
-			z = 0;
-			w = 0;
-		}
-		vec4(float a) {
-			x = a;
-			y = a;
-			z = a;
-			w = a;
-		}
-		vec4(float x, float y, float z, float w) {
-			this->x = x;
-			this->y = y;
-			this->z = z;
-			this->w = w;
-		}
-		vec4(kl::vec2 v, float z, float w) {
-			x = v.x;
-			y = v.y;
-			this->z = z;
-			this->w = w;
-		}
-		vec4(float x, kl::vec2 v, float w) {
-			this->x = x;
-			y = v.x;
-			z = v.y;
-			this->w = w;
-		}
-		vec4(float x, float y, kl::vec2 v) {
-			this->x = x;
-			this->y = y;
-			z = v.x;
-			w = v.y;
-		}
-		vec4(kl::vec2 v1, kl::vec2 v2) {
-			x = v1.x;
-			y = v1.y;
-			z = v2.x;
-			w = v2.y;
-		}
-		vec4(kl::vec3 v) {
-			x = v.x;
-			y = v.y;
-			z = v.z;
-			w = 1;
-		}
-		vec4(kl::vec3 v, float w) {
-			x = v.x;
-			y = v.y;
-			z = v.z;
-			this->w = w;
-		}
-		vec4(float x, kl::vec3 v) {
-			this->x = x;
-			y = v.x;
-			z = v.y;
-			w = v.z;
-		}
+		vec4();
+		vec4(float a);
+		vec4(float x, float y, float z, float w);
+		vec4(const kl::vec2& v, float z, float w);
+		vec4(float x, const kl::vec2& v, float w);
+		vec4(float x, float y, const kl::vec2& v);
+		vec4(const kl::vec2& v1, const kl::vec2& v2);
+		vec4(const kl::vec3& v);
+		vec4(const kl::vec3& v, float w);
+		vec4(float x, const kl::vec3& v);
 
-		// Operator overloading
-		kl::vec4 operator + (kl::vec4 obj) {
-			return kl::vec4(x + obj.x, y + obj.y, z + obj.z, w + obj.w);
-		}
-		void operator += (kl::vec4 obj) {
-			x += obj.x; y += obj.y; z += obj.z; w += obj.w;
-		}
-		kl::vec4 operator - (kl::vec4 obj) {
-			return kl::vec4(x - obj.x, y - obj.y, z - obj.z, w - obj.w);
-		}
-		void operator -= (kl::vec4 obj) {
-			x -= obj.x; y -= obj.y; z -= obj.z; w -= obj.w;
-		}
-		kl::vec4 operator * (float a) {
-			return kl::vec4(x * a, y * a, z * a, w * a);
-		}
-		void operator *= (float a) {
-			x *= a; y *= a; z *= a; w *= a;
-		}
-		kl::vec4 operator / (float a) {
-			return operator*(1 / a);
-		}
-		void operator /= (float a) {
-			operator*=(1 / a);
-		}
-		bool operator == (kl::vec4 obj) {
-			return (x == obj.x && y == obj.y && z == obj.z && w == obj.w);
-		}
-		bool operator != (kl::vec4 obj) {
-			return !operator==(obj);
-		}
+		// Addition
+		kl::vec4 add(const kl::vec4& obj) const;
+		kl::vec4 operator+(const kl::vec4& obj) const;
+		void operator+=(const kl::vec4& obj);
+
+		// Subtraction
+		kl::vec4 sub(const kl::vec4& obj) const;
+		kl::vec4 operator-(const kl::vec4& obj) const;
+		void operator-=(const kl::vec4& obj);
+
+		// Multiplication
+		kl::vec4 mul(float a) const;
+		kl::vec4 operator*(float a) const;
+		void operator*=(float a);
+		kl::vec4 mul(const kl::vec4& obj) const;
+		kl::vec4 operator*(const kl::vec4& obj) const;
+		void operator*=(const kl::vec4& obj);
+
+		// Division
+		kl::vec4 div(float a) const;
+		kl::vec4 operator/(float a) const;
+		void operator/=(float a);
+		kl::vec4 div(const kl::vec4& obj) const;
+		kl::vec4 operator/(const kl::vec4& obj) const;
+		void operator/=(const kl::vec4& obj);
+
+		// Comparison
+		bool equals(const kl::vec4& obj) const;
+		bool operator==(const kl::vec4& obj) const;
+		bool operator!=(const kl::vec4& obj) const;
 
 		// Returns a negated vector
-		kl::vec4 negate() {
-			return operator*(-1);
-		}
+		kl::vec4 negate() const;
 
 		// Returns the vectors length
-		float length() {
-			return sqrt(x * x + y * y + z * z + w * w);
-		}
+		float length() const;
 
 		// Retruns a normalized vector
-		kl::vec4 normalize() {
-			return operator/(length());
-		}
+		kl::vec4 normalize() const;
 
 		// Returns the dot product
-		float dot(kl::vec4 a) {
-			return x * a.x + y * a.y + z * a.z + w * a.w;
-		}
+		float dot(const kl::vec4& a) const;
 
 		// Returns the angle between the given vector and self
-		float angle(kl::vec4 a) {
-			return acos(this->normalize().dot(a.normalize())) * 57.2957795131f;
-		}
+		float angle(const kl::vec4& a) const;
 
 		// Prints the data to the console
-		void print() {
-			printf("% .2f % .2f % .2f % .2f\n", x, y, z, w);
-		}
+		void print() const;
 	};
 }

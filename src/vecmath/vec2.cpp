@@ -112,7 +112,7 @@ float kl::vec2::length() const {
 
 // Retruns a normalized vector
 kl::vec2 kl::vec2::normalize() const {
-	return operator/(length());
+	return this->div(this->length());
 }
 
 // Returns the dot product
