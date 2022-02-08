@@ -212,6 +212,12 @@
     <ClCompile Include="src\renderer2D\object2D.cpp" />
     <ClCompile Include="src\renderer2D\renderer2D.cpp" />
     <ClCompile Include="src\renderer2D\vertex2D.cpp" />
+    <ClCompile Include="src\renderer3D\camera.cpp" />
+    <ClCompile Include="src\renderer3D\light\ambient.cpp" />
+    <ClCompile Include="src\renderer3D\light\direct.cpp" />
+    <ClCompile Include="src\renderer3D\object3D.cpp" />
+    <ClCompile Include="src\renderer3D\renderer3D.cpp" />
+    <ClCompile Include="src\renderer3D\skybox.cpp" />
     <ClCompile Include="src\renderer3D\vertex3D.cpp" />
     <ClCompile Include="src\time.cpp" />
     <ClCompile Include="src\vecmath\ivec2.cpp" />
@@ -225,7 +231,7 @@
     <ClCompile Include="src\window\keys.cpp" />
     <ClCompile Include="src\window\mouse.cpp" />
     <ClCompile Include="src\window\window.cpp" />
-    <ClCompile Include="test\Rendering2D.cpp" />
+    <ClCompile Include="test\Rendering3D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

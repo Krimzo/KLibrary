@@ -55,7 +55,7 @@ namespace kl {
 		void startNew(const kl::ivec2& size, const std::string& name, bool resizeable = true, bool continuous = false, bool opengl = false);
 		
 		// Window stop
-		void stop();
+		void stop() const;
 
 		// Returns a handle to the window
 		HWND getHWND();

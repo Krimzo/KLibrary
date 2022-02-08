@@ -22,6 +22,11 @@
 #include "KrimzLib/file.h"
 #include "KrimzLib/web.h"
 
+// Including window
+#include "KrimzLib/window/keys.h"
+#include "KrimzLib/window/mouse.h"
+#include "KrimzLib/window/window.h"
+
 // Including gl
 #include "KrimzLib/gl/glad.h"
 #include "KrimzLib/gl/gl.h"
@@ -30,21 +35,16 @@
 #include "KrimzLib/gl/uniform.h"
 #include "KrimzLib/gl/shaders.h"
 
-// Including window
-#include "KrimzLib/window/keys.h"
-#include "KrimzLib/window/mouse.h"
-#include "KrimzLib/window/window.h"
-
 // Including 2D renderer
 #include "KrimzLib/renderer2D/vertex2D.h"
 #include "KrimzLib/renderer2D/object2D.h"
 #include "KrimzLib/renderer2D/renderer2D.h"
 
 // Including 3D renderer
-//#include "KrimzLib/renderer3D/vertex3D.h"
-//#include "KrimzLib/renderer3D/object3D.h"
-//#include "KrimzLib/renderer3D/camera.h"
-//#include "KrimzLib/renderer3D/skybox.h"
-//#include "KrimzLib/renderer3D/light/ambient.h"
-//#include "KrimzLib/renderer3D/light/direct.h"
-//#include "KrimzLib/renderer3D/renderer3D.h"
+#include "KrimzLib/renderer3D/vertex3D.h"
+#include "KrimzLib/renderer3D/object3D.h"
+#include "KrimzLib/renderer3D/camera.h"
+#include "KrimzLib/renderer3D/skybox.h"
+#include "KrimzLib/renderer3D/light/ambient.h"
+#include "KrimzLib/renderer3D/light/direct.h"
+#include "KrimzLib/renderer3D/renderer3D.h"

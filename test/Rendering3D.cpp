@@ -197,5 +197,5 @@ int main() {
 	renderer.update = update;
 
 	// Renderer creation
-	renderer.createNew(kl::ivec2(1600, 900));
+	renderer.startNew(kl::ivec2(1600, 900));
 }

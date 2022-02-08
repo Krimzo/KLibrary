@@ -56,10 +56,10 @@ void kl::ivec2::operator*=(const kl::ivec2& obj) {
 }
 
 // Division
-kl::ivec2 kl::ivec2::div(int a) {
+kl::ivec2 kl::ivec2::div(int a) const {
 	return kl::ivec2(x / a, y / a);
 }
-kl::ivec2 kl::ivec2::operator/(int a) {
+kl::ivec2 kl::ivec2::operator/(int a) const {
 	return this->div(a);
 }
 void kl::ivec2::operator/=(int a) {

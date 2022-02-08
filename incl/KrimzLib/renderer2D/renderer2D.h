@@ -15,6 +15,19 @@
 
 namespace kl {
 	class renderer2D {
+	private:
+		// Window
+		kl::window win;
+
+		// Mesh buffer
+		std::vector<kl::mesh*> meshes;
+
+		// Texture buffer
+		std::vector<kl::texture*> textures;
+
+		// Object buffer
+		std::vector<kl::object2D*> objects;
+
 	public:
 		/* Time */
 		float deltaT = 0;
@@ -65,18 +78,5 @@ namespace kl {
 
 		// Deletes a game object
 		bool delObject(kl::object2D* objectAddress);
-
-	private:
-		// Window
-		kl::window win;
-
-		// Mesh buffer
-		std::vector<kl::mesh*> meshes;
-
-		// Texture buffer
-		std::vector<kl::texture*> textures;
-
-		// Object buffer
-		std::vector<kl::object2D*> objects;
 	};
 }

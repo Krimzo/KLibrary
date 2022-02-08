@@ -30,8 +30,8 @@ namespace kl {
 		void operator*=(const kl::ivec2& obj);
 		
 		// Division
-		kl::ivec2 div(int a);
-		kl::ivec2 operator/(int a);
+		kl::ivec2 div(int a) const;
+		kl::ivec2 operator/(int a) const;
 		void operator/=(int a);
 		kl::ivec2 div(const kl::ivec2& obj) const;
 		kl::ivec2 operator/(const kl::ivec2& obj) const;

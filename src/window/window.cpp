@@ -82,7 +82,7 @@ void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool r
 	// Cleanup
 	cleanup(wName, opengl);
 }
-void kl::window::stop() {
+void kl::window::stop() const {
 	PostMessageW(hwnd, WM_CLOSE, 0, 0);
 }
 
@@ -130,7 +130,7 @@ float kl::window::getAspect() const {
 
 // Returns the center point of the frame
 kl::ivec2 kl::window::getCenter() const {
-	return getSize() / 2;
+	return this->getSize() / 2;
 }
 
 // Sets the window title

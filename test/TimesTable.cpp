@@ -5,7 +5,7 @@ int main() {
 	// Time table properties
 	int n = 200;
 	float m = 0;
-	float mIncrement = 0.1;
+	float mIncrement = 0.1f;
 
 	// Circle properties
 	float radiusBias = 25;
@@ -21,7 +21,6 @@ int main() {
 	// Window properties
 	kl::ivec2 windowSize(1600, 900);
 
-
 	// Window
 	kl::window window;
 	kl::image frame(windowSize, kl::colors::gray);
@@ -31,18 +30,18 @@ int main() {
 
 		// Circle position and size calculations
 		kl::ivec2 circleCenter(windowSize.x / 2, windowSize.y / 2);
-		float circleRadius = min(windowSize.x / 2.0, windowSize.y / 2.0) - radiusBias;
+		float circleRadius = min(windowSize.x * 0.5f, windowSize.y * 0.5f) - radiusBias;
 
 		// Drawing the circle
 		frame.drawCircle(circleCenter, circleRadius, circleColor);
 
 		// Calculating the points
-		float pointAngle = 360.0 / n;
+		float pointAngle = 360.0f / n;
 		std::vector<kl::ivec2> circlePoints(n);
 		int pointCounter = 0;
 		for (kl::ivec2& point : circlePoints) {
-			int pointX = int(cos(kl::convert::toRadians(pointAngle * pointCounter + 180)) * circleRadius) + windowSize.x / 2;
-			int pointY = int(sin(kl::convert::toRadians(pointAngle * pointCounter + 180)) * circleRadius) + windowSize.y / 2;
+			const int pointX = int(cos(kl::convert::toRadians(pointAngle * pointCounter + 180)) * circleRadius) + windowSize.x / 2;
+			const int pointY = int(sin(kl::convert::toRadians(pointAngle * pointCounter + 180)) * circleRadius) + windowSize.y / 2;
 			point = kl::ivec2(pointX, pointY);
 			pointCounter++;
 		}

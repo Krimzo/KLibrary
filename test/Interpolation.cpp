@@ -7,13 +7,13 @@ int main() {
 	const int fpsLimit = 165;
 
 	// Triangle points
-	kl::vec2 A(50, (windowSize.y - 1) / 3);
+	kl::vec2 A(50.0f, (windowSize.y - 1) / 3.0f);
 	kl::color colA(255, 0, 0);
-	kl::vec2 B((windowSize.x - 1) / 3, windowSize.y - 51);
+	kl::vec2 B((windowSize.x - 1) / 3.0f, windowSize.y - 51.0f);
 	kl::color colB(255, 255, 255);
-	kl::vec2 C(windowSize.x - 51, (windowSize.y - 1) * 0.667);
+	kl::vec2 C(windowSize.x - 51.0f, (windowSize.y - 1) * 0.667f);
 	kl::color colC(0, 0, 255);
-	kl::vec2 D((windowSize.x - 1) * 0.667, 50);
+	kl::vec2 D((windowSize.x - 1) * 0.667f, 50.0f);
 	kl::color colD(0, 255, 0);
 
 	// Triangle creation
@@ -38,18 +38,18 @@ int main() {
 		// Interpolating the line
 		for (int i = 0; i < windowSize.y; i++) {
 			// Pixel buffer
-			kl::color pixel = {};
+			kl::color pixel;
 			
 			// Checkig if the point inside a triangle and coloring the pixel
-			if (T1.inTriangle(kl::vec2(x, y))) {
-				pixel.r = T1.interpolate(kl::vec3(colA.r, colB.r, colC.r), kl::vec2(x, y));
-				pixel.g = T1.interpolate(kl::vec3(colA.g, colB.g, colC.g), kl::vec2(x, y));
-				pixel.b = T1.interpolate(kl::vec3(colA.b, colB.b, colC.b), kl::vec2(x, y));
+			if (T1.inTriangle(kl::vec2(float(x), float(y)))) {
+				pixel.r = byte(T1.interpolate(kl::vec3(float(colA.r), float(colB.r), float(colC.r)), kl::vec2(float(x), float(y))));
+				pixel.g = byte(T1.interpolate(kl::vec3(float(colA.g), float(colB.g), float(colC.g)), kl::vec2(float(x), float(y))));
+				pixel.b = byte(T1.interpolate(kl::vec3(float(colA.b), float(colB.b), float(colC.b)), kl::vec2(float(x), float(y))));
 			}
-			else if (T2.inTriangle(kl::vec2(x, y))) {
-				pixel.r = T2.interpolate(kl::vec3(colA.r, colD.r, colC.r), kl::vec2(x, y));
-				pixel.g = T2.interpolate(kl::vec3(colA.g, colD.g, colC.g), kl::vec2(x, y));
-				pixel.b = T2.interpolate(kl::vec3(colA.b, colD.b, colC.b), kl::vec2(x, y));
+			else if (T2.inTriangle(kl::vec2(float(x), float(y)))) {
+				pixel.r = byte(T2.interpolate(kl::vec3(float(colA.r), float(colD.r), float(colC.r)), kl::vec2(float(x), float(y))));
+				pixel.g = byte(T2.interpolate(kl::vec3(float(colA.g), float(colD.g), float(colC.g)), kl::vec2(float(x), float(y))));
+				pixel.b = byte(T2.interpolate(kl::vec3(float(colA.b), float(colD.b), float(colC.b)), kl::vec2(float(x), float(y))));
 			}
 			else {
 				pixel = kl::colors::gray;
