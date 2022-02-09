@@ -41,7 +41,7 @@ kl::mesh::mesh(const std::vector<kl::vertex2D>& vertexData) {
 }
 kl::mesh::mesh(const std::vector<kl::vertex3D>& vertexData) {
 	// Saving the vertex count
-	this->vertexCount = (int)vertexData.size();
+	this->vertexCount = int(vertexData.size());
 
 	// Generating the vao
 	glGenVertexArrays(1, &this->vao);

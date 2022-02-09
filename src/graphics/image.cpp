@@ -14,27 +14,27 @@
 
 // Constructor
 kl::image::image() {
-	sSize(kl::ivec2());
+	this->setSize(kl::ivec2());
 }
 kl::image::image(const kl::ivec2& size, const kl::color& color) {
-	sSize(size);
-	fill(color);
+	this->setSize(size);
+	this->fill(color);
 }
 kl::image::image(const char* fileName) {
-	fromFile(fileName);
+	this->fromFile(fileName);
 }
 
 // Getters
-int kl::image::gWidth() const {
+int kl::image::getWidth() const {
 	return width;
 }
-int kl::image::gHeight() const {
+int kl::image::getHeight() const {
 	return height;
 }
-kl::ivec2 kl::image::gSize() const {
+kl::ivec2 kl::image::getSize() const {
 	return kl::ivec2(width, height);
 }
-kl::color kl::image::gPixel(const kl::ivec2& point) const {
+kl::color kl::image::getPixel(const kl::ivec2& point) const {
 	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
 		return pixels[size_t(point.y) * width + point.x];
 	}
@@ -46,7 +46,7 @@ int kl::image::pixelCount() const {
 byte* kl::image::pointer() const {
 	return (byte*)&pixels[0];
 }
-kl::image kl::image::gRect(kl::ivec2 a, kl::ivec2 b) const {
+kl::image kl::image::getRect(kl::ivec2 a, kl::ivec2 b) const {
 	// Clamping
 	a.x = min(max(a.x, 0), this->width);
 	a.y = min(max(a.y, 0), this->height);
@@ -67,28 +67,28 @@ kl::image kl::image::gRect(kl::ivec2 a, kl::ivec2 b) const {
 
 	// Saving data
 	kl::image temp(b - a);
-	for (int y = 0; y < temp.gHeight(); y++) {
-		for (int x = 0; x < temp.gWidth(); x++) {
+	for (int y = 0; y < temp.getHeight(); y++) {
+		for (int x = 0; x < temp.getWidth(); x++) {
 			const kl::ivec2 pos(x, y);
-			temp.sPixel(pos, this->gPixel(pos + a));
+			temp.setPixel(pos, this->getPixel(pos + a));
 		}
 	}
 	return temp;
 }
 
 // Setters
-void kl::image::sWidth(int width) {
-	sSize(kl::ivec2(width, height));
+void kl::image::setWidth(int width) {
+	setSize(kl::ivec2(width, height));
 }
-void kl::image::sHeight(int height) {
-	sSize(kl::ivec2(width, height));
+void kl::image::setHeight(int height) {
+	setSize(kl::ivec2(width, height));
 }
-void kl::image::sSize(const kl::ivec2& size) {
+void kl::image::setSize(const kl::ivec2& size) {
 	width = size.x;
 	height = size.y;
 	pixels.resize(size_t(width) * height);
 }
-void kl::image::sPixel(const kl::ivec2& point, const kl::color& color) {
+void kl::image::setPixel(const kl::ivec2& point, const kl::color& color) {
 	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
 		pixels[size_t(point.y) * width + point.x] = color;
 	}
@@ -112,7 +112,7 @@ void kl::image::fromFile(const std::string& filePath) {
 	}
 
 	// Resizing the self
-	this->sSize(kl::ivec2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
+	this->setSize(kl::ivec2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
 
 	// Locking the bitmap data
 	Gdiplus::BitmapData bitmapData;
@@ -182,7 +182,7 @@ void kl::image::toFile(const std::string& fileName) {
 	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(width, height, PixelFormat24bppRGB);
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			kl::color tempPixel = gPixel(kl::ivec2(x, y));
+			kl::color tempPixel = getPixel(kl::ivec2(x, y));
 			tempBitmap->SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.r, tempPixel.g, tempPixel.b));
 		}
 	}
@@ -235,7 +235,7 @@ void kl::image::drawLine(const kl::ivec2& a, const kl::ivec2& b, const kl::color
 	// Drawing
 	kl::vec2 drawPoint(float(a.x), float(a.y));
 	for (int i = 0; i <= len; i++) {
-		sPixel(kl::ivec2(int(drawPoint.x), int(drawPoint.y)), col);
+		setPixel(kl::ivec2(int(drawPoint.x), int(drawPoint.y)), col);
 		drawPoint = drawPoint + incr;
 	}
 }
@@ -308,14 +308,14 @@ void kl::image::drawCircle(const kl::ivec2& p, float r, const kl::color& col, bo
 			// X run
 			const int x1 = int(p.x - r + i);
 			const int y1 = int(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
-			sPixel(kl::ivec2(x1, y1), col);
-			sPixel(kl::ivec2(x1, 2 * p.y - y1), col);
+			setPixel(kl::ivec2(x1, y1), col);
+			setPixel(kl::ivec2(x1, 2 * p.y - y1), col);
 
 			// Y run
 			const int y2 = int(p.y - r + i);
 			const int x2 = int(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
-			sPixel(kl::ivec2(x2, y2), col);
-			sPixel(kl::ivec2(2 * p.x - x2, y2), col);
+			setPixel(kl::ivec2(x2, y2), col);
+			setPixel(kl::ivec2(2 * p.x - x2, y2), col);
 		}
 	}
 }
@@ -338,7 +338,7 @@ std::string kl::image::toASCII(const kl::ivec2& frameSize) {
 	for (int y = 0; y < frameSize.y; y++) {
 		for (int x = 0; x < frameSize.x; x++) {
 			// Pixels to grayscale
-			kl::color currentPixel = gPixel(kl::ivec2(x * pixelWidthIncrement, y * pixelHeightIncrement));
+			kl::color currentPixel = getPixel(kl::ivec2(x * pixelWidthIncrement, y * pixelHeightIncrement));
 			const int grayScaledPixel = int(currentPixel.r * 0.299f + currentPixel.g * 0.587f + currentPixel.b * 0.114f);
 
 			// Grayscaled values to ASCII

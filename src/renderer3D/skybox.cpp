@@ -61,21 +61,21 @@ const std::vector<kl::vertex3D> kl::skybox::boxVertices {
 // Constructors/destructor
 kl::skybox::skybox(const kl::image& fullbox) {
 	// Checking the aspect ratio
-	if (fullbox.gWidth() % 4 == 0 && fullbox.gHeight() % 3 == 0) {
+	if (fullbox.getWidth() % 4 == 0 && fullbox.getHeight() % 3 == 0) {
 		// Getting the part size
-		const int partWidth = fullbox.gWidth() / 4;
-		const int partHeight = fullbox.gHeight() / 3;
+		const int partWidth = fullbox.getWidth() / 4;
+		const int partHeight = fullbox.getHeight() / 3;
 
 		// Checking the part size
 		if (partWidth == partHeight) {
 			// Extracting the sides
 			const kl::ivec2 partSize(partWidth, partHeight);
-			const kl::image front  = fullbox.gRect(partSize * kl::ivec2(1, 1), partSize * kl::ivec2(2, 2));
-			const kl::image back   = fullbox.gRect(partSize * kl::ivec2(3, 1), partSize * kl::ivec2(4, 2));
-			const kl::image left   = fullbox.gRect(partSize * kl::ivec2(0, 1), partSize * kl::ivec2(1, 2));
-			const kl::image right  = fullbox.gRect(partSize * kl::ivec2(2, 1), partSize * kl::ivec2(3, 2));
-			const kl::image top    = fullbox.gRect(partSize * kl::ivec2(1, 0), partSize * kl::ivec2(2, 1));
-			const kl::image bottom = fullbox.gRect(partSize * kl::ivec2(1, 2), partSize * kl::ivec2(2, 3));
+			const kl::image front  = fullbox.getRect(partSize * kl::ivec2(1, 1), partSize * kl::ivec2(2, 2));
+			const kl::image back   = fullbox.getRect(partSize * kl::ivec2(3, 1), partSize * kl::ivec2(4, 2));
+			const kl::image left   = fullbox.getRect(partSize * kl::ivec2(0, 1), partSize * kl::ivec2(1, 2));
+			const kl::image right  = fullbox.getRect(partSize * kl::ivec2(2, 1), partSize * kl::ivec2(3, 2));
+			const kl::image top    = fullbox.getRect(partSize * kl::ivec2(1, 0), partSize * kl::ivec2(2, 1));
+			const kl::image bottom = fullbox.getRect(partSize * kl::ivec2(1, 2), partSize * kl::ivec2(2, 3));
 
 			// Calling the other constructor
 			this->skybox::skybox(front, back, left, right, top, bottom);

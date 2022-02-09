@@ -38,7 +38,7 @@ kl::window::~window() {
 // Window creation
 void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool opengl) {
 	// Converting window name to a wstring
-	std::wstring wName = kl::convert::toWString(name);
+	const std::wstring wName = kl::convert::toWString(name);
 
 	// Registering winapi window class
 	registerWindowClass(wName);
@@ -140,9 +140,9 @@ void kl::window::setTitle(const std::string& data) {
 
 // Sets the pixels of the window
 void kl::window::drawImage(const kl::image& toDraw, const kl::ivec2& position) {
-	bmpInfo.bmiHeader.biWidth = toDraw.gWidth();
-	bmpInfo.bmiHeader.biHeight = toDraw.gHeight();
-	StretchDIBits(hdc, position.x, (toDraw.gHeight() - 1) + position.y, toDraw.gWidth(), -toDraw.gHeight(), 0, 0, toDraw.gWidth(), toDraw.gHeight(), toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+	bmpInfo.bmiHeader.biWidth = toDraw.getWidth();
+	bmpInfo.bmiHeader.biHeight = toDraw.getHeight();
+	StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 }
 
 // Binds the OpenGL contex of the window

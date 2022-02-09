@@ -23,19 +23,19 @@ namespace kl {
 		image(const char* fileName);
 
 		// Getters
-		int gWidth() const;
-		int gHeight() const;
-		kl::ivec2 gSize() const;
-		kl::color gPixel(const kl::ivec2& point) const;
+		int getWidth() const;
+		int getHeight() const;
+		kl::ivec2 getSize() const;
+		kl::color getPixel(const kl::ivec2& point) const;
 		int pixelCount() const;
 		byte* pointer() const;
-		kl::image gRect(kl::ivec2 a, kl::ivec2 b) const;
+		kl::image getRect(kl::ivec2 a, kl::ivec2 b) const;
 
 		// Setters
-		void sWidth(int width);
-		void sHeight(int height);
-		void sSize(const kl::ivec2& size);
-		void sPixel(const kl::ivec2& point, const kl::color& color);
+		void setWidth(int width);
+		void setHeight(int height);
+		void setSize(const kl::ivec2& size);
+		void setPixel(const kl::ivec2& point, const kl::color& color);
 
 		// Reads an image file and stores it in the image instance
 		void fromFile(const std::string& filePath);

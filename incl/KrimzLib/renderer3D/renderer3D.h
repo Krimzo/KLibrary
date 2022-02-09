@@ -47,6 +47,7 @@ namespace kl {
 		// Time
 		float deltaT = 0;
 		float elapsedT = 0;
+		float fpsLimit = 300;
 
 		// View
 		kl::color background = kl::colors::gray;
@@ -83,23 +84,17 @@ namespace kl {
 		// Returns the aspect ratio
 		float getAspect() const;
 
-		// Creates a mesh
+		// Mesh
 		kl::mesh* newMesh(const std::string& filePath, bool flipZ = true);
 		kl::mesh* newMesh(const std::vector<kl::vertex3D>& vertexData);
+		void delMesh(kl::mesh* mesAddress);
 
-		// Deletes a mesh
-		bool delMesh(kl::mesh* mesAddress);
-
-		// Creates a texture
+		// Texture
 		kl::texture* newTexture(const kl::image& image);
+		void delTex(kl::texture* texAddress);
 
-		// Deletes a texture
-		bool delTex(kl::texture* texAddress);
-
-		// Creates a new game object
+		// Object
 		kl::object3D* newObject(kl::mesh* mes, kl::texture* tex);
-
-		// Deletes a game object
-		bool delObject(kl::object3D* objectAddress);
+		void delObject(kl::object3D* objectAddress);
 	};
 }

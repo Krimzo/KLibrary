@@ -10,7 +10,7 @@ kl::object3D* table = nullptr;
 kl::object3D* katanaL = nullptr;
 kl::object3D* katanaR = nullptr;
 kl::object3D* horse = nullptr;
-kl::object3D* sphere1 = nullptr;
+kl::object3D* sphere = nullptr;
 kl::object3D* metalcube1 = nullptr;
 kl::object3D* metalcube2 = nullptr;
 kl::object3D* kerv = nullptr;
@@ -33,6 +33,7 @@ void setup() {
 	night = new kl::skybox(
 		"res/textures/skyboxes/night/night.png"
 	);
+	renderer.skybox = clouds;
 
 	// Mesh creation
 	kl::mesh* cube_mes = renderer.newMesh("res/objects/cube.obj");
@@ -58,7 +59,7 @@ void setup() {
 	katanaL = renderer.newObject(katana_mes, katana_tex);
 	katanaR = renderer.newObject(katana_mes, katana_tex);
 	horse = renderer.newObject(horse_mes, horse_tex);
-	sphere1 = renderer.newObject(sphere_mes, solid2_tex);
+	sphere = renderer.newObject(sphere_mes, solid2_tex);
 	metalcube1 = renderer.newObject(cube_mes, peace_tex);
 	metalcube2 = renderer.newObject(cube_mes, fp_tex);
 	kerv = renderer.newObject(tv_mes, tv_tex);
@@ -84,10 +85,10 @@ void setup() {
 	horse->physics = true;
 	horse->angular.y = 18;
 
-	sphere1->size = kl::vec3(1, 1, 1);
-	sphere1->position = kl::vec3(0, 2, -2);
-	sphere1->physics = true;
-	sphere1->velocity.x = 1;
+	sphere->size = kl::vec3(1, 1, 1);
+	sphere->position = kl::vec3(0, 2, -2);
+	sphere->physics = true;
+	sphere->velocity.x = 1;
 
 	metalcube1->size = kl::vec3(0.5, 0.5, 0.5);
 	metalcube1->rotation = kl::vec3(45, 45, 0);
@@ -109,7 +110,7 @@ void setup() {
 	renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
 
 	// Going into fullscreen
-	renderer.setFullscreen(true);
+	//renderer.setFullscreen(true);
 }
 
 // Renderer input
@@ -173,17 +174,17 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 // Renderer update
 void update() {
 	const float horseGrav = 0.1f;
-	sphere1->velocity += (horse->position - sphere1->position) * horseGrav * renderer.deltaT;
+	sphere->velocity += (horse->position - sphere->position) * horseGrav * renderer.deltaT;
 
 	const float r = 2;
 	const float sinT = sin(renderer.elapsedT);
 	const float cosT = cos(renderer.elapsedT);
-	metalcube1->position.x = sphere1->position.x + r * sinT;
-	metalcube1->position.y = sphere1->position.y + r * sinT;
-	metalcube1->position.z = sphere1->position.z + r * cosT;
-	metalcube2->position.x = sphere1->position.x - r * sinT;
-	metalcube2->position.y = sphere1->position.y - r * sinT;
-	metalcube2->position.z = sphere1->position.z - r * cosT;
+	metalcube1->position.x = sphere->position.x + r * sinT;
+	metalcube1->position.y = sphere->position.y + r * sinT;
+	metalcube1->position.z = sphere->position.z + r * cosT;
+	metalcube2->position.x = sphere->position.x - r * sinT;
+	metalcube2->position.y = sphere->position.y - r * sinT;
+	metalcube2->position.z = sphere->position.z - r * cosT;
 }
 
 int main() {

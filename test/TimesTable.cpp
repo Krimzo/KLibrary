@@ -26,7 +26,7 @@ int main() {
 	kl::image frame(windowSize, kl::colors::gray);
 	window.update = [&]() {
 		// Clearing the frame
-		frame.fillSolid(kl::colors::gray);
+		frame.fill(kl::colors::gray);
 
 		// Circle position and size calculations
 		kl::ivec2 circleCenter(windowSize.x / 2, windowSize.y / 2);

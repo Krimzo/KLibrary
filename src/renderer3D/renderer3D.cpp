@@ -106,19 +106,26 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 		}
 
 		// Rendering skybox
-		if (this->skybox) this->skybox->render(this->camera.matrix());
+		if (this->skybox) {
+			this->skybox->render(this->camera.matrix());
+		}
 
 		// Updating the fps display
 		win.setTitle(std::to_string(int(1 / deltaT)));
 
 		// Swapping the frame buffers
 		win.swapBuffers();
+
+		// Fps limit wait
+		const float toSleep = 1 / fpsLimit;
+		while ((timer.elapsed() - elapsedT) < toSleep);
 	};
 
 	// Window end definition
 	win.end = [&]() {
 		// Deleting shaders
 		delete default_sha;
+		default_sha = nullptr;
 
 		// Deleting the sun shadow buffers
 		sun.delBuff();
@@ -179,15 +186,13 @@ kl::mesh* kl::renderer3D::newMesh(const std::vector<kl::vertex3D>& vertexData) {
 }
 
 // Deletes a mesh
-bool kl::renderer3D::delMesh(kl::mesh* mesAddress) {
+void kl::renderer3D::delMesh(kl::mesh* mesAddress) {
 	for (int i = 0; i < meshes.size(); i++) {
 		if (meshes[i] == mesAddress) {
 			delete meshes[i];
 			meshes.erase(meshes.begin() + i);
-			return true;
 		}
 	}
-	return false;
 }
 
 // Creates a texture
@@ -197,15 +202,13 @@ kl::texture* kl::renderer3D::newTexture(const kl::image& image) {
 }
 
 // Deletes a texture
-bool kl::renderer3D::delTex(kl::texture* texAddress) {
+void kl::renderer3D::delTex(kl::texture* texAddress) {
 	for (int i = 0; i < textures.size(); i++) {
 		if (textures[i] == texAddress) {
 			delete textures[i];
 			textures.erase(textures.begin() + i);
-			return true;
 		}
 	}
-	return false;
 }
 
 // Creates a new game object
@@ -215,13 +218,11 @@ kl::object3D* kl::renderer3D::newObject(kl::mesh* mes, kl::texture* tex) {
 }
 
 // Deletes a game object
-bool kl::renderer3D::delObject(kl::object3D* objectAddress) {
+void kl::renderer3D::delObject(kl::object3D* objectAddress) {
 	for (int i = 0; i < objects.size(); i++) {
 		if (objects[i] == objectAddress) {
 			delete objects[i];
 			objects.erase(objects.begin() + i);
-			return true;
 		}
 	}
-	return false;
 }

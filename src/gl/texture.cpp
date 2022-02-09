@@ -23,7 +23,7 @@ kl::texture::texture(const kl::image& image) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 	// Loading the pixel data
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, temp.gWidth(), temp.gHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, temp.pointer());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, temp.getWidth(), temp.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, temp.pointer());
 
 	// Generating the texture mipmaps
 	glGenerateMipmap(GL_TEXTURE_2D);
@@ -50,12 +50,12 @@ kl::texture::texture(const kl::image& front, const kl::image& back, const kl::im
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 	// Loading the pixel data
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, right.gWidth(), right.gHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, right.pointer());
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, left.gWidth(), left.gHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, left.pointer());
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB, top.gWidth(), top.gHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, top.pointer());
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, bottom.gWidth(), bottom.gHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, bottom.pointer());
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, front.gWidth(), front.gHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, front.pointer());
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, back.gWidth(), back.gHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, back.pointer());
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, right.getWidth(), right.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, right.pointer());
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, left.getWidth(), left.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, left.pointer());
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB, top.getWidth(), top.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, top.pointer());
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, bottom.getWidth(), bottom.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, bottom.pointer());
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, front.getWidth(), front.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, front.pointer());
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, back.getWidth(), back.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, back.pointer());
 
 	// Unbinding the texture object
 	glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);

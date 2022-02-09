@@ -8,7 +8,7 @@ struct stick {
 
 void renderSticks(kl::image& frameBuffer, std::vector<stick>& stickArray) {
 	// Clearing the frame buffer
-	frameBuffer.fillSolid(kl::colors::gray);
+	frameBuffer.fill(kl::colors::gray);
 
 	// Drawing the sticks
 	for (int x = 0; x < stickArray.size(); x++) {
