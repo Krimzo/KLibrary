@@ -10,42 +10,30 @@ kl::renderer3D::renderer3D() {
 
 // Creates and runs a new engine
 void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
-	/* Engine timer */
-	kl::timer timer;
-
-	/* Default shaders */
-	kl::shaders* default_sha = nullptr;
-	kl::uniform w_uni;
-	kl::uniform vp_uni;
-	kl::uniform dark_uni;
-	kl::uniform sunL_uni;
-	kl::uniform sunD_uni;
-	kl::uniform sunVP_uni;
-
-	/* Window start definition */
+	// Window start definition
 	win.start = [&]() {
-		/* Setting up the depth testing */
+		// Setting up the depth testing
 		kl::gl::setDepthTest(true);
 
-		/* Setting up the camera */
-		cam.nearPlane = 0.01f;
-		cam.farPlane = 100;
-		cam.sens = 0.025f;
+		// Setting up the camera
+		this->camera.nearPlane = 0.01f;
+		this->camera.farPlane = 100.0f;
+		this->camera.sens = 0.025f;
 
-		/* Setting up the lights */
-		dark.color = kl::colors::white;
-		dark.intensity = 0.1f;
-		sun.color = kl::colors::white;
-		sun.intensity = 1;
-		sun.direction = kl::vec3(0, -1, -2);
+		// Setting up the lights
+		this->ambient.color = kl::colors::white;
+		this->ambient.intensity = 0.1f;
+		this->sun.color = kl::colors::white;
+		this->sun.intensity = 1.0f;
+		this->sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
 
-		/* Compiling default shaders */
+		// Compiling default shaders
 		default_sha = new kl::shaders(
 			kl::shaders::parse("res/shaders/renderer3D.glsl", kl::shaders::Vertex),
 			kl::shaders::parse("res/shaders/renderer3D.glsl", kl::shaders::Fragment)
 		);
 
-		/* Getting object shader uniforms */
+		// Getting object shader uniforms
 		w_uni = default_sha->getUniform("w");
 		vp_uni = default_sha->getUniform("vp");
 		dark_uni = default_sha->getUniform("dark");
@@ -54,46 +42,46 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 		sunVP_uni = default_sha->getUniform("sunVP");
 		default_sha->getUniform("shadowMap").setData(1);
 
-		/* Generating sun buffers */
+		// Generating sun buffers
 		sun.genBuff(4096);
 
-		/* Calling the user start */
+		// Calling the user start
 		setup();
 	};
 
-	/* Window update definition */
+	// Window update definition
 	win.update = [&]() {
-		/* Time calculations */
+		// Time calculations
 		deltaT = timer.interval();
 		elapsedT = timer.elapsed();
 
-		/* Clearing the default buffers */
+		// Clearing the default buffers
 		kl::gl::clearBuffers(background);
 
-		/* Calling the user input */
+		// Calling the user input
 		input(&win.keys, &win.mouse);
 
-		/* Calling the physics update */
+		// Calling the physics update
 		for (int i = 0; i < objects.size(); i++) {
 			objects[i]->upPhys(deltaT);
 		}
 
-		/* Calling the user update */
+		// Calling the user update
 		update();
 
-		/* Setting the camera uniforms */
-		vp_uni.setData(cam.matrix());
+		// Setting the camera uniforms
+		vp_uni.setData(this->camera.matrix());
 
-		/* Calculating the light vp matrix */
-		sun.calcMat(cam);
+		// Calculating the light vp matrix
+		sun.calcMat(this->camera);
 
-		/* Setting the light uniforms */
-		dark_uni.setData(dark.getCol());
+		// Setting the light uniforms
+		dark_uni.setData(this->ambient.getCol());
 		sunL_uni.setData(sun.getCol());
 		sunD_uni.setData(sun.getDir());
 		sunVP_uni.setData(sun.matrix());
 
-		/* Rendering the shadows */
+		// Rendering the shadows
 		sun.render(&win, [&]() {
 			for (int i = 0; i < objects.size(); i++) {
 				if (objects[i]->shadows) {
@@ -104,9 +92,9 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 					objects[i]->render();
 				}
 			}
-			});
+		});
 
-		/* Rendering objects */
+		// Rendering objects
 		for (int i = 0; i < objects.size(); i++) {
 			if (objects[i]->visible) {
 				// Setting the world matrix
@@ -117,17 +105,17 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 			}
 		}
 
-		/* Rendering skybox */
-		if (sky) sky->render(cam.matrix());
+		// Rendering skybox
+		if (this->skybox) this->skybox->render(this->camera.matrix());
 
-		/* Updating the fps display */
+		// Updating the fps display
 		win.setTitle(std::to_string(int(1 / deltaT)));
 
-		/* Swapping the frame buffers */
+		// Swapping the frame buffers
 		win.swapBuffers();
 	};
 
-	/* Window end definition */
+	// Window end definition
 	win.end = [&]() {
 		// Deleting shaders
 		delete default_sha;
@@ -148,8 +136,11 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 		textures.clear();
 	};
 
-	/* Window creation */
+	// Timer reset
+	timer.interval();
 	timer.reset();
+
+	// Window creation
 	win.startNew(frameSize, kl::random::STRING(6), false, true, true);
 }
 void kl::renderer3D::stop() const {
@@ -175,20 +166,6 @@ kl::ivec2 kl::renderer3D::frameCenter() const {
 // Returns the aspect ratio
 float kl::renderer3D::getAspect() const {
 	return win.getAspect();
-}
-
-// Creates a new skybox
-void kl::renderer3D::newSkybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
-	delSkybox();
-	sky = new kl::skybox(front, back, left, right, top, bottom);
-}
-
-// Deletes an existing skybox
-void kl::renderer3D::delSkybox() {
-	if (sky) {
-		delete sky;
-		sky = nullptr;
-	}
 }
 
 // Creates a mesh

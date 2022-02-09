@@ -87,34 +87,34 @@ void kl::keys::setKey(kl::key key, bool state) {
 
 		// Numbers
 	case '0':
-		key0 = state;
+		num0 = state;
 		break;
 	case '1':
-		key1 = state;
+		num1 = state;
 		break;
 	case '2':
-		key2 = state;
+		num2 = state;
 		break;
 	case '3':
-		key3 = state;
+		num3 = state;
 		break;
 	case '4':
-		key4 = state;
+		num4 = state;
 		break;
 	case '5':
-		key5 = state;
+		num5 = state;
 		break;
 	case '6':
-		key6 = state;
+		num6 = state;
 		break;
 	case '7':
-		key7 = state;
+		num7 = state;
 		break;
 	case '8':
-		key8 = state;
+		num8 = state;
 		break;
 	case '9':
-		key9 = state;
+		num9 = state;
 		break;
 
 		// Signs

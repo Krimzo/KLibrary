@@ -105,6 +105,11 @@ kl::vec2 kl::vec2::negate() const {
 	return operator*(-1);
 }
 
+// Returns an absolute vector
+kl::vec2 kl::vec2::abso() const {
+	return kl::vec2(abs(x), abs(y));
+}
+
 // Returns the vectors length
 float kl::vec2::length() const {
 	return sqrt(x * x + y * y);

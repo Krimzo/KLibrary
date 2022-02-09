@@ -27,6 +27,7 @@ namespace kl {
 
 	public:
 		// Constructor/destructor
+		skybox(const kl::image& fullbox);
 		skybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
 		~skybox();
 

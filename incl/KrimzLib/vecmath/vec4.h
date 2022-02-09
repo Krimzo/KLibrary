@@ -58,6 +58,9 @@ namespace kl {
 		// Returns a negated vector
 		kl::vec4 negate() const;
 
+		// Returns an absolute vector
+		kl::vec4 abso() const;
+
 		// Returns the vectors length
 		float length() const;
 

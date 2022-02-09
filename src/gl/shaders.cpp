@@ -141,6 +141,7 @@ kl::id kl::shaders::compileShader(const std::string& shaderSource, kl::id shader
 		char compilationInfo[1024];
 		glGetShaderInfoLog(shader, sizeof(compilationInfo), NULL, compilationInfo);
 		printf("'%d' shader compilation error: '%s'\n", shaderType, compilationInfo);
+		std::cin.get();
 		exit(69);
 	}
 
@@ -158,6 +159,7 @@ void kl::shaders::finalizeProgram() {
 		char linkingInfo[1024];
 		glGetProgramInfoLog(programID, sizeof(linkingInfo), NULL, linkingInfo);
 		printf("Shader program linking error: '%s'\n", linkingInfo);
+		std::cin.get();
 		exit(69);
 	}
 
@@ -169,6 +171,7 @@ void kl::shaders::finalizeProgram() {
 		char validateInfo[1024];
 		glGetProgramInfoLog(programID, sizeof(validateInfo), NULL, validateInfo);
 		printf("Shader program validation error: '%s'\n", validateInfo);
+		std::cin.get();
 		exit(69);
 	}
 }

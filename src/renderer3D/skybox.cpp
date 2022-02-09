@@ -43,7 +43,7 @@ const std::string kl::skybox::fragSource = R"(
 )";
 
 // Skybox box vertices
-const std::vector<kl::vertex3D> kl::skybox::boxVertices = {
+const std::vector<kl::vertex3D> kl::skybox::boxVertices {
 	kl::vertex3D(kl::vec3( 1,  1, -1)), kl::vertex3D(kl::vec3( 1, -1, -1)), kl::vertex3D(kl::vec3( 1, -1,  1)),
 	kl::vertex3D(kl::vec3( 1, -1,  1)), kl::vertex3D(kl::vec3( 1,  1,  1)), kl::vertex3D(kl::vec3( 1,  1, -1)),
 	kl::vertex3D(kl::vec3(-1,  1, -1)), kl::vertex3D(kl::vec3(-1,  1,  1)), kl::vertex3D(kl::vec3(-1, -1,  1)),
@@ -58,7 +58,40 @@ const std::vector<kl::vertex3D> kl::skybox::boxVertices = {
 	kl::vertex3D(kl::vec3(-1, -1, -1)), kl::vertex3D(kl::vec3( 1, -1, -1)), kl::vertex3D(kl::vec3( 1,  1, -1))
 };
 
-// Constructor/destructor
+// Constructors/destructor
+kl::skybox::skybox(const kl::image& fullbox) {
+	// Checking the aspect ratio
+	if (fullbox.gWidth() % 4 == 0 && fullbox.gHeight() % 3 == 0) {
+		// Getting the part size
+		const int partWidth = fullbox.gWidth() / 4;
+		const int partHeight = fullbox.gHeight() / 3;
+
+		// Checking the part size
+		if (partWidth == partHeight) {
+			// Extracting the sides
+			const kl::ivec2 partSize(partWidth, partHeight);
+			const kl::image front  = fullbox.gRect(partSize * kl::ivec2(1, 1), partSize * kl::ivec2(2, 2));
+			const kl::image back   = fullbox.gRect(partSize * kl::ivec2(3, 1), partSize * kl::ivec2(4, 2));
+			const kl::image left   = fullbox.gRect(partSize * kl::ivec2(0, 1), partSize * kl::ivec2(1, 2));
+			const kl::image right  = fullbox.gRect(partSize * kl::ivec2(2, 1), partSize * kl::ivec2(3, 2));
+			const kl::image top    = fullbox.gRect(partSize * kl::ivec2(1, 0), partSize * kl::ivec2(2, 1));
+			const kl::image bottom = fullbox.gRect(partSize * kl::ivec2(1, 2), partSize * kl::ivec2(2, 3));
+
+			// Calling the other constructor
+			this->skybox::skybox(front, back, left, right, top, bottom);
+		}
+		else {
+			printf("Skybox image width and height do not match!");
+			std::cin.get();
+			exit(69);
+		}
+	}
+	else {
+		printf("Skybox image does not have the correct aspect ratio!");
+		std::cin.get();
+		exit(69);
+	}
+}
 kl::skybox::skybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
 	// Generating the box mesh
 	box_mes = new kl::mesh(boxVertices);
@@ -91,8 +124,10 @@ void kl::skybox::render(const kl::mat4& vpMat) const {
 	// Setting skybox uniforms
 	vp_uni.setData(vpMat);
 
-	// Drawing the cubemap
+	// Binding the texture
 	box_tex->bind();
+
+	// Drawing the cubemap
 	box_mes->draw();
 
 	// Resetting the depth testing

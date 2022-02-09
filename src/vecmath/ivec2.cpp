@@ -86,6 +86,16 @@ bool kl::ivec2::operator!=(const kl::ivec2& obj) const {
 	return !this->equals(obj);
 }
 
+// Returns a negated vec
+kl::ivec2 kl::ivec2::negate() const {
+	return this->mul(-1);
+}
+
+// Returns an absolute vec
+kl::ivec2 kl::ivec2::abso() const {
+	return kl::ivec2(abs(x), abs(y));
+}
+
 // Prints the data to the console
 void kl::ivec2::print() const {
 	printf("% d % d\n", x, y);

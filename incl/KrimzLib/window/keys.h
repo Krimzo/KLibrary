@@ -34,16 +34,16 @@ namespace kl {
 		bool m = false;
 
 		// Numbers
-		bool key0 = false;
-		bool key1 = false;
-		bool key2 = false;
-		bool key3 = false;
-		bool key4 = false;
-		bool key5 = false;
-		bool key6 = false;
-		bool key7 = false;
-		bool key8 = false;
-		bool key9 = false;
+		bool num0 = false;
+		bool num1 = false;
+		bool num2 = false;
+		bool num3 = false;
+		bool num4 = false;
+		bool num5 = false;
+		bool num6 = false;
+		bool num7 = false;
+		bool num8 = false;
+		bool num9 = false;
 
 		// Signs
 		bool period = false;

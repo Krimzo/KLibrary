@@ -116,6 +116,11 @@ kl::vec3 kl::vec3::negate() const {
 	return this->mul(-1);
 }
 
+// Returns an absolute vector
+kl::vec3 kl::vec3::abso() const {
+	return kl::vec3(abs(x), abs(y), abs(z));
+}
+
 // Returns the vectors length
 float kl::vec3::length() const {
 	return sqrt(x * x + y * y + z * z);

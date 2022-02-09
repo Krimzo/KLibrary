@@ -22,9 +22,6 @@ namespace kl {
 		// Window
 		kl::window win;
 
-		// Engine skybox
-		kl::skybox* sky = nullptr;
-
 		// Mesh buffer
 		std::vector<kl::mesh*> meshes;
 
@@ -34,6 +31,18 @@ namespace kl {
 		// Object buffer
 		std::vector<kl::object3D*> objects;
 
+		// Engine timer
+		kl::timer timer;
+
+		// Default shaders
+		kl::shaders* default_sha = nullptr;
+		kl::uniform w_uni;
+		kl::uniform vp_uni;
+		kl::uniform dark_uni;
+		kl::uniform sunL_uni;
+		kl::uniform sunD_uni;
+		kl::uniform sunVP_uni;
+
 	public:
 		// Time
 		float deltaT = 0;
@@ -41,11 +50,14 @@ namespace kl {
 
 		// View
 		kl::color background = kl::colors::gray;
-		kl::camera cam;
+		kl::camera camera;
 
 		// Lighting
-		kl::ambient dark;
+		kl::ambient ambient;
 		kl::direct sun;
+
+		// Engine skybox
+		kl::skybox* skybox = nullptr;
 
 		// User functions
 		std::function<void()> setup;
@@ -70,12 +82,6 @@ namespace kl {
 
 		// Returns the aspect ratio
 		float getAspect() const;
-
-		// Creates a new skybox
-		void newSkybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
-
-		// Deletes an existing skybox
-		void delSkybox();
 
 		// Creates a mesh
 		kl::mesh* newMesh(const std::string& filePath, bool flipZ = true);

@@ -42,6 +42,12 @@ namespace kl {
 		bool operator==(const kl::ivec2& obj) const;
 		bool operator!=(const kl::ivec2& obj) const;
 
+		// Returns a negated vector
+		kl::ivec2 negate() const;
+
+		// Returns an absolute vector
+		kl::ivec2 abso() const;
+
 		// Prints the data to the console
 		void print() const;
 	};

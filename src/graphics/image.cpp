@@ -14,54 +14,83 @@
 
 // Constructor
 kl::image::image() {
-	setSize(kl::ivec2());
+	sSize(kl::ivec2());
 }
 kl::image::image(const kl::ivec2& size, const kl::color& color) {
-	setSize(size);
-	fillSolid(color);
+	sSize(size);
+	fill(color);
 }
 kl::image::image(const char* fileName) {
 	fromFile(fileName);
 }
 
 // Getters
-int kl::image::getWidth() const {
+int kl::image::gWidth() const {
 	return width;
 }
-int kl::image::getHeight() const {
+int kl::image::gHeight() const {
 	return height;
 }
-kl::ivec2 kl::image::getSize() const {
+kl::ivec2 kl::image::gSize() const {
 	return kl::ivec2(width, height);
 }
-kl::color kl::image::getPixel(const kl::ivec2& point) const {
+kl::color kl::image::gPixel(const kl::ivec2& point) const {
 	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
-		return pixels[(uint64_t)point.y * width + point.x];
+		return pixels[size_t(point.y) * width + point.x];
 	}
-	return kl::color();
+	return kl::colors::purple;
 }
-int kl::image::getPixelCount() const {
-	return (int)pixels.size();
+int kl::image::pixelCount() const {
+	return int(pixels.size());
 }
 byte* kl::image::pointer() const {
 	return (byte*)&pixels[0];
 }
+kl::image kl::image::gRect(kl::ivec2 a, kl::ivec2 b) const {
+	// Clamping
+	a.x = min(max(a.x, 0), this->width);
+	a.y = min(max(a.y, 0), this->height);
+	b.x = min(max(b.x, 0), this->width);
+	b.y = min(max(b.y, 0), this->height);
+
+	// Sorting
+	if (b.x < a.x) {
+		int t = a.x;
+		a.x = b.x;
+		b.x = t;
+	}
+	if (b.y < a.y) {
+		int t = a.y;
+		a.y = b.y;
+		b.y = t;
+	}
+
+	// Saving data
+	kl::image temp(b - a);
+	for (int y = 0; y < temp.gHeight(); y++) {
+		for (int x = 0; x < temp.gWidth(); x++) {
+			const kl::ivec2 pos(x, y);
+			temp.sPixel(pos, this->gPixel(pos + a));
+		}
+	}
+	return temp;
+}
 
 // Setters
-void kl::image::setWidth(int width) {
-	setSize(kl::ivec2(width, height));
+void kl::image::sWidth(int width) {
+	sSize(kl::ivec2(width, height));
 }
-void kl::image::setHeight(int height) {
-	setSize(kl::ivec2(width, height));
+void kl::image::sHeight(int height) {
+	sSize(kl::ivec2(width, height));
 }
-void kl::image::setSize(const kl::ivec2& size) {
+void kl::image::sSize(const kl::ivec2& size) {
 	width = size.x;
 	height = size.y;
-	pixels.resize((uint64_t)width * height);
+	pixels.resize(size_t(width) * height);
 }
-void kl::image::setPixel(const kl::ivec2& point, const kl::color& color) {
+void kl::image::sPixel(const kl::ivec2& point, const kl::color& color) {
 	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
-		pixels[(uint64_t)point.y * width + point.x] = color;
+		pixels[size_t(point.y) * width + point.x] = color;
 	}
 }
 
@@ -78,11 +107,12 @@ void kl::image::fromFile(const std::string& filePath) {
 	// Checks load status
 	if (loadedBitmap->GetLastStatus()) {
 		printf("Could not load image file \"%s\".", filePath.c_str());
+		std::cin.get();
 		exit(69);
 	}
 
 	// Resizing the self
-	this->setSize(kl::ivec2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
+	this->sSize(kl::ivec2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
 
 	// Locking the bitmap data
 	Gdiplus::BitmapData bitmapData;
@@ -94,7 +124,7 @@ void kl::image::fromFile(const std::string& filePath) {
 	const uint32_t* bmPixels = (uint32_t*)bitmapData.Scan0;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			pixels[(uint64_t)y * width + x] = *(kl::color*)(bmPixels + y * bitmapStride + x);
+			pixels[size_t(y) * width + x] = *(kl::color*)(bmPixels + y * bitmapStride + x);
 		}
 	}
 
@@ -152,7 +182,7 @@ void kl::image::toFile(const std::string& fileName) {
 	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(width, height, PixelFormat24bppRGB);
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			kl::color tempPixel = getPixel(kl::ivec2(x, y));
+			kl::color tempPixel = gPixel(kl::ivec2(x, y));
 			tempBitmap->SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.r, tempPixel.g, tempPixel.b));
 		}
 	}
@@ -166,7 +196,7 @@ void kl::image::toFile(const std::string& fileName) {
 }
 
 // Fils the image with solid color
-void kl::image::fillSolid(const kl::color& color) {
+void kl::image::fill(const kl::color& color) {
 	for (int i = 0; i < pixels.size(); i++) {
 		pixels[i] = color;
 	}
@@ -200,12 +230,12 @@ void kl::image::flipVertical() {
 void kl::image::drawLine(const kl::ivec2& a, const kl::ivec2& b, const kl::color& col) {
 	// Calculations
 	const int len = max(abs(b.x - a.x), abs(b.y - a.y));
-	kl::vec2 incr(((float)b.x - a.x) / len, ((float)b.y - a.y) / len);
+	kl::vec2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
 
 	// Drawing
-	kl::vec2 drawPoint((float)a.x, (float)a.y);
+	kl::vec2 drawPoint(float(a.x), float(a.y));
 	for (int i = 0; i <= len; i++) {
-		setPixel(kl::ivec2((int)drawPoint.x, (int)drawPoint.y), col);
+		sPixel(kl::ivec2(int(drawPoint.x), int(drawPoint.y)), col);
 		drawPoint = drawPoint + incr;
 	}
 }
@@ -232,7 +262,7 @@ void kl::image::drawTriangle(kl::ivec2 a, kl::ivec2 b, kl::ivec2 c, const kl::co
 
 		// Drawing
 		for (int y = a.y; y < c.y; y++) {
-			drawLine(kl::ivec2((int)kl::math::lineX((y < b.y) ? a : c, b, (float)y), (int)y), kl::ivec2((int)kl::math::lineX(a, c, (float)y), (int)y), col);
+			drawLine(kl::ivec2(int(kl::math::lineX((y < b.y) ? a : c, b, float(y))), int(y)), kl::ivec2(int(kl::math::lineX(a, c, float(y))), int(y)), col);
 		}
 	}
 	else {
@@ -269,23 +299,23 @@ void kl::image::drawRectangle(kl::ivec2 a, kl::ivec2 b, const kl::color& col, bo
 void kl::image::drawCircle(const kl::ivec2& p, float r, const kl::color& col, bool fill) {
 	if (fill) {
 		for (int y = int(p.y - r); y <= int(p.y + r); y++) {
-			int x = int(p.x + sqrt(r * r - float(y - p.y) * float(y - p.y)));
+			const int x = int(p.x + sqrt(r * r - float(y - p.y) * float(y - p.y)));
 			drawLine(kl::ivec2(2 * p.x - x, y), kl::ivec2(x, y), col);
 		}
 	}
 	else {
 		for (int i = 0; i < 2 * r; i++) {
 			// X run
-			int x1 = int(p.x - r + i);
-			int y1 = int(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
-			setPixel(kl::ivec2(x1, y1), col);
-			setPixel(kl::ivec2(x1, 2 * p.y - y1), col);
+			const int x1 = int(p.x - r + i);
+			const int y1 = int(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
+			sPixel(kl::ivec2(x1, y1), col);
+			sPixel(kl::ivec2(x1, 2 * p.y - y1), col);
 
 			// Y run
-			int y2 = int(p.y - r + i);
-			int x2 = int(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
-			setPixel(kl::ivec2(x2, y2), col);
-			setPixel(kl::ivec2(2 * p.x - x2, y2), col);
+			const int y2 = int(p.y - r + i);
+			const int x2 = int(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
+			sPixel(kl::ivec2(x2, y2), col);
+			sPixel(kl::ivec2(2 * p.x - x2, y2), col);
 		}
 	}
 }
@@ -296,22 +326,24 @@ void kl::image::drawCircle(const kl::ivec2& a, const kl::ivec2& b, const kl::col
 
 // Converts an image to an ASCII frame
 std::string kl::image::toASCII(const kl::ivec2& frameSize) {
+	// ASCII 'table'
 	static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 
 	// Calculations
-	int pixelWidthIncrement = width / frameSize.x;
-	int pixelHeightIncrement = height / frameSize.y;
+	const int pixelWidthIncrement = width / frameSize.x;
+	const int pixelHeightIncrement = height / frameSize.y;
 
 	// Processing
 	std::stringstream frame;
 	for (int y = 0; y < frameSize.y; y++) {
 		for (int x = 0; x < frameSize.x; x++) {
 			// Pixels to grayscale
-			kl::color currentPixel = getPixel(kl::ivec2(x * pixelWidthIncrement, y * pixelHeightIncrement));
-			int grayScaledPixel = int(currentPixel.r * 0.299 + currentPixel.g * 0.587 + currentPixel.b * 0.114);
+			kl::color currentPixel = gPixel(kl::ivec2(x * pixelWidthIncrement, y * pixelHeightIncrement));
+			const int grayScaledPixel = int(currentPixel.r * 0.299f + currentPixel.g * 0.587f + currentPixel.b * 0.114f);
 
 			// Grayscaled values to ASCII
-			int saturationLevel = int((grayScaledPixel / 255.0) * 9);
+			static const float toSatur = 9.0f / 255;
+			const int saturationLevel = int(grayScaledPixel * toSatur);
 			frame << asciiPixelTable[saturationLevel];
 		}
 		frame << '\n';

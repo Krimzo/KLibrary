@@ -15,16 +15,23 @@ kl::object3D* metalcube1 = nullptr;
 kl::object3D* metalcube2 = nullptr;
 kl::object3D* kerv = nullptr;
 
+// Skyboxes
+kl::skybox* clouds = nullptr;
+kl::skybox* night = nullptr;
+
 // Renderer setup
 void setup() {
 	// Skybox creation
-	renderer.newSkybox(
-		"res/skyboxes/clouds/front.jpg",
-		"res/skyboxes/clouds/back.jpg",
-		"res/skyboxes/clouds/left.jpg",
-		"res/skyboxes/clouds/right.jpg",
-		"res/skyboxes/clouds/top.jpg",
-		"res/skyboxes/clouds/bottom.jpg"
+	clouds = new kl::skybox(
+		"res/textures/skyboxes/clouds/front.jpg",
+		"res/textures/skyboxes/clouds/back.jpg",
+		"res/textures/skyboxes/clouds/left.jpg",
+		"res/textures/skyboxes/clouds/right.jpg",
+		"res/textures/skyboxes/clouds/top.jpg",
+		"res/textures/skyboxes/clouds/bottom.jpg"
+	);
+	night = new kl::skybox(
+		"res/textures/skyboxes/night/night.png"
 	);
 
 	// Mesh creation
@@ -108,33 +115,39 @@ void setup() {
 // Renderer input
 bool movingCam = false;
 void input(kl::keys* keys, kl::mouse* mouse) {
-	// Keyboard input
-	if (keys->w) {
-		renderer.cam.moveForward(renderer.deltaT);
-	}
-	if (keys->s) {
-		renderer.cam.moveBack(renderer.deltaT);
-	}
-	if (keys->d) {
-		renderer.cam.moveRight(renderer.deltaT);
-	}
-	if (keys->a) {
-		renderer.cam.moveLeft(renderer.deltaT);
-	}
-	if (keys->space) {
-		renderer.cam.moveUp(renderer.deltaT);
-	}
-	if (keys->c) {
-		renderer.cam.moveDown(renderer.deltaT);
-	}
+	// Exit
+	if (keys->esc) renderer.stop();
+
+	// Fullscreen
+	if (keys->insert) renderer.setFullscreen(true);
+	if (keys->delet) renderer.setFullscreen(false);
+
+	// Wireframe
+	if (keys->v) kl::gl::setWireframe(true);
+	if (keys->f) kl::gl::setWireframe(false);
+
+	// Skyboxes
+	if (keys->num0) renderer.skybox = nullptr;
+	if (keys->num1) renderer.skybox = clouds;
+	if (keys->num2) renderer.skybox = night;
+
+	// Movement
+	if (keys->w) renderer.camera.moveForward(renderer.deltaT);
+	if (keys->s) renderer.camera.moveBack(renderer.deltaT);
+	if (keys->d) renderer.camera.moveRight(renderer.deltaT);
+	if (keys->a) renderer.camera.moveLeft(renderer.deltaT);
+	if (keys->space) renderer.camera.moveUp(renderer.deltaT);
+	if (keys->c) renderer.camera.moveDown(renderer.deltaT);
+
+	// Speed
 	if (keys->shift) {
-		renderer.cam.speed = 5;
+		renderer.camera.speed = 5;
 	}
 	else {
-		renderer.cam.speed = 2;
+		renderer.camera.speed = 2;
 	}
 
-	// Mouse input
+	// Camera rotation
 	if (mouse->lmb) {
 		movingCam = true;
 		mouse->hide();
@@ -148,25 +161,8 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	}
 	if (movingCam) {
 		kl::ivec2 frameCenter = renderer.frameCenter();
-		renderer.cam.rotate(mouse->position, frameCenter);
+		renderer.camera.rotate(mouse->position, frameCenter);
 		mouse->move(frameCenter);
-	}
-
-	// Other
-	if (keys->esc) {
-		renderer.stop();
-	}
-	if (keys->insert) {
-		renderer.setFullscreen(true);
-	}
-	if (keys->delet) {
-		renderer.setFullscreen(false);
-	}
-	if (keys->v) {
-		kl::gl::setWireframe(true);
-	}
-	if (keys->f) {
-		kl::gl::setWireframe(false);
 	}
 }
 

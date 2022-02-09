@@ -23,5 +23,5 @@ bool kl::color::operator != (kl::color obj) const {
 
 // Prints the color
 void kl::color::print() const {
-	printf("%d %d %d\n", r, g, b);
+	printf("% d % d % d\n", r, g, b);
 }
