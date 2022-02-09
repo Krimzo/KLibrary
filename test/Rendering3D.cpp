@@ -131,6 +131,10 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	if (keys->num1) renderer.skybox = clouds;
 	if (keys->num2) renderer.skybox = night;
 
+	// Sun
+	if (keys->comma) renderer.sun.direction.x += 0.75f * renderer.deltaT;
+	if (keys->period) renderer.sun.direction.x -= 0.75f * renderer.deltaT;
+
 	// Movement
 	if (keys->w) renderer.camera.moveForward(renderer.deltaT);
 	if (keys->s) renderer.camera.moveBack(renderer.deltaT);

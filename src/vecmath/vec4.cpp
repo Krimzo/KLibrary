@@ -170,8 +170,8 @@ float kl::vec4::angle(const kl::vec4& a) const {
 	return kl::convert::toDegrees(acos(this->normalize().dot(a.normalize())));
 }
 
-// Prints the data to the console
-void kl::vec4::print() const {
-	printf("% .2f % .2f % .2f % .2f\n", x, y, z, w);
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::vec4& obj) {
+	os << obj.x << " " << obj.y << " " << obj.z << " " << obj.w;
+	return os;
 }
-

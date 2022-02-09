@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 
 namespace kl {
 	class ivec2 {
@@ -47,8 +49,8 @@ namespace kl {
 
 		// Returns an absolute vector
 		kl::ivec2 abso() const;
-
-		// Prints the data to the console
-		void print() const;
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::ivec2& obj);
 }

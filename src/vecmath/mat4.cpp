@@ -143,18 +143,13 @@ void kl::mat4::setIdentity() {
 	data[12] = 0; data[13] = 0; data[14] = 0; data[15] = 1;
 }
 
-// Prints the matrix to the screen
-void kl::mat4::print() const {
-	printf(
-		"% .2f % .2f % .2f % .2f\n"
-		"% .2f % .2f % .2f % .2f\n"
-		"% .2f % .2f % .2f % .2f\n"
-		"% .2f % .2f % .2f % .2f\n",
-		data[ 0], data[ 1], data[ 2], data[ 3],
-		data[ 4], data[ 5], data[ 6], data[ 7],
-		data[ 8], data[ 9], data[10], data[11],
-		data[12], data[13], data[14], data[15]
-	);
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, kl::mat4& obj) {
+	os << obj[ 0] << " " << obj[ 1] << " " << obj[ 2] << " " << obj[ 3] << "\n";
+	os << obj[ 4] << " " << obj[ 5] << " " << obj[ 6] << " " << obj[ 7] << "\n";
+	os << obj[ 8] << " " << obj[ 9] << " " << obj[10] << " " << obj[11] << "\n";
+	os << obj[12] << " " << obj[13] << " " << obj[14] << " " << obj[15];
+	return os;
 }
 
 // Returns a translation matrix

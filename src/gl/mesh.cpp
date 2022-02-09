@@ -3,38 +3,6 @@
 
 // Constructors/destructor
 kl::mesh::mesh(const std::vector<kl::vertex2D>& vertexData) {
-	this->loadData(vertexData);
-}
-kl::mesh::mesh(const std::vector<kl::vertex3D>& vertexData) {
-	this->loadData(vertexData);
-}
-kl::mesh::mesh(const std::string& filePath, bool flipZ, bool load2D) {
-	if (load2D) {
-		loadFromFile2D(filePath);
-	}
-	else {
-		loadFromFile3D(filePath, flipZ);
-	}
-}
-kl::mesh::~mesh() {
-	glDeleteVertexArrays(1, &this->vao);
-	glDeleteBuffers(1, &this->vbo);
-}
-
-// Renders the mesh
-void kl::mesh::draw() const {
-	// Binding the vao
-	glBindVertexArray(this->vao);
-
-	// Drawing vertices
-	glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);
-
-	// Unbinding the vao
-	glBindVertexArray(NULL);
-}
-
-// Loads the vertex data
-void kl::mesh::loadData(const std::vector<kl::vertex2D>& vertexData) {
 	// Saving the vertex count
 	this->vertexCount = (int)vertexData.size();
 
@@ -71,7 +39,7 @@ void kl::mesh::loadData(const std::vector<kl::vertex2D>& vertexData) {
 	// Unbinding the vbo
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
 }
-void kl::mesh::loadData(const std::vector<kl::vertex3D>& vertexData) {
+kl::mesh::mesh(const std::vector<kl::vertex3D>& vertexData) {
 	// Saving the vertex count
 	this->vertexCount = (int)vertexData.size();
 
@@ -110,6 +78,30 @@ void kl::mesh::loadData(const std::vector<kl::vertex3D>& vertexData) {
 
 	// Unbinding the vbo
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
+}
+kl::mesh::mesh(const std::string& filePath, bool flipZ, bool load2D) {
+	if (load2D) {
+		loadFromFile2D(filePath);
+	}
+	else {
+		loadFromFile3D(filePath, flipZ);
+	}
+}
+kl::mesh::~mesh() {
+	glDeleteVertexArrays(1, &this->vao);
+	glDeleteBuffers(1, &this->vbo);
+}
+
+// Renders the mesh
+void kl::mesh::draw() const {
+	// Binding the vao
+	glBindVertexArray(this->vao);
+
+	// Drawing vertices
+	glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);
+
+	// Unbinding the vao
+	glBindVertexArray(NULL);
 }
 
 // Loads the vertex data from a .obj file
@@ -167,7 +159,7 @@ void kl::mesh::loadFromFile2D(const std::string& filePath) {
 	fileStream.close();
 
 	// Loading the data
-	loadData(vertexData);
+	this->mesh::mesh(vertexData);
 }
 void kl::mesh::loadFromFile3D(const std::string& filePath, bool flipZ) {
 	// Temp vertex buffer
@@ -231,5 +223,5 @@ void kl::mesh::loadFromFile3D(const std::string& filePath, bool flipZ) {
 	fileStream.close();
 
 	// Loading the data
-	loadData(vertexData);
+	this->mesh::mesh(vertexData);
 }

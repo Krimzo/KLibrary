@@ -62,12 +62,6 @@ namespace kl {
 		// Fast console writing
 		static void fastOut(const std::string& data, const kl::ivec2& location = { 0, 0 });
 
-		// Prints RGB data
-		template<typename T> static void print(const T& data, const kl::color& textColor = kl::colors::white);
-
-		// Prints RGB data with new line at the end
-		template<typename T> static void println(const T& data, const kl::color& textColor = kl::colors::white);
-
 		// Prints an error message and waits for a key to exit
 		static void error(bool check, const std::string& mess, char waitFor = ' ', bool quit = true, int exitCode = 69);
 	};

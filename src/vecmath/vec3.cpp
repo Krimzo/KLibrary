@@ -175,7 +175,8 @@ kl::vec3 kl::vec3::rotate(float angle, const kl::vec3& axis) const {
 	return temp;
 }
 
-// Prints the data to the console
-void kl::vec3::print() const {
-	printf("% .2f % .2f % .2f\n", x, y, z);
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::vec3& obj) {
+	os << obj.x << " " << obj.y << " " << obj.z;
+	return os;
 }

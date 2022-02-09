@@ -28,9 +28,3 @@ bool kl::vertex3D::operator==(const kl::vertex3D& obj) const {
 bool kl::vertex3D::operator!=(const kl::vertex3D& obj) const {
 	return !this->equals(obj);
 }
-
-// Prints the vertex
-void kl::vertex3D::print() const {
-	printf("% .2f % .2f % .2f | % .2f % .2f | % .2f % .2f % .2f\n", world.x, world.y, world.z, texture.x, texture.y, normal.x, normal.y, normal.z);
-}
-

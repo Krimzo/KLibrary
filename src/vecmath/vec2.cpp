@@ -137,7 +137,8 @@ kl::vec2 kl::vec2::rotate(float angle) const {
 	return kl::vec2(cosA * x - sinA * y, sinA * x + cosA * y);
 }
 
-// Prints the data to the console
-void kl::vec2::print() const {
-	printf("% .2f % .2f\n", x, y);
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::vec2& obj) {
+	os << obj.x << " " << obj.y;
+	return os;
 }

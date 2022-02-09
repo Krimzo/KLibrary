@@ -19,13 +19,14 @@ namespace kl {
 		// Operator overloading
 		bool operator == (kl::color obj) const;
 		bool operator != (kl::color obj) const;
-
-		// Prints the color
-		void print() const;
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::color& obj);
 
 	// Predefined colors
 	namespace colors {
+		static const kl::color defaul  = kl::color(204, 204, 204);
 		static const kl::color black   = kl::color(  0,   0,   0);
 		static const kl::color white   = kl::color(255, 255, 255);
 		static const kl::color gray    = kl::color( 50,  50,  50);

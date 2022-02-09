@@ -151,20 +151,10 @@ void kl::console::fastOut(const std::string& data, const kl::ivec2& location) {
 	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 }
 
-// Prints RGB data
-template<typename T> void kl::console::print(const T& data, const kl::color& textColor) {
-	std::cout << "\033[38;2;" << textColor.r << ";" << textColor.g << ";" << textColor.b << "m" << data << "\033[0m";
-}
-
-// Prints RGB data with new line at the end
-template<typename T> void kl::console::println(const T& data, const kl::color& textColor) {
-	std::cout << "\033[38;2;" << textColor.r << ";" << textColor.g << ";" << textColor.b << "m" << data << "\033[0m\n";
-}
-
 // Prints an error message and waits for a key to exit
 void kl::console::error(bool check, const std::string& mess, char waitFor, bool quit, int exitCode) {
 	if (check) {
-		println(mess, kl::color(255, 50, 50));
+		std::cout << mess;
 		kl::console::waitFor(waitFor);
 		if (quit) exit(exitCode);
 	}

@@ -20,8 +20,5 @@ namespace kl {
 		bool equals(const kl::vertex2D& obj) const;
 		bool operator==(const kl::vertex2D& obj) const;
 		bool operator!=(const kl::vertex2D& obj) const;
-
-		// Prints the vertex
-		void print() const;
 	};
 }

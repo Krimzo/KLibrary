@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "KrimzLib/vecmath/vec2.h"
 #include "KrimzLib/vecmath/vec3.h"
 
@@ -72,8 +74,8 @@ namespace kl {
 
 		// Returns the angle between the given vector and self
 		float angle(const kl::vec4& a) const;
-
-		// Prints the data to the console
-		void print() const;
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::vec4& obj);
 }

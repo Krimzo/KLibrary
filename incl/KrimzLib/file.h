@@ -1,12 +1,16 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 
 namespace kl {
 	namespace file {
 		// Returns the file extension from the given file path
 		std::string getExtension(const std::string& filePath);
+
+		// Returns the files in the given directory
+		std::vector<std::string> getFiles(const std::string& dirPath, bool recursive = false);
 
 		// Returns a string from a given text file
 		std::string read(const std::string& filePath);

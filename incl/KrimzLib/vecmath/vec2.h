@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "KrimzLib/vecmath/ivec2.h"
 
 
@@ -67,8 +69,8 @@ namespace kl {
 
 		// Returns a rotated vector around the given point
 		kl::vec2 rotate(float angle) const;
+	};
 
-		// Prints the data to the console
-		void print() const;
-	};   
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::vec2& obj);
 }

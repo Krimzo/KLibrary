@@ -29,11 +29,7 @@ namespace kl {
 		kl::id vbo = NULL;
 		int vertexCount = 0;
 
-		// Loads the vertex data
-		void loadData(const std::vector<kl::vertex2D>& vertexData);
-		void loadData(const std::vector<kl::vertex3D>& vertexData);
-
-		// Loads the vertex data from a .obj file
+		// Loads the vertex data from an .obj file
 		void loadFromFile2D(const std::string& filePath);
 		void loadFromFile3D(const std::string& filePath, bool flipZ);
 	};

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "KrimzLib/vecmath/vec2.h"
 #include "KrimzLib/vecmath/vec3.h"
 
@@ -52,9 +54,6 @@ namespace kl {
 		// Loads the identity matrix
 		void setIdentity();
 
-		// Prints the matrix to the screen
-		void print() const;
-
 		// Returns a translation matrix
 		static kl::mat3 translate(const kl::vec2& translation);
 
@@ -64,4 +63,7 @@ namespace kl {
 		// Returns a scaling matrix
 		static kl::mat3 scale(const kl::vec2& size);
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, kl::mat3& obj);
 }

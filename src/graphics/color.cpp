@@ -21,7 +21,8 @@ bool kl::color::operator != (kl::color obj) const {
 	return (r != obj.r || g != obj.g || b != obj.b);
 }
 
-// Prints the color
-void kl::color::print() const {
-	printf("% d % d % d\n", r, g, b);
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::color& obj) {
+	os << "\033[38;2;" << int(obj.r) << ";" << int(obj.g) << ";" << int(obj.b) << "m";
+	return os;
 }

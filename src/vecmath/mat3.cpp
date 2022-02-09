@@ -134,16 +134,12 @@ void kl::mat3::setIdentity() {
 	data[6] = 0; data[7] = 0; data[8] = 1;
 }
 
-// Prints the matrix to the screen
-void kl::mat3::print() const {
-	printf(
-		"% .2f % .2f % .2f\n"
-		"% .2f % .2f % .2f\n"
-		"% .2f % .2f % .2f\n",
-		data[0], data[1], data[2],
-		data[3], data[4], data[5],
-		data[6], data[7], data[8]
-	);
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, kl::mat3& obj) {
+	os << obj[0] << " " << obj[1] << " " << obj[2] << "\n";
+	os << obj[3] << " " << obj[4] << " " << obj[5] << "\n";
+	os << obj[6] << " " << obj[7] << " " << obj[8];
+	return os;
 }
 
 // Returns a translation matrix

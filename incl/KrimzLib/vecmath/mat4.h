@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "KrimzLib/vecmath/vec4.h"
 
 
@@ -51,9 +53,6 @@ namespace kl {
 		// Loads the identity matrix
 		void setIdentity();
 
-		// Prints the matrix to the screen
-		void print() const;
-
 		// Returns a translation matrix
 		static kl::mat4 translate(const kl::vec3& translation);
 
@@ -75,4 +74,7 @@ namespace kl {
 		// Returns the "look at" matrix
 		static kl::mat4 lookAt(const kl::vec3& eye, const kl::vec3& center, const kl::vec3& up);
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, kl::mat4& obj);
 }

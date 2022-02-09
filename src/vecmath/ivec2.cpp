@@ -96,7 +96,8 @@ kl::ivec2 kl::ivec2::abso() const {
 	return kl::ivec2(abs(x), abs(y));
 }
 
-// Prints the data to the console
-void kl::ivec2::print() const {
-	printf("% d % d\n", x, y);
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::ivec2& obj) {
+	os << obj.x << " " << obj.y;
+	return os;
 }
