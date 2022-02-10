@@ -27,6 +27,38 @@
 
 namespace kl {
 	class window {
+		private:
+		// Winapi variables
+		HINSTANCE hInstance;
+		HWND hwnd;
+		HDC hdc;
+		HGLRC hglrc;
+		BITMAPINFO bmpInfo;
+		MSG wndMsg;
+
+		// Fullscreen data
+		bool inFull;
+		DWORD winStyle;
+		WINDOWPLACEMENT winPlace;
+
+		// Registers a new window class
+		void registerWindowClass(const std::wstring& name);
+
+		// Creates a new window
+		void createWindow(const kl::ivec2& size, const std::wstring& name, bool resizeable);
+
+		// Sets up the bitmap properties
+		void setupBitmapInfo();
+
+		// Sets up OpenGL context
+		void initOpenGL();
+
+		// Handles the windows message
+		void handleMessage();
+
+		// Destroys the contexts
+		void cleanup(const std::wstring& name, bool opengl);
+
 	public:
 		// Screen
 		class screen {
@@ -86,37 +118,5 @@ namespace kl {
 
 		// Swaps the front and back buffers
 		void swapBuffers();
-
-	private:
-		// Winapi variables
-		HINSTANCE hInstance;
-		HWND hwnd;
-		HDC hdc;
-		HGLRC hglrc;
-		BITMAPINFO bmpInfo;
-		MSG wndMsg;
-
-		// Fullscreen data
-		bool inFull;
-		DWORD winStyle;
-		WINDOWPLACEMENT winPlace;
-
-		// Registers a new window class
-		void registerWindowClass(const std::wstring& name);
-
-		// Creates a new window
-		void createWindow(const kl::ivec2& size, const std::wstring& name, bool resizeable);
-
-		// Sets up the bitmap properties
-		void setupBitmapInfo();
-
-		// Sets up OpenGL context
-		void initOpenGL();
-
-		// Handles the windows message
-		void handleMessage();
-
-		// Destroys the contexts
-		void cleanup(const std::wstring& name, bool opengl);
 	};
 }

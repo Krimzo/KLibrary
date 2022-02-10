@@ -267,7 +267,7 @@
     <ClCompile Include="src\renderer3D\renderer3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\_Testing.cpp">
+    <ClCompile Include="test\DirectX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\dx\gpu.cpp">

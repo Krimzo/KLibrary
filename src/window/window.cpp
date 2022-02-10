@@ -117,7 +117,7 @@ void kl::window::setFullscreen(bool enable) {
 
 // Returns the window size
 kl::ivec2 kl::window::getSize() const {
-	RECT clientArea;
+	RECT clientArea = {};
 	GetClientRect(hwnd, &clientArea);
 	return kl::ivec2(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
 }
