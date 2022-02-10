@@ -20,7 +20,6 @@ kl::window::window() {
 	this->hInstance = GetModuleHandle(nullptr);
 	this->hwnd = nullptr;
 	this->hdc = nullptr;
-	this->hglrc = nullptr;
 	this->bmpInfo = {};
 	this->wndMsg = {};
 
@@ -36,7 +35,7 @@ kl::window::~window() {
 }
 
 // Window creation
-void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool opengl) {
+void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous) {
 	// Converting window name to a wstring
 	const std::wstring wName = kl::convert::toWString(name);
 
@@ -48,11 +47,6 @@ void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool r
 
 	// Setting up bitmap info
 	setupBitmapInfo();
-
-	// Setting up OpenGL context
-	if (opengl) {
-		initOpenGL();
-	}
 
 	// Binding the mouse
 	this->mouse.bind(hwnd);
@@ -80,7 +74,9 @@ void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool r
 	}
 
 	// Cleanup
-	cleanup(wName, opengl);
+	UnregisterClassW(wName.c_str(), hInstance);
+	hdc = nullptr;
+	hwnd = nullptr;
 }
 void kl::window::stop() const {
 	PostMessageW(hwnd, WM_CLOSE, 0, 0);
@@ -145,21 +141,6 @@ void kl::window::drawImage(const kl::image& toDraw, const kl::ivec2& position) {
 	StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 }
 
-// Binds the OpenGL contex of the window
-void kl::window::makeCurrentGL() {
-	wglMakeCurrent(hdc, hglrc);
-}
-
-// Resets the OpenGL viewport
-void kl::window::resetViewport() {
-	kl::gl::resetViewport(hwnd);
-}
-
-// Swaps the front and back buffers
-void kl::window::swapBuffers() {
-	SwapBuffers(hdc);
-}
-
 // Registers a new window class
 void kl::window::registerWindowClass(const std::wstring& name) {
 	WNDCLASSEXW windowClass = {};
@@ -206,15 +187,6 @@ void kl::window::setupBitmapInfo() {
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 }
 
-// Sets up OpenGL context
-void kl::window::initOpenGL() {
-	// Init OpenGL
-	hglrc = kl::gl::init(hwnd);
-
-	// Setting the viewport size
-	kl::gl::resetViewport(hwnd);
-}
-
 // Handles the windows message
 void kl::window::handleMessage() {
 	switch (wndMsg.message) {
@@ -258,17 +230,4 @@ void kl::window::handleMessage() {
 		DispatchMessageW(&wndMsg);
 		break;
 	}
-}
-
-// Destroys the contexts
-void kl::window::cleanup(const std::wstring& name, bool opengl) {
-	// Destroying the opengl context
-	if (opengl) {
-		kl::gl::uninit(&hglrc);
-	}
-
-	// Unregistering the window class
-	UnregisterClassW(name.c_str(), hInstance);
-	hdc = nullptr;
-	hwnd = nullptr;
 }

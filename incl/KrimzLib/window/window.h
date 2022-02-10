@@ -5,7 +5,6 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#include "KrimzLib/gl/gl.h"
 #include "KrimzLib/vecmath/ivec2.h"
 #include "KrimzLib/graphics/image.h"
 #include "KrimzLib/window/keys.h"
@@ -32,7 +31,6 @@ namespace kl {
 		HINSTANCE hInstance;
 		HWND hwnd;
 		HDC hdc;
-		HGLRC hglrc;
 		BITMAPINFO bmpInfo;
 		MSG wndMsg;
 
@@ -50,14 +48,8 @@ namespace kl {
 		// Sets up the bitmap properties
 		void setupBitmapInfo();
 
-		// Sets up OpenGL context
-		void initOpenGL();
-
 		// Handles the windows message
 		void handleMessage();
-
-		// Destroys the contexts
-		void cleanup(const std::wstring& name, bool opengl);
 
 	public:
 		// Screen
@@ -84,7 +76,7 @@ namespace kl {
 		~window();
 
 		// Window creation
-		void startNew(const kl::ivec2& size, const std::string& name, bool resizeable = true, bool continuous = false, bool opengl = false);
+		void startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous);
 		
 		// Window stop
 		void stop() const;
@@ -109,14 +101,5 @@ namespace kl {
 
 		// Sets the pixels of the window
 		void drawImage(const kl::image& toDraw, const kl::ivec2& position = { 0, 0 });
-
-		// Binds the OpenGL contex of the window
-		void makeCurrentGL();
-
-		// Resets the OpenGL viewport
-		void resetViewport();
-
-		// Swaps the front and back buffers
-		void swapBuffers();
 	};
 }

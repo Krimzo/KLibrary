@@ -28,9 +28,9 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 		this->sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
 
 		// Compiling default shaders
-		default_sha = new kl::shaders(
-			kl::shaders::parse("res/shaders/renderer3D.glsl", kl::shaders::Vertex),
-			kl::shaders::parse("res/shaders/renderer3D.glsl", kl::shaders::Fragment)
+		default_sha = new kl::glsl(
+			kl::glsl::parse("res/glsl/renderer3D.glsl", kl::glsl::Vertex),
+			kl::glsl::parse("res/glsl/renderer3D.glsl", kl::glsl::Fragment)
 		);
 
 		// Getting object shader uniforms

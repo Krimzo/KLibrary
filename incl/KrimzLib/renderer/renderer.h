@@ -3,15 +3,14 @@
 #include <iostream>
 #include <functional>
 
-#include "KrimzLib/gl/gl.h"
-#include "KrimzLib/gl/mesh.h"
-#include "KrimzLib/gl/texture.h"
-#include "KrimzLib/gl/shaders.h"
-#include "KrimzLib/renderer3D/camera.h"
-#include "KrimzLib/renderer3D/skybox.h"
-#include "KrimzLib/renderer3D/object3D.h"
-#include "KrimzLib/renderer3D/light/ambient.h"
-#include "KrimzLib/renderer3D/light/direct.h"
+#include "KrimzLib/dx/mesh.h"
+#include "KrimzLib/dx/texture.h"
+#include "KrimzLib/dx/shaders.h"
+#include "KrimzLib/renderer/camera.h"
+#include "KrimzLib/renderer/skybox.h"
+#include "KrimzLib/renderer/entity.h"
+#include "KrimzLib/renderer/light/ambient.h"
+#include "KrimzLib/renderer/light/direct.h"
 #include "KrimzLib/random.h"
 #include "KrimzLib/time.h"
 
@@ -29,25 +28,24 @@ namespace kl {
 		std::vector<kl::texture*> textures;
 
 		// Object buffer
-		std::vector<kl::object3D*> objects;
+		std::vector<kl::entity*> objects;
 
 		// Engine timer
 		kl::timer timer;
 
 		// Default shaders
-		kl::shaders* default_sha = nullptr;
-		kl::uniform w_uni;
-		kl::uniform vp_uni;
-		kl::uniform dark_uni;
-		kl::uniform sunL_uni;
-		kl::uniform sunD_uni;
-		kl::uniform sunVP_uni;
+		//kl::glsl* default_sha = nullptr;
+		//kl::uniform w_uni;
+		//kl::uniform vp_uni;
+		//kl::uniform dark_uni;
+		//kl::uniform sunL_uni;
+		//kl::uniform sunD_uni;
+		//kl::uniform sunVP_uni;
 
 	public:
 		// Time
 		float deltaT = 0;
 		float elapsedT = 0;
-		float fpsLimit = 300;
 
 		// View
 		kl::color background = kl::colors::gray;
@@ -86,15 +84,15 @@ namespace kl {
 
 		// Mesh
 		kl::mesh* newMesh(const std::string& filePath, bool flipZ = true);
-		kl::mesh* newMesh(const std::vector<kl::vertex3D>& vertexData);
+		kl::mesh* newMesh(const std::vector<kl::vertex>& vertexData);
 		void delMesh(kl::mesh* mesAddress);
 
 		// Texture
 		kl::texture* newTexture(const kl::image& image);
 		void delTex(kl::texture* texAddress);
 
-		// Object
-		kl::object3D* newObject(kl::mesh* mes, kl::texture* tex);
-		void delObject(kl::object3D* objectAddress);
+		// Entity
+		kl::entity* newObject(kl::mesh* mes, kl::texture* tex);
+		void delObject(kl::entity* objectAddress);
 	};
 }

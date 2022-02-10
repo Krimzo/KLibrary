@@ -1,13 +1,13 @@
 #pragma once
 
+#include "KrimzLib/dx/mesh.h"
+#include "KrimzLib/dx/texture.h"
 #include "KrimzLib/vecmath/vec3.h"
 #include "KrimzLib/vecmath/mat4.h"
-#include "KrimzLib/gl/mesh.h"
-#include "KrimzLib/gl/texture.h"
 
 
 namespace kl {
-	class object3D {
+	class entity {
 	public:
 		// View
 		bool visible = true;
@@ -31,7 +31,7 @@ namespace kl {
 		kl::texture* texture = nullptr;
 
 		// Constructor
-		object3D(kl::mesh* mes, kl::texture* tex);
+		entity(kl::mesh* mes, kl::texture* tex);
 
 		// Updates the object physics
 		void upPhys(float deltaT);

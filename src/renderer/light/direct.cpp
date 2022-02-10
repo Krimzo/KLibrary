@@ -77,7 +77,7 @@ void kl::direct::genBuff(int mapSize) {
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		// Compiling the shaders and getting uniforms
-		depth_sha = new kl::shaders(vertSource, fragSource);
+		depth_sha = new kl::glsl(vertSource, fragSource);
 		sunVP_uni = depth_sha->getUniform("sunVP");
 		w_uni = depth_sha->getUniform("w");
 	}

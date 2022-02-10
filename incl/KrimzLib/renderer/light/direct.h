@@ -3,12 +3,11 @@
 #include <functional>
 #include <vector>
 
-#include "KrimzLib/gl/gl.h"
-#include "KrimzLib/gl/shaders.h"
+#include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/convert.h"
 #include "KrimzLib/vecmath/vec3.h"
 #include "KrimzLib/vecmath/mat4.h"
-#include "KrimzLib/renderer3D/camera.h"
+#include "KrimzLib/renderer/camera.h"
 #include "KrimzLib/window/window.h"
 
 
@@ -16,8 +15,8 @@ namespace kl {
 	class direct {
 	private:
 		// Shadow buffers
-		kl::id depthFB = NULL;
-		kl::id depthMap = NULL;
+		//int depthFB = NULL;
+		//int depthMap = NULL;
 
 		// Light vp matrix
 		kl::mat4 sunVP;
@@ -26,9 +25,9 @@ namespace kl {
 		int mapSize = 0;
 
 		// Shadow shaders
-		kl::shaders* depth_sha = nullptr;
-		kl::uniform sunVP_uni;
-		kl::uniform w_uni;
+		//kl::glsl* depth_sha = nullptr;
+		//kl::uniform sunVP_uni;
+		//kl::uniform w_uni;
 
 		// Shadow shader sources
 		const static std::string vertSource;
@@ -66,6 +65,6 @@ namespace kl {
 		void setWMat(const kl::mat4& wMat) const;
 
 		// Binds the shadow map
-		void bindMap(kl::id textureID) const;
+		void bindMap(int textureID) const;
 	};
 }

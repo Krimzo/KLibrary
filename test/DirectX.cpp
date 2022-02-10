@@ -9,11 +9,15 @@ int main() {
 
 	// DirectX
 	kl::gpu* gpu = nullptr;
+	kl::shaders* shaders = nullptr;
 
 	// Start callback
 	window.start = [&]() {
 		// DirectX init
 		gpu = new kl::gpu(window.getHWND());
+
+		// Compiling shaders
+		shaders = gpu->newShaders("res/shaders/default.hlsl");
 	};
 
 	// Frame callback

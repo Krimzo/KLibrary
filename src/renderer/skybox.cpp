@@ -100,7 +100,7 @@ kl::skybox::skybox(const kl::image& front, const kl::image& back, const kl::imag
 	box_tex = new kl::texture(front, back, left, right, top, bottom);
 
 	// Compiling skybox shaders
-	box_sha = new kl::shaders(vertSource, fragSource);
+	box_sha = new kl::glsl(vertSource, fragSource);
 
 	// Getting the view/projection uniform
 	vp_uni = box_sha->getUniform("vp");

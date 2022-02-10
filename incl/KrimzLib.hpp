@@ -27,27 +27,19 @@
 #include "KrimzLib/window/mouse.h"
 #include "KrimzLib/window/window.h"
 
-// Including gl
-#include "KrimzLib/gl/glad.h"
-#include "KrimzLib/gl/gl.h"
-#include "KrimzLib/gl/mesh.h"
-#include "KrimzLib/gl/texture.h"
-#include "KrimzLib/gl/uniform.h"
-#include "KrimzLib/gl/shaders.h"
-
 // Including dx
 #include "KrimzLib/dx/gpu.h"
+#include "KrimzLib/dx/shaders.h"
+#include "KrimzLib/dx/cbuffer.h"
+#include "KrimzLib/dx/mesh.h"
+#include "KrimzLib/dx/texture.h"
+#include "KrimzLib/dx/sampler.h"
 
-// Including 2D renderer
-#include "KrimzLib/renderer2D/vertex2D.h"
-#include "KrimzLib/renderer2D/object2D.h"
-#include "KrimzLib/renderer2D/renderer2D.h"
-
-// Including 3D renderer
-#include "KrimzLib/renderer3D/vertex3D.h"
-#include "KrimzLib/renderer3D/object3D.h"
-#include "KrimzLib/renderer3D/camera.h"
-#include "KrimzLib/renderer3D/skybox.h"
-#include "KrimzLib/renderer3D/light/ambient.h"
-#include "KrimzLib/renderer3D/light/direct.h"
-#include "KrimzLib/renderer3D/renderer3D.h"
+// Including the renderer
+#include "KrimzLib/renderer/vertex.h"
+#include "KrimzLib/renderer/entity.h"
+#include "KrimzLib/renderer/camera.h"
+#include "KrimzLib/renderer/skybox.h"
+#include "KrimzLib/renderer/light/ambient.h"
+#include "KrimzLib/renderer/light/direct.h"
+#include "KrimzLib/renderer/renderer.h"
