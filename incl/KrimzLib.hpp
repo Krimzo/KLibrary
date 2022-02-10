@@ -35,6 +35,9 @@
 #include "KrimzLib/gl/uniform.h"
 #include "KrimzLib/gl/shaders.h"
 
+// Including dx
+#include "KrimzLib/dx/gpu.h"
+
 // Including 2D renderer
 #include "KrimzLib/renderer2D/vertex2D.h"
 #include "KrimzLib/renderer2D/object2D.h"

@@ -150,6 +150,9 @@
     <ClInclude Include="incl\KrimzLib\renderer2D\vertex2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="incl\KrimzLib\dx\gpu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.vs" />
@@ -264,7 +267,10 @@
     <ClCompile Include="src\renderer3D\renderer3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\Testing.cpp">
+    <ClCompile Include="test\_Testing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dx\gpu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
