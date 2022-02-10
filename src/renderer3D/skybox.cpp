@@ -118,8 +118,8 @@ kl::skybox::~skybox() {
 
 // Renders the cubemap
 void kl::skybox::render(const kl::mat4& vpMat) const {
-	// Setting the depth testing
-	glDepthFunc(GL_LEQUAL);
+	// Disabling depth testing
+	kl::gl::setDepthTest(false);
 
 	// Setting skybox uniforms
 	vp_uni.setData(vpMat);
@@ -130,6 +130,6 @@ void kl::skybox::render(const kl::mat4& vpMat) const {
 	// Drawing the cubemap
 	box_mes->draw();
 
-	// Resetting the depth testing
-	glDepthFunc(GL_LESS);
+	// Resetting depth testing
+	kl::gl::setDepthTest(true);
 }

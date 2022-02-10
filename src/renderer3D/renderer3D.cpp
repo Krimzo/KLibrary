@@ -55,9 +55,6 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 		deltaT = timer.interval();
 		elapsedT = timer.elapsed();
 
-		// Clearing the default buffers
-		kl::gl::clearBuffers(background);
-
 		// Calling the user input
 		input(&win.keys, &win.mouse);
 
@@ -94,6 +91,14 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 			}
 		});
 
+		// Clearing the default buffers
+		kl::gl::clearBuffers(background);
+
+		// Rendering skybox
+		if (this->skybox) {
+			this->skybox->render(this->camera.matrix());
+		}
+
 		// Rendering objects
 		for (int i = 0; i < objects.size(); i++) {
 			if (objects[i]->visible) {
@@ -103,11 +108,6 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 				// Rendering the object
 				objects[i]->render();
 			}
-		}
-
-		// Rendering skybox
-		if (this->skybox) {
-			this->skybox->render(this->camera.matrix());
 		}
 
 		// Updating the fps display

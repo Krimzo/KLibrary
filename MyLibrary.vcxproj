@@ -240,7 +240,7 @@
     <ClCompile Include="src\window\keys.cpp" />
     <ClCompile Include="src\window\mouse.cpp" />
     <ClCompile Include="src\window\window.cpp" />
-    <ClCompile Include="test\Rendering3D.cpp" />
+    <ClCompile Include="test\Testing.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -264,7 +264,7 @@
     <ClCompile Include="src\renderer3D\renderer3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\Rendering3D.cpp">
+    <ClCompile Include="test\Testing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
