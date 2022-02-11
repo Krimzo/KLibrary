@@ -7,6 +7,7 @@
 #include <d3d11.h>
 
 #include "KrimzLib/dx/gpu.h"
+#include "KrimzLib/dx/framebuffer.h"
 #include "KrimzLib/dx/raster.h"
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"
@@ -28,11 +29,7 @@ namespace kl {
 		IDXGISwapChain* chain = nullptr;
 		ID3D11Device* dev = nullptr;
 		ID3D11DeviceContext* devcon = nullptr;
-		ID3D11RenderTargetView* backBuff = nullptr;
-		ID3D11DepthStencilView* depthBuff = nullptr;
-
-		// MSAA
-		int msaa = 0;
+		kl::framebuffer* frameBuff = nullptr;
 
 	public:
 		// Constructor

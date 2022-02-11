@@ -131,10 +131,8 @@ void kl::image::fromFile(const std::string& filePath) {
 		}
 	}
 
-	// Bitmap deletion
+	// Cleanup
 	delete loadedBitmap;
-
-	// Gdiplus cleanup
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
 

@@ -1,0 +1,90 @@
+#include "KrimzLib/dx/framebuffer.h"
+
+
+// Constructor
+kl::framebuffer::framebuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11DeviceContext* devcon, int width, int height, int msaa) {
+    // Saving devcon
+    this->devcon = devcon;
+
+    // Getting the back buffer address
+    ID3D11Texture2D* buffAddrs = nullptr;
+    chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffAddrs);
+    if (!buffAddrs) {
+        std::cout << "DirectX: Could not get back buffer address!";
+        std::cin.get();
+        exit(69);
+    }
+
+    // Creating the backbuffer
+    dev->CreateRenderTargetView(buffAddrs, nullptr, &backBuff);
+    if (!backBuff) {
+        std::cout << "DirectX: Could not create a backbuffer!";
+        std::cin.get();
+        exit(69);
+    }
+
+    // Creating depth/stencil state
+    D3D11_DEPTH_STENCIL_DESC depthDesc = {};
+    depthDesc.DepthEnable = true;
+    depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    depthDesc.StencilEnable = false;
+    dev->CreateDepthStencilState(&depthDesc, &depthState);
+    if (!depthState) {
+        std::cout << "DirectX: Could not create a depth/stencil state!";
+        std::cin.get();
+        exit(69);
+    }
+
+    // Creating depth/stencil textures
+    D3D11_TEXTURE2D_DESC depthTexDesc = {};
+    depthTexDesc.Width = width;
+    depthTexDesc.Height = height;
+    depthTexDesc.MipLevels = 1;
+    depthTexDesc.ArraySize = 1;
+    depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    depthTexDesc.SampleDesc.Count = msaa;
+    depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    ID3D11Texture2D* depthTex = nullptr;
+    dev->CreateTexture2D(&depthTexDesc, NULL, &depthTex);
+    if (!depthTex) {
+        std::cout << "DirectX: Could not create a depth/stencil buffer texture!";
+        std::cin.get();
+        exit(69);
+    }
+
+    // Creating depth/stencil buffers
+    D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+    dsvDesc.Format = depthTexDesc.Format;
+    dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+    dev->CreateDepthStencilView(depthTex, &dsvDesc, &dsBuff);
+    if (!dsBuff) {
+        std::cout << "DirectX: Could not create a depth/stencil buffer view!";
+        std::cin.get();
+        exit(69);
+    }
+
+    // Cleanup
+    depthTex->Release();
+    buffAddrs->Release();
+}
+
+// Destructor
+kl::framebuffer::~framebuffer() {
+    depthState->Release();
+    dsBuff->Release();
+    backBuff->Release();
+}
+
+// Binds the buffer
+void kl::framebuffer::bind() {
+    devcon->OMSetDepthStencilState(depthState, 1);
+    devcon->OMSetRenderTargets(1, &backBuff, dsBuff);
+}
+
+// Clears the buffer
+void kl::framebuffer::clear(const kl::vec4& color) {
+    devcon->ClearRenderTargetView(backBuff, (float*)&color);
+    devcon->ClearDepthStencilView(dsBuff, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+}

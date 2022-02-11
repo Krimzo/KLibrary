@@ -18,7 +18,7 @@ int main() {
 	kl::gpu* gpu = nullptr;
 	kl::shaders* shaders = nullptr;
 	kl::cbuffer* cb = nullptr;
-	kl::mesh* mes = nullptr;
+	kl::mesh* rect = nullptr;
 	kl::texture* dogo = nullptr;
 	
 	// Constant buffer data
@@ -38,9 +38,9 @@ int main() {
 		cb->bind(0);
 
 		// Mesh creation
-		mes = gpu->newMesh({
-			kl::vertex(kl::vec3(-0.5f, -0.5f, 0.5f), kl::vec2(0.0f, 0.0f)), kl::vertex(kl::vec3(-0.5f, 0.5f, 0.5f), kl::vec2(0.0f, 1.0f)), kl::vertex(kl::vec3(0.5f, 0.5f, 0.5f), kl::vec2(1.0f, 1.0f)),
-			kl::vertex(kl::vec3(-0.5f, -0.5f, 0.5f), kl::vec2(0.0f, 0.0f)), kl::vertex(kl::vec3(0.5f, -0.5f, 0.5f), kl::vec2(1.0f, 0.0f)), kl::vertex(kl::vec3(0.5f, 0.5f, 0.5f), kl::vec2(1.0f, 1.0f))
+		rect = gpu->newMesh({
+			kl::vertex(kl::vec3(-0.5, -0.5, 0.5), kl::vec2(0, 0)), kl::vertex(kl::vec3(-0.5,  0.5, 0.5), kl::vec2(0, 1)), kl::vertex(kl::vec3(0.5, 0.5, 0.5), kl::vec2(1, 1)),
+			kl::vertex(kl::vec3(-0.5, -0.5, 0.5), kl::vec2(0, 0)), kl::vertex(kl::vec3( 0.5, -0.5, 0.5), kl::vec2(1, 0)), kl::vertex(kl::vec3(0.5, 0.5, 0.5), kl::vec2(1, 1))
 		});
 
 		// Sampler setup
@@ -73,7 +73,7 @@ int main() {
 		cb->setData(&cbData);
 
 		// Rendering
-		mes->draw();
+		rect->draw();
 
 		// Swapping the buffers
 		gpu->swap(vSync);
@@ -85,7 +85,7 @@ int main() {
 	// Exit callback
 	window.end = [&]() {
 		delete dogo;
-		delete mes;
+		delete rect;
 		delete cb;
 		delete shaders;
 		delete gpu;
