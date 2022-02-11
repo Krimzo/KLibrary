@@ -9,19 +9,19 @@
 
 
 namespace kl {
-	class framebuffer {
+	class fbuffer {
 	private:
 		ID3D11DeviceContext* devcon = nullptr;
 		ID3D11RenderTargetView* backBuff = nullptr;
-		ID3D11DepthStencilState* depthState = nullptr;
+		ID3D11DepthStencilState* dsState = nullptr;
 		ID3D11DepthStencilView* dsBuff = nullptr;
 
 	public:
 		// Constructor
-		framebuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11DeviceContext* devcon, int width, int height, int msaa);
+		fbuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11DeviceContext* devcon, int width, int height, int msaa);
 
 		// Desctructor
-		~framebuffer();
+		~fbuffer();
 
 		// Binds the buffer
 		void bind();

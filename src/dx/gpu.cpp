@@ -59,7 +59,7 @@ kl::gpu::gpu(HWND hwnd, int msaa) {
     }
 
     // Frame buffer creation
-    frameBuff = new kl::framebuffer(chain, dev, devcon, clientArea.right, clientArea.bottom, msaa);
+    frameBuff = new kl::fbuffer(chain, dev, devcon, clientArea.right, clientArea.bottom, msaa);
     frameBuff->bind();
 
     // Setting the raster
@@ -70,7 +70,7 @@ kl::gpu::gpu(HWND hwnd, int msaa) {
     // Viewport setup
     this->setViewport(kl::ivec2(clientArea.left, clientArea.top), kl::ivec2(clientArea.right, clientArea.bottom));
 
-    // Selecting the triangles as the render type
+    // Setting the triangle as the main primitive type
     devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

@@ -7,7 +7,7 @@
 #include <d3d11.h>
 
 #include "KrimzLib/dx/gpu.h"
-#include "KrimzLib/dx/framebuffer.h"
+#include "KrimzLib/dx/fbuffer.h"
 #include "KrimzLib/dx/raster.h"
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"
@@ -29,7 +29,7 @@ namespace kl {
 		IDXGISwapChain* chain = nullptr;
 		ID3D11Device* dev = nullptr;
 		ID3D11DeviceContext* devcon = nullptr;
-		kl::framebuffer* frameBuff = nullptr;
+		kl::fbuffer* frameBuff = nullptr;
 
 	public:
 		// Constructor

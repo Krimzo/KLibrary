@@ -29,7 +29,7 @@
 
 // Including dx
 #include "KrimzLib/dx/gpu.h"
-#include "KrimzLib/dx/framebuffer.h"
+#include "KrimzLib/dx/fbuffer.h"
 #include "KrimzLib/dx/raster.h"
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"

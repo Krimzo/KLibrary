@@ -164,7 +164,7 @@
     <ClInclude Include="incl\KrimzLib\console.h" />
     <ClInclude Include="incl\KrimzLib\convert.h" />
     <ClInclude Include="incl\KrimzLib\dx\cbuffer.h" />
-    <ClInclude Include="incl\KrimzLib\dx\framebuffer.h" />
+    <ClInclude Include="incl\KrimzLib\dx\fbuffer.h" />
     <ClInclude Include="incl\KrimzLib\dx\gpu.h" />
     <ClInclude Include="incl\KrimzLib\dx\hlsl.h" />
     <ClInclude Include="incl\KrimzLib\dx\raster.h" />
@@ -206,7 +206,7 @@
     <ClCompile Include="src\console.cpp" />
     <ClCompile Include="src\convert.cpp" />
     <ClCompile Include="src\dx\cbuffer.cpp" />
-    <ClCompile Include="src\dx\framebuffer.cpp" />
+    <ClCompile Include="src\dx\fbuffer.cpp" />
     <ClCompile Include="src\dx\gpu.cpp" />
     <ClCompile Include="src\dx\raster.cpp" />
     <ClCompile Include="src\dx\sampler.cpp" />

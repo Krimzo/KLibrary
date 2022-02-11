@@ -1,8 +1,8 @@
-#include "KrimzLib/dx/framebuffer.h"
+#include "KrimzLib/dx/fbuffer.h"
 
 
 // Constructor
-kl::framebuffer::framebuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11DeviceContext* devcon, int width, int height, int msaa) {
+kl::fbuffer::fbuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11DeviceContext* devcon, int width, int height, int msaa) {
     // Saving devcon
     this->devcon = devcon;
 
@@ -29,8 +29,8 @@ kl::framebuffer::framebuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11Dev
     depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
     depthDesc.StencilEnable = false;
-    dev->CreateDepthStencilState(&depthDesc, &depthState);
-    if (!depthState) {
+    dev->CreateDepthStencilState(&depthDesc, &dsState);
+    if (!dsState) {
         std::cout << "DirectX: Could not create a depth/stencil state!";
         std::cin.get();
         exit(69);
@@ -71,20 +71,20 @@ kl::framebuffer::framebuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11Dev
 }
 
 // Destructor
-kl::framebuffer::~framebuffer() {
-    depthState->Release();
+kl::fbuffer::~fbuffer() {
+    dsState->Release();
     dsBuff->Release();
     backBuff->Release();
 }
 
 // Binds the buffer
-void kl::framebuffer::bind() {
-    devcon->OMSetDepthStencilState(depthState, 1);
+void kl::fbuffer::bind() {
+    devcon->OMSetDepthStencilState(dsState, 1);
     devcon->OMSetRenderTargets(1, &backBuff, dsBuff);
 }
 
 // Clears the buffer
-void kl::framebuffer::clear(const kl::vec4& color) {
+void kl::fbuffer::clear(const kl::vec4& color) {
     devcon->ClearRenderTargetView(backBuff, (float*)&color);
     devcon->ClearDepthStencilView(dsBuff, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 }

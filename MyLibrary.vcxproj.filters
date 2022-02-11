@@ -150,7 +150,7 @@
     <ClInclude Include="incl\KrimzLib\dx\raster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\dx\framebuffer.h">
+    <ClInclude Include="incl\KrimzLib\dx\fbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -243,7 +243,7 @@
     <ClCompile Include="src\dx\raster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\dx\framebuffer.cpp">
+    <ClCompile Include="src\dx\fbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
