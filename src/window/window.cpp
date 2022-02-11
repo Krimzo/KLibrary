@@ -1,8 +1,6 @@
 #include "KrimzLib/window/window.h"
 
-
 #include "KrimzLib/convert.h"
-#include "KrimzLib/console.h"
 
 
 // Screen
@@ -120,8 +118,8 @@ kl::ivec2 kl::window::getSize() const {
 
 // Returns the aspect ratio
 float kl::window::getAspect() const {
-	kl::ivec2 winSize = getSize();
-	return (float)winSize.x / winSize.y;
+	const kl::ivec2 winSize = getSize();
+	return float(winSize.x) / winSize.y;
 }
 
 // Returns the center point of the frame
@@ -156,7 +154,11 @@ void kl::window::registerWindowClass(const std::wstring& name) {
 	windowClass.lpszMenuName = nullptr;
 	windowClass.lpszClassName = name.c_str();
 	windowClass.hIconSm = nullptr;
-	kl::console::error(!RegisterClassExW(&windowClass), "WinApi: Could not register a window class!");
+	if (!RegisterClassExW(&windowClass)) {
+		std::cout << "WinApi: Could not register a window class!";
+		std::cin.get();
+		exit(69);
+	}
 }
 
 // Creates a new window
@@ -169,7 +171,11 @@ void kl::window::createWindow(const kl::ivec2& size, const std::wstring& name, b
 
 	// Creating the window
 	hwnd = CreateWindowExW(0, name.c_str(), name.c_str(), winStyle, (kl::window::screen::width / 2 - adjSize.x / 2), (kl::window::screen::height / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, hInstance, nullptr);
-	kl::console::error(!hwnd, "WinApi: Could not create a window!");
+	if (!hwnd) {
+		std::cout << "WinApi: Could not create a window!";
+		std::cin.get();
+		exit(69);
+	}
 
 	// Setting and getting window info
 	ShowWindow(hwnd, SW_SHOW);

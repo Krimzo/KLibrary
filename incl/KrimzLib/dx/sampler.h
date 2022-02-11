@@ -16,12 +16,12 @@ namespace kl {
 
 	public:
 		// Constructor
-		sampler(ID3D11DeviceContext* devcon, ID3D11SamplerState* state);
+		sampler(ID3D11Device* dev, ID3D11DeviceContext* devcon, bool linear, bool mirror);
 
 		// Destructor
 		~sampler();
 
 		// Binds the smapler
-		void bind(int slot) const;
+		void bind(int slot);
 	};
 }

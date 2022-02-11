@@ -17,12 +17,12 @@ namespace kl {
 
 	public:
 		// Constructor
-		texture(ID3D11DeviceContext* devcon, ID3D11ShaderResourceView* view);
+		texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& img);
 
 		// Destructor
 		~texture();
 
 		// Binds the texture
-		void bind(int slot) const;
+		void bind(int slot);
 	};
 }

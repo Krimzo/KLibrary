@@ -6,7 +6,6 @@
 #include <gdiplus.h>
 
 #include "KrimzLib/vecmath/vec2.h"
-#include "KrimzLib/console.h"
 #include "KrimzLib/convert.h"
 #include "KrimzLib/file.h"
 #include "KrimzLib/math.h"
@@ -99,7 +98,11 @@ void kl::image::fromFile(const std::string& filePath) {
 	// Gdiplus init
 	ULONG_PTR gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
-	kl::console::error(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "GdiPlus: Failed to init!");
+	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
+		std::cout << "GdiPlus: Failed to init!";
+		std::cin.get();
+		exit(69);
+	}
 
 	// Loads image file
 	Gdiplus::Bitmap* loadedBitmap = new Gdiplus::Bitmap(kl::convert::toWString(filePath).c_str());
@@ -176,7 +179,11 @@ void kl::image::toFile(const std::string& fileName) {
 	// Gdiplus init
 	ULONG_PTR gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
-	kl::console::error(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "GdiPlus: Failed to init!");
+	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
+		std::cout << "GdiPlus: Failed to init!";
+		std::cin.get();
+		exit(69);
+	}
 
 	// Pixel data transfer and saving to file
 	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(width, height, PixelFormat24bppRGB);

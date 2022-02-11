@@ -7,6 +7,7 @@
 #include <d3d11.h>
 
 #include "KrimzLib/dx/gpu.h"
+#include "KrimzLib/dx/raster.h"
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"
 #include "KrimzLib/dx/mesh.h"
@@ -18,7 +19,6 @@
 #include "KrimzLib/graphics/image.h"
 
 #pragma comment (lib, "d3d11.lib")
-#pragma comment (lib, "d3dcompiler.lib")
 
 
 namespace kl {
@@ -29,6 +29,7 @@ namespace kl {
 		ID3D11Device* dev = nullptr;
 		ID3D11DeviceContext* devcon = nullptr;
 		ID3D11RenderTargetView* backBuff = nullptr;
+		ID3D11DepthStencilView* depthBuff = nullptr;
 
 		// MSAA
 		int msaa = 0;
@@ -43,20 +44,20 @@ namespace kl {
 		// Sets the viewport
 		void setViewport(const kl::ivec2& pos, const kl::ivec2& size);
 
-		// Sets the raster type
-		void setRaster(bool wireframe, bool cull);
-
 		// Clears the buffer
 		void clear(const kl::vec4& color);
 
 		// Swaps the buffers
 		void swap(bool vSync);
 
+		// Raster
+		kl::raster* newRaster(bool wireframe, bool cull, bool cullBack);
+
 		// Shaders
 		kl::shaders* newShaders(const std::string& filePath);
 
 		// Constant buffer
-		kl::cbuffer* newCBuffer(const int byteSize);
+		kl::cbuffer* newCBuffer(int byteSize);
 
 		// Mesh
 		kl::mesh* newMesh(const std::vector<kl::vertex>& vertexData);
@@ -66,6 +67,6 @@ namespace kl {
 		kl::texture* newTexture(const kl::image& img);
 
 		// Sampler
-		kl::sampler* newSampler();
+		kl::sampler* newSampler(bool linear, bool mirror);
 	};
 }

@@ -1,9 +1,13 @@
 #pragma once
 
 #include <iostream>
+#include <string>
+#include <vector>
 #include <windows.h>
 #include <windowsx.h>
 #include <d3d11.h>
+
+#include "KrimzLib/renderer/vertex.h"
 
 
 namespace kl {
@@ -15,12 +19,16 @@ namespace kl {
 
 	public:
 		// Constructors
-		mesh(ID3D11DeviceContext* devcon, ID3D11Buffer* buff, int vertexCount);
+		mesh(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::vector<kl::vertex>& vertexData);
+		mesh(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& filePath, bool flipZ);
 
 		// Destructor
 		~mesh();
 
 		// Draws the mesh
 		void draw() const;
+
+		// Parses .obj file
+		static std::vector<kl::vertex> parseFile(const std::string& filePath, bool flipZ);
 	};
 }

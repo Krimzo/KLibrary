@@ -61,8 +61,5 @@ namespace kl {
 
 		// Fast console writing
 		static void fastOut(const std::string& data, const kl::ivec2& location = { 0, 0 });
-
-		// Prints an error message and waits for a key to exit
-		static void error(bool check, const std::string& mess, char waitFor = ' ', bool quit = true, int exitCode = 69);
 	};
 }

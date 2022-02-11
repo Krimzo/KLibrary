@@ -150,12 +150,3 @@ void kl::console::fastOut(const std::string& data, const kl::ivec2& location) {
 	static DWORD ignore = 0;
 	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 }
-
-// Prints an error message and waits for a key to exit
-void kl::console::error(bool check, const std::string& mess, char waitFor, bool quit, int exitCode) {
-	if (check) {
-		std::cout << mess;
-		kl::console::waitFor(waitFor);
-		if (quit) exit(exitCode);
-	}
-}
