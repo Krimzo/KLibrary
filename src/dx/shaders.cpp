@@ -20,7 +20,7 @@ kl::shaders::shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::
     const std::wstring wFilPath = kl::convert::toWString(filePath);
 
     // Vertex shader compilation
-    D3DCompileFromFile(wFilPath.c_str(), nullptr, nullptr, "vShader", "vs_4_0", NULL, NULL, &vsBlob, &vsError);
+    D3DCompileFromFile(wFilPath.c_str(), nullptr, nullptr, "vShader", "vs_5_0", NULL, NULL, &vsBlob, &vsError);
     if (!vsBlob) {
         if (vsError) {
             std::cout << "DirectX: Could not compile vertex shader!\nError: " << (char*)vsError->GetBufferPointer();
@@ -40,7 +40,7 @@ kl::shaders::shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::
     }
 
     // Pixel shader compilation
-    D3DCompileFromFile(wFilPath.c_str(), nullptr, nullptr, "pShader", "ps_4_0", NULL, NULL, &psBlob, &psError);
+    D3DCompileFromFile(wFilPath.c_str(), nullptr, nullptr, "pShader", "ps_5_0", NULL, NULL, &psBlob, &psError);
     if (!vsBlob) {
         if (psError) {
             std::cout << "DirectX: Could not compile pixel shader!\nError: " << (char*)psError->GetBufferPointer();

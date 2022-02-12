@@ -19,7 +19,7 @@ float zoomSpeed = 1;
 kl::vec2 pos(-0.5, 0);
 
 const float minZoom = 0.5f;
-const float maxZoom = 5000000;
+const float maxZoom = 10000;
 const kl::ivec2 frameSize(1600, 900);
 
 void start() {
@@ -57,10 +57,10 @@ void update() {
 		zoom = 1;
 	}
 	if (win.keys.w) {
-		pos.y += (1 / zoom) * deltaT;
+		pos.y -= (1 / zoom) * deltaT;
 	}
 	if (win.keys.s) {
-		pos.y -= (1 / zoom) * deltaT;
+		pos.y += (1 / zoom) * deltaT;
 	}
 	if (win.keys.d) {
 		pos.x += (1 / zoom) * deltaT;
@@ -115,7 +115,7 @@ void update() {
 	// Updating the title
 	win.setTitle(
 		"Fps: " + std::to_string(int(1 / deltaT)) +
-		" Zoom: " + std::to_string(zoom) +
+		" Zoom: " + std::to_string(int(zoom)) +
 		" Position: " + std::to_string(pos.x) + " " + std::to_string(pos.y)
 	);
 }
