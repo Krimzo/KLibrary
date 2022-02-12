@@ -4,7 +4,7 @@
 
 
 // Constructors
-kl::shaders::shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& filePath) {
+kl::shaders::shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& filePath, uint32_t vertBuffSize, uint32_t pixlBuffSize) {
     // Saving the devcon
 	this->devcon = devcon;
 
@@ -82,10 +82,24 @@ kl::shaders::shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::
     // Cleanup
     vsBlob->Release();
     psBlob->Release();
+
+    // CBuffer check/creation
+    if (vertBuffSize) {
+        vs_data = new kl::cbuffer(dev, devcon, vertBuffSize);
+    }
+    if (pixlBuffSize) {
+        ps_data = new kl::cbuffer(dev, devcon, pixlBuffSize);
+    }
 }
 
 // Destructor
 kl::shaders::~shaders() {
+    if (vs_data) {
+        delete vs_data;
+    }
+    if (ps_data) {
+        delete ps_data;
+    }
 	vs->Release();
 	ps->Release();
 }
@@ -94,4 +108,20 @@ kl::shaders::~shaders() {
 void kl::shaders::bind() const {
 	devcon->VSSetShader(this->vs, nullptr, 0);
 	devcon->PSSetShader(this->ps, nullptr, 0);
+}
+
+// Sets the cbuffer data
+void kl::shaders::setVertData(void* data) {
+    if (vs_data) {
+        this->bind();
+        vs_data->bind(false, 0);
+        vs_data->setData(data);
+    }
+}
+void kl::shaders::setPixlData(void* data) {
+    if (ps_data) {
+        this->bind();
+        ps_data->bind(true, 0);
+        ps_data->setData(data);
+    }
 }

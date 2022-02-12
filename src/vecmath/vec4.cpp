@@ -66,7 +66,9 @@ kl::vec4::vec4(float x, const kl::vec3& v) {
 	z = v.y;
 	w = v.z;
 }
-kl::vec4::vec4(const kl::color& color) : vec4(color, 1) {}
+kl::vec4::vec4(const kl::color& color) {
+	this->kl::vec4::vec4(color, 1);
+}
 
 // Addition
 kl::vec4 kl::vec4::add(const kl::vec4& obj) const {

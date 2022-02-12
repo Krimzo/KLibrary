@@ -221,7 +221,9 @@
     <ClCompile Include="src\renderer\camera.cpp" />
     <ClCompile Include="src\renderer\entity.cpp" />
     <ClCompile Include="src\renderer\light\ambient.cpp" />
+    <ClCompile Include="src\renderer\light\direct.cpp" />
     <ClCompile Include="src\renderer\renderer.cpp" />
+    <ClCompile Include="src\renderer\skybox.cpp" />
     <ClCompile Include="src\renderer\vertex.cpp" />
     <ClCompile Include="src\time.cpp" />
     <ClCompile Include="src\vecmath\ivec2.cpp" />

@@ -31,18 +31,18 @@ void setup() {
 	renderer.vSync = true;
 
 	// Skybox creation
-	//clouds = new kl::skybox(
-	//	"res/textures/skyboxes/clouds/front.jpg",
-	//	"res/textures/skyboxes/clouds/back.jpg",
-	//	"res/textures/skyboxes/clouds/left.jpg",
-	//	"res/textures/skyboxes/clouds/right.jpg",
-	//	"res/textures/skyboxes/clouds/top.jpg",
-	//	"res/textures/skyboxes/clouds/bottom.jpg"
-	//);
-	//night = new kl::skybox(
-	//	"res/textures/skyboxes/night/night.png"
-	//);
-	//renderer.skybox = clouds;
+	clouds = renderer.newSkybox(
+		"res/textures/skyboxes/clouds/front.jpg",
+		"res/textures/skyboxes/clouds/back.jpg",
+		"res/textures/skyboxes/clouds/left.jpg",
+		"res/textures/skyboxes/clouds/right.jpg",
+		"res/textures/skyboxes/clouds/top.jpg",
+		"res/textures/skyboxes/clouds/bottom.jpg"
+	);
+	night = renderer.newSkybox(
+		"res/textures/skyboxes/night/night.png"
+	);
+	renderer.skybox = night;
 
 	// Mesh creation
 	kl::mesh* cube_mes = renderer.newMesh("res/objects/cube.obj");
@@ -116,7 +116,7 @@ void setup() {
 	kerv->position = kl::vec3(0, 3, -6);
 
 	// Sun setup
-	//renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
+	renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
 }
 
 // Renderer input
@@ -134,13 +134,13 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	if (keys->f) renderer.setWireframe(false);
 
 	// Skyboxes
-	//if (keys->num0) renderer.skybox = nullptr;
-	//if (keys->num1) renderer.skybox = clouds;
-	//if (keys->num2) renderer.skybox = night;
+	if (keys->num0) renderer.skybox = nullptr;
+	if (keys->num1) renderer.skybox = clouds;
+	if (keys->num2) renderer.skybox = night;
 
 	// Sun
-	//if (keys->comma) renderer.sun.direction.x += 0.75f * renderer.deltaT;
-	//if (keys->period) renderer.sun.direction.x -= 0.75f * renderer.deltaT;
+	if (keys->comma) renderer.sun.direction.x += 0.75f * renderer.deltaT;
+	if (keys->period) renderer.sun.direction.x -= 0.75f * renderer.deltaT;
 
 	// Movement
 	if (keys->w) renderer.camera.moveForward(renderer.deltaT);

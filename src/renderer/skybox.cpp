@@ -1,65 +1,24 @@
-#include "KrimzLib/renderer3D/skybox.h"
+#include "KrimzLib/renderer/skybox.h"
 
-
-// Skybox vertex shader
-const std::string kl::skybox::vertSource = R"(
-	#version 330
-
-	// Input arrays
-	layout (location = 0) in vec3 world;
-
-	// Transformation matrices
-	uniform mat4 vp;
-
-	// Interpolated values output
-	out vec3 interTex;
-
-	void main() {
-		// Outputting the transformed world coords
-		gl_Position = (vp * vec4(world, 0)).xyww;
-    
-		// Outputting the interpolated texture coords
-		interTex = world;
-	}
-)";
-
-// Skybox fragment shader
-const std::string kl::skybox::fragSource = R"(
-	#version 330
-
-	// Skybox texture
-	uniform samplerCube skybox;
-
-	// Interpolated values input
-	in vec3 interTex;
-
-	// Pixel color output
-	out vec4 pixelColor;
-
-	void main () {
-		// Setting the pixel color
-		pixelColor = texture(skybox, interTex);
-	}
-)";
 
 // Skybox box vertices
-const std::vector<kl::vertex3D> kl::skybox::boxVertices {
-	kl::vertex3D(kl::vec3( 1,  1, -1)), kl::vertex3D(kl::vec3( 1, -1, -1)), kl::vertex3D(kl::vec3( 1, -1,  1)),
-	kl::vertex3D(kl::vec3( 1, -1,  1)), kl::vertex3D(kl::vec3( 1,  1,  1)), kl::vertex3D(kl::vec3( 1,  1, -1)),
-	kl::vertex3D(kl::vec3(-1,  1, -1)), kl::vertex3D(kl::vec3(-1,  1,  1)), kl::vertex3D(kl::vec3(-1, -1,  1)),
-	kl::vertex3D(kl::vec3(-1, -1,  1)), kl::vertex3D(kl::vec3(-1, -1, -1)), kl::vertex3D(kl::vec3(-1,  1, -1)),
-	kl::vertex3D(kl::vec3( 1,  1, -1)), kl::vertex3D(kl::vec3( 1,  1,  1)), kl::vertex3D(kl::vec3(-1,  1,  1)),
-	kl::vertex3D(kl::vec3(-1,  1,  1)), kl::vertex3D(kl::vec3(-1,  1, -1)), kl::vertex3D(kl::vec3( 1,  1, -1)),
-	kl::vertex3D(kl::vec3( 1, -1, -1)), kl::vertex3D(kl::vec3(-1, -1, -1)), kl::vertex3D(kl::vec3(-1, -1,  1)),
-	kl::vertex3D(kl::vec3(-1, -1,  1)), kl::vertex3D(kl::vec3( 1, -1,  1)), kl::vertex3D(kl::vec3( 1, -1, -1)),
-	kl::vertex3D(kl::vec3( 1,  1,  1)), kl::vertex3D(kl::vec3( 1, -1,  1)), kl::vertex3D(kl::vec3(-1, -1,  1)),
-	kl::vertex3D(kl::vec3(-1, -1,  1)), kl::vertex3D(kl::vec3(-1,  1,  1)), kl::vertex3D(kl::vec3( 1,  1,  1)),
-	kl::vertex3D(kl::vec3( 1,  1, -1)), kl::vertex3D(kl::vec3(-1,  1, -1)), kl::vertex3D(kl::vec3(-1, -1, -1)),
-	kl::vertex3D(kl::vec3(-1, -1, -1)), kl::vertex3D(kl::vec3( 1, -1, -1)), kl::vertex3D(kl::vec3( 1,  1, -1))
+const std::vector<kl::vertex> kl::skybox::boxVertices {
+	kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3( 1, -1,  1)),
+	kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3( 1,  1, -1)),
+	kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3(-1, -1,  1)),
+	kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3(-1,  1, -1)),
+	kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3(-1,  1,  1)),
+	kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3( 1,  1, -1)),
+	kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3(-1, -1,  1)),
+	kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3( 1, -1, -1)),
+	kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3(-1, -1,  1)),
+	kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3( 1,  1,  1)),
+	kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3(-1, -1, -1)),
+	kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3( 1,  1, -1))
 };
 
 // Constructors/destructor
-kl::skybox::skybox(const kl::image& fullbox) {
+kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& fullbox) {
 	// Checking the aspect ratio
 	if (fullbox.getWidth() % 4 == 0 && fullbox.getHeight() % 3 == 0) {
 		// Getting the part size
@@ -78,7 +37,7 @@ kl::skybox::skybox(const kl::image& fullbox) {
 			const kl::image bottom = fullbox.getRect(partSize * kl::ivec2(1, 2), partSize * kl::ivec2(2, 3));
 
 			// Calling the other constructor
-			this->skybox::skybox(front, back, left, right, top, bottom);
+			this->kl::skybox::skybox(dev, devcon, front, back, left, right, top, bottom);
 		}
 		else {
 			printf("Skybox image width and height do not match!");
@@ -92,44 +51,30 @@ kl::skybox::skybox(const kl::image& fullbox) {
 		exit(69);
 	}
 }
-kl::skybox::skybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+	// Compiling skybox shaders
+	sky_sh = new kl::shaders(dev, devcon, "res/shaders/skybox.hlsl", sizeof(kl::mat4), 0);
+
 	// Generating the box mesh
-	box_mes = new kl::mesh(boxVertices);
+	box_mes = new kl::mesh(dev, devcon, boxVertices);
 
 	// Generating the box texture
-	box_tex = new kl::texture(front, back, left, right, top, bottom);
-
-	// Compiling skybox shaders
-	box_sha = new kl::glsl(vertSource, fragSource);
-
-	// Getting the view/projection uniform
-	vp_uni = box_sha->getUniform("vp");
+	box_tex = new kl::texture(dev, devcon, front, back, left, right, top, bottom);
 }
 kl::skybox::~skybox() {
-	// Deleting the texture
+	delete sky_sh;
 	delete box_tex;
-
-	// Deleting the mesh
 	delete box_mes;
-
-	// Deleting the shaders
-	delete box_sha;
 }
 
 // Renders the cubemap
 void kl::skybox::render(const kl::mat4& vpMat) const {
-	// Disabling depth testing
-	kl::gl::setDepthTest(false);
-
-	// Setting skybox uniforms
-	vp_uni.setData(vpMat);
+	// Setting skybox vp data
+	sky_sh->setVertData(vpMat.pointer());
 
 	// Binding the texture
-	box_tex->bind();
+	box_tex->bind(0);
 
 	// Drawing the cubemap
 	box_mes->draw();
-
-	// Resetting depth testing
-	kl::gl::setDepthTest(true);
 }

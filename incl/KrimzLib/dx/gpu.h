@@ -38,10 +38,16 @@ namespace kl {
 		// Destructor
 		~gpu();
 
+		// Getters
+		ID3D11Device* getDev();
+		ID3D11DeviceContext* getDevCon();
+
 		// Sets the viewport
 		void setViewport(const kl::ivec2& pos, const kl::ivec2& size);
 
 		// Clears the buffer
+		void clearColor(const kl::vec4& color);
+		void clearDepth();
 		void clear(const kl::vec4& color);
 
 		// Swaps the buffers
@@ -54,7 +60,7 @@ namespace kl {
 		kl::raster* newRaster(bool wireframe, bool cull, bool cullBack);
 
 		// Shaders
-		kl::shaders* newShaders(const std::string& filePath);
+		kl::shaders* newShaders(const std::string& filePath, uint32_t vertBuffSize, uint32_t pixlBuffSize);
 
 		// Constant buffer
 		kl::cbuffer* newCBuffer(int byteSize);

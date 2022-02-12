@@ -16,8 +16,9 @@ namespace kl {
 		ID3D11ShaderResourceView* view = nullptr;
 
 	public:
-		// Constructor
+		// Constructors
 		texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& img);
+		texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
 
 		// Destructor
 		~texture();

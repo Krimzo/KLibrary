@@ -17,13 +17,13 @@ namespace kl {
 
     public:
 		// Constructor
-        cbuffer(ID3D11Device* dev, ID3D11DeviceContext* devcon, int byteSize);
+        cbuffer(ID3D11Device* dev, ID3D11DeviceContext* devcon, uint32_t byteSize);
 
         // Destructor
         ~cbuffer();
 
         // Binds the buffer
-        void bind(int slot);
+        void bind(bool pixlSha, int slot);
 
         // Sets the data of the buffer
         void setData(void* data);

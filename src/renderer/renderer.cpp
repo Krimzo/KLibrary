@@ -1,6 +1,19 @@
 #include "KrimzLib/renderer/renderer.h"
 
 
+// Default vertex shader constant buffer
+struct VS_CB {
+	kl::mat4 w;
+	kl::mat4 vp;
+};
+
+// Default pixel shader constant buffer
+struct PS_CB {
+	kl::vec4 ambient;
+	kl::vec4 dirCol;
+	kl::vec4 dirDir;
+};
+
 // Constructor
 kl::renderer::renderer() {
 	setup = []() {};
@@ -20,9 +33,9 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		// Setting up the lighing
 		ambient.color = kl::colors::white;
 		ambient.intensity = 0.1f;
-		//sun.color = kl::colors::white;
-		//sun.intensity = 1.0f;
-		//sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
+		sun.color = kl::colors::white;
+		sun.intensity = 1.0f;
+		sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
 
 		// Creating the gpu
 		gpu = new kl::gpu(win.getHWND(), 4);
@@ -33,20 +46,12 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		solid_ra->bind();
 
 		// Compiling shaders
-		default_sh = gpu->newShaders("res/shaders/renderer.hlsl");
-		default_sh->bind();
+		default_sh = gpu->newShaders("res/shaders/renderer.hlsl", sizeof(VS_CB), sizeof(PS_CB));
 
-		// CBuffer creation
-		default_cb = gpu->newCBuffer(sizeof(VS_CB));
-		default_cb->bind(0);
-
-		// Sampler creation
+		// Sampler setup
 		kl::sampler* samp = gpu->newSampler(true, true);
 		samp->bind(0);
 		delete samp;
-
-		// Generating sun buffers
-
 
 		// Calling the user start
 		setup();
@@ -58,61 +63,49 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		deltaT = timer.interval();
 		elapsedT = timer.elapsed();
 
-		// Calling the user input
+		// User input
 		input(&win.keys, &win.mouse);
 
-		// Calling the physics update
-		for (int i = 0; i < objects.size(); i++) {
-			objects[i]->upPhys(deltaT);
+		// Physics update
+		for (int i = 0; i < entities.size(); i++) {
+			entities[i]->upPhys(deltaT);
 		}
 
-		// Calling the user update
+		// User update
 		update();
 
-		// Clearing the cb buffer
-		default_cb_data = {};
+		// Setting the lighting data
+		PS_CB pixl_data = {};
+		pixl_data.ambient = ambient.getCol();
+		pixl_data.dirCol = sun.getCol();
+		pixl_data.dirDir = sun.getDir();
+		default_sh->setPixlData(&pixl_data);
 
-		// Setting the camera data
-		default_cb_data.vp = camera.matrix();
-
-		// Calculating the light vp matrix
-
-
-		// Setting the light data
-
-
-		// Rendering the shadows
-		//sun.render(&win, [&]() {
-		//	for (int i = 0; i < objects.size(); i++) {
-		//		if (objects[i]->shadows) {
-		//			// Setting the world matrix
-		//			sun.setWMat(objects[i]->matrix());
-		//
-		//			// Rendering the object
-		//			objects[i]->render();
-		//		}
-		//	}
-		//});
-
-		// Clearing the default buffers
+		// Clearing the frame buffer
 		gpu->clear(background);
 
 		// Rendering skybox
-		//if (skybox) {
-		//	skybox->render(camera.matrix());
-		//}
+		if (skybox) {
+			gpu->setDepthTest(false);
+			skybox->render(camera.matrix());
+			gpu->setDepthTest(true);
+		}
+
+		// Setting the camera data
+		VS_CB vert_data = {};
+		vert_data.vp = camera.matrix();
 
 		// Rendering objects
-		for (int i = 0; i < objects.size(); i++) {
-			if (objects[i]->visible) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities[i]->visible) {
 				// Setting the world matrix
-				default_cb_data.w = objects[i]->matrix();
+				vert_data.w = entities[i]->matrix();
 
 				// Updating the cb data
-				default_cb->setData(&default_cb_data);
+				default_sh->setVertData(&vert_data);
 
 				// Rendering the object
-				objects[i]->render();
+				entities[i]->render();
 			}
 		}
 
@@ -125,14 +118,11 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 
 	// Window end definition
 	win.end = [&]() {
-		// Deleting the sun shadow buffers
-
-
-		// Deleting meshes
-		for (int i = 0; i < meshes.size(); i++) {
-			delete meshes[i];
+		// Deleting skyboxes
+		for (int i = 0; i < skyboxes.size(); i++) {
+			delete skyboxes[i];
 		}
-		meshes.clear();
+		skyboxes.clear();
 
 		// Deleting textures
 		for (int i = 0; i < textures.size(); i++) {
@@ -140,8 +130,11 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		}
 		textures.clear();
 
-		// Deleting cbuffer
-		delete default_cb;
+		// Deleting meshes
+		for (int i = 0; i < meshes.size(); i++) {
+			delete meshes[i];
+		}
+		meshes.clear();
 
 		// Deleting shaders
 		delete default_sh;
@@ -231,14 +224,33 @@ void kl::renderer::delTexture(kl::texture* texAddress) {
 
 // Entity
 kl::entity* kl::renderer::newEntity(kl::mesh* mes, kl::texture* tex) {
-	objects.push_back(new kl::entity(mes, tex));
-	return objects.back();
+	entities.push_back(new kl::entity(mes, tex));
+	return entities.back();
 }
 void kl::renderer::delEntity(kl::entity* objectAddress) {
-	for (int i = 0; i < objects.size(); i++) {
-		if (objects[i] == objectAddress) {
-			delete objects[i];
-			objects.erase(objects.begin() + i);
+	for (int i = 0; i < entities.size(); i++) {
+		if (entities[i] == objectAddress) {
+			delete entities[i];
+			entities.erase(entities.begin() + i);
+			break;
+		}
+	}
+}
+
+// Skybox
+kl::skybox* kl::renderer::newSkybox(const kl::image& fullBox) {
+	skyboxes.push_back(new kl::skybox(gpu->getDev(), gpu->getDevCon(), fullBox));
+	return skyboxes.back();
+}
+kl::skybox* kl::renderer::newSkybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+	skyboxes.push_back(new kl::skybox(gpu->getDev(), gpu->getDevCon(), front, back, left, right, top, bottom));
+	return skyboxes.back();
+}
+void kl::renderer::delSkybox(kl::skybox* skyboxAddress) {
+	for (int i = 0; i < skyboxes.size(); i++) {
+		if (skyboxes[i] == skyboxAddress) {
+			delete skyboxes[i];
+			skyboxes.erase(skyboxes.begin() + i);
 			break;
 		}
 	}

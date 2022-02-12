@@ -94,7 +94,9 @@ void kl::fbuffer::bind(bool depthTest) {
 }
 
 // Clears the buffer
-void kl::fbuffer::clear(const kl::vec4& color) {
+void kl::fbuffer::clearColor(const kl::vec4& color) {
     devcon->ClearRenderTargetView(backBuff, (float*)&color);
+}
+void kl::fbuffer::clearDepth() {
     devcon->ClearDepthStencilView(dsBuff, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 }

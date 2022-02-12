@@ -21,11 +21,6 @@
 
 
 namespace kl {
-	struct VS_CB {
-		kl::mat4 w;
-		kl::mat4 vp;
-	};
-
 	class renderer {
 	private:
 		// Window
@@ -37,8 +32,11 @@ namespace kl {
 		// Texture buffer
 		std::vector<kl::texture*> textures;
 
-		// Object buffer
-		std::vector<kl::entity*> objects;
+		// Entity buffer
+		std::vector<kl::entity*> entities;
+
+		// Skybox buffer
+		std::vector<kl::skybox*> skyboxes;
 
 		// Engine timer
 		kl::timer timer;
@@ -48,8 +46,6 @@ namespace kl {
 		kl::raster* solid_ra = nullptr;
 		kl::raster* wire_ra = nullptr;
 		kl::shaders* default_sh = nullptr;
-		kl::cbuffer* default_cb = nullptr;
-		kl::VS_CB default_cb_data;
 
 	public:
 		// Time
@@ -63,10 +59,10 @@ namespace kl {
 
 		// Lighting
 		kl::ambient ambient;
-		//kl::direct sun;
+		kl::direct sun;
 
 		// Engine skybox
-		//kl::skybox* skybox = nullptr;
+		kl::skybox* skybox = nullptr;
 
 		// User functions
 		std::function<void()> setup;
@@ -107,5 +103,10 @@ namespace kl {
 		// Entity
 		kl::entity* newEntity(kl::mesh* mes, kl::texture* tex);
 		void delEntity(kl::entity* objectAddress);
+
+		// Skybox
+		kl::skybox* newSkybox(const kl::image& fullBox);
+		kl::skybox* newSkybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
+		void delSkybox(kl::skybox* skyboxAddress);
 	};
 }

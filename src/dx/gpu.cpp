@@ -81,6 +81,14 @@ kl::gpu::~gpu() {
     dev->Release();
 }
 
+// Getters
+ID3D11Device* kl::gpu::getDev() {
+    return dev;
+}
+ID3D11DeviceContext* kl::gpu::getDevCon() {
+    return devcon;
+}
+
 // Sets the viewport
 void kl::gpu::setViewport(const kl::ivec2& pos, const kl::ivec2& size) {
     D3D11_VIEWPORT viewport = {};
@@ -94,8 +102,15 @@ void kl::gpu::setViewport(const kl::ivec2& pos, const kl::ivec2& size) {
 }
 
 // Clears the buffer
+void kl::gpu::clearColor(const kl::vec4& color) {
+    frameBuff->clearColor(color);
+}
+void kl::gpu::clearDepth() {
+    frameBuff->clearDepth();
+}
 void kl::gpu::clear(const kl::vec4& color) {
-    this->frameBuff->clear(color);
+    frameBuff->clearColor(color);
+    frameBuff->clearDepth();
 }
 
 // Swaps the buffers
@@ -114,8 +129,8 @@ kl::raster* kl::gpu::newRaster(bool wireframe, bool cull, bool cullBack) {
 }
 
 // Compiles and returns shaders
-kl::shaders* kl::gpu::newShaders(const std::string& filePath) {
-    return new kl::shaders(dev, devcon, filePath);
+kl::shaders* kl::gpu::newShaders(const std::string& filePath, uint32_t vertBuffSize, uint32_t pixlBuffSize) {
+    return new kl::shaders(dev, devcon, filePath, vertBuffSize, pixlBuffSize);
 }
 
 // Creates a new constant buffer

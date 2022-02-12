@@ -2,7 +2,7 @@
 
 
 // Constructor
-kl::cbuffer::cbuffer(ID3D11Device* dev, ID3D11DeviceContext* devcon, int byteSize) {
+kl::cbuffer::cbuffer(ID3D11Device* dev, ID3D11DeviceContext* devcon, uint32_t byteSize) {
     // Saving the devcon
     this->devcon = devcon;
 
@@ -40,8 +40,13 @@ kl::cbuffer::~cbuffer() {
 }
 
 // Binds the buffer
-void kl::cbuffer::bind(int slot) {
-    devcon->VSSetConstantBuffers(slot, 1, &buff);
+void kl::cbuffer::bind(bool pixlSha, int slot) {
+    if (pixlSha) {
+        devcon->PSSetConstantBuffers(slot, 1, &buff);
+    }
+    else {
+        devcon->VSSetConstantBuffers(slot, 1, &buff);
+    }
 }
 
 // Sets the data of the buffer

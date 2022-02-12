@@ -28,6 +28,7 @@ namespace kl {
 		void bind(bool depthTest);
 
 		// Clears the buffer
-		void clear(const kl::vec4& color);
+		void clearColor(const kl::vec4& color);
+		void clearDepth();
 	};
 }

@@ -1,8 +1,8 @@
-#include "KrimzLib/renderer3D/light/direct.h"
+#include "KrimzLib/renderer/light/direct.h"
 
 
 // Shadow vertex shader
-const std::string kl::direct::vertSource = R"(
+const std::string vertSource = R"(
 	#version 330
 
 	layout (location = 0) in vec3 world;
@@ -16,16 +16,11 @@ const std::string kl::direct::vertSource = R"(
 )";
 
 // Shadow fragment shader
-const std::string kl::direct::fragSource = R"(
+const std::string fragSource = R"(
 	#version 330
 
 	void main() {} 
 )";
-
-// Constructor
-kl::direct::direct() {
-
-}
 
 // Returns the true light color
 kl::vec3 kl::direct::getCol() const {
@@ -39,65 +34,12 @@ kl::vec3 kl::direct::getDir() const {
 
 // Generates the shadow buffers
 void kl::direct::genBuff(int mapSize) {
-	if (!depthFB) {
-		// Upadating the map size
-		this->mapSize = mapSize;
-
-		// Generating the shadow frame buffer
-		glGenFramebuffers(1, &depthFB);
-
-		// Generating the shadow depth texture
-		glGenTextures(1, &depthMap);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, mapSize, mapSize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-		// Fixing the borders
-		float borderColor[] = { 1, 1, 1, 1 };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-
-		// Attaching the shadow map to the shadow frame buffer
-		glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-
-		// Disabling the color buffers
-		glDrawBuffer(NULL);
-		glReadBuffer(NULL);
-
-		// Chechink the frame buffer status
-		kl::id checkStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		if (checkStatus != GL_FRAMEBUFFER_COMPLETE) {
-			printf("Shadow frame buffer error, status: 0x%x\n", checkStatus);
-		}
-
-		// Binding the default frame buffer
-		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-
-		// Compiling the shaders and getting uniforms
-		depth_sha = new kl::glsl(vertSource, fragSource);
-		sunVP_uni = depth_sha->getUniform("sunVP");
-		w_uni = depth_sha->getUniform("w");
-	}
+	
 }
 
 // Destroys the shadow buffers
 void kl::direct::delBuff() {
-	if (depthFB) {
-		// Deleting the the shadow frame buffer
-		glDeleteFramebuffers(1, &depthFB);
-		depthFB = NULL;
-
-		// Deleting the shadow map
-		glGenTextures(1, &depthMap);
-		depthMap = NULL;
-
-		// Deleting the shaders
-		delete depth_sha;
-		depth_sha = nullptr;
-	}
+	
 }
 
 // Calculates the light vp matrix
@@ -179,38 +121,27 @@ kl::mat4 kl::direct::matrix() const {
 }
 
 void kl::direct::render(kl::window* win, const std::function<void()>& toRender) const {
-	// Setting the viewport size
-	glViewport(0, 0, mapSize, mapSize);
-
-	// Binding the shadow frame buffer
-	glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
-
-	// Clearing the depth data
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	// Setting the light vp uni
-	sunVP_uni.setData(this->matrix());
-
-	// Rendering
-	toRender();
-
-	// Binding the defualt frame buffer
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-
-	// Resetting the viewport
-	win->resetViewport();
-
-	// Binding the shadow map
-	this->bindMap(GL_TEXTURE1);
-}
-
-// Sets the object world transform matrix
-void kl::direct::setWMat(const kl::mat4& wMat) const {
-	w_uni.setData(wMat);
-}
-
-// Binds the shadow map
-void kl::direct::bindMap(kl::id textureID) const {
-	glActiveTexture(textureID);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
+	//// Setting the viewport size
+	//glViewport(0, 0, mapSize, mapSize);
+	//
+	//// Binding the shadow frame buffer
+	//glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
+	//
+	//// Clearing the depth data
+	//glClear(GL_DEPTH_BUFFER_BIT);
+	//
+	//// Setting the light vp uni
+	//sunVP_uni.setData(this->matrix());
+	//
+	//// Rendering
+	//toRender();
+	//
+	//// Binding the defualt frame buffer
+	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	//
+	//// Resetting the viewport
+	//win->resetViewport();
+	//
+	//// Binding the shadow map
+	//this->bindMap(GL_TEXTURE1);
 }
