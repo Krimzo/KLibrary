@@ -237,7 +237,7 @@
     <ClCompile Include="src\window\keys.cpp" />
     <ClCompile Include="src\window\mouse.cpp" />
     <ClCompile Include="src\window\window.cpp" />
-    <ClCompile Include="test\Rendering.cpp" />
+    <ClCompile Include="test\Mandelbrot.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

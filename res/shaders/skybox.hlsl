@@ -25,7 +25,6 @@ TextureCube tex0 : register(t0);
 float4 pShader(vOut data) : SV_TARGET {
     float4 pixel;
 
-    // Getting the texture pixel
     pixel = tex0.Sample(samp, data.textur);
 
     return pixel;

@@ -42,7 +42,7 @@ void setup() {
 	night = renderer.newSkybox(
 		"res/textures/skyboxes/night/night.png"
 	);
-	renderer.skybox = night;
+	renderer.skybox = clouds;
 
 	// Mesh creation
 	kl::mesh* cube_mes = renderer.newMesh("res/objects/cube.obj");
@@ -98,6 +98,7 @@ void setup() {
 	sphere->position = kl::vec3(0, 2, -2);
 	sphere->physics = true;
 	sphere->velocity.x = 1;
+	sphere->angular.y = -36;
 
 	metalcube1->size = kl::vec3(0.5, 0.5, 0.5);
 	metalcube1->rotation = kl::vec3(45, 45, 0);

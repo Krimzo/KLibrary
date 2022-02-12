@@ -109,11 +109,11 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 			}
 		}
 
-		// Updating the fps display
-		win.setTitle(std::to_string(int(1 / deltaT)));
-
 		// Swapping the frame buffers
 		gpu->swap(vSync);
+
+		// Updating the fps display
+		win.setTitle(std::to_string(int(1 / deltaT)));
 	};
 
 	// Window end definition

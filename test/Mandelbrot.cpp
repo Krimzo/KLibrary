@@ -3,65 +3,54 @@
 
 kl::window win;
 
-kl::mesh* box;
-kl::shaders* shad;
-kl::uniform frameSize_uni;
-kl::uniform zoom_uni;
-kl::uniform pos_uni;
-kl::uniform startPos_uni;
+kl::gpu* gpu = nullptr;
+kl::shaders* sha = nullptr;
+kl::mesh* box = nullptr;
 
-kl::timer timer;
-float deltaT = 0;
-float elapsedT = 0;
+struct PS_CB {
+	kl::vec2 frameSize;
+	kl::vec2 zoom;
+	kl::vec2 pos;
+	kl::vec2 startPos;
+};
 
-float zoomSpeed = 1;
 float zoom = 1;
+float zoomSpeed = 1;
 kl::vec2 pos(-0.5, 0);
 
 const float minZoom = 0.5f;
-const float maxZoom = 5000;
+const float maxZoom = 5000000;
+const kl::ivec2 frameSize(1600, 900);
 
 void start() {
-	/* Compiling shaders */
-	shad = new kl::shaders(
-		kl::shaders::parse("res/shaders/mandelbrot.glsl", kl::shaders::Vertex),
-		kl::shaders::parse("res/shaders/mandelbrot.glsl", kl::shaders::Fragment)
-	);
-	shad->use();
+	// DirectX init
+	gpu = new kl::gpu(win.getHWND(), 1);
 
-	/* Creating the box mesh */
-	std::vector<kl::vertex2D> boxVertices = {
-		kl::vertex2D(kl::vec2(-1)), kl::vertex2D(kl::vec2(-1,  1)), kl::vertex2D(kl::vec2(1)),
-		kl::vertex2D(kl::vec2(-1)), kl::vertex2D(kl::vec2( 1, -1)), kl::vertex2D(kl::vec2(1))
+	// Setting the raster
+	kl::raster* ras = gpu->newRaster(false, false, true);
+	ras->bind();
+	delete ras;
+
+	// Compiling shaders
+	sha = gpu->newShaders("res/shaders/mandelbrot.hlsl", 0, sizeof(PS_CB));
+
+	// Creating the box mesh
+	std::vector<kl::vertex> boxVertices = {
+		kl::vertex(kl::vec3(-1, -1, 0.5)), kl::vertex(kl::vec3(-1,  1, 0.5)), kl::vertex(kl::vec3(1, 1, 0.5)),
+		kl::vertex(kl::vec3(-1, -1, 0.5)), kl::vertex(kl::vec3( 1, -1, 0.5)), kl::vertex(kl::vec3(1, 1, 0.5))
 	};
-	box = new kl::mesh(boxVertices);
-
-	/* Getting shader uniforms */
-	frameSize_uni = shad->getUniform("frameSize");
-	zoom_uni = shad->getUniform("zoom");
-	pos_uni = shad->getUniform("pos");
-	startPos_uni = shad->getUniform("startPos");
+	box = gpu->newMesh(boxVertices);
 }
 
+kl::timer timer;
 void update() {
-	/* Time calculations */
-	deltaT = timer.interval();
-	elapsedT = timer.elapsed();
-
-	/* Getting the screen size */
-	kl::vec2 frameSize = win.getSize();
+	// Time calculations
+	const float deltaT = timer.interval();
+	const float elapsedT = timer.elapsed();
 
 	/* Checking the input */
 	if (win.keys.esc) {
 		win.stop();
-	}
-	if (win.keys.insert) {
-		win.setFullscreen(true);
-		win.resetViewport();
-	}
-	if (win.keys.delet) {
-		win.setFullscreen(false);
-		win.resetViewport();
 	}
 	if (win.keys.r) {
 		pos = kl::vec2(-0.5, 0);
@@ -81,15 +70,11 @@ void update() {
 	}
 	if (win.mouse.lmb) {
 		// Calculating the zoom
-		zoom = zoom + zoom * zoomSpeed * deltaT;
+		zoom += (zoom * zoomSpeed * deltaT);
 
 		// Checking the zoom
 		if (zoom < maxZoom) {
-			// Calculating the position
-			kl::vec2 uv(
-				((win.mouse.position.x / frameSize.x) * 2 - 1) * (frameSize.x / frameSize.y),
-				(((frameSize.y - win.mouse.position.y) / frameSize.y) * 2 - 1)
-			);
+			const kl::vec2 uv = ((kl::vec2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
 			pos += (uv / zoom) * deltaT;
 		}
 		else {
@@ -102,11 +87,7 @@ void update() {
 
 		// Checking the zoom
 		if (zoom > minZoom) {
-			// Calculating the position
-			kl::vec2 uv(
-				((win.mouse.position.x / frameSize.x) * 2 - 1) * (frameSize.x / frameSize.y),
-				(((frameSize.y - win.mouse.position.y) / frameSize.y) * 2 - 1)
-			);
+			const kl::vec2 uv = ((kl::vec2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
 			pos -= (uv / zoom) * deltaT;
 		}
 		else {
@@ -114,29 +95,35 @@ void update() {
 		}
 	}
 
-	/* Setting the uniforms */
-	frameSize_uni.setData(frameSize);
-	pos_uni.setData(pos);
-	zoom_uni.setData(zoom);
-	startPos_uni.setData(0);
+	// Clearing
+	gpu->clear(kl::colors::black);
 
-	/* Rendering the box */
+	// CBuffer data
+	PS_CB pxdata = {};
+	pxdata.frameSize = frameSize;
+	pxdata.zoom.x = zoom;
+	pxdata.pos = pos;
+	pxdata.startPos.x = 0;
+	sha->setPixlData(&pxdata);
+
+	// Rendering the box
 	box->draw();
 
-	/* Updating the fps display */
+	// Swapping the frame buffers
+	gpu->swap(true);
+
+	// Updating the title
 	win.setTitle(
 		"Fps: " + std::to_string(int(1 / deltaT)) +
 		" Zoom: " + std::to_string(zoom) +
 		" Position: " + std::to_string(pos.x) + " " + std::to_string(pos.y)
 	);
-
-	/* Swapping the frame buffers */
-	win.swapBuffers();
 }
 
 int main() {
 	win.start = start;
 	win.update = update;
 	timer.reset();
-	win.startNew(kl::ivec2(1600, 900), "Mandelbrot", false, true, true);
+	timer.interval();
+	win.startNew(frameSize, "Mandelbrot", false, true);
 }
