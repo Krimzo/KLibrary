@@ -222,9 +222,6 @@
     <ClCompile Include="src\dx\texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\DirectX.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\dx\gpu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -244,6 +241,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\dx\fbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\light\ambient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test\Rendering.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

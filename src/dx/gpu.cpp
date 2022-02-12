@@ -60,12 +60,7 @@ kl::gpu::gpu(HWND hwnd, int msaa) {
 
     // Frame buffer creation
     frameBuff = new kl::fbuffer(chain, dev, devcon, clientArea.right, clientArea.bottom, msaa);
-    frameBuff->bind();
-
-    // Setting the raster
-    kl::raster* defaultRaster = this->newRaster(false, false, true);
-    defaultRaster->bind();
-    delete defaultRaster;
+    frameBuff->bind(true);
 
     // Viewport setup
     this->setViewport(kl::ivec2(clientArea.left, clientArea.top), kl::ivec2(clientArea.right, clientArea.bottom));
@@ -106,6 +101,11 @@ void kl::gpu::clear(const kl::vec4& color) {
 // Swaps the buffers
 void kl::gpu::swap(bool vSync) {
     chain->Present(vSync, NULL);
+}
+
+// Sets the depth testing state
+void kl::gpu::setDepthTest(bool enabled) {
+    frameBuff->bind(enabled);
 }
 
 // Creates a new rasterizer state

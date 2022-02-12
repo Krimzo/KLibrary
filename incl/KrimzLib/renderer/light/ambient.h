@@ -10,6 +10,6 @@ namespace kl {
 		float intensity = 0;
 
 		// Returns the true light color
-		kl::vec3 getCol();
+		kl::vec3 getCol() const;
 	};
 }

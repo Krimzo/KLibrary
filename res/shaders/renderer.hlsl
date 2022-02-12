@@ -5,7 +5,7 @@ struct vOut {
     float3 normal : NORM;
 };
 
-cbuffer VS_BUFF : register(b0) {
+cbuffer VS_CB : register(b0) {
     matrix w;
     matrix vp;
 }
@@ -13,10 +13,13 @@ cbuffer VS_BUFF : register(b0) {
 vOut vShader(float3 pos : POS_IN, float2 tex : TEX_IN, float3 norm : NORM_IN) {
     vOut data;
 
+    // WVP calculation
+    matrix wvp = mul(w, vp);
+
     // Vertex transform
-    data.world = mul(float4(pos, 1), w);
+    data.world = mul(float4(pos, 1), wvp);
     data.textur = tex;
-    data.normal = mul(float4(norm, 0), w);
+    data.normal = mul(float4(norm, 0), w).xyz;
 
     return data;
 }

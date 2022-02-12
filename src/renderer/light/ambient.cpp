@@ -1,7 +1,7 @@
-#include "KrimzLib/renderer3D/light/ambient.h"
+#include "KrimzLib/renderer/light/ambient.h"
 
 
 // Returns the true light color
-kl::vec3 kl::ambient::getCol() {
+kl::vec3 kl::ambient::getCol() const {
 	return color * intensity;
 }

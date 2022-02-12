@@ -3,9 +3,14 @@
 #include <iostream>
 #include <functional>
 
+#include "KrimzLib/dx/gpu.h"
+#include "KrimzLib/dx/fbuffer.h"
+#include "KrimzLib/dx/raster.h"
+#include "KrimzLib/dx/shaders.h"
+#include "KrimzLib/dx/cbuffer.h"
 #include "KrimzLib/dx/mesh.h"
 #include "KrimzLib/dx/texture.h"
-#include "KrimzLib/dx/shaders.h"
+#include "KrimzLib/dx/sampler.h"
 #include "KrimzLib/renderer/camera.h"
 #include "KrimzLib/renderer/skybox.h"
 #include "KrimzLib/renderer/entity.h"
@@ -16,7 +21,12 @@
 
 
 namespace kl {
-	class renderer3D {
+	struct VS_CB {
+		kl::mat4 w;
+		kl::mat4 vp;
+	};
+
+	class renderer {
 	private:
 		// Window
 		kl::window win;
@@ -33,19 +43,19 @@ namespace kl {
 		// Engine timer
 		kl::timer timer;
 
-		// Default shaders
-		//kl::glsl* default_sha = nullptr;
-		//kl::uniform w_uni;
-		//kl::uniform vp_uni;
-		//kl::uniform dark_uni;
-		//kl::uniform sunL_uni;
-		//kl::uniform sunD_uni;
-		//kl::uniform sunVP_uni;
+		// DirectX
+		kl::gpu* gpu = nullptr;
+		kl::raster* solid_ra = nullptr;
+		kl::raster* wire_ra = nullptr;
+		kl::shaders* default_sh = nullptr;
+		kl::cbuffer* default_cb = nullptr;
+		kl::VS_CB default_cb_data;
 
 	public:
 		// Time
 		float deltaT = 0;
 		float elapsedT = 0;
+		bool vSync = false;
 
 		// View
 		kl::color background = kl::colors::gray;
@@ -53,10 +63,10 @@ namespace kl {
 
 		// Lighting
 		kl::ambient ambient;
-		kl::direct sun;
+		//kl::direct sun;
 
 		// Engine skybox
-		kl::skybox* skybox = nullptr;
+		//kl::skybox* skybox = nullptr;
 
 		// User functions
 		std::function<void()> setup;
@@ -64,7 +74,7 @@ namespace kl {
 		std::function<void()> update;
 
 		// Constructor
-		renderer3D();
+		renderer();
 
 		// Creates and runs a new engine
 		void startNew(const kl::ivec2& frameSize);
@@ -82,17 +92,20 @@ namespace kl {
 		// Returns the aspect ratio
 		float getAspect() const;
 
+		// Sets the raster type
+		void setWireframe(bool enabled);
+
 		// Mesh
-		kl::mesh* newMesh(const std::string& filePath, bool flipZ = true);
 		kl::mesh* newMesh(const std::vector<kl::vertex>& vertexData);
+		kl::mesh* newMesh(const std::string& filePath, bool flipZ = true);
 		void delMesh(kl::mesh* mesAddress);
 
 		// Texture
 		kl::texture* newTexture(const kl::image& image);
-		void delTex(kl::texture* texAddress);
+		void delTexture(kl::texture* texAddress);
 
 		// Entity
-		kl::entity* newObject(kl::mesh* mes, kl::texture* tex);
-		void delObject(kl::entity* objectAddress);
+		kl::entity* newEntity(kl::mesh* mes, kl::texture* tex);
+		void delEntity(kl::entity* objectAddress);
 	};
 }

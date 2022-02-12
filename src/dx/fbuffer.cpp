@@ -23,14 +23,23 @@ kl::fbuffer::fbuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11DeviceConte
         exit(69);
     }
 
-    // Creating depth/stencil state
-    D3D11_DEPTH_STENCIL_DESC depthDesc = {};
-    depthDesc.DepthEnable = true;
-    depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
-    depthDesc.StencilEnable = false;
-    dev->CreateDepthStencilState(&depthDesc, &dsState);
-    if (!dsState) {
+    // Creating depth/stencil states
+    D3D11_DEPTH_STENCIL_DESC depthDesc_e = {};
+    depthDesc_e.DepthEnable = true;
+    depthDesc_e.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    depthDesc_e.DepthFunc = D3D11_COMPARISON_LESS;
+    depthDesc_e.StencilEnable = false;
+    dev->CreateDepthStencilState(&depthDesc_e, &dsState_enabled);
+    if (!dsState_enabled) {
+        std::cout << "DirectX: Could not create a depth/stencil state!";
+        std::cin.get();
+        exit(69);
+    }
+    D3D11_DEPTH_STENCIL_DESC depthDesc_d = {};
+    depthDesc_d.DepthEnable = false;
+    depthDesc_d.StencilEnable = false;
+    dev->CreateDepthStencilState(&depthDesc_d, &dsState_disabled);
+    if (!dsState_disabled) {
         std::cout << "DirectX: Could not create a depth/stencil state!";
         std::cin.get();
         exit(69);
@@ -72,14 +81,15 @@ kl::fbuffer::fbuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11DeviceConte
 
 // Destructor
 kl::fbuffer::~fbuffer() {
-    dsState->Release();
+    dsState_enabled->Release();
+    dsState_disabled->Release();
     dsBuff->Release();
     backBuff->Release();
 }
 
 // Binds the buffer
-void kl::fbuffer::bind() {
-    devcon->OMSetDepthStencilState(dsState, 1);
+void kl::fbuffer::bind(bool depthTest) {
+    devcon->OMSetDepthStencilState(depthTest ? dsState_enabled : dsState_disabled, 1);
     devcon->OMSetRenderTargets(1, &backBuff, dsBuff);
 }
 

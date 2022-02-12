@@ -13,7 +13,8 @@ namespace kl {
 	private:
 		ID3D11DeviceContext* devcon = nullptr;
 		ID3D11RenderTargetView* backBuff = nullptr;
-		ID3D11DepthStencilState* dsState = nullptr;
+		ID3D11DepthStencilState* dsState_enabled = nullptr;
+		ID3D11DepthStencilState* dsState_disabled = nullptr;
 		ID3D11DepthStencilView* dsBuff = nullptr;
 
 	public:
@@ -24,7 +25,7 @@ namespace kl {
 		~fbuffer();
 
 		// Binds the buffer
-		void bind();
+		void bind(bool depthTest);
 
 		// Clears the buffer
 		void clear(const kl::vec4& color);

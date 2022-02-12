@@ -47,6 +47,9 @@ namespace kl {
 		// Swaps the buffers
 		void swap(bool vSync);
 
+		// Sets the depth testing state
+		void setDepthTest(bool enabled);
+
 		// Raster
 		kl::raster* newRaster(bool wireframe, bool cull, bool cullBack);
 

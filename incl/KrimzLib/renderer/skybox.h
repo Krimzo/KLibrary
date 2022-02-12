@@ -14,8 +14,6 @@ namespace kl {
 		// gl data
 		kl::mesh* box_mes = nullptr;
 		kl::texture* box_tex = nullptr;
-		//kl::glsl* box_sha = nullptr;
-		//kl::uniform vp_uni;
 
 		// Box vertices
 		static const std::vector<kl::vertex> boxVertices;

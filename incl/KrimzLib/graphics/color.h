@@ -17,8 +17,9 @@ namespace kl {
 		color(byte r, byte g, byte b);
 
 		// Operator overloading
-		bool operator == (kl::color obj) const;
-		bool operator != (kl::color obj) const;
+		bool equals(const kl::color& obj) const;
+		bool operator==(const kl::color& obj) const;
+		bool operator!=(const kl::color& obj) const;
 	};
 
 	// Overloading std::cout

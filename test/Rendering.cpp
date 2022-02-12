@@ -2,38 +2,47 @@
 
 
 // Rendering engine
-kl::renderer3D renderer;
+kl::renderer renderer;
 
 // Game objects
-kl::object3D* wall = nullptr;
-kl::object3D* table = nullptr;
-kl::object3D* katanaL = nullptr;
-kl::object3D* katanaR = nullptr;
-kl::object3D* horse = nullptr;
-kl::object3D* sphere = nullptr;
-kl::object3D* metalcube1 = nullptr;
-kl::object3D* metalcube2 = nullptr;
-kl::object3D* kerv = nullptr;
+kl::entity* wall = nullptr;
+kl::entity* table = nullptr;
+kl::entity* katanaL = nullptr;
+kl::entity* katanaR = nullptr;
+kl::entity* horse = nullptr;
+kl::entity* sphere = nullptr;
+kl::entity* metalcube1 = nullptr;
+kl::entity* metalcube2 = nullptr;
+kl::entity* kerv = nullptr;
 
 // Skyboxes
 kl::skybox* clouds = nullptr;
 kl::skybox* night = nullptr;
 
+// Frame size
+const kl::ivec2 frameSize(1600, 900);
+
 // Renderer setup
 void setup() {
+	// Going into fullscreen
+	renderer.setFullscreen(false);
+
+	// Enabling the vSync
+	renderer.vSync = true;
+
 	// Skybox creation
-	clouds = new kl::skybox(
-		"res/textures/skyboxes/clouds/front.jpg",
-		"res/textures/skyboxes/clouds/back.jpg",
-		"res/textures/skyboxes/clouds/left.jpg",
-		"res/textures/skyboxes/clouds/right.jpg",
-		"res/textures/skyboxes/clouds/top.jpg",
-		"res/textures/skyboxes/clouds/bottom.jpg"
-	);
-	night = new kl::skybox(
-		"res/textures/skyboxes/night/night.png"
-	);
-	renderer.skybox = clouds;
+	//clouds = new kl::skybox(
+	//	"res/textures/skyboxes/clouds/front.jpg",
+	//	"res/textures/skyboxes/clouds/back.jpg",
+	//	"res/textures/skyboxes/clouds/left.jpg",
+	//	"res/textures/skyboxes/clouds/right.jpg",
+	//	"res/textures/skyboxes/clouds/top.jpg",
+	//	"res/textures/skyboxes/clouds/bottom.jpg"
+	//);
+	//night = new kl::skybox(
+	//	"res/textures/skyboxes/night/night.png"
+	//);
+	//renderer.skybox = clouds;
 
 	// Mesh creation
 	kl::mesh* cube_mes = renderer.newMesh("res/objects/cube.obj");
@@ -54,15 +63,15 @@ void setup() {
 	kl::texture* fp_tex = renderer.newTexture("res/textures/firepower.jpg");
 
 	// Object creation
-	wall = renderer.newObject(cube_mes, solid1_tex);
-	table = renderer.newObject(table_mes, table_tex);
-	katanaL = renderer.newObject(katana_mes, katana_tex);
-	katanaR = renderer.newObject(katana_mes, katana_tex);
-	horse = renderer.newObject(horse_mes, horse_tex);
-	sphere = renderer.newObject(sphere_mes, solid2_tex);
-	metalcube1 = renderer.newObject(cube_mes, peace_tex);
-	metalcube2 = renderer.newObject(cube_mes, fp_tex);
-	kerv = renderer.newObject(tv_mes, tv_tex);
+	wall = renderer.newEntity(cube_mes, solid1_tex);
+	table = renderer.newEntity(table_mes, table_tex);
+	katanaL = renderer.newEntity(katana_mes, katana_tex);
+	katanaR = renderer.newEntity(katana_mes, katana_tex);
+	horse = renderer.newEntity(horse_mes, horse_tex);
+	sphere = renderer.newEntity(sphere_mes, solid2_tex);
+	metalcube1 = renderer.newEntity(cube_mes, peace_tex);
+	metalcube2 = renderer.newEntity(cube_mes, fp_tex);
+	kerv = renderer.newEntity(tv_mes, tv_tex);
 
 	// Object properties setup
 	wall->size = kl::vec3(50, 10, 0.05f);
@@ -107,10 +116,7 @@ void setup() {
 	kerv->position = kl::vec3(0, 3, -6);
 
 	// Sun setup
-	renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
-
-	// Going into fullscreen
-	//renderer.setFullscreen(true);
+	//renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
 }
 
 // Renderer input
@@ -124,17 +130,17 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	if (keys->delet) renderer.setFullscreen(false);
 
 	// Wireframe
-	if (keys->v) kl::gl::setWireframe(true);
-	if (keys->f) kl::gl::setWireframe(false);
+	if (keys->v) renderer.setWireframe(true);
+	if (keys->f) renderer.setWireframe(false);
 
 	// Skyboxes
-	if (keys->num0) renderer.skybox = nullptr;
-	if (keys->num1) renderer.skybox = clouds;
-	if (keys->num2) renderer.skybox = night;
+	//if (keys->num0) renderer.skybox = nullptr;
+	//if (keys->num1) renderer.skybox = clouds;
+	//if (keys->num2) renderer.skybox = night;
 
 	// Sun
-	if (keys->comma) renderer.sun.direction.x += 0.75f * renderer.deltaT;
-	if (keys->period) renderer.sun.direction.x -= 0.75f * renderer.deltaT;
+	//if (keys->comma) renderer.sun.direction.x += 0.75f * renderer.deltaT;
+	//if (keys->period) renderer.sun.direction.x -= 0.75f * renderer.deltaT;
 
 	// Movement
 	if (keys->w) renderer.camera.moveForward(renderer.deltaT);
@@ -198,5 +204,5 @@ int main() {
 	renderer.update = update;
 
 	// Renderer creation
-	renderer.startNew(kl::ivec2(1600, 900));
+	renderer.startNew(frameSize);
 }

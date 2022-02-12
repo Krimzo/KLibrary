@@ -22,8 +22,13 @@ kl::shaders::shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::
     // Vertex shader compilation
     D3DCompileFromFile(wFilPath.c_str(), nullptr, nullptr, "vShader", "vs_4_0", NULL, NULL, &vsBlob, &vsError);
     if (!vsBlob) {
-        vsError->Release();
-        std::cout << "DirectX: Could not compile vertex shader!\nError: " << (char*)vsError->GetBufferPointer();
+        if (vsError) {
+            std::cout << "DirectX: Could not compile vertex shader!\nError: " << (char*)vsError->GetBufferPointer();
+            vsError->Release();
+        }
+        else {
+            std::cout << "DirectX: Could not compile vertex shader!\nError: Unknown";
+        }
         std::cin.get();
         exit(69);
     }
@@ -37,8 +42,13 @@ kl::shaders::shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::
     // Pixel shader compilation
     D3DCompileFromFile(wFilPath.c_str(), nullptr, nullptr, "pShader", "ps_4_0", NULL, NULL, &psBlob, &psError);
     if (!vsBlob) {
-        psError->Release();
-        std::cout << "DirectX: Could not compile pixel shader!\nError: " << (char*)psError->GetBufferPointer();
+        if (psError) {
+            std::cout << "DirectX: Could not compile pixel shader!\nError: " << (char*)psError->GetBufferPointer();
+            psError->Release();
+        }
+        else {
+            std::cout << "DirectX: Could not compile pixel shader!\nError: Unknown";
+        }
         std::cin.get();
         exit(69);
     }

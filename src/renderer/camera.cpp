@@ -1,4 +1,4 @@
-#include "KrimzLib/renderer3D/camera.h"
+#include "KrimzLib/renderer/camera.h"
 
 
 const kl::vec3 kl::camera::yAxis = kl::vec3(0, 1, 0);

@@ -1,49 +1,52 @@
-#include "KrimzLib/renderer3D/renderer3D.h"
+#include "KrimzLib/renderer/renderer.h"
 
 
 // Constructor
-kl::renderer3D::renderer3D() {
-	this->setup = []() {};
-	this->input = [](kl::keys* k, kl::mouse* m) {};
-	this->update = []() {};
+kl::renderer::renderer() {
+	setup = []() {};
+	input = [](kl::keys* k, kl::mouse* m) {};
+	update = []() {};
 }
 
 // Creates and runs a new engine
-void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
+void kl::renderer::startNew(const kl::ivec2& frameSize) {
 	// Window start definition
 	win.start = [&]() {
-		// Setting up the depth testing
-		kl::gl::setDepthTest(true);
-
 		// Setting up the camera
-		this->camera.nearPlane = 0.01f;
-		this->camera.farPlane = 100.0f;
-		this->camera.sens = 0.025f;
+		camera.nearPlane = 0.01f;
+		camera.farPlane = 100.0f;
+		camera.sens = 0.025f;
 
-		// Setting up the lights
-		this->ambient.color = kl::colors::white;
-		this->ambient.intensity = 0.1f;
-		this->sun.color = kl::colors::white;
-		this->sun.intensity = 1.0f;
-		this->sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
+		// Setting up the lighing
+		ambient.color = kl::colors::white;
+		ambient.intensity = 0.1f;
+		//sun.color = kl::colors::white;
+		//sun.intensity = 1.0f;
+		//sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
 
-		// Compiling default shaders
-		default_sha = new kl::glsl(
-			kl::glsl::parse("res/glsl/renderer3D.glsl", kl::glsl::Vertex),
-			kl::glsl::parse("res/glsl/renderer3D.glsl", kl::glsl::Fragment)
-		);
+		// Creating the gpu
+		gpu = new kl::gpu(win.getHWND(), 4);
 
-		// Getting object shader uniforms
-		w_uni = default_sha->getUniform("w");
-		vp_uni = default_sha->getUniform("vp");
-		dark_uni = default_sha->getUniform("dark");
-		sunL_uni = default_sha->getUniform("sunL");
-		sunD_uni = default_sha->getUniform("sunD");
-		sunVP_uni = default_sha->getUniform("sunVP");
-		default_sha->getUniform("shadowMap").setData(1);
+		// Creating the rasters
+		solid_ra = gpu->newRaster(false, false, true);
+		wire_ra = gpu->newRaster(true, false, true);
+		solid_ra->bind();
+
+		// Compiling shaders
+		default_sh = gpu->newShaders("res/shaders/renderer.hlsl");
+		default_sh->bind();
+
+		// CBuffer creation
+		default_cb = gpu->newCBuffer(sizeof(VS_CB));
+		default_cb->bind(0);
+
+		// Sampler creation
+		kl::sampler* samp = gpu->newSampler(true, true);
+		samp->bind(0);
+		delete samp;
 
 		// Generating sun buffers
-		sun.genBuff(4096);
+
 
 		// Calling the user start
 		setup();
@@ -66,44 +69,47 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 		// Calling the user update
 		update();
 
-		// Setting the camera uniforms
-		vp_uni.setData(this->camera.matrix());
+		// Clearing the cb buffer
+		default_cb_data = {};
+
+		// Setting the camera data
+		default_cb_data.vp = camera.matrix();
 
 		// Calculating the light vp matrix
-		sun.calcMat(this->camera);
 
-		// Setting the light uniforms
-		dark_uni.setData(this->ambient.getCol());
-		sunL_uni.setData(sun.getCol());
-		sunD_uni.setData(sun.getDir());
-		sunVP_uni.setData(sun.matrix());
+
+		// Setting the light data
+
 
 		// Rendering the shadows
-		sun.render(&win, [&]() {
-			for (int i = 0; i < objects.size(); i++) {
-				if (objects[i]->shadows) {
-					// Setting the world matrix
-					sun.setWMat(objects[i]->matrix());
-
-					// Rendering the object
-					objects[i]->render();
-				}
-			}
-		});
+		//sun.render(&win, [&]() {
+		//	for (int i = 0; i < objects.size(); i++) {
+		//		if (objects[i]->shadows) {
+		//			// Setting the world matrix
+		//			sun.setWMat(objects[i]->matrix());
+		//
+		//			// Rendering the object
+		//			objects[i]->render();
+		//		}
+		//	}
+		//});
 
 		// Clearing the default buffers
-		kl::gl::clearBuffers(background);
+		gpu->clear(background);
 
 		// Rendering skybox
-		if (this->skybox) {
-			this->skybox->render(this->camera.matrix());
-		}
+		//if (skybox) {
+		//	skybox->render(camera.matrix());
+		//}
 
 		// Rendering objects
 		for (int i = 0; i < objects.size(); i++) {
 			if (objects[i]->visible) {
 				// Setting the world matrix
-				w_uni.setData(objects[i]->matrix());
+				default_cb_data.w = objects[i]->matrix();
+
+				// Updating the cb data
+				default_cb->setData(&default_cb_data);
 
 				// Rendering the object
 				objects[i]->render();
@@ -114,21 +120,13 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 		win.setTitle(std::to_string(int(1 / deltaT)));
 
 		// Swapping the frame buffers
-		win.swapBuffers();
-
-		// Fps limit wait
-		const float toSleep = 1 / fpsLimit;
-		while ((timer.elapsed() - elapsedT) < toSleep);
+		gpu->swap(vSync);
 	};
 
 	// Window end definition
 	win.end = [&]() {
-		// Deleting shaders
-		delete default_sha;
-		default_sha = nullptr;
-
 		// Deleting the sun shadow buffers
-		sun.delBuff();
+
 
 		// Deleting meshes
 		for (int i = 0; i < meshes.size(); i++) {
@@ -141,6 +139,19 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 			delete textures[i];
 		}
 		textures.clear();
+
+		// Deleting cbuffer
+		delete default_cb;
+
+		// Deleting shaders
+		delete default_sh;
+
+		// Deleting rasters
+		delete solid_ra;
+		delete wire_ra;
+
+		// Deleting the gpu
+		delete gpu;
 	};
 
 	// Timer reset
@@ -148,81 +159,87 @@ void kl::renderer3D::startNew(const kl::ivec2& frameSize) {
 	timer.reset();
 
 	// Window creation
-	win.startNew(frameSize, kl::random::STRING(6), false, true, true);
+	win.startNew(frameSize, kl::random::STRING(6), false, true);
 }
-void kl::renderer3D::stop() const {
+void kl::renderer::stop() const {
 	win.stop();
 }
 
 // Sets the fullscreen mode
-void kl::renderer3D::setFullscreen(bool enable) {
+void kl::renderer::setFullscreen(bool enable) {
 	win.setFullscreen(enable);
-	win.resetViewport();
 }
 
 // Returns the frame size
-kl::ivec2 kl::renderer3D::frameSize() const {
+kl::ivec2 kl::renderer::frameSize() const {
 	return win.getSize();
 }
 
 // Returns the frame center
-kl::ivec2 kl::renderer3D::frameCenter() const {
+kl::ivec2 kl::renderer::frameCenter() const {
 	return win.getCenter();
 }
 
 // Returns the aspect ratio
-float kl::renderer3D::getAspect() const {
+float kl::renderer::getAspect() const {
 	return win.getAspect();
 }
 
-// Creates a mesh
-kl::mesh* kl::renderer3D::newMesh(const std::string& filePath, bool flipZ) {
-	meshes.push_back(new kl::mesh(filePath, flipZ, false));
-	return meshes.back();
-}
-kl::mesh* kl::renderer3D::newMesh(const std::vector<kl::vertex3D>& vertexData) {
-	meshes.push_back(new kl::mesh(vertexData));
-	return meshes.back();
+// Sets the raster type
+void kl::renderer::setWireframe(bool enabled) {
+	if (enabled) {
+		wire_ra->bind();
+	}
+	else {
+		solid_ra->bind();
+	}
 }
 
-// Deletes a mesh
-void kl::renderer3D::delMesh(kl::mesh* mesAddress) {
+// Mesh
+kl::mesh* kl::renderer::newMesh(const std::vector<kl::vertex>& vertexData) {
+	meshes.push_back(gpu->newMesh(vertexData));
+	return meshes.back();
+}
+kl::mesh* kl::renderer::newMesh(const std::string& filePath, bool flipZ) {
+	meshes.push_back(gpu->newMesh(filePath, flipZ));
+	return meshes.back();
+}
+void kl::renderer::delMesh(kl::mesh* mesAddress) {
 	for (int i = 0; i < meshes.size(); i++) {
 		if (meshes[i] == mesAddress) {
 			delete meshes[i];
 			meshes.erase(meshes.begin() + i);
+			break;
 		}
 	}
 }
 
-// Creates a texture
-kl::texture* kl::renderer3D::newTexture(const kl::image& image) {
-	textures.push_back(new kl::texture(image));
+// Texture
+kl::texture* kl::renderer::newTexture(const kl::image& image) {
+	textures.push_back(gpu->newTexture(image));
 	return textures.back();
 }
-
-// Deletes a texture
-void kl::renderer3D::delTex(kl::texture* texAddress) {
+void kl::renderer::delTexture(kl::texture* texAddress) {
 	for (int i = 0; i < textures.size(); i++) {
 		if (textures[i] == texAddress) {
 			delete textures[i];
 			textures.erase(textures.begin() + i);
+			break;
 		}
 	}
 }
 
-// Creates a new game object
-kl::object3D* kl::renderer3D::newObject(kl::mesh* mes, kl::texture* tex) {
-	objects.push_back(new kl::object3D(mes, tex));
+// Entity
+kl::entity* kl::renderer::newEntity(kl::mesh* mes, kl::texture* tex) {
+	objects.push_back(new kl::entity(mes, tex));
 	return objects.back();
 }
-
-// Deletes a game object
-void kl::renderer3D::delObject(kl::object3D* objectAddress) {
+void kl::renderer::delEntity(kl::entity* objectAddress) {
 	for (int i = 0; i < objects.size(); i++) {
 		if (objects[i] == objectAddress) {
 			delete objects[i];
 			objects.erase(objects.begin() + i);
+			break;
 		}
 	}
 }

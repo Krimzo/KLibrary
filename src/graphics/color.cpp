@@ -14,11 +14,14 @@ kl::color::color(byte r, byte g, byte b) {
 }
 
 // Operator overloading
-bool kl::color::operator == (kl::color obj) const {
-	return (r == obj.r && g == obj.g && b == obj.b);
+bool kl::color::equals(const kl::color& obj) const {
+	return r == obj.r && g == obj.g && b == obj.b;
 }
-bool kl::color::operator != (kl::color obj) const {
-	return (r != obj.r || g != obj.g || b != obj.b);
+bool kl::color::operator==(const kl::color& obj) const {
+	return this->equals(obj);
+}
+bool kl::color::operator!=(const kl::color& obj) const {
+	return !this->equals(obj);
 }
 
 // Overloading std::cout

@@ -1,14 +1,14 @@
-#include "KrimzLib/renderer3D/object3D.h"
+#include "KrimzLib/renderer/entity.h"
 
 
 // Constructor
-kl::object3D::object3D(kl::mesh* mes, kl::texture* tex) {
+kl::entity::entity(kl::mesh* mes, kl::texture* tex) {
 	mesh = mes;
 	texture = tex;
 }
 
 // Updates the object physics
-void kl::object3D::upPhys(float deltaT) {
+void kl::entity::upPhys(float deltaT) {
 	if (physics) {
 		// Applying acceleration
 		velocity += acceler * deltaT;
@@ -22,14 +22,14 @@ void kl::object3D::upPhys(float deltaT) {
 }
 
 // Returns the world matrix
-kl::mat4 kl::object3D::matrix() const {
+kl::mat4 kl::entity::matrix() const {
 	return kl::mat4::translate(position) * kl::mat4::rotate(rotation) * kl::mat4::scale(size);
 }
 
 // Renders the mesh
-void kl::object3D::render() const {
+void kl::entity::render() const {
 	// Binding the texture
-	texture->bind();
+	texture->bind(0);
 
 	// Rendering
 	mesh->draw();

@@ -218,6 +218,10 @@
     <ClCompile Include="src\graphics\image.cpp" />
     <ClCompile Include="src\math.cpp" />
     <ClCompile Include="src\random.cpp" />
+    <ClCompile Include="src\renderer\camera.cpp" />
+    <ClCompile Include="src\renderer\entity.cpp" />
+    <ClCompile Include="src\renderer\light\ambient.cpp" />
+    <ClCompile Include="src\renderer\renderer.cpp" />
     <ClCompile Include="src\renderer\vertex.cpp" />
     <ClCompile Include="src\time.cpp" />
     <ClCompile Include="src\vecmath\ivec2.cpp" />
@@ -231,7 +235,7 @@
     <ClCompile Include="src\window\keys.cpp" />
     <ClCompile Include="src\window\mouse.cpp" />
     <ClCompile Include="src\window\window.cpp" />
-    <ClCompile Include="test\DirectX.cpp" />
+    <ClCompile Include="test\Rendering.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
