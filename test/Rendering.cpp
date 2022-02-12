@@ -40,7 +40,7 @@ void setup() {
 		"res/textures/skyboxes/clouds/bottom.jpg"
 	);
 	night = renderer.newSkybox(
-		"res/textures/skyboxes/night/night.png"
+		"res/textures/skyboxes/night/night.jpg"
 	);
 	renderer.skybox = clouds;
 

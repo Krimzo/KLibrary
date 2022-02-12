@@ -261,7 +261,7 @@
     <ClCompile Include="src\renderer\light\direct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\Mandelbrot.cpp">
+    <ClCompile Include="test\Rendering.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

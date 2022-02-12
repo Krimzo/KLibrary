@@ -1,10 +1,5 @@
 #include "KrimzLib/file.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <filesystem>
-
 
 // Returns the file extension from the given file path
 std::string kl::file::getExtension(const std::string& filePath) {
