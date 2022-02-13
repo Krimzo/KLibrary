@@ -72,7 +72,7 @@ kl::mat4 kl::camera::matrix() const {
 	const kl::mat4 proj = kl::mat4::perspective(fov, aspect, nearPlane, farPlane);
 
 	// Building the view matrix
-	const kl::mat4 view = kl::mat4::view(getForward(), getRight(), getUp(), position);
+	const kl::mat4 view = kl::mat4::lookAt(position, position + getForward(), getUp());
 
 	// Multiplying and returning
 	return proj * view;

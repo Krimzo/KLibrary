@@ -68,11 +68,8 @@ namespace kl {
 		// Returns the orthographics projection matrix
 		static kl::mat4 ortho(float left, float right, float bottom, float top, float nearZ, float farZ);
 
-		// Returns the camera view matrix
-		static kl::mat4 view(const kl::vec3& forward, const kl::vec3& right, const kl::vec3& up, const kl::vec3& position);
-
 		// Returns the "look at" matrix
-		static kl::mat4 lookAt(const kl::vec3& eye, const kl::vec3& center, const kl::vec3& up);
+		static kl::mat4 lookAt(const kl::vec3& position, const kl::vec3& target, const kl::vec3& up);
 	};
 
 	// Overloading std::cout

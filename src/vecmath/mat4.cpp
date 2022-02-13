@@ -231,39 +231,26 @@ kl::mat4 kl::mat4::ortho(float left, float right, float bottom, float top, float
 	return temp;
 }
 
-// Returns the camera view matrix
-kl::mat4 kl::mat4::view(const kl::vec3& forward, const kl::vec3& right, const kl::vec3& up, const kl::vec3& position) {
-	kl::mat4 view;
-	view[ 0] = right.x;
-	view[ 1] = right.y;
-	view[ 2] = right.z;
-	view[ 4] = up.x;
-	view[ 5] = up.y;
-	view[ 6] = up.z;
-	view[ 8] = forward.x;
-	view[ 9] = forward.y;
-	view[10] = forward.z;
-	return view * translate(position.negate());
-}
-
 // Returns the "look at" matrix
-kl::mat4 kl::mat4::lookAt(const kl::vec3& eye, const kl::vec3& center, const kl::vec3& up) {
-	kl::vec3 f = (center - eye).normalize();
-	kl::vec3 s = f.cross(up).normalize();
-	kl::vec3 u = s.cross(f);
+kl::mat4 kl::mat4::lookAt(const kl::vec3& position, const kl::vec3& target, const kl::vec3& up) {
+	// Vector calculations
+	const kl::vec3 f = (target - position).normalize();
+	const kl::vec3 s = up.cross(f).normalize();
+	const kl::vec3 u = f.cross(s);
 
+	// Matrix building
 	kl::mat4 temp;
 	temp[ 0] = s.x;
 	temp[ 1] = s.y;
 	temp[ 2] = s.z;
+	temp[ 3] = -s.dot(position);
 	temp[ 4] = u.x;
 	temp[ 5] = u.y;
 	temp[ 6] = u.z;
-	temp[ 8] = -f.x;
-	temp[ 9] = -f.y;
-	temp[10] = -f.z;
-	temp[ 3] = -s.dot(eye);
-	temp[ 7] = -u.dot(eye);
-	temp[11] = f.dot(eye);
+	temp[ 7] = -u.dot(position);
+	temp[ 8] = f.x;
+	temp[ 9] = f.y;
+	temp[10] = f.z;
+	temp[11] = -f.dot(position);
 	return temp;
 }

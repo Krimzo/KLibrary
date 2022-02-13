@@ -41,5 +41,5 @@ std::string kl::web::getWebsiteData(const std::string& url, int bufferSize) {
 
 // Downloads data from the website and saves it in a file
 void kl::web::downloadToFile(const std::string& url, const std::string& fileName) {
-	kl::file::write(fileName, getWebsiteData(url));
+	kl::file::write(fileName, kl::web::getWebsiteData(url));
 }
