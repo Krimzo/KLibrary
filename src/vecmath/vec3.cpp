@@ -177,6 +177,6 @@ kl::vec3 kl::vec3::rotate(float angle, const kl::vec3& axis) const {
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::vec3& obj) {
-	os << obj.x << " " << obj.y << " " << obj.z;
+	os << kl::convert::toString(obj.x) << " " << kl::convert::toString(obj.y) << " " << kl::convert::toString(obj.z);
 	return os;
 }

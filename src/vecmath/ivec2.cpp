@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "KrimzLib/convert.h"
+
 
 // Constructors
 kl::ivec2::ivec2() {
@@ -98,6 +100,6 @@ kl::ivec2 kl::ivec2::abso() const {
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::ivec2& obj) {
-	os << obj.x << " " << obj.y;
+	os << kl::convert::toString(obj.x) << " " << kl::convert::toString(obj.y);
 	return os;
 }

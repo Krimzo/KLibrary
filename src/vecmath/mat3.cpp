@@ -136,9 +136,17 @@ void kl::mat3::setIdentity() {
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, kl::mat3& obj) {
-	os << obj[0] << " " << obj[1] << " " << obj[2] << "\n";
-	os << obj[3] << " " << obj[4] << " " << obj[5] << "\n";
-	os << obj[6] << " " << obj[7] << " " << obj[8];
+	os <<
+	kl::convert::toString(obj[0]) << " " << kl::convert::toString(obj[1]) << " " << kl::convert::toString(obj[2]) << "\n" <<
+	kl::convert::toString(obj[3]) << " " << kl::convert::toString(obj[4]) << " " << kl::convert::toString(obj[5]) << "\n" <<
+	kl::convert::toString(obj[6]) << " " << kl::convert::toString(obj[7]) << " " << kl::convert::toString(obj[8]);
+	return os;
+}
+std::ostream& kl::operator<<(std::ostream& os, kl::mat3&& obj) {
+	os <<
+	kl::convert::toString(obj[0]) << " " << kl::convert::toString(obj[1]) << " " << kl::convert::toString(obj[2]) << "\n" <<
+	kl::convert::toString(obj[3]) << " " << kl::convert::toString(obj[4]) << " " << kl::convert::toString(obj[5]) << "\n" <<
+	kl::convert::toString(obj[6]) << " " << kl::convert::toString(obj[7]) << " " << kl::convert::toString(obj[8]);
 	return os;
 }
 

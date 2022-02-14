@@ -9,7 +9,7 @@
 namespace kl {
 	class mat3 {
 	private:
-		float data[9];
+		float data[9] = {};
 
 	public:
 		// Constructor
@@ -66,4 +66,5 @@ namespace kl {
 
 	// Overloading std::cout
 	std::ostream& operator<<(std::ostream& os, kl::mat3& obj);
+	std::ostream& operator<<(std::ostream& os, kl::mat3&& obj);
 }

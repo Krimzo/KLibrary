@@ -175,6 +175,6 @@ float kl::vec4::angle(const kl::vec4& a) const {
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::vec4& obj) {
-	os << obj.x << " " << obj.y << " " << obj.z << " " << obj.w;
+	os << kl::convert::toString(obj.x) << " " << kl::convert::toString(obj.y) << " " << kl::convert::toString(obj.z) << " " << kl::convert::toString(obj.w);
 	return os;
 }
