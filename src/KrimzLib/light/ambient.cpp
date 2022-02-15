@@ -1,4 +1,4 @@
-#include "KrimzLib/renderer/light/ambient.h"
+#include "KrimzLib/light/ambient.h"
 
 
 // Returns the true light color

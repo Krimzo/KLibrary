@@ -1,4 +1,4 @@
-#include "KrimzLib/renderer/light/direct.h"
+#include "KrimzLib/light/direct.h"
 
 
 // Shadow vertex shader
