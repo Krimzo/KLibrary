@@ -41,8 +41,8 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		gpu = new kl::gpu(win.getHWND(), 4);
 
 		// Creating the rasters
-		solid_ra = gpu->newRaster(false, false, true);
-		wire_ra = gpu->newRaster(true, false, true);
+		solid_ra = gpu->newRaster(false, true);
+		wire_ra = gpu->newRaster(true, false);
 		solid_ra->bind();
 
 		// Compiling shaders
@@ -51,7 +51,7 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		// Sampler setup
 		kl::sampler* samp = gpu->newSampler(true, true);
 		samp->bind(0);
-		delete samp;
+		gpu->delSampler(samp);
 
 		// Calling the user start
 		setup();
@@ -118,30 +118,11 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 
 	// Window end definition
 	win.end = [&]() {
+		// Deleting entities
+		entities.clear();
+
 		// Deleting skyboxes
-		for (int i = 0; i < skyboxes.size(); i++) {
-			delete skyboxes[i];
-		}
 		skyboxes.clear();
-
-		// Deleting textures
-		for (int i = 0; i < textures.size(); i++) {
-			delete textures[i];
-		}
-		textures.clear();
-
-		// Deleting meshes
-		for (int i = 0; i < meshes.size(); i++) {
-			delete meshes[i];
-		}
-		meshes.clear();
-
-		// Deleting shaders
-		delete default_sh;
-
-		// Deleting rasters
-		delete solid_ra;
-		delete wire_ra;
 
 		// Deleting the gpu
 		delete gpu;
@@ -189,69 +170,39 @@ void kl::renderer::setWireframe(bool enabled) {
 }
 
 // Mesh
-kl::mesh* kl::renderer::newMesh(const std::vector<kl::vertex>& vertexData) {
-	meshes.push_back(gpu->newMesh(vertexData));
-	return meshes.back();
+kl::mesh* kl::renderer::newMesh(const std::vector<kl::vertex>& vertices) {
+	return gpu->newMesh(vertices);
 }
 kl::mesh* kl::renderer::newMesh(const std::string& filePath, bool flipZ) {
-	meshes.push_back(gpu->newMesh(filePath, flipZ));
-	return meshes.back();
+	return gpu->newMesh(filePath, flipZ);
 }
-void kl::renderer::delMesh(kl::mesh* mesAddress) {
-	for (int i = 0; i < meshes.size(); i++) {
-		if (meshes[i] == mesAddress) {
-			delete meshes[i];
-			meshes.erase(meshes.begin() + i);
-			break;
-		}
-	}
+bool kl::renderer::delMesh(kl::mesh* mes) {
+	return gpu->delMesh(mes);
 }
 
 // Texture
-kl::texture* kl::renderer::newTexture(const kl::image& image) {
-	textures.push_back(gpu->newTexture(image));
-	return textures.back();
+kl::texture* kl::renderer::newTexture(const kl::image& img) {
+	return gpu->newTexture(img);
 }
-void kl::renderer::delTexture(kl::texture* texAddress) {
-	for (int i = 0; i < textures.size(); i++) {
-		if (textures[i] == texAddress) {
-			delete textures[i];
-			textures.erase(textures.begin() + i);
-			break;
-		}
-	}
+bool kl::renderer::delTexture(kl::texture* tex) {
+	return gpu->delTexture(tex);
 }
 
 // Entity
 kl::entity* kl::renderer::newEntity(kl::mesh* mes, kl::texture* tex) {
-	entities.push_back(new kl::entity(mes, tex));
-	return entities.back();
+	return entities.newInst(new kl::entity(mes, tex));
 }
-void kl::renderer::delEntity(kl::entity* objectAddress) {
-	for (int i = 0; i < entities.size(); i++) {
-		if (entities[i] == objectAddress) {
-			delete entities[i];
-			entities.erase(entities.begin() + i);
-			break;
-		}
-	}
+bool kl::renderer::delEntity(kl::entity* ent) {
+	return entities.delInst(ent);
 }
 
 // Skybox
 kl::skybox* kl::renderer::newSkybox(const kl::image& fullBox) {
-	skyboxes.push_back(new kl::skybox(gpu->getDev(), gpu->getDevCon(), fullBox));
-	return skyboxes.back();
+	return skyboxes.newInst(new kl::skybox(gpu->getDev(), gpu->getDevCon(), fullBox));
 }
 kl::skybox* kl::renderer::newSkybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
-	skyboxes.push_back(new kl::skybox(gpu->getDev(), gpu->getDevCon(), front, back, left, right, top, bottom));
-	return skyboxes.back();
+	return skyboxes.newInst(new kl::skybox(gpu->getDev(), gpu->getDevCon(), front, back, left, right, top, bottom));
 }
-void kl::renderer::delSkybox(kl::skybox* skyboxAddress) {
-	for (int i = 0; i < skyboxes.size(); i++) {
-		if (skyboxes[i] == skyboxAddress) {
-			delete skyboxes[i];
-			skyboxes.erase(skyboxes.begin() + i);
-			break;
-		}
-	}
+bool kl::renderer::delSkybox(kl::skybox* sky) {
+	return skyboxes.delInst(sky);
 }

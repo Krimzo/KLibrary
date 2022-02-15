@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "KrimzLib/renderer/vertex.h"
+#include "KrimzLib/geometry/vertex.h"
 
 
 // Constructors

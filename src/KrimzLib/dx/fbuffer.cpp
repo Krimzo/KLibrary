@@ -29,6 +29,17 @@ kl::fbuffer::fbuffer(IDXGISwapChain* chain, ID3D11Device* dev, ID3D11DeviceConte
     depthDesc_e.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     depthDesc_e.DepthFunc = D3D11_COMPARISON_LESS;
     depthDesc_e.StencilEnable = false;
+    depthDesc_e.StencilEnable = true;
+    depthDesc_e.StencilReadMask = 0xFF;
+    depthDesc_e.StencilWriteMask = 0xFF;
+    depthDesc_e.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depthDesc_e.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+    depthDesc_e.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depthDesc_e.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    depthDesc_e.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depthDesc_e.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+    depthDesc_e.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depthDesc_e.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
     dev->CreateDepthStencilState(&depthDesc_e, &dsState_enabled);
     if (!dsState_enabled) {
         std::cout << "DirectX: Could not create a depth/stencil state!";

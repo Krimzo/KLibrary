@@ -78,7 +78,7 @@
     <ClCompile Include="src\KrimzLib\renderer\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\renderer\entity.cpp">
+    <ClCompile Include="src\KrimzLib\entity\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\KrimzLib\renderer\renderer.cpp">
@@ -87,7 +87,7 @@
     <ClCompile Include="src\KrimzLib\renderer\skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\renderer\vertex.cpp">
+    <ClCompile Include="src\KrimzLib\geometry\vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\KrimzLib\vecmath\ivec2.cpp">
@@ -99,7 +99,7 @@
     <ClCompile Include="src\KrimzLib\vecmath\mat4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\vecmath\triangle.cpp">
+    <ClCompile Include="src\KrimzLib\geometry\triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\KrimzLib\vecmath\vec2.cpp">
@@ -212,7 +212,7 @@
     <ClInclude Include="incl\KrimzLib\renderer\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\entity.h">
+    <ClInclude Include="incl\KrimzLib\entity\entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\renderer\renderer.h">
@@ -221,7 +221,7 @@
     <ClInclude Include="incl\KrimzLib\renderer\skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\renderer\vertex.h">
+    <ClInclude Include="incl\KrimzLib\geometry\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\vecmath\ivec2.h">
@@ -233,7 +233,7 @@
     <ClInclude Include="incl\KrimzLib\vecmath\mat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\vecmath\triangle.h">
+    <ClInclude Include="incl\KrimzLib\geometry\triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\vecmath\vec2.h">
@@ -276,6 +276,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\memory\pbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

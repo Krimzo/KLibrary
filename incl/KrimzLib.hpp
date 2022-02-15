@@ -8,7 +8,6 @@
 #include "KrimzLib/vecmath/vec4.h"
 #include "KrimzLib/vecmath/mat3.h"
 #include "KrimzLib/vecmath/mat4.h"
-#include "KrimzLib/vecmath/triangle.h"
 
 // Including graphics
 #include "KrimzLib/graphics/image.h"
@@ -21,6 +20,9 @@
 #include "KrimzLib/console.h"
 #include "KrimzLib/file.h"
 #include "KrimzLib/web.h"
+
+// Including memory
+#include "KrimzLib/memory/pbuffer.h"
 
 // Including window
 #include "KrimzLib/window/keys.h"
@@ -37,11 +39,18 @@
 #include "KrimzLib/dx/texture.h"
 #include "KrimzLib/dx/sampler.h"
 
-// Including the renderer
+// Including the geometry
+#include "KrimzLib/geometry/vertex.h"
+#include "KrimzLib/geometry/triangle.h"
+
+// Including the light
 #include "KrimzLib/light/ambient.h"
 #include "KrimzLib/light/direct.h"
-#include "KrimzLib/renderer/vertex.h"
-#include "KrimzLib/renderer/entity.h"
+
+// Including the entity
+#include "KrimzLib/entity/entity.h"
+
+// Including the renderer
 #include "KrimzLib/renderer/camera.h"
 #include "KrimzLib/renderer/skybox.h"
 #include "KrimzLib/renderer/renderer.h"

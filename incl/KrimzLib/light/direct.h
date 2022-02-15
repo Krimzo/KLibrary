@@ -14,9 +14,6 @@
 namespace kl {
 	class direct {
 	private:
-		// Light vp matrix
-		kl::mat4 sunVP;
-
 		// Shadow map size
 		int mapSize = 0;
 
@@ -37,13 +34,10 @@ namespace kl {
 		// Destroys the shadow buffers
 		void delBuff();
 
-		// Calculates the light vp matrix
-		void calcMat(const kl::camera& cam);
-
 		// Returns the light vp matrix
-		kl::mat4 matrix() const;
+		kl::mat4 matrix(const kl::camera& cam) const;
 
 		// Renders the shadows
-		void render(kl::window* win, const std::function<void()>& toRender) const;
+		void renderShadows() const;
 	};
 }

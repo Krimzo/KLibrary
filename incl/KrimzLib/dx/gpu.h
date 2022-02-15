@@ -6,6 +6,7 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
+#include "KrimzLib/memory/pbuffer.h"
 #include "KrimzLib/dx/gpu.h"
 #include "KrimzLib/dx/fbuffer.h"
 #include "KrimzLib/dx/raster.h"
@@ -16,7 +17,7 @@
 #include "KrimzLib/dx/sampler.h"
 #include "KrimzLib/vecmath/ivec2.h"
 #include "KrimzLib/vecmath/vec4.h"
-#include "KrimzLib/renderer/vertex.h"
+#include "KrimzLib/geometry/vertex.h"
 #include "KrimzLib/graphics/image.h"
 
 #pragma comment (lib, "d3d11.lib")
@@ -26,10 +27,18 @@ namespace kl {
 	class gpu {
 	private:
 		// DirectX pointers
-		IDXGISwapChain* chain = nullptr;
 		ID3D11Device* dev = nullptr;
 		ID3D11DeviceContext* devcon = nullptr;
+		IDXGISwapChain* chain = nullptr;
 		kl::fbuffer* frameBuff = nullptr;
+
+		// Buffers
+		kl::pbuffer<kl::raster>   rasters;
+		kl::pbuffer<kl::shaders>  shaders;
+		kl::pbuffer<kl::cbuffer> cbuffers;
+		kl::pbuffer<kl::mesh>      meshes;
+		kl::pbuffer<kl::texture> textures;
+		kl::pbuffer<kl::sampler> samplers;
 
 	public:
 		// Constructor
@@ -57,22 +66,28 @@ namespace kl {
 		void setDepthTest(bool enabled);
 
 		// Raster
-		kl::raster* newRaster(bool wireframe, bool cull, bool cullBack);
+		kl::raster* newRaster(bool wireframe, bool cull, bool cullBack = true);
+		bool delRaster(kl::raster* ras);
 
 		// Shaders
 		kl::shaders* newShaders(const std::string& filePath, uint32_t vertBuffSize, uint32_t pixlBuffSize);
+		bool delShaders(kl::shaders* sha);
 
 		// Constant buffer
 		kl::cbuffer* newCBuffer(int byteSize);
+		bool delCBuffer(kl::cbuffer* cbuf);
 
 		// Mesh
 		kl::mesh* newMesh(const std::vector<kl::vertex>& vertexData);
 		kl::mesh* newMesh(const std::string& filePath, bool flipZ);
+		bool delMesh(kl::mesh* mes);
 
 		// Texture
 		kl::texture* newTexture(const kl::image& img);
+		bool delTexture(kl::texture* tex);
 
 		// Sampler
 		kl::sampler* newSampler(bool linear, bool mirror);
+		bool delSampler(kl::sampler* samp);
 	};
 }

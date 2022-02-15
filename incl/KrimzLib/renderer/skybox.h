@@ -10,7 +10,7 @@
 #include "KrimzLib/dx/cbuffer.h"
 #include "KrimzLib/graphics/image.h"
 #include "KrimzLib/vecmath/mat4.h"
-#include "KrimzLib/renderer/vertex.h"
+#include "KrimzLib/geometry/vertex.h"
 
 
 namespace kl {

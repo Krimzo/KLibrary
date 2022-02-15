@@ -1,4 +1,4 @@
-#include "KrimzLib/renderer/vertex.h"
+#include "KrimzLib/geometry/vertex.h"
 
 
 // Constructors

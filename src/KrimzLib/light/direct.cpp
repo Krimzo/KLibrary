@@ -42,8 +42,8 @@ void kl::direct::delBuff() {
 	
 }
 
-// Calculates the light vp matrix
-void kl::direct::calcMat(const kl::camera& cam) {
+// Returns the light vp matrix
+kl::mat4 kl::direct::matrix(const kl::camera& cam) const {
 	// Calculating the near points
 	const float nearDist = cam.nearPlane;
 	const float Hnear = 2 * tan(kl::convert::toRadians(cam.fov) * 0.5f) * nearDist;
@@ -84,7 +84,7 @@ void kl::direct::calcMat(const kl::camera& cam) {
 	};
 
 	// Finding the min and max points that generate the bounding box
-	kl::vec3 minp(INFINITY, INFINITY, INFINITY);
+	kl::vec3 minp( INFINITY,  INFINITY,  INFINITY);
 	kl::vec3 maxp(-INFINITY, -INFINITY, -INFINITY);
 	for (int i = 0; i < lightViewFrust.size(); i++) {
 		if (lightViewFrust[i].x < minp.x) {
@@ -112,36 +112,9 @@ void kl::direct::calcMat(const kl::camera& cam) {
 	const kl::mat4 proj = kl::mat4::ortho(minp.x, maxp.x, minp.y, maxp.y, -maxp.z - 3 * cam.shadowD, -minp.z);
 
 	// Setting the sun view/projection matrix
-	sunVP = proj * view;
+	return proj * view;
 }
 
-// Returns the light vp matrix
-kl::mat4 kl::direct::matrix() const {
-	return sunVP;
-}
+void kl::direct::renderShadows() const {
 
-void kl::direct::render(kl::window* win, const std::function<void()>& toRender) const {
-	//// Setting the viewport size
-	//glViewport(0, 0, mapSize, mapSize);
-	//
-	//// Binding the shadow frame buffer
-	//glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
-	//
-	//// Clearing the depth data
-	//glClear(GL_DEPTH_BUFFER_BIT);
-	//
-	//// Setting the light vp uni
-	//sunVP_uni.setData(this->matrix());
-	//
-	//// Rendering
-	//toRender();
-	//
-	//// Binding the defualt frame buffer
-	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	//
-	//// Resetting the viewport
-	//win->resetViewport();
-	//
-	//// Binding the shadow map
-	//this->bindMap(GL_TEXTURE1);
 }

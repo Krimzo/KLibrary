@@ -172,7 +172,7 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 		mouse->show();
 	}
 	if (movingCam) {
-		kl::ivec2 frameCenter = renderer.frameCenter();
+		const kl::ivec2 frameCenter = renderer.frameCenter();
 		renderer.camera.rotate(mouse->position, frameCenter);
 		mouse->move(frameCenter);
 	}

@@ -1,4 +1,4 @@
-#include "KrimzLib/vecmath/triangle.h"
+#include "KrimzLib/geometry/triangle.h"
 
 
 // Constructors

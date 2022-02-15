@@ -1,4 +1,4 @@
-#include "KrimzLib/renderer/entity.h"
+#include "KrimzLib/entity/entity.h"
 
 
 // Constructor

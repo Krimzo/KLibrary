@@ -7,7 +7,7 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
-#include "KrimzLib/renderer/vertex.h"
+#include "KrimzLib/geometry/vertex.h"
 
 
 namespace kl {
