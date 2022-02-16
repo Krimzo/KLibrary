@@ -12,8 +12,8 @@ kl::mesh::mesh(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::vector
 	// Saving the devcon
 	this->devcon = devcon;
 
-    // Saving the vertex count
-    this->vertexCount = int(vertexData.size());
+    // Saving the vertices
+    this->vertices = vertexData;
 
     // Buffer descriptor creation
     D3D11_BUFFER_DESC bufferDescriptor = {};
@@ -53,7 +53,7 @@ void kl::mesh::draw() const {
 	devcon->IASetVertexBuffers(0, 1, &buff, &tempStride, &tempOffset);
 
 	// Drawing
-	devcon->Draw(vertexCount, 0);
+	devcon->Draw(UINT(vertices.size()), 0);
 }
 
 // Parses .obj file

@@ -6,25 +6,19 @@
 
 namespace kl {
 	class camera {
-	private:
-		static const kl::vec3 yAxis;
-		kl::vec3 forward = kl::vec3(0, 0, 1);
-
 	public:
-		kl::vec3 position;
-		float nearPlane = 1.0f;
-		float farPlane = 10.0f;
+		kl::vec3 forward = kl::vec3(0, 0, 1);
+		kl::vec3 position = kl::vec3(0, 0, 0);
+		float nearPlane = 0.01f;
+		float farPlane = 100.0f;
 		float aspect = 16.0f / 9;
 		float fov = 75.0f;
 		float speed = 2.0f;
-		float sens = 0.05f;
+		float sens = 0.025f;
 		float shadowD = 20.0f;
 
 		// Constructor
 		camera();
-
-		// Sets the forward vector
-		void setForward(const kl::vec3& vec);
 
 		// Camera direction getters
 		kl::vec3 getForward() const;

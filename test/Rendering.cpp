@@ -118,6 +118,9 @@ void setup() {
 
 	// Sun setup
 	renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
+
+	// Highlight
+	renderer.toHighlight = metalcube1;
 }
 
 // Renderer input

@@ -75,6 +75,12 @@ kl::gpu::~gpu() {
     chain->SetFullscreenState(false, nullptr);
 
     // Memory release
+    samplers.clear();
+    textures.clear();
+    meshes.clear();
+    cbuffers.clear();
+    shaders.clear();
+    rasters.clear();
     delete frameBuff;
     chain->Release();
     devcon->Release();

@@ -1,16 +1,11 @@
 #include "KrimzLib/renderer/camera.h"
 
 
-const kl::vec3 kl::camera::yAxis = kl::vec3(0, 1, 0);
+const kl::vec3 yAxis = kl::vec3(0, 1, 0);
 
 // Constructor
 kl::camera::camera() {
 
-}
-
-// Sets the forward vector
-void kl::camera::setForward(const kl::vec3& vec) {
-	forward = vec.normalize();
 }
 
 // Camera direction getters
@@ -63,7 +58,7 @@ void kl::camera::rotate(const kl::ivec2& mousePos, const kl::ivec2& frameCenter,
 	}
 
 	// Calculating the horizontally rotated forward vector
-	forward = getForward().rotate(xRotation, kl::vec3(0, 1, 0));
+	forward = getForward().rotate(xRotation, yAxis);
 }
 
 // Computes and returns the camera matrix

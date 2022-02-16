@@ -41,6 +41,7 @@ namespace kl {
 		kl::raster* solid_ra = nullptr;
 		kl::raster* wire_ra = nullptr;
 		kl::shaders* default_sh = nullptr;
+		kl::shaders* highlight_sh = nullptr;
 
 	public:
 		// Time
@@ -58,6 +59,10 @@ namespace kl {
 
 		// Engine skybox
 		kl::skybox* skybox = nullptr;
+
+		// Highlight
+		kl::color highlight = kl::colors::white;
+		kl::entity* toHighlight = nullptr;
 
 		// User functions
 		std::function<void()> setup;

@@ -1,14 +1,12 @@
 #include "KrimzLib/renderer/renderer.h"
 
 
-// Default vertex shader constant buffer
-struct VS_CB {
+// Default constant buffers
+struct DEF_VS_CB {
 	kl::mat4 w;
 	kl::mat4 vp;
 };
-
-// Default pixel shader constant buffer
-struct PS_CB {
+struct DEF_PS_CB {
 	kl::vec4 ambient;
 	kl::vec4 dirCol;
 	kl::vec4 dirDir;
@@ -25,11 +23,6 @@ kl::renderer::renderer() {
 void kl::renderer::startNew(const kl::ivec2& frameSize) {
 	// Window start definition
 	win.start = [&]() {
-		// Setting up the camera
-		camera.nearPlane = 0.01f;
-		camera.farPlane = 100.0f;
-		camera.sens = 0.025f;
-
 		// Setting up the lighing
 		ambient.color = kl::colors::white;
 		ambient.intensity = 0.1f;
@@ -42,11 +35,12 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 
 		// Creating the rasters
 		solid_ra = gpu->newRaster(false, true);
-		wire_ra = gpu->newRaster(true, false);
+		wire_ra = gpu->newRaster(true, true);
 		solid_ra->bind();
 
 		// Compiling shaders
-		default_sh = gpu->newShaders("res/shaders/renderer.hlsl", sizeof(VS_CB), sizeof(PS_CB));
+		default_sh = gpu->newShaders("res/shaders/renderer.hlsl", sizeof(DEF_VS_CB), sizeof(DEF_PS_CB));
+		highlight_sh = gpu->newShaders("res/shaders/highlight.hlsl", sizeof(kl::mat4), sizeof(kl::vec4));
 
 		// Sampler setup
 		kl::sampler* samp = gpu->newSampler(true, true);
@@ -75,11 +69,11 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		update();
 
 		// Setting the lighting data
-		PS_CB pixl_data = {};
-		pixl_data.ambient = ambient.getCol();
-		pixl_data.dirCol = sun.getCol();
-		pixl_data.dirDir = sun.getDir();
-		default_sh->setPixlData(&pixl_data);
+		DEF_PS_CB def_pixl_data = {};
+		def_pixl_data.ambient = ambient.getCol();
+		def_pixl_data.dirCol = sun.getCol();
+		def_pixl_data.dirDir = sun.getDir();
+		default_sh->setPixlData(&def_pixl_data);
 
 		// Clearing the frame buffer
 		gpu->clear(background);
@@ -92,21 +86,39 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		}
 
 		// Setting the camera data
-		VS_CB vert_data = {};
-		vert_data.vp = camera.matrix();
+		DEF_VS_CB def_vert_data = {};
+		def_vert_data.vp = camera.matrix();
 
 		// Rendering objects
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities[i]->visible) {
 				// Setting the world matrix
-				vert_data.w = entities[i]->matrix();
+				def_vert_data.w = entities[i]->matrix();
 
 				// Updating the cb data
-				default_sh->setVertData(&vert_data);
+				default_sh->setVertData(&def_vert_data);
 
 				// Rendering the object
 				entities[i]->render();
 			}
+		}
+
+		// Highlight check
+		if (toHighlight) {
+			// Setting the highlight vertex data
+			kl::mat4 wvp = camera.matrix() * toHighlight->matrix();
+			highlight_sh->setVertData(&wvp);
+
+			// Setting the highlight pixel data
+			kl::vec4 hig_col = highlight;
+			highlight_sh->setPixlData(&hig_col);
+
+			// Rendering
+			gpu->setDepthTest(false);
+			wire_ra->bind();
+			toHighlight->render();
+			solid_ra->bind();
+			gpu->setDepthTest(true);
 		}
 
 		// Swapping the frame buffers
