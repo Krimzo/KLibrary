@@ -18,9 +18,9 @@ namespace kl {
 		int mapSize = 0;
 
 	public:
-		kl::vec3 color;
-		kl::vec3 direction;
-		float intensity = 0;
+		kl::vec3 color = kl::colors::white;
+		kl::vec3 direction = kl::vec3(0.0f, -1.0f, -2.0f);
+		float intensity = 1.0f;
 		
 		// Returns the true light color
 		kl::vec3 getCol() const;

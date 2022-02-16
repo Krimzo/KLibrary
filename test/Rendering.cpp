@@ -1,4 +1,4 @@
-#include "KrimzLib.hpp"
+#include "KrimzLib/KrimzLib.hpp"
 
 
 // Rendering engine
@@ -118,9 +118,6 @@ void setup() {
 
 	// Sun setup
 	renderer.sun.direction = kl::vec3(-0.575f, -0.75f, -2);
-
-	// Highlight
-	renderer.toHighlight = metalcube1;
 }
 
 // Renderer input
@@ -132,10 +129,6 @@ void input(kl::keys* keys, kl::mouse* mouse) {
 	// Fullscreen
 	if (keys->insert) renderer.setFullscreen(true);
 	if (keys->delet) renderer.setFullscreen(false);
-
-	// Wireframe
-	if (keys->v) renderer.setWireframe(true);
-	if (keys->f) renderer.setWireframe(false);
 
 	// Skyboxes
 	if (keys->num0) renderer.skybox = nullptr;

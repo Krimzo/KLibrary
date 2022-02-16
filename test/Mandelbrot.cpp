@@ -1,4 +1,4 @@
-#include "KrimzLib.hpp"
+#include "KrimzLib/KrimzLib.hpp"
 
 
 kl::window win;

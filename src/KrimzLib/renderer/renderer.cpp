@@ -34,13 +34,11 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		gpu = new kl::gpu(win.getHWND(), 4);
 
 		// Creating the rasters
-		solid_ra = gpu->newRaster(false, true);
-		wire_ra = gpu->newRaster(true, true);
+		kl::raster* solid_ra = gpu->newRaster(false, true);
 		solid_ra->bind();
 
 		// Compiling shaders
 		default_sh = gpu->newShaders("res/shaders/renderer.hlsl", sizeof(DEF_VS_CB), sizeof(DEF_PS_CB));
-		highlight_sh = gpu->newShaders("res/shaders/highlight.hlsl", sizeof(kl::mat4), sizeof(kl::vec4));
 
 		// Sampler setup
 		kl::sampler* samp = gpu->newSampler(true, true);
@@ -103,24 +101,6 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 			}
 		}
 
-		// Highlight check
-		if (toHighlight) {
-			// Setting the highlight vertex data
-			kl::mat4 wvp = camera.matrix() * toHighlight->matrix();
-			highlight_sh->setVertData(&wvp);
-
-			// Setting the highlight pixel data
-			kl::vec4 hig_col = highlight;
-			highlight_sh->setPixlData(&hig_col);
-
-			// Rendering
-			gpu->setDepthTest(false);
-			wire_ra->bind();
-			toHighlight->render();
-			solid_ra->bind();
-			gpu->setDepthTest(true);
-		}
-
 		// Swapping the frame buffers
 		gpu->swap(vSync);
 
@@ -169,16 +149,6 @@ kl::ivec2 kl::renderer::frameCenter() const {
 // Returns the aspect ratio
 float kl::renderer::getAspect() const {
 	return win.getAspect();
-}
-
-// Sets the raster type
-void kl::renderer::setWireframe(bool enabled) {
-	if (enabled) {
-		wire_ra->bind();
-	}
-	else {
-		solid_ra->bind();
-	}
 }
 
 // Mesh
