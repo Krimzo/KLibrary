@@ -41,7 +41,7 @@ kl::shaders::shaders(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::
 
     // Pixel shader compilation
     D3DCompileFromFile(wFilPath.c_str(), nullptr, nullptr, "pShader", "ps_5_0", NULL, NULL, &psBlob, &psError);
-    if (!vsBlob) {
+    if (!psBlob) {
         if (psError) {
             std::cout << "DirectX: Could not compile pixel shader!\nError: " << (char*)psError->GetBufferPointer();
             psError->Release();

@@ -18,7 +18,7 @@ const std::vector<kl::vertex> kl::skybox::boxVertices {
 };
 
 // Constructors/destructor
-kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& fullbox) {
+kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& name, const kl::image& fullbox) {
 	// Checking the aspect ratio
 	if (fullbox.getWidth() % 4 == 0 && fullbox.getHeight() % 3 == 0) {
 		// Getting the part size
@@ -37,7 +37,7 @@ kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::ima
 			const kl::image bottom = fullbox.getRect(partSize * kl::ivec2(1, 2), partSize * kl::ivec2(2, 3));
 
 			// Calling the other constructor
-			this->kl::skybox::skybox(dev, devcon, front, back, left, right, top, bottom);
+			this->kl::skybox::skybox(dev, devcon, name, front, back, left, right, top, bottom);
 		}
 		else {
 			printf("Skybox image width and height do not match!");
@@ -51,7 +51,10 @@ kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::ima
 		exit(69);
 	}
 }
-kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+	// Saving the name
+	this->name = name;
+
 	// Compiling skybox shaders
 	sky_sh = new kl::shaders(dev, devcon, "res/shaders/skybox.hlsl", sizeof(kl::mat4), 0);
 

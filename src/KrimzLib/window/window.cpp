@@ -2,6 +2,8 @@
 
 #include "KrimzLib/convert.h"
 
+#include "ImGui/imgui_impl_win32.h"
+
 
 // Screen
 const int kl::window::screen::width = GetSystemMetrics(SM_CXSCREEN);
@@ -13,6 +15,7 @@ kl::window::window() {
 	this->start = []() {};
 	this->update = []() {};
 	this->end = []() {};
+	this->onResize = [](const kl::ivec2& size) {};
 	
 	// Winapi variables
 	this->hInstance = GetModuleHandle(nullptr);
@@ -32,119 +35,15 @@ kl::window::~window() {
 	this->stop();
 }
 
-// Window creation
-void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous) {
-	// Converting window name to a wstring
-	const std::wstring wName = kl::convert::toWString(name);
-
-	// Registering winapi window class
-	registerWindowClass(wName);
-
-	// Creating a window
-	createWindow(size, wName, resizeable);
-
-	// Setting up bitmap info
-	setupBitmapInfo();
-
-	// Binding the mouse
-	this->mouse.bind(hwnd);
-
-	// Starting the update loops
-	SetCursor(LoadCursor(NULL, IDC_ARROW));
-	if (continuous) {
-		start();
-		while (IsWindow(hwnd)) {
-			while (PeekMessageW(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
-				handleMessage();
-			}
-			update();
-		}
-		end();
-	}
-	else {
-		start();
-		while (IsWindow(hwnd)) {
-			GetMessageW(&wndMsg, hwnd, 0, 0);
-			handleMessage();
-			update();
-		}
-		end();
-	}
-
-	// Cleanup
-	UnregisterClassW(wName.c_str(), hInstance);
-	hdc = nullptr;
-	hwnd = nullptr;
-}
-void kl::window::stop() const {
-	PostMessageW(hwnd, WM_CLOSE, 0, 0);
-}
-
-// Returns a handle to the window
-HWND kl::window::getHWND() {
-	return hwnd;
-}
-
-// Sets the fullscreen mode
-void kl::window::setFullscreen(bool enable) {
-	if (!inFull && enable) {
-		// Saving old window position
-		GetWindowPlacement(hwnd, &winPlace);
-
-		// Enabling the fullscreen
-		SetWindowLong(hwnd, GWL_STYLE, winStyle & ~WS_OVERLAPPEDWINDOW);
-		SetWindowPos(hwnd, HWND_TOP, 0, 0, kl::window::screen::width, kl::window::screen::height, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-
-		// Setting info
-		inFull = true;
-	}
-	else if (inFull && !enable) {
-		// Resetting the size
-		SetWindowLong(hwnd, GWL_STYLE, winStyle);
-		SetWindowPlacement(hwnd, &winPlace);
-		SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-
-		// Setting info
-		inFull = false;
-	}
-}
-
-// Returns the window size
-kl::ivec2 kl::window::getSize() const {
-	RECT clientArea = {};
-	GetClientRect(hwnd, &clientArea);
-	return kl::ivec2(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
-}
-
-// Returns the aspect ratio
-float kl::window::getAspect() const {
-	const kl::ivec2 winSize = getSize();
-	return float(winSize.x) / winSize.y;
-}
-
-// Returns the center point of the frame
-kl::ivec2 kl::window::getCenter() const {
-	return this->getSize() / 2;
-}
-
-// Sets the window title
-void kl::window::setTitle(const std::string& data) {
-	SetWindowTextA(hwnd, data.c_str());
-}
-
-// Sets the pixels of the window
-void kl::window::drawImage(const kl::image& toDraw, const kl::ivec2& position) {
-	bmpInfo.bmiHeader.biWidth = toDraw.getWidth();
-	bmpInfo.bmiHeader.biHeight = toDraw.getHeight();
-	StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
-}
-
 // Registers a new window class
 void kl::window::registerWindowClass(const std::wstring& name) {
 	WNDCLASSEXW windowClass = {};
 	windowClass.cbSize = sizeof(WNDCLASSEX);
 	windowClass.style = CS_OWNDC;
-	windowClass.lpfnWndProc = DefWindowProc;
+	windowClass.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		kl::window* callingWin = (kl::window*)GetWindowLongPtrW(hwnd, GWLP_USERDATA);
+		return callingWin->WndProc(hwnd, msg, wParam, lParam);
+	};
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
 	windowClass.hInstance = hInstance;
@@ -176,6 +75,7 @@ void kl::window::createWindow(const kl::ivec2& size, const std::wstring& name, b
 		std::cin.get();
 		exit(69);
 	}
+	SetWindowLongPtrW(hwnd, GWLP_USERDATA, (long long)this);
 
 	// Setting and getting window info
 	ShowWindow(hwnd, SW_SHOW);
@@ -189,12 +89,29 @@ void kl::window::createWindow(const kl::ivec2& size, const std::wstring& name, b
 void kl::window::setupBitmapInfo() {
 	bmpInfo.bmiHeader.biSize = sizeof(bmpInfo.bmiHeader);
 	bmpInfo.bmiHeader.biPlanes = 1;
-	bmpInfo.bmiHeader.biBitCount = 24;
+	bmpInfo.bmiHeader.biBitCount = 32;
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 }
 
 // Handles the windows message
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	switch (msg) {
+	case WM_SIZE:
+		this->onResize(kl::ivec2(LOWORD(lParam), HIWORD(lParam)));
+		break;
+	}
+	return DefWindowProc(hwnd, msg, wParam, lParam);
+}
 void kl::window::handleMessage() {
+	// ImGui
+	if (usingImGui) {
+		if (ImGui_ImplWin32_WndProcHandler(wndMsg.hwnd, wndMsg.message, wndMsg.wParam, wndMsg.lParam)) {
+			return;
+		}
+	}
+
+	// Default
 	switch (wndMsg.message) {
 	case WM_KEYDOWN:
 		this->keys.setKey(wndMsg.wParam, true);
@@ -236,4 +153,145 @@ void kl::window::handleMessage() {
 		DispatchMessageW(&wndMsg);
 		break;
 	}
+}
+
+// Window creation
+void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool imgui) {
+	// Converting window name to a wstring
+	const std::wstring wName = kl::convert::toWString(name);
+
+	// Registering winapi window class
+	registerWindowClass(wName);
+
+	// Creating a window
+	createWindow(size, wName, resizeable);
+
+	// Setting up bitmap info
+	setupBitmapInfo();
+
+	// Binding the mouse
+	this->mouse.bind(hwnd);
+
+	// ImGui setup
+	this->usingImGui = imgui;
+	if (imgui) {
+		ImGui_ImplWin32_Init(hwnd);
+	}
+
+	// Starting the update loops
+	SetCursor(LoadCursor(NULL, IDC_ARROW));
+	if (continuous) {
+		start();
+		while (IsWindow(hwnd)) {
+			while (PeekMessageW(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
+				handleMessage();
+			}
+			update();
+		}
+		end();
+	}
+	else {
+		start();
+		while (IsWindow(hwnd)) {
+			GetMessageW(&wndMsg, hwnd, 0, 0);
+			handleMessage();
+			update();
+		}
+		end();
+	}
+
+	// ImGui cleanup
+	if (imgui) {
+		ImGui_ImplWin32_Shutdown();
+	}
+
+	// Cleanup
+	UnregisterClassW(wName.c_str(), hInstance);
+	hdc = nullptr;
+	hwnd = nullptr;
+}
+void kl::window::stop() const {
+	PostMessageW(hwnd, WM_CLOSE, 0, 0);
+}
+
+// Returns a handle to the window
+HWND kl::window::getHWND() {
+	return hwnd;
+}
+
+// Sets the fullscreen mode
+void kl::window::setFullscreen(bool enable) {
+	if (!inFull && enable) {
+		// Saving old window position
+		GetWindowPlacement(hwnd, &winPlace);
+
+		// Enabling the fullscreen
+		SetWindowLong(hwnd, GWL_STYLE, winStyle & ~WS_OVERLAPPEDWINDOW);
+		SetWindowPos(hwnd, HWND_TOP, 0, 0, kl::window::screen::width, kl::window::screen::height, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+
+		// Setting info
+		inFull = true;
+	}
+	else if (inFull && !enable) {
+		// Resetting the size
+		SetWindowLong(hwnd, GWL_STYLE, winStyle);
+		SetWindowPlacement(hwnd, &winPlace);
+		SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+
+		// Setting info
+		inFull = false;
+	}
+}
+
+// Max/min functions
+void kl::window::maximize() {
+	ShowWindow(this->hwnd, SW_MAXIMIZE);
+}
+void kl::window::minimize() {
+	ShowWindow(this->hwnd, SW_MINIMIZE);
+}
+
+// Returns the window size
+kl::ivec2 kl::window::getSize() const {
+	RECT clientArea = {};
+	GetClientRect(hwnd, &clientArea);
+	return kl::ivec2(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
+}
+
+// Returns the aspect ratio
+float kl::window::getAspect() const {
+	const kl::ivec2 winSize = getSize();
+	return float(winSize.x) / winSize.y;
+}
+
+// Returns the center point of the frame
+kl::ivec2 kl::window::getCenter() const {
+	return this->getSize() / 2;
+}
+
+// Sets the window title
+void kl::window::setTitle(const std::string& data) {
+	SetWindowTextA(hwnd, data.c_str());
+}
+
+// Sets the window icons
+void kl::window::setIcon(const std::string& filePath) {
+	// Loading the icon
+	HICON loadedIcon = ExtractIconA(nullptr, filePath.c_str(), NULL);
+	if (!loadedIcon) {
+		std::cout << "WinApi: Could not load an icon file \"" << filePath << "\"";
+		std::cin.get();
+		exit(69);
+	}
+
+	// Sending the icon
+	SendMessageA(this->hwnd, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
+	SendMessageA(this->hwnd, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
+}
+
+// Sets the pixels of the window
+void kl::window::drawImage(const kl::image& toDraw, const kl::ivec2& position) {
+	bmpInfo.bmiHeader.biWidth = toDraw.getWidth();
+	bmpInfo.bmiHeader.biHeight = toDraw.getHeight();
+	StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 }

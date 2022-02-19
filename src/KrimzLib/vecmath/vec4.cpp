@@ -67,7 +67,11 @@ kl::vec4::vec4(float x, const kl::vec3& v) {
 	w = v.z;
 }
 kl::vec4::vec4(const kl::color& color) {
-	this->kl::vec4::vec4(color, 1);
+	static const float toFloatCol = 1.0f / 255;
+	x = color.r * toFloatCol;
+	y = color.g * toFloatCol;
+	z = color.b * toFloatCol;
+	w = color.a * toFloatCol;
 }
 
 // Addition

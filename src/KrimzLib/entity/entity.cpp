@@ -2,7 +2,8 @@
 
 
 // Constructor
-kl::entity::entity(kl::mesh* mes, kl::texture* tex) {
+kl::entity::entity(const std::string& name, kl::mesh* mes, kl::texture* tex) {
+	this->name = name;
 	mesh = mes;
 	texture = tex;
 }

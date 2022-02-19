@@ -23,7 +23,7 @@ const std::string fragSource = R"(
 )";
 
 // Returns the true light color
-kl::vec3 kl::direct::getCol() const {
+kl::vec4 kl::direct::getCol() const {
 	return color * intensity;
 }
 

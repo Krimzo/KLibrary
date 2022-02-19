@@ -17,13 +17,13 @@ vOut vShader(float3 pos : POS_IN, float2 tex : TEX_IN, float3 norm : NORM_IN) {
 
 // Pixel shader
 cbuffer PS_CB : register(b0) {
-    float4 color;
+    float4 highCol;
 }
 
 float4 pShader(vOut data) : SV_TARGET {
     float4 pixel;
 
-    pixel = color;
+    pixel = highCol;
 
     return pixel;
 }

@@ -41,16 +41,16 @@ namespace kl {
 		void fromFile(const std::string& filePath);
 
 		// Saves the image to a file
-		void toFile(const std::string& fileName);
+		void toFile(const std::string& fileName) const;
 
 		// Fils the image with solid color
 		void fill(const kl::color& color);
 
-		// Flips the pixel on x axis
-		void flipHorizontal();
+		// Returns a x flipped image
+		kl::image flipHorizontal() const;
 
-		// Flips the pixel on y axis
-		void flipVertical();
+		// Returns a y flipped image
+		kl::image flipVertical() const;
 
 		// Draws a line between 2 points
 		void drawLine(const kl::ivec2& a, const kl::ivec2& b, const kl::color& col);

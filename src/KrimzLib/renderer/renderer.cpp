@@ -31,7 +31,7 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
 
 		// Creating the gpu
-		gpu = new kl::gpu(win.getHWND(), 4);
+		gpu = new kl::gpu(win.getHWND());
 
 		// Creating the rasters
 		kl::raster* solid_ra = gpu->newRaster(false, true);
@@ -171,19 +171,19 @@ bool kl::renderer::delTexture(kl::texture* tex) {
 }
 
 // Entity
-kl::entity* kl::renderer::newEntity(kl::mesh* mes, kl::texture* tex) {
-	return entities.newInst(new kl::entity(mes, tex));
+kl::entity* kl::renderer::newEntity(const std::string& name, kl::mesh* mes, kl::texture* tex) {
+	return entities.newInst(new kl::entity(name, mes, tex));
 }
 bool kl::renderer::delEntity(kl::entity* ent) {
 	return entities.delInst(ent);
 }
 
 // Skybox
-kl::skybox* kl::renderer::newSkybox(const kl::image& fullBox) {
-	return skyboxes.newInst(new kl::skybox(gpu->getDev(), gpu->getDevCon(), fullBox));
+kl::skybox* kl::renderer::newSkybox(const std::string& name, const kl::image& fullBox) {
+	return skyboxes.newInst(new kl::skybox(gpu->getDev(), gpu->getCon(), name, fullBox));
 }
-kl::skybox* kl::renderer::newSkybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
-	return skyboxes.newInst(new kl::skybox(gpu->getDev(), gpu->getDevCon(), front, back, left, right, top, bottom));
+kl::skybox* kl::renderer::newSkybox(const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+	return skyboxes.newInst(new kl::skybox(gpu->getDev(), gpu->getCon(), name, front, back, left, right, top, bottom));
 }
 bool kl::renderer::delSkybox(kl::skybox* sky) {
 	return skyboxes.delInst(sky);

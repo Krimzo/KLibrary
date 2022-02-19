@@ -9,6 +9,9 @@
 namespace kl {
 	class entity {
 	public:
+		// Name
+		std::string name;
+
 		// View
 		bool visible = true;
 		bool shadows = true;
@@ -31,7 +34,7 @@ namespace kl {
 		kl::texture* texture = nullptr;
 
 		// Constructor
-		entity(kl::mesh* mes, kl::texture* tex);
+		entity(const std::string& name, kl::mesh* mes, kl::texture* tex);
 
 		// Updates the object physics
 		void upPhys(float deltaT);

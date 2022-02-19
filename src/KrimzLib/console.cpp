@@ -29,6 +29,16 @@ void kl::console::clear() {
 	system("cls");
 }
 
+// Hides the console
+void kl::console::hide() {
+	ShowWindow(GetConsoleWindow(), SW_HIDE);
+}
+
+// Shows the console
+void kl::console::show() {
+	ShowWindow(GetConsoleWindow(), SW_SHOW);
+}
+
 // Sets the console cursor position
 void kl::console::setCursor(const kl::ivec2& position) {
 	SetConsoleCursorPosition(kl::console::handle, { short(position.x), short(position.y) });

@@ -5,12 +5,14 @@
 #include <fstream>
 #include <vector>
 
+#include "ImGui/imgui_impl_dx11.h"
+
 #include "KrimzLib/geometry/vertex.h"
 #include "KrimzLib/convert.h"
 
 
 // Constructor
-kl::gpu::gpu(HWND hwnd, int msaa) {
+kl::gpu::gpu(HWND hwnd, bool imgui) {
     // Getting the window size
     RECT clientArea = {};
     GetClientRect(hwnd, &clientArea);
@@ -23,7 +25,7 @@ kl::gpu::gpu(HWND hwnd, int msaa) {
     chaindes.BufferDesc.Height = clientArea.bottom;           // Setting the backbuffer height
     chaindes.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;   // Usage
     chaindes.OutputWindow = hwnd;                             // Window
-    chaindes.SampleDesc.Count = msaa;                         // MSAA
+    chaindes.SampleDesc.Count = 1;                            // MSAA
     chaindes.Windowed = true;                                 // Windowed/fullscreen
     chaindes.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;  // Allowing fullscreen switching
 
@@ -58,15 +60,20 @@ kl::gpu::gpu(HWND hwnd, int msaa) {
         exit(69);
     }
 
-    // Frame buffer creation
-    frameBuff = new kl::fbuffer(chain, dev, devcon, clientArea.right, clientArea.bottom, msaa);
-    frameBuff->bind(true);
+    // Generating the buffers
+    this->regenBuffers(kl::ivec2(clientArea.right, clientArea.bottom));
 
     // Viewport setup
     this->setViewport(kl::ivec2(clientArea.left, clientArea.top), kl::ivec2(clientArea.right, clientArea.bottom));
 
     // Setting the triangle as the main primitive type
     devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // ImGui
+    this->usingImGui = imgui;
+    if (imgui) {
+        ImGui_ImplDX11_Init(dev, devcon);
+    }
 }
 
 // Destructor
@@ -74,14 +81,25 @@ kl::gpu::~gpu() {
     // Exiting fullscreen
     chain->SetFullscreenState(false, nullptr);
 
-    // Memory release
+    // ImGui
+    if (usingImGui) {
+        ImGui_ImplDX11_Shutdown();
+    }
+
+    // Utility cleanup
     samplers.clear();
     textures.clear();
     meshes.clear();
     cbuffers.clear();
     shaders.clear();
     rasters.clear();
+    
+    // Buffer cleanup
+    delete indexBuff;
+    delete depthBuff;
     delete frameBuff;
+
+    // Chain cleanup
     chain->Release();
     devcon->Release();
     dev->Release();
@@ -91,8 +109,27 @@ kl::gpu::~gpu() {
 ID3D11Device* kl::gpu::getDev() {
     return dev;
 }
-ID3D11DeviceContext* kl::gpu::getDevCon() {
+ID3D11DeviceContext* kl::gpu::getCon() {
     return devcon;
+}
+
+// Resizes the buffers
+void kl::gpu::regenBuffers(const kl::ivec2& size) {
+    // Cleanup
+    devcon->OMSetRenderTargets(0, nullptr, nullptr);
+    if (frameBuff) delete frameBuff;
+    if (depthBuff) delete depthBuff;
+    if (indexBuff) delete indexBuff;
+    chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+    // New buffer creation
+    frameBuff = new kl::fbuffer(chain, dev, devcon, size.x, size.y);
+    depthBuff = new kl::dbuffer(dev, devcon, size.x, size.y);
+    indexBuff = new kl::ibuffer(dev, devcon, size.x, size.y);
+
+    // Buffer binding
+    this->bindInternal();
+    this->setDepthTest(true);
 }
 
 // Sets the viewport
@@ -107,16 +144,26 @@ void kl::gpu::setViewport(const kl::ivec2& pos, const kl::ivec2& size) {
     devcon->RSSetViewports(1, &viewport);
 }
 
+// Binds the internal render targets
+void kl::gpu::bindInternal() {
+    ID3D11RenderTargetView* tempBuff[2] = { frameBuff->getView(), indexBuff->getView() };
+    devcon->OMSetRenderTargets(2, tempBuff, depthBuff->getView());
+}
+
 // Clears the buffer
 void kl::gpu::clearColor(const kl::vec4& color) {
-    frameBuff->clearColor(color);
+    frameBuff->clear(color);
 }
 void kl::gpu::clearDepth() {
-    frameBuff->clearDepth();
+    depthBuff->clear();
+}
+void kl::gpu::clearIndex() {
+    indexBuff->clear();
 }
 void kl::gpu::clear(const kl::vec4& color) {
-    frameBuff->clearColor(color);
-    frameBuff->clearDepth();
+    frameBuff->clear(color);
+    depthBuff->clear();
+    indexBuff->clear();
 }
 
 // Swaps the buffers
@@ -126,7 +173,7 @@ void kl::gpu::swap(bool vSync) {
 
 // Sets the depth testing state
 void kl::gpu::setDepthTest(bool enabled) {
-    frameBuff->bind(enabled);
+    depthBuff->setState(enabled);
 }
 
 // Creates a new rasterizer state
@@ -178,4 +225,9 @@ kl::sampler* kl::gpu::newSampler(bool linear, bool mirror) {
 }
 bool kl::gpu::delSampler(kl::sampler* samp) {
     return samplers.delInst(samp);
+}
+
+// Returns the picking index
+int kl::gpu::getIndex(const kl::ivec2& pos) {
+    return indexBuff->getIndex(pos);
 }

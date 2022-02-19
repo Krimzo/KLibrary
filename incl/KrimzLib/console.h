@@ -20,6 +20,12 @@ namespace kl {
 		// Clears the console screen
 		static void clear();
 
+		// Hides the console
+		static void hide();
+
+		// Shows the console
+		static void show();
+
 		// Sets the console cursor position
 		static void setCursor(const kl::ivec2& position);
 

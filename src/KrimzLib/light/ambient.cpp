@@ -2,6 +2,6 @@
 
 
 // Returns the true light color
-kl::vec3 kl::ambient::getCol() const {
+kl::vec4 kl::ambient::getCol() const {
 	return color * intensity;
 }

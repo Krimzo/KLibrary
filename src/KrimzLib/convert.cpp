@@ -7,7 +7,7 @@
 #include <string>
 
 #include "KrimzLib/math.h"
-#include "KrimzLib/vecmath/vec3.h"
+#include "KrimzLib/vecmath/vec4.h"
 #include "KrimzLib/graphics/color.h"
 
 
@@ -24,8 +24,8 @@ float kl::convert::toDegrees(float radians) {
 }
 
 // Converts a float color to color
-kl::color kl::convert::toColor(const kl::vec3& colf) {
-	return kl::color(byte(colf.x * 255), byte(colf.y * 255), byte(colf.z * 255));
+kl::color kl::convert::toColor(const kl::vec4& colf) {
+	return kl::color(byte(colf.x * 255), byte(colf.y * 255), byte(colf.z * 255), byte(colf.w * 255));
 }
 
 // Converts a string to a wstring

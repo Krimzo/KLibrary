@@ -58,5 +58,5 @@ kl::color kl::random::COLOR(bool grayScaled) {
 		byte randGray = kl::random::BYTE();
 		return kl::color(randGray, randGray, randGray);
 	}
-	return kl::color(kl::random::BYTE(), kl::random::BYTE(), kl::random::BYTE());
+	return kl::color(kl::random::BYTE(), kl::random::BYTE(), kl::random::BYTE(), kl::random::BYTE());
 }

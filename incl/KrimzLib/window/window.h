@@ -49,7 +49,11 @@ namespace kl {
 		void setupBitmapInfo();
 
 		// Handles the windows message
+		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		void handleMessage();
+
+		// ImGui
+		bool usingImGui = false;
 
 	public:
 		// Screen
@@ -68,6 +72,7 @@ namespace kl {
 		std::function<void(void)> start;
 		std::function<void(void)> update;
 		std::function<void(void)> end;
+		std::function<void(const kl::ivec2& size)> onResize;
 
 		// Constructor
 		window();
@@ -76,7 +81,7 @@ namespace kl {
 		~window();
 
 		// Window creation
-		void startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous);
+		void startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool imgui = false);
 		
 		// Window stop
 		void stop() const;
@@ -86,6 +91,10 @@ namespace kl {
 
 		// Sets the fullscreen mode
 		void setFullscreen(bool enable);
+
+		// Max/min functions
+		void maximize();
+		void minimize();
 
 		// Returns the window size
 		kl::ivec2 getSize() const;
@@ -98,6 +107,9 @@ namespace kl {
 
 		// Sets the window title
 		void setTitle(const std::string& data);
+
+		// Sets the window icons
+		void setIcon(const std::string& filePath);
 
 		// Sets the pixels of the window
 		void drawImage(const kl::image& toDraw, const kl::ivec2& position = { 0, 0 });

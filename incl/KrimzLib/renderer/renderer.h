@@ -91,12 +91,12 @@ namespace kl {
 		bool delTexture(kl::texture* tex);
 
 		// Entity
-		kl::entity* newEntity(kl::mesh* mes, kl::texture* tex);
+		kl::entity* newEntity(const std::string& name, kl::mesh* mes, kl::texture* tex);
 		bool delEntity(kl::entity* ent);
 
 		// Skybox
-		kl::skybox* newSkybox(const kl::image& fullBox);
-		kl::skybox* newSkybox(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
+		kl::skybox* newSkybox(const std::string& name, const kl::image& fullBox);
+		kl::skybox* newSkybox(const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
 		bool delSkybox(kl::skybox* sky);
 	};
 }

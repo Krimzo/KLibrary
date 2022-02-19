@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "KrimzLib/vecmath/vec3.h"
+#include "KrimzLib/vecmath/vec4.h"
 #include "KrimzLib/graphics/color.h"
 
 
@@ -15,7 +15,7 @@ namespace kl {
 		float toDegrees(float radians);
 
 		// Converts a float color to color
-		kl::color toColor(const kl::vec3& colf);
+		kl::color toColor(const kl::vec4& colf);
 		
 		// Converts a string to a wstring
 		std::wstring toWString(const std::string& data);

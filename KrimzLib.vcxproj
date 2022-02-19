@@ -153,11 +153,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ImGui\imgui.cpp" />
+    <ClCompile Include="src\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="src\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="src\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="src\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\KrimzLib\console.cpp" />
     <ClCompile Include="src\KrimzLib\convert.cpp" />
     <ClCompile Include="src\KrimzLib\dx\cbuffer.cpp" />
+    <ClCompile Include="src\KrimzLib\dx\dbuffer.cpp" />
     <ClCompile Include="src\KrimzLib\dx\fbuffer.cpp" />
     <ClCompile Include="src\KrimzLib\dx\gpu.cpp" />
+    <ClCompile Include="src\KrimzLib\dx\ibuffer.cpp" />
     <ClCompile Include="src\KrimzLib\dx\mesh.cpp" />
     <ClCompile Include="src\KrimzLib\dx\raster.cpp" />
     <ClCompile Include="src\KrimzLib\dx\sampler.cpp" />
@@ -169,6 +178,7 @@
     <ClCompile Include="src\KrimzLib\geometry\vertex.cpp" />
     <ClCompile Include="src\KrimzLib\graphics\color.cpp" />
     <ClCompile Include="src\KrimzLib\graphics\image.cpp" />
+    <ClCompile Include="src\KrimzLib\igui\igui.cpp" />
     <ClCompile Include="src\KrimzLib\light\ambient.cpp" />
     <ClCompile Include="src\KrimzLib\light\direct.cpp" />
     <ClCompile Include="src\KrimzLib\math.cpp" />
@@ -187,14 +197,24 @@
     <ClCompile Include="src\KrimzLib\window\keys.cpp" />
     <ClCompile Include="src\KrimzLib\window\mouse.cpp" />
     <ClCompile Include="src\KrimzLib\window\window.cpp" />
-    <ClCompile Include="test\Rendering.cpp" />
+    <ClCompile Include="test\TimesTable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="incl\ImGui\imconfig.h" />
+    <ClInclude Include="incl\ImGui\imgui.h" />
+    <ClInclude Include="incl\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="incl\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="incl\ImGui\imgui_internal.h" />
+    <ClInclude Include="incl\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="incl\ImGui\imstb_textedit.h" />
+    <ClInclude Include="incl\ImGui\imstb_truetype.h" />
     <ClInclude Include="incl\KrimzLib\console.h" />
     <ClInclude Include="incl\KrimzLib\convert.h" />
     <ClInclude Include="incl\KrimzLib\dx\cbuffer.h" />
+    <ClInclude Include="incl\KrimzLib\dx\dbuffer.h" />
     <ClInclude Include="incl\KrimzLib\dx\fbuffer.h" />
     <ClInclude Include="incl\KrimzLib\dx\gpu.h" />
+    <ClInclude Include="incl\KrimzLib\dx\ibuffer.h" />
     <ClInclude Include="incl\KrimzLib\dx\mesh.h" />
     <ClInclude Include="incl\KrimzLib\dx\raster.h" />
     <ClInclude Include="incl\KrimzLib\dx\sampler.h" />
@@ -206,6 +226,7 @@
     <ClInclude Include="incl\KrimzLib\geometry\vertex.h" />
     <ClInclude Include="incl\KrimzLib\graphics\color.h" />
     <ClInclude Include="incl\KrimzLib\graphics\image.h" />
+    <ClInclude Include="incl\KrimzLib\igui\igui.h" />
     <ClInclude Include="incl\KrimzLib\KrimzLib.hpp" />
     <ClInclude Include="incl\KrimzLib\light\ambient.h" />
     <ClInclude Include="incl\KrimzLib\light\direct.h" />

@@ -137,7 +137,7 @@ void kl::image::fromFile(const std::string& filePath) {
 }
 
 // Saves the image to a file
-void kl::image::toFile(const std::string& fileName) {
+void kl::image::toFile(const std::string& fileName) const {
 	// Static image type CLSID-s
 	static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 	static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
@@ -184,11 +184,11 @@ void kl::image::toFile(const std::string& fileName) {
 	}
 
 	// Pixel data transfer and saving to file
-	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(width, height, PixelFormat24bppRGB);
+	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(width, height, PixelFormat32bppARGB);
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
 			kl::color tempPixel = getPixel(kl::ivec2(x, y));
-			tempBitmap->SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.r, tempPixel.g, tempPixel.b));
+			tempBitmap->SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.a, tempPixel.r, tempPixel.g, tempPixel.b));
 		}
 	}
 	tempBitmap->Save(kl::convert::toWString(fileName).c_str(), formatToUse, nullptr);
@@ -208,27 +208,35 @@ void kl::image::fill(const kl::color& color) {
 }
 
 // Flips the pixel on x axis
-void kl::image::flipHorizontal() {
-	const int halfWidth = width / 2;
+kl::image kl::image::flipHorizontal() const {
+	// Temp image
+	kl::image temp(this->getSize());
+
+	// Flipping
 	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < halfWidth; x++) {
-			kl::color tempPixel = pixels[(uint64_t)y * width + x];
-			pixels[(uint64_t)y * width + x] = pixels[(uint64_t)y * width + uint64_t(width - 1 - x)];
-			pixels[(uint64_t)y * width + uint64_t(width - 1 - x)] = tempPixel;
+		for (int x = 0; x < width; x++) {
+			temp.pixels[size_t(y) * width + x] = this->pixels[size_t(y) * width + width - 1 - x];
 		}
 	}
+
+	// Returning the edited
+	return temp;
 }
 
 // Flips the pixel on y axis
-void kl::image::flipVertical() {
-	const int halfHeight = height / 2;
+kl::image kl::image::flipVertical() const {
+	// Temp image
+	kl::image temp(this->getSize());
+
+	// Flipping
 	for (int x = 0; x < width; x++) {
-		for (int y = 0; y < halfHeight; y++) {
-			kl::color tempPixel = pixels[(uint64_t)y * width + x];
-			pixels[(uint64_t)y * width + x] = pixels[uint64_t(height - 1 - y) * width + x];
-			pixels[uint64_t(height - 1 - y) * width + x] = tempPixel;
+		for (int y = 0; y < height; y++) {
+			temp.pixels[size_t(y) * width + x] = this->pixels[size_t(height - 1 - y) * width + x];
 		}
 	}
+
+	// Returning the edited
+	return temp;
 }
 
 // Draws a line between 2 points

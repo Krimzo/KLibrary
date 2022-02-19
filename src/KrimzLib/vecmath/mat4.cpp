@@ -164,8 +164,8 @@ std::ostream& kl::operator<<(std::ostream& os, kl::mat4&& obj) {
 // Returns a translation matrix
 kl::mat4 kl::mat4::translate(const kl::vec3& translation) {
 	kl::mat4 temp;
-	temp[3] = translation.x;
-	temp[7] = translation.y;
+	temp[ 3] = translation.x;
+	temp[ 7] = translation.y;
 	temp[11] = translation.z;
 	return temp;
 }

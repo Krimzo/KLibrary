@@ -25,9 +25,12 @@ namespace kl {
 		static const std::vector<kl::vertex> boxVertices;
 
 	public:
+		// Name
+		std::string name;
+
 		// Constructor/destructor
-		skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& fullbox);
-		skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
+		skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& name, const kl::image& fullbox);
+		skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
 		~skybox();
 
 		// Renders the cubemap

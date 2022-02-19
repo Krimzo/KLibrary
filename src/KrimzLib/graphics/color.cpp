@@ -6,16 +6,23 @@ kl::color::color() {
 	r = 0;
 	g = 0;
 	b = 0;
+	a = 255;
 }
-kl::color::color(byte r, byte g, byte b) {
+kl::color::color(byte r, byte g, byte b, byte a) {
 	this->r = r;
 	this->g = g;
 	this->b = b;
+	this->a = a;
+}
+
+// Returns data as an int
+int kl::color::getInt() const {
+	return *(int*)this;
 }
 
 // Operator overloading
 bool kl::color::equals(const kl::color& obj) const {
-	return r == obj.r && g == obj.g && b == obj.b;
+	return r == obj.r && g == obj.g && b == obj.b && a == obj.a;
 }
 bool kl::color::operator==(const kl::color& obj) const {
 	return this->equals(obj);

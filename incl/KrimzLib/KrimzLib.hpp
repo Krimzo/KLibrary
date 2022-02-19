@@ -32,12 +32,17 @@
 // Including dx
 #include "KrimzLib/dx/gpu.h"
 #include "KrimzLib/dx/fbuffer.h"
+#include "KrimzLib/dx/dbuffer.h"
+#include "KrimzLib/dx/ibuffer.h"
 #include "KrimzLib/dx/raster.h"
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"
 #include "KrimzLib/dx/mesh.h"
 #include "KrimzLib/dx/texture.h"
 #include "KrimzLib/dx/sampler.h"
+
+// Including ImGui
+#include "KrimzLib/igui/igui.h"
 
 // Including the geometry
 #include "KrimzLib/geometry/vertex.h"

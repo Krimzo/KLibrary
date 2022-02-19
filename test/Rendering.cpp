@@ -32,6 +32,7 @@ void setup() {
 
 	// Skybox creation
 	clouds = renderer.newSkybox(
+		"",
 		"res/textures/skyboxes/clouds/front.jpg",
 		"res/textures/skyboxes/clouds/back.jpg",
 		"res/textures/skyboxes/clouds/left.jpg",
@@ -40,6 +41,7 @@ void setup() {
 		"res/textures/skyboxes/clouds/bottom.jpg"
 	);
 	night = renderer.newSkybox(
+		"",
 		"res/textures/skyboxes/night/night.jpg"
 	);
 	renderer.skybox = clouds;
@@ -63,15 +65,15 @@ void setup() {
 	kl::texture* fp_tex = renderer.newTexture("res/textures/firepower.jpg");
 
 	// Object creation
-	wall = renderer.newEntity(cube_mes, solid1_tex);
-	table = renderer.newEntity(table_mes, table_tex);
-	katanaL = renderer.newEntity(katana_mes, katana_tex);
-	katanaR = renderer.newEntity(katana_mes, katana_tex);
-	horse = renderer.newEntity(horse_mes, horse_tex);
-	sphere = renderer.newEntity(sphere_mes, solid2_tex);
-	metalcube1 = renderer.newEntity(cube_mes, peace_tex);
-	metalcube2 = renderer.newEntity(cube_mes, fp_tex);
-	kerv = renderer.newEntity(tv_mes, tv_tex);
+	wall = renderer.newEntity("", cube_mes, solid1_tex);
+	table = renderer.newEntity("", table_mes, table_tex);
+	katanaL = renderer.newEntity("", katana_mes, katana_tex);
+	katanaR = renderer.newEntity("", katana_mes, katana_tex);
+	horse = renderer.newEntity("", horse_mes, horse_tex);
+	sphere = renderer.newEntity("", sphere_mes, solid2_tex);
+	metalcube1 = renderer.newEntity("", cube_mes, peace_tex);
+	metalcube2 = renderer.newEntity("", cube_mes, fp_tex);
+	kerv = renderer.newEntity("", tv_mes, tv_tex);
 
 	// Object properties setup
 	wall->size = kl::vec3(50, 10, 0.05f);
