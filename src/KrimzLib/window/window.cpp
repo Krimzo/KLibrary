@@ -21,7 +21,6 @@ kl::window::window() {
 	this->hInstance = GetModuleHandle(nullptr);
 	this->hwnd = nullptr;
 	this->hdc = nullptr;
-	this->bmpInfo = {};
 	this->wndMsg = {};
 
 	// Fullscreen data
@@ -83,14 +82,6 @@ void kl::window::createWindow(const kl::ivec2& size, const std::wstring& name, b
 
 	// Saving a complete window style
 	winStyle = GetWindowLong(hwnd, GWL_STYLE);
-}
-
-// Sets up the bitmap properties
-void kl::window::setupBitmapInfo() {
-	bmpInfo.bmiHeader.biSize = sizeof(bmpInfo.bmiHeader);
-	bmpInfo.bmiHeader.biPlanes = 1;
-	bmpInfo.bmiHeader.biBitCount = 32;
-	bmpInfo.bmiHeader.biCompression = BI_RGB;
 }
 
 // Handles the windows message
@@ -165,9 +156,6 @@ void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool r
 
 	// Creating a window
 	createWindow(size, wName, resizeable);
-
-	// Setting up bitmap info
-	setupBitmapInfo();
 
 	// Binding the mouse
 	this->mouse.bind(hwnd);
@@ -285,13 +273,24 @@ void kl::window::setIcon(const std::string& filePath) {
 	}
 
 	// Sending the icon
-	SendMessageA(this->hwnd, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
-	SendMessageA(this->hwnd, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
+	SendMessage(this->hwnd, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
+	SendMessage(this->hwnd, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
 }
 
 // Sets the pixels of the window
 void kl::window::drawImage(const kl::image& toDraw, const kl::ivec2& position) {
-	bmpInfo.bmiHeader.biWidth = toDraw.getWidth();
-	bmpInfo.bmiHeader.biHeight = toDraw.getHeight();
-	StretchDIBits(hdc, position.x, (toDraw.getHeight() - 1) + position.y, toDraw.getWidth(), -toDraw.getHeight(), 0, 0, toDraw.getWidth(), toDraw.getHeight(), toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+	// Getting the image size
+	const kl::ivec2 size = toDraw.getSize();
+
+	// Setting up the bitmapinfo
+	BITMAPINFO bmpInfo = {};
+	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmpInfo.bmiHeader.biCompression = BI_RGB;
+	bmpInfo.bmiHeader.biBitCount = 32;
+	bmpInfo.bmiHeader.biPlanes = 1;
+	bmpInfo.bmiHeader.biWidth = size.x;
+	bmpInfo.bmiHeader.biHeight = -size.y;
+
+	// Drawing
+	StretchDIBits(hdc, position.x, position.y, size.x, size.y, 0, 0, size.x, size.y, toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 }

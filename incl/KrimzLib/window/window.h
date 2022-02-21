@@ -31,7 +31,6 @@ namespace kl {
 		HINSTANCE hInstance;
 		HWND hwnd;
 		HDC hdc;
-		BITMAPINFO bmpInfo;
 		MSG wndMsg;
 
 		// Fullscreen data
@@ -44,9 +43,6 @@ namespace kl {
 
 		// Creates a new window
 		void createWindow(const kl::ivec2& size, const std::wstring& name, bool resizeable);
-
-		// Sets up the bitmap properties
-		void setupBitmapInfo();
 
 		// Handles the windows message
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
