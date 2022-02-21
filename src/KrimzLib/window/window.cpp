@@ -215,7 +215,7 @@ void kl::window::stop() const {
 }
 
 // Returns a handle to the window
-HWND kl::window::getHWND() {
+HWND kl::window::getWND() {
 	return hwnd;
 }
 

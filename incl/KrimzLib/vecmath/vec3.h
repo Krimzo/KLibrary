@@ -19,6 +19,7 @@ namespace kl {
 		vec3(float x, float y, float z);
 		vec3(const kl::vec2& v, float z);
 		vec3(float x, const kl::vec2& v);
+		vec3(const kl::color& color);
 
 		// Addition
 		kl::vec3 add(const kl::vec3& obj) const;

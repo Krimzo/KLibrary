@@ -31,7 +31,7 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
 
 		// Creating the gpu
-		gpu = new kl::gpu(win.getHWND());
+		gpu = new kl::gpu(win.getWND());
 
 		// Creating the rasters
 		kl::raster* solid_ra = gpu->newRaster(false, true);

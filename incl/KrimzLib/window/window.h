@@ -87,7 +87,7 @@ namespace kl {
 		void stop() const;
 
 		// Returns a handle to the window
-		HWND getHWND();
+		HWND getWND();
 
 		// Sets the fullscreen mode
 		void setFullscreen(bool enable);

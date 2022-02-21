@@ -31,6 +31,12 @@ kl::vec3::vec3(float x, const kl::vec2& v) {
 	y = v.x;
 	z = v.y;
 }
+kl::vec3::vec3(const kl::color& color) {
+	static const float toFloatCol = 1.0f / 255;
+	x = color.r * toFloatCol;
+	y = color.g * toFloatCol;
+	z = color.b * toFloatCol;
+}
 
 // Addition
 kl::vec3 kl::vec3::add(const kl::vec3& obj) const {

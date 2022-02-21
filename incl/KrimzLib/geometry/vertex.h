@@ -14,6 +14,7 @@ namespace kl {
 		vertex();
 		vertex(const kl::vec3& world);
 		vertex(const kl::vec3& world, const kl::vec2& texture);
+		vertex(const kl::vec3& world, const kl::vec3& normal);
 		vertex(const kl::vec3& world, const kl::vec2& texture, const kl::vec3& normal);
 
 		// Comparison
