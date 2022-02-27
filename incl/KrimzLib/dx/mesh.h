@@ -15,7 +15,7 @@ namespace kl {
 	private:
 		ID3D11DeviceContext* devcon = nullptr;
 		ID3D11Buffer* buff = nullptr;
-		std::vector<kl::vertex> vertices;
+		UINT vertexCount = 0;
 
 	public:
 		// Constructors
@@ -27,8 +27,5 @@ namespace kl {
 
 		// Draws the mesh
 		void draw() const;
-
-		// Parses .obj file
-		static std::vector<kl::vertex> parseFile(const std::string& filePath, bool flipZ);
 	};
 }

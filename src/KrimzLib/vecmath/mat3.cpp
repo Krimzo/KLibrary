@@ -134,6 +134,28 @@ void kl::mat3::setIdentity() {
 	data[6] = 0; data[7] = 0; data[8] = 1;
 }
 
+// Returns the inverse matrix
+kl::mat3 kl::mat3::inverse() const {
+	kl::mat3 inv;
+	inv[0] = data[4] * data[8] - data[7] * data[5];
+	inv[1] = data[2] * data[7] - data[1] * data[8];
+	inv[2] = data[1] * data[5] - data[2] * data[4];
+	inv[3] = data[5] * data[6] - data[3] * data[8];
+	inv[4] = data[0] * data[8] - data[2] * data[6];
+	inv[5] = data[3] * data[2] - data[0] * data[5];
+	inv[6] = data[3] * data[7] - data[6] * data[4];
+	inv[7] = data[6] * data[1] - data[0] * data[7];
+	inv[8] = data[0] * data[4] - data[3] * data[1];
+
+	// Det calc
+	const float det = data[0] * (data[4] * data[8] - data[7] * data[5]) -
+		data[1] * (data[3] * data[8] - data[5] * data[6]) +
+		data[2] * (data[3] * data[7] - data[4] * data[6]);
+
+	// Return
+	return inv.div(det);
+}
+
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, kl::mat3& obj) {
 	os <<

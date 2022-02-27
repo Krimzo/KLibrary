@@ -11,6 +11,7 @@
 #include "KrimzLib/dx/fbuffer.h"
 #include "KrimzLib/dx/dbuffer.h"
 #include "KrimzLib/dx/ibuffer.h"
+#include "KrimzLib/dx/sbuffer.h"
 #include "KrimzLib/dx/raster.h"
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"
@@ -43,6 +44,7 @@ namespace kl {
 		kl::pbuffer<kl::mesh>      meshes;
 		kl::pbuffer<kl::texture> textures;
 		kl::pbuffer<kl::sampler> samplers;
+		kl::pbuffer<kl::sbuffer> sbuffers;
 
 		// ImGui
 		bool usingImGui = false;
@@ -76,8 +78,8 @@ namespace kl {
 		// Swaps the buffers
 		void swap(bool vSync);
 
-		// Sets the depth testing state
-		void setDepthTest(bool enabled);
+		// Sets the depth/stencil state
+		void setDSState(kl::dbuffer::STATE state);
 
 		// Raster
 		kl::raster* newRaster(bool wireframe, bool cull, bool cullBack = true);
@@ -93,7 +95,7 @@ namespace kl {
 
 		// Mesh
 		kl::mesh* newMesh(const std::vector<kl::vertex>& vertexData);
-		kl::mesh* newMesh(const std::string& filePath, bool flipZ);
+		kl::mesh* newMesh(const std::string& filePath, bool flipZ = true);
 		bool delMesh(kl::mesh* mes);
 
 		// Texture
@@ -103,6 +105,10 @@ namespace kl {
 		// Sampler
 		kl::sampler* newSampler(bool linear, bool mirror);
 		bool delSampler(kl::sampler* samp);
+
+		// SBuffer
+		kl::sbuffer* newSBuffer(uint32_t size);
+		bool delSBuffer(kl::sbuffer* sbuff);
 
 		// Returns the picking index
 		int getIndex(const kl::ivec2& pos);

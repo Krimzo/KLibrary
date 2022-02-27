@@ -93,8 +93,9 @@ kl::gpu::~gpu() {
     cbuffers.clear();
     shaders.clear();
     rasters.clear();
+    sbuffers.clear();
     
-    // Buffer cleanup
+    // Internal cleanup
     delete indexBuff;
     delete depthBuff;
     delete frameBuff;
@@ -129,7 +130,7 @@ void kl::gpu::regenBuffers(const kl::ivec2& size) {
 
     // Buffer binding
     this->bindInternal();
-    this->setDepthTest(true);
+    this->setDSState(kl::dbuffer::Default);
 }
 
 // Sets the viewport
@@ -171,9 +172,9 @@ void kl::gpu::swap(bool vSync) {
     chain->Present(vSync, NULL);
 }
 
-// Sets the depth testing state
-void kl::gpu::setDepthTest(bool enabled) {
-    depthBuff->setState(enabled);
+// Sets the depth/stencil state
+void kl::gpu::setDSState(kl::dbuffer::STATE state) {
+    depthBuff->setState(state);
 }
 
 // Creates a new rasterizer state
@@ -225,6 +226,14 @@ kl::sampler* kl::gpu::newSampler(bool linear, bool mirror) {
 }
 bool kl::gpu::delSampler(kl::sampler* samp) {
     return samplers.delInst(samp);
+}
+
+// SBuffer
+kl::sbuffer* kl::gpu::newSBuffer(uint32_t size) {
+    return sbuffers.newInst(new kl::sbuffer(dev, devcon, size));
+}
+bool kl::gpu::delSBuffer(kl::sbuffer* sbuff) {
+    return sbuffers.delInst(sbuff);
 }
 
 // Returns the picking index

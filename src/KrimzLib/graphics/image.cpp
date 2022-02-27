@@ -96,7 +96,7 @@ void kl::image::setPixel(const kl::ivec2& point, const kl::color& color) {
 // Reads an image file and stores it in the image instance
 void kl::image::fromFile(const std::string& filePath) {
 	// Gdiplus init
-	ULONG_PTR gdiplusToken = NULL;
+	uint64_t gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
 	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
 		std::cout << "GdiPlus: Failed to init!";
@@ -104,10 +104,8 @@ void kl::image::fromFile(const std::string& filePath) {
 		exit(69);
 	}
 
-	// Loads image file
+	// Loading image file
 	Gdiplus::Bitmap* loadedBitmap = new Gdiplus::Bitmap(kl::convert::toWString(filePath).c_str());
-
-	// Checks load status
 	if (loadedBitmap->GetLastStatus()) {
 		printf("Could not load image file \"%s\".", filePath.c_str());
 		std::cin.get();
@@ -119,17 +117,10 @@ void kl::image::fromFile(const std::string& filePath) {
 
 	// Locking the bitmap data
 	Gdiplus::BitmapData bitmapData;
-	Gdiplus::Rect bitmapRect(0, 0, width, height);
-	loadedBitmap->LockBits(&bitmapRect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
+	loadedBitmap->LockBits(nullptr, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
 
 	// Loading the pixel data
-	const int bitmapStride = bitmapData.Stride / 4;
-	const uint32_t* bmPixels = (uint32_t*)bitmapData.Scan0;
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
-			pixels[size_t(y) * width + x] = *(kl::color*)(bmPixels + y * bitmapStride + x);
-		}
-	}
+	memcpy(&pixels[0], bitmapData.Scan0, pixels.size() * sizeof(kl::color));
 
 	// Cleanup
 	delete loadedBitmap;
@@ -161,9 +152,9 @@ void kl::image::toFile(const std::string& fileName) const {
 			for (int x = 0; x < width; x++) {
 				ss <<
 					x << " " << y << " => " <<
-					int(pixels[(uint64_t)y * width + x].r) << " " <<
-					int(pixels[(uint64_t)y * width + x].g) << " " <<
-					int(pixels[(uint64_t)y * width + x].b) << "\n";
+					int(pixels[uint64_t(y) * width + x].r) << " " <<
+					int(pixels[uint64_t(y) * width + x].g) << " " <<
+					int(pixels[uint64_t(y) * width + x].b) << "\n";
 			}
 		}
 		kl::file::write(fileName, ss.str());
@@ -183,20 +174,24 @@ void kl::image::toFile(const std::string& fileName) const {
 		exit(69);
 	}
 
-	// Pixel data transfer and saving to file
+	// Temp bitmap creation
 	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(width, height, PixelFormat32bppARGB);
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
-			kl::color tempPixel = getPixel(kl::ivec2(x, y));
-			tempBitmap->SetPixel(int(x), int(y), Gdiplus::Color(tempPixel.a, tempPixel.r, tempPixel.g, tempPixel.b));
-		}
-	}
+
+	// Locking the bitmap data
+	Gdiplus::BitmapData bitmapData;
+	tempBitmap->LockBits(nullptr, Gdiplus::ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
+
+	// Pixel data transfer
+	memcpy(bitmapData.Scan0, &pixels[0], pixels.size() * sizeof(kl::color));
+
+	// Unlocking the bitmap
+	tempBitmap->UnlockBits(&bitmapData);
+
+	// Saving to file
 	tempBitmap->Save(kl::convert::toWString(fileName).c_str(), formatToUse, nullptr);
 
-	// Bitmap deletion
+	// Cleanup
 	delete tempBitmap;
-
-	// Gdiplus cleanup
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
 

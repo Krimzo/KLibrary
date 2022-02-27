@@ -12,8 +12,10 @@ namespace kl {
 	class dbuffer {
 	private:
 		ID3D11DeviceContext* devcon = nullptr;
-		ID3D11DepthStencilState* stateEnabled = nullptr;
+		ID3D11DepthStencilState* stateDefault = nullptr;
 		ID3D11DepthStencilState* stateDisabled = nullptr;
+		ID3D11DepthStencilState* stateWrite = nullptr;
+		ID3D11DepthStencilState* stateMask = nullptr;
 		ID3D11DepthStencilView* view = nullptr;
 
 	public:
@@ -24,7 +26,13 @@ namespace kl {
 		~dbuffer();
 
 		// Binds the buffer
-		void setState(bool enabled);
+		enum STATE {
+			Default = 0,
+			Disabled,
+			Write,
+			Mask
+		};
+		void setState(STATE state);
 
 		// Returns the view pointer
 		ID3D11DepthStencilView* getView();

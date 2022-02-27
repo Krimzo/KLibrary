@@ -74,6 +74,11 @@ kl::vec4::vec4(const kl::color& color) {
 	w = color.a * toFloatCol;
 }
 
+// Getter
+kl::vec3 kl::vec4::xyz() const {
+	return kl::vec3(x, y, z);
+}
+
 // Addition
 kl::vec4 kl::vec4::add(const kl::vec4& obj) const {
 	return kl::vec4(x + obj.x, y + obj.y, z + obj.z, w + obj.w);

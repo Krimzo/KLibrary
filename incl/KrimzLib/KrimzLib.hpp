@@ -8,6 +8,8 @@
 #include "KrimzLib/vecmath/vec4.h"
 #include "KrimzLib/vecmath/mat3.h"
 #include "KrimzLib/vecmath/mat4.h"
+#include "KrimzLib/vecmath/plane.h"
+#include "KrimzLib/vecmath/ray.h"
 
 // Including graphics
 #include "KrimzLib/graphics/image.h"
@@ -34,6 +36,7 @@
 #include "KrimzLib/dx/fbuffer.h"
 #include "KrimzLib/dx/dbuffer.h"
 #include "KrimzLib/dx/ibuffer.h"
+#include "KrimzLib/dx/sbuffer.h"
 #include "KrimzLib/dx/raster.h"
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"

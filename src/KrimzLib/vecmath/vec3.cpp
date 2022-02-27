@@ -38,6 +38,11 @@ kl::vec3::vec3(const kl::color& color) {
 	z = color.b * toFloatCol;
 }
 
+// Getter
+kl::vec2 kl::vec3::xy() const {
+	return kl::vec2(x, y);
+}
+
 // Addition
 kl::vec3 kl::vec3::add(const kl::vec3& obj) const {
 	return kl::vec3(x + obj.x, y + obj.y, z + obj.z);
@@ -174,6 +179,14 @@ kl::vec3 kl::vec3::rotate(float angle, const kl::vec3& axis) const {
 	temp.z = (xz - yw + xz - yw) * x + (yz + yz + xw + xw) * y + (z2 - y2 - x2 + w2) * z;
 	return temp;
 }
+
+// Constants
+const kl::vec3 kl::vec3::pos_x = kl::vec3( 1.0f,  0.0f,  0.0f);
+const kl::vec3 kl::vec3::neg_x = kl::vec3(-1.0f,  0.0f,  0.0f);
+const kl::vec3 kl::vec3::pos_y = kl::vec3( 0.0f,  1.0f,  0.0f);
+const kl::vec3 kl::vec3::neg_y = kl::vec3( 0.0f, -1.0f,  0.0f);
+const kl::vec3 kl::vec3::pos_z = kl::vec3( 0.0f,  0.0f,  1.0f);
+const kl::vec3 kl::vec3::neg_z = kl::vec3( 0.0f,  0.0f, -1.0f);
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::vec3& obj) {

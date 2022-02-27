@@ -21,6 +21,9 @@ namespace kl {
 		vec3(float x, const kl::vec2& v);
 		vec3(const kl::color& color);
 
+		// Getter
+		kl::vec2 xy() const;
+
 		// Addition
 		kl::vec3 add(const kl::vec3& obj) const;
 		kl::vec3 operator+(const kl::vec3& obj) const;
@@ -75,6 +78,14 @@ namespace kl {
 
 		// Returns a rotated vector around the given axis
 		kl::vec3 rotate(float angle, const kl::vec3& axis) const;
+
+		// Constans
+		static const kl::vec3 pos_x;
+		static const kl::vec3 neg_x;
+		static const kl::vec3 pos_y;
+		static const kl::vec3 neg_y;
+		static const kl::vec3 pos_z;
+		static const kl::vec3 neg_z;
 	};
 
 	// Overloading std::cout

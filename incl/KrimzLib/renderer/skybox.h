@@ -21,9 +21,6 @@ namespace kl {
 		kl::texture* box_tex = nullptr;
 		kl::shaders* sky_sh = nullptr;
 
-		// Box vertices
-		static const std::vector<kl::vertex> boxVertices;
-
 	public:
 		// Name
 		std::string name;

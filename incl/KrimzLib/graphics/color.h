@@ -35,6 +35,7 @@ namespace kl {
 		static const kl::color black   = kl::color(  0,   0,   0);
 		static const kl::color white   = kl::color(255, 255, 255);
 		static const kl::color gray    = kl::color( 50,  50,  50);
+		static const kl::color lgray   = kl::color(100, 100, 100);
 		static const kl::color red     = kl::color(255,   0,   0);
 		static const kl::color green   = kl::color(  0, 255,   0);
 		static const kl::color blue    = kl::color(  0,   0, 255);

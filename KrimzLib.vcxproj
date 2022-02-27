@@ -170,6 +170,7 @@
     <ClCompile Include="src\KrimzLib\dx\mesh.cpp" />
     <ClCompile Include="src\KrimzLib\dx\raster.cpp" />
     <ClCompile Include="src\KrimzLib\dx\sampler.cpp" />
+    <ClCompile Include="src\KrimzLib\dx\sbuffer.cpp" />
     <ClCompile Include="src\KrimzLib\dx\shaders.cpp" />
     <ClCompile Include="src\KrimzLib\dx\texture.cpp" />
     <ClCompile Include="src\KrimzLib\entity\entity.cpp" />
@@ -190,6 +191,8 @@
     <ClCompile Include="src\KrimzLib\vecmath\ivec2.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\mat3.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\mat4.cpp" />
+    <ClCompile Include="src\KrimzLib\vecmath\plane.cpp" />
+    <ClCompile Include="src\KrimzLib\vecmath\ray.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\vec2.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\vec3.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\vec4.cpp" />
@@ -218,6 +221,7 @@
     <ClInclude Include="incl\KrimzLib\dx\mesh.h" />
     <ClInclude Include="incl\KrimzLib\dx\raster.h" />
     <ClInclude Include="incl\KrimzLib\dx\sampler.h" />
+    <ClInclude Include="incl\KrimzLib\dx\sbuffer.h" />
     <ClInclude Include="incl\KrimzLib\dx\shaders.h" />
     <ClInclude Include="incl\KrimzLib\dx\texture.h" />
     <ClInclude Include="incl\KrimzLib\entity\entity.h" />
@@ -240,6 +244,8 @@
     <ClInclude Include="incl\KrimzLib\vecmath\ivec2.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\mat3.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\mat4.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\plane.h" />
+    <ClInclude Include="incl\KrimzLib\vecmath\ray.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\vec2.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\vec3.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\vec4.h" />

@@ -65,10 +65,16 @@ namespace kl {
 		float dot(const kl::vec2& a) const;
 
 		// Returns the angle between the given vector and self
-		float angle(const kl::vec2& a) const;
+		float angle(const kl::vec2& a, bool full = false) const;
 
 		// Returns a rotated vector around the given point
 		kl::vec2 rotate(float angle) const;
+
+		// Constans
+		static const kl::vec2 pos_x;
+		static const kl::vec2 neg_x;
+		static const kl::vec2 pos_y;
+		static const kl::vec2 neg_y;
 	};
 
 	// Overloading std::cout

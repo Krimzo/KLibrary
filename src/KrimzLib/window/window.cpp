@@ -16,9 +16,9 @@ kl::window::window() {
 	this->update = []() {};
 	this->end = []() {};
 	this->onResize = [](const kl::ivec2& size) {};
-	
+
 	// Winapi variables
-	this->hInstance = GetModuleHandle(nullptr);
+	this->hInstance = GetModuleHandleA(nullptr);
 	this->hwnd = nullptr;
 	this->hdc = nullptr;
 	this->wndMsg = {};
@@ -35,12 +35,12 @@ kl::window::~window() {
 }
 
 // Registers a new window class
-void kl::window::registerWindowClass(const std::wstring& name) {
-	WNDCLASSEXW windowClass = {};
-	windowClass.cbSize = sizeof(WNDCLASSEX);
+void kl::window::registerWindowClass(const std::string& name) {
+	WNDCLASSEXA windowClass = {};
+	windowClass.cbSize = sizeof(WNDCLASSEXA);
 	windowClass.style = CS_OWNDC;
 	windowClass.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		kl::window* callingWin = (kl::window*)GetWindowLongPtrW(hwnd, GWLP_USERDATA);
+		kl::window* callingWin = (kl::window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		return callingWin->WndProc(hwnd, msg, wParam, lParam);
 	};
 	windowClass.cbClsExtra = 0;
@@ -52,7 +52,7 @@ void kl::window::registerWindowClass(const std::wstring& name) {
 	windowClass.lpszMenuName = nullptr;
 	windowClass.lpszClassName = name.c_str();
 	windowClass.hIconSm = nullptr;
-	if (!RegisterClassExW(&windowClass)) {
+	if (!RegisterClassExA(&windowClass)) {
 		std::cout << "WinApi: Could not register a window class!";
 		std::cin.get();
 		exit(69);
@@ -60,28 +60,28 @@ void kl::window::registerWindowClass(const std::wstring& name) {
 }
 
 // Creates a new window
-void kl::window::createWindow(const kl::ivec2& size, const std::wstring& name, bool resizeable) {
+void kl::window::createWindow(const kl::ivec2& size, const std::string& name, bool resizeable) {
 	// Setting the window properties
 	winStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 	RECT adjustedWindowSize = { 0, 0, (LONG)size.x, (LONG)size.y };
-	AdjustWindowRect(&adjustedWindowSize, winStyle, FALSE);
+	AdjustWindowRect(&adjustedWindowSize, winStyle, false);
 	const kl::ivec2 adjSize(adjustedWindowSize.right - adjustedWindowSize.left, adjustedWindowSize.bottom - adjustedWindowSize.top);
 
 	// Creating the window
-	hwnd = CreateWindowExW(0, name.c_str(), name.c_str(), winStyle, (kl::window::screen::width / 2 - adjSize.x / 2), (kl::window::screen::height / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, hInstance, nullptr);
+	hwnd = CreateWindowExA(0, name.c_str(), name.c_str(), winStyle, (kl::window::screen::width / 2 - adjSize.x / 2), (kl::window::screen::height / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, hInstance, nullptr);
 	if (!hwnd) {
 		std::cout << "WinApi: Could not create a window!";
 		std::cin.get();
 		exit(69);
 	}
-	SetWindowLongPtrW(hwnd, GWLP_USERDATA, (long long)this);
+	SetWindowLongPtrA(hwnd, GWLP_USERDATA, (long long)this);
 
 	// Setting and getting window info
 	ShowWindow(hwnd, SW_SHOW);
 	hdc = GetDC(hwnd);
 
 	// Saving a complete window style
-	winStyle = GetWindowLong(hwnd, GWL_STYLE);
+	winStyle = GetWindowLongA(hwnd, GWL_STYLE);
 }
 
 // Handles the windows message
@@ -92,7 +92,7 @@ LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		this->onResize(kl::ivec2(LOWORD(lParam), HIWORD(lParam)));
 		break;
 	}
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	return DefWindowProcA(hwnd, msg, wParam, lParam);
 }
 void kl::window::handleMessage() {
 	// ImGui
@@ -141,21 +141,18 @@ void kl::window::handleMessage() {
 		break;
 
 	default:
-		DispatchMessageW(&wndMsg);
+		DispatchMessageA(&wndMsg);
 		break;
 	}
 }
 
 // Window creation
 void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool imgui) {
-	// Converting window name to a wstring
-	const std::wstring wName = kl::convert::toWString(name);
-
 	// Registering winapi window class
-	registerWindowClass(wName);
+	registerWindowClass(name);
 
 	// Creating a window
-	createWindow(size, wName, resizeable);
+	createWindow(size, name, resizeable);
 
 	// Binding the mouse
 	this->mouse.bind(hwnd);
@@ -167,11 +164,11 @@ void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool r
 	}
 
 	// Starting the update loops
-	SetCursor(LoadCursor(NULL, IDC_ARROW));
+	SetCursor(LoadCursorA(nullptr, LPCSTR(IDC_ARROW)));
 	if (continuous) {
 		start();
 		while (IsWindow(hwnd)) {
-			while (PeekMessageW(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
+			while (PeekMessageA(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
 				handleMessage();
 			}
 			update();
@@ -181,7 +178,7 @@ void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool r
 	else {
 		start();
 		while (IsWindow(hwnd)) {
-			GetMessageW(&wndMsg, hwnd, 0, 0);
+			GetMessageA(&wndMsg, hwnd, 0, 0);
 			handleMessage();
 			update();
 		}
@@ -194,12 +191,12 @@ void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool r
 	}
 
 	// Cleanup
-	UnregisterClassW(wName.c_str(), hInstance);
+	UnregisterClassA(name.c_str(), hInstance);
 	hdc = nullptr;
 	hwnd = nullptr;
 }
 void kl::window::stop() const {
-	PostMessageW(hwnd, WM_CLOSE, 0, 0);
+	PostMessageA(hwnd, WM_CLOSE, 0, 0);
 }
 
 // Returns a handle to the window
@@ -214,7 +211,7 @@ void kl::window::setFullscreen(bool enable) {
 		GetWindowPlacement(hwnd, &winPlace);
 
 		// Enabling the fullscreen
-		SetWindowLong(hwnd, GWL_STYLE, winStyle & ~WS_OVERLAPPEDWINDOW);
+		SetWindowLongA(hwnd, GWL_STYLE, winStyle & ~WS_OVERLAPPEDWINDOW);
 		SetWindowPos(hwnd, HWND_TOP, 0, 0, kl::window::screen::width, kl::window::screen::height, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
 		// Setting info
@@ -222,7 +219,7 @@ void kl::window::setFullscreen(bool enable) {
 	}
 	else if (inFull && !enable) {
 		// Resetting the size
-		SetWindowLong(hwnd, GWL_STYLE, winStyle);
+		SetWindowLongA(hwnd, GWL_STYLE, winStyle);
 		SetWindowPlacement(hwnd, &winPlace);
 		SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
@@ -273,8 +270,8 @@ void kl::window::setIcon(const std::string& filePath) {
 	}
 
 	// Sending the icon
-	SendMessage(this->hwnd, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
-	SendMessage(this->hwnd, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
+	SendMessageA(this->hwnd, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
+	SendMessageA(this->hwnd, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
 }
 
 // Sets the pixels of the window

@@ -21,8 +21,8 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
     texDesc.SampleDesc.Count = 1;
     texDesc.Usage = D3D11_USAGE_DEFAULT;
     texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    texDesc.CPUAccessFlags = NULL;
-    texDesc.MiscFlags = NULL;
+
+    // Texture data descriptor creation
     D3D11_SUBRESOURCE_DATA texData = {};
     texData.pSysMem = flipped.pointer();
     texData.SysMemPitch = img.getWidth() * sizeof(uint32_t);
@@ -37,12 +37,7 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
     }
 
     // Texture view creation
-    D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
-    viewDesc.Format = texDesc.Format;
-    viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    viewDesc.Texture2D.MipLevels = 1;
-    viewDesc.Texture2D.MostDetailedMip = 0;
-    dev->CreateShaderResourceView(tex, &viewDesc, &view);
+    dev->CreateShaderResourceView(tex, nullptr, &view);
     if (!view) {
         std::cout << "DirectX: Could not create a 2D texture view!";
         std::cin.get();
@@ -73,8 +68,9 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
     texDesc.SampleDesc.Count = 1;
     texDesc.Usage = D3D11_USAGE_DEFAULT;
     texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    texDesc.CPUAccessFlags = NULL;
     texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+    // Texture data descriptor creation
     D3D11_SUBRESOURCE_DATA texData[6] = {
         {  right.pointer(), front.getWidth() * sizeof(uint32_t), 0 },
         {   left.pointer(), front.getWidth() * sizeof(uint32_t), 0 },
@@ -94,12 +90,7 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
     }
 
     // Texture view creation
-    D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
-    viewDesc.Format = texDesc.Format;
-    viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-    viewDesc.Texture2D.MipLevels = 1;
-    viewDesc.Texture2D.MostDetailedMip = 0;
-    dev->CreateShaderResourceView(tex, &viewDesc, &view);
+    dev->CreateShaderResourceView(tex, nullptr, &view);
     if (!view) {
         std::cout << "DirectX: Could not create a 2D texture view!";
         std::cin.get();

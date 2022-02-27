@@ -54,6 +54,9 @@ namespace kl {
 		// Loads the identity matrix
 		void setIdentity();
 
+		// Returns the inverse matrix
+		kl::mat3 inverse() const;
+
 		// Returns a translation matrix
 		static kl::mat3 translate(const kl::vec2& translation);
 

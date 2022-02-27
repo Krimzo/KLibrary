@@ -78,9 +78,9 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 
 		// Rendering skybox
 		if (skybox) {
-			gpu->setDepthTest(false);
+			gpu->setDSState(kl::dbuffer::Disabled);
 			skybox->render(camera.matrix());
-			gpu->setDepthTest(true);
+			gpu->setDSState(kl::dbuffer::Default);
 		}
 
 		// Setting the camera data
@@ -97,7 +97,7 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 				default_sh->setVertData(&def_vert_data);
 
 				// Rendering the object
-				entities[i]->render();
+				entities[i]->render(true);
 			}
 		}
 

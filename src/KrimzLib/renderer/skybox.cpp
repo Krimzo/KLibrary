@@ -2,7 +2,7 @@
 
 
 // Skybox box vertices
-const std::vector<kl::vertex> kl::skybox::boxVertices {
+const std::vector<kl::vertex> boxVertices {
 	kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3( 1,  1, -1)),
 	kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3( 1, -1,  1)),
 	kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3(-1,  1, -1)),

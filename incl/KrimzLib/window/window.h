@@ -26,7 +26,7 @@
 
 namespace kl {
 	class window {
-		private:
+	private:
 		// Winapi variables
 		HINSTANCE hInstance;
 		HWND hwnd;
@@ -39,10 +39,10 @@ namespace kl {
 		WINDOWPLACEMENT winPlace;
 
 		// Registers a new window class
-		void registerWindowClass(const std::wstring& name);
+		void registerWindowClass(const std::string& name);
 
 		// Creates a new window
-		void createWindow(const kl::ivec2& size, const std::wstring& name, bool resizeable);
+		void createWindow(const kl::ivec2& size, const std::string& name, bool resizeable);
 
 		// Handles the windows message
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -78,7 +78,7 @@ namespace kl {
 
 		// Window creation
 		void startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool imgui = false);
-		
+
 		// Window stop
 		void stop() const;
 

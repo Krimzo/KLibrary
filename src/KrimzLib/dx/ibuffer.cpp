@@ -46,7 +46,6 @@ kl::ibuffer::ibuffer(ID3D11Device* dev, ID3D11DeviceContext* devcon, int width, 
     stagTexDes.Format = indTexDes.Format;
     stagTexDes.SampleDesc.Count = 1;
     stagTexDes.Usage = D3D11_USAGE_STAGING;
-    stagTexDes.BindFlags = NULL;
     stagTexDes.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
     dev->CreateTexture2D(&stagTexDes, nullptr, &stagTex);
     if (!stagTex) {

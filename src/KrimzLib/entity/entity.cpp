@@ -28,9 +28,11 @@ kl::mat4 kl::entity::matrix() const {
 }
 
 // Renders the mesh
-void kl::entity::render() const {
+void kl::entity::render(bool useTex) const {
 	// Binding the texture
-	texture->bind(0);
+	if (useTex) {
+		texture->bind(0);
+	}
 
 	// Rendering
 	mesh->draw();

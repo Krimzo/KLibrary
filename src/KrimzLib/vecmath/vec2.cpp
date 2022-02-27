@@ -126,7 +126,10 @@ float kl::vec2::dot(const vec2& a) const {
 }
 
 // Returns the angle between the given vector and self
-float kl::vec2::angle(const kl::vec2& a) const {
+float kl::vec2::angle(const kl::vec2& a, bool full) const {
+	if (full) {
+		return kl::convert::toDegrees(atan2(x * a.y - y * a.x, x * a.x + y * a.y));
+	}
 	return kl::convert::toDegrees(acos(this->normalize().dot(a.normalize())));
 }
 
@@ -136,6 +139,12 @@ kl::vec2 kl::vec2::rotate(float angle) const {
 	const float cosA = cos(kl::convert::toRadians(angle));
 	return kl::vec2(cosA * x - sinA * y, sinA * x + cosA * y);
 }
+
+// Constants
+const kl::vec2 kl::vec2::pos_x = kl::vec2( 1.0f,  0.0f);
+const kl::vec2 kl::vec2::neg_x = kl::vec2(-1.0f,  0.0f);
+const kl::vec2 kl::vec2::pos_y = kl::vec2( 0.0f,  1.0f);
+const kl::vec2 kl::vec2::neg_y = kl::vec2( 0.0f, -1.0f);
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::vec2& obj) {
