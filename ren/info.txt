@@ -1,7 +1,16 @@
-Resolution: 15360x8640
-Pixel count: 132710400
-Thread 1 time:   3.04 seconds
-Thread 2 time:   5.32 seconds
-Thread 3 time:   9.47 seconds
-Thread 4 time:   7.67 seconds
-Total time: 9.47 seconds
+Resolution: 7680 x 4320
+Pixel count: 33177600
+Bounce limit: 3
+
+Thread 1 time:   1.25 seconds
+Thread 2 time:   1.53 seconds
+Thread 3 time:   2.49 seconds
+Thread 4 time:   2.30 seconds
+Total time: 2.49 seconds
+
+Sphere 1 | Center:     0.00 -5004.00    20.00 | Radius:  5000.00 | Color:     0.20     0.20     0.20
+Sphere 2 | Center:     0.00     0.00    20.00 | Radius:     4.00 | Color:     1.00     0.33     0.35
+Sphere 3 | Center:    -5.00    -1.00    15.00 | Radius:     2.00 | Color:     0.90     0.76     0.45
+Sphere 4 | Center:    -5.00     0.00    25.00 | Radius:     3.00 | Color:     0.65     0.76     0.96
+Sphere 5 | Center:     5.50     0.00    15.00 | Radius:     3.00 | Color:     0.12     0.90     0.90
+Sphere 6 | Center:     0.00    20.00    30.00 | Radius:     3.00 | Color:     1.00     1.00     1.00

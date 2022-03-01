@@ -5,11 +5,15 @@
 kl::sphere::sphere() {
 
 }
-kl::sphere::sphere(const kl::vec3& center, float radius, const kl::vec3& surfColor, const kl::vec3& emissColor = 0, float transparency = 0, float reflection = 0) {
+kl::sphere::sphere(const kl::vec3& center, float radius, const kl::vec3& color, float reflectivity, float emission) {
     this->center = center;
     this->radius = radius;
-    this->surfColor = surfColor;
-    this->emissColor = emissColor;
-    this->transparency = transparency;
-    this->reflection = reflection;
+    this->color = color;
+    this->reflectivity = reflectivity;
+    this->emission = emission;
+}
+
+// Calculates the emissive color
+kl::vec3 kl::sphere::calcEmiss() const {
+    return color * emission;
 }
