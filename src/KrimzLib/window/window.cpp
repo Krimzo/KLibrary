@@ -15,7 +15,7 @@ kl::window::window() {
 	this->start = []() {};
 	this->update = []() {};
 	this->end = []() {};
-	this->onResize = [](const kl::ivec2& size) {};
+	this->resize = [](const kl::ivec2& size) {};
 
 	// Winapi variables
 	this->hInstance = GetModuleHandleA(nullptr);
@@ -89,7 +89,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 	case WM_SIZE:
-		this->onResize(kl::ivec2(LOWORD(lParam), HIWORD(lParam)));
+		this->resize(kl::ivec2(LOWORD(lParam), HIWORD(lParam)));
 		break;
 	}
 	return DefWindowProcA(hwnd, msg, wParam, lParam);

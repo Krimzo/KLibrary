@@ -202,7 +202,7 @@
     <ClCompile Include="src\KrimzLib\window\keys.cpp" />
     <ClCompile Include="src\KrimzLib\window\mouse.cpp" />
     <ClCompile Include="src\KrimzLib\window\window.cpp" />
-    <ClCompile Include="test\Raytracing_cpu.cpp" />
+    <ClCompile Include="test\Raytracing_gpu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="incl\ImGui\imconfig.h" />

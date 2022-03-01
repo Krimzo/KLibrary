@@ -68,7 +68,7 @@ namespace kl {
 		std::function<void(void)> start;
 		std::function<void(void)> update;
 		std::function<void(void)> end;
-		std::function<void(const kl::ivec2& size)> onResize;
+		std::function<void(const kl::ivec2& size)> resize;
 
 		// Constructor
 		window();

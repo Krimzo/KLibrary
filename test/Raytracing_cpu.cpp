@@ -143,7 +143,7 @@ int main() {
             raydir /= raydir.w;
 
             // Tracing the pixel color
-            const kl::vec3 pixel = TraceRay(kl::ray(kl::vec3(0), raydir.xyz().normalize()), spheres, 0, bounceLimit);
+            const kl::vec3 pixel = TraceRay(kl::ray(cam.position, raydir.xyz().normalize()), spheres, 0, bounceLimit);
 
             // Saving the pixel
             frame.setPixel(kl::ivec2(x, y), kl::convert::toColor(pixel));

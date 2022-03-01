@@ -63,6 +63,9 @@ kl::gpu::gpu(HWND hwnd, bool imgui) {
     // Generating the buffers
     this->regenBuffers(kl::ivec2(clientArea.right, clientArea.bottom));
 
+    // Creating a default raster
+    this->newRaster(false, false)->bind();
+
     // Viewport setup
     this->setViewport(kl::ivec2(clientArea.left, clientArea.top), kl::ivec2(clientArea.right, clientArea.bottom));
 

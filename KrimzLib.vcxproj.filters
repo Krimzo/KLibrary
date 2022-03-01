@@ -162,7 +162,7 @@
     <ClCompile Include="src\KrimzLib\thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\Raytracing_cpu.cpp">
+    <ClCompile Include="test\Raytracing_gpu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
