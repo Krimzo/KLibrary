@@ -137,22 +137,22 @@ void kl::console::waitForAny(bool echo) {
 // Outputs a progress bar on the console
 void kl::console::progressBar(const std::string& message, int outputY, float percentage) {
 	// Prep
-	percentage = max(min(percentage, 1), 0);
-	int barLen = console::getSize().x - int(message.length() - 11);
-	int doneLen = int(barLen * percentage);
-	int emptyLen = barLen - doneLen;
+	percentage = max(min(percentage, 1.0f), 0.0f);
+	const int barLen = console::getSize().x - int(message.length()) - 12;
+	const int finishLen = int(barLen * percentage);
+	const int emptyLen = barLen - finishLen;
 
 	// Printing
 	std::stringstream ss;
-	ss << "  " << message << "[";
-	for (int i = 0; i < doneLen; i++) {
+	ss << "  " << message << " [";
+	for (int i = 0; i < finishLen; i++) {
 		ss << '#';
 	}
 	for (int i = 0; i < emptyLen; i++) {
 		ss << ' ';
 	}
 	console::setCursor(kl::ivec2(0, outputY));
-	printf("%s] %3d%% \n", ss.str().c_str(), int(percentage * 100));
+	printf("%s] %3d%% ", ss.str().c_str(), int(percentage * 100.0f));
 }
 
 // Fast console writing

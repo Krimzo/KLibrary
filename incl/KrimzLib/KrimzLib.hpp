@@ -1,5 +1,6 @@
 #pragma once
 
+
 // Including math
 #include "KrimzLib/math.h"
 #include "KrimzLib/vecmath/ivec2.h"
@@ -8,8 +9,13 @@
 #include "KrimzLib/vecmath/vec4.h"
 #include "KrimzLib/vecmath/mat3.h"
 #include "KrimzLib/vecmath/mat4.h"
-#include "KrimzLib/vecmath/plane.h"
-#include "KrimzLib/vecmath/ray.h"
+
+// Including the geometry
+#include "KrimzLib/geometry/ray.h"
+#include "KrimzLib/geometry/plane.h"
+#include "KrimzLib/geometry/sphere.h"
+#include "KrimzLib/geometry/vertex.h"
+#include "KrimzLib/geometry/triangle.h"
 
 // Including graphics
 #include "KrimzLib/graphics/image.h"
@@ -22,6 +28,7 @@
 #include "KrimzLib/console.h"
 #include "KrimzLib/file.h"
 #include "KrimzLib/web.h"
+#include "KrimzLib/thread.h"
 
 // Including memory
 #include "KrimzLib/memory/pbuffer.h"
@@ -46,10 +53,6 @@
 
 // Including ImGui
 #include "KrimzLib/igui/igui.h"
-
-// Including the geometry
-#include "KrimzLib/geometry/vertex.h"
-#include "KrimzLib/geometry/triangle.h"
 
 // Including the light
 #include "KrimzLib/light/ambient.h"

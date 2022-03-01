@@ -175,6 +175,7 @@
     <ClCompile Include="src\KrimzLib\dx\texture.cpp" />
     <ClCompile Include="src\KrimzLib\entity\entity.cpp" />
     <ClCompile Include="src\KrimzLib\file.cpp" />
+    <ClCompile Include="src\KrimzLib\geometry\sphere.cpp" />
     <ClCompile Include="src\KrimzLib\geometry\triangle.cpp" />
     <ClCompile Include="src\KrimzLib\geometry\vertex.cpp" />
     <ClCompile Include="src\KrimzLib\graphics\color.cpp" />
@@ -187,12 +188,13 @@
     <ClCompile Include="src\KrimzLib\renderer\camera.cpp" />
     <ClCompile Include="src\KrimzLib\renderer\renderer.cpp" />
     <ClCompile Include="src\KrimzLib\renderer\skybox.cpp" />
+    <ClCompile Include="src\KrimzLib\thread.cpp" />
     <ClCompile Include="src\KrimzLib\time.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\ivec2.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\mat3.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\mat4.cpp" />
-    <ClCompile Include="src\KrimzLib\vecmath\plane.cpp" />
-    <ClCompile Include="src\KrimzLib\vecmath\ray.cpp" />
+    <ClCompile Include="src\KrimzLib\geometry\plane.cpp" />
+    <ClCompile Include="src\KrimzLib\geometry\ray.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\vec2.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\vec3.cpp" />
     <ClCompile Include="src\KrimzLib\vecmath\vec4.cpp" />
@@ -226,6 +228,7 @@
     <ClInclude Include="incl\KrimzLib\dx\texture.h" />
     <ClInclude Include="incl\KrimzLib\entity\entity.h" />
     <ClInclude Include="incl\KrimzLib\file.h" />
+    <ClInclude Include="incl\KrimzLib\geometry\sphere.h" />
     <ClInclude Include="incl\KrimzLib\geometry\triangle.h" />
     <ClInclude Include="incl\KrimzLib\geometry\vertex.h" />
     <ClInclude Include="incl\KrimzLib\graphics\color.h" />
@@ -240,12 +243,13 @@
     <ClInclude Include="incl\KrimzLib\renderer\camera.h" />
     <ClInclude Include="incl\KrimzLib\renderer\renderer.h" />
     <ClInclude Include="incl\KrimzLib\renderer\skybox.h" />
+    <ClInclude Include="incl\KrimzLib\thread.h" />
     <ClInclude Include="incl\KrimzLib\time.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\ivec2.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\mat3.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\mat4.h" />
-    <ClInclude Include="incl\KrimzLib\vecmath\plane.h" />
-    <ClInclude Include="incl\KrimzLib\vecmath\ray.h" />
+    <ClInclude Include="incl\KrimzLib\geometry\plane.h" />
+    <ClInclude Include="incl\KrimzLib\geometry\ray.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\vec2.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\vec3.h" />
     <ClInclude Include="incl\KrimzLib\vecmath\vec4.h" />

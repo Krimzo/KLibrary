@@ -1,0 +1,7 @@
+Resolution: 15360x8640
+Pixel count: 132710400
+Thread 1 time:   3.04 seconds
+Thread 2 time:   5.32 seconds
+Thread 3 time:   9.47 seconds
+Thread 4 time:   7.67 seconds
+Total time: 9.47 seconds

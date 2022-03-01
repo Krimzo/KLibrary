@@ -46,5 +46,6 @@ namespace kl {
 		static const kl::color magenta = kl::color(155,   0, 155);
 		static const kl::color crimson = kl::color(100,   0,   0);
 		static const kl::color wheat   = kl::color(245, 220, 180);
+		static const kl::color sky     = kl::color(190, 245, 255);
 	};
 }
