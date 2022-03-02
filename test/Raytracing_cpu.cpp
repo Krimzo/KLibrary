@@ -131,7 +131,7 @@ int main() {
     // Tracing the rays
     kl::timer tim;
     kl::time::interval();
-    kl::thread::ParallelFor(0, frame.getHeight(), [&](int t, int y) {
+    kl::thread::parallelFor(0, frame.getHeight(), [&](int t, int y) {
         for (int x = 0; x < frame.getWidth(); x++) {
             // Calculating ndc pixel coordinates
             kl::vec2 ndc = kl::vec2(float(x), float(frame.getHeight() - y)) / kl::vec2(float(frame.getWidth()), float(frame.getHeight()));

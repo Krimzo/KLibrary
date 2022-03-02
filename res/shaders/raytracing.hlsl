@@ -146,12 +146,9 @@ float3 TraceRayDefault(Ray ray) {
         const float fresnelEffect = mixRatio + pow(1.0f - facingRatio, 3.0f) * (1.0f - mixRatio);
 
         // Reflection
-        float3 reflection = 1.0f;
-        if (spheres[interSphereID].reflectivity > 0.0f) {
-            float3 reflDir = normalize(ray.direction - interNorm * 2 * dot(ray.direction, interNorm));
-            Ray reflRay = { interPoin + interNorm, reflDir };
-            reflection = TraceRayDiffuse(reflRay);
-        }
+        float3 reflDir = normalize(ray.direction - interNorm * 2 * dot(ray.direction, interNorm));
+        Ray reflRay = { interPoin + interNorm, reflDir };
+        float3 reflection = TraceRayDiffuse(reflRay);
 
         // Ray color
         rayColor = (reflection * fresnelEffect) * spheres[interSphereID].color;

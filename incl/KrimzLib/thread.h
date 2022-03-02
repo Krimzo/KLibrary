@@ -8,6 +8,6 @@
 namespace kl {
 	namespace thread {
         // Multithreaded for loop
-		void ParallelFor(int startInclusive, int endExclusive, std::function<void(int, int)> loopBody, int threadCount = 4);
+		void parallelFor(int startInclusive, int endExclusive, std::function<void(int, int)> loopBody, int threadCount = 4);
 	}
 }

@@ -2,7 +2,7 @@
 
 
 // Multithreaded for loop
-void kl::thread::ParallelFor(int startInclusive, int endExclusive, std::function<void(int, int)> loopBody, int threadCount) {
+void kl::thread::parallelFor(int startInclusive, int endExclusive, std::function<void(int, int)> loopBody, int threadCount) {
     // Thread storage
     std::vector<std::thread> threads(threadCount);
 
@@ -15,7 +15,7 @@ void kl::thread::ParallelFor(int startInclusive, int endExclusive, std::function
             for (int i = start; i < end; i++) {
                 loopBody(t, i);
             }
-            }, loopStart, loopEnd);
+        }, loopStart, loopEnd);
     }
 
     // Waiting for the threads to finish

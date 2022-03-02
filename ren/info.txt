@@ -2,10 +2,10 @@ Resolution: 7680 x 4320
 Pixel count: 33177600
 Bounce limit: 3
 
-Thread 1 time:   1.31 seconds
-Thread 2 time:   1.64 seconds
+Thread 1 time:   0.64 seconds
+Thread 2 time:   1.60 seconds
 Thread 3 time:   2.58 seconds
-Thread 4 time:   2.38 seconds
+Thread 4 time:   2.36 seconds
 Total time: 2.58 seconds
 
 Sphere 1 | Center:     0.00 -5004.00    20.00 | Radius:  5000.00 | Color:     0.20     0.20     0.20
