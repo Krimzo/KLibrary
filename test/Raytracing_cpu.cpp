@@ -1,16 +1,16 @@
 #include "KrimzLib/KrimzLib.hpp"
 
 
-kl::vec3 TraceRay(const kl::ray& ray, const std::vector<kl::sphere>& spheres, int bounce, int maxBounces, const kl::color& background = { 150, 150, 150 }) {
+kl::float3 TraceRay(const kl::ray& ray, const std::vector<kl::sphere>& spheres, int bounce, int maxBounces, const kl::color& background = { 150, 150, 150 }) {
     // Intersected point and sphere
-    kl::vec3 interPoin;
+    kl::float3 interPoin;
     const kl::sphere* interSphere = nullptr;
 
     // Finding the intersection point
     float interDis = INFINITY;
     for (int i = 0; i < spheres.size(); i++) {
         // Data buffers
-        kl::vec3 tempInter;
+        kl::float3 tempInter;
         float tempDis = 0;
 
         // Intersection test
@@ -35,7 +35,7 @@ kl::vec3 TraceRay(const kl::ray& ray, const std::vector<kl::sphere>& spheres, in
     }
 
     // Intersection normal calculation
-    kl::vec3 interNorm = (interPoin - interSphere->center).normalize();
+    kl::float3 interNorm = (interPoin - interSphere->center).normalize();
 
     // In sphere test
     bool insideSph = false;
@@ -45,7 +45,7 @@ kl::vec3 TraceRay(const kl::ray& ray, const std::vector<kl::sphere>& spheres, in
     }
 
     // Reflection test
-    kl::vec3 rayColor;
+    kl::float3 rayColor;
     if (interSphere->reflectivity > 0.0f && bounce < maxBounces) {
         // Facing ratio
         const float facingRatio = -ray.direction.dot(interNorm);
@@ -55,9 +55,9 @@ kl::vec3 TraceRay(const kl::ray& ray, const std::vector<kl::sphere>& spheres, in
         const float fresnelEffect = mixRatio + pow(1.0f - facingRatio, 3.0f) * (1.0f - mixRatio);
 
         // Reflection
-        kl::vec3 reflection;
+        kl::float3 reflection;
         if (interSphere->reflectivity > 0.0f) {
-            kl::vec3 reflDir = (ray.direction - interNorm * 2 * ray.direction.dot(interNorm)).normalize();
+            kl::float3 reflDir = (ray.direction - interNorm * 2 * ray.direction.dot(interNorm)).normalize();
             reflection = TraceRay(kl::ray(interPoin + interNorm, reflDir), spheres, bounce + 1, maxBounces);
         }
 
@@ -67,7 +67,7 @@ kl::vec3 TraceRay(const kl::ray& ray, const std::vector<kl::sphere>& spheres, in
     else {
         for (int i = 0; i < spheres.size(); i++) {
             // Light direction           
-            kl::vec3 lightDirection = (spheres[i].center - interPoin).normalize();
+            kl::float3 lightDirection = (spheres[i].center - interPoin).normalize();
 
             // Shadow testing
             bool inShadow = false;
@@ -86,7 +86,7 @@ kl::vec3 TraceRay(const kl::ray& ray, const std::vector<kl::sphere>& spheres, in
     }
 
     // Calculating the pixel color
-    kl::vec3 pixel = rayColor + interSphere->calcEmiss();
+    kl::float3 pixel = rayColor + interSphere->calcEmiss();
 
     // Clamping the color channels
     pixel.x = max(min(pixel.x, 1.0f), 0.0f);
@@ -102,17 +102,17 @@ int main() {
     std::vector<kl::sphere> spheres;
 
     // Scene spheres
-    spheres.push_back(kl::sphere(kl::vec3( 0.0f, -5004.0f, 20.0f), 5000.0f, kl::color( 50,  50,  50), 0.0f));
-    spheres.push_back(kl::sphere(kl::vec3( 0.0f,     0.0f, 20.0f),    4.0f, kl::color(255,  85,  90), 0.8f));
-    spheres.push_back(kl::sphere(kl::vec3(-5.0f,    -1.0f, 15.0f),    2.0f, kl::color(230, 195, 115), 0.9f));
-    spheres.push_back(kl::sphere(kl::vec3(-5.0f,     0.0f, 25.0f),    3.0f, kl::color(165, 195, 245), 0.9f));
-    spheres.push_back(kl::sphere(kl::vec3( 5.5f,     0.0f, 15.0f),    3.0f, kl::color( 30, 230, 230), 0.9f));
+    spheres.push_back(kl::sphere(kl::float3( 0.0f, -5004.0f, 20.0f), 5000.0f, kl::color( 50,  50,  50), 0.0f));
+    spheres.push_back(kl::sphere(kl::float3( 0.0f,     0.0f, 20.0f),    4.0f, kl::color(255,  85,  90), 0.8f));
+    spheres.push_back(kl::sphere(kl::float3(-5.0f,    -1.0f, 15.0f),    2.0f, kl::color(230, 195, 115), 0.9f));
+    spheres.push_back(kl::sphere(kl::float3(-5.0f,     0.0f, 25.0f),    3.0f, kl::color(165, 195, 245), 0.9f));
+    spheres.push_back(kl::sphere(kl::float3( 5.5f,     0.0f, 15.0f),    3.0f, kl::color( 30, 230, 230), 0.9f));
 
     // Light sphere
-    spheres.push_back(kl::sphere(kl::vec3( 0.0f,    20.0f, 30.0f),    3.0f, kl::color(255, 255, 255), 0.0f, 3.0f));
+    spheres.push_back(kl::sphere(kl::float3( 0.0f,    20.0f, 30.0f),    3.0f, kl::color(255, 255, 255), 0.0f, 3.0f));
 
     // Image resolution
-    kl::image frame(kl::ivec2(1920, 1080) * 4);
+    kl::image frame(kl::int2(1920, 1080) * 4);
 
     // Camera properties
     kl::camera cam;
@@ -134,19 +134,19 @@ int main() {
     kl::thread::parallelFor(0, frame.getHeight(), [&](int t, int y) {
         for (int x = 0; x < frame.getWidth(); x++) {
             // Calculating ndc pixel coordinates
-            kl::vec2 ndc = kl::vec2(float(x), float(frame.getHeight() - y)) / kl::vec2(float(frame.getWidth()), float(frame.getHeight()));
+            kl::float2 ndc = kl::float2(float(x), float(frame.getHeight() - y)) / kl::float2(float(frame.getWidth()), float(frame.getHeight()));
             ndc *= 2.0f;
             ndc -= 1.0f;
 
             // Calculating pixel ray direction
-            kl::vec4 raydir = invCam * kl::vec4(ndc, 1.0f, 1.0f);
+            kl::float4 raydir = invCam * kl::float4(ndc, 1.0f, 1.0f);
             raydir /= raydir.w;
 
             // Tracing the pixel color
-            const kl::vec3 pixel = TraceRay(kl::ray(cam.position, raydir.xyz().normalize()), spheres, 0, bounceLimit);
+            const kl::float3 pixel = TraceRay(kl::ray(cam.position, raydir.xyz().normalize()), spheres, 0, bounceLimit);
 
             // Saving the pixel
-            frame.setPixel(kl::ivec2(x, y), kl::convert::toColor(pixel));
+            frame.setPixel(kl::int2(x, y), kl::convert::toColor(pixel));
 
             // Progress bar
             static std::mutex lock;
@@ -162,7 +162,7 @@ int main() {
     const float totalT = kl::time::interval();
 
     // Echo
-    kl::console::setCursor(kl::ivec2(0, 4));
+    kl::console::setCursor(kl::int2(0, 4));
     std::cout << "Saving..\n";
 
     // Saving the info

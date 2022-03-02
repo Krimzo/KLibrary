@@ -9,7 +9,7 @@
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"
 #include "KrimzLib/graphics/image.h"
-#include "KrimzLib/vecmath/mat4.h"
+#include "KrimzLib/math/mat4.h"
 #include "KrimzLib/geometry/vertex.h"
 
 

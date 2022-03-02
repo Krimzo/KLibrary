@@ -3,7 +3,7 @@
 #include <iostream>
 #include <conio.h>
 
-#include "KrimzLib/vecmath/ivec2.h"
+#include "KrimzLib/math/int2.h"
 #include "KrimzLib/graphics/color.h"
 
 
@@ -27,7 +27,7 @@ namespace kl {
 		static void show();
 
 		// Sets the console cursor position
-		static void setCursor(const kl::ivec2& position);
+		static void setCursor(const kl::int2& position);
 
 		// Hides the console cursor
 		static void hideCursor();
@@ -39,19 +39,19 @@ namespace kl {
 		static void setTitle(const std::string& text);
 
 		// Returns screen buffer size
-		static kl::ivec2 getBufferSize();
+		static kl::int2 getBufferSize();
 
 		// Returns the current console size
-		static kl::ivec2 getSize();
+		static kl::int2 getSize();
 
 		// Changes the console buffer size
-		static void setBufferSize(const kl::ivec2& size);
+		static void setBufferSize(const kl::int2& size);
 
 		// Changes the console size
-		static void setSize(const kl::ivec2& size);
+		static void setSize(const kl::int2& size);
 
 		// Changes the console font size
-		static void setFont(const kl::ivec2& size, const std::string& fontName = "Consolas");
+		static void setFont(const kl::int2& size, const std::string& fontName = "Consolas");
 
 		// Returns a pressed key
 		static char getInput();
@@ -66,6 +66,6 @@ namespace kl {
 		static void progressBar(const std::string& message, int outputY, float percentage);
 
 		// Fast console writing
-		static void fastOut(const std::string& data, const kl::ivec2& location = { 0, 0 });
+		static void fastOut(const std::string& data, const kl::int2& location = { 0, 0 });
 	};
 }

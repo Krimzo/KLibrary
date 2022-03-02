@@ -1,6 +1,6 @@
 #include "KrimzLib/window/window.h"
 
-#include "KrimzLib/convert.h"
+#include "KrimzLib/utility/convert.h"
 
 #include "ImGui/imgui_impl_win32.h"
 
@@ -15,7 +15,7 @@ kl::window::window() {
 	this->start = []() {};
 	this->update = []() {};
 	this->end = []() {};
-	this->resize = [](const kl::ivec2& size) {};
+	this->resize = [](const kl::int2& size) {};
 
 	// Winapi variables
 	this->hInstance = GetModuleHandleA(nullptr);
@@ -60,12 +60,12 @@ void kl::window::registerWindowClass(const std::string& name) {
 }
 
 // Creates a new window
-void kl::window::createWindow(const kl::ivec2& size, const std::string& name, bool resizeable) {
+void kl::window::createWindow(const kl::int2& size, const std::string& name, bool resizeable) {
 	// Setting the window properties
 	winStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 	RECT adjustedWindowSize = { 0, 0, (LONG)size.x, (LONG)size.y };
 	AdjustWindowRect(&adjustedWindowSize, winStyle, false);
-	const kl::ivec2 adjSize(adjustedWindowSize.right - adjustedWindowSize.left, adjustedWindowSize.bottom - adjustedWindowSize.top);
+	const kl::int2 adjSize(adjustedWindowSize.right - adjustedWindowSize.left, adjustedWindowSize.bottom - adjustedWindowSize.top);
 
 	// Creating the window
 	hwnd = CreateWindowExA(0, name.c_str(), name.c_str(), winStyle, (kl::window::screen::width / 2 - adjSize.x / 2), (kl::window::screen::height / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, hInstance, nullptr);
@@ -89,7 +89,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 	case WM_SIZE:
-		this->resize(kl::ivec2(LOWORD(lParam), HIWORD(lParam)));
+		this->resize(kl::int2(LOWORD(lParam), HIWORD(lParam)));
 		break;
 	}
 	return DefWindowProcA(hwnd, msg, wParam, lParam);
@@ -137,7 +137,7 @@ void kl::window::handleMessage() {
 		break;
 
 	case WM_MOUSEMOVE:
-		this->mouse.position = kl::ivec2(GET_X_LPARAM(wndMsg.lParam), GET_Y_LPARAM(wndMsg.lParam));
+		this->mouse.position = kl::int2(GET_X_LPARAM(wndMsg.lParam), GET_Y_LPARAM(wndMsg.lParam));
 		break;
 
 	default:
@@ -147,7 +147,7 @@ void kl::window::handleMessage() {
 }
 
 // Window creation
-void kl::window::startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool imgui) {
+void kl::window::startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous, bool imgui) {
 	// Registering winapi window class
 	registerWindowClass(name);
 
@@ -237,20 +237,20 @@ void kl::window::minimize() {
 }
 
 // Returns the window size
-kl::ivec2 kl::window::getSize() const {
+kl::int2 kl::window::getSize() const {
 	RECT clientArea = {};
 	GetClientRect(hwnd, &clientArea);
-	return kl::ivec2(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
+	return kl::int2(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
 }
 
 // Returns the aspect ratio
 float kl::window::getAspect() const {
-	const kl::ivec2 winSize = getSize();
+	const kl::int2 winSize = getSize();
 	return float(winSize.x) / winSize.y;
 }
 
 // Returns the center point of the frame
-kl::ivec2 kl::window::getCenter() const {
+kl::int2 kl::window::getCenter() const {
 	return this->getSize() / 2;
 }
 
@@ -275,9 +275,9 @@ void kl::window::setIcon(const std::string& filePath) {
 }
 
 // Sets the pixels of the window
-void kl::window::drawImage(const kl::image& toDraw, const kl::ivec2& position) {
+void kl::window::drawImage(const kl::image& toDraw, const kl::int2& position) {
 	// Getting the image size
-	const kl::ivec2 size = toDraw.getSize();
+	const kl::int2 size = toDraw.getSize();
 
 	// Setting up the bitmapinfo
 	BITMAPINFO bmpInfo = {};

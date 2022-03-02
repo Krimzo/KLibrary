@@ -5,18 +5,18 @@
 kl::vertex::vertex() {
 
 }
-kl::vertex::vertex(const kl::vec3& world) {
+kl::vertex::vertex(const kl::float3& world) {
 	this->world = world;
 }
-kl::vertex::vertex(const kl::vec3& world, const kl::vec2& texture) {
+kl::vertex::vertex(const kl::float3& world, const kl::float2& texture) {
 	this->world = world;
 	this->texture = texture;
 }
-kl::vertex::vertex(const kl::vec3& world, const kl::vec3& normal) {
+kl::vertex::vertex(const kl::float3& world, const kl::float3& normal) {
 	this->world = world;
 	this->normal = normal;
 }
-kl::vertex::vertex(const kl::vec3& world, const kl::vec2& texture, const kl::vec3& normal) {
+kl::vertex::vertex(const kl::float3& world, const kl::float2& texture, const kl::float3& normal) {
 	this->world = world;
 	this->texture = texture;
 	this->normal = normal;

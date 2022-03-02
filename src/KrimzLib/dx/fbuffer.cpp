@@ -38,6 +38,6 @@ ID3D11RenderTargetView* kl::fbuffer::getView() {
 }
 
 // Clears the buffer
-void kl::fbuffer::clear(const kl::vec4& color) {
+void kl::fbuffer::clear(const kl::float4& color) {
     devcon->ClearRenderTargetView(view, (float*)&color);
 }

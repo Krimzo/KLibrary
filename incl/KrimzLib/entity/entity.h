@@ -2,8 +2,8 @@
 
 #include "KrimzLib/dx/mesh.h"
 #include "KrimzLib/dx/texture.h"
-#include "KrimzLib/vecmath/vec3.h"
-#include "KrimzLib/vecmath/mat4.h"
+#include "KrimzLib/math/float3.h"
+#include "KrimzLib/math/mat4.h"
 
 
 namespace kl {
@@ -18,15 +18,15 @@ namespace kl {
 		float roughness = 0.5f;
 
 		// Geometry
-		kl::vec3 size = kl::vec3(1);
-		kl::vec3 rotation;
-		kl::vec3 position;
+		kl::float3 size = kl::float3(1);
+		kl::float3 rotation;
+		kl::float3 position;
 		
 		// Physics
 		bool physics = true;
-		kl::vec3 acceler;
-		kl::vec3 velocity;
-		kl::vec3 angular;
+		kl::float3 acceler;
+		kl::float3 velocity;
+		kl::float3 angular;
 
 		// Mesh pointer
 		kl::mesh* mesh = nullptr;

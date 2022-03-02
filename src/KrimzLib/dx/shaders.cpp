@@ -1,6 +1,6 @@
 #include "KrimzLib/dx/shaders.h"
 
-#include "KrimzLib/convert.h"
+#include "KrimzLib/utility/convert.h"
 
 
 // Constructors

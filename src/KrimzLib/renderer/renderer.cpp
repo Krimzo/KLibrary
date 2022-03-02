@@ -7,9 +7,9 @@ struct DEF_VS_CB {
 	kl::mat4 vp;
 };
 struct DEF_PS_CB {
-	kl::vec4 ambient;
-	kl::vec4 dirCol;
-	kl::vec4 dirDir;
+	kl::float4 ambient;
+	kl::float4 dirCol;
+	kl::float4 dirDir;
 };
 
 // Constructor
@@ -20,7 +20,7 @@ kl::renderer::renderer() {
 }
 
 // Creates and runs a new engine
-void kl::renderer::startNew(const kl::ivec2& frameSize) {
+void kl::renderer::startNew(const kl::int2& frameSize) {
 	// Window start definition
 	win.start = [&]() {
 		// Setting up the lighing
@@ -28,7 +28,7 @@ void kl::renderer::startNew(const kl::ivec2& frameSize) {
 		ambient.intensity = 0.1f;
 		sun.color = kl::colors::white;
 		sun.intensity = 1.0f;
-		sun.direction = kl::vec3(0.0f, -1.0f, -2.0f);
+		sun.direction = kl::float3(0.0f, -1.0f, -2.0f);
 
 		// Creating the gpu
 		gpu = new kl::gpu(win.getWND());
@@ -137,12 +137,12 @@ void kl::renderer::setFullscreen(bool enable) {
 }
 
 // Returns the frame size
-kl::ivec2 kl::renderer::frameSize() const {
+kl::int2 kl::renderer::frameSize() const {
 	return win.getSize();
 }
 
 // Returns the frame center
-kl::ivec2 kl::renderer::frameCenter() const {
+kl::int2 kl::renderer::frameCenter() const {
 	return win.getCenter();
 }
 

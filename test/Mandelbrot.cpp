@@ -8,36 +8,34 @@ kl::shaders* sha = nullptr;
 kl::mesh* box = nullptr;
 
 struct PS_CB {
-	kl::vec2 frameSize;
-	kl::vec2 zoom;
-	kl::vec2 pos;
-	kl::vec2 startPos;
+	kl::float2 frameSize;
+	kl::float2 zoom;
+	kl::float2 pos;
+	kl::float2 startPos;
 };
 
 float zoom = 1;
 float zoomSpeed = 1;
-kl::vec2 pos(-0.5, 0);
+kl::float2 pos(-0.5, 0);
 
 const float minZoom = 0.5f;
 const float maxZoom = 10000;
-const kl::ivec2 frameSize(1600, 900);
+const kl::int2 frameSize(1600, 900);
 
 void start() {
 	// DirectX init
-	gpu = new kl::gpu(win.getHWND(), 1);
+	gpu = new kl::gpu(win.getWND());
 
 	// Setting the raster
-	kl::raster* ras = gpu->newRaster(false, false, true);
-	ras->bind();
-	delete ras;
+	gpu->newRaster(false, false, true)->bind();
 
 	// Compiling shaders
 	sha = gpu->newShaders("res/shaders/mandelbrot.hlsl", 0, sizeof(PS_CB));
 
 	// Creating the box mesh
 	std::vector<kl::vertex> boxVertices = {
-		kl::vertex(kl::vec3(-1, -1, 0.5)), kl::vertex(kl::vec3(-1,  1, 0.5)), kl::vertex(kl::vec3(1, 1, 0.5)),
-		kl::vertex(kl::vec3(-1, -1, 0.5)), kl::vertex(kl::vec3( 1, -1, 0.5)), kl::vertex(kl::vec3(1, 1, 0.5))
+		kl::vertex(kl::float3(-1, -1, 0.5)), kl::vertex(kl::float3(-1,  1, 0.5)), kl::vertex(kl::float3(1, 1, 0.5)),
+		kl::vertex(kl::float3(-1, -1, 0.5)), kl::vertex(kl::float3( 1, -1, 0.5)), kl::vertex(kl::float3(1, 1, 0.5))
 	};
 	box = gpu->newMesh(boxVertices);
 }
@@ -53,7 +51,7 @@ void update() {
 		win.stop();
 	}
 	if (win.keys.r) {
-		pos = kl::vec2(-0.5, 0);
+		pos = kl::float2(-0.5, 0);
 		zoom = 1;
 	}
 	if (win.keys.w) {
@@ -74,7 +72,7 @@ void update() {
 
 		// Checking the zoom
 		if (zoom < maxZoom) {
-			const kl::vec2 uv = ((kl::vec2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
+			const kl::float2 uv = ((kl::float2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
 			pos += (uv / zoom) * deltaT;
 		}
 		else {
@@ -87,7 +85,7 @@ void update() {
 
 		// Checking the zoom
 		if (zoom > minZoom) {
-			const kl::vec2 uv = ((kl::vec2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
+			const kl::float2 uv = ((kl::float2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
 			pos -= (uv / zoom) * deltaT;
 		}
 		else {

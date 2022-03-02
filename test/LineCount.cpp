@@ -4,7 +4,7 @@
 int main() {
 	// Info
 	const std::string dirs[] = { "incl", "src", "res/shaders" };
-	const std::string blacklist[] = { "glad.h", "glad.cpp" };
+	const std::string blacklist[] = { "ImGui" };
 
 	// Dir loop
 	int lineCount = 0;

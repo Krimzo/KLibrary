@@ -1,16 +1,16 @@
 #pragma once
 
-#include "KrimzLib/vecmath/vec3.h"
+#include "KrimzLib/math/float3.h"
 
 
 namespace kl {
 	class plane {
 	public:
-		kl::vec3 normal;
-		kl::vec3 point;
+		kl::float3 normal;
+		kl::float3 point;
 
 		// Constructors
 		plane();
-		plane(const kl::vec3& normal, const kl::vec3& point);
+		plane(const kl::float3& normal, const kl::float3& point);
 	};
 }

@@ -8,7 +8,7 @@
 #include "ImGui/imgui_impl_dx11.h"
 
 #include "KrimzLib/geometry/vertex.h"
-#include "KrimzLib/convert.h"
+#include "KrimzLib/utility/convert.h"
 
 
 // Constructor
@@ -61,13 +61,13 @@ kl::gpu::gpu(HWND hwnd, bool imgui) {
     }
 
     // Generating the buffers
-    this->regenBuffers(kl::ivec2(clientArea.right, clientArea.bottom));
+    this->regenBuffers(kl::int2(clientArea.right, clientArea.bottom));
 
     // Creating a default raster
     this->newRaster(false, false)->bind();
 
     // Viewport setup
-    this->setViewport(kl::ivec2(clientArea.left, clientArea.top), kl::ivec2(clientArea.right, clientArea.bottom));
+    this->setViewport(kl::int2(clientArea.left, clientArea.top), kl::int2(clientArea.right, clientArea.bottom));
 
     // Setting the triangle as the main primitive type
     devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -118,7 +118,7 @@ ID3D11DeviceContext* kl::gpu::getCon() {
 }
 
 // Resizes the buffers
-void kl::gpu::regenBuffers(const kl::ivec2& size) {
+void kl::gpu::regenBuffers(const kl::int2& size) {
     // Cleanup
     devcon->OMSetRenderTargets(0, nullptr, nullptr);
     if (frameBuff) delete frameBuff;
@@ -137,7 +137,7 @@ void kl::gpu::regenBuffers(const kl::ivec2& size) {
 }
 
 // Sets the viewport
-void kl::gpu::setViewport(const kl::ivec2& pos, const kl::ivec2& size) {
+void kl::gpu::setViewport(const kl::int2& pos, const kl::int2& size) {
     D3D11_VIEWPORT viewport = {};
     viewport.TopLeftX = float(pos.x);
     viewport.TopLeftY = float(pos.y);
@@ -155,7 +155,7 @@ void kl::gpu::bindInternal() {
 }
 
 // Clears the buffer
-void kl::gpu::clearColor(const kl::vec4& color) {
+void kl::gpu::clearColor(const kl::float4& color) {
     frameBuff->clear(color);
 }
 void kl::gpu::clearDepth() {
@@ -164,7 +164,7 @@ void kl::gpu::clearDepth() {
 void kl::gpu::clearIndex() {
     indexBuff->clear();
 }
-void kl::gpu::clear(const kl::vec4& color) {
+void kl::gpu::clear(const kl::float4& color) {
     frameBuff->clear(color);
     depthBuff->clear();
     indexBuff->clear();
@@ -240,6 +240,6 @@ bool kl::gpu::delSBuffer(kl::sbuffer* sbuff) {
 }
 
 // Returns the picking index
-int kl::gpu::getIndex(const kl::ivec2& pos) {
+int kl::gpu::getIndex(const kl::int2& pos) {
     return indexBuff->getIndex(pos);
 }

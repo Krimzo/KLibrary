@@ -1,8 +1,8 @@
-#include "KrimzLib/vecmath/mat3.h"
+#include "KrimzLib/math/mat3.h"
 
 #include <iostream>
 
-#include "KrimzLib/convert.h"
+#include "KrimzLib/utility/convert.h"
 
 
 // Constructor
@@ -84,14 +84,14 @@ kl::mat3 kl::mat3::operator*(const kl::mat3& obj) const {
 void kl::mat3::operator*=(const kl::mat3& obj) {
 	*this = this->mul(obj);
 }
-kl::vec3 kl::mat3::mul(const kl::vec3& obj) const {
-	kl::vec3 temp;
+kl::float3 kl::mat3::mul(const kl::float3& obj) const {
+	kl::float3 temp;
 	temp.x = data[0] * obj.x + data[1] * obj.y + data[2] * obj.z;
 	temp.y = data[3] * obj.x + data[4] * obj.y + data[5] * obj.z;
 	temp.z = data[6] * obj.x + data[7] * obj.y + data[8] * obj.z;
 	return temp;
 }
-kl::vec3 kl::mat3::operator*(const kl::vec3& obj) const {
+kl::float3 kl::mat3::operator*(const kl::float3& obj) const {
 	return this->mul(obj);
 }
 
@@ -173,7 +173,7 @@ std::ostream& kl::operator<<(std::ostream& os, kl::mat3&& obj) {
 }
 
 // Returns a translation matrix
-kl::mat3 kl::mat3::translate(const kl::vec2& translation) {
+kl::mat3 kl::mat3::translate(const kl::float2& translation) {
 	kl::mat3 temp;
 	temp[2] = translation.x;
 	temp[5] = translation.y;
@@ -196,7 +196,7 @@ kl::mat3 kl::mat3::rotate(float rotation) {
 }
 
 // Returns a scaling matrix
-kl::mat3 kl::mat3::scale(const kl::vec2& size) {
+kl::mat3 kl::mat3::scale(const kl::float2& size) {
 	kl::mat3 temp;
 	temp[0] = size.x;
 	temp[4] = size.y;

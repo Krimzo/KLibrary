@@ -19,7 +19,7 @@ int main() {
 	kl::color lineColor(20, 175, 120);
 
 	// Window properties
-	kl::ivec2 windowSize(1600, 900);
+	kl::int2 windowSize(1600, 900);
 
 	// Window
 	kl::window window;
@@ -29,7 +29,7 @@ int main() {
 		frame.fill(kl::colors::gray);
 
 		// Circle position and size calculations
-		kl::ivec2 circleCenter(windowSize.x / 2, windowSize.y / 2);
+		kl::int2 circleCenter(windowSize.x / 2, windowSize.y / 2);
 		float circleRadius = min(windowSize.x * 0.5f, windowSize.y * 0.5f) - radiusBias;
 
 		// Drawing the circle
@@ -37,23 +37,23 @@ int main() {
 
 		// Calculating the points
 		float pointAngle = 360.0f / n;
-		std::vector<kl::ivec2> circlePoints(n);
+		std::vector<kl::int2> circlePoints(n);
 		int pointCounter = 0;
-		for (kl::ivec2& point : circlePoints) {
+		for (kl::int2& point : circlePoints) {
 			const int pointX = int(cos(kl::convert::toRadians(pointAngle * pointCounter + 180)) * circleRadius) + windowSize.x / 2;
 			const int pointY = int(sin(kl::convert::toRadians(pointAngle * pointCounter + 180)) * circleRadius) + windowSize.y / 2;
-			point = kl::ivec2(pointX, pointY);
+			point = kl::int2(pointX, pointY);
 			pointCounter++;
 		}
 
 		// Drawing the points
-		for (kl::ivec2& point : circlePoints) {
+		for (kl::int2& point : circlePoints) {
 			frame.drawCircle(point, pointRadius, pointColor, true);
 		}
 
 		// Drawing the lines
 		pointCounter = 0;
-		for (kl::ivec2& point : circlePoints) {
+		for (kl::int2& point : circlePoints) {
 			int secondPoint = abs(int(pointCounter++ * m) % n);
 			frame.drawLine(point, circlePoints[secondPoint], lineColor);
 		}

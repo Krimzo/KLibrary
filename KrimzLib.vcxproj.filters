@@ -69,22 +69,22 @@
     <ClCompile Include="src\KrimzLib\renderer\skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\vecmath\ivec2.cpp">
+    <ClCompile Include="src\KrimzLib\math\int2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\vecmath\mat3.cpp">
+    <ClCompile Include="src\KrimzLib\math\mat3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\vecmath\mat4.cpp">
+    <ClCompile Include="src\KrimzLib\math\mat4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\vecmath\vec2.cpp">
+    <ClCompile Include="src\KrimzLib\math\float2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\vecmath\vec3.cpp">
+    <ClCompile Include="src\KrimzLib\math\float3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\vecmath\vec4.cpp">
+    <ClCompile Include="src\KrimzLib\math\float4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\KrimzLib\window\keys.cpp">
@@ -96,25 +96,25 @@
     <ClCompile Include="src\KrimzLib\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\console.cpp">
+    <ClCompile Include="src\KrimzLib\utility\console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\convert.cpp">
+    <ClCompile Include="src\KrimzLib\utility\convert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\file.cpp">
+    <ClCompile Include="src\KrimzLib\utility\file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\math.cpp">
+    <ClCompile Include="src\KrimzLib\math\math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\random.cpp">
+    <ClCompile Include="src\KrimzLib\utility\random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\time.cpp">
+    <ClCompile Include="src\KrimzLib\utility\time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\web.cpp">
+    <ClCompile Include="src\KrimzLib\utility\web.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGui\imgui.cpp">
@@ -159,7 +159,13 @@
     <ClCompile Include="src\KrimzLib\geometry\sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\thread.cpp">
+    <ClCompile Include="src\KrimzLib\utility\thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KrimzLib\math\int3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KrimzLib\math\int4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test\Raytracing_cpu.cpp">
@@ -224,22 +230,22 @@
     <ClInclude Include="incl\KrimzLib\renderer\skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\vecmath\ivec2.h">
+    <ClInclude Include="incl\KrimzLib\math\int2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\vecmath\mat3.h">
+    <ClInclude Include="incl\KrimzLib\math\mat3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\vecmath\mat4.h">
+    <ClInclude Include="incl\KrimzLib\math\mat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\vecmath\vec2.h">
+    <ClInclude Include="incl\KrimzLib\math\float2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\vecmath\vec3.h">
+    <ClInclude Include="incl\KrimzLib\math\float3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\vecmath\vec4.h">
+    <ClInclude Include="incl\KrimzLib\math\float4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\window\keys.h">
@@ -251,28 +257,28 @@
     <ClInclude Include="incl\KrimzLib\window\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\console.h">
+    <ClInclude Include="incl\KrimzLib\utility\console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\convert.h">
+    <ClInclude Include="incl\KrimzLib\utility\convert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\file.h">
+    <ClInclude Include="incl\KrimzLib\utility\file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\KrimzLib.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\math.h">
+    <ClInclude Include="incl\KrimzLib\math\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\random.h">
+    <ClInclude Include="incl\KrimzLib\utility\random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\time.h">
+    <ClInclude Include="incl\KrimzLib\utility\time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\web.h">
+    <ClInclude Include="incl\KrimzLib\utility\web.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\ImGui\imconfig.h">
@@ -320,7 +326,13 @@
     <ClInclude Include="incl\KrimzLib\geometry\sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\thread.h">
+    <ClInclude Include="incl\KrimzLib\utility\thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\math\int3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\math\int4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,7 +5,7 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
-#include "KrimzLib/console.h"
+#include "KrimzLib/utility/console.h"
 
 
 namespace kl {

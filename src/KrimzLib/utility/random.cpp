@@ -1,4 +1,4 @@
-#include "KrimzLib/random.h"
+#include "KrimzLib/utility/random.h"
 
 
 // Random seed init

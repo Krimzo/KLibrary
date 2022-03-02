@@ -1,13 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "KrimzLib/convert.h"
+#include "KrimzLib/utility/convert.h"
 
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 
-#include "KrimzLib/math.h"
-#include "KrimzLib/vecmath/vec4.h"
+#include "KrimzLib/math/math.h"
+#include "KrimzLib/math/float4.h"
 #include "KrimzLib/graphics/color.h"
 
 
@@ -24,7 +24,7 @@ float kl::convert::toDegrees(float radians) {
 }
 
 // Converts a float color to color
-kl::color kl::convert::toColor(const kl::vec4& colf) {
+kl::color kl::convert::toColor(const kl::float4& colf) {
 	return kl::color(byte(colf.x * 255), byte(colf.y * 255), byte(colf.z * 255), byte(colf.w * 255));
 }
 

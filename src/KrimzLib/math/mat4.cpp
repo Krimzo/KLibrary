@@ -1,8 +1,8 @@
-#include "KrimzLib/vecmath/mat4.h"
+#include "KrimzLib/math/mat4.h"
 
 #include <iostream>
 
-#include "KrimzLib/convert.h"
+#include "KrimzLib/utility/convert.h"
 
 
 // Constructor
@@ -91,15 +91,15 @@ kl::mat4 kl::mat4::operator*(const kl::mat4& obj) const {
 void kl::mat4::operator*=(const kl::mat4& obj) {
 	*this = this->mul(obj);
 }
-kl::vec4 kl::mat4::mul(const kl::vec4& obj) const {
-	kl::vec4 temp;
+kl::float4 kl::mat4::mul(const kl::float4& obj) const {
+	kl::float4 temp;
 	temp.x = data[ 0] * obj.x + data[ 1] * obj.y + data[ 2] * obj.z + data[ 3] * obj.w;
 	temp.y = data[ 4] * obj.x + data[ 5] * obj.y + data[ 6] * obj.z + data[ 7] * obj.w;
 	temp.z = data[ 8] * obj.x + data[ 9] * obj.y + data[10] * obj.z + data[11] * obj.w;
 	temp.w = data[12] * obj.x + data[13] * obj.y + data[14] * obj.z + data[15] * obj.w;
 	return temp;
 }
-kl::vec4 kl::mat4::operator*(const kl::vec4& obj) const {
+kl::float4 kl::mat4::operator*(const kl::float4& obj) const {
 	return this->mul(obj);
 }
 
@@ -274,7 +274,7 @@ std::ostream& kl::operator<<(std::ostream& os, kl::mat4&& obj) {
 }
 
 // Returns a translation matrix
-kl::mat4 kl::mat4::translate(const kl::vec3& translation) {
+kl::mat4 kl::mat4::translate(const kl::float3& translation) {
 	kl::mat4 temp;
 	temp[ 3] = translation.x;
 	temp[ 7] = translation.y;
@@ -283,7 +283,7 @@ kl::mat4 kl::mat4::translate(const kl::vec3& translation) {
 }
 
 // Returns a rotation matrix
-kl::mat4 kl::mat4::rotate(const kl::vec3& rotation) {
+kl::mat4 kl::mat4::rotate(const kl::float3& rotation) {
 	// Computing x rotation matrix
 	const float xRad = kl::convert::toRadians(rotation.x);
 	const float xSin = sin(xRad);
@@ -319,7 +319,7 @@ kl::mat4 kl::mat4::rotate(const kl::vec3& rotation) {
 }
 
 // Returns a scaling matrix
-kl::mat4 kl::mat4::scale(const kl::vec3& size) {
+kl::mat4 kl::mat4::scale(const kl::float3& size) {
 	kl::mat4 temp;
 	temp[ 0] = size.x;
 	temp[ 5] = size.y;
@@ -353,11 +353,11 @@ kl::mat4 kl::mat4::ortho(float left, float right, float bottom, float top, float
 }
 
 // Returns the "look at" matrix
-kl::mat4 kl::mat4::lookAt(const kl::vec3& position, const kl::vec3& target, const kl::vec3& up) {
+kl::mat4 kl::mat4::lookAt(const kl::float3& position, const kl::float3& target, const kl::float3& up) {
 	// Vector calculations
-	const kl::vec3 f = (target - position).normalize();
-	const kl::vec3 s = up.cross(f).normalize();
-	const kl::vec3 u = f.cross(s);
+	const kl::float3 f = (target - position).normalize();
+	const kl::float3 s = up.cross(f).normalize();
+	const kl::float3 u = f.cross(s);
 
 	// Matrix building
 	kl::mat4 temp;

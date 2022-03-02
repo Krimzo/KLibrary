@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "KrimzLib/vecmath/vec4.h"
+#include "KrimzLib/math/float4.h"
 
 
 namespace kl {
@@ -34,8 +34,8 @@ namespace kl {
 		kl::mat4 mul(const kl::mat4& obj) const;
 		kl::mat4 operator*(const kl::mat4& obj) const;
 		void operator*=(const kl::mat4& obj);
-		kl::vec4 mul(const kl::vec4& obj) const;
-		kl::vec4 operator*(const kl::vec4& obj) const;
+		kl::float4 mul(const kl::float4& obj) const;
+		kl::float4 operator*(const kl::float4& obj) const;
 
 		// Division
 		kl::mat4 div(float a) const;
@@ -57,13 +57,13 @@ namespace kl {
 		kl::mat4 inverse() const;
 
 		// Returns a translation matrix
-		static kl::mat4 translate(const kl::vec3& translation);
+		static kl::mat4 translate(const kl::float3& translation);
 
 		// Returns a rotation matrix
-		static kl::mat4 rotate(const kl::vec3& rotation);
+		static kl::mat4 rotate(const kl::float3& rotation);
 
 		// Returns a scaling matrix
-		static kl::mat4 scale(const kl::vec3& size);
+		static kl::mat4 scale(const kl::float3& size);
 
 		// Returns the perspective projection matrix
 		static kl::mat4 persp(float fov, float ar, float zNear, float zFar);
@@ -72,7 +72,7 @@ namespace kl {
 		static kl::mat4 ortho(float left, float right, float bottom, float top, float nearZ, float farZ);
 
 		// Returns the "look at" matrix
-		static kl::mat4 lookAt(const kl::vec3& position, const kl::vec3& target, const kl::vec3& up);
+		static kl::mat4 lookAt(const kl::float3& position, const kl::float3& target, const kl::float3& up);
 	};
 
 	// Overloading std::cout

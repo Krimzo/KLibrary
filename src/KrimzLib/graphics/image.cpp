@@ -5,17 +5,17 @@
 #include <windows.h>
 #include <gdiplus.h>
 
-#include "KrimzLib/vecmath/vec2.h"
-#include "KrimzLib/convert.h"
-#include "KrimzLib/file.h"
-#include "KrimzLib/math.h"
+#include "KrimzLib/math/math.h"
+#include "KrimzLib/math/float2.h"
+#include "KrimzLib/utility/convert.h"
+#include "KrimzLib/utility/file.h"
 
 
 // Constructor
 kl::image::image() {
-	this->setSize(kl::ivec2());
+	this->setSize(kl::int2());
 }
-kl::image::image(const kl::ivec2& size, const kl::color& color) {
+kl::image::image(const kl::int2& size, const kl::color& color) {
 	this->setSize(size);
 	this->fill(color);
 }
@@ -30,10 +30,10 @@ int kl::image::getWidth() const {
 int kl::image::getHeight() const {
 	return height;
 }
-kl::ivec2 kl::image::getSize() const {
-	return kl::ivec2(width, height);
+kl::int2 kl::image::getSize() const {
+	return kl::int2(width, height);
 }
-kl::color kl::image::getPixel(const kl::ivec2& point) const {
+kl::color kl::image::getPixel(const kl::int2& point) const {
 	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
 		return pixels[size_t(point.y) * width + point.x];
 	}
@@ -45,7 +45,7 @@ int kl::image::pixelCount() const {
 byte* kl::image::pointer() const {
 	return (byte*)&pixels[0];
 }
-kl::image kl::image::getRect(kl::ivec2 a, kl::ivec2 b) const {
+kl::image kl::image::getRect(kl::int2 a, kl::int2 b) const {
 	// Clamping
 	a.x = min(max(a.x, 0), this->width);
 	a.y = min(max(a.y, 0), this->height);
@@ -68,7 +68,7 @@ kl::image kl::image::getRect(kl::ivec2 a, kl::ivec2 b) const {
 	kl::image temp(b - a);
 	for (int y = 0; y < temp.getHeight(); y++) {
 		for (int x = 0; x < temp.getWidth(); x++) {
-			const kl::ivec2 pos(x, y);
+			const kl::int2 pos(x, y);
 			temp.setPixel(pos, this->getPixel(pos + a));
 		}
 	}
@@ -77,17 +77,17 @@ kl::image kl::image::getRect(kl::ivec2 a, kl::ivec2 b) const {
 
 // Setters
 void kl::image::setWidth(int width) {
-	setSize(kl::ivec2(width, height));
+	setSize(kl::int2(width, height));
 }
 void kl::image::setHeight(int height) {
-	setSize(kl::ivec2(width, height));
+	setSize(kl::int2(width, height));
 }
-void kl::image::setSize(const kl::ivec2& size) {
+void kl::image::setSize(const kl::int2& size) {
 	width = size.x;
 	height = size.y;
 	pixels.resize(size_t(width) * height);
 }
-void kl::image::setPixel(const kl::ivec2& point, const kl::color& color) {
+void kl::image::setPixel(const kl::int2& point, const kl::color& color) {
 	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
 		pixels[size_t(point.y) * width + point.x] = color;
 	}
@@ -113,7 +113,7 @@ void kl::image::fromFile(const std::string& filePath) {
 	}
 
 	// Resizing the self
-	this->setSize(kl::ivec2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
+	this->setSize(kl::int2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
 
 	// Locking the bitmap data
 	Gdiplus::BitmapData bitmapData;
@@ -235,42 +235,42 @@ kl::image kl::image::flipVertical() const {
 }
 
 // Draws a line between 2 points
-void kl::image::drawLine(const kl::ivec2& a, const kl::ivec2& b, const kl::color& col) {
+void kl::image::drawLine(const kl::int2& a, const kl::int2& b, const kl::color& col) {
 	// Calculations
 	const int len = max(abs(b.x - a.x), abs(b.y - a.y));
-	kl::vec2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
+	kl::float2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
 
 	// Drawing
-	kl::vec2 drawPoint(float(a.x), float(a.y));
+	kl::float2 drawPoint(float(a.x), float(a.y));
 	for (int i = 0; i <= len; i++) {
-		setPixel(kl::ivec2(int(drawPoint.x), int(drawPoint.y)), col);
+		setPixel(kl::int2(int(drawPoint.x), int(drawPoint.y)), col);
 		drawPoint = drawPoint + incr;
 	}
 }
 
 // Draws a triangle between 3 points
-void kl::image::drawTriangle(kl::ivec2 a, kl::ivec2 b, kl::ivec2 c, const kl::color& col, bool fill) {
+void kl::image::drawTriangle(kl::int2 a, kl::int2 b, kl::int2 c, const kl::color& col, bool fill) {
 	if (fill) {
 		// Sorting by y
 		if (a.y > b.y) {
-			kl::ivec2 temp = a;
+			kl::int2 temp = a;
 			a = b;
 			b = temp;
 		}
 		if (a.y > c.y) {
-			kl::ivec2 temp = a;
+			kl::int2 temp = a;
 			a = c;
 			c = temp;
 		}
 		if (b.y > c.y) {
-			kl::ivec2 temp = b;
+			kl::int2 temp = b;
 			b = c;
 			c = temp;
 		}
 
 		// Drawing
 		for (int y = a.y; y < c.y; y++) {
-			drawLine(kl::ivec2(int(kl::math::lineX((y < b.y) ? a : c, b, float(y))), int(y)), kl::ivec2(int(kl::math::lineX(a, c, float(y))), int(y)), col);
+			drawLine(kl::int2(int(kl::math::lineX((y < b.y) ? a : c, b, float(y))), int(y)), kl::int2(int(kl::math::lineX(a, c, float(y))), int(y)), col);
 		}
 	}
 	else {
@@ -281,34 +281,34 @@ void kl::image::drawTriangle(kl::ivec2 a, kl::ivec2 b, kl::ivec2 c, const kl::co
 }
 
 // Draws a rectangle between 2 points
-void kl::image::drawRectangle(kl::ivec2 a, kl::ivec2 b, const kl::color& col, bool fill) {
+void kl::image::drawRectangle(kl::int2 a, kl::int2 b, const kl::color& col, bool fill) {
 	if (fill) {
 		// Sorting by y
 		if (a.y > b.y) {
-			kl::ivec2 temp = a;
+			kl::int2 temp = a;
 			a = b;
 			b = temp;
 		}
 
 		// Drawing
 		for (int y = a.y; y <= b.y; y++) {
-			drawLine(kl::ivec2(a.x, y), kl::ivec2(b.x, y), col);
+			drawLine(kl::int2(a.x, y), kl::int2(b.x, y), col);
 		}
 	}
 	else {
-		drawLine(a, kl::ivec2(a.x, b.y), col);
-		drawLine(a, kl::ivec2(b.x, a.y), col);
-		drawLine(b, kl::ivec2(a.x, b.y), col);
-		drawLine(b, kl::ivec2(b.x, a.y), col);
+		drawLine(a, kl::int2(a.x, b.y), col);
+		drawLine(a, kl::int2(b.x, a.y), col);
+		drawLine(b, kl::int2(a.x, b.y), col);
+		drawLine(b, kl::int2(b.x, a.y), col);
 	}
 }
 
 // Draws a circle with the given center point and radius
-void kl::image::drawCircle(const kl::ivec2& p, float r, const kl::color& col, bool fill) {
+void kl::image::drawCircle(const kl::int2& p, float r, const kl::color& col, bool fill) {
 	if (fill) {
 		for (int y = int(p.y - r); y <= int(p.y + r); y++) {
 			const int x = int(p.x + sqrt(r * r - float(y - p.y) * float(y - p.y)));
-			drawLine(kl::ivec2(2 * p.x - x, y), kl::ivec2(x, y), col);
+			drawLine(kl::int2(2 * p.x - x, y), kl::int2(x, y), col);
 		}
 	}
 	else {
@@ -316,24 +316,24 @@ void kl::image::drawCircle(const kl::ivec2& p, float r, const kl::color& col, bo
 			// X run
 			const int x1 = int(p.x - r + i);
 			const int y1 = int(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
-			setPixel(kl::ivec2(x1, y1), col);
-			setPixel(kl::ivec2(x1, 2 * p.y - y1), col);
+			setPixel(kl::int2(x1, y1), col);
+			setPixel(kl::int2(x1, 2 * p.y - y1), col);
 
 			// Y run
 			const int y2 = int(p.y - r + i);
 			const int x2 = int(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
-			setPixel(kl::ivec2(x2, y2), col);
-			setPixel(kl::ivec2(2 * p.x - x2, y2), col);
+			setPixel(kl::int2(x2, y2), col);
+			setPixel(kl::int2(2 * p.x - x2, y2), col);
 		}
 	}
 }
 // Draws a circle between 1 center and 1 outer point
-void kl::image::drawCircle(const kl::ivec2& a, const kl::ivec2& b, const kl::color& col, bool fill) {
-	this->drawCircle(a, kl::vec2(a, b).length(), col, fill);
+void kl::image::drawCircle(const kl::int2& a, const kl::int2& b, const kl::color& col, bool fill) {
+	this->drawCircle(a, kl::float2(a, b).length(), col, fill);
 }
 
 // Converts an image to an ASCII frame
-std::string kl::image::toASCII(const kl::ivec2& frameSize) {
+std::string kl::image::toASCII(const kl::int2& frameSize) {
 	// ASCII 'table'
 	static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 
@@ -346,7 +346,7 @@ std::string kl::image::toASCII(const kl::ivec2& frameSize) {
 	for (int y = 0; y < frameSize.y; y++) {
 		for (int x = 0; x < frameSize.x; x++) {
 			// Pixels to grayscale
-			kl::color currentPixel = getPixel(kl::ivec2(x * pixelWidthIncrement, y * pixelHeightIncrement));
+			kl::color currentPixel = getPixel(kl::int2(x * pixelWidthIncrement, y * pixelHeightIncrement));
 			const int grayScaledPixel = int(currentPixel.r * 0.299f + currentPixel.g * 0.587f + currentPixel.b * 0.114f);
 
 			// Grayscaled values to ASCII

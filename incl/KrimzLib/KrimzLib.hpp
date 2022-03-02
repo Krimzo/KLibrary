@@ -2,13 +2,13 @@
 
 
 // Including math
-#include "KrimzLib/math.h"
-#include "KrimzLib/vecmath/ivec2.h"
-#include "KrimzLib/vecmath/vec2.h"
-#include "KrimzLib/vecmath/vec3.h"
-#include "KrimzLib/vecmath/vec4.h"
-#include "KrimzLib/vecmath/mat3.h"
-#include "KrimzLib/vecmath/mat4.h"
+#include "KrimzLib/math/math.h"
+#include "KrimzLib/math/int2.h"
+#include "KrimzLib/math/float2.h"
+#include "KrimzLib/math/float3.h"
+#include "KrimzLib/math/float4.h"
+#include "KrimzLib/math/mat3.h"
+#include "KrimzLib/math/mat4.h"
 
 // Including the geometry
 #include "KrimzLib/geometry/ray.h"
@@ -22,13 +22,13 @@
 #include "KrimzLib/graphics/color.h"
 
 // Including utility
-#include "KrimzLib/time.h"
-#include "KrimzLib/convert.h"
-#include "KrimzLib/random.h"
-#include "KrimzLib/console.h"
-#include "KrimzLib/file.h"
-#include "KrimzLib/web.h"
-#include "KrimzLib/thread.h"
+#include "KrimzLib/utility/time.h"
+#include "KrimzLib/utility/convert.h"
+#include "KrimzLib/utility/random.h"
+#include "KrimzLib/utility/console.h"
+#include "KrimzLib/utility/file.h"
+#include "KrimzLib/utility/web.h"
+#include "KrimzLib/utility/thread.h"
 
 // Including memory
 #include "KrimzLib/memory/pbuffer.h"

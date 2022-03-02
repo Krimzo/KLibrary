@@ -1,4 +1,4 @@
-#include "KrimzLib/file.h"
+#include "KrimzLib/utility/file.h"
 
 
 // Returns the file extension from the given file path
@@ -86,9 +86,9 @@ std::vector<kl::vertex> kl::file::parseObj(const std::string& filePath, bool fli
     }
 
     // Temp load buffers
-    std::vector<kl::vec3> xyzBuffer;
-    std::vector<kl::vec2> uvBuffer;
-    std::vector<kl::vec3> normBuffer;
+    std::vector<kl::float3> xyzBuffer;
+    std::vector<kl::float2> uvBuffer;
+    std::vector<kl::float3> normBuffer;
 
     // Z flipper
     const int zFlip = flipZ ? -1 : 1;
@@ -105,13 +105,13 @@ std::vector<kl::vertex> kl::file::parseObj(const std::string& filePath, bool fli
 
         // Parsing the data
         if (lineParts[0] == "v") {
-            xyzBuffer.push_back(kl::vec3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
+            xyzBuffer.push_back(kl::float3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
         }
         else if (lineParts[0] == "vt") {
-            uvBuffer.push_back(kl::vec2(std::stof(lineParts[1]), std::stof(lineParts[2])));
+            uvBuffer.push_back(kl::float2(std::stof(lineParts[1]), std::stof(lineParts[2])));
         }
         else if (lineParts[0] == "vn") {
-            normBuffer.push_back(kl::vec3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
+            normBuffer.push_back(kl::float3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
         }
         else if (lineParts[0] == "f") {
             for (int i = 1; i < 4; i++) {

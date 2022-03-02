@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include "KrimzLib/geometry/vertex.h"
-#include "KrimzLib/file.h"
+#include "KrimzLib/utility/file.h"
 
 
 // Constructors

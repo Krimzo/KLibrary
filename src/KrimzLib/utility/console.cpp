@@ -1,13 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "KrimzLib/console.h"
+#include "KrimzLib/utility/console.h"
 
 #include <iostream>
 #include <sstream>
 #include <windows.h>
 
-#include "KrimzLib/vecmath/ivec2.h"
+#include "KrimzLib/math/int2.h"
 #include "KrimzLib/graphics/color.h"
-#include "KrimzLib/convert.h"
+#include "KrimzLib/utility/convert.h"
 
 
 // Getting the console handle and rgb init
@@ -40,7 +40,7 @@ void kl::console::show() {
 }
 
 // Sets the console cursor position
-void kl::console::setCursor(const kl::ivec2& position) {
+void kl::console::setCursor(const kl::int2& position) {
 	SetConsoleCursorPosition(kl::console::handle, { short(position.x), short(position.y) });
 }
 
@@ -66,33 +66,33 @@ void kl::console::setTitle(const std::string& text) {
 }
 
 // Returns screen buffer size
-kl::ivec2 kl::console::getBufferSize() {
+kl::int2 kl::console::getBufferSize() {
 	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 	GetConsoleScreenBufferInfo(kl::console::handle, &csbi);
-	return kl::ivec2(csbi.dwSize.X, csbi.dwSize.Y);
+	return kl::int2(csbi.dwSize.X, csbi.dwSize.Y);
 }
 
 // Returns the current console size
-kl::ivec2 kl::console::getSize() {
+kl::int2 kl::console::getSize() {
 	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 	GetConsoleScreenBufferInfo(kl::console::handle, &csbi);
-	return kl::ivec2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
+	return kl::int2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 }
 
 // Changes the console buffer size
-void kl::console::setBufferSize(const kl::ivec2& size) {
+void kl::console::setBufferSize(const kl::int2& size) {
 	SetConsoleScreenBufferSize(kl::console::handle, { (short)size.x, (short)size.y });
 }
 
 // Changes the console size
-void kl::console::setSize(const kl::ivec2& size) {
+void kl::console::setSize(const kl::int2& size) {
 	setBufferSize(size);
 	SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
 	SetConsoleWindowInfo(kl::console::handle, true, &consoleRect);
 }
 
 // Changes the console font size
-void kl::console::setFont(const kl::ivec2& size, const std::string& fontName) {
+void kl::console::setFont(const kl::int2& size, const std::string& fontName) {
 	CONSOLE_FONT_INFOEX cfi = {};
 	cfi.cbSize = sizeof(cfi);
 	cfi.nFont = 0;
@@ -151,12 +151,12 @@ void kl::console::progressBar(const std::string& message, int outputY, float per
 	for (int i = 0; i < emptyLen; i++) {
 		ss << ' ';
 	}
-	console::setCursor(kl::ivec2(0, outputY));
+	console::setCursor(kl::int2(0, outputY));
 	printf("%s] %3d%% ", ss.str().c_str(), int(percentage * 100.0f));
 }
 
 // Fast console writing
-void kl::console::fastOut(const std::string& data, const kl::ivec2& location) {
+void kl::console::fastOut(const std::string& data, const kl::int2& location) {
 	static DWORD ignore = 0;
 	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 }

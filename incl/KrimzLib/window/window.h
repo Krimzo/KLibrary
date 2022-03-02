@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#include "KrimzLib/vecmath/ivec2.h"
+#include "KrimzLib/math/int2.h"
 #include "KrimzLib/graphics/image.h"
 #include "KrimzLib/window/keys.h"
 #include "KrimzLib/window/mouse.h"
@@ -42,7 +42,7 @@ namespace kl {
 		void registerWindowClass(const std::string& name);
 
 		// Creates a new window
-		void createWindow(const kl::ivec2& size, const std::string& name, bool resizeable);
+		void createWindow(const kl::int2& size, const std::string& name, bool resizeable);
 
 		// Handles the windows message
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -68,7 +68,7 @@ namespace kl {
 		std::function<void(void)> start;
 		std::function<void(void)> update;
 		std::function<void(void)> end;
-		std::function<void(const kl::ivec2& size)> resize;
+		std::function<void(const kl::int2& size)> resize;
 
 		// Constructor
 		window();
@@ -77,7 +77,7 @@ namespace kl {
 		~window();
 
 		// Window creation
-		void startNew(const kl::ivec2& size, const std::string& name, bool resizeable, bool continuous, bool imgui = false);
+		void startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous, bool imgui = false);
 
 		// Window stop
 		void stop() const;
@@ -93,13 +93,13 @@ namespace kl {
 		void minimize();
 
 		// Returns the window size
-		kl::ivec2 getSize() const;
+		kl::int2 getSize() const;
 
 		// Returns the aspect ratio
 		float getAspect() const;
 
 		// Returns the center point of the frame
-		kl::ivec2 getCenter() const;
+		kl::int2 getCenter() const;
 
 		// Sets the window title
 		void setTitle(const std::string& data);
@@ -108,6 +108,6 @@ namespace kl {
 		void setIcon(const std::string& filePath);
 
 		// Sets the pixels of the window
-		void drawImage(const kl::image& toDraw, const kl::ivec2& position = { 0, 0 });
+		void drawImage(const kl::image& toDraw, const kl::int2& position = { 0, 0 });
 	};
 }

@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "KrimzLib/vecmath/vec2.h"
-#include "KrimzLib/vecmath/vec3.h"
+#include "KrimzLib/math/float2.h"
+#include "KrimzLib/math/float3.h"
 
 
 namespace kl {
@@ -35,8 +35,8 @@ namespace kl {
 		kl::mat3 mul(const kl::mat3& obj) const;
 		kl::mat3 operator*(const kl::mat3& obj) const;
 		void operator*=(const kl::mat3& obj);
-		kl::vec3 mul(const kl::vec3& obj) const;
-		kl::vec3 operator*(const kl::vec3& obj) const;
+		kl::float3 mul(const kl::float3& obj) const;
+		kl::float3 operator*(const kl::float3& obj) const;
 
 		// Division
 		kl::mat3 div(float a) const;
@@ -58,13 +58,13 @@ namespace kl {
 		kl::mat3 inverse() const;
 
 		// Returns a translation matrix
-		static kl::mat3 translate(const kl::vec2& translation);
+		static kl::mat3 translate(const kl::float2& translation);
 
 		// Returns a rotation matrix
 		static kl::mat3 rotate(float rotation);
 
 		// Returns a scaling matrix
-		static kl::mat3 scale(const kl::vec2& size);
+		static kl::mat3 scale(const kl::float2& size);
 	};
 
 	// Overloading std::cout

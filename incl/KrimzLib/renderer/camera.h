@@ -1,14 +1,14 @@
 #pragma once 
 
-#include "KrimzLib/vecmath/vec3.h"
-#include "KrimzLib/vecmath/mat4.h"
+#include "KrimzLib/math/float3.h"
+#include "KrimzLib/math/mat4.h"
 
 
 namespace kl {
 	class camera {
 	public:
-		kl::vec3 forward = kl::vec3::pos_z;
-		kl::vec3 position;
+		kl::float3 forward = kl::float3::pos_z;
+		kl::float3 position;
 		float nearPlane = 0.01f;
 		float farPlane = 100.0f;
 		float aspect = 16.0f / 9;
@@ -21,9 +21,9 @@ namespace kl {
 		camera();
 
 		// Camera direction getters
-		kl::vec3 getForward() const;
-		kl::vec3 getRight() const;
-		kl::vec3 getUp() const;
+		kl::float3 getForward() const;
+		kl::float3 getRight() const;
+		kl::float3 getUp() const;
 
 		// Camera movement
 		void moveForward(float deltaTime);
@@ -34,7 +34,7 @@ namespace kl {
 		void moveDown(float deltaTime);
 
 		// Camera rotation
-		void rotate(const kl::ivec2& mousePos, const kl::ivec2& frameCenter, float verticalAngleLimit = 85);
+		void rotate(const kl::int2& mousePos, const kl::int2& frameCenter, float verticalAngleLimit = 85);
 
 		// Computes and returns the camera matrix
 		kl::mat4 matrix() const;

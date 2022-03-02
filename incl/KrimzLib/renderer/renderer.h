@@ -17,8 +17,8 @@
 #include "KrimzLib/light/direct.h"
 #include "KrimzLib/renderer/camera.h"
 #include "KrimzLib/renderer/skybox.h"
-#include "KrimzLib/random.h"
-#include "KrimzLib/time.h"
+#include "KrimzLib/utility/random.h"
+#include "KrimzLib/utility/time.h"
 
 
 namespace kl {
@@ -66,17 +66,17 @@ namespace kl {
 		renderer();
 
 		// Creates and runs a new engine
-		void startNew(const kl::ivec2& frameSize);
+		void startNew(const kl::int2& frameSize);
 		void stop() const;
 
 		// Sets the fullscreen mode
 		void setFullscreen(bool enable);
 
 		// Returns the frame size
-		kl::ivec2 frameSize() const;
+		kl::int2 frameSize() const;
 
 		// Returns the frame center
-		kl::ivec2 frameCenter() const;
+		kl::int2 frameCenter() const;
 
 		// Returns the aspect ratio
 		float getAspect() const;

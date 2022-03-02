@@ -5,7 +5,7 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
-#include "KrimzLib/vecmath/ivec2.h"
+#include "KrimzLib/math/int2.h"
 
 
 namespace kl {
@@ -32,6 +32,6 @@ namespace kl {
 		void clear();
 
 		// Returns the picking index
-		int getIndex(const kl::ivec2& pos);
+		int getIndex(const kl::int2& pos);
 	};
 }

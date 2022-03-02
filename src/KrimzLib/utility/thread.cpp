@@ -1,4 +1,4 @@
-#include "KrimzLib/thread.h"
+#include "KrimzLib/utility/thread.h"
 
 
 // Multithreaded for loop

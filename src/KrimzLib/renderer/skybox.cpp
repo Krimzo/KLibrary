@@ -3,18 +3,18 @@
 
 // Skybox box vertices
 const std::vector<kl::vertex> boxVertices {
-	kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3( 1,  1, -1)),
-	kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3( 1, -1,  1)),
-	kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3(-1,  1, -1)),
-	kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3(-1, -1,  1)),
-	kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3( 1,  1, -1)),
-	kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3(-1,  1,  1)),
-	kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3( 1, -1, -1)),
-	kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3(-1, -1,  1)),
-	kl::vertex(kl::vec3(-1, -1,  1)), kl::vertex(kl::vec3( 1, -1,  1)), kl::vertex(kl::vec3( 1,  1,  1)),
-	kl::vertex(kl::vec3( 1,  1,  1)), kl::vertex(kl::vec3(-1,  1,  1)), kl::vertex(kl::vec3(-1, -1,  1)),
-	kl::vertex(kl::vec3(-1, -1, -1)), kl::vertex(kl::vec3(-1,  1, -1)), kl::vertex(kl::vec3( 1,  1, -1)),
-	kl::vertex(kl::vec3( 1,  1, -1)), kl::vertex(kl::vec3( 1, -1, -1)), kl::vertex(kl::vec3(-1, -1, -1))
+	kl::vertex(kl::float3( 1, -1,  1)), kl::vertex(kl::float3( 1, -1, -1)), kl::vertex(kl::float3( 1,  1, -1)),
+	kl::vertex(kl::float3( 1,  1, -1)), kl::vertex(kl::float3( 1,  1,  1)), kl::vertex(kl::float3( 1, -1,  1)),
+	kl::vertex(kl::float3(-1, -1,  1)), kl::vertex(kl::float3(-1,  1,  1)), kl::vertex(kl::float3(-1,  1, -1)),
+	kl::vertex(kl::float3(-1,  1, -1)), kl::vertex(kl::float3(-1, -1, -1)), kl::vertex(kl::float3(-1, -1,  1)),
+	kl::vertex(kl::float3(-1,  1,  1)), kl::vertex(kl::float3( 1,  1,  1)), kl::vertex(kl::float3( 1,  1, -1)),
+	kl::vertex(kl::float3( 1,  1, -1)), kl::vertex(kl::float3(-1,  1, -1)), kl::vertex(kl::float3(-1,  1,  1)),
+	kl::vertex(kl::float3(-1, -1,  1)), kl::vertex(kl::float3(-1, -1, -1)), kl::vertex(kl::float3( 1, -1, -1)),
+	kl::vertex(kl::float3( 1, -1, -1)), kl::vertex(kl::float3( 1, -1,  1)), kl::vertex(kl::float3(-1, -1,  1)),
+	kl::vertex(kl::float3(-1, -1,  1)), kl::vertex(kl::float3( 1, -1,  1)), kl::vertex(kl::float3( 1,  1,  1)),
+	kl::vertex(kl::float3( 1,  1,  1)), kl::vertex(kl::float3(-1,  1,  1)), kl::vertex(kl::float3(-1, -1,  1)),
+	kl::vertex(kl::float3(-1, -1, -1)), kl::vertex(kl::float3(-1,  1, -1)), kl::vertex(kl::float3( 1,  1, -1)),
+	kl::vertex(kl::float3( 1,  1, -1)), kl::vertex(kl::float3( 1, -1, -1)), kl::vertex(kl::float3(-1, -1, -1))
 };
 
 // Constructors/destructor
@@ -28,13 +28,13 @@ kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::st
 		// Checking the part size
 		if (partWidth == partHeight) {
 			// Extracting the sides
-			const kl::ivec2 partSize(partWidth, partHeight);
-			const kl::image front  = fullbox.getRect(partSize * kl::ivec2(1, 1), partSize * kl::ivec2(2, 2));
-			const kl::image back   = fullbox.getRect(partSize * kl::ivec2(3, 1), partSize * kl::ivec2(4, 2));
-			const kl::image left   = fullbox.getRect(partSize * kl::ivec2(0, 1), partSize * kl::ivec2(1, 2));
-			const kl::image right  = fullbox.getRect(partSize * kl::ivec2(2, 1), partSize * kl::ivec2(3, 2));
-			const kl::image top    = fullbox.getRect(partSize * kl::ivec2(1, 0), partSize * kl::ivec2(2, 1));
-			const kl::image bottom = fullbox.getRect(partSize * kl::ivec2(1, 2), partSize * kl::ivec2(2, 3));
+			const kl::int2 partSize(partWidth, partHeight);
+			const kl::image front  = fullbox.getRect(partSize * kl::int2(1, 1), partSize * kl::int2(2, 2));
+			const kl::image back   = fullbox.getRect(partSize * kl::int2(3, 1), partSize * kl::int2(4, 2));
+			const kl::image left   = fullbox.getRect(partSize * kl::int2(0, 1), partSize * kl::int2(1, 2));
+			const kl::image right  = fullbox.getRect(partSize * kl::int2(2, 1), partSize * kl::int2(3, 2));
+			const kl::image top    = fullbox.getRect(partSize * kl::int2(1, 0), partSize * kl::int2(2, 1));
+			const kl::image bottom = fullbox.getRect(partSize * kl::int2(1, 2), partSize * kl::int2(2, 3));
 
 			// Calling the other constructor
 			this->kl::skybox::skybox(dev, devcon, name, front, back, left, right, top, bottom);

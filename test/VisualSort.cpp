@@ -13,7 +13,7 @@ void renderSticks(kl::image& frameBuffer, std::vector<stick>& stickArray) {
 	// Drawing the sticks
 	for (int x = 0; x < stickArray.size(); x++) {
 		for (int y = (frameBuffer.getHeight() - 1 - stickArray[x].val); y < frameBuffer.getHeight(); y++) {
-			frameBuffer.setPixel(kl::ivec2(x, y), stickArray[x].col);
+			frameBuffer.setPixel(kl::int2(x, y), stickArray[x].col);
 		}
 	}
 }
@@ -26,7 +26,7 @@ void swapSticks(stick& a, stick& b) {
 
 int main() {
 	kl::window testWindow;
-	kl::image frame(kl::ivec2(900, 900));
+	kl::image frame(kl::int2(900, 900));
 
 	std::vector<stick> sticks(frame.getWidth());
 	for (stick& stik : sticks) {

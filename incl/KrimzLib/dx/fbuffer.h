@@ -5,7 +5,7 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
-#include "KrimzLib/vecmath/vec4.h"
+#include "KrimzLib/math/float4.h"
 
 
 namespace kl {
@@ -25,6 +25,6 @@ namespace kl {
 		ID3D11RenderTargetView* getView();
 
 		// Clears the buffer
-		void clear(const kl::vec4& color);
+		void clear(const kl::float4& color);
 	};
 }

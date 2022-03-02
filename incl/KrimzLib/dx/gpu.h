@@ -18,8 +18,8 @@
 #include "KrimzLib/dx/mesh.h"
 #include "KrimzLib/dx/texture.h"
 #include "KrimzLib/dx/sampler.h"
-#include "KrimzLib/vecmath/ivec2.h"
-#include "KrimzLib/vecmath/vec4.h"
+#include "KrimzLib/math/int2.h"
+#include "KrimzLib/math/float4.h"
 #include "KrimzLib/geometry/vertex.h"
 #include "KrimzLib/graphics/image.h"
 
@@ -61,19 +61,19 @@ namespace kl {
 		ID3D11DeviceContext* getCon();
 
 		// Regenerates the buffers
-		void regenBuffers(const kl::ivec2& size);
+		void regenBuffers(const kl::int2& size);
 
 		// Sets the viewport
-		void setViewport(const kl::ivec2& pos, const kl::ivec2& size);
+		void setViewport(const kl::int2& pos, const kl::int2& size);
 
 		// Binds the internal render targets
 		void bindInternal();
 
 		// Clears the buffer
-		void clearColor(const kl::vec4& color);
+		void clearColor(const kl::float4& color);
 		void clearDepth();
 		void clearIndex();
-		void clear(const kl::vec4& color);
+		void clear(const kl::float4& color);
 
 		// Swaps the buffers
 		void swap(bool vSync);
@@ -111,6 +111,6 @@ namespace kl {
 		bool delSBuffer(kl::sbuffer* sbuff);
 
 		// Returns the picking index
-		int getIndex(const kl::ivec2& pos);
+		int getIndex(const kl::int2& pos);
 	};
 }

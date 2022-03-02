@@ -5,13 +5,13 @@
 kl::ray::ray() {
 
 }
-kl::ray::ray(const kl::vec3& origin, const kl::vec3& direction) {
+kl::ray::ray(const kl::float3& origin, const kl::float3& direction) {
 	this->origin = origin;
 	this->direction = direction;
 }
 
 // Intersection with a plane
-bool kl::ray::intersect(const kl::plane& plane, kl::vec3* outInter) const {
+bool kl::ray::intersect(const kl::plane& plane, kl::float3* outInter) const {
     const float dnDot = this->direction.dot(plane.normal);
     if (dnDot != 0.0f) {
         if (outInter) *outInter = this->origin - this->direction * ((this->origin - plane.point).dot(plane.normal) / dnDot);
@@ -21,16 +21,16 @@ bool kl::ray::intersect(const kl::plane& plane, kl::vec3* outInter) const {
 }
 
 // Intersection with a triangle
-bool kl::ray::intersect(const kl::triangle& triangle, kl::vec3* outInter) const {
+bool kl::ray::intersect(const kl::triangle& triangle, kl::float3* outInter) const {
     // Const epsilon
     const float bias = 1e-7f;
 
     // Calculating triangle edges
-    const kl::vec3 edge1 = triangle.b.world - triangle.a.world;
-    const kl::vec3 edge2 = triangle.c.world - triangle.a.world;
+    const kl::float3 edge1 = triangle.b.world - triangle.a.world;
+    const kl::float3 edge2 = triangle.c.world - triangle.a.world;
 
     // More calculations
-    const kl::vec3 h = this->direction.cross(edge2);
+    const kl::float3 h = this->direction.cross(edge2);
     const float a = edge1.dot(h);
 
     // Parallel check
@@ -39,7 +39,7 @@ bool kl::ray::intersect(const kl::triangle& triangle, kl::vec3* outInter) const 
     }
 
     // More calculations
-    const kl::vec3 s = this->origin - triangle.a.world;
+    const kl::float3 s = this->origin - triangle.a.world;
     const float f = 1.0f / a;
     const float u = f * s.dot(h);
 
@@ -49,7 +49,7 @@ bool kl::ray::intersect(const kl::triangle& triangle, kl::vec3* outInter) const 
     }
 
     // More calculations
-    const kl::vec3 q = s.cross(edge1);
+    const kl::float3 q = s.cross(edge1);
     const float v = f * this->direction.dot(q);
 
     // More checks
@@ -71,9 +71,9 @@ bool kl::ray::intersect(const kl::triangle& triangle, kl::vec3* outInter) const 
 }
 
 // Intersection with a sphere
-bool kl::ray::intersect(const kl::sphere& sphere, kl::vec3* outInter, float* outDis) const {
+bool kl::ray::intersect(const kl::sphere& sphere, kl::float3* outInter, float* outDis) const {
     // Ray sphere center ray
-    const kl::vec3 centerRay = sphere.center - this->origin;
+    const kl::float3 centerRay = sphere.center - this->origin;
 
     // Center ray and main ray direction dot product
     const float cdDot = centerRay.dot(this->direction);

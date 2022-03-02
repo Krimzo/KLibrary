@@ -4,7 +4,7 @@
 kl::plane::plane() {
 
 }
-kl::plane::plane(const kl::vec3& normal, const kl::vec3& point) {
+kl::plane::plane(const kl::float3& normal, const kl::float3& point) {
 	this->normal = normal.normalize();
 	this->point = point;
 }

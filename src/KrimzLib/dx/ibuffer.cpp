@@ -1,6 +1,6 @@
 #include "KrimzLib/dx/ibuffer.h"
 
-#include "KrimzLib/vecmath/vec4.h"
+#include "KrimzLib/math/float4.h"
 
 
 // Constructor
@@ -69,12 +69,12 @@ ID3D11RenderTargetView* kl::ibuffer::getView() {
 
 // Clears the buffer
 void kl::ibuffer::clear() {
-    static const kl::vec4 pickCol(-1, 0, 0, 0);
+    static const kl::float4 pickCol(-1, 0, 0, 0);
     devcon->ClearRenderTargetView(view, (float*)&pickCol);
 }
 
 // Returns the picking index
-int kl::ibuffer::getIndex(const kl::ivec2& pos) {
+int kl::ibuffer::getIndex(const kl::int2& pos) {
     // Checking if the pos is in frame
     if (pos.x >= 0 && pos.x < this->width && pos.y >= 0 && pos.y < this->height) {
         // Copying the index texture pixel

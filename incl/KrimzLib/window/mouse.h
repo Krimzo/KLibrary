@@ -2,8 +2,8 @@
 
 #include <windows.h>
 
-#include "KrimzLib/vecmath/ivec2.h"
-#include "KrimzLib/vecmath/vec2.h"
+#include "KrimzLib/math/int2.h"
+#include "KrimzLib/math/float2.h"
 
 
 namespace kl {
@@ -16,7 +16,7 @@ namespace kl {
 		bool lmb = false;
 		bool mmb = false;
 		bool rmb = false;
-		kl::ivec2 position;
+		kl::int2 position;
 
 		// Constructor
 		mouse();
@@ -31,9 +31,9 @@ namespace kl {
 		void show();
 
 		// Moves the mouse pointer
-		void move(const kl::ivec2& pos);
+		void move(const kl::int2& pos);
 
 		// Return a normalized screen position
-		kl::vec2 normPos(const kl::ivec2& frameSize) const;
+		kl::float2 normPos(const kl::int2& frameSize) const;
 	};
 }

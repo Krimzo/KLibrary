@@ -2,12 +2,12 @@
 
 
 // Returns the true light color
-kl::vec4 kl::direct::getCol() const {
+kl::float4 kl::direct::getCol() const {
 	return color * intensity;
 }
 
 // Returns the direction of light
-kl::vec3 kl::direct::getDir() const {
+kl::float3 kl::direct::getDir() const {
 	return direction.normalize();
 }
 
@@ -20,31 +20,31 @@ kl::mat4 kl::direct::matrix(const kl::camera& cam) const {
 	).inverse();
 
 	// Frustum world corners
-	std::vector<kl::vec4> frustumCorners;
+	std::vector<kl::float4> frustumCorners;
 	for (int x = 0; x < 2; x++) {
 		for (int y = 0; y < 2; y++) {
 			for (int z = 0; z < 2; z++) {
-				const kl::vec4 corner = invCam * kl::vec4(2.0f * x - 1.0f, 2.0f * y - 1.0f, 2.0f * z - 1.0f, 1.0f);
+				const kl::float4 corner = invCam * kl::float4(2.0f * x - 1.0f, 2.0f * y - 1.0f, 2.0f * z - 1.0f, 1.0f);
 				frustumCorners.push_back(corner / corner.w);
 			}
 		}
 	}
 
 	// Centroid calculation
-	kl::vec3 centroid;
+	kl::float3 centroid;
 	for (const auto& corn : frustumCorners) {
 		centroid += corn.xyz();
 	}
 	centroid /= 8.0f;
 
 	// Light view matrix
-	const kl::mat4 view = kl::mat4::lookAt(centroid - this->getDir(), centroid, kl::vec3::pos_y);
+	const kl::mat4 view = kl::mat4::lookAt(centroid - this->getDir(), centroid, kl::float3::pos_y);
 
 	// Finding min and max points
-	kl::vec3 minp(FLT_MAX, FLT_MAX, FLT_MAX);
-	kl::vec3 maxp(FLT_MIN, FLT_MIN, FLT_MIN);
+	kl::float3 minp(FLT_MAX, FLT_MAX, FLT_MAX);
+	kl::float3 maxp(FLT_MIN, FLT_MIN, FLT_MIN);
 	for (const auto& corn : frustumCorners) {
-		const kl::vec4 lightCorn = view * corn;
+		const kl::float4 lightCorn = view * corn;
 		minp.x = min(minp.x, lightCorn.x);
 		maxp.x = max(maxp.x, lightCorn.x);
 		minp.y = min(minp.y, lightCorn.y);
