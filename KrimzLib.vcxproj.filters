@@ -168,7 +168,7 @@
     <ClCompile Include="src\KrimzLib\math\int4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\Raytracing_cpu.cpp">
+    <ClCompile Include="test\TicEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

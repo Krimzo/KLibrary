@@ -22,10 +22,6 @@ kl::float2::float2(const kl::int2& v) {
 	x = float(v.x);
 	y = float(v.y);
 }
-kl::float2::float2(const kl::float2& a, const kl::float2& b) {
-	x = b.x - a.x;
-	y = b.y - a.y;
-}
 
 // Addition
 kl::float2 kl::float2::add(const kl::float2& obj) const {

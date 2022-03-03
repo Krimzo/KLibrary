@@ -16,7 +16,6 @@ namespace kl {
 		float2(float a);
 		float2(float x, float y);
 		float2(const kl::int2& v);
-		float2(const kl::float2& a, const kl::float2& b);
 
 		// Addition
 		kl::float2 add(const kl::float2& obj) const;

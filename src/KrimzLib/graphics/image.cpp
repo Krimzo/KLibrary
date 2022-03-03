@@ -238,13 +238,13 @@ kl::image kl::image::flipVertical() const {
 void kl::image::drawLine(const kl::int2& a, const kl::int2& b, const kl::color& col) {
 	// Calculations
 	const int len = max(abs(b.x - a.x), abs(b.y - a.y));
-	kl::float2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
+	const kl::float2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
 
 	// Drawing
 	kl::float2 drawPoint(float(a.x), float(a.y));
 	for (int i = 0; i <= len; i++) {
 		setPixel(kl::int2(int(drawPoint.x), int(drawPoint.y)), col);
-		drawPoint = drawPoint + incr;
+		drawPoint += incr;
 	}
 }
 
@@ -329,7 +329,7 @@ void kl::image::drawCircle(const kl::int2& p, float r, const kl::color& col, boo
 }
 // Draws a circle between 1 center and 1 outer point
 void kl::image::drawCircle(const kl::int2& a, const kl::int2& b, const kl::color& col, bool fill) {
-	this->drawCircle(a, kl::float2(a, b).length(), col, fill);
+	this->drawCircle(a, kl::float2(b - a).length(), col, fill);
 }
 
 // Converts an image to an ASCII frame
