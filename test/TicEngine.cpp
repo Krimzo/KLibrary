@@ -107,7 +107,7 @@ struct BoardInfo {
 	}
 };
 
-BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth) {
+BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, int alpha, int beta) {
 	// Game finished check
 	const int currEval = Evaluate(board);
 	if (currEval != ID_EMPTY || !HasEmpty(board) || depth >= INT_MAX) {
@@ -129,10 +129,16 @@ BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth) {
 				futureBoard[i] = ID_ENGINE;
 
 				// Find best move for future board
-				const int futureEval = FindBest(futureBoard, true, depth + 1).eval;
+				const int futureEval = FindBest(futureBoard, true, depth + 1, alpha, beta).eval;
 				if (futureEval > maxInfo.eval) {
 					maxInfo.eval = futureEval;
 					maxInfo.move = i;
+				}
+
+				// Alpha beta pruning
+				alpha = max(alpha, futureEval);
+				if (beta <= alpha) {
+					break;
 				}
 			}
 		}
@@ -152,10 +158,16 @@ BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth) {
 				futureBoard[i] = ID_PLAYER;
 
 				// Find best move for future board
-				const int futureEval = FindBest(futureBoard, false, depth + 1).eval;
+				const int futureEval = FindBest(futureBoard, false, depth + 1, alpha, beta).eval;
 				if (futureEval < minInfo.eval) {
 					minInfo.eval = futureEval;
 					minInfo.move = i;
+				}
+
+				// Alpha beat pruning
+				beta = min(beta, futureEval);
+				if (beta <= alpha) {
+					break;
 				}
 			}
 		}
@@ -164,6 +176,8 @@ BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth) {
 }
 
 int main() {
+	kl::console::hide();
+
 	std::vector<int> board(BOARD_LEN * BOARD_LEN);
 	bool playersTurn = kl::random::BOOL();
 
@@ -209,7 +223,7 @@ int main() {
 			}
 		}
 		else {
-			board[FindBest(board, false, 0).move] = ID_ENGINE;
+			board[FindBest(board, false, 0, ID_PLAYER, ID_ENGINE).move] = ID_ENGINE;
 			playersTurn = true;
 		}
 
