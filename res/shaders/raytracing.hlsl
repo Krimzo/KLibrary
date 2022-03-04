@@ -63,11 +63,13 @@ struct Ray {
     }
 };
 
+#define SPHERE_COUNT 6
+
 cbuffer PS_CB : register(b0) {
     float4 frameSize;
     matrix invCam;
     float4 camPos;
-    Sphere spheres[6];
+    Sphere spheres[SPHERE_COUNT];
 };
 
 float3 TraceRayDefault(Ray ray);
@@ -99,7 +101,7 @@ float3 TraceRayDefault(Ray ray) {
 
     // Finding the intersection point
     float interDis = 3.14e38f;
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < SPHERE_COUNT; i++) {
         // Data buffers
         float3 tempInter;
         float tempDis = 0;
@@ -154,13 +156,13 @@ float3 TraceRayDefault(Ray ray) {
         rayColor = (reflection * fresnelEffect) * spheres[interSphereID].color;
     }
     else {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < SPHERE_COUNT; i++) {
             // Light direction           
             float3 lightDirection = normalize(spheres[i].center - interPoin);
             
             // Shadow testing
             bool inShadow = false;
-            for (int j = 0; j < 6; j++) {
+            for (int j = 0; j < SPHERE_COUNT; j++) {
                 if (j != i) {
                     Ray lightRay = { interPoin + interNorm, lightDirection };
                     float3 ignoreOut1; float ignoreOut2;
@@ -194,7 +196,7 @@ float3 TraceRayDiffuse(Ray ray) {
 
     // Finding the intersection point
     float interDis = 3.14e38f;
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < SPHERE_COUNT; i++) {
         // Data buffers
         float3 tempInter;
         float tempDis = 0;
@@ -231,13 +233,13 @@ float3 TraceRayDiffuse(Ray ray) {
     }
 
     float3 rayColor = 0.0f;
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < SPHERE_COUNT; i++) {
         // Light direction           
         float3 lightDirection = normalize(spheres[i].center - interPoin);
 
         // Shadow testing
         bool inShadow = false;
-        for (int j = 0; j < 6; j++) {
+        for (int j = 0; j < SPHERE_COUNT; j++) {
             if (j != i) {
                 Ray lightRay = { interPoin + interNorm, lightDirection };
                 float3 ignoreOut1;

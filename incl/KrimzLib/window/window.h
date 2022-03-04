@@ -6,7 +6,7 @@
 #include <windowsx.h>
 
 #include "KrimzLib/math/int2.h"
-#include "KrimzLib/graphics/image.h"
+#include "KrimzLib/color/image.h"
 #include "KrimzLib/window/keys.h"
 #include "KrimzLib/window/mouse.h"
 

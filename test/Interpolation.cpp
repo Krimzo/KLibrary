@@ -2,18 +2,21 @@
 
 
 int main() {
+	// Window creation
+	kl::window window;
+	kl::image frame(kl::int2(900));
+
 	// Window size
-	const kl::int2 windowSize(900, 900);
 	const int fpsLimit = 165;
 
 	// Triangle points
-	kl::float2 A(50.0f, (windowSize.y - 1) / 3.0f);
+	kl::float2 A(50.0f, (frame.height() - 1) / 3.0f);
 	kl::color colA(255, 0, 0);
-	kl::float2 B((windowSize.x - 1) / 3.0f, windowSize.y - 51.0f);
+	kl::float2 B((frame.width() - 1) / 3.0f, frame.height() - 51.0f);
 	kl::color colB(255, 255, 255);
-	kl::float2 C(windowSize.x - 51.0f, (windowSize.y - 1) * 0.667f);
+	kl::float2 C(frame.width() - 51.0f, (frame.height() - 1) * 0.667f);
 	kl::color colC(0, 0, 255);
-	kl::float2 D((windowSize.x - 1) * 0.667f, 50.0f);
+	kl::float2 D((frame.width() - 1) * 0.667f, 50.0f);
 	kl::color colD(0, 255, 0);
 
 	// Triangle creation
@@ -22,21 +25,12 @@ int main() {
 	kl::triangle T2(kl::vertex(kl::float3(A, 0.5f)), kl::vertex(kl::float3(D, 0.5f)), kl::vertex(kl::float3(C, 0.5f)));
 	const kl::float4 t2Consts = T2.getConsts();
 
-	// Window creation
-	kl::window window;
-	kl::image frame(windowSize);
-
-	// Window update setup
-	int counter = 0;
-	const float timeToSleep = 1.0f / fpsLimit;
+	// Window update setups
 	kl::timer timer;
+	const float timeToSleep = 1.0f / fpsLimit;
 	window.update = [&]() {
-		// Setting x and y
-		int x = counter - windowSize.y;
-		int y = 0;
-
-		// Interpolating the line
-		for (int i = 0; i < windowSize.y; i++) {
+		static int frameInd = 0;
+		for (int x = frameInd - frame.height(), y = 0; y < frame.height(); x++, y++) {
 			// Pixel buffer
 			kl::color pixel;
 			
@@ -56,28 +50,24 @@ int main() {
 			}
 
 			// Drawing the pixel to the frame
-			frame.setPixel(kl::int2(x, y), pixel);
+			frame.spixel(kl::int2(x, y), pixel);
 
 			// Drawing the rand scanline
-			frame.setPixel(kl::int2(x + 1, y), kl::random::COLOR());
+			frame.spixel(kl::int2(x + 1, y), kl::random::COLOR());
 
 			// Drawing the yellow scanlinepa
 			int yellowStrength = kl::random::INT(0, 256);
-			frame.setPixel(kl::int2(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
-
-			// Updating x and y
-			x++;
-			y++;
+			frame.spixel(kl::int2(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
 		}
 		
 		// Rendering the frame
 		window.drawImage(frame);
 
 		// Updating the title
-		window.setTitle(std::to_string(int((100.0 * counter) / (windowSize.x + windowSize.y - 1))) + "%");
+		window.setTitle(std::to_string(int((100.0f * frameInd) / (frame.width() + frame.height() - 1))) + "%");
 
 		// Checking the i
-		if (++counter == windowSize.x + windowSize.y) {
+		if (++frameInd == frame.width() + frame.height()) {
 			window.setTitle("Finished!");
 			window.update = []() {};
 		}
@@ -88,5 +78,5 @@ int main() {
 	};
 
 	// Window start
-	window.startNew(windowSize, "Triangle Interpolation", false, true);
+	window.startNew(frame.size(), "Triangle Interpolation", false, true);
 }

@@ -58,11 +58,11 @@ void Start() {
 	});
 
 	// Sphere setup
-	spheres[0] = kl::sphere(kl::float3( 0.0f, -5005.0f, 20.0f), 5000.00f, kl::color( 50,  50,  50), 0.0f, 0.0f);
-	spheres[1] = kl::sphere(kl::float3( 0.0f,     0.0f, 20.0f),    4.00f, kl::color(255,  85,  90), 0.8f, 0.0f);
-	spheres[2] = kl::sphere(kl::float3(-5.0f,    -1.0f, 15.0f),    2.00f, kl::color(230, 195, 115), 0.9f, 0.0f);
-	spheres[3] = kl::sphere(kl::float3(-5.0f,     0.0f, 25.0f),    3.00f, kl::color(165, 195, 245), 0.9f, 0.0f);
-	spheres[4] = kl::sphere(kl::float3( 5.5f,     0.0f, 15.0f),    3.00f, kl::color( 30, 230, 230), 0.9f, 0.0f);
+	spheres[0] = kl::sphere(kl::float3( 0.0f, -9005.0f, 20.0f),  9000.0f, kl::color( 50,  50,  50), 0.0f, 0.0f);
+	spheres[1] = kl::sphere(kl::float3( 0.0f,     0.0f, 20.0f),    4.00f, kl::random::COLOR(), 0.8f, 0.0f);
+	spheres[2] = kl::sphere(kl::float3(-5.0f,    -1.0f, 15.0f),    2.00f, kl::random::COLOR(), 0.9f, 0.0f);
+	spheres[3] = kl::sphere(kl::float3(-5.0f,     0.0f, 25.0f),    3.00f, kl::random::COLOR(), 0.9f, 0.0f);
+	spheres[4] = kl::sphere(kl::float3( 5.5f,     0.0f, 15.0f),    3.00f, kl::random::COLOR(), 0.9f, 0.0f);
 	spheres[5] = kl::sphere(kl::float3( 0.0f,    20.0f, 30.0f),    0.25f, kl::color(255, 255, 255), 0.0f, 3.0f);
 }
 

@@ -4,7 +4,7 @@
 
 #include "KrimzLib/math/float2.h"
 #include "KrimzLib/math/int3.h"
-#include "KrimzLib/graphics/color.h"
+#include "KrimzLib/color/color.h"
 
 
 namespace kl {

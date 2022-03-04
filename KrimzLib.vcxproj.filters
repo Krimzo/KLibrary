@@ -48,10 +48,10 @@
     <ClCompile Include="src\KrimzLib\geometry\vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\graphics\color.cpp">
+    <ClCompile Include="src\KrimzLib\color\color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KrimzLib\graphics\image.cpp">
+    <ClCompile Include="src\KrimzLib\color\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\KrimzLib\light\ambient.cpp">
@@ -206,10 +206,10 @@
     <ClInclude Include="incl\KrimzLib\geometry\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\graphics\color.h">
+    <ClInclude Include="incl\KrimzLib\color\color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="incl\KrimzLib\graphics\image.h">
+    <ClInclude Include="incl\KrimzLib\color\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\light\ambient.h">

@@ -6,7 +6,7 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
-#include "KrimzLib/graphics/image.h"
+#include "KrimzLib/color/image.h"
 
 
 namespace kl {

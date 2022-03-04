@@ -21,7 +21,7 @@
 #include "KrimzLib/math/int2.h"
 #include "KrimzLib/math/float4.h"
 #include "KrimzLib/geometry/vertex.h"
-#include "KrimzLib/graphics/image.h"
+#include "KrimzLib/color/image.h"
 
 #pragma comment (lib, "d3d11.lib")
 

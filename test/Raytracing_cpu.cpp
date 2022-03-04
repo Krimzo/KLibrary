@@ -117,7 +117,7 @@ int main() {
     // Camera properties
     kl::camera cam;
     cam.fov = 45.0f;
-    cam.aspect = float(frame.getWidth()) / frame.getHeight();
+    cam.aspect = float(frame.width()) / frame.height();
 
     // Inverse cam calculation
     const kl::mat4 invCam = cam.matrix().inverse();
@@ -125,16 +125,16 @@ int main() {
     // Prep
     kl::console::hideCursor();
     float threadTimes[4] = {};
-    const float pixelsPerThread = frame.getWidth() * frame.getHeight() * 0.25f;
+    const float pixelsPerThread = frame.width() * frame.height() * 0.25f;
     const int bounceLimit = 3;
 
     // Tracing the rays
     kl::timer tim;
     kl::time::interval();
-    kl::thread::parallelFor(0, frame.getHeight(), [&](int t, int y) {
-        for (int x = 0; x < frame.getWidth(); x++) {
+    kl::thread::parallelFor(0, frame.height(), [&](int t, int y) {
+        for (int x = 0; x < frame.width(); x++) {
             // Calculating ndc pixel coordinates
-            kl::float2 ndc = kl::float2(float(x), float(frame.getHeight() - y)) / kl::float2(float(frame.getWidth()), float(frame.getHeight()));
+            kl::float2 ndc = kl::float2(float(x), float(frame.height() - y)) / kl::float2(float(frame.width()), float(frame.height()));
             ndc *= 2.0f;
             ndc -= 1.0f;
 
@@ -146,7 +146,7 @@ int main() {
             const kl::float3 pixel = TraceRay(kl::ray(cam.position, raydir.xyz().normalize()), spheres, 0, bounceLimit);
 
             // Saving the pixel
-            frame.setPixel(kl::int2(x, y), kl::convert::toColor(pixel));
+            frame.spixel(kl::int2(x, y), kl::convert::toColor(pixel));
 
             // Progress bar
             static std::mutex lock;
@@ -168,8 +168,8 @@ int main() {
     // Saving the info
     std::ofstream file("ren/info.txt");
     file << std::fixed << std::setprecision(2);
-    file << "Resolution: " << frame.getWidth() << " x " << frame.getHeight() << "\n";
-    file << "Pixel count: " << frame.getWidth() * frame.getHeight() << "\n";
+    file << "Resolution: " << frame.width() << " x " << frame.height() << "\n";
+    file << "Pixel count: " << frame.width() * frame.height() << "\n";
     file << "Bounce limit: " << bounceLimit << "\n\n";
     for (int i = 0; i < 4; i++) {
         file << "Thread " << (i + 1) << " time: " << std::setw(6) << threadTimes[i] << " seconds\n";

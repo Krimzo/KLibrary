@@ -1,4 +1,4 @@
-#include "KrimzLib/graphics/image.h"
+#include "KrimzLib/color/image.h"
 
 #include <iostream>
 #include <sstream>
@@ -13,45 +13,36 @@
 
 // Constructor
 kl::image::image() {
-	this->setSize(kl::int2());
+	resize(kl::int2());
 }
 kl::image::image(const kl::int2& size, const kl::color& color) {
-	this->setSize(size);
-	this->fill(color);
+	resize(size);
+	fill(color);
 }
-kl::image::image(const char* fileName) {
-	this->fromFile(fileName);
+kl::image::image(const std::string& filePath) {
+	fromFile(filePath);
 }
 
 // Getters
-int kl::image::getWidth() const {
-	return width;
+int kl::image::width() const {
+	return _size.x;
 }
-int kl::image::getHeight() const {
-	return height;
+int kl::image::height() const {
+	return _size.y;
 }
-kl::int2 kl::image::getSize() const {
-	return kl::int2(width, height);
+kl::int2 kl::image::size() const {
+	return _size;
 }
-kl::color kl::image::getPixel(const kl::int2& point) const {
-	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
-		return pixels[size_t(point.y) * width + point.x];
+kl::color kl::image::gpixel(const kl::int2& coords) const {
+	if (coords.x >= 0 && coords.x < _size.x && coords.y >= 0 && coords.y < _size.y) {
+		return pixels[size_t(coords.y * _size.x + coords.x)];
 	}
-	return kl::colors::purple;
+	return kl::colors::black;
 }
-int kl::image::pixelCount() const {
-	return int(pixels.size());
+kl::color* kl::image::pointer() const {
+	return (kl::color*)&pixels.front();
 }
-byte* kl::image::pointer() const {
-	return (byte*)&pixels[0];
-}
-kl::image kl::image::getRect(kl::int2 a, kl::int2 b) const {
-	// Clamping
-	a.x = min(max(a.x, 0), this->width);
-	a.y = min(max(a.y, 0), this->height);
-	b.x = min(max(b.x, 0), this->width);
-	b.y = min(max(b.y, 0), this->height);
-
+kl::image kl::image::rect(kl::int2 a, kl::int2 b) const {
 	// Sorting
 	if (b.x < a.x) {
 		int t = a.x;
@@ -66,30 +57,28 @@ kl::image kl::image::getRect(kl::int2 a, kl::int2 b) const {
 
 	// Saving data
 	kl::image temp(b - a);
-	for (int y = 0; y < temp.getHeight(); y++) {
-		for (int x = 0; x < temp.getWidth(); x++) {
-			const kl::int2 pos(x, y);
-			temp.setPixel(pos, this->getPixel(pos + a));
+	for (kl::int2 pos = 0; pos.y < temp.height(); pos.y++) {
+		for (pos.x = 0; pos.x < temp.width(); pos.x++) {
+			temp.spixel(pos, gpixel(pos + a));
 		}
 	}
 	return temp;
 }
 
 // Setters
-void kl::image::setWidth(int width) {
-	setSize(kl::int2(width, height));
+void kl::image::width(int width) {
+	resize(kl::int2(width, _size.y));
 }
-void kl::image::setHeight(int height) {
-	setSize(kl::int2(width, height));
+void kl::image::height(int height) {
+	resize(kl::int2(_size.x, height));
 }
-void kl::image::setSize(const kl::int2& size) {
-	width = size.x;
-	height = size.y;
-	pixels.resize(size_t(width) * height);
+void kl::image::resize(const kl::int2& size) {
+	_size = size;
+	pixels.resize(size_t(_size.x * _size.y));
 }
-void kl::image::setPixel(const kl::int2& point, const kl::color& color) {
-	if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
-		pixels[size_t(point.y) * width + point.x] = color;
+void kl::image::spixel(const kl::int2& coords, const kl::color& color) {
+	if (coords.x >= 0 && coords.x < _size.x && coords.y >= 0 && coords.y < _size.y) {
+		pixels[size_t(coords.y * _size.x + coords.x)] = color;
 	}
 }
 
@@ -113,7 +102,7 @@ void kl::image::fromFile(const std::string& filePath) {
 	}
 
 	// Resizing the self
-	this->setSize(kl::int2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
+	resize(kl::int2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
 
 	// Locking the bitmap data
 	Gdiplus::BitmapData bitmapData;
@@ -148,20 +137,20 @@ void kl::image::toFile(const std::string& fileName) const {
 	}
 	else if (fileExtension == "txt") {
 		std::stringstream ss;
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
+		for (int y = 0; y < _size.y; y++) {
+			for (int x = 0; x < _size.x; x++) {
 				ss <<
 					x << " " << y << " => " <<
-					int(pixels[uint64_t(y) * width + x].r) << " " <<
-					int(pixels[uint64_t(y) * width + x].g) << " " <<
-					int(pixels[uint64_t(y) * width + x].b) << "\n";
+					int(pixels[uint64_t(y) * _size.x + x].r) << " " <<
+					int(pixels[uint64_t(y) * _size.x + x].g) << " " <<
+					int(pixels[uint64_t(y) * _size.x + x].b) << "\n";
 			}
 		}
 		kl::file::write(fileName, ss.str());
 		return;
 	}
 	else {
-		printf("File extension \"%s\" is not supported!\n", fileExtension.c_str());
+		printf("Image: File extension \"%s\" is not supported!\n", fileExtension.c_str());
 		return;
 	}
 
@@ -175,7 +164,7 @@ void kl::image::toFile(const std::string& fileName) const {
 	}
 
 	// Temp bitmap creation
-	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(width, height, PixelFormat32bppARGB);
+	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(_size.x, _size.y, PixelFormat32bppARGB);
 
 	// Locking the bitmap data
 	Gdiplus::BitmapData bitmapData;
@@ -203,14 +192,14 @@ void kl::image::fill(const kl::color& color) {
 }
 
 // Flips the pixel on x axis
-kl::image kl::image::flipHorizontal() const {
+kl::image kl::image::flipH() const {
 	// Temp image
-	kl::image temp(this->getSize());
+	kl::image temp(size());
 
 	// Flipping
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
-			temp.pixels[size_t(y) * width + x] = this->pixels[size_t(y) * width + width - 1 - x];
+	for (int y = 0; y < _size.y; y++) {
+		for (int x = 0; x < _size.x; x++) {
+			temp.pixels[size_t(y) * _size.x + x] = pixels[size_t(y) * _size.x + _size.x - 1 - x];
 		}
 	}
 
@@ -219,14 +208,14 @@ kl::image kl::image::flipHorizontal() const {
 }
 
 // Flips the pixel on y axis
-kl::image kl::image::flipVertical() const {
+kl::image kl::image::flipV() const {
 	// Temp image
-	kl::image temp(this->getSize());
+	kl::image temp(size());
 
 	// Flipping
-	for (int x = 0; x < width; x++) {
-		for (int y = 0; y < height; y++) {
-			temp.pixels[size_t(y) * width + x] = this->pixels[size_t(height - 1 - y) * width + x];
+	for (int x = 0; x < _size.x; x++) {
+		for (int y = 0; y < _size.y; y++) {
+			temp.pixels[size_t(y) * _size.x + x] = pixels[size_t(_size.y - 1 - y) * _size.x + x];
 		}
 	}
 
@@ -243,7 +232,7 @@ void kl::image::drawLine(const kl::int2& a, const kl::int2& b, const kl::color& 
 	// Drawing
 	kl::float2 drawPoint(float(a.x), float(a.y));
 	for (int i = 0; i <= len; i++) {
-		setPixel(kl::int2(int(drawPoint.x), int(drawPoint.y)), col);
+		spixel(kl::int2(int(drawPoint.x), int(drawPoint.y)), col);
 		drawPoint += incr;
 	}
 }
@@ -316,43 +305,40 @@ void kl::image::drawCircle(const kl::int2& p, float r, const kl::color& col, boo
 			// X run
 			const int x1 = int(p.x - r + i);
 			const int y1 = int(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
-			setPixel(kl::int2(x1, y1), col);
-			setPixel(kl::int2(x1, 2 * p.y - y1), col);
+			spixel(kl::int2(x1, y1), col);
+			spixel(kl::int2(x1, 2 * p.y - y1), col);
 
 			// Y run
 			const int y2 = int(p.y - r + i);
 			const int x2 = int(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
-			setPixel(kl::int2(x2, y2), col);
-			setPixel(kl::int2(2 * p.x - x2, y2), col);
+			spixel(kl::int2(x2, y2), col);
+			spixel(kl::int2(2 * p.x - x2, y2), col);
 		}
 	}
 }
 // Draws a circle between 1 center and 1 outer point
 void kl::image::drawCircle(const kl::int2& a, const kl::int2& b, const kl::color& col, bool fill) {
-	this->drawCircle(a, kl::float2(b - a).length(), col, fill);
+	drawCircle(a, kl::float2(b - a).length(), col, fill);
 }
 
 // Converts an image to an ASCII frame
-std::string kl::image::toASCII(const kl::int2& frameSize) {
+std::string kl::image::toASCII(const kl::int2& frameSize) const {
 	// ASCII 'table'
 	static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 
 	// Calculations
-	const int pixelWidthIncrement = width / frameSize.x;
-	const int pixelHeightIncrement = height / frameSize.y;
+	const kl::int2 incr = _size / frameSize;
 
 	// Processing
 	std::stringstream frame;
-	for (int y = 0; y < frameSize.y; y++) {
-		for (int x = 0; x < frameSize.x; x++) {
+	const float toSatur = 9.0f / 255.0f;
+	for (kl::int2 pos = 0; pos.y < frameSize.y; pos.y++) {
+		for (pos.x = 0; pos.x < frameSize.x; pos.x++) {
 			// Pixels to grayscale
-			kl::color currentPixel = getPixel(kl::int2(x * pixelWidthIncrement, y * pixelHeightIncrement));
-			const int grayScaledPixel = int(currentPixel.r * 0.299f + currentPixel.g * 0.587f + currentPixel.b * 0.114f);
+			const kl::color grayPixel = gpixel(pos * incr).grayscale();
 
 			// Grayscaled values to ASCII
-			static const float toSatur = 9.0f / 255;
-			const int saturationLevel = int(grayScaledPixel * toSatur);
-			frame << asciiPixelTable[saturationLevel];
+			frame << asciiPixelTable[int(grayPixel.r * toSatur)];
 		}
 		frame << '\n';
 	}

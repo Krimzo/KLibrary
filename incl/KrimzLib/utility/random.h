@@ -5,7 +5,7 @@
 #include <sstream>
 #include <windows.h>
 
-#include "KrimzLib/graphics/color.h"
+#include "KrimzLib/color/color.h"
 
 
 namespace kl {

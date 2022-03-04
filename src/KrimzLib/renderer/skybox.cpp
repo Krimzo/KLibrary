@@ -20,21 +20,21 @@ const std::vector<kl::vertex> boxVertices {
 // Constructors/destructor
 kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& name, const kl::image& fullbox) {
 	// Checking the aspect ratio
-	if (fullbox.getWidth() % 4 == 0 && fullbox.getHeight() % 3 == 0) {
+	if (fullbox.width() % 4 == 0 && fullbox.height() % 3 == 0) {
 		// Getting the part size
-		const int partWidth = fullbox.getWidth() / 4;
-		const int partHeight = fullbox.getHeight() / 3;
+		const int partWidth = fullbox.width() / 4;
+		const int partHeight = fullbox.height() / 3;
 
 		// Checking the part size
 		if (partWidth == partHeight) {
 			// Extracting the sides
 			const kl::int2 partSize(partWidth, partHeight);
-			const kl::image front  = fullbox.getRect(partSize * kl::int2(1, 1), partSize * kl::int2(2, 2));
-			const kl::image back   = fullbox.getRect(partSize * kl::int2(3, 1), partSize * kl::int2(4, 2));
-			const kl::image left   = fullbox.getRect(partSize * kl::int2(0, 1), partSize * kl::int2(1, 2));
-			const kl::image right  = fullbox.getRect(partSize * kl::int2(2, 1), partSize * kl::int2(3, 2));
-			const kl::image top    = fullbox.getRect(partSize * kl::int2(1, 0), partSize * kl::int2(2, 1));
-			const kl::image bottom = fullbox.getRect(partSize * kl::int2(1, 2), partSize * kl::int2(2, 3));
+			const kl::image front  = fullbox.rect(partSize * kl::int2(1, 1), partSize * kl::int2(2, 2));
+			const kl::image back   = fullbox.rect(partSize * kl::int2(3, 1), partSize * kl::int2(4, 2));
+			const kl::image left   = fullbox.rect(partSize * kl::int2(0, 1), partSize * kl::int2(1, 2));
+			const kl::image right  = fullbox.rect(partSize * kl::int2(2, 1), partSize * kl::int2(3, 2));
+			const kl::image top    = fullbox.rect(partSize * kl::int2(1, 0), partSize * kl::int2(2, 1));
+			const kl::image bottom = fullbox.rect(partSize * kl::int2(1, 2), partSize * kl::int2(2, 3));
 
 			// Calling the other constructor
 			this->kl::skybox::skybox(dev, devcon, name, front, back, left, right, top, bottom);

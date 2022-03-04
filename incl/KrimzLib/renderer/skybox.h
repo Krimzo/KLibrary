@@ -8,7 +8,7 @@
 #include "KrimzLib/dx/texture.h"
 #include "KrimzLib/dx/shaders.h"
 #include "KrimzLib/dx/cbuffer.h"
-#include "KrimzLib/graphics/image.h"
+#include "KrimzLib/color/image.h"
 #include "KrimzLib/math/mat4.h"
 #include "KrimzLib/geometry/vertex.h"
 

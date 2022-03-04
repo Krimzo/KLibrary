@@ -8,7 +8,7 @@
 
 #include "KrimzLib/math/math.h"
 #include "KrimzLib/math/float4.h"
-#include "KrimzLib/graphics/color.h"
+#include "KrimzLib/color/color.h"
 
 
 // Converts degrees to radians

@@ -17,13 +17,16 @@ namespace kl {
 		color();
 		color(byte r, byte g, byte b, byte a = 255);
 
-		// Returns data as an int
-		int getInt() const;
-
 		// Operator overloading
 		bool equals(const kl::color& obj) const;
 		bool operator==(const kl::color& obj) const;
 		bool operator!=(const kl::color& obj) const;
+
+		// Returns data as an int
+		int getInt() const;
+
+		// Returns grayscaled color
+		kl::color grayscale() const;
 	};
 
 	// Overloading std::cout

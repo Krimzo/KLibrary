@@ -12,8 +12,8 @@ void renderSticks(kl::image& frameBuffer, std::vector<stick>& stickArray) {
 
 	// Drawing the sticks
 	for (int x = 0; x < stickArray.size(); x++) {
-		for (int y = (frameBuffer.getHeight() - 1 - stickArray[x].val); y < frameBuffer.getHeight(); y++) {
-			frameBuffer.setPixel(kl::int2(x, y), stickArray[x].col);
+		for (int y = (frameBuffer.height() - 1 - stickArray[x].val); y < frameBuffer.height(); y++) {
+			frameBuffer.spixel(kl::int2(x, y), stickArray[x].col);
 		}
 	}
 }
@@ -28,25 +28,25 @@ int main() {
 	kl::window testWindow;
 	kl::image frame(kl::int2(900, 900));
 
-	std::vector<stick> sticks(frame.getWidth());
+	std::vector<stick> sticks(frame.width());
 	for (stick& stik : sticks) {
 		// Setting the value
 		int randVal = 0;
 		do {
-			randVal = kl::random::INT(frame.getHeight() + 1);
-		} while ([&]() {
+			randVal = kl::random::INT(frame.height() + 1);
+		}
+		while ([&]() {
 			for (int i = 0; i < sticks.size(); i++) {
 				if (sticks[i].val == randVal) {
 					return true;
 				}
 			}
 			return false;
-			}());
+		}());
 		stik.val = randVal;
 
 		// Setting the color
-		const byte yellowGradient = kl::random::BYTE();
-		stik.col = kl::color(yellowGradient, yellowGradient, 0);
+		stik.col = kl::random::COLOR(true);
 	}
 
 	testWindow.update = [&]() {
@@ -86,5 +86,5 @@ int main() {
 		testWindow.update = []() {};
 	};
 
-	testWindow.startNew(frame.getSize(), "Bubble Sort", false, true);
+	testWindow.startNew(frame.size(), "Bubble Sort", false, true);
 }

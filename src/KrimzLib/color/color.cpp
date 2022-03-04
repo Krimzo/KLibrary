@@ -1,4 +1,4 @@
-#include "KrimzLib/graphics/color.h"
+#include "KrimzLib/color/color.h"
 
 
 // Constructors
@@ -15,11 +15,6 @@ kl::color::color(byte r, byte g, byte b, byte a) {
 	this->a = a;
 }
 
-// Returns data as an int
-int kl::color::getInt() const {
-	return *(int*)this;
-}
-
 // Operator overloading
 bool kl::color::equals(const kl::color& obj) const {
 	return r == obj.r && g == obj.g && b == obj.b && a == obj.a;
@@ -29,6 +24,17 @@ bool kl::color::operator==(const kl::color& obj) const {
 }
 bool kl::color::operator!=(const kl::color& obj) const {
 	return !this->equals(obj);
+}
+
+// Returns data as an int
+int kl::color::getInt() const {
+	return *(int*)this;
+}
+
+// Returns grayscaled color
+kl::color kl::color::grayscale() const {
+	const byte grayValue = byte(r * 0.299f + g * 0.587f + b * 0.114f);
+	return kl::color(grayValue, grayValue, grayValue);
 }
 
 // Overloading std::cout

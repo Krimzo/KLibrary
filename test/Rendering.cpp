@@ -31,18 +31,16 @@ void setup() {
 	renderer.vSync = true;
 
 	// Skybox creation
-	clouds = renderer.newSkybox(
-		"",
-		"res/textures/skyboxes/clouds/front.jpg",
-		"res/textures/skyboxes/clouds/back.jpg",
-		"res/textures/skyboxes/clouds/left.jpg",
-		"res/textures/skyboxes/clouds/right.jpg",
-		"res/textures/skyboxes/clouds/top.jpg",
-		"res/textures/skyboxes/clouds/bottom.jpg"
+	clouds = renderer.newSkybox("clouds",
+		kl::image("res/textures/skyboxes/clouds/front.jpg"),
+		kl::image("res/textures/skyboxes/clouds/back.jpg"),
+		kl::image("res/textures/skyboxes/clouds/left.jpg"),
+		kl::image("res/textures/skyboxes/clouds/right.jpg"),
+		kl::image("res/textures/skyboxes/clouds/top.jpg"),
+		kl::image("res/textures/skyboxes/clouds/bottom.jpg")
 	);
-	night = renderer.newSkybox(
-		"",
-		"res/textures/skyboxes/night/night.jpg"
+	night = renderer.newSkybox("night",
+		kl::image("res/textures/skyboxes/night/night.jpg")
 	);
 	renderer.skybox = clouds;
 
@@ -55,25 +53,25 @@ void setup() {
 	kl::mesh* tv_mes = renderer.newMesh("res/objects/tv.obj");
 
 	// Texture creation
-	kl::texture* solid1_tex = renderer.newTexture(kl::image(kl::int2(1, 1), kl::color(235, 180, 120)));
-	kl::texture* solid2_tex = renderer.newTexture(kl::image(kl::int2(1, 1), kl::color(120, 180, 200)));
-	kl::texture* table_tex = renderer.newTexture("res/textures/table.jpg");
-	kl::texture* katana_tex = renderer.newTexture("res/textures/katana.jpg");
-	kl::texture* horse_tex = renderer.newTexture("res/textures/horse.jpg");
-	kl::texture* tv_tex = renderer.newTexture("res/textures/tv.jpg");
-	kl::texture* peace_tex = renderer.newTexture("res/textures/peace.jpg");
-	kl::texture* fp_tex = renderer.newTexture("res/textures/firepower.jpg");
+	kl::texture* solid1_tex = renderer.newTexture(kl::image(kl::int2(1), kl::color(235, 180, 120)));
+	kl::texture* solid2_tex = renderer.newTexture(kl::image(kl::int2(1), kl::color(120, 180, 200)));
+	kl::texture* table_tex = renderer.newTexture(kl::image("res/textures/table.jpg"));
+	kl::texture* katana_tex = renderer.newTexture(kl::image("res/textures/katana.jpg"));
+	kl::texture* horse_tex = renderer.newTexture(kl::image("res/textures/horse.jpg"));
+	kl::texture* tv_tex = renderer.newTexture(kl::image("res/textures/tv.jpg"));
+	kl::texture* peace_tex = renderer.newTexture(kl::image("res/textures/peace.jpg"));
+	kl::texture* fp_tex = renderer.newTexture(kl::image("res/textures/firepower.jpg"));
 
 	// Object creation
-	wall = renderer.newEntity("", cube_mes, solid1_tex);
-	table = renderer.newEntity("", table_mes, table_tex);
-	katanaL = renderer.newEntity("", katana_mes, katana_tex);
-	katanaR = renderer.newEntity("", katana_mes, katana_tex);
-	horse = renderer.newEntity("", horse_mes, horse_tex);
-	sphere = renderer.newEntity("", sphere_mes, solid2_tex);
-	metalcube1 = renderer.newEntity("", cube_mes, peace_tex);
-	metalcube2 = renderer.newEntity("", cube_mes, fp_tex);
-	kerv = renderer.newEntity("", tv_mes, tv_tex);
+	wall = renderer.newEntity("wall", cube_mes, solid1_tex);
+	table = renderer.newEntity("table", table_mes, table_tex);
+	katanaL = renderer.newEntity("katanaL", katana_mes, katana_tex);
+	katanaR = renderer.newEntity("katanaR", katana_mes, katana_tex);
+	horse = renderer.newEntity("horse", horse_mes, horse_tex);
+	sphere = renderer.newEntity("sphere", sphere_mes, solid2_tex);
+	metalcube1 = renderer.newEntity("metal1", cube_mes, peace_tex);
+	metalcube2 = renderer.newEntity("metal2", cube_mes, fp_tex);
+	kerv = renderer.newEntity("kerv", tv_mes, tv_tex);
 
 	// Object properties setup
 	wall->size = kl::float3(50, 10, 0.05f);
@@ -81,7 +79,7 @@ void setup() {
 
 	table->size = kl::float3(1, 1, 1);
 	table->rotation = kl::float3(0, 45, 0);
-	table->position = kl::float3(0, -0.5, 2);
+	table->position = kl::float3(0, -0.5f, 2);
 
 	katanaL->size = kl::float3(2, 2, 2);
 	katanaL->rotation = kl::float3(0, 180, -42);
@@ -102,13 +100,13 @@ void setup() {
 	sphere->velocity.x = 1;
 	sphere->angular.y = -36;
 
-	metalcube1->size = kl::float3(0.5, 0.5, 0.5);
+	metalcube1->size = kl::float3(0.5f, 0.5f, 0.5f);
 	metalcube1->rotation = kl::float3(45, 45, 0);
 	metalcube1->position = kl::float3(0, 4, -2);
 	metalcube1->physics = true;
 	metalcube1->angular = kl::float3(kl::random::FLOAT(-32, 32), kl::random::FLOAT(-32, 32), kl::random::FLOAT(-32, 32));
 
-	metalcube2->size = kl::float3(0.5, 0.5, 0.5);
+	metalcube2->size = kl::float3(0.5f, 0.5f, 0.5f);
 	metalcube2->rotation = kl::float3(45, 45, 0);
 	metalcube2->position = kl::float3(0, -4, -2);
 	metalcube2->physics = true;

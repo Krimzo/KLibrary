@@ -4,7 +4,7 @@
 #include <conio.h>
 
 #include "KrimzLib/math/int2.h"
-#include "KrimzLib/graphics/color.h"
+#include "KrimzLib/color/color.h"
 
 
 namespace kl {

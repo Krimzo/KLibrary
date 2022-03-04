@@ -180,8 +180,8 @@
     <ClCompile Include="src\KrimzLib\geometry\sphere.cpp" />
     <ClCompile Include="src\KrimzLib\geometry\triangle.cpp" />
     <ClCompile Include="src\KrimzLib\geometry\vertex.cpp" />
-    <ClCompile Include="src\KrimzLib\graphics\color.cpp" />
-    <ClCompile Include="src\KrimzLib\graphics\image.cpp" />
+    <ClCompile Include="src\KrimzLib\color\color.cpp" />
+    <ClCompile Include="src\KrimzLib\color\image.cpp" />
     <ClCompile Include="src\KrimzLib\igui\igui.cpp" />
     <ClCompile Include="src\KrimzLib\light\ambient.cpp" />
     <ClCompile Include="src\KrimzLib\light\direct.cpp" />
@@ -235,8 +235,8 @@
     <ClInclude Include="incl\KrimzLib\geometry\sphere.h" />
     <ClInclude Include="incl\KrimzLib\geometry\triangle.h" />
     <ClInclude Include="incl\KrimzLib\geometry\vertex.h" />
-    <ClInclude Include="incl\KrimzLib\graphics\color.h" />
-    <ClInclude Include="incl\KrimzLib\graphics\image.h" />
+    <ClInclude Include="incl\KrimzLib\color\color.h" />
+    <ClInclude Include="incl\KrimzLib\color\image.h" />
     <ClInclude Include="incl\KrimzLib\igui\igui.h" />
     <ClInclude Include="incl\KrimzLib\KrimzLib.hpp" />
     <ClInclude Include="incl\KrimzLib\light\ambient.h" />

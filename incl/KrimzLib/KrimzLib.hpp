@@ -10,16 +10,9 @@
 #include "KrimzLib/math/mat3.h"
 #include "KrimzLib/math/mat4.h"
 
-// Including the geometry
-#include "KrimzLib/geometry/ray.h"
-#include "KrimzLib/geometry/plane.h"
-#include "KrimzLib/geometry/sphere.h"
-#include "KrimzLib/geometry/vertex.h"
-#include "KrimzLib/geometry/triangle.h"
-
-// Including graphics
-#include "KrimzLib/graphics/image.h"
-#include "KrimzLib/graphics/color.h"
+// Including color
+#include "KrimzLib/color/color.h"
+#include "KrimzLib/color/image.h"
 
 // Including utility
 #include "KrimzLib/utility/time.h"
@@ -32,6 +25,13 @@
 
 // Including memory
 #include "KrimzLib/memory/pbuffer.h"
+
+// Including the geometry
+#include "KrimzLib/geometry/ray.h"
+#include "KrimzLib/geometry/plane.h"
+#include "KrimzLib/geometry/sphere.h"
+#include "KrimzLib/geometry/vertex.h"
+#include "KrimzLib/geometry/triangle.h"
 
 // Including window
 #include "KrimzLib/window/keys.h"

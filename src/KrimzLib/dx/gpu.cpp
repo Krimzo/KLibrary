@@ -63,7 +63,7 @@ kl::gpu::gpu(HWND hwnd, bool imgui) {
     // Generating the buffers
     this->regenBuffers(kl::int2(clientArea.right, clientArea.bottom));
 
-    // Creating a default raster
+    // Creating a default rasterizer
     this->newRaster(false, false)->bind();
 
     // Viewport setup

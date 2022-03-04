@@ -9,12 +9,12 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
 	this->devcon = devcon;
 
     // Getting the flipped image
-    const kl::image flipped = img.flipVertical();
+    const kl::image flipped = img.flipV();
 
     // Texture descriptor creation
     D3D11_TEXTURE2D_DESC texDesc = {};
-    texDesc.Width = img.getWidth();
-    texDesc.Height = img.getHeight();
+    texDesc.Width = img.width();
+    texDesc.Height = img.height();
     texDesc.MipLevels = 1;
     texDesc.ArraySize = 1;
     texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -25,7 +25,7 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
     // Texture data descriptor creation
     D3D11_SUBRESOURCE_DATA texData = {};
     texData.pSysMem = flipped.pointer();
-    texData.SysMemPitch = img.getWidth() * sizeof(uint32_t);
+    texData.SysMemPitch = img.width() * sizeof(uint32_t);
 
     // Texture creation
     ID3D11Texture2D* tex = nullptr;
@@ -52,7 +52,7 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
     this->devcon = devcon;
 
     // Image size check
-    if (!(front.getSize() == back.getSize() && front.getSize() == left.getSize() && front.getSize() == right.getSize() && front.getSize() == top.getSize() && front.getSize() == bottom.getSize())) {
+    if (!(front.size() == back.size() && front.size() == left.size() && front.size() == right.size() && front.size() == top.size() && front.size() == bottom.size())) {
         std::cout << "Texture: Sizes of the 6 given images do not match!";
         std::cin.get();
         exit(69);
@@ -60,8 +60,8 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
 
     // Texture descriptor creation
     D3D11_TEXTURE2D_DESC texDesc = {};
-    texDesc.Width = front.getWidth();
-    texDesc.Height = front.getHeight();
+    texDesc.Width = front.width();
+    texDesc.Height = front.height();
     texDesc.MipLevels = 1;
     texDesc.ArraySize = 6;
     texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -72,12 +72,12 @@ kl::texture::texture(ID3D11Device* dev, ID3D11DeviceContext* devcon, const kl::i
 
     // Texture data descriptor creation
     D3D11_SUBRESOURCE_DATA texData[6] = {
-        {  right.pointer(), front.getWidth() * sizeof(uint32_t), 0 },
-        {   left.pointer(), front.getWidth() * sizeof(uint32_t), 0 },
-        {    top.pointer(), front.getWidth() * sizeof(uint32_t), 0 },
-        { bottom.pointer(), front.getWidth() * sizeof(uint32_t), 0 },
-        {  front.pointer(), front.getWidth() * sizeof(uint32_t), 0 },
-        {   back.pointer(), front.getWidth() * sizeof(uint32_t), 0 }
+        {  right.pointer(), front.width() * sizeof(uint32_t), 0 },
+        {   left.pointer(), front.width() * sizeof(uint32_t), 0 },
+        {    top.pointer(), front.width() * sizeof(uint32_t), 0 },
+        { bottom.pointer(), front.width() * sizeof(uint32_t), 0 },
+        {  front.pointer(), front.width() * sizeof(uint32_t), 0 },
+        {   back.pointer(), front.width() * sizeof(uint32_t), 0 }
     };
 
     // Texture creation

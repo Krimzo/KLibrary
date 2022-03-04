@@ -3,9 +3,13 @@
 
 const int BOARD_LEN = 3;
 const int FRAME_SIZE = 900;
+
 const int ID_PLAYER = -1;
 const int ID_EMPTY = 0;
 const int ID_ENGINE = 1;
+
+const kl::color COLOR_PLAYER = kl::colors::orange;
+const kl::color COLOR_ENGINE = kl::colors::green;
 
 bool HasEmpty(const std::vector<int>& board) {
 	for (int i = 0; i < board.size(); i++) {
@@ -110,7 +114,7 @@ struct BoardInfo {
 BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, int alpha, int beta) {
 	// Game finished check
 	const int currEval = Evaluate(board);
-	if (currEval != ID_EMPTY || !HasEmpty(board) || depth >= INT_MAX) {
+	if (currEval != ID_EMPTY || !HasEmpty(board)) {
 		return BoardInfo(currEval, -1);
 	}
 
@@ -243,20 +247,20 @@ int main() {
 				const int posID = board[size_t(pos.y * BOARD_LEN + pos.x)];
 				if (playerWasFirst) {
 					if (posID == ID_PLAYER) {
-						frame.drawLine(pos * squareSize + kl::int2(lineOffs), (pos + 1) * squareSize - kl::int2(lineOffs), kl::colors::orange);
-						frame.drawLine((pos + kl::int2(0, 1)) * squareSize + kl::int2(lineOffs, -lineOffs), (pos + kl::int2(1, 0)) * squareSize + kl::int2(-lineOffs, lineOffs), kl::colors::orange);
+						frame.drawLine(pos * squareSize + kl::int2(lineOffs), (pos + 1) * squareSize - kl::int2(lineOffs), COLOR_PLAYER);
+						frame.drawLine((pos + kl::int2(0, 1)) * squareSize + kl::int2(lineOffs, -lineOffs), (pos + kl::int2(1, 0)) * squareSize + kl::int2(-lineOffs, lineOffs), COLOR_PLAYER);
 					}
 					else if (posID == ID_ENGINE) {
-						frame.drawCircle(pos * squareSize + kl::int2(circlOffs), pos * squareSize + kl::int2(circlOffs, lineOffs), kl::colors::cyan);
+						frame.drawCircle(pos * squareSize + kl::int2(circlOffs), pos * squareSize + kl::int2(circlOffs, lineOffs), COLOR_ENGINE);
 					}
 				}
 				else {
 					if (posID == ID_ENGINE) {
-						frame.drawLine(pos * squareSize + kl::int2(lineOffs), (pos + 1) * squareSize - kl::int2(lineOffs), kl::colors::cyan);
-						frame.drawLine((pos + kl::int2(0, 1)) * squareSize + kl::int2(lineOffs, -lineOffs), (pos + kl::int2(1, 0)) * squareSize + kl::int2(-lineOffs, lineOffs), kl::colors::cyan);
+						frame.drawLine(pos * squareSize + kl::int2(lineOffs), (pos + 1) * squareSize - kl::int2(lineOffs), COLOR_ENGINE);
+						frame.drawLine((pos + kl::int2(0, 1)) * squareSize + kl::int2(lineOffs, -lineOffs), (pos + kl::int2(1, 0)) * squareSize + kl::int2(-lineOffs, lineOffs), COLOR_ENGINE);
 					}
 					else if(posID == ID_PLAYER) {
-						frame.drawCircle(pos * squareSize + kl::int2(circlOffs), pos * squareSize + kl::int2(circlOffs, lineOffs), kl::colors::orange);
+						frame.drawCircle(pos * squareSize + kl::int2(circlOffs), pos * squareSize + kl::int2(circlOffs, lineOffs), COLOR_PLAYER);
 					}
 				}
 			}

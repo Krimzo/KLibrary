@@ -277,7 +277,7 @@ void kl::window::setIcon(const std::string& filePath) {
 // Sets the pixels of the window
 void kl::window::drawImage(const kl::image& toDraw, const kl::int2& position) {
 	// Getting the image size
-	const kl::int2 size = toDraw.getSize();
+	const kl::int2 size = toDraw.size();
 
 	// Setting up the bitmapinfo
 	BITMAPINFO bmpInfo = {};
