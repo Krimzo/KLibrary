@@ -37,6 +37,24 @@ kl::color kl::color::grayscale() const {
 	return kl::color(grayValue, grayValue, grayValue);
 }
 
+// Mixes 2 colors
+kl::color kl::color::mix(const kl::color& col, float ratio) const {
+	// Calc r and ir
+	ratio = max(min(ratio, 1.0f), 0.0f);
+	const float iratio = 1.0f - ratio;
+
+	// Calculating mixed color
+	return kl::color(
+		byte(this->r * iratio) + byte(col.r * ratio),
+		byte(this->g * iratio) + byte(col.g * ratio), 
+		byte(this->b * iratio) + byte(col.b * ratio)
+	);
+}
+kl::color kl::color::mix(const kl::color& col) const {
+	static const float toFloatCol = 1.0f / 255;
+	return this->mix(col, col.a * toFloatCol);
+}
+
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::color& obj) {
 	os << "\033[38;2;" << int(obj.r) << ";" << int(obj.g) << ";" << int(obj.b) << "m";

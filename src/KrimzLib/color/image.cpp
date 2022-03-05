@@ -321,6 +321,21 @@ void kl::image::drawCircle(const kl::int2& a, const kl::int2& b, const kl::color
 	drawCircle(a, kl::float2(b - a).length(), col, fill);
 }
 
+// Draws image on image
+void kl::image::drawImage(const kl::int2& pos, const kl::image& img, bool mixAlpha) {
+	for (kl::int2 coords = 0; coords.y < img.height(); coords.y++) {
+		for (coords.x = 0; coords.x < img.width(); coords.x++) {
+			const kl::color imgPxl = img.gpixel(coords);
+			if (mixAlpha) {
+				spixel(pos + coords, gpixel(pos + coords).mix(img.gpixel(coords)));
+			}
+			else {
+				spixel(pos + coords, img.gpixel(coords));
+			}
+		}
+	}
+}
+
 // Converts an image to an ASCII frame
 std::string kl::image::toASCII(const kl::int2& frameSize) const {
 	// ASCII 'table'

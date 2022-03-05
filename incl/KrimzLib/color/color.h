@@ -27,6 +27,10 @@ namespace kl {
 
 		// Returns grayscaled color
 		kl::color grayscale() const;
+
+		// Mixes 2 colors
+		kl::color mix(const kl::color& col, float ratio) const;
+		kl::color mix(const kl::color& col) const;
 	};
 
 	// Overloading std::cout

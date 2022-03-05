@@ -64,6 +64,9 @@ namespace kl {
 		// Draws a circle between 1 center and 1 outer point
 		void drawCircle(const kl::int2& a, const kl::int2& b, const kl::color& col, bool fill = false);
 
+		// Draws image on image
+		void drawImage(const kl::int2& pos, const kl::image& img, bool mixAlpha = true);
+
 		// Converts an image to an ASCII frame
 		std::string toASCII(const kl::int2& frameSize) const;
 	};
