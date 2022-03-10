@@ -17,6 +17,7 @@ namespace kl {
 		bool mmb = false;
 		bool rmb = false;
 		kl::int2 position;
+		int scroll = 0;
 
 		// Constructor
 		mouse();
