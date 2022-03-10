@@ -87,7 +87,10 @@ void kl::window::createWindow(const kl::int2& size, const std::string& name, boo
 }
 
 // Handles the windows message
+#ifdef KL_USING_IMGUI
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
+
 LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 	case WM_SIZE:
