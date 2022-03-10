@@ -46,8 +46,10 @@ namespace kl {
 		kl::pbuffer<kl::sampler> samplers;
 		kl::pbuffer<kl::sbuffer> sbuffers;
 
+#ifdef KL_USING_IMGUI
 		// ImGui
 		bool usingImGui = false;
+#endif
 
 	public:
 		// Constructor

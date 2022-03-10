@@ -48,8 +48,10 @@ namespace kl {
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		void handleMessage();
 
+#ifdef KL_USING_IMGUI
 		// ImGui
 		bool usingImGui = false;
+#endif
 
 	public:
 		// Screen

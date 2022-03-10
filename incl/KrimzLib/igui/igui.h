@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef KL_USING_IMGUI
+
 #include <functional>
 
 #include "ImGui/imgui.h"
@@ -22,3 +24,5 @@ namespace kl {
 		void draw(const std::function<void()>& func);
 	}
 }
+
+#endif

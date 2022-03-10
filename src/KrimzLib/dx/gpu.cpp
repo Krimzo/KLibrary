@@ -5,7 +5,9 @@
 #include <fstream>
 #include <vector>
 
+#ifdef KL_USING_IMGUI
 #include "ImGui/imgui_impl_dx11.h"
+#endif
 
 #include "KrimzLib/geometry/vertex.h"
 #include "KrimzLib/utility/convert.h"
@@ -72,11 +74,13 @@ kl::gpu::gpu(HWND hwnd, bool imgui) {
     // Setting the triangle as the main primitive type
     devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+#ifdef KL_USING_IMGUI
     // ImGui
     this->usingImGui = imgui;
     if (imgui) {
         ImGui_ImplDX11_Init(dev, devcon);
     }
+#endif
 }
 
 // Destructor
@@ -84,10 +88,12 @@ kl::gpu::~gpu() {
     // Exiting fullscreen
     chain->SetFullscreenState(false, nullptr);
 
+#ifdef KL_USING_IMGUI
     // ImGui
     if (usingImGui) {
         ImGui_ImplDX11_Shutdown();
     }
+#endif
 
     // Utility cleanup
     samplers.clear();

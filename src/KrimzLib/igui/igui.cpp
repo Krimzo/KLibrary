@@ -1,6 +1,8 @@
 #include "KrimzLib/igui/igui.h"
 
 
+#ifdef KL_USING_IMGUI
+
 // Inits the ImGui context
 void kl::igui::init() {
 	IMGUI_CHECKVERSION();
@@ -81,3 +83,5 @@ void kl::igui::draw(const std::function<void()>& func) {
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
+
+#endif

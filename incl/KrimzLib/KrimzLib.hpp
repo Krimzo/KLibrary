@@ -52,7 +52,9 @@
 #include "KrimzLib/dx/sampler.h"
 
 // Including ImGui
+#ifdef KL_USING_IMGUI
 #include "KrimzLib/igui/igui.h"
+#endif
 
 // Including the light
 #include "KrimzLib/light/ambient.h"
