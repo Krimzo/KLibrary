@@ -4,10 +4,10 @@
 kl::window win;
 
 kl::gpu* gpu = nullptr;
-
-kl::shaders* raytracingSha = nullptr;
-
-kl::mesh* screenMes = nullptr;
+ID3D11VertexShader* vertSha = nullptr;
+ID3D11PixelShader* pixlSha = nullptr;
+ID3D11Buffer* cbuff = nullptr;
+ID3D11Buffer* screenMes = nullptr;
 
 kl::timer timer;
 float deltaT = 0.0f;
@@ -44,15 +44,19 @@ void Start() {
 	// Gpu creation
 	gpu = new kl::gpu(win.getWND());
 
-	// Disabling the depth testing
-	gpu->setDSState(kl::dbuffer::Disabled);
+	// Disabling depth test
+	gpu->bind(gpu->newDepthState(false, false, false));
 
-	// Shader creation
-	raytracingSha = gpu->newShaders("res/shaders/raytracing.hlsl", 0, sizeof(PS_CB));
-	raytracingSha->bind();
+	// Raster setup
+	gpu->bind(gpu->newRasterState(false, false));
+
+	// Compiling shaders
+	vertSha = gpu->newVertexShader(kl::file::read("res/shaders/raytracing.hlsl"));
+	pixlSha = gpu->newPixelShader(kl::file::read("res/shaders/raytracing.hlsl"));
+	cbuff = gpu->newConstBuffer(sizeof(PS_CB));
 
 	// Screen mesh creation
-	screenMes = gpu->newMesh({
+	screenMes = gpu->newVertBuffer({
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f, 1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
 	});
@@ -145,6 +149,11 @@ void Update() {
 	// Physics
 	Phys();
 
+	// Binding
+	gpu->bind(vertSha);
+	gpu->bind(pixlSha);
+	gpu->bindPixlCBuff(cbuff, 0);
+
 	// Setting data
 	PS_CB psData = {};
 	psData.frameSize = kl::float4(win.getSize(), 0.0f, 0.0f);
@@ -157,10 +166,10 @@ void Update() {
 		psData.spheres[i].reflectivity = spheres[i].reflectivity;
 		psData.spheres[i].emission = spheres[i].calcEmiss();
 	}
-	raytracingSha->setPixlData(&psData);
+	gpu->setBuffData(cbuff, &psData);
 
 	// Raytracing
-	screenMes->draw();
+	gpu->draw(screenMes);
 
 	// Buffer swap
 	gpu->swap(true);
@@ -169,15 +178,10 @@ void Update() {
 	win.setTitle(std::to_string(int(1 / deltaT)));
 }
 
-void End() {
-	delete gpu;
-}
-
 void Resize(const kl::int2& newSize) {
 	if (gpu && newSize.x > 0 && newSize.y > 0) {
 		gpu->regenBuffers(newSize);
-		gpu->setDSState(kl::dbuffer::Disabled);
-		gpu->setViewport(kl::int2(0, 0), newSize);
+		gpu->viewport(kl::int2(0), newSize);
 		camera.aspect = float(newSize.x) / newSize.y;
 	}
 }
@@ -185,7 +189,6 @@ void Resize(const kl::int2& newSize) {
 int main() {
 	win.start = Start;
 	win.update = Update;
-	win.end = End;
 	win.resize = Resize;
 	timer.elapsed();
 	win.startNew(kl::int2(1600, 900), "Raytracing", true, true);

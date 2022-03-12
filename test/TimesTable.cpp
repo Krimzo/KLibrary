@@ -66,7 +66,7 @@ int main() {
 
 		// Incrementing m
 		m += mIncr * kl::time::interval();
-		win.setTitle("Times Table -> n: " + std::to_string(n) + " m: " + std::to_string(m));
+		win.setTitle("n: " + std::to_string(n) + " m: " + std::to_string(m));
 	};
 
 	win.resize = [&](const kl::int2& size) {

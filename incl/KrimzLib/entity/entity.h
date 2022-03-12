@@ -1,9 +1,12 @@
 #pragma once
 
-#include "KrimzLib/dx/mesh.h"
-#include "KrimzLib/dx/texture.h"
+#include "KrimzLib/gpu/gpu.h"
 #include "KrimzLib/math/float3.h"
 #include "KrimzLib/math/mat4.h"
+
+#include <windows.h>
+#include <windowsx.h>
+#include <d3d11.h>
 
 
 namespace kl {
@@ -29,13 +32,13 @@ namespace kl {
 		kl::float3 angular;
 
 		// Mesh pointer
-		kl::mesh* mesh = nullptr;
+		ID3D11Buffer* mesh = nullptr;
 
 		// Texture pointer
-		kl::texture* texture = nullptr;
+		ID3D11ShaderResourceView* texture = nullptr;
 
 		// Constructor
-		entity(const std::string& name, kl::mesh* mes, kl::texture* tex);
+		entity(const std::string& name, ID3D11Buffer* mes, ID3D11ShaderResourceView* tex);
 
 		// Updates the object physics
 		void upPhys(float deltaT);
@@ -44,6 +47,6 @@ namespace kl {
 		kl::mat4 matrix() const;
 
 		// Renders the mesh
-		void render(bool useTex) const;
+		void render(kl::gpu* gpu, bool useTex) const;
 	};
 }

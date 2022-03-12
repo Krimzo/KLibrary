@@ -1,7 +1,6 @@
 #pragma once
 
-
-// Including math
+// Math
 #include "KrimzLib/math/math.h"
 #include "KrimzLib/math/int2.h"
 #include "KrimzLib/math/float2.h"
@@ -10,11 +9,11 @@
 #include "KrimzLib/math/mat3.h"
 #include "KrimzLib/math/mat4.h"
 
-// Including color
+// Color
 #include "KrimzLib/color/color.h"
 #include "KrimzLib/color/image.h"
 
-// Including utility
+// Utility
 #include "KrimzLib/utility/time.h"
 #include "KrimzLib/utility/convert.h"
 #include "KrimzLib/utility/random.h"
@@ -23,47 +22,36 @@
 #include "KrimzLib/utility/web.h"
 #include "KrimzLib/utility/thread.h"
 
-// Including memory
+// Memory
 #include "KrimzLib/memory/pbuffer.h"
 
-// Including the geometry
+// Geometry
 #include "KrimzLib/geometry/ray.h"
 #include "KrimzLib/geometry/plane.h"
 #include "KrimzLib/geometry/sphere.h"
 #include "KrimzLib/geometry/vertex.h"
 #include "KrimzLib/geometry/triangle.h"
 
-// Including window
+// Window
 #include "KrimzLib/window/keys.h"
 #include "KrimzLib/window/mouse.h"
 #include "KrimzLib/window/window.h"
 
-// Including dx
-#include "KrimzLib/dx/gpu.h"
-#include "KrimzLib/dx/fbuffer.h"
-#include "KrimzLib/dx/dbuffer.h"
-#include "KrimzLib/dx/ibuffer.h"
-#include "KrimzLib/dx/sbuffer.h"
-#include "KrimzLib/dx/raster.h"
-#include "KrimzLib/dx/shaders.h"
-#include "KrimzLib/dx/cbuffer.h"
-#include "KrimzLib/dx/mesh.h"
-#include "KrimzLib/dx/texture.h"
-#include "KrimzLib/dx/sampler.h"
+// GPU
+#include "KrimzLib/gpu/gpu.h"
 
-// Including ImGui
-#ifdef KL_USING_IMGUI
-#include "KrimzLib/igui/igui.h"
-#endif
+// Render
+#include "KrimzLib/render/camera.h"
+#include "KrimzLib/render/skybox.h"
 
-// Including the light
+// Light
 #include "KrimzLib/light/ambient.h"
 #include "KrimzLib/light/direct.h"
 
-// Including the entity
+// Entity
 #include "KrimzLib/entity/entity.h"
 
-// Including the renderer
-#include "KrimzLib/renderer/camera.h"
-#include "KrimzLib/renderer/skybox.h"
-#include "KrimzLib/renderer/renderer.h"
+#ifdef KL_USING_IMGUI
+// ImGui
+#include "KrimzLib/igui/igui.h"
+#endif

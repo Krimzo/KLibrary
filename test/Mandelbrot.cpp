@@ -4,8 +4,10 @@
 kl::window win;
 
 kl::gpu* gpu = nullptr;
-kl::shaders* sha = nullptr;
-kl::mesh* box = nullptr;
+ID3D11VertexShader* vertSha = nullptr;
+ID3D11PixelShader* pixlSha = nullptr;
+ID3D11Buffer* cbuff = nullptr;
+ID3D11Buffer* box = nullptr;
 
 struct PS_CB {
 	kl::float2 frameSize;
@@ -27,17 +29,19 @@ void start() {
 	gpu = new kl::gpu(win.getWND());
 
 	// Setting the raster
-	gpu->newRaster(false, false, true)->bind();
+	gpu->bind(gpu->newRasterState(false, false));
 
 	// Compiling shaders
-	sha = gpu->newShaders("res/shaders/mandelbrot.hlsl", 0, sizeof(PS_CB));
+	vertSha = gpu->newVertexShader(kl::file::read("res/shaders/mandelbrot.hlsl"));
+	pixlSha = gpu->newPixelShader(kl::file::read("res/shaders/mandelbrot.hlsl"));
+	cbuff = gpu->newConstBuffer(sizeof(PS_CB));
 
 	// Creating the box mesh
 	std::vector<kl::vertex> boxVertices = {
-		kl::vertex(kl::float3(-1, -1, 0.5)), kl::vertex(kl::float3(-1,  1, 0.5)), kl::vertex(kl::float3(1, 1, 0.5)),
-		kl::vertex(kl::float3(-1, -1, 0.5)), kl::vertex(kl::float3( 1, -1, 0.5)), kl::vertex(kl::float3(1, 1, 0.5))
+		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f,  1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
+		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3( 1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
 	};
-	box = gpu->newMesh(boxVertices);
+	box = gpu->newVertBuffer(boxVertices);
 }
 
 kl::timer timer;
@@ -96,16 +100,21 @@ void update() {
 	// Clearing
 	gpu->clear(kl::colors::black);
 
+	// Binding
+	gpu->bind(vertSha);
+	gpu->bind(pixlSha);
+	gpu->bindPixlCBuff(cbuff, 0);
+
 	// CBuffer data
 	PS_CB pxdata = {};
 	pxdata.frameSize = frameSize;
 	pxdata.zoom.x = zoom;
 	pxdata.pos = pos;
 	pxdata.startPos.x = 0;
-	sha->setPixlData(&pxdata);
+	gpu->setBuffData(cbuff, &pxdata);
 
 	// Rendering the box
-	box->draw();
+	gpu->draw(box);
 
 	// Swapping the frame buffers
 	gpu->swap(true);

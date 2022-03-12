@@ -2,7 +2,7 @@
 
 
 // Constructor
-kl::entity::entity(const std::string& name, kl::mesh* mes, kl::texture* tex) {
+kl::entity::entity(const std::string& name, ID3D11Buffer* mes, ID3D11ShaderResourceView* tex) {
 	this->name = name;
 	mesh = mes;
 	texture = tex;
@@ -28,12 +28,12 @@ kl::mat4 kl::entity::matrix() const {
 }
 
 // Renders the mesh
-void kl::entity::render(bool useTex) const {
+void kl::entity::render(kl::gpu* gpu, bool useTex) const {
 	// Binding the texture
 	if (useTex) {
-		texture->bind(0);
+		gpu->bindPixlTex(texture, 0);
 	}
 
 	// Rendering
-	mesh->draw();
+	gpu->draw(mesh);
 }

@@ -1,4 +1,6 @@
-#include "KrimzLib/renderer/skybox.h"
+#include "KrimzLib/render/skybox.h"
+
+#include "KrimzLib/utility/file.h"
 
 
 // Skybox box vertices
@@ -18,7 +20,7 @@ const std::vector<kl::vertex> boxVertices {
 };
 
 // Constructors/destructor
-kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& name, const kl::image& fullbox) {
+kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& fullbox) {
 	// Checking the aspect ratio
 	if (fullbox.width() % 4 == 0 && fullbox.height() % 3 == 0) {
 		// Getting the part size
@@ -37,7 +39,7 @@ kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::st
 			const kl::image bottom = fullbox.rect(partSize * kl::int2(1, 2), partSize * kl::int2(2, 3));
 
 			// Calling the other constructor
-			this->kl::skybox::skybox(dev, devcon, name, front, back, left, right, top, bottom);
+			this->kl::skybox::skybox(gpu, name, front, back, left, right, top, bottom);
 		}
 		else {
 			printf("Skybox image width and height do not match!");
@@ -51,33 +53,45 @@ kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::st
 		exit(69);
 	}
 }
-kl::skybox::skybox(ID3D11Device* dev, ID3D11DeviceContext* devcon, const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+	// Saving the gpu
+	this->gpu = gpu;
+
 	// Saving the name
 	this->name = name;
 
 	// Compiling skybox shaders
-	sky_sh = new kl::shaders(dev, devcon, "res/shaders/skybox.hlsl", sizeof(kl::mat4), 0);
+	sky_vtx = gpu->newVertexShader(kl::file::read("res/shaders/skybox.hlsl"));
+	sky_pxl = gpu->newPixelShader(kl::file::read("res/shaders/skybox.hlsl"));
+	vtx_cb = gpu->newConstBuffer(sizeof(kl::mat4));
 
 	// Generating the box mesh
-	box_mes = new kl::mesh(dev, devcon, boxVertices);
+	box_mes = gpu->newVertBuffer(boxVertices);
 
 	// Generating the box texture
-	box_tex = new kl::texture(dev, devcon, front, back, left, right, top, bottom);
+	ID3D11Texture2D* boxTex = gpu->newTexture(front, back, left, right, top, bottom);
+	box_tex = gpu->newShaderView(boxTex);
+	gpu->destroy(boxTex);
 }
 kl::skybox::~skybox() {
-	delete sky_sh;
-	delete box_tex;
-	delete box_mes;
+	gpu->destroy(sky_vtx);
+	gpu->destroy(sky_pxl);
+	gpu->destroy(vtx_cb);
+	gpu->destroy(box_mes);
+	gpu->destroy(box_tex);
 }
 
 // Renders the cubemap
 void kl::skybox::render(const kl::mat4& vpMat) const {
-	// Setting skybox vp data
-	sky_sh->setVertData(vpMat.pointer());
+	// Shader bind
+	gpu->bind(sky_pxl);
+	gpu->bind(sky_vtx);
+	gpu->bindVertCBuff(vtx_cb, 0);
+	gpu->setBuffData(vtx_cb, (void*)&vpMat);
 
 	// Binding the texture
-	box_tex->bind(0);
+	gpu->bindPixlTex(box_tex, 0);
 
 	// Drawing the cubemap
-	box_mes->draw();
+	gpu->draw(box_mes);
 }
