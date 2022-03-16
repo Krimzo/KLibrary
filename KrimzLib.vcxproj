@@ -57,6 +57,7 @@
     <ClCompile Include="src\KrimzLib\utility\convert.cpp" />
     <ClCompile Include="src\KrimzLib\utility\file.cpp" />
     <ClCompile Include="src\KrimzLib\utility\random.cpp" />
+    <ClCompile Include="src\KrimzLib\utility\socket.cpp" />
     <ClCompile Include="src\KrimzLib\utility\thread.cpp" />
     <ClCompile Include="src\KrimzLib\utility\time.cpp" />
     <ClCompile Include="src\KrimzLib\utility\web.cpp" />
@@ -64,7 +65,7 @@
     <ClCompile Include="src\KrimzLib\window\keys.cpp" />
     <ClCompile Include="src\KrimzLib\window\mouse.cpp" />
     <ClCompile Include="src\KrimzLib\window\window.cpp" />
-    <ClCompile Include="test\Mandelbrot.cpp" />
+    <ClCompile Include="test\SocketTcp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="incl\KrimzLib\color\color.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="incl\KrimzLib\utility\convert.h" />
     <ClInclude Include="incl\KrimzLib\utility\file.h" />
     <ClInclude Include="incl\KrimzLib\utility\random.h" />
+    <ClInclude Include="incl\KrimzLib\utility\socket.h" />
     <ClInclude Include="incl\KrimzLib\utility\thread.h" />
     <ClInclude Include="incl\KrimzLib\utility\time.h" />
     <ClInclude Include="incl\KrimzLib\utility\web.h" />

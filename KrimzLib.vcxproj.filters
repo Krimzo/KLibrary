@@ -150,7 +150,10 @@
     <ClCompile Include="src\KrimzLib\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\Mandelbrot.cpp">
+    <ClCompile Include="test\SocketTcp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KrimzLib\utility\socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -261,6 +264,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="incl\KrimzLib\KrimzLib.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="incl\KrimzLib\utility\socket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
