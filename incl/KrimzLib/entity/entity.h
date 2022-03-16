@@ -26,7 +26,7 @@ namespace kl {
 		kl::float3 position;
 		
 		// Physics
-		bool physics = true;
+		bool physics = false;
 		kl::float3 acceler;
 		kl::float3 velocity;
 		kl::float3 angular;

@@ -112,35 +112,35 @@ void kl::window::handleMessage() {
 	// Default
 	switch (wndMsg.message) {
 	case WM_KEYDOWN:
-		this->keys.setKey(wndMsg.wParam, true);
+		this->keys.updateKey(wndMsg.wParam, true);
 		break;
 
 	case WM_KEYUP:
-		this->keys.setKey(wndMsg.wParam, false);
+		this->keys.updateKey(wndMsg.wParam, false);
 		break;
 
 	case WM_LBUTTONDOWN:
-		this->mouse.lmb = true;
+		this->mouse.lmb.update(true);
 		break;
 
 	case WM_LBUTTONUP:
-		this->mouse.lmb = false;
+		this->mouse.lmb.update(false);
 		break;
 
 	case WM_MBUTTONDOWN:
-		this->mouse.mmb = true;
+		this->mouse.mmb.update(true);
 		break;
 
 	case WM_MBUTTONUP:
-		this->mouse.mmb = false;
+		this->mouse.mmb.update(false);
 		break;
 
 	case WM_RBUTTONDOWN:
-		this->mouse.rmb = true;
+		this->mouse.rmb.update(true);
 		break;
 
 	case WM_RBUTTONUP:
-		this->mouse.rmb = false;
+		this->mouse.rmb.update(false);
 		break;
 
 	case WM_MOUSEMOVE:
@@ -182,8 +182,10 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 		start();
 		while (IsWindow(hwnd)) {
 			while (PeekMessageA(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
-				handleMessage();
+				this->handleMessage();
 			}
+			this->keys.callAllDowns();
+			this->mouse.callAllDowns();
 			update();
 		}
 		end();
@@ -192,7 +194,9 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 		start();
 		while (IsWindow(hwnd)) {
 			GetMessageA(&wndMsg, hwnd, 0, 0);
-			handleMessage();
+			this->handleMessage();
+			this->keys.callAllDowns();
+			this->mouse.callAllDowns();
 			update();
 		}
 		end();

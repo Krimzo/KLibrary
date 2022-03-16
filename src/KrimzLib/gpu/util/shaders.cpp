@@ -8,7 +8,7 @@
 
 
 // Shader creation
-ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source) {
+ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11InputLayout** outLayout, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc) {
     // Blobs
     ID3DBlob* blobData = nullptr;
     ID3DBlob* blobError = nullptr;
@@ -35,27 +35,28 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source) {
         exit(69);
     }
 
-    // Input descriptor
-    D3D11_INPUT_ELEMENT_DESC inputDesc[3] = {
-        {  "POS_IN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        {  "TEX_IN", 0,    DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORM_IN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-    };
+    // Layout output check
+    if (outLayout) {
+        // Input descriptor
+        D3D11_INPUT_ELEMENT_DESC defaulDesc[3] = {
+            {  "POS_IN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            {  "TEX_IN", 0,    DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORM_IN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
 
-    // Creating the input layout
-    ID3D11InputLayout* inputLayout = nullptr;
-    device->CreateInputLayout(inputDesc, 3, blobData->GetBufferPointer(), blobData->GetBufferSize(), &inputLayout);
-    if (!inputLayout) {
-        std::cout << "DirectX: Could not create an input layout!";
-        std::cin.get();
-        exit(69);
+        // Creating the input layout
+        device->CreateInputLayout(desc.size() > 0 ? &desc[0] : defaulDesc, desc.size() > 0 ? UINT(desc.size()) : 3, blobData->GetBufferPointer(), blobData->GetBufferSize(), outLayout);
+        if (!*outLayout) {
+            std::cout << "DirectX: Could not create an input layout!";
+            std::cin.get();
+            exit(69);
+        }
+
+        // Saving child
+        children.push_back(*outLayout);
     }
 
-    // Setting the input layout
-    devcon->IASetInputLayout(inputLayout);
-
     // Cleanup
-    inputLayout->Release();
     blobData->Release();
 
     // Saving child
@@ -107,4 +108,7 @@ void kl::gpu::bind(ID3D11VertexShader* sha) {
 }
 void kl::gpu::bind(ID3D11PixelShader* sha) {
     devcon->PSSetShader(sha, nullptr, 0);
+}
+void kl::gpu::bind(ID3D11InputLayout* layout) {
+    devcon->IASetInputLayout(layout);
 }

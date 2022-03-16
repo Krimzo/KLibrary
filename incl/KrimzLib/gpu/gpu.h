@@ -77,10 +77,11 @@ namespace kl {
 		void bind(ID3D11DepthStencilState* state);
 
 		// Shaders
-		ID3D11VertexShader* newVertexShader(const std::string& source);
+		ID3D11VertexShader* newVertexShader(const std::string& source, ID3D11InputLayout** outLayout = nullptr, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
 		ID3D11PixelShader* newPixelShader(const std::string& source);
 		void bind(ID3D11VertexShader* sha);
 		void bind(ID3D11PixelShader* sha);
+		void bind(ID3D11InputLayout* layout);
 
 		// Buffer
 		ID3D11Buffer* newBuffer(D3D11_BUFFER_DESC* desc, D3D11_SUBRESOURCE_DATA* subData = nullptr);

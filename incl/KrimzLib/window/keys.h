@@ -1,90 +1,95 @@
 #pragma once
 
+#include "KrimzLib/window/key.h"
+
 
 namespace kl {
-	typedef unsigned long long key;
+	typedef unsigned long long id;
 	class keys {
 	public:
 		// Letters
-		bool q = false;
-		bool w = false;
-		bool e = false;
-		bool r = false;
-		bool t = false;
-		bool z = false;
-		bool u = false;
-		bool i = false;
-		bool o = false;
-		bool p = false;
-		bool a = false;
-		bool s = false;
-		bool d = false;
-		bool f = false;
-		bool g = false;
-		bool h = false;
-		bool j = false;
-		bool k = false;
-		bool l = false;
-		bool y = false;
-		bool x = false;
-		bool c = false;
-		bool v = false;
-		bool b = false;
-		bool n = false;
-		bool m = false;
+		kl::key q;
+		kl::key w;
+		kl::key e;
+		kl::key r;
+		kl::key t;
+		kl::key z;
+		kl::key u;
+		kl::key i;
+		kl::key o;
+		kl::key p;
+		kl::key a;
+		kl::key s;
+		kl::key d;
+		kl::key f;
+		kl::key g;
+		kl::key h;
+		kl::key j;
+		kl::key k;
+		kl::key l;
+		kl::key y;
+		kl::key x;
+		kl::key c;
+		kl::key v;
+		kl::key b;
+		kl::key n;
+		kl::key m;
 
 		// Numbers
-		bool num0 = false;
-		bool num1 = false;
-		bool num2 = false;
-		bool num3 = false;
-		bool num4 = false;
-		bool num5 = false;
-		bool num6 = false;
-		bool num7 = false;
-		bool num8 = false;
-		bool num9 = false;
+		kl::key num0;
+		kl::key num1;
+		kl::key num2;
+		kl::key num3;
+		kl::key num4;
+		kl::key num5;
+		kl::key num6;
+		kl::key num7;
+		kl::key num8;
+		kl::key num9;
 
 		// Signs
-		bool period = false;
-		bool comma = false;
-		bool plus = false;
-		bool minus = false;
+		kl::key period;
+		kl::key comma;
+		kl::key plus;
+		kl::key minus;
 
 		// Special
-		bool esc = false;
-		bool tab = false;
-		bool caps = false;
-		bool shift = false;
-		bool ctrl = false;
-		bool alt = false;
-		bool space = false;
-		bool enter = false;
-		bool insert = false;
-		bool delet = false;
-		bool up = false;
-		bool left = false;
-		bool down = false;
-		bool right = false;
+		kl::key esc;
+		kl::key tab;
+		kl::key caps;
+		kl::key shift;
+		kl::key ctrl;
+		kl::key alt;
+		kl::key space;
+		kl::key enter;
+		kl::key insert;
+		kl::key delet;
+		kl::key up;
+		kl::key left;
+		kl::key down;
+		kl::key right;
 
 		// Function
-		bool f1 = false;
-		bool f2 = false;
-		bool f3 = false;
-		bool f4 = false;
-		bool f5 = false;
-		bool f6 = false;
-		bool f7 = false;
-		bool f8 = false;
-		bool f9 = false;
-		bool f10 = false;
-		bool f11 = false;
-		bool f12 = false;
+		kl::key f1;
+		kl::key f2;
+		kl::key f3;
+		kl::key f4;
+		kl::key f5;
+		kl::key f6;
+		kl::key f7;
+		kl::key f8;
+		kl::key f9;
+		kl::key f10;
+		kl::key f11;
+		kl::key f12;
 
 		// Unknown
-		kl::key unknown = 0;
+		kl::id unknown = 0;
 
 		// Updates the given key to the given value
-		void setKey(kl::key key, bool state);
+		void updateKey(kl::id key, bool state);
+
+		// Calls all key down functions
+		void callAllDowns();
 	};
 }

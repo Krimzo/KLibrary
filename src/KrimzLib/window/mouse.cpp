@@ -1,7 +1,6 @@
 #include "KrimzLib/window/mouse.h"
 
 
-// Constructor
 kl::mouse::mouse() {
 
 }
@@ -9,6 +8,13 @@ kl::mouse::mouse() {
 // Binds the mouse to the window
 void kl::mouse::bind(HWND hwnd) {
 	this->hwnd = hwnd;
+}
+
+// Calls all key down functions
+void kl::mouse::callAllDowns() {
+	if (lmb) lmb.down();
+	if (mmb) mmb.down();
+	if (rmb) rmb.down();
 }
 
 // Hides the mouse cursor
@@ -38,7 +44,7 @@ kl::float2 kl::mouse::normPos(const kl::int2& frameSize) const {
 		float(position.x) / frameSize.x,
 		float(frameSize.y - position.y) / frameSize.y
 	);
-	pos *= 2;
-	pos -= 1;
+	pos *= 2.0f;
+	pos -= 1.0f;
 	return pos;
 }

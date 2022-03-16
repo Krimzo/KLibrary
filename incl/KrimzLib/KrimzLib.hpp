@@ -33,6 +33,7 @@
 #include "KrimzLib/geometry/triangle.h"
 
 // Window
+#include "KrimzLib/window/key.h"
 #include "KrimzLib/window/keys.h"
 #include "KrimzLib/window/mouse.h"
 #include "KrimzLib/window/window.h"

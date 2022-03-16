@@ -3,19 +3,21 @@
 #include "KrimzLib/math/float3.h"
 #include "KrimzLib/math/mat4.h"
 
+#undef near
+#undef far
 
 namespace kl {
 	class camera {
 	public:
 		kl::float3 forward = kl::float3::pos_z;
 		kl::float3 position;
-		float nearPlane = 0.01f;
-		float farPlane = 100.0f;
+		float near = 0.01f;
+		float far = 100.0f;
 		float aspect = 16.0f / 9;
 		float fov = 75.0f;
 		float speed = 2.0f;
 		float sens = 0.025f;
-		float shadowDis = 40.0f;
+		float shadows = 40.0f;
 
 		// Constructor
 		camera();

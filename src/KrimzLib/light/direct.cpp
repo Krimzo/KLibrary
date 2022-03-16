@@ -15,7 +15,7 @@ kl::float3 kl::direct::getDir() const {
 kl::mat4 kl::direct::matrix(const kl::camera& cam) const {
 	// Inverse camera matrix calculation
 	const kl::mat4 invCam = (
-		kl::mat4::persp(cam.fov, cam.aspect, cam.nearPlane, cam.shadowDis) *
+		kl::mat4::persp(cam.fov, cam.aspect, cam.near, cam.shadows) *
 		kl::mat4::lookAt(cam.position, cam.position + cam.getForward(), cam.getUp())
 	).inverse();
 

@@ -32,9 +32,11 @@ void start() {
 	gpu->bind(gpu->newRasterState(false, false));
 
 	// Compiling shaders
-	vertSha = gpu->newVertexShader(kl::file::read("res/shaders/mandelbrot.hlsl"));
+	ID3D11InputLayout* defaultLayout = nullptr;
+	vertSha = gpu->newVertexShader(kl::file::read("res/shaders/mandelbrot.hlsl"), &defaultLayout);
 	pixlSha = gpu->newPixelShader(kl::file::read("res/shaders/mandelbrot.hlsl"));
 	cbuff = gpu->newConstBuffer(sizeof(PS_CB));
+	gpu->bind(defaultLayout);
 
 	// Creating the box mesh
 	std::vector<kl::vertex> boxVertices = {

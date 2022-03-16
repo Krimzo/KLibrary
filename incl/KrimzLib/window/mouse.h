@@ -4,6 +4,7 @@
 
 #include "KrimzLib/math/int2.h"
 #include "KrimzLib/math/float2.h"
+#include "KrimzLib/window/keys.h"
 
 
 namespace kl {
@@ -13,17 +14,19 @@ namespace kl {
 		int showCounter = 0;
 
 	public:
-		bool lmb = false;
-		bool mmb = false;
-		bool rmb = false;
+		kl::key lmb;
+		kl::key mmb;
+		kl::key rmb;
 		kl::int2 position;
 		int scroll = 0;
 
-		// Constructor
 		mouse();
 
 		// Binds the mouse to the window
 		void bind(HWND hwnd);
+
+		// Calls all key down functions
+		void callAllDowns();
 
 		// Hides the mouse cursor
 		void hide();

@@ -51,9 +51,11 @@ void Start() {
 	gpu->bind(gpu->newRasterState(false, false));
 
 	// Compiling shaders
-	vertSha = gpu->newVertexShader(kl::file::read("res/shaders/raytracing.hlsl"));
+	ID3D11InputLayout* defaultLayout = nullptr;
+	vertSha = gpu->newVertexShader(kl::file::read("res/shaders/raytracing.hlsl"), &defaultLayout);
 	pixlSha = gpu->newPixelShader(kl::file::read("res/shaders/raytracing.hlsl"));
 	cbuff = gpu->newConstBuffer(sizeof(PS_CB));
+	gpu->bind(defaultLayout);
 
 	// Screen mesh creation
 	screenMes = gpu->newVertBuffer({
