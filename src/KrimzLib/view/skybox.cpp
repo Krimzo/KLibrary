@@ -1,4 +1,4 @@
-#include "KrimzLib/render/skybox.h"
+#include "KrimzLib/view/skybox.h"
 
 #include "KrimzLib/utility/file.h"
 

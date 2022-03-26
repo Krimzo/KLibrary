@@ -11,6 +11,37 @@ kl::float3 kl::direct::getDir() const {
 	return direction.normalize();
 }
 
+// Generates depth buffer
+void kl::direct::genBuff(kl::gpu* gpu, int size) {
+	// Texture gen
+	D3D11_TEXTURE2D_DESC sunTexDesc = {};
+	sunTexDesc.Width = 4096;
+	sunTexDesc.Height = 4096;
+	sunTexDesc.MipLevels = 1;
+	sunTexDesc.ArraySize = 1;
+	sunTexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	sunTexDesc.SampleDesc.Count = 1;
+	sunTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	sunTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	ID3D11Texture2D* sunTex = gpu->newTexture(&sunTexDesc);
+
+	// Depth view gen
+	D3D11_DEPTH_STENCIL_VIEW_DESC sunDepthVDesc = {};
+	sunDepthVDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	sunDepthVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	this->shadowMapDV = gpu->newDepthView(sunTex, &sunDepthVDesc);
+
+	// Shader view gen
+	D3D11_SHADER_RESOURCE_VIEW_DESC sunShaderVDesc = {};
+	sunShaderVDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	sunShaderVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	sunShaderVDesc.Texture2D.MipLevels = 1;
+	this->shadowMapSV = gpu->newShaderView(sunTex, &sunShaderVDesc);
+
+	// Cleanup
+	gpu->destroy(sunTex);
+}
+
 // Returns the light vp matrix
 kl::mat4 kl::direct::matrix(const kl::camera& cam) const {
 	// Inverse camera matrix calculation

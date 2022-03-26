@@ -19,9 +19,45 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="incl\KrimzLib\color\color.h" />
+    <ClInclude Include="incl\KrimzLib\color\image.h" />
+    <ClInclude Include="incl\KrimzLib\geometry\plane.h" />
+    <ClInclude Include="incl\KrimzLib\geometry\ray.h" />
+    <ClInclude Include="incl\KrimzLib\geometry\sphere.h" />
+    <ClInclude Include="incl\KrimzLib\geometry\triangle.h" />
+    <ClInclude Include="incl\KrimzLib\geometry\vertex.h" />
+    <ClInclude Include="incl\KrimzLib\gpu\gpu.h" />
+    <ClInclude Include="incl\KrimzLib\KrimzLib.hpp" />
+    <ClInclude Include="incl\KrimzLib\light\ambient.h" />
+    <ClInclude Include="incl\KrimzLib\light\direct.h" />
+    <ClInclude Include="incl\KrimzLib\math\float2.h" />
+    <ClInclude Include="incl\KrimzLib\math\float3.h" />
+    <ClInclude Include="incl\KrimzLib\math\float4.h" />
+    <ClInclude Include="incl\KrimzLib\math\int2.h" />
+    <ClInclude Include="incl\KrimzLib\math\int3.h" />
+    <ClInclude Include="incl\KrimzLib\math\int4.h" />
+    <ClInclude Include="incl\KrimzLib\math\mat3.h" />
+    <ClInclude Include="incl\KrimzLib\math\mat4.h" />
+    <ClInclude Include="incl\KrimzLib\math\math.h" />
+    <ClInclude Include="incl\KrimzLib\memory\pbuffer.h" />
+    <ClInclude Include="incl\KrimzLib\utility\console.h" />
+    <ClInclude Include="incl\KrimzLib\utility\convert.h" />
+    <ClInclude Include="incl\KrimzLib\utility\file.h" />
+    <ClInclude Include="incl\KrimzLib\utility\random.h" />
+    <ClInclude Include="incl\KrimzLib\utility\socket.h" />
+    <ClInclude Include="incl\KrimzLib\utility\thread.h" />
+    <ClInclude Include="incl\KrimzLib\utility\time.h" />
+    <ClInclude Include="incl\KrimzLib\utility\web.h" />
+    <ClInclude Include="incl\KrimzLib\view\camera.h" />
+    <ClInclude Include="incl\KrimzLib\view\skybox.h" />
+    <ClInclude Include="incl\KrimzLib\window\key.h" />
+    <ClInclude Include="incl\KrimzLib\window\keys.h" />
+    <ClInclude Include="incl\KrimzLib\window\mouse.h" />
+    <ClInclude Include="incl\KrimzLib\window\window.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="src\KrimzLib\color\color.cpp" />
     <ClCompile Include="src\KrimzLib\color\image.cpp" />
-    <ClCompile Include="src\KrimzLib\entity\entity.cpp" />
     <ClCompile Include="src\KrimzLib\geometry\plane.cpp" />
     <ClCompile Include="src\KrimzLib\geometry\ray.cpp" />
     <ClCompile Include="src\KrimzLib\geometry\sphere.cpp" />
@@ -39,7 +75,6 @@
     <ClCompile Include="src\KrimzLib\gpu\views\dview.cpp" />
     <ClCompile Include="src\KrimzLib\gpu\views\sview.cpp" />
     <ClCompile Include="src\KrimzLib\gpu\views\tview.cpp" />
-    <ClCompile Include="src\KrimzLib\igui\igui.cpp" />
     <ClCompile Include="src\KrimzLib\light\ambient.cpp" />
     <ClCompile Include="src\KrimzLib\light\direct.cpp" />
     <ClCompile Include="src\KrimzLib\math\float2.cpp" />
@@ -51,8 +86,6 @@
     <ClCompile Include="src\KrimzLib\math\mat3.cpp" />
     <ClCompile Include="src\KrimzLib\math\mat4.cpp" />
     <ClCompile Include="src\KrimzLib\math\math.cpp" />
-    <ClCompile Include="src\KrimzLib\render\camera.cpp" />
-    <ClCompile Include="src\KrimzLib\render\skybox.cpp" />
     <ClCompile Include="src\KrimzLib\utility\console.cpp" />
     <ClCompile Include="src\KrimzLib\utility\convert.cpp" />
     <ClCompile Include="src\KrimzLib\utility\file.cpp" />
@@ -61,50 +94,13 @@
     <ClCompile Include="src\KrimzLib\utility\thread.cpp" />
     <ClCompile Include="src\KrimzLib\utility\time.cpp" />
     <ClCompile Include="src\KrimzLib\utility\web.cpp" />
+    <ClCompile Include="src\KrimzLib\view\camera.cpp" />
+    <ClCompile Include="src\KrimzLib\view\skybox.cpp" />
     <ClCompile Include="src\KrimzLib\window\key.cpp" />
     <ClCompile Include="src\KrimzLib\window\keys.cpp" />
     <ClCompile Include="src\KrimzLib\window\mouse.cpp" />
     <ClCompile Include="src\KrimzLib\window\window.cpp" />
     <ClCompile Include="test\SocketTcp.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="incl\KrimzLib\color\color.h" />
-    <ClInclude Include="incl\KrimzLib\color\image.h" />
-    <ClInclude Include="incl\KrimzLib\entity\entity.h" />
-    <ClInclude Include="incl\KrimzLib\geometry\plane.h" />
-    <ClInclude Include="incl\KrimzLib\geometry\ray.h" />
-    <ClInclude Include="incl\KrimzLib\geometry\sphere.h" />
-    <ClInclude Include="incl\KrimzLib\geometry\triangle.h" />
-    <ClInclude Include="incl\KrimzLib\geometry\vertex.h" />
-    <ClInclude Include="incl\KrimzLib\gpu\gpu.h" />
-    <ClInclude Include="incl\KrimzLib\igui\igui.h" />
-    <ClInclude Include="incl\KrimzLib\KrimzLib.hpp" />
-    <ClInclude Include="incl\KrimzLib\light\ambient.h" />
-    <ClInclude Include="incl\KrimzLib\light\direct.h" />
-    <ClInclude Include="incl\KrimzLib\math\float2.h" />
-    <ClInclude Include="incl\KrimzLib\math\float3.h" />
-    <ClInclude Include="incl\KrimzLib\math\float4.h" />
-    <ClInclude Include="incl\KrimzLib\math\int2.h" />
-    <ClInclude Include="incl\KrimzLib\math\int3.h" />
-    <ClInclude Include="incl\KrimzLib\math\int4.h" />
-    <ClInclude Include="incl\KrimzLib\math\mat3.h" />
-    <ClInclude Include="incl\KrimzLib\math\mat4.h" />
-    <ClInclude Include="incl\KrimzLib\math\math.h" />
-    <ClInclude Include="incl\KrimzLib\memory\pbuffer.h" />
-    <ClInclude Include="incl\KrimzLib\render\camera.h" />
-    <ClInclude Include="incl\KrimzLib\render\skybox.h" />
-    <ClInclude Include="incl\KrimzLib\utility\console.h" />
-    <ClInclude Include="incl\KrimzLib\utility\convert.h" />
-    <ClInclude Include="incl\KrimzLib\utility\file.h" />
-    <ClInclude Include="incl\KrimzLib\utility\random.h" />
-    <ClInclude Include="incl\KrimzLib\utility\socket.h" />
-    <ClInclude Include="incl\KrimzLib\utility\thread.h" />
-    <ClInclude Include="incl\KrimzLib\utility\time.h" />
-    <ClInclude Include="incl\KrimzLib\utility\web.h" />
-    <ClInclude Include="incl\KrimzLib\window\key.h" />
-    <ClInclude Include="incl\KrimzLib\window\keys.h" />
-    <ClInclude Include="incl\KrimzLib\window\mouse.h" />
-    <ClInclude Include="incl\KrimzLib\window\window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -9,8 +9,9 @@
 #include "KrimzLib/utility/convert.h"
 #include "KrimzLib/math/float4.h"
 #include "KrimzLib/math/mat4.h"
-#include "KrimzLib/render/camera.h"
+#include "KrimzLib/view/camera.h"
 #include "KrimzLib/window/window.h"
+#include "KrimzLib/gpu/gpu.h"
 
 
 namespace kl {
@@ -27,6 +28,9 @@ namespace kl {
 
 		// Returns the direction of light
 		kl::float3 getDir() const;
+
+		// Generates depth buffer
+		void genBuff(kl::gpu* gpu, int size);
 
 		// Returns the light vp matrix
 		kl::mat4 matrix(const kl::camera& cam) const;

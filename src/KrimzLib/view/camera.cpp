@@ -1,4 +1,4 @@
-#include "KrimzLib/render/camera.h"
+#include "KrimzLib/view/camera.h"
 
 
 // Constructor

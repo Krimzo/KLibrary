@@ -42,18 +42,10 @@
 // GPU
 #include "KrimzLib/gpu/gpu.h"
 
-// Render
-#include "KrimzLib/render/camera.h"
-#include "KrimzLib/render/skybox.h"
+// View
+#include "KrimzLib/view/camera.h"
+#include "KrimzLib/view/skybox.h"
 
 // Light
 #include "KrimzLib/light/ambient.h"
 #include "KrimzLib/light/direct.h"
-
-// Entity
-#include "KrimzLib/entity/entity.h"
-
-#ifdef KL_USING_IMGUI
-// ImGui
-#include "KrimzLib/igui/igui.h"
-#endif

@@ -146,7 +146,7 @@ float kl::float3::dot(const kl::float3& a) const {
 	return x * a.x + y * a.y + z * a.z;
 }
 
-// Returns the dot product
+// Returns the cross product
 kl::float3 kl::float3::cross(const kl::float3& a) const {
 	return kl::float3(y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x);
 }

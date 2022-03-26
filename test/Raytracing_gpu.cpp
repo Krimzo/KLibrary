@@ -110,7 +110,7 @@ void Input() {
 
 	// Camera rotation
 	static bool camMoving = false;
-	if (win.mouse.lmb) {
+	if (win.mouse.lmb || win.mouse.rmb) {
 		// Getting the frame center
 		const kl::int2 frameCenter = win.getCenter();
 
