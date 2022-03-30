@@ -29,7 +29,7 @@ namespace kl {
 		// Deletes the given instance
 		bool delInst(T* inst) {
 			for (int i = 0; i < instances.size(); i++) {
-				if (instances[i] = inst) {
+				if (instances[i] == inst) {
 					delete instances[i];
 					instances.erase(instances.begin() + i);
 					return true;
