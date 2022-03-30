@@ -1,4 +1,4 @@
-#include "KrimzLib.hpp"
+#include "KrimzLib.h"
 
 
 struct stick {

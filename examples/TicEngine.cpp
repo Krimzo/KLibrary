@@ -1,4 +1,4 @@
-#include "KrimzLib.hpp"
+#include "KrimzLib.h"
 
 
 const int BOARD_LEN = 3;

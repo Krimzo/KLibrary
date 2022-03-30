@@ -51,6 +51,15 @@
     <ClCompile Include="source\gpu\states\sstate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\gpu\utility\shaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\utility\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\utility\vbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\gpu\views\dview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -139,15 +148,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="examples\Interpolation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\utility\shaders.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\utility\texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\utility\vbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -254,7 +254,7 @@
     <ClInclude Include="source\window\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\KrimzLib.hpp">
+    <ClInclude Include="source\KrimzLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
