@@ -20,6 +20,17 @@ namespace kl {
 			this->clear();
 		}
 
+		// Finds if pointer exists
+		bool find(const T* inst, int* outInd = nullptr) const {
+			for (int i = 0; i < instances.size(); i++) {
+				if (instances[i] == inst) {
+					if (outInd) *outInd = i;
+					return true;
+				}
+			}
+			return false;
+		}
+
 		// Creates a new instance
 		T* newInst(T* inst) {
 			instances.push_back(inst);
@@ -27,24 +38,23 @@ namespace kl {
 		}
 
 		// Deletes the given instance
-		bool delInst(T* inst) {
-			for (int i = 0; i < instances.size(); i++) {
-				if (instances[i] == inst) {
-					delete instances[i];
-					instances.erase(instances.begin() + i);
-					return true;
-				}
+		bool delInst(const T* inst) {
+			int ind = -1;
+			if (find(inst, &ind)) {
+				delete instances[ind];
+				instances.erase(instances.begin() + ind);
+				return true;
 			}
 			return false;
 		}
 
 		// Returns the size
-		size_t size() {
+		size_t size() const {
 			return instances.size();
 		}
 
 		// Operator overload
-		T* operator[](const size_t i) {
+		T* operator[](const size_t i) const {
 			return instances[i];
 		}
 

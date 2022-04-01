@@ -6,7 +6,7 @@
 #include <vector>
 
 #ifdef KL_USING_IMGUI
-#include "ImGui/imgui_impl_dx11.h"
+#include "imgui_impl_dx11.h"
 #endif
 
 #include "geometry/vertex.h"
