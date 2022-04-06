@@ -2,17 +2,20 @@
 
 
 // Returns the true light color
-kl::float4 kl::direct::getCol() const {
+kl::float4 kl::direct::getCol() const
+{
 	return color * intensity;
 }
 
 // Returns the direction of light
-kl::float3 kl::direct::getDir() const {
+kl::float3 kl::direct::getDir() const
+{
 	return direction.normalize();
 }
 
 // Generates depth buffer
-void kl::direct::genBuff(kl::gpu* gpu, int size) {
+void kl::direct::genBuff(kl::gpu* gpu, int size)
+{
 	// Texture gen
 	D3D11_TEXTURE2D_DESC sunTexDesc = {};
 	sunTexDesc.Width = 4096;
@@ -43,18 +46,22 @@ void kl::direct::genBuff(kl::gpu* gpu, int size) {
 }
 
 // Returns the light vp matrix
-kl::mat4 kl::direct::matrix(const kl::camera& cam) const {
+kl::mat4 kl::direct::matrix(const kl::camera& cam) const
+{
 	// Inverse camera matrix calculation
 	const kl::mat4 invCam = (
 		kl::mat4::persp(cam.fov, cam.aspect, cam.near, cam.shadows) *
 		kl::mat4::lookAt(cam.position, cam.position + cam.getForward(), cam.getUp())
-	).inverse();
+		).inverse();
 
 	// Frustum world corners
 	std::vector<kl::float4> frustumCorners;
-	for (int x = 0; x < 2; x++) {
-		for (int y = 0; y < 2; y++) {
-			for (int z = 0; z < 2; z++) {
+	for (int x = 0; x < 2; x++)
+	{
+		for (int y = 0; y < 2; y++)
+		{
+			for (int z = 0; z < 2; z++)
+			{
 				const kl::float4 corner = invCam * kl::float4(2.0f * x - 1.0f, 2.0f * y - 1.0f, 2.0f * z - 1.0f, 1.0f);
 				frustumCorners.push_back(corner / corner.w);
 			}
@@ -63,9 +70,8 @@ kl::mat4 kl::direct::matrix(const kl::camera& cam) const {
 
 	// Centroid calculation
 	kl::float3 centroid;
-	for (const auto& corn : frustumCorners) {
+	for (const auto& corn : frustumCorners)
 		centroid += corn.xyz();
-	}
 	centroid /= 8.0f;
 
 	// Light view matrix
@@ -74,7 +80,8 @@ kl::mat4 kl::direct::matrix(const kl::camera& cam) const {
 	// Finding min and max points
 	kl::float3 minp(FLT_MAX, FLT_MAX, FLT_MAX);
 	kl::float3 maxp(FLT_MIN, FLT_MIN, FLT_MIN);
-	for (const auto& corn : frustumCorners) {
+	for (const auto& corn : frustumCorners)
+	{
 		const kl::float4 lightCorn = view * corn;
 		minp.x = min(minp.x, lightCorn.x);
 		maxp.x = max(maxp.x, lightCorn.x);

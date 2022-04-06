@@ -12,8 +12,10 @@
 #include "geometry/vertex.h"
 
 
-namespace kl {
-	class skybox {
+namespace kl
+{
+	class skybox
+	{
 	private:
 		// DirectX pointers
 		kl::gpu* gpu = nullptr;

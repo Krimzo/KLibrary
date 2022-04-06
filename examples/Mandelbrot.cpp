@@ -9,7 +9,8 @@ ID3D11PixelShader* pixlSha = nullptr;
 ID3D11Buffer* cbuff = nullptr;
 ID3D11Buffer* box = nullptr;
 
-struct PS_CB {
+struct PS_CB
+{
 	kl::float2 frameSize;
 	kl::float2 zoom;
 	kl::float2 pos;
@@ -24,7 +25,8 @@ const float minZoom = 0.5f;
 const float maxZoom = 10000;
 const kl::int2 frameSize(1600, 900);
 
-void start() {
+void start()
+{
 	// DirectX init
 	gpu = new kl::gpu(win.getWND());
 
@@ -39,62 +41,66 @@ void start() {
 	gpu->bind(defaultLayout);
 
 	// Creating the box mesh
-	std::vector<kl::vertex> boxVertices = {
+	std::vector<kl::vertex> boxVertices
+	{
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f,  1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
-		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3( 1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
+		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
 	};
 	box = gpu->newVertBuffer(boxVertices);
 }
 
 kl::timer timer;
-void update() {
+void update()
+{
 	// Time calculations
 	const float deltaT = timer.interval();
 	const float elapsedT = timer.elapsed();
 
 	/* Checking the input */
-	if (win.keys.esc) {
+	if (win.keys.esc)
 		win.stop();
-	}
-	if (win.keys.r) {
+	if (win.keys.r)
+	{
 		pos = kl::float2(-0.5, 0);
-		zoom = 1;
+		zoom = 1.0f;
 	}
-	if (win.keys.w) {
+	if (win.keys.w)
 		pos.y -= (1 / zoom) * deltaT;
-	}
-	if (win.keys.s) {
+	if (win.keys.s)
 		pos.y += (1 / zoom) * deltaT;
-	}
-	if (win.keys.d) {
+	if (win.keys.d)
 		pos.x += (1 / zoom) * deltaT;
-	}
-	if (win.keys.a) {
+	if (win.keys.a)
 		pos.x -= (1 / zoom) * deltaT;
-	}
-	if (win.mouse.lmb) {
+	if (win.mouse.lmb)
+	{
 		// Calculating the zoom
 		zoom += (zoom * zoomSpeed * deltaT);
 
 		// Checking the zoom
-		if (zoom < maxZoom) {
+		if (zoom < maxZoom)
+		{
 			const kl::float2 uv = ((kl::float2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
 			pos += (uv / zoom) * deltaT;
 		}
-		else {
+		else
+		{
 			zoom = maxZoom;
 		}
 	}
-	if (win.mouse.rmb) {
+	if (win.mouse.rmb)
+	{
 		// Calculating the zoom
 		zoom = zoom - zoom * zoomSpeed * deltaT;
 
 		// Checking the zoom
-		if (zoom > minZoom) {
+		if (zoom > minZoom)
+		{
 			const kl::float2 uv = ((kl::float2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
 			pos -= (uv / zoom) * deltaT;
 		}
-		else {
+		else
+		{
 			zoom = minZoom;
 		}
 	}
@@ -129,7 +135,8 @@ void update() {
 	);
 }
 
-int main() {
+int main()
+{
 	win.start = start;
 	win.update = update;
 	timer.reset();

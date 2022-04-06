@@ -12,7 +12,8 @@ const int kl::window::screen::width = GetSystemMetrics(SM_CXSCREEN);
 const int kl::window::screen::height = GetSystemMetrics(SM_CYSCREEN);
 
 // Constructor
-kl::window::window() {
+kl::window::window()
+{
 	// User methods
 	this->start = []() {};
 	this->update = []() {};
@@ -32,16 +33,19 @@ kl::window::window() {
 }
 
 // Destructor
-kl::window::~window() {
+kl::window::~window()
+{
 	this->stop();
 }
 
 // Registers a new window class
-void kl::window::registerWindowClass(const std::string& name) {
+void kl::window::registerWindowClass(const std::string& name)
+{
 	WNDCLASSEXA windowClass = {};
 	windowClass.cbSize = sizeof(WNDCLASSEXA);
 	windowClass.style = CS_OWNDC;
-	windowClass.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	windowClass.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
 		kl::window* callingWin = (kl::window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		return callingWin->WndProc(hwnd, msg, wParam, lParam);
 	};
@@ -54,7 +58,8 @@ void kl::window::registerWindowClass(const std::string& name) {
 	windowClass.lpszMenuName = nullptr;
 	windowClass.lpszClassName = name.c_str();
 	windowClass.hIconSm = nullptr;
-	if (!RegisterClassExA(&windowClass)) {
+	if (!RegisterClassExA(&windowClass))
+	{
 		std::cout << "WinApi: Could not register a window class!";
 		std::cin.get();
 		exit(69);
@@ -62,16 +67,18 @@ void kl::window::registerWindowClass(const std::string& name) {
 }
 
 // Creates a new window
-void kl::window::createWindow(const kl::int2& size, const std::string& name, bool resizeable) {
+void kl::window::createWindow(const kl::int2& size, const std::string& name, bool resizeable)
+{
 	// Setting the window properties
 	winStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
-	RECT adjustedWindowSize = { 0, 0, (LONG)size.x, (LONG)size.y };
+	RECT adjustedWindowSize = { 0, 0, LONG(size.x), LONG(size.y) };
 	AdjustWindowRect(&adjustedWindowSize, winStyle, false);
 	const kl::int2 adjSize(adjustedWindowSize.right - adjustedWindowSize.left, adjustedWindowSize.bottom - adjustedWindowSize.top);
 
 	// Creating the window
 	hwnd = CreateWindowExA(0, name.c_str(), name.c_str(), winStyle, (kl::window::screen::width / 2 - adjSize.x / 2), (kl::window::screen::height / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, hInstance, nullptr);
-	if (!hwnd) {
+	if (!hwnd)
+	{
 		std::cout << "WinApi: Could not create a window!";
 		std::cin.get();
 		exit(69);
@@ -91,31 +98,34 @@ void kl::window::createWindow(const kl::int2& size, const std::string& name, boo
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #endif
 
-LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	switch (msg) {
+LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
 	case WM_SIZE:
 		this->resize(kl::int2(LOWORD(lParam), HIWORD(lParam)));
 		break;
 	}
 	return DefWindowProcA(hwnd, msg, wParam, lParam);
 }
-void kl::window::handleMessage() {
+void kl::window::handleMessage()
+{
 #ifdef KL_USING_IMGUI
 	TranslateMessage(&wndMsg);
-	if (usingImGui) {
-		if (ImGui_ImplWin32_WndProcHandler(wndMsg.hwnd, wndMsg.message, wndMsg.wParam, wndMsg.lParam)) {
+	if (usingImGui)
+	{
+		if (ImGui_ImplWin32_WndProcHandler(wndMsg.hwnd, wndMsg.message, wndMsg.wParam, wndMsg.lParam))
 			return;
-		}
 	}
 #endif
 
 	// Default
-	switch (wndMsg.message) {
+	switch (wndMsg.message)
+	{
 #ifdef KL_USING_IMGUI
 	case WM_CHAR:
-		if (*(short*)&wndMsg.lParam > 1) {
+		if (*(short*)&wndMsg.lParam > 1)
 			ImGui::GetIO().AddInputCharacter(uint32_t(wndMsg.wParam));
-		}
 		break;
 #endif
 
@@ -166,7 +176,8 @@ void kl::window::handleMessage() {
 }
 
 // Window creation
-void kl::window::startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous, bool imgui) {
+void kl::window::startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous, bool imgui)
+{
 	// Registering winapi window class
 	registerWindowClass(name);
 
@@ -179,28 +190,30 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 #ifdef KL_USING_IMGUI
 	// ImGui setup
 	this->usingImGui = imgui;
-	if (imgui) {
+	if (imgui)
 		ImGui_ImplWin32_Init(hwnd);
-	}
 #endif
 
 	// Starting the update loops
 	SetCursor(LoadCursorA(nullptr, LPCSTR(IDC_ARROW)));
-	if (continuous) {
+	if (continuous)
+	{
 		start();
-		while (IsWindow(hwnd)) {
-			while (PeekMessageA(&wndMsg, hwnd, 0, 0, PM_REMOVE)) {
+		while (IsWindow(hwnd))
+		{
+			while (PeekMessageA(&wndMsg, hwnd, 0, 0, PM_REMOVE))
 				this->handleMessage();
-			}
 			this->keys.callAllDowns();
 			this->mouse.callAllDowns();
 			update();
 		}
 		end();
 	}
-	else {
+	else
+	{
 		start();
-		while (IsWindow(hwnd)) {
+		while (IsWindow(hwnd))
+		{
 			GetMessageA(&wndMsg, hwnd, 0, 0);
 			this->handleMessage();
 			this->keys.callAllDowns();
@@ -212,26 +225,29 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 
 #ifdef KL_USING_IMGUI
 	// ImGui cleanup
-	if (imgui) {
+	if (imgui)
 		ImGui_ImplWin32_Shutdown();
-	}
 #endif
 
 	// Cleanup
 	UnregisterClassA(name.c_str(), hInstance);
 }
-void kl::window::stop() const {
+void kl::window::stop() const
+{
 	PostMessageA(hwnd, WM_CLOSE, 0, 0);
 }
 
 // Returns a handle to the window
-HWND kl::window::getWND() {
+HWND kl::window::getWND()
+{
 	return hwnd;
 }
 
 // Sets the fullscreen mode
-void kl::window::setFullscreen(bool enable) {
-	if (!inFull && enable) {
+void kl::window::setFullscreen(bool enable)
+{
+	if (!inFull && enable)
+	{
 		// Saving old window position
 		GetWindowPlacement(hwnd, &winPlace);
 
@@ -242,7 +258,8 @@ void kl::window::setFullscreen(bool enable) {
 		// Setting info
 		inFull = true;
 	}
-	else if (inFull && !enable) {
+	else if (inFull && !enable)
+	{
 		// Resetting the size
 		SetWindowLongA(hwnd, GWL_STYLE, winStyle);
 		SetWindowPlacement(hwnd, &winPlace);
@@ -254,41 +271,49 @@ void kl::window::setFullscreen(bool enable) {
 }
 
 // Max/min functions
-void kl::window::maximize() {
+void kl::window::maximize()
+{
 	ShowWindow(this->hwnd, SW_MAXIMIZE);
 }
-void kl::window::minimize() {
+void kl::window::minimize()
+{
 	ShowWindow(this->hwnd, SW_MINIMIZE);
 }
 
 // Returns the window size
-kl::int2 kl::window::getSize() const {
+kl::int2 kl::window::getSize() const
+{
 	RECT clientArea = {};
 	GetClientRect(hwnd, &clientArea);
 	return kl::int2(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
 }
 
 // Returns the aspect ratio
-float kl::window::getAspect() const {
+float kl::window::getAspect() const
+{
 	const kl::int2 winSize = getSize();
 	return float(winSize.x) / winSize.y;
 }
 
 // Returns the center point of the frame
-kl::int2 kl::window::getCenter() const {
+kl::int2 kl::window::getCenter() const
+{
 	return this->getSize() / 2;
 }
 
 // Sets the window title
-void kl::window::setTitle(const std::string& data) {
+void kl::window::setTitle(const std::string& data)
+{
 	SetWindowTextA(hwnd, data.c_str());
 }
 
 // Sets the window icons
-void kl::window::setIcon(const std::string& filePath) {
+void kl::window::setIcon(const std::string& filePath)
+{
 	// Loading the icon
 	HICON loadedIcon = ExtractIconA(nullptr, filePath.c_str(), NULL);
-	if (!loadedIcon) {
+	if (!loadedIcon)
+	{
 		std::cout << "WinApi: Could not load an icon file \"" << filePath << "\"";
 		std::cin.get();
 		exit(69);
@@ -300,7 +325,8 @@ void kl::window::setIcon(const std::string& filePath) {
 }
 
 // Sets the pixels of the window
-void kl::window::drawImage(const kl::image& toDraw, const kl::int2& position) {
+void kl::window::drawImage(const kl::image& toDraw, const kl::int2& position)
+{
 	// Getting the image size
 	const kl::int2 size = toDraw.size();
 

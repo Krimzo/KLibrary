@@ -8,8 +8,10 @@
 #include "color/color.h"
 
 
-namespace kl {
-	namespace random {
+namespace kl
+{
+	namespace random
+	{
 		// Returns a random bool
 		bool BOOL();
 

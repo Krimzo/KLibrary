@@ -7,8 +7,10 @@
 #include "math/int4.h"
 
 
-namespace kl {
-	class float4 {
+namespace kl
+{
+	class float4
+	{
 	public:
 		float x;
 		float y;

@@ -3,8 +3,10 @@
 #include <functional>
 
 
-namespace kl {
-	class key {
+namespace kl
+{
+	class key
+	{
 	private:
 		bool state;
 

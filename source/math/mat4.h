@@ -5,8 +5,10 @@
 #include "math/float4.h"
 
 
-namespace kl {
-	class mat4 {
+namespace kl
+{
+	class mat4
+	{
 	private:
 		float data[16] = {};
 

@@ -1,7 +1,8 @@
 #include "KrimzLib.h"
 
 
-int main() {
+int main()
+{
 	// Time table properties
 	const int n = 200;
 	const float mIncr = 0.15f;
@@ -19,17 +20,21 @@ int main() {
 	// Window
 	kl::window win;
 	kl::image frame(kl::int2(900), kl::colors::gray);
-	win.update = [&]() {
+	win.update = [&]()
+	{
 		// Color regen
 		static bool rWasDown = false;
-		if (win.keys.r) {
-			if (!rWasDown) {
+		if (win.keys.r)
+		{
+			if (!rWasDown)
+			{
 				pointColor = kl::random::COLOR();
 				lineColor = kl::random::COLOR();
 			}
 			rWasDown = true;
 		}
-		else {
+		else
+		{
 			rWasDown = false;
 		}
 
@@ -43,7 +48,8 @@ int main() {
 		// Calculating the points
 		const float pointAngle = 360.0f / n;
 		std::vector<kl::int2> circlePoints(n);
-		for (int i = 0; i < circlePoints.size(); i++) {
+		for (int i = 0; i < circlePoints.size(); i++)
+		{
 			circlePoints[i] = kl::int2(
 				int(cos(kl::convert::toRadians(pointAngle * i + 180.0f)) * circleRadius) + frame.width() / 2,
 				int(sin(kl::convert::toRadians(pointAngle * i + 180.0f)) * circleRadius) + frame.height() / 2
@@ -51,12 +57,12 @@ int main() {
 		}
 
 		// Drawing the points
-		for (kl::int2& point : circlePoints) {
+		for (kl::int2& point : circlePoints)
 			frame.drawCircle(point, 3.0f, pointColor, true);
-		}
 
 		// Drawing the lines
-		for (int i = 0; i < circlePoints.size(); i++) {
+		for (int i = 0; i < circlePoints.size(); i++)
+		{
 			const int secondPoint = abs(int(i * m) % n);
 			frame.drawLine(circlePoints[i], circlePoints[secondPoint], lineColor);
 		}
@@ -69,7 +75,8 @@ int main() {
 		win.setTitle("n: " + std::to_string(n) + " m: " + std::to_string(m));
 	};
 
-	win.resize = [&](const kl::int2& size) {
+	win.resize = [&](const kl::int2& size)
+	{
 		frame.resize(size);
 	};
 

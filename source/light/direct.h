@@ -14,15 +14,17 @@
 #include "gpu/gpu.h"
 
 
-namespace kl {
-	class direct {
+namespace kl
+{
+	class direct
+	{
 	public:
 		ID3D11DepthStencilView* shadowMapDV = nullptr;
 		ID3D11ShaderResourceView* shadowMapSV = nullptr;
 		kl::float4 color = kl::colors::white;
 		kl::float3 direction = kl::float3(0.0f, -1.0f, -2.0f);
 		float intensity = 1.0f;
-		
+
 		// Returns the true light color
 		kl::float4 getCol() const;
 

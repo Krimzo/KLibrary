@@ -6,8 +6,10 @@
 #include "color/color.h"
 
 
-namespace kl {
-	namespace convert {
+namespace kl
+{
+	namespace convert
+	{
 		// Converts degrees to radians
 		float toRadians(float degrees);
 
@@ -16,7 +18,7 @@ namespace kl {
 
 		// Converts a float color to color
 		kl::color toColor(const kl::float4& colf);
-		
+
 		// Converts a string to a wstring
 		std::wstring toWString(const std::string& data);
 

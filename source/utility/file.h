@@ -10,8 +10,10 @@
 #include "geometry/vertex.h"
 
 
-namespace kl {
-	namespace file {
+namespace kl
+{
+	namespace file
+	{
 		// Returns the file extension from the given file path
 		std::string getExtension(const std::string& filePath);
 

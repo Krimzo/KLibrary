@@ -3,8 +3,10 @@
 #include "math/float2.h"
 
 
-namespace kl {
-	namespace math {
+namespace kl
+{
+	namespace math
+	{
 		// PI
 		static const float pi = 3.14159265358979f;
 

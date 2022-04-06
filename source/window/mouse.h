@@ -7,8 +7,10 @@
 #include "window/keys.h"
 
 
-namespace kl {
-    class mouse {
+namespace kl
+{
+	class mouse
+	{
 	private:
 		HWND hwnd = nullptr;
 		int showCounter = 0;

@@ -5,8 +5,10 @@
 #include "math/int2.h"
 
 
-namespace kl {
-    class float2 {
+namespace kl
+{
+	class float2
+	{
 	public:
 		float x;
 		float y;

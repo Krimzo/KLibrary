@@ -15,8 +15,10 @@
 #pragma comment (lib, "d3d11.lib")
 
 
-namespace kl {
-	class gpu {
+namespace kl
+{
+	class gpu
+	{
 	private:
 		// DirectX pointers
 		ID3D11Device* device = nullptr;
@@ -64,7 +66,7 @@ namespace kl {
 		void clear(const kl::float4& color);
 
 		// Swaps the buffers
-		void swap(bool vSync);		
+		void swap(bool vSync);
 
 		// Raster state
 		ID3D11RasterizerState* newRasterState(D3D11_RASTERIZER_DESC* desc);
@@ -91,7 +93,7 @@ namespace kl {
 		void setBuffData(ID3D11Buffer* buff, void* data);
 		void bindVertCBuff(ID3D11Buffer* buff, int slot);
 		void bindPixlCBuff(ID3D11Buffer* buff, int slot);
-		
+
 		// Mesh
 		ID3D11Buffer* newVertBuffer(const std::vector<kl::vertex>& vertexData);
 		ID3D11Buffer* newVertBuffer(const std::string& filePath, bool flipZ = true);

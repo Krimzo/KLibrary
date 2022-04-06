@@ -3,9 +3,11 @@
 #include "window/key.h"
 
 
-namespace kl {
+namespace kl
+{
 	typedef unsigned long long id;
-	class keys {
+	class keys
+	{
 	public:
 		// Letters
 		kl::key q;

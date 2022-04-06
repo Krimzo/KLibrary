@@ -19,7 +19,8 @@ kl::sphere spheres[6] = {};
 
 int selected = -1;
 
-struct PS_SP {
+struct PS_SP
+{
 	// Geometry
 	kl::float3 center;
 	float radius = 0;
@@ -30,14 +31,16 @@ struct PS_SP {
 	kl::float4 emission = 0;
 };
 
-struct PS_CB {
+struct PS_CB
+{
 	kl::float4 frameSize;
 	kl::mat4 invCam;
 	kl::float4 camPos;
 	PS_SP spheres[6] = {};
 };
 
-void Start() {
+void Start()
+{
 	// Window maximize
 	win.maximize();
 
@@ -61,37 +64,37 @@ void Start() {
 	screenMes = gpu->newVertBuffer({
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f, 1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
-	});
+		});
 
 	// Sphere setup
-	spheres[0] = kl::sphere(kl::float3( 0.0f, -9005.0f, 20.0f),  9000.0f, kl::color( 50,  50,  50), 0.0f, 0.0f);
-	spheres[1] = kl::sphere(kl::float3( 0.0f,     0.0f, 20.0f),    4.00f, kl::random::COLOR(), 0.8f, 0.0f);
-	spheres[2] = kl::sphere(kl::float3(-5.0f,    -1.0f, 15.0f),    2.00f, kl::random::COLOR(), 0.9f, 0.0f);
-	spheres[3] = kl::sphere(kl::float3(-5.0f,     0.0f, 25.0f),    3.00f, kl::random::COLOR(), 0.9f, 0.0f);
-	spheres[4] = kl::sphere(kl::float3( 5.5f,     0.0f, 15.0f),    3.00f, kl::random::COLOR(), 0.9f, 0.0f);
-	spheres[5] = kl::sphere(kl::float3( 0.0f,    20.0f, 30.0f),    0.25f, kl::color(255, 255, 255), 0.0f, 3.0f);
+	spheres[0] = kl::sphere(kl::float3(0.0f, -9005.0f, 20.0f), 9000.0f, kl::color(50, 50, 50), 0.0f, 0.0f);
+	spheres[1] = kl::sphere(kl::float3(0.0f, 0.0f, 20.0f), 4.00f, kl::random::COLOR(), 0.8f, 0.0f);
+	spheres[2] = kl::sphere(kl::float3(-5.0f, -1.0f, 15.0f), 2.00f, kl::random::COLOR(), 0.9f, 0.0f);
+	spheres[3] = kl::sphere(kl::float3(-5.0f, 0.0f, 25.0f), 3.00f, kl::random::COLOR(), 0.9f, 0.0f);
+	spheres[4] = kl::sphere(kl::float3(5.5f, 0.0f, 15.0f), 3.00f, kl::random::COLOR(), 0.9f, 0.0f);
+	spheres[5] = kl::sphere(kl::float3(0.0f, 20.0f, 30.0f), 0.25f, kl::color(255, 255, 255), 0.0f, 3.0f);
 }
 
-void Input() {
+void Input()
+{
 	// Selection
 	if (win.keys.num0) selected = -1;
-	if (win.keys.num1) selected =  0;
-	if (win.keys.num2) selected =  1;
-	if (win.keys.num3) selected =  2;
-	if (win.keys.num4) selected =  3;
-	if (win.keys.num5) selected =  4;
-	if (win.keys.num6) selected =  5;
+	if (win.keys.num1) selected = 0;
+	if (win.keys.num2) selected = 1;
+	if (win.keys.num3) selected = 2;
+	if (win.keys.num4) selected = 3;
+	if (win.keys.num5) selected = 4;
+	if (win.keys.num6) selected = 5;
 
 	// Speed
-	if (win.keys.shift) {
+	if (win.keys.shift)
 		camera.speed = 5;
-	}
-	else {
+	else
 		camera.speed = 2;
-	}
 
 	// Movement
-	if (selected == -1) {
+	if (selected == -1)
+	{
 		if (win.keys.w) camera.moveForward(deltaT);
 		if (win.keys.s) camera.moveBack(deltaT);
 		if (win.keys.d) camera.moveRight(deltaT);
@@ -99,7 +102,8 @@ void Input() {
 		if (win.keys.space) camera.moveUp(deltaT);
 		if (win.keys.c) camera.moveDown(deltaT);
 	}
-	else {
+	else
+	{
 		if (win.keys.w) spheres[selected].center += camera.getForward() * (camera.speed * deltaT);
 		if (win.keys.s) spheres[selected].center -= camera.getForward() * (camera.speed * deltaT);
 		if (win.keys.d) spheres[selected].center += camera.getRight() * (camera.speed * deltaT);
@@ -110,14 +114,14 @@ void Input() {
 
 	// Camera rotation
 	static bool camMoving = false;
-	if (win.mouse.lmb || win.mouse.rmb) {
+	if (win.mouse.lmb || win.mouse.rmb)
+	{
 		// Getting the frame center
 		const kl::int2 frameCenter = win.getCenter();
 
 		// Fixing the camera jump on the first click
-		if (!camMoving) {
+		if (!camMoving)
 			win.mouse.position = frameCenter;
-		}
 
 		// Saving info
 		win.mouse.hide();
@@ -127,20 +131,22 @@ void Input() {
 		camera.rotate(win.mouse.position, frameCenter);
 		win.mouse.move(frameCenter);
 	}
-	else {
+	else
+	{
 		// Saving info
 		win.mouse.show();
 		camMoving = false;
 	}
 }
 
-void Phys() {
-	for (int i = 1; i < 5; i++) {
+void Phys()
+{
+	for (int i = 1; i < 5; i++)
 		spheres[i].center.y = 1.5f * sin(elapsedT + i);
-	}
 }
 
-void Update() {
+void Update()
+{
 	// Time
 	deltaT = timer.interval();
 	elapsedT = timer.elapsed();
@@ -161,7 +167,8 @@ void Update() {
 	psData.frameSize = kl::float4(win.getSize(), 0.0f, 0.0f);
 	psData.invCam = camera.matrix().inverse();
 	psData.camPos = camera.position;
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		psData.spheres[i].center = spheres[i].center;
 		psData.spheres[i].radius = spheres[i].radius;
 		psData.spheres[i].color = spheres[i].color;
@@ -180,15 +187,18 @@ void Update() {
 	win.setTitle(std::to_string(int(1 / deltaT)));
 }
 
-void Resize(const kl::int2& newSize) {
-	if (gpu && newSize.x > 0 && newSize.y > 0) {
+void Resize(const kl::int2& newSize)
+{
+	if (gpu && newSize.x > 0 && newSize.y > 0)
+	{
 		gpu->regenBuffers(newSize);
 		gpu->viewport(kl::int2(0), newSize);
 		camera.aspect = float(newSize.x) / newSize.y;
 	}
 }
 
-int main() {
+int main()
+{
 	win.start = Start;
 	win.update = Update;
 	win.resize = Resize;

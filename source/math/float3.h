@@ -7,8 +7,10 @@
 #include "color/color.h"
 
 
-namespace kl {
-    class float3 {
+namespace kl
+{
+	class float3
+	{
 	public:
 		float x;
 		float y;

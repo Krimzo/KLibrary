@@ -4,56 +4,63 @@
 
 
 // Skybox box vertices
-const std::vector<kl::vertex> boxVertices {
-	kl::vertex(kl::float3( 1, -1,  1)), kl::vertex(kl::float3( 1, -1, -1)), kl::vertex(kl::float3( 1,  1, -1)),
-	kl::vertex(kl::float3( 1,  1, -1)), kl::vertex(kl::float3( 1,  1,  1)), kl::vertex(kl::float3( 1, -1,  1)),
+const std::vector<kl::vertex> boxVertices
+{
+	kl::vertex(kl::float3(1, -1,  1)), kl::vertex(kl::float3(1, -1, -1)), kl::vertex(kl::float3(1,  1, -1)),
+	kl::vertex(kl::float3(1,  1, -1)), kl::vertex(kl::float3(1,  1,  1)), kl::vertex(kl::float3(1, -1,  1)),
 	kl::vertex(kl::float3(-1, -1,  1)), kl::vertex(kl::float3(-1,  1,  1)), kl::vertex(kl::float3(-1,  1, -1)),
 	kl::vertex(kl::float3(-1,  1, -1)), kl::vertex(kl::float3(-1, -1, -1)), kl::vertex(kl::float3(-1, -1,  1)),
-	kl::vertex(kl::float3(-1,  1,  1)), kl::vertex(kl::float3( 1,  1,  1)), kl::vertex(kl::float3( 1,  1, -1)),
-	kl::vertex(kl::float3( 1,  1, -1)), kl::vertex(kl::float3(-1,  1, -1)), kl::vertex(kl::float3(-1,  1,  1)),
-	kl::vertex(kl::float3(-1, -1,  1)), kl::vertex(kl::float3(-1, -1, -1)), kl::vertex(kl::float3( 1, -1, -1)),
-	kl::vertex(kl::float3( 1, -1, -1)), kl::vertex(kl::float3( 1, -1,  1)), kl::vertex(kl::float3(-1, -1,  1)),
-	kl::vertex(kl::float3(-1, -1,  1)), kl::vertex(kl::float3( 1, -1,  1)), kl::vertex(kl::float3( 1,  1,  1)),
-	kl::vertex(kl::float3( 1,  1,  1)), kl::vertex(kl::float3(-1,  1,  1)), kl::vertex(kl::float3(-1, -1,  1)),
-	kl::vertex(kl::float3(-1, -1, -1)), kl::vertex(kl::float3(-1,  1, -1)), kl::vertex(kl::float3( 1,  1, -1)),
-	kl::vertex(kl::float3( 1,  1, -1)), kl::vertex(kl::float3( 1, -1, -1)), kl::vertex(kl::float3(-1, -1, -1))
+	kl::vertex(kl::float3(-1,  1,  1)), kl::vertex(kl::float3(1,  1,  1)), kl::vertex(kl::float3(1,  1, -1)),
+	kl::vertex(kl::float3(1,  1, -1)), kl::vertex(kl::float3(-1,  1, -1)), kl::vertex(kl::float3(-1,  1,  1)),
+	kl::vertex(kl::float3(-1, -1,  1)), kl::vertex(kl::float3(-1, -1, -1)), kl::vertex(kl::float3(1, -1, -1)),
+	kl::vertex(kl::float3(1, -1, -1)), kl::vertex(kl::float3(1, -1,  1)), kl::vertex(kl::float3(-1, -1,  1)),
+	kl::vertex(kl::float3(-1, -1,  1)), kl::vertex(kl::float3(1, -1,  1)), kl::vertex(kl::float3(1,  1,  1)),
+	kl::vertex(kl::float3(1,  1,  1)), kl::vertex(kl::float3(-1,  1,  1)), kl::vertex(kl::float3(-1, -1,  1)),
+	kl::vertex(kl::float3(-1, -1, -1)), kl::vertex(kl::float3(-1,  1, -1)), kl::vertex(kl::float3(1,  1, -1)),
+	kl::vertex(kl::float3(1,  1, -1)), kl::vertex(kl::float3(1, -1, -1)), kl::vertex(kl::float3(-1, -1, -1))
 };
 
 // Constructors/destructor
-kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& fullbox) {
+kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& fullbox)
+{
 	// Checking the aspect ratio
-	if (fullbox.width() % 4 == 0 && fullbox.height() % 3 == 0) {
+	if (fullbox.width() % 4 == 0 && fullbox.height() % 3 == 0)
+	{
 		// Getting the part size
 		const int partWidth = fullbox.width() / 4;
 		const int partHeight = fullbox.height() / 3;
 
 		// Checking the part size
-		if (partWidth == partHeight) {
+		if (partWidth == partHeight)
+		{
 			// Extracting the sides
 			const kl::int2 partSize(partWidth, partHeight);
-			const kl::image front  = fullbox.rect(partSize * kl::int2(1, 1), partSize * kl::int2(2, 2));
-			const kl::image back   = fullbox.rect(partSize * kl::int2(3, 1), partSize * kl::int2(4, 2));
-			const kl::image left   = fullbox.rect(partSize * kl::int2(0, 1), partSize * kl::int2(1, 2));
-			const kl::image right  = fullbox.rect(partSize * kl::int2(2, 1), partSize * kl::int2(3, 2));
-			const kl::image top    = fullbox.rect(partSize * kl::int2(1, 0), partSize * kl::int2(2, 1));
+			const kl::image front = fullbox.rect(partSize * kl::int2(1, 1), partSize * kl::int2(2, 2));
+			const kl::image back = fullbox.rect(partSize * kl::int2(3, 1), partSize * kl::int2(4, 2));
+			const kl::image left = fullbox.rect(partSize * kl::int2(0, 1), partSize * kl::int2(1, 2));
+			const kl::image right = fullbox.rect(partSize * kl::int2(2, 1), partSize * kl::int2(3, 2));
+			const kl::image top = fullbox.rect(partSize * kl::int2(1, 0), partSize * kl::int2(2, 1));
 			const kl::image bottom = fullbox.rect(partSize * kl::int2(1, 2), partSize * kl::int2(2, 3));
 
 			// Calling the other constructor
 			this->kl::skybox::skybox(gpu, name, front, back, left, right, top, bottom);
 		}
-		else {
+		else
+		{
 			printf("Skybox image width and height do not match!");
 			std::cin.get();
 			exit(69);
 		}
 	}
-	else {
+	else
+	{
 		printf("Skybox image does not have the correct aspect ratio!");
 		std::cin.get();
 		exit(69);
 	}
 }
-kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
+kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom)
+{
 	// Saving the gpu
 	this->gpu = gpu;
 
@@ -73,7 +80,8 @@ kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& front
 	box_tex = gpu->newShaderView(boxTex);
 	gpu->destroy(boxTex);
 }
-kl::skybox::~skybox() {
+kl::skybox::~skybox()
+{
 	gpu->destroy(sky_vtx);
 	gpu->destroy(sky_pxl);
 	gpu->destroy(vtx_cb);
@@ -82,7 +90,8 @@ kl::skybox::~skybox() {
 }
 
 // Renders the cubemap
-void kl::skybox::render(const kl::mat4& vpMat) const {
+void kl::skybox::render(const kl::mat4& vpMat) const
+{
 	// Shader bind
 	gpu->bind(sky_pxl);
 	gpu->bind(sky_vtx);

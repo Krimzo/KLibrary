@@ -6,8 +6,10 @@
 #include "geometry/triangle.h"
 
 
-namespace kl {
-	class ray {
+namespace kl
+{
+	class ray
+	{
 	public:
 		kl::float3 origin;
 		kl::float3 direction;

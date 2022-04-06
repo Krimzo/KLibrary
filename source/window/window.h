@@ -24,8 +24,10 @@
 #pragma comment(lib, "odbccp32.lib")
 
 
-namespace kl {
-	class window {
+namespace kl
+{
+	class window
+	{
 	private:
 		// Winapi variables
 		HINSTANCE hInstance;
@@ -55,7 +57,8 @@ namespace kl {
 
 	public:
 		// Screen
-		class screen {
+		class screen
+		{
 		public:
 			screen() = delete;
 			static const int width;

@@ -3,8 +3,10 @@
 #include "math/float3.h"
 
 
-namespace kl {
-    class vertex {
+namespace kl
+{
+	class vertex
+	{
 	public:
 		kl::float3 world;
 		kl::float2 texture;

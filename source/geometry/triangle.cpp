@@ -2,17 +2,20 @@
 
 
 // Constructors
-kl::triangle::triangle() {
+kl::triangle::triangle()
+{
 
 }
-kl::triangle::triangle(const kl::vertex& a, const kl::vertex& b, const kl::vertex& c) {
+kl::triangle::triangle(const kl::vertex& a, const kl::vertex& b, const kl::vertex& c)
+{
 	this->a = a;
 	this->b = b;
 	this->c = c;
 }
 
 // Computes and stores the barycentric constants
-kl::float4 kl::triangle::getConsts() {
+kl::float4 kl::triangle::getConsts()
+{
 	const float tempConst = 1.0f / ((b.world.y - c.world.y) * (a.world.x - c.world.x) + (c.world.x - b.world.x) * (a.world.y - c.world.y));
 	return kl::float4(
 		(b.world.y - c.world.y) * tempConst,
@@ -23,7 +26,8 @@ kl::float4 kl::triangle::getConsts() {
 }
 
 // Calculates and returns the 3 barycentric weights of a triangle and a point
-kl::float3 kl::triangle::getWeights(const kl::float4& interConsts, const kl::float2& pos) const {
+kl::float3 kl::triangle::getWeights(const kl::float4& interConsts, const kl::float2& pos) const
+{
 	const float dx = pos.x - c.world.x;
 	const float dy = pos.y - c.world.y;
 	const float interWeight1 = dx * interConsts.x + dy * interConsts.y;
@@ -32,17 +36,20 @@ kl::float3 kl::triangle::getWeights(const kl::float4& interConsts, const kl::flo
 }
 
 // Checks if the point is inside the triangle
-bool kl::triangle::inTriangle(const kl::float4& interConsts, const kl::float2& pos) const {
+bool kl::triangle::inTriangle(const kl::float4& interConsts, const kl::float2& pos) const
+{
 	const kl::float3 weights = getWeights(interConsts, pos);
 	return !(weights.x < 0 || weights.y < 0 || weights.z < 0);
 }
 
 // Interpolates and returns the depth
-float kl::triangle::interpolate(const kl::float4& interConsts, const kl::float3& values, const kl::float2& pos) const {
+float kl::triangle::interpolate(const kl::float4& interConsts, const kl::float3& values, const kl::float2& pos) const
+{
 	const kl::float3 weights = getWeights(interConsts, pos);
 	return values.x * weights.x + values.y * weights.y + values.z * weights.z;
 }
-kl::vertex kl::triangle::interpolate(const kl::float4& interConsts, const kl::float2& pos) const {
+kl::vertex kl::triangle::interpolate(const kl::float4& interConsts, const kl::float2& pos) const
+{
 	const kl::float3 weights = getWeights(interConsts, pos);
 	return kl::vertex(
 		kl::float3(
