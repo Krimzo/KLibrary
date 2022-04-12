@@ -1,5 +1,7 @@
 #include "gpu/gpu.h"
 
+#include "utility/console.h"
+
 
 ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc)
 {
@@ -8,6 +10,7 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc)
 	device->CreateDepthStencilState(desc, &depthState);
 	if (!depthState)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create a write depth/stencil state!";
 		std::cin.get();
 		exit(69);

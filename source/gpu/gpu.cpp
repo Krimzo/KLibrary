@@ -11,10 +11,11 @@
 
 #include "geometry/vertex.h"
 #include "utility/convert.h"
+#include "utility/console.h"
 
 
 // Constructor
-kl::gpu::gpu(HWND hwnd, bool imgui)
+kl::gpu::gpu(HWND hwnd)
 {
 	// Getting the window size
 	RECT clientArea = {};
@@ -49,18 +50,21 @@ kl::gpu::gpu(HWND hwnd, bool imgui)
 	);
 	if (!device)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create device!";
 		std::cin.get();
 		exit(69);
 	}
 	if (!devcon)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create device context!";
 		std::cin.get();
 		exit(69);
 	}
 	if (!chain)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create swapchain!";
 		std::cin.get();
 		exit(69);
@@ -79,10 +83,7 @@ kl::gpu::gpu(HWND hwnd, bool imgui)
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 #ifdef KL_USING_IMGUI
-	// ImGui
-	this->usingImGui = imgui;
-	if (imgui)
-		ImGui_ImplDX11_Init(device, devcon);
+	ImGui_ImplDX11_Init(device, devcon);
 #endif
 }
 
@@ -90,9 +91,7 @@ kl::gpu::gpu(HWND hwnd, bool imgui)
 kl::gpu::~gpu()
 {
 #ifdef KL_USING_IMGUI
-	// ImGui
-	if (usingImGui)
-		ImGui_ImplDX11_Shutdown();
+	ImGui_ImplDX11_Shutdown();
 #endif
 
 	// Exiting fullscreen
@@ -167,7 +166,7 @@ void kl::gpu::viewport(const kl::int2& pos, const kl::int2& size)
 void kl::gpu::bindInternal(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView)
 {
 	std::vector<ID3D11RenderTargetView*> combinedTargets = { interFrameBuff };
-	for (const auto& ref : targets)
+	for (auto& ref : targets)
 		combinedTargets.push_back(ref);
 	devcon->OMSetRenderTargets(UINT(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : interDepthBuff);
 }

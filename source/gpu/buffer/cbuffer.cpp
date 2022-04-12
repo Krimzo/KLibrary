@@ -1,5 +1,7 @@
 #include "gpu/gpu.h"
 
+#include "utility/console.h"
+
 
 // Constant buffer
 ID3D11Buffer* kl::gpu::newConstBuffer(int byteSize)
@@ -7,6 +9,7 @@ ID3D11Buffer* kl::gpu::newConstBuffer(int byteSize)
 	// Checking the size
 	if (byteSize % 16 != 0)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Constant buffer size has to be a multiple of 16!";
 		std::cin.get();
 		exit(69);

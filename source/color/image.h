@@ -38,10 +38,10 @@ namespace kl
 		void spixel(const kl::int2& coords, const kl::color& color);
 
 		// Reads an image file and stores it in the image instance
-		void fromFile(const std::string& filePath);
+		bool fromFile(const std::string& filePath);
 
 		// Saves the image to a file
-		void toFile(const std::string& fileName) const;
+		bool toFile(const std::string& fileName) const;
 
 		// Fils the image with solid color
 		void fill(const kl::color& color);

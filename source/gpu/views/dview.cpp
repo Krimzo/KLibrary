@@ -1,5 +1,7 @@
 #include "gpu/gpu.h"
 
+#include "utility/console.h"
+
 
 ID3D11DepthStencilView* kl::gpu::newDepthView(ID3D11Texture2D* tex, D3D11_DEPTH_STENCIL_VIEW_DESC* desc)
 {
@@ -8,6 +10,7 @@ ID3D11DepthStencilView* kl::gpu::newDepthView(ID3D11Texture2D* tex, D3D11_DEPTH_
 	device->CreateDepthStencilView(tex, desc, &depthView);
 	if (!depthView)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create a backbuffer!";
 		std::cin.get();
 		exit(69);

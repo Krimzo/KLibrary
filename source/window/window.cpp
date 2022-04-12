@@ -1,5 +1,7 @@
 #include "window/window.h"
+
 #include "utility/convert.h"
+#include "utility/console.h"
 
 #ifdef KL_USING_IMGUI
 #include "imgui.h"
@@ -60,6 +62,7 @@ void kl::window::registerWindowClass(const std::string& name)
 	windowClass.hIconSm = nullptr;
 	if (!RegisterClassExA(&windowClass))
 	{
+		kl::console::show();
 		std::cout << "WinApi: Could not register a window class!";
 		std::cin.get();
 		exit(69);
@@ -79,6 +82,7 @@ void kl::window::createWindow(const kl::int2& size, const std::string& name, boo
 	hwnd = CreateWindowExA(0, name.c_str(), name.c_str(), winStyle, (kl::window::screen::width / 2 - adjSize.x / 2), (kl::window::screen::height / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, hInstance, nullptr);
 	if (!hwnd)
 	{
+		kl::console::show();
 		std::cout << "WinApi: Could not create a window!";
 		std::cin.get();
 		exit(69);
@@ -112,11 +116,8 @@ void kl::window::handleMessage()
 {
 #ifdef KL_USING_IMGUI
 	TranslateMessage(&wndMsg);
-	if (usingImGui)
-	{
-		if (ImGui_ImplWin32_WndProcHandler(wndMsg.hwnd, wndMsg.message, wndMsg.wParam, wndMsg.lParam))
-			return;
-	}
+	if (ImGui_ImplWin32_WndProcHandler(wndMsg.hwnd, wndMsg.message, wndMsg.wParam, wndMsg.lParam))
+		return;
 #endif
 
 	// Default
@@ -176,7 +177,7 @@ void kl::window::handleMessage()
 }
 
 // Window creation
-void kl::window::startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous, bool imgui)
+void kl::window::startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous)
 {
 	// Registering winapi window class
 	registerWindowClass(name);
@@ -188,10 +189,7 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 	this->mouse.bind(hwnd);
 
 #ifdef KL_USING_IMGUI
-	// ImGui setup
-	this->usingImGui = imgui;
-	if (imgui)
-		ImGui_ImplWin32_Init(hwnd);
+	ImGui_ImplWin32_Init(hwnd);
 #endif
 
 	// Starting the update loops
@@ -224,9 +222,7 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 	}
 
 #ifdef KL_USING_IMGUI
-	// ImGui cleanup
-	if (imgui)
-		ImGui_ImplWin32_Shutdown();
+	ImGui_ImplWin32_Shutdown();
 #endif
 
 	// Cleanup
@@ -308,20 +304,21 @@ void kl::window::setTitle(const std::string& data)
 }
 
 // Sets the window icons
-void kl::window::setIcon(const std::string& filePath)
+bool kl::window::setIcon(const std::string& filePath)
 {
 	// Loading the icon
 	HICON loadedIcon = ExtractIconA(nullptr, filePath.c_str(), NULL);
 	if (!loadedIcon)
 	{
+		kl::console::show();
 		std::cout << "WinApi: Could not load an icon file \"" << filePath << "\"";
-		std::cin.get();
-		exit(69);
+		return false;
 	}
 
 	// Sending the icon
 	SendMessageA(this->hwnd, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
 	SendMessageA(this->hwnd, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
+	return true;
 }
 
 // Sets the pixels of the window

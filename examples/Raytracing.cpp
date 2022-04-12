@@ -202,6 +202,11 @@ int main()
 	win.start = Start;
 	win.update = Update;
 	win.resize = Resize;
+	win.keys.r.press = [&]()
+	{
+		for (int i = 1; i < 5; i++)
+			spheres[i].color = kl::random::COLOR();
+	};
 	timer.elapsed();
 	win.startNew(kl::int2(1600, 900), "Raytracing", true, true);
 }

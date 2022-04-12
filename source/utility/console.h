@@ -62,7 +62,7 @@ namespace kl
 		static void waitFor(char toWaitFor, bool echo = false);
 
 		// Waits for any key to be pressed
-		static void waitForAny(bool echo = false);
+		static char waitForAny(bool echo = false);
 
 		// Outputs a progress bar on the console
 		static void progressBar(const std::string& message, int outputY, float percentage);

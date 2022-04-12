@@ -52,7 +52,7 @@ void kl::console::setCursor(const kl::int2& position)
 // Hides the console cursor
 void kl::console::hideCursor()
 {
-	CONSOLE_CURSOR_INFO cursorInfo;
+	CONSOLE_CURSOR_INFO cursorInfo = {};
 	GetConsoleCursorInfo(kl::console::handle, &cursorInfo);
 	cursorInfo.bVisible = false;
 	SetConsoleCursorInfo(kl::console::handle, &cursorInfo);
@@ -61,7 +61,7 @@ void kl::console::hideCursor()
 // Shows the console cursor
 void kl::console::showCursor()
 {
-	CONSOLE_CURSOR_INFO cursorInfo;
+	CONSOLE_CURSOR_INFO cursorInfo = {};
 	GetConsoleCursorInfo(kl::console::handle, &cursorInfo);
 	cursorInfo.bVisible = true;
 	SetConsoleCursorInfo(kl::console::handle, &cursorInfo);
@@ -108,7 +108,6 @@ void kl::console::setFont(const kl::int2& size, const std::string& fontName)
 {
 	CONSOLE_FONT_INFOEX cfi = {};
 	cfi.cbSize = sizeof(cfi);
-	cfi.nFont = 0;
 	cfi.dwFontSize.X = SHORT(size.x);
 	cfi.dwFontSize.Y = SHORT(size.y);
 	cfi.FontFamily = FF_DONTCARE;
@@ -140,11 +139,11 @@ void kl::console::waitFor(char toWaitFor, bool echo)
 }
 
 // Waits for any key to be pressed
-void kl::console::waitForAny(bool echo)
+char kl::console::waitForAny(bool echo)
 {
 	if (echo)
 		printf("Press any key to continue\n");
-	char iHateWarnings = _getch();
+	return _getch();
 }
 
 // Outputs a progress bar on the console
@@ -168,8 +167,8 @@ void kl::console::progressBar(const std::string& message, int outputY, float per
 }
 
 // Fast console writing
+DWORD ignore = 0;
 void kl::console::fastOut(const std::string& data, const kl::int2& location)
 {
-	static DWORD ignore = 0;
 	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 }

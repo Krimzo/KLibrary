@@ -17,64 +17,142 @@ std::vector<std::string> kl::file::getFiles(const std::string& dirPath, bool rec
 	if (recursive)
 	{
 		for (const auto& file : std::filesystem::recursive_directory_iterator(dirPath))
-		{
 			if (!file.is_directory())
 				files.push_back(file.path().string());
-		}
 	}
 	else
 	{
 		for (const auto& file : std::filesystem::directory_iterator(dirPath))
-		{
 			if (!file.is_directory())
 				files.push_back(file.path().string());
-		}
 	}
 	return files;
 }
 
-// Returns a string from a given text file
+// Reads file data
 std::string kl::file::read(const std::string& filePath)
 {
+	// Open file
 	std::ifstream fileStream(filePath);
 	std::stringstream textBuffer;
 	if (!fileStream.is_open())
 	{
-		printf("Could not load text file \"%s\".\n", filePath.c_str());
-		std::cin.get();
-		exit(69);
+		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+		return {};
 	}
+
+	// Read/close
 	textBuffer << fileStream.rdbuf();
 	fileStream.close();
 	return textBuffer.str();
 }
-
-// Writes text to a text file
-void kl::file::write(const std::string& filePath, const std::string& data)
+std::vector<byte> kl::file::readB(const std::string& filePath)
 {
+	// Open file
+	FILE* file = nullptr;
+	fopen_s(&file, filePath.c_str(), "rb");
+	if (!file)
+	{
+		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+		return {};
+	}
+
+	// Seek to end and get pos
+	fseek(file, 0, SEEK_END);
+	const int byteSize = ftell(file);
+
+	// Create buff and read data
+	std::vector<byte> buff(byteSize);
+	rewind(file);
+	fread(&buff[0], 1, byteSize, file);
+
+	// Close file
+	fclose(file);
+
+	// Return data
+	return buff;
+}
+
+// Writes data to file
+bool kl::file::write(const std::string& filePath, const std::string& data)
+{
+	// Open file
 	std::ofstream fileStream(filePath);
+	if (!fileStream.is_open())
+	{
+		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+		return false;
+	}
+
+	// Write/close
 	fileStream << data;
 	fileStream.close();
+	return true;
+}
+bool kl::file::writeB(const std::string& filePath, const std::vector<byte>& data)
+{
+	// Open file
+	FILE* file = nullptr;
+	fopen_s(&file, filePath.c_str(), "wb");
+	if (!file)
+	{
+		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+		return false;
+	}
+
+	// Write
+	fwrite(&data[0], 1, data.size(), file);
+
+	// Close
+	fclose(file);
+	return true;
 }
 
 // Appends text to a text file
-void kl::file::append(const std::string& filePath, const std::string& data, int position)
+bool kl::file::append(const std::string& filePath, const std::string& data, int position)
 {
+	// Open file
 	std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 	if (!fileStream.is_open())
 	{
-		printf("Could not load text file \"%s\".\n", filePath.c_str());
-		std::cin.get();
-		exit(69);
+		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+		return false;
 	}
 
+	// Set pos
 	if (position < 0)
 		fileStream.seekp(0, std::ios_base::end);
 	else
 		fileStream.seekp(position);
 
+	// Write and close
 	fileStream << data;
 	fileStream.close();
+	return true;
+}
+bool kl::file::appendB(const std::string& filePath, const std::vector<byte>& data, int position)
+{
+	// Open file
+	FILE* file = nullptr;
+	fopen_s(&file, filePath.c_str(), "ab");
+	if (!file)
+	{
+		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+		return false;
+	}
+
+	// Set pos
+	if (position < 0)
+		fseek(file, 0, SEEK_END);
+	else
+		fseek(file, position, SEEK_SET);
+
+	// Write
+	fwrite(&data[0], 1, data.size(), file);
+
+	// Close
+	fclose(file);
+	return true;
 }
 
 // Parses given .obj file
@@ -88,9 +166,8 @@ std::vector<kl::vertex> kl::file::parseObj(const std::string& filePath, bool fli
 	fileStream.open(filePath, std::ios::in);
 	if (!fileStream.is_open())
 	{
-		std::cout << "Mesh: Could not open an object file!\nFile: " << filePath;
-		std::cin.get();
-		exit(69);
+		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+		return {};
 	}
 
 	// Temp load buffers
@@ -109,9 +186,7 @@ std::vector<kl::vertex> kl::file::parseObj(const std::string& filePath, bool fli
 		std::vector<std::string> lineParts;
 		std::stringstream lineStream(fileLine);
 		for (std::string linePart; std::getline(lineStream, linePart, ' ');)
-		{
 			lineParts.push_back(linePart);
-		}
 
 		// Parsing the data
 		if (lineParts[0] == "v")

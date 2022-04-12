@@ -1,5 +1,7 @@
 #include "gpu/gpu.h"
 
+#include "utility/console.h"
+
 
 ID3D11RasterizerState* kl::gpu::newRasterState(D3D11_RASTERIZER_DESC* desc)
 {
@@ -8,6 +10,7 @@ ID3D11RasterizerState* kl::gpu::newRasterState(D3D11_RASTERIZER_DESC* desc)
 	device->CreateRasterizerState(desc, &rasterState);
 	if (!rasterState)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create a raster state!";
 		std::cin.get();
 		exit(69);

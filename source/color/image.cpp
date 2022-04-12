@@ -23,7 +23,8 @@ kl::image::image(const kl::int2& size, const kl::color& color)
 }
 kl::image::image(const std::string& filePath)
 {
-	fromFile(filePath);
+	if (!fromFile(filePath))
+		this->kl::image::image();
 }
 
 // Getters
@@ -53,25 +54,15 @@ kl::image kl::image::rect(kl::int2 a, kl::int2 b) const
 {
 	// Sorting
 	if (b.x < a.x)
-	{
-		int t = a.x;
-		a.x = b.x;
-		b.x = t;
-	}
+		std::swap(a.x, b.x);
 	if (b.y < a.y)
-	{
-		int t = a.y;
-		a.y = b.y;
-		b.y = t;
-	}
+		std::swap(a.y, b.y);
 
 	// Saving data
 	kl::image temp(b - a);
 	for (kl::int2 pos = 0; pos.y < temp.height(); pos.y++)
-	{
 		for (pos.x = 0; pos.x < temp.width(); pos.x++)
 			temp.spixel(pos, gpixel(pos + a));
-	}
 	return temp;
 }
 
@@ -96,25 +87,23 @@ void kl::image::spixel(const kl::int2& coords, const kl::color& color)
 }
 
 // Reads an image file and stores it in the image instance
-void kl::image::fromFile(const std::string& filePath)
+bool kl::image::fromFile(const std::string& filePath)
 {
 	// Gdiplus init
 	uint64_t gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
 	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr))
 	{
-		std::cout << "GdiPlus: Failed to init!";
-		std::cin.get();
-		exit(69);
+		std::cout << "Image: GdiPlus failed to init!" << std::endl;
+		return false;
 	}
 
 	// Loading image file
 	Gdiplus::Bitmap* loadedBitmap = new Gdiplus::Bitmap(kl::convert::toWString(filePath).c_str());
 	if (loadedBitmap->GetLastStatus())
 	{
-		printf("Could not load image file \"%s\".", filePath.c_str());
-		std::cin.get();
-		exit(69);
+		std::cout << "Image: Could not open file \"" << filePath << "\"!" << std::endl;
+		return false;
 	}
 
 	// Resizing the self
@@ -130,16 +119,15 @@ void kl::image::fromFile(const std::string& filePath)
 	// Cleanup
 	delete loadedBitmap;
 	Gdiplus::GdiplusShutdown(gdiplusToken);
+	return true;
 }
 
 // Saves the image to a file
-void kl::image::toFile(const std::string& fileName) const
+const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
+bool kl::image::toFile(const std::string& fileName) const
 {
-	// Static image type CLSID-s
-	static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-	static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-	static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-
 	// Checking the file extension is supported
 	const CLSID* formatToUse = nullptr;
 	std::string fileExtension = kl::file::getExtension(fileName);
@@ -164,12 +152,12 @@ void kl::image::toFile(const std::string& fileName) const
 			}
 		}
 		kl::file::write(fileName, ss.str());
-		return;
+		return true;
 	}
 	else
 	{
-		printf("Image: File extension \"%s\" is not supported!\n", fileExtension.c_str());
-		return;
+		std::cout << "Image: File extension \"" << fileExtension << "\" is not supported!" << std::endl;
+		return false;
 	}
 
 	// Gdiplus init
@@ -177,9 +165,8 @@ void kl::image::toFile(const std::string& fileName) const
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
 	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr))
 	{
-		std::cout << "GdiPlus: Failed to init!";
-		std::cin.get();
-		exit(69);
+		std::cout << "Image: GdiPlus failed to init!" << std::endl;
+		return false;
 	}
 
 	// Temp bitmap creation
@@ -201,6 +188,7 @@ void kl::image::toFile(const std::string& fileName) const
 	// Cleanup
 	delete tempBitmap;
 	Gdiplus::GdiplusShutdown(gdiplusToken);
+	return true;
 }
 
 // Fils the image with solid color

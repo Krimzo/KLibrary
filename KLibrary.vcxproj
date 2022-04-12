@@ -161,7 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Mandelbrot.cpp" />
+    <ClCompile Include="examples\Raytracing.cpp" />
     <ClCompile Include="source\color\color.cpp" />
     <ClCompile Include="source\color\image.cpp" />
     <ClCompile Include="source\geometry\plane.cpp" />

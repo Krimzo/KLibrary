@@ -1,5 +1,7 @@
 #include "gpu/gpu.h"
 
+#include "utility/console.h"
+
 
 // Texture from backbuffer
 ID3D11Texture2D* kl::gpu::newTextureBB()
@@ -9,6 +11,7 @@ ID3D11Texture2D* kl::gpu::newTextureBB()
 	chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffAddrs);
 	if (!buffAddrs)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not get back buffer address!";
 		std::cin.get();
 		exit(69);
@@ -29,6 +32,7 @@ ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOUR
 	device->CreateTexture2D(desc, subData, &tex);
 	if (!tex)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create a 2D texture!";
 		std::cin.get();
 		exit(69);
@@ -73,6 +77,7 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& ba
 	// Image size check
 	if (!(front.size() == back.size() && front.size() == left.size() && front.size() == right.size() && front.size() == top.size() && front.size() == bottom.size()))
 	{
+		kl::console::show();
 		std::cout << "Texture: Sizes of the 6 given images do not match!";
 		std::cin.get();
 		exit(69);

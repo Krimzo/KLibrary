@@ -1,6 +1,7 @@
 #include "view/skybox.h"
 
 #include "utility/file.h"
+#include "utility/console.h"
 
 
 // Skybox box vertices
@@ -47,14 +48,16 @@ kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& fullb
 		}
 		else
 		{
-			printf("Skybox image width and height do not match!");
+			kl::console::show();
+			std::cout << "Skybox image width and height do not match!";
 			std::cin.get();
 			exit(69);
 		}
 	}
 	else
 	{
-		printf("Skybox image does not have the correct aspect ratio!");
+		kl::console::show();
+		std::cout << "Skybox image does not have the correct aspect ratio!";
 		std::cin.get();
 		exit(69);
 	}

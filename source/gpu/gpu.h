@@ -32,16 +32,9 @@ namespace kl
 		// Buffers
 		std::vector<IUnknown*> children;
 
-#ifdef KL_USING_IMGUI
-		// ImGui
-		bool usingImGui = false;
-#endif
-
 	public:
-		// Constructor
-		gpu(HWND hwnd, bool imgui = false);
-
-		// Destructor
+		gpu(HWND hwnd);
+		gpu(const kl::gpu&) = delete;
 		~gpu();
 
 		// Getters

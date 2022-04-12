@@ -3,6 +3,7 @@
 #include <d3dcompiler.h>
 
 #include "utility/convert.h"
+#include "utility/console.h"
 
 #pragma comment (lib, "d3dcompiler.lib")
 
@@ -18,6 +19,7 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11In
 	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "vShader", "vs_5_0", NULL, NULL, &blobData, &blobError);
 	if (!blobData)
 	{
+		kl::console::show();
 		if (blobError)
 			std::cout << "DirectX: Could not compile vertex shader!\nError: " << (char*)blobError->GetBufferPointer();
 		else
@@ -31,6 +33,7 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11In
 	device->CreateVertexShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &vertShader);
 	if (!vertShader)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create vertex shader!";
 		std::cin.get();
 		exit(69);
@@ -50,6 +53,7 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11In
 		device->CreateInputLayout(desc.size() > 0 ? &desc[0] : defaulDesc, desc.size() > 0 ? UINT(desc.size()) : 3, blobData->GetBufferPointer(), blobData->GetBufferSize(), outLayout);
 		if (!*outLayout)
 		{
+			kl::console::show();
 			std::cout << "DirectX: Could not create an input layout!";
 			std::cin.get();
 			exit(69);
@@ -78,6 +82,7 @@ ID3D11PixelShader* kl::gpu::newPixelShader(const std::string& source)
 	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "pShader", "ps_5_0", NULL, NULL, &blobData, &blobError);
 	if (!blobData)
 	{
+		kl::console::show();
 		if (blobError)
 			std::cout << "DirectX: Could not compile pixel shader!\nError: " << (char*)blobError->GetBufferPointer();
 		else
@@ -91,6 +96,7 @@ ID3D11PixelShader* kl::gpu::newPixelShader(const std::string& source)
 	device->CreatePixelShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &pixlShader);
 	if (!pixlShader)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create pixel shader!";
 		std::cin.get();
 		exit(69);

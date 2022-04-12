@@ -17,12 +17,12 @@ struct PS_CB
 	kl::float2 startPos;
 };
 
-float zoom = 1;
-float zoomSpeed = 1;
-kl::float2 pos(-0.5, 0);
+float zoom = 1.0f;
+float zoomSpeed = 1.0f;
+kl::float2 pos(-0.5f, 0.0f);
 
 const float minZoom = 0.5f;
-const float maxZoom = 10000;
+const float maxZoom = 10000.0f;
 const kl::int2 frameSize(1600, 900);
 
 void start()
@@ -61,17 +61,17 @@ void update()
 		win.stop();
 	if (win.keys.r)
 	{
-		pos = kl::float2(-0.5, 0);
+		pos = kl::float2(-0.5, 0.0f);
 		zoom = 1.0f;
 	}
 	if (win.keys.w)
-		pos.y -= (1 / zoom) * deltaT;
+		pos.y -= (1.0f / zoom) * deltaT;
 	if (win.keys.s)
-		pos.y += (1 / zoom) * deltaT;
+		pos.y += (1.0f / zoom) * deltaT;
 	if (win.keys.d)
-		pos.x += (1 / zoom) * deltaT;
+		pos.x += (1.0f / zoom) * deltaT;
 	if (win.keys.a)
-		pos.x -= (1 / zoom) * deltaT;
+		pos.x -= (1.0f / zoom) * deltaT;
 	if (win.mouse.lmb)
 	{
 		// Calculating the zoom
@@ -84,9 +84,7 @@ void update()
 			pos += (uv / zoom) * deltaT;
 		}
 		else
-		{
 			zoom = maxZoom;
-		}
 	}
 	if (win.mouse.rmb)
 	{
@@ -100,9 +98,7 @@ void update()
 			pos -= (uv / zoom) * deltaT;
 		}
 		else
-		{
 			zoom = minZoom;
-		}
 	}
 
 	// Clearing
@@ -118,7 +114,7 @@ void update()
 	pxdata.frameSize = frameSize;
 	pxdata.zoom.x = zoom;
 	pxdata.pos = pos;
-	pxdata.startPos.x = 0;
+	pxdata.startPos.x = 0.0f;
 	gpu->setBuffData(cbuff, &pxdata);
 
 	// Rendering the box
@@ -129,7 +125,7 @@ void update()
 
 	// Updating the title
 	win.setTitle(
-		"Fps: " + std::to_string(int(1 / deltaT)) +
+		"Fps: " + std::to_string(int(1.0f / deltaT)) +
 		" Zoom: " + std::to_string(int(zoom)) +
 		" Position: " + std::to_string(pos.x) + " " + std::to_string(pos.y)
 	);

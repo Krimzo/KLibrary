@@ -1,5 +1,7 @@
 #include "gpu/gpu.h"
 
+#include "utility/console.h"
+
 
 ID3D11ShaderResourceView* kl::gpu::newShaderView(ID3D11Texture2D* tex, D3D11_SHADER_RESOURCE_VIEW_DESC* desc)
 {
@@ -8,6 +10,7 @@ ID3D11ShaderResourceView* kl::gpu::newShaderView(ID3D11Texture2D* tex, D3D11_SHA
 	device->CreateShaderResourceView(tex, desc, &shaderView);
 	if (!shaderView)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create a backbuffer!";
 		std::cin.get();
 		exit(69);

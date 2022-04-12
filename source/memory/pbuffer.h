@@ -15,7 +15,6 @@ namespace kl
 		// Constructor
 		pbuffer()
 		{
-
 		}
 
 		// Destructor

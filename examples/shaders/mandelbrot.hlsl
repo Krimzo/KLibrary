@@ -4,12 +4,10 @@ struct vOut
     float4 world : SV_POSITION;
 };
 
-vOut vShader(float3 pos : POS_IN, float2 tex : TEX_IN, float3 norm : NORM_IN)
+vOut vShader(float3 pos : POS_IN)
 {
     vOut data;
-
-    data.world = float4(pos, 1);
-
+    data.world = float4(pos, 1.0f);
     return data;
 }
 
@@ -30,10 +28,10 @@ float2 ComplexSqr(float2 a)
 
 float4 pShader(vOut data) : SV_TARGET
 {
-    float4 pixel = float4(1, 1, 1, 1);
+    float4 pixel = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
     // Getting the uv coordinates
-    float2 uv = (data.world.xy / frameSize * 2 - 1) * float2(frameSize.x / frameSize.y, 1);
+    float2 uv = (data.world.xy / frameSize * 2.0f - 1.0f) * float2(frameSize.x / frameSize.y, 1.0f);
 
     // Setting the zoom
     uv /= zoom.x;
@@ -42,12 +40,12 @@ float4 pShader(vOut data) : SV_TARGET
     uv += pos;
 
     // Calculating the reaction
-    float n = 64;
+    float n = 64.0f;
     float2 num = startPos.x + uv;
     for (int i = 0; i < n; i++)
     {
         // Checking the distance
-        if (length(num) > 2)
+        if (length(num) > 2.0f)
         {
             pixel *= (i / n);
             break;

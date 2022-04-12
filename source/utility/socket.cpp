@@ -1,6 +1,8 @@
 #include <ws2tcpip.h>
 #include "utility/socket.h"
 
+#include "utility/console.h"
+
 #pragma comment(lib,"Ws2_32.lib")
 
 
@@ -14,6 +16,7 @@ void kl::socket::initWSA()
 	{
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
 		{
+			kl::console::show();
 			std::cout << "Could not startup WSA!";
 			std::cin.get();
 			exit(69);
@@ -35,6 +38,7 @@ kl::socket::socket()
 	sock = ::socket(AF_INET, SOCK_STREAM, NULL);
 	if (sock == INVALID_SOCKET)
 	{
+		kl::console::show();
 		std::cout << "Could not create a socket!";
 		std::cin.get();
 		exit(69);
@@ -71,6 +75,7 @@ void kl::socket::setAddr(const std::string& addrs)
 {
 	if (inet_pton(AF_INET, addrs.c_str(), &addr.sin_addr) != 1)
 	{
+		kl::console::show();
 		std::cout << "Could not parse address \"" << addrs << "\"";
 		std::cin.get();
 		exit(69);
@@ -82,6 +87,7 @@ void kl::socket::bind()
 {
 	if (::bind(sock, (sockaddr*)&addr, sizeof(addr)))
 	{
+		kl::console::show();
 		std::cout << "Could not bind socket!";
 		std::cin.get();
 		exit(69);
@@ -93,6 +99,7 @@ void kl::socket::listen(int queueSize)
 {
 	if (::listen(sock, queueSize))
 	{
+		kl::console::show();
 		std::cout << "Could not listen on socket!";
 		std::cin.get();
 		exit(69);
@@ -106,6 +113,7 @@ kl::socket kl::socket::accept()
 	SOCKET accepted = ::accept(sock, (sockaddr*)&addr, &addrLen);
 	if (accepted == INVALID_SOCKET)
 	{
+		kl::console::show();
 		std::cout << "Bad socket accepted!";
 		std::cin.get();
 		exit(69);
@@ -118,6 +126,7 @@ void kl::socket::connect()
 {
 	if (::connect(sock, (sockaddr*)&addr, sizeof(addr)))
 	{
+		kl::console::show();
 		std::cout << "Could not connect to socket!";
 		std::cin.get();
 		exit(69);

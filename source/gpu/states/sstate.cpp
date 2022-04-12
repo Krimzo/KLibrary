@@ -1,5 +1,7 @@
 #include "gpu/gpu.h"
 
+#include "utility/console.h"
+
 
 ID3D11SamplerState* kl::gpu::newSamplerState(D3D11_SAMPLER_DESC* desc)
 {
@@ -8,6 +10,7 @@ ID3D11SamplerState* kl::gpu::newSamplerState(D3D11_SAMPLER_DESC* desc)
 	device->CreateSamplerState(desc, &sampState);
 	if (!sampState)
 	{
+		kl::console::show();
 		std::cout << "DirectX: Could not create a sampler state!";
 		std::cin.get();
 		exit(69);

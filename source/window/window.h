@@ -50,11 +50,6 @@ namespace kl
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		void handleMessage();
 
-#ifdef KL_USING_IMGUI
-		// ImGui
-		bool usingImGui = false;
-#endif
-
 	public:
 		// Screen
 		class screen
@@ -75,14 +70,12 @@ namespace kl
 		std::function<void(void)> end;
 		std::function<void(const kl::int2& size)> resize;
 
-		// Constructor
 		window();
-
-		// Destructor
+		window(const kl::window&) = delete;
 		~window();
 
 		// Window creation
-		void startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous, bool imgui = false);
+		void startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous);
 
 		// Window stop
 		void stop() const;
@@ -110,7 +103,7 @@ namespace kl
 		void setTitle(const std::string& data);
 
 		// Sets the window icons
-		void setIcon(const std::string& filePath);
+		bool setIcon(const std::string& filePath);
 
 		// Sets the pixels of the window
 		void drawImage(const kl::image& toDraw, const kl::int2& position = { 0, 0 });

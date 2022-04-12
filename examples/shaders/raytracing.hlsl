@@ -4,12 +4,10 @@ struct vOut
     float4 screen : SV_POSITION;
 };
 
-vOut vShader(float3 pos : POS_IN, float2 tex : TEX_IN, float3 norm : NORM_IN)
+vOut vShader(float3 pos : POS_IN)
 {
     vOut data;
-
     data.screen = float4(pos, 1.0f);
-
     return data;
 }
 
