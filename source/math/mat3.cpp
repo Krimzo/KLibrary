@@ -5,10 +5,9 @@
 #include "utility/convert.h"
 
 
-// Constructor
 kl::mat3::mat3()
 {
-	this->setIdentity();
+	setIdentity();
 }
 
 // Getter

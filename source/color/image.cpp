@@ -14,7 +14,7 @@
 // Constructor
 kl::image::image()
 {
-	resize(kl::int2());
+	resize(0);
 }
 kl::image::image(const kl::int2& size, const kl::color& color)
 {

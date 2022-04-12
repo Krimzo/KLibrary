@@ -22,8 +22,6 @@ namespace kl
 		kl::int2 position;
 		int scroll = 0;
 
-		mouse();
-
 		// Binds the mouse to the window
 		void bind(HWND hwnd);
 

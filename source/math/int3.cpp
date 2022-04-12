@@ -5,36 +5,26 @@
 #include "utility/convert.h"
 
 
-// Constructors
+// Constr
 kl::int3::int3()
+	: x(0), y(0), z(0)
 {
-	x = 0;
-	y = 0;
-	z = 0;
 }
 kl::int3::int3(int a)
+	: x(a), y(a), z(a)
 {
-	x = a;
-	y = a;
-	z = a;
 }
 kl::int3::int3(int x, int y, int z)
+	: x(x), y(y), z(z)
 {
-	this->x = x;
-	this->y = y;
-	this->z = z;
 }
 kl::int3::int3(const kl::int2& v, int z)
+	: x(v.x), y(v.y), z(z)
 {
-	x = v.x;
-	y = v.y;
-	this->z = z;
 }
 kl::int3::int3(int x, const kl::int2& v)
+	: x(x), y(v.x), z(v.y)
 {
-	this->x = x;
-	y = v.x;
-	z = v.y;
 }
 
 // Addition

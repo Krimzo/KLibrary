@@ -44,7 +44,7 @@ kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& fullb
 			const kl::image bottom = fullbox.rect(partSize * kl::int2(1, 2), partSize * kl::int2(2, 3));
 
 			// Calling the other constructor
-			this->kl::skybox::skybox(gpu, name, front, back, left, right, top, bottom);
+			this->skybox::skybox(gpu, name, front, back, left, right, top, bottom);
 		}
 		else
 		{
@@ -63,13 +63,8 @@ kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& fullb
 	}
 }
 kl::skybox::skybox(kl::gpu* gpu, const std::string& name, const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom)
+	: gpu(gpu), name(name)
 {
-	// Saving the gpu
-	this->gpu = gpu;
-
-	// Saving the name
-	this->name = name;
-
 	// Compiling skybox shaders
 	sky_vtx = gpu->newVertexShader(kl::file::read("res/shaders/skybox.hlsl"));
 	sky_pxl = gpu->newPixelShader(kl::file::read("res/shaders/skybox.hlsl"));

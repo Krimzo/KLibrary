@@ -11,12 +11,9 @@ namespace kl
 	class int4
 	{
 	public:
-		int x;
-		int y;
-		int z;
-		int w;
+		int x, y, z, w;
 
-		// Constructors
+		// Constr
 		int4();
 		int4(int a);
 		int4(int x, int y, int z, int w);

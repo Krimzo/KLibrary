@@ -5,21 +5,18 @@
 #include "utility/convert.h"
 
 
-// Constructors
+// Constr
 kl::int2::int2()
+	: x(0), y(0)
 {
-	x = 0;
-	y = 0;
 }
 kl::int2::int2(int a)
+	: x(a), y(a)
 {
-	x = a;
-	y = a;
 }
 kl::int2::int2(int x, int y)
+	: x(x), y(y)
 {
-	this->x = x;
-	this->y = y;
 }
 
 // Addition

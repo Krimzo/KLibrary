@@ -5,69 +5,42 @@
 #include "utility/convert.h"
 
 
-// Constructors
+// Constr
 kl::int4::int4()
+	: x(0), y(0), z(0), w(0)
 {
-	x = 0;
-	y = 0;
-	z = 0;
-	w = 0;
 }
 kl::int4::int4(int a)
+	: x(a), y(a), z(a), w(a)
 {
-	x = a;
-	y = a;
-	z = a;
-	w = a;
 }
 kl::int4::int4(int x, int y, int z, int w)
+	: x(x), y(y), z(z), w(w)
 {
-	this->x = x;
-	this->y = y;
-	this->z = z;
-	this->w = w;
 }
 kl::int4::int4(const kl::int2& v, int z, int w)
+	: x(v.x), y(v.y), z(z), w(w)
 {
-	x = v.x;
-	y = v.y;
-	this->z = z;
-	this->w = w;
 }
 kl::int4::int4(int x, const kl::int2& v, int w)
+	: x(x), y(v.x), z(v.y), w(w)
 {
-	this->x = x;
-	y = v.x;
-	z = v.y;
-	this->w = w;
 }
 kl::int4::int4(int x, int y, const kl::int2& v)
+	: x(x), y(y), z(v.x), w(v.y)
 {
-	this->x = x;
-	this->y = y;
-	z = v.x;
-	w = v.y;
 }
 kl::int4::int4(const kl::int2& v1, const kl::int2& v2)
+	: x(v1.x), y(v1.y), z(v2.x), w(v2.y)
 {
-	x = v1.x;
-	y = v1.y;
-	z = v2.x;
-	w = v2.y;
 }
 kl::int4::int4(const kl::int3& v, int w)
+	: x(v.x), y(v.y), z(v.z), w(w)
 {
-	x = v.x;
-	y = v.y;
-	z = v.z;
-	this->w = w;
 }
 kl::int4::int4(int x, const kl::int3& v)
+	: x(x), y(v.x), z(v.y), w(v.z)
 {
-	this->x = x;
-	y = v.x;
-	z = v.y;
-	w = v.z;
 }
 
 // Addition

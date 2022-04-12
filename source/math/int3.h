@@ -10,11 +10,9 @@ namespace kl
 	class int3
 	{
 	public:
-		int x;
-		int y;
-		int z;
+		int x, y, z;
 
-		// Constructors
+		// Constr
 		int3();
 		int3(int a);
 		int3(int x, int y, int z);

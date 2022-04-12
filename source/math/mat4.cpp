@@ -5,7 +5,6 @@
 #include "utility/convert.h"
 
 
-// Constructor
 kl::mat4::mat4()
 {
 	setIdentity();

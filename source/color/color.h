@@ -9,11 +9,7 @@ namespace kl
 	class color
 	{
 	public:
-		// Had to flip R and B because the winapi uses BGR
-		byte b;
-		byte g;
-		byte r;
-		byte a;
+		byte b, g, r, a;
 
 		// Constructors
 		color();

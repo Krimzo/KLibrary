@@ -3,18 +3,12 @@
 
 // Constructors
 kl::color::color()
+	: b(0), g(0), r(0), a(0)
 {
-	r = 0;
-	g = 0;
-	b = 0;
-	a = 255;
 }
 kl::color::color(byte r, byte g, byte b, byte a)
+	: b(b), g(g), r(r), a(a)
 {
-	this->r = r;
-	this->g = g;
-	this->b = b;
-	this->a = a;
 }
 
 // Operator overloading

@@ -13,7 +13,6 @@ namespace kl
 		float data[16] = {};
 
 	public:
-		// Constructor
 		mat4();
 
 		// Getter

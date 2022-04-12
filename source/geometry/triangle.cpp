@@ -4,13 +4,10 @@
 // Constructors
 kl::triangle::triangle()
 {
-
 }
 kl::triangle::triangle(const kl::vertex& a, const kl::vertex& b, const kl::vertex& c)
+	: a(a), b(b), c(c)
 {
-	this->a = a;
-	this->b = b;
-	this->c = c;
 }
 
 // Computes and stores the barycentric constants

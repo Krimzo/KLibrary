@@ -4,15 +4,10 @@
 // Constructor
 kl::sphere::sphere()
 {
-
 }
 kl::sphere::sphere(const kl::float3& center, float radius, const kl::float3& color, float reflectivity, float emission)
+	: center(center), radius(radius), color(color), reflectivity(reflectivity), emission(emission)
 {
-	this->center = center;
-	this->radius = radius;
-	this->color = color;
-	this->reflectivity = reflectivity;
-	this->emission = emission;
 }
 
 // Calculates the emissive color

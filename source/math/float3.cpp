@@ -5,49 +5,34 @@
 #include "utility/convert.h"
 
 
-// Constructors
+// Constr
 kl::float3::float3()
+	: x(0.0f), y(0.0f), z(0.0f)
 {
-	x = 0;
-	y = 0;
-	z = 0;
 }
 kl::float3::float3(float a)
+	: x(a), y(a), z(a)
 {
-	x = a;
-	y = a;
-	z = a;
 }
 kl::float3::float3(float x, float y, float z)
+	: x(x), y(y), z(z)
 {
-	this->x = x;
-	this->y = y;
-	this->z = z;
 }
 kl::float3::float3(const kl::int3& v)
+	: x(float(v.x)), y(float(v.y)), z(float(v.z))
 {
-	x = float(v.x);
-	y = float(v.y);
-	z = float(v.z);
 }
 kl::float3::float3(const kl::float2& v, float z)
+	: x(v.x), y(v.y), z(z)
 {
-	x = v.x;
-	y = v.y;
-	this->z = z;
 }
 kl::float3::float3(float x, const kl::float2& v)
+	: x(x), y(v.x), z(v.y)
 {
-	this->x = x;
-	y = v.x;
-	z = v.y;
 }
-kl::float3::float3(const kl::color& color)
+kl::float3::float3(const kl::color& c)
+	: x(kl::convert::toFloCol(c.r)), y(kl::convert::toFloCol(c.g)), z(kl::convert::toFloCol(c.b))
 {
-	static const float toFloatCol = 1.0f / 255;
-	x = color.r * toFloatCol;
-	y = color.g * toFloatCol;
-	z = color.b * toFloatCol;
 }
 
 // Getter

@@ -2,11 +2,8 @@
 
 
 kl::key::key()
+	: state(false), press([]() {}), down([]() {}), release([]() {})
 {
-	state = false;
-	press = []() {};
-	down = []() {};
-	release = []() {};
 }
 
 kl::key::operator bool()

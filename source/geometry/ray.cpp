@@ -4,12 +4,10 @@
 // Constructors
 kl::ray::ray()
 {
-
 }
 kl::ray::ray(const kl::float3& origin, const kl::float3& direction)
+	: origin(origin), direction(direction)
 {
-	this->origin = origin;
-	this->direction = direction;
 }
 
 // Intersection with a plane

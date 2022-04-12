@@ -5,91 +5,54 @@
 #include "utility/convert.h"
 
 
-// Constructors
+// Constr
 kl::float4::float4()
+	: x(0.0f), y(0.0f), z(0.0f), w(0.0f)
 {
-	x = 0;
-	y = 0;
-	z = 0;
-	w = 0;
 }
 kl::float4::float4(float a)
+	: x(a), y(a), z(a), w(a)
 {
-	x = a;
-	y = a;
-	z = a;
-	w = a;
 }
 kl::float4::float4(float x, float y, float z, float w)
+	: x(x), y(y), z(z), w(w)
 {
-	this->x = x;
-	this->y = y;
-	this->z = z;
-	this->w = w;
 }
 kl::float4::float4(const kl::int4& v)
+	: x(float(v.x)), y(float(v.y)), z(float(v.z)), w(float(v.w))
 {
-	x = float(v.x);
-	y = float(v.y);
-	z = float(v.z);
-	w = float(v.w);
 }
 kl::float4::float4(const kl::float2& v, float z, float w)
+	: x(v.x), y(v.y), z(z), w(w)
 {
-	x = v.x;
-	y = v.y;
-	this->z = z;
-	this->w = w;
 }
 kl::float4::float4(float x, const kl::float2& v, float w)
+	: x(x), y(v.x), z(v.y), w(w)
 {
-	this->x = x;
-	y = v.x;
-	z = v.y;
-	this->w = w;
 }
 kl::float4::float4(float x, float y, const kl::float2& v)
+	: x(x), y(y), z(v.x), w(v.y)
 {
-	this->x = x;
-	this->y = y;
-	z = v.x;
-	w = v.y;
 }
 kl::float4::float4(const kl::float2& v1, const kl::float2& v2)
+	: x(v1.x), y(v1.y), z(v2.x), w(v2.y)
 {
-	x = v1.x;
-	y = v1.y;
-	z = v2.x;
-	w = v2.y;
 }
 kl::float4::float4(const kl::float3& v)
+	: x(v.x), y(v.y), z(v.z), w(1.0f)
 {
-	x = v.x;
-	y = v.y;
-	z = v.z;
-	w = 1;
 }
 kl::float4::float4(const kl::float3& v, float w)
+	: x(v.x), y(v.y), z(v.z), w(w)
 {
-	x = v.x;
-	y = v.y;
-	z = v.z;
-	this->w = w;
 }
 kl::float4::float4(float x, const kl::float3& v)
+	: x(x), y(v.x), z(v.y), w(v.z)
 {
-	this->x = x;
-	y = v.x;
-	z = v.y;
-	w = v.z;
 }
-kl::float4::float4(const kl::color& color)
+kl::float4::float4(const kl::color& c)
+	: x(kl::convert::toFloCol(c.r)), y(kl::convert::toFloCol(c.g)), z(kl::convert::toFloCol(c.b)), w(kl::convert::toFloCol(c.a))
 {
-	static const float toFloatCol = 1.0f / 255;
-	x = color.r * toFloatCol;
-	y = color.g * toFloatCol;
-	z = color.b * toFloatCol;
-	w = color.a * toFloatCol;
 }
 
 // Getter

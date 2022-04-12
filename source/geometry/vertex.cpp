@@ -4,27 +4,22 @@
 // Constructors
 kl::vertex::vertex()
 {
-
 }
 kl::vertex::vertex(const kl::float3& world)
+	: world(world)
 {
-	this->world = world;
 }
 kl::vertex::vertex(const kl::float3& world, const kl::float2& texture)
+	: world(world), texture(texture)
 {
-	this->world = world;
-	this->texture = texture;
 }
 kl::vertex::vertex(const kl::float3& world, const kl::float3& normal)
+	: world(world), normal(normal)
 {
-	this->world = world;
-	this->normal = normal;
 }
 kl::vertex::vertex(const kl::float3& world, const kl::float2& texture, const kl::float3& normal)
+	: world(world), texture(texture), normal(normal)
 {
-	this->world = world;
-	this->texture = texture;
-	this->normal = normal;
 }
 
 // Comparison

@@ -8,10 +8,9 @@ namespace kl
 	class int2
 	{
 	public:
-		int x;
-		int y;
+		int x, y;
 
-		// Constructors
+		// Constr
 		int2();
 		int2(int a);
 		int2(int x, int y);

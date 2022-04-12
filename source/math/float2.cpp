@@ -5,26 +5,22 @@
 #include "utility/convert.h"
 
 
-// Constructors
+// Constr
 kl::float2::float2()
+	: x(0.0f), y(0.0f)
 {
-	x = 0;
-	y = 0;
 }
 kl::float2::float2(float a)
+	: x(a), y(a)
 {
-	x = a;
-	y = a;
 }
 kl::float2::float2(float x, float y)
+	: x(x), y(y)
 {
-	this->x = x;
-	this->y = y;
 }
 kl::float2::float2(const kl::int2& v)
+	: x(float(v.x)), y(float(v.y))
 {
-	x = float(v.x);
-	y = float(v.y);
 }
 
 // Addition

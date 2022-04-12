@@ -16,6 +16,9 @@ namespace kl
 		// Converts radians to degrees
 		float toDegrees(float radians);
 
+		// Byte to float color
+		float toFloCol(byte val);
+
 		// Converts a float color to color
 		kl::color toColor(const kl::float4& colf);
 

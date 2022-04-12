@@ -30,15 +30,15 @@ namespace kl
 	{
 	private:
 		// Winapi variables
-		HINSTANCE hInstance;
-		HWND hwnd;
-		HDC hdc;
-		MSG wndMsg;
+		HINSTANCE hInstance = GetModuleHandleA(nullptr);
+		HWND hwnd = nullptr;
+		HDC hdc = nullptr;
+		MSG wndMsg = {};
 
 		// Fullscreen data
-		bool inFull;
-		DWORD winStyle;
-		WINDOWPLACEMENT winPlace;
+		bool inFull = false;
+		DWORD winStyle = NULL;
+		WINDOWPLACEMENT winPlace = {};
 
 		// Registers a new window class
 		void registerWindowClass(const std::string& name);
@@ -65,10 +65,10 @@ namespace kl
 		kl::mouse mouse;
 
 		// User functions
-		std::function<void(void)> start;
-		std::function<void(void)> update;
-		std::function<void(void)> end;
-		std::function<void(const kl::int2& size)> resize;
+		std::function<void(void)> start = []() {};
+		std::function<void(void)> update = []() {};
+		std::function<void(void)> end = []() {};
+		std::function<void(const kl::int2&)> resize = [](const kl::int2&) {};
 
 		window();
 		window(const kl::window&) = delete;

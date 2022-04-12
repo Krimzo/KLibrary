@@ -10,10 +10,19 @@ namespace kl
 	class float2
 	{
 	public:
-		float x;
-		float y;
+		union
+		{
+			struct
+			{
+				float x, y;
+			};
+			struct
+			{
+				float r, g;
+			};
+		};
 
-		// Constructors
+		// Constr
 		float2();
 		float2(float a);
 		float2(float x, float y);

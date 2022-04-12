@@ -1,11 +1,6 @@
 #include "window/mouse.h"
 
 
-kl::mouse::mouse()
-{
-
-}
-
 // Binds the mouse to the window
 void kl::mouse::bind(HWND hwnd)
 {

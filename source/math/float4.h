@@ -12,12 +12,19 @@ namespace kl
 	class float4
 	{
 	public:
-		float x;
-		float y;
-		float z;
-		float w;
+		union
+		{
+			struct
+			{
+				float x, y, z, w;
+			};
+			struct
+			{
+				float r, g, b, a;
+			};
+		};
 
-		// Constructors
+		// Constr
 		float4();
 		float4(float a);
 		float4(float x, float y, float z, float w);
@@ -29,7 +36,7 @@ namespace kl
 		float4(const kl::float3& v);
 		float4(const kl::float3& v, float w);
 		float4(float x, const kl::float3& v);
-		float4(const kl::color& color);
+		float4(const kl::color& c);
 
 		// Getter
 		kl::float3 xyz() const;

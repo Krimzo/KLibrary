@@ -14,7 +14,6 @@ namespace kl
 		float data[9] = {};
 
 	public:
-		// Constructor
 		mat3();
 
 		// Getter

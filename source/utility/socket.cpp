@@ -47,12 +47,12 @@ kl::socket::socket()
 	addr.sin_addr.s_addr = INADDR_ANY;
 }
 kl::socket::socket(SOCKET sock)
+	: sock(sock)
 {
-	this->sock = sock;
 }
 kl::socket::~socket()
 {
-	this->close();
+	close();
 }
 
 kl::socket::operator SOCKET()

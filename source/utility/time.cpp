@@ -45,11 +45,11 @@ void kl::time::wait(float seconds)
 	do
 	{
 		QueryPerformanceCounter(&sleepEndT);
-	} while (_ignore::CalcTime(sleepStartT, sleepEndT) < seconds);
+	}
+	while (_ignore::CalcTime(sleepStartT, sleepEndT) < seconds);
 }
 
 /* TIMER */
-// Constructor
 kl::timer::timer()
 {
 	interval();

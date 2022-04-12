@@ -1,12 +1,6 @@
 #include "view/camera.h"
 
 
-// Constructor
-kl::camera::camera()
-{
-
-}
-
 // Camera direction getters
 kl::float3 kl::camera::getForward() const
 {

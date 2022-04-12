@@ -24,8 +24,11 @@ namespace kl
 
 	class timer
 	{
+	private:
+		LARGE_INTEGER inStartTime;
+		LARGE_INTEGER swStartTime;
+
 	public:
-		// Constructor
 		timer();
 
 		// Returns the interval between 2 calls
@@ -36,9 +39,5 @@ namespace kl
 
 		// Returns the passed time since the last reset
 		float elapsed() const;
-
-	private:
-		LARGE_INTEGER inStartTime;
-		LARGE_INTEGER swStartTime;
 	};
 }

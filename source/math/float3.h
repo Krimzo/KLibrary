@@ -12,18 +12,26 @@ namespace kl
 	class float3
 	{
 	public:
-		float x;
-		float y;
-		float z;
+		union
+		{
+			struct
+			{
+				float x, y, z;
+			};
+			struct
+			{
+				float r, g, b;
+			};
+		};
 
-		// Constructors
+		// Constr
 		float3();
 		float3(float a);
 		float3(float x, float y, float z);
 		float3(const kl::int3& v);
 		float3(const kl::float2& v, float z);
 		float3(float x, const kl::float2& v);
-		float3(const kl::color& color);
+		float3(const kl::color& c);
 
 		// Getter
 		kl::float2 xy() const;

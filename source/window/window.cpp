@@ -13,28 +13,10 @@
 const int kl::window::screen::width = GetSystemMetrics(SM_CXSCREEN);
 const int kl::window::screen::height = GetSystemMetrics(SM_CYSCREEN);
 
-// Constructor
+// Constr/destr
 kl::window::window()
 {
-	// User methods
-	this->start = []() {};
-	this->update = []() {};
-	this->end = []() {};
-	this->resize = [](const kl::int2& size) {};
-
-	// Winapi variables
-	this->hInstance = GetModuleHandleA(nullptr);
-	this->hwnd = nullptr;
-	this->hdc = nullptr;
-	this->wndMsg = {};
-
-	// Fullscreen data
-	this->inFull = false;
-	this->winStyle = NULL;
-	this->winPlace = {};
 }
-
-// Destructor
 kl::window::~window()
 {
 	this->stop();
