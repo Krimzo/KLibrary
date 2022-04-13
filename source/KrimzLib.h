@@ -39,12 +39,11 @@
 #include "window/mouse.h"
 #include "window/window.h"
 
-// GPU
+// DirectX
 #include "gpu/gpu.h"
 
 // View
 #include "view/camera.h"
-#include "view/skybox.h"
 
 // Light
 #include "light/ambient.h"

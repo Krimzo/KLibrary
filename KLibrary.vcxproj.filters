@@ -132,9 +132,6 @@
     <ClCompile Include="source\view\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\view\skybox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\window\key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -147,7 +144,7 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\Mandelbrot.cpp">
+    <ClCompile Include="examples\Raytracing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -237,9 +234,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\view\camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\view\skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\window\key.h">

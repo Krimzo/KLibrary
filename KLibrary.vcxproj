@@ -161,7 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Mandelbrot.cpp" />
+    <ClCompile Include="examples\Raytracing.cpp" />
     <ClCompile Include="source\color\color.cpp" />
     <ClCompile Include="source\color\image.cpp" />
     <ClCompile Include="source\geometry\plane.cpp" />
@@ -201,7 +201,6 @@
     <ClCompile Include="source\utility\time.cpp" />
     <ClCompile Include="source\utility\web.cpp" />
     <ClCompile Include="source\view\camera.cpp" />
-    <ClCompile Include="source\view\skybox.cpp" />
     <ClCompile Include="source\window\key.cpp" />
     <ClCompile Include="source\window\keys.cpp" />
     <ClCompile Include="source\window\mouse.cpp" />
@@ -238,7 +237,6 @@
     <ClInclude Include="source\utility\time.h" />
     <ClInclude Include="source\utility\web.h" />
     <ClInclude Include="source\view\camera.h" />
-    <ClInclude Include="source\view\skybox.h" />
     <ClInclude Include="source\window\key.h" />
     <ClInclude Include="source\window\keys.h" />
     <ClInclude Include="source\window\mouse.h" />
