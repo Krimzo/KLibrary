@@ -96,13 +96,14 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& ba
 	texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
 	// Texture data descriptor creation
-	D3D11_SUBRESOURCE_DATA texData[6] = {
-		{  right.pointer(), front.width() * sizeof(uint32_t), 0 },
-		{   left.pointer(), front.width() * sizeof(uint32_t), 0 },
-		{    top.pointer(), front.width() * sizeof(uint32_t), 0 },
-		{ bottom.pointer(), front.width() * sizeof(uint32_t), 0 },
-		{  front.pointer(), front.width() * sizeof(uint32_t), 0 },
-		{   back.pointer(), front.width() * sizeof(uint32_t), 0 }
+	D3D11_SUBRESOURCE_DATA texData[6]
+	{
+		{  right.pointer(), front.width() * sizeof(kl::color), 0 },
+		{   left.pointer(), front.width() * sizeof(kl::color), 0 },
+		{    top.pointer(), front.width() * sizeof(kl::color), 0 },
+		{ bottom.pointer(), front.width() * sizeof(kl::color), 0 },
+		{  front.pointer(), front.width() * sizeof(kl::color), 0 },
+		{   back.pointer(), front.width() * sizeof(kl::color), 0 }
 	};
 
 	// Return

@@ -71,13 +71,13 @@ kl::gpu::gpu(HWND hwnd)
 	}
 
 	// Generating the buffers
-	this->regenBuffers(kl::int2(clientArea.right, clientArea.bottom));
+	regenBuffers(kl::int2(clientArea.right, clientArea.bottom));
 
 	// Creating a default rasterizer
-	this->bind(this->newRasterState(false, false));
+	bind(newRasterState(false, false));
 
 	// Viewport setup
-	this->viewport(kl::int2(clientArea.left, clientArea.top), kl::int2(clientArea.right, clientArea.bottom));
+	viewport(kl::int2(clientArea.left, clientArea.top), kl::int2(clientArea.right, clientArea.bottom));
 
 	// Setting the triangle as the main primitive type
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -121,15 +121,17 @@ ID3D11DeviceContext* kl::gpu::con()
 void kl::gpu::regenBuffers(const kl::int2& size)
 {
 	// Cleanup
-	this->bindTargets({});
-	if (interFrameBuff) this->destroy(interFrameBuff);
-	if (interDepthBuff) this->destroy(interDepthBuff);
+	bindTargets({});
+	if (interFrameBuff)
+		destroy(interFrameBuff);
+	if (interDepthBuff)
+		destroy(interDepthBuff);
 	chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
 	// Frame buffer creation
-	ID3D11Texture2D* bbTex = this->newTextureBB();
-	interFrameBuff = this->newTargetView(bbTex);
-	this->destroy(bbTex);
+	ID3D11Texture2D* bbTex = newTextureBB();
+	interFrameBuff = newTargetView(bbTex);
+	destroy(bbTex);
 
 	// Depth buffer creation
 	D3D11_TEXTURE2D_DESC dsTexDesc = {};
@@ -141,12 +143,12 @@ void kl::gpu::regenBuffers(const kl::int2& size)
 	dsTexDesc.SampleDesc.Count = 1;
 	dsTexDesc.Usage = D3D11_USAGE_DEFAULT;
 	dsTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	ID3D11Texture2D* depthTex = this->newTexture(&dsTexDesc);
-	interDepthBuff = this->newDepthView(depthTex);
-	this->destroy(depthTex);
+	ID3D11Texture2D* depthTex = newTexture(&dsTexDesc);
+	interDepthBuff = newDepthView(depthTex);
+	destroy(depthTex);
 
 	// Buffer binding
-	this->bindInternal();
+	bindInternal();
 }
 
 // Sets the viewport
@@ -180,16 +182,16 @@ void kl::gpu::bindTargets(const std::vector<ID3D11RenderTargetView*> targets, ID
 // Clears the buffer
 void kl::gpu::clearColor(const kl::float4& color)
 {
-	this->clear(interFrameBuff, color);
+	clear(interFrameBuff, color);
 }
 void kl::gpu::clearDepth()
 {
-	this->clear(interDepthBuff);
+	clear(interDepthBuff);
 }
 void kl::gpu::clear(const kl::float4& color)
 {
-	this->clear(interFrameBuff, color);
-	this->clear(interDepthBuff);
+	clear(interFrameBuff, color);
+	clear(interDepthBuff);
 }
 
 // Swaps the buffers

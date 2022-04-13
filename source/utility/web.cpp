@@ -29,10 +29,8 @@ std::string kl::web::getWebsiteData(const std::string& url, int bufferSize)
 	dataBuffer.resize(bufferSize);
 	DWORD byteReadCount = 0;
 	while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount)
-	{
 		for (DWORD i = 0; i < byteReadCount; i++)
 			finalData.push_back(dataBuffer[i]);
-	}
 
 	// Close browser and url
 	InternetCloseHandle(openAddress);

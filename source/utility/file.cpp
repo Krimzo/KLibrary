@@ -179,8 +179,7 @@ std::vector<kl::vertex> kl::file::parseObj(const std::string& filePath, bool fli
 	const int zFlip = flipZ ? -1 : 1;
 
 	// Parsing data
-	std::string fileLine;
-	while (std::getline(fileStream, fileLine))
+	for (std::string fileLine; std::getline(fileStream, fileLine);)
 	{
 		// Splitting the string by spaces
 		std::vector<std::string> lineParts;
@@ -207,7 +206,8 @@ std::vector<kl::vertex> kl::file::parseObj(const std::string& filePath, bool fli
 
 				// Saving the data
 				vertexData.push_back(
-					kl::vertex(
+					kl::vertex
+					(
 						xyzBuffer[std::stoi(linePartParts[0]) - 1],
 						uvBuffer[std::stoi(linePartParts[1]) - 1],
 						normBuffer[std::stoi(linePartParts[2]) - 1]

@@ -141,16 +141,12 @@ bool kl::image::toFile(const std::string& fileName) const
 	{
 		std::stringstream ss;
 		for (int y = 0; y < _size.y; y++)
-		{
 			for (int x = 0; x < _size.x; x++)
-			{
 				ss <<
-					x << " " << y << " => " <<
-					int(pixels[uint64_t(y) * _size.x + x].r) << " " <<
-					int(pixels[uint64_t(y) * _size.x + x].g) << " " <<
-					int(pixels[uint64_t(y) * _size.x + x].b) << "\n";
-			}
-		}
+				x << " " << y << " => " <<
+				int(pixels[uint64_t(y) * _size.x + x].r) << " " <<
+				int(pixels[uint64_t(y) * _size.x + x].g) << " " <<
+				int(pixels[uint64_t(y) * _size.x + x].b) << "\n";
 		kl::file::write(fileName, ss.str());
 		return true;
 	}
@@ -206,10 +202,8 @@ kl::image kl::image::flipH() const
 
 	// Flipping
 	for (int y = 0; y < _size.y; y++)
-	{
 		for (int x = 0; x < _size.x; x++)
 			temp.pixels[size_t(y) * _size.x + x] = pixels[size_t(y) * _size.x + _size.x - 1 - x];
-	}
 
 	// Returning the edited
 	return temp;
@@ -223,10 +217,8 @@ kl::image kl::image::flipV() const
 
 	// Flipping
 	for (int x = 0; x < _size.x; x++)
-	{
 		for (int y = 0; y < _size.y; y++)
 			temp.pixels[size_t(y) * _size.x + x] = pixels[size_t(_size.y - 1 - y) * _size.x + x];
-	}
 
 	// Returning the edited
 	return temp;
@@ -255,23 +247,11 @@ void kl::image::drawTriangle(kl::int2 a, kl::int2 b, kl::int2 c, const kl::color
 	{
 		// Sorting by y
 		if (a.y > b.y)
-		{
-			kl::int2 temp = a;
-			a = b;
-			b = temp;
-		}
+			std::swap(a, b);
 		if (a.y > c.y)
-		{
-			kl::int2 temp = a;
-			a = c;
-			c = temp;
-		}
+			std::swap(a, c);
 		if (b.y > c.y)
-		{
-			kl::int2 temp = b;
-			b = c;
-			c = temp;
-		}
+			std::swap(b, c);
 
 		// Drawing
 		for (int y = a.y; y < c.y; y++)
@@ -292,11 +272,7 @@ void kl::image::drawRectangle(kl::int2 a, kl::int2 b, const kl::color& col, bool
 	{
 		// Sorting by y
 		if (a.y > b.y)
-		{
-			kl::int2 temp = a;
-			a = b;
-			b = temp;
-		}
+			std::swap(a, b);
 
 		// Drawing
 		for (int y = a.y; y <= b.y; y++)

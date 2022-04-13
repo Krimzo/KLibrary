@@ -75,7 +75,7 @@ void update()
 	if (win.mouse.lmb)
 	{
 		// Calculating the zoom
-		zoom += (zoom * zoomSpeed * deltaT);
+		zoom += zoom * zoomSpeed * deltaT;
 
 		// Checking the zoom
 		if (zoom < maxZoom)
@@ -89,7 +89,7 @@ void update()
 	if (win.mouse.rmb)
 	{
 		// Calculating the zoom
-		zoom = zoom - zoom * zoomSpeed * deltaT;
+		zoom -= zoom * zoomSpeed * deltaT;
 
 		// Checking the zoom
 		if (zoom > minZoom)

@@ -20,7 +20,7 @@ namespace kl
 		// Destructor
 		~pbuffer()
 		{
-			this->clear();
+			clear();
 		}
 
 		// Finds if pointer exists

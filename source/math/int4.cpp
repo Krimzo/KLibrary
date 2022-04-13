@@ -50,7 +50,7 @@ kl::int4 kl::int4::add(const kl::int4& obj) const
 }
 kl::int4 kl::int4::operator+(const kl::int4& obj) const
 {
-	return this->add(obj);
+	return add(obj);
 }
 void kl::int4::operator+=(const kl::int4& obj)
 {
@@ -64,7 +64,7 @@ kl::int4 kl::int4::sub(const kl::int4& obj) const
 }
 kl::int4 kl::int4::operator-(const kl::int4& obj) const
 {
-	return this->sub(obj);
+	return sub(obj);
 }
 void kl::int4::operator-=(const kl::int4& obj)
 {
@@ -78,7 +78,7 @@ kl::int4 kl::int4::mul(int a) const
 }
 kl::int4 kl::int4::operator*(int a) const
 {
-	return this->mul(a);
+	return mul(a);
 }
 void kl::int4::operator*=(int a)
 {
@@ -90,7 +90,7 @@ kl::int4 kl::int4::mul(const kl::int4& obj) const
 }
 kl::int4 kl::int4::operator*(const kl::int4& obj) const
 {
-	return this->mul(obj);
+	return mul(obj);
 }
 void kl::int4::operator*=(const kl::int4& obj)
 {
@@ -104,7 +104,7 @@ kl::int4 kl::int4::div(int a) const
 }
 kl::int4 kl::int4::operator/(int a) const
 {
-	return this->div(a);
+	return div(a);
 }
 void kl::int4::operator/=(int a)
 {
@@ -116,7 +116,7 @@ kl::int4 kl::int4::div(const kl::int4& obj) const
 }
 kl::int4 kl::int4::operator/(const kl::int4& obj) const
 {
-	return this->div(obj);
+	return div(obj);
 }
 void kl::int4::operator/=(const kl::int4& obj)
 {
@@ -130,17 +130,17 @@ bool kl::int4::equals(const kl::int4& obj) const
 }
 bool kl::int4::operator==(const kl::int4& obj) const
 {
-	return this->equals(obj);
+	return equals(obj);
 }
 bool kl::int4::operator!=(const kl::int4& obj) const
 {
-	return !this->equals(obj);
+	return !equals(obj);
 }
 
 // Returns a negated vec
 kl::int4 kl::int4::negate() const
 {
-	return this->mul(-1);
+	return mul(-1);
 }
 
 // Returns an absolute vec

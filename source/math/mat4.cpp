@@ -26,7 +26,7 @@ kl::mat4 kl::mat4::add(const kl::mat4& obj) const
 }
 kl::mat4 kl::mat4::operator+(const kl::mat4& obj) const
 {
-	return this->add(obj);
+	return add(obj);
 }
 void kl::mat4::operator+=(const kl::mat4& obj)
 {
@@ -44,7 +44,7 @@ kl::mat4 kl::mat4::sub(const kl::mat4& obj) const
 }
 kl::mat4 kl::mat4::operator-(const kl::mat4& obj) const
 {
-	return this->sub(obj);
+	return sub(obj);
 }
 void kl::mat4::operator-=(const kl::mat4& obj)
 {
@@ -62,7 +62,7 @@ kl::mat4 kl::mat4::mul(float a) const
 }
 kl::mat4 kl::mat4::operator*(float a) const
 {
-	return this->mul(a);
+	return mul(a);
 }
 void kl::mat4::operator*=(float a)
 {
@@ -92,11 +92,11 @@ kl::mat4 kl::mat4::mul(const kl::mat4& obj) const
 }
 kl::mat4 kl::mat4::operator*(const kl::mat4& obj) const
 {
-	return this->mul(obj);
+	return mul(obj);
 }
 void kl::mat4::operator*=(const kl::mat4& obj)
 {
-	*this = this->mul(obj);
+	*this = mul(obj);
 }
 kl::float4 kl::mat4::mul(const kl::float4& obj) const
 {
@@ -109,40 +109,38 @@ kl::float4 kl::mat4::mul(const kl::float4& obj) const
 }
 kl::float4 kl::mat4::operator*(const kl::float4& obj) const
 {
-	return this->mul(obj);
+	return mul(obj);
 }
 
 // Division
 kl::mat4 kl::mat4::div(float a) const
 {
-	return this->mul(1 / a);
+	return mul(1 / a);
 }
 kl::mat4 kl::mat4::operator/(float a) const
 {
-	return this->div(a);
+	return div(a);
 }
 void kl::mat4::operator /= (float a)
 {
-	this->operator*=(1 / a);
+	operator*=(1 / a);
 }
 
 // Comparison
 bool kl::mat4::equals(const kl::mat4& obj) const
 {
 	for (int i = 0; i < 16; i++)
-	{
 		if (data[i] != obj.data[i])
 			return false;
-	}
 	return true;
 }
 bool kl::mat4::operator==(const kl::mat4& obj) const
 {
-	return this->equals(obj);
+	return equals(obj);
 }
 bool kl::mat4::operator!=(const kl::mat4& obj) const
 {
-	return !this->equals(obj);
+	return !equals(obj);
 }
 
 // Returns pointer to raw data
@@ -266,7 +264,7 @@ kl::mat4 kl::mat4::inverse() const
 
 	// Det check
 	if (det == 0.0f)
-		return kl::mat4();
+		return {};
 
 	// Return
 	return inv.div(det);

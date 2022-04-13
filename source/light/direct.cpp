@@ -32,14 +32,14 @@ void kl::direct::genBuff(kl::gpu* gpu, int size)
 	D3D11_DEPTH_STENCIL_VIEW_DESC sunDepthVDesc = {};
 	sunDepthVDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	sunDepthVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	this->shadowMapDV = gpu->newDepthView(sunTex, &sunDepthVDesc);
+	shadowMapDV = gpu->newDepthView(sunTex, &sunDepthVDesc);
 
 	// Shader view gen
 	D3D11_SHADER_RESOURCE_VIEW_DESC sunShaderVDesc = {};
 	sunShaderVDesc.Format = DXGI_FORMAT_R32_FLOAT;
 	sunShaderVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	sunShaderVDesc.Texture2D.MipLevels = 1;
-	this->shadowMapSV = gpu->newShaderView(sunTex, &sunShaderVDesc);
+	shadowMapSV = gpu->newShaderView(sunTex, &sunShaderVDesc);
 
 	// Cleanup
 	gpu->destroy(sunTex);
@@ -51,8 +51,8 @@ kl::mat4 kl::direct::matrix(const kl::camera& cam) const
 	// Inverse camera matrix calculation
 	const kl::mat4 invCam = (
 		kl::mat4::persp(cam.fov, cam.aspect, cam.near, cam.shadows) *
-		kl::mat4::lookAt(cam.position, cam.position + cam.getForward(), cam.getUp())
-		).inverse();
+		kl::mat4::lookAt(cam.position, cam.position + cam.getForward(),
+			cam.getUp())).inverse();
 
 	// Frustum world corners
 	std::vector<kl::float4> frustumCorners;
@@ -75,7 +75,7 @@ kl::mat4 kl::direct::matrix(const kl::camera& cam) const
 	centroid /= 8.0f;
 
 	// Light view matrix
-	const kl::mat4 view = kl::mat4::lookAt(centroid - this->getDir(), centroid, kl::float3::pos_y);
+	const kl::mat4 view = kl::mat4::lookAt(centroid - getDir(), centroid, kl::float3::pos_y);
 
 	// Finding min and max points
 	kl::float3 minp(FLT_MAX, FLT_MAX, FLT_MAX);

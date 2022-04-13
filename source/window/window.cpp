@@ -19,7 +19,7 @@ kl::window::window()
 }
 kl::window::~window()
 {
-	this->stop();
+	stop();
 }
 
 // Registers a new window class
@@ -89,7 +89,7 @@ LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 	switch (msg)
 	{
 	case WM_SIZE:
-		this->resize(kl::int2(LOWORD(lParam), HIWORD(lParam)));
+		resize(kl::int2(LOWORD(lParam), HIWORD(lParam)));
 		break;
 	}
 	return DefWindowProcA(hwnd, msg, wParam, lParam);
@@ -113,43 +113,43 @@ void kl::window::handleMessage()
 #endif
 
 	case WM_KEYDOWN:
-		this->keys.updateKey(wndMsg.wParam, true);
+		keys.updateKey(wndMsg.wParam, true);
 		break;
 
 	case WM_KEYUP:
-		this->keys.updateKey(wndMsg.wParam, false);
+		keys.updateKey(wndMsg.wParam, false);
 		break;
 
 	case WM_LBUTTONDOWN:
-		this->mouse.lmb.update(true);
+		mouse.lmb.update(true);
 		break;
 
 	case WM_LBUTTONUP:
-		this->mouse.lmb.update(false);
+		mouse.lmb.update(false);
 		break;
 
 	case WM_MBUTTONDOWN:
-		this->mouse.mmb.update(true);
+		mouse.mmb.update(true);
 		break;
 
 	case WM_MBUTTONUP:
-		this->mouse.mmb.update(false);
+		mouse.mmb.update(false);
 		break;
 
 	case WM_RBUTTONDOWN:
-		this->mouse.rmb.update(true);
+		mouse.rmb.update(true);
 		break;
 
 	case WM_RBUTTONUP:
-		this->mouse.rmb.update(false);
+		mouse.rmb.update(false);
 		break;
 
 	case WM_MOUSEMOVE:
-		this->mouse.position = kl::int2(GET_X_LPARAM(wndMsg.lParam), GET_Y_LPARAM(wndMsg.lParam));
+		mouse.position = kl::int2(GET_X_LPARAM(wndMsg.lParam), GET_Y_LPARAM(wndMsg.lParam));
 		break;
 
 	case WM_MOUSEWHEEL:
-		this->mouse.scroll += GET_WHEEL_DELTA_WPARAM(wndMsg.wParam) / 120;
+		mouse.scroll += GET_WHEEL_DELTA_WPARAM(wndMsg.wParam) / 120;
 		break;
 
 	default:
@@ -168,7 +168,7 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 	createWindow(size, name, resizeable);
 
 	// Binding the mouse
-	this->mouse.bind(hwnd);
+	mouse.bind(hwnd);
 
 #ifdef KL_USING_IMGUI
 	ImGui_ImplWin32_Init(hwnd);
@@ -182,9 +182,9 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 		while (IsWindow(hwnd))
 		{
 			while (PeekMessageA(&wndMsg, hwnd, 0, 0, PM_REMOVE))
-				this->handleMessage();
-			this->keys.callAllDowns();
-			this->mouse.callAllDowns();
+				handleMessage();
+			keys.callAllDowns();
+			mouse.callAllDowns();
 			update();
 		}
 		end();
@@ -195,9 +195,9 @@ void kl::window::startNew(const kl::int2& size, const std::string& name, bool re
 		while (IsWindow(hwnd))
 		{
 			GetMessageA(&wndMsg, hwnd, 0, 0);
-			this->handleMessage();
-			this->keys.callAllDowns();
-			this->mouse.callAllDowns();
+			handleMessage();
+			keys.callAllDowns();
+			mouse.callAllDowns();
 			update();
 		}
 		end();
@@ -251,11 +251,11 @@ void kl::window::setFullscreen(bool enable)
 // Max/min functions
 void kl::window::maximize()
 {
-	ShowWindow(this->hwnd, SW_MAXIMIZE);
+	ShowWindow(hwnd, SW_MAXIMIZE);
 }
 void kl::window::minimize()
 {
-	ShowWindow(this->hwnd, SW_MINIMIZE);
+	ShowWindow(hwnd, SW_MINIMIZE);
 }
 
 // Returns the window size
@@ -276,7 +276,7 @@ float kl::window::getAspect() const
 // Returns the center point of the frame
 kl::int2 kl::window::getCenter() const
 {
-	return this->getSize() / 2;
+	return getSize() / 2;
 }
 
 // Sets the window title
@@ -298,8 +298,8 @@ bool kl::window::setIcon(const std::string& filePath)
 	}
 
 	// Sending the icon
-	SendMessageA(this->hwnd, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
-	SendMessageA(this->hwnd, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
+	SendMessageA(hwnd, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
+	SendMessageA(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
 	return true;
 }
 

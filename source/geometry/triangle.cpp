@@ -48,17 +48,21 @@ float kl::triangle::interpolate(const kl::float4& interConsts, const kl::float3&
 kl::vertex kl::triangle::interpolate(const kl::float4& interConsts, const kl::float2& pos) const
 {
 	const kl::float3 weights = getWeights(interConsts, pos);
-	return kl::vertex(
-		kl::float3(
+	return kl::vertex
+	(
+		kl::float3
+		(
 			a.world.x * weights.x + b.world.x * weights.y + c.world.x * weights.z,
 			a.world.y * weights.x + b.world.y * weights.y + c.world.y * weights.z,
 			a.world.z * weights.x + b.world.z * weights.y + c.world.z * weights.z
 		),
-		kl::float2(
+		kl::float2
+		(
 			a.texture.x * weights.x + b.texture.x * weights.y + c.texture.x * weights.z,
 			a.texture.y * weights.x + b.texture.y * weights.y + c.texture.y * weights.z
 		),
-		kl::float3(
+		kl::float3
+		(
 			a.normal.x * weights.x + b.normal.x * weights.y + c.normal.x * weights.z,
 			a.normal.y * weights.x + b.normal.y * weights.y + c.normal.y * weights.z,
 			a.normal.z * weights.x + b.normal.z * weights.y + c.normal.z * weights.z

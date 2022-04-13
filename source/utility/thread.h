@@ -3,13 +3,14 @@
 #include <functional>
 #include <thread>
 #include <mutex>
+#include <future>
 
 
 namespace kl
 {
 	namespace thread
 	{
-		// Multithreaded for loop
-		void parallelFor(int startInclusive, int endExclusive, std::function<void(int, int)> loopBody, int threadCount = 4);
+		// Asynchronous for loop
+		void asyncFor(int startInclusive, int endExclusive, const std::function<void(int t, int i)>& loopBody, int threadCount = 4);
 	}
 }

@@ -48,7 +48,7 @@ kl::float3 kl::float3::add(const kl::float3& obj) const
 }
 kl::float3 kl::float3::operator+(const kl::float3& obj) const
 {
-	return this->add(obj);
+	return add(obj);
 }
 void kl::float3::operator+=(const kl::float3& obj)
 {
@@ -62,7 +62,7 @@ kl::float3 kl::float3::sub(const kl::float3& obj) const
 }
 kl::float3 kl::float3::operator-(const kl::float3& obj) const
 {
-	return this->sub(obj);
+	return sub(obj);
 }
 void kl::float3::operator-=(const kl::float3& obj)
 {
@@ -76,7 +76,7 @@ kl::float3 kl::float3::mul(float a) const
 }
 kl::float3 kl::float3::operator*(float a) const
 {
-	return this->mul(a);
+	return mul(a);
 }
 void kl::float3::operator*=(float a)
 {
@@ -88,7 +88,7 @@ kl::float3 kl::float3::mul(const kl::float3& obj) const
 }
 kl::float3 kl::float3::operator*(const kl::float3& obj) const
 {
-	return this->mul(obj);
+	return mul(obj);
 }
 void kl::float3::operator*=(const kl::float3& obj)
 {
@@ -98,15 +98,15 @@ void kl::float3::operator*=(const kl::float3& obj)
 // Division
 kl::float3 kl::float3::div(float a) const
 {
-	return this->mul(1 / a);
+	return mul(1 / a);
 }
 kl::float3 kl::float3::operator/(float a) const
 {
-	return this->div(a);
+	return div(a);
 }
 void kl::float3::operator/=(float a)
 {
-	this->operator*=(1 / a);
+	operator*=(1 / a);
 }
 kl::float3 kl::float3::div(const kl::float3& obj) const
 {
@@ -114,7 +114,7 @@ kl::float3 kl::float3::div(const kl::float3& obj) const
 }
 kl::float3 kl::float3::operator/(const kl::float3& obj) const
 {
-	return this->div(obj);
+	return div(obj);
 }
 void kl::float3::operator/=(const kl::float3& obj)
 {
@@ -128,17 +128,17 @@ bool kl::float3::equals(const kl::float3& obj) const
 }
 bool kl::float3::operator==(const kl::float3& obj) const
 {
-	return this->equals(obj);
+	return equals(obj);
 }
 bool kl::float3::operator!=(const kl::float3& obj) const
 {
-	return !this->equals(obj);
+	return !equals(obj);
 }
 
 // Returns a negated vector
 kl::float3 kl::float3::negate() const
 {
-	return this->mul(-1);
+	return mul(-1);
 }
 
 // Returns an absolute vector
@@ -156,7 +156,7 @@ float kl::float3::length() const
 // Retruns a normalized vector
 kl::float3 kl::float3::normalize() const
 {
-	return this->div(this->length());
+	return div(length());
 }
 
 // Returns the dot product
@@ -174,7 +174,7 @@ kl::float3 kl::float3::cross(const kl::float3& a) const
 // Returns the angle between the given vector and self
 float kl::float3::angle(const kl::float3& a) const
 {
-	return kl::convert::toDegrees(acos(this->normalize().dot(a.normalize())));
+	return kl::convert::toDegrees(acos(normalize().dot(a.normalize())));
 }
 
 // Returns a rotated vector around the given axis

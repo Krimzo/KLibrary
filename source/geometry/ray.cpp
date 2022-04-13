@@ -97,13 +97,17 @@ bool kl::ray::intersect(const kl::sphere& sphere, kl::float3* outInter, float* o
 	// Origin in sphere test
 	if (dis0 < 0.0f)
 	{
-		if (outInter) *outInter = this->origin + this->direction * dis1;
-		if (outDis) *outDis = dis1;
+		if (outInter)
+			*outInter = this->origin + this->direction * dis1;
+		if (outDis)
+			*outDis = dis1;
 	}
 	else
 	{
-		if (outInter) *outInter = this->origin + this->direction * dis0;
-		if (outDis) *outDis = dis0;
+		if (outInter)
+			*outInter = this->origin + this->direction * dis0;
+		if (outDis)
+			*outDis = dis0;
 	}
 	return true;
 }

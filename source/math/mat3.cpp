@@ -21,12 +21,12 @@ kl::mat3 kl::mat3::add(const kl::mat3& obj) const
 {
 	kl::mat3 temp;
 	for (int i = 0; i < 9; i++)
-		temp[i] = this->data[i] + obj.data[i];
+		temp[i] = data[i] + obj.data[i];
 	return temp;
 }
 kl::mat3 kl::mat3::operator+(const kl::mat3& obj) const
 {
-	return this->add(obj);
+	return add(obj);
 }
 void kl::mat3::operator+=(const kl::mat3& obj)
 {
@@ -39,12 +39,12 @@ kl::mat3 kl::mat3::sub(const kl::mat3& obj) const
 {
 	kl::mat3 temp;
 	for (int i = 0; i < 9; i++)
-		temp[i] = this->data[i] - obj.data[i];
+		temp[i] = data[i] - obj.data[i];
 	return temp;
 }
 kl::mat3 kl::mat3::operator-(const kl::mat3& obj) const
 {
-	return this->sub(obj);
+	return sub(obj);
 }
 void kl::mat3::operator-=(const kl::mat3& obj)
 {
@@ -62,7 +62,7 @@ kl::mat3 kl::mat3::mul(float a) const
 }
 kl::mat3 kl::mat3::operator*(float a) const
 {
-	return this->mul(a);
+	return mul(a);
 }
 void kl::mat3::operator*=(float a)
 {
@@ -85,11 +85,11 @@ kl::mat3 kl::mat3::mul(const kl::mat3& obj) const
 }
 kl::mat3 kl::mat3::operator*(const kl::mat3& obj) const
 {
-	return this->mul(obj);
+	return mul(obj);
 }
 void kl::mat3::operator*=(const kl::mat3& obj)
 {
-	*this = this->mul(obj);
+	*this = mul(obj);
 }
 kl::float3 kl::mat3::mul(const kl::float3& obj) const
 {
@@ -101,17 +101,17 @@ kl::float3 kl::mat3::mul(const kl::float3& obj) const
 }
 kl::float3 kl::mat3::operator*(const kl::float3& obj) const
 {
-	return this->mul(obj);
+	return mul(obj);
 }
 
 // Division
 kl::mat3 kl::mat3::div(float a) const
 {
-	return this->mul(1 / a);
+	return mul(1 / a);
 }
 kl::mat3 kl::mat3::operator/(float a) const
 {
-	return this->div(a);
+	return div(a);
 }
 void kl::mat3::operator/=(float a)
 {
@@ -122,19 +122,17 @@ void kl::mat3::operator/=(float a)
 bool kl::mat3::equals(const kl::mat3& obj) const
 {
 	for (int i = 0; i < 9; i++)
-	{
 		if (data[i] != obj.data[i])
 			return false;
-	}
 	return true;
 }
 bool kl::mat3::operator==(const kl::mat3& obj) const
 {
-	return this->equals(obj);
+	return equals(obj);
 }
 bool kl::mat3::operator!=(const kl::mat3& obj) const
 {
-	return !this->equals(obj);
+	return !equals(obj);
 }
 
 // Returns pointer to raw data

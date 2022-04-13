@@ -30,7 +30,7 @@ kl::float2 kl::float2::add(const kl::float2& obj) const
 }
 kl::float2 kl::float2::operator+(const kl::float2& obj) const
 {
-	return this->add(obj);
+	return add(obj);
 }
 void kl::float2::operator+=(const kl::float2& obj)
 {
@@ -44,7 +44,7 @@ kl::float2 kl::float2::sub(const kl::float2& obj) const
 }
 kl::float2 kl::float2::operator-(const kl::float2& obj) const
 {
-	return this->sub(obj);
+	return sub(obj);
 }
 void kl::float2::operator-=(const kl::float2& obj)
 {
@@ -58,7 +58,7 @@ kl::float2 kl::float2::mul(float a) const
 }
 kl::float2 kl::float2::operator*(float a) const
 {
-	return this->mul(a);
+	return mul(a);
 }
 void kl::float2::operator*=(float a)
 {
@@ -70,7 +70,7 @@ kl::float2 kl::float2::mul(const kl::float2& obj) const
 }
 kl::float2 kl::float2::operator*(const kl::float2& obj) const
 {
-	return this->mul(obj);
+	return mul(obj);
 }
 void kl::float2::operator*=(const kl::float2& obj)
 {
@@ -80,15 +80,15 @@ void kl::float2::operator*=(const kl::float2& obj)
 // Division
 kl::float2 kl::float2::div(float a) const
 {
-	return this->mul(1 / a);
+	return mul(1 / a);
 }
 kl::float2 kl::float2::operator/(float a) const
 {
-	return this->div(a);
+	return div(a);
 }
 void kl::float2::operator/=(float a)
 {
-	this->operator*=(1 / a);
+	operator*=(1 / a);
 }
 kl::float2 kl::float2::div(const kl::float2& obj) const
 {
@@ -96,7 +96,7 @@ kl::float2 kl::float2::div(const kl::float2& obj) const
 }
 kl::float2 kl::float2::operator/(const kl::float2& obj) const
 {
-	return this->div(obj);
+	return div(obj);
 }
 void kl::float2::operator/=(const kl::float2& obj)
 {
@@ -110,11 +110,11 @@ bool kl::float2::equals(const kl::float2& obj) const
 }
 bool kl::float2::operator==(const kl::float2& obj) const
 {
-	return this->equals(obj);
+	return equals(obj);
 }
 bool kl::float2::operator!=(const kl::float2& obj) const
 {
-	return !this->equals(obj);
+	return !equals(obj);
 }
 
 // Returns a negated vector
@@ -138,7 +138,7 @@ float kl::float2::length() const
 // Retruns a normalized vector
 kl::float2 kl::float2::normalize() const
 {
-	return this->div(this->length());
+	return div(length());
 }
 
 // Returns the dot product
@@ -151,10 +151,8 @@ float kl::float2::dot(const float2& a) const
 float kl::float2::angle(const kl::float2& a, bool full) const
 {
 	if (full)
-	{
 		return kl::convert::toDegrees(atan2(x * a.y - y * a.x, x * a.x + y * a.y));
-	}
-	return kl::convert::toDegrees(acos(this->normalize().dot(a.normalize())));
+	return kl::convert::toDegrees(acos(normalize().dot(a.normalize())));
 }
 
 // Returns a rotated vector around the given point

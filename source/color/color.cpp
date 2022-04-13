@@ -46,7 +46,8 @@ kl::color kl::color::mix(const kl::color& col, float ratio) const
 	const float iratio = 1.0f - ratio;
 
 	// Calculating mixed color
-	return kl::color(
+	return kl::color
+	(
 		byte(this->r * iratio) + byte(col.r * ratio),
 		byte(this->g * iratio) + byte(col.g * ratio),
 		byte(this->b * iratio) + byte(col.b * ratio)

@@ -10,9 +10,12 @@ void kl::mouse::bind(HWND hwnd)
 // Calls all key down functions
 void kl::mouse::callAllDowns()
 {
-	if (lmb) lmb.down();
-	if (mmb) mmb.down();
-	if (rmb) rmb.down();
+	if (lmb)
+		lmb.down();
+	if (mmb)
+		mmb.down();
+	if (rmb)
+		rmb.down();
 }
 
 // Hides the mouse cursor
@@ -40,7 +43,8 @@ void kl::mouse::move(const kl::int2& pos)
 // Return a normalized screen position
 kl::float2 kl::mouse::normPos(const kl::int2& frameSize) const
 {
-	kl::float2 pos(
+	kl::float2 pos
+	(
 		float(position.x) / frameSize.x,
 		float(frameSize.y - position.y) / frameSize.y
 	);

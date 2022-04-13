@@ -14,8 +14,8 @@ kl::key::operator bool()
 void kl::key::update(bool newState)
 {
 	if (!state && newState)
-		this->press();
+		press();
 	else if (state && !newState)
-		this->release();
+		release();
 	state = newState;
 }
