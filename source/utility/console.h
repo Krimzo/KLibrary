@@ -7,10 +7,8 @@
 #include "color/color.h"
 
 
-namespace kl
-{
-	class console
-	{
+namespace kl {
+	class console {
 	private:
 		// Console handle
 		static HANDLE handle;

@@ -3,10 +3,8 @@
 #include <windows.h>
 
 
-void kl::keys::updateKey(kl::id key, bool state)
-{
-	switch (key)
-	{
+void kl::keys::updateKey(kl::id key, bool state) {
+	switch (key) {
 		// Letters
 	case 'Q':
 		q.update(state);
@@ -223,8 +221,7 @@ void kl::keys::updateKey(kl::id key, bool state)
 }
 
 // Calls all key down functions
-void kl::keys::callAllDowns()
-{
+void kl::keys::callAllDowns() {
 	if (q) q.down();
 	if (w) w.down();
 	if (e) e.down();

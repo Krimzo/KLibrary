@@ -10,12 +10,9 @@ WSADATA kl::socket::wsaData = {};
 bool kl::socket::wsaInited = false;
 
 // WSA setup
-void kl::socket::initWSA()
-{
-	if (!wsaInited)
-	{
-		if (WSAStartup(MAKEWORD(2, 2), &wsaData))
-		{
+void kl::socket::initWSA() {
+	if (!wsaInited) {
+		if (WSAStartup(MAKEWORD(2, 2), &wsaData)) {
 			kl::console::show();
 			std::cout << "Could not startup WSA!";
 			std::cin.get();
@@ -24,20 +21,16 @@ void kl::socket::initWSA()
 		wsaInited = true;
 	}
 }
-void kl::socket::uninitWSA()
-{
-	if (wsaInited)
-	{
+void kl::socket::uninitWSA() {
+	if (wsaInited) {
 		WSACleanup();
 		wsaInited = false;
 	}
 }
 
-kl::socket::socket()
-{
+kl::socket::socket() {
 	sock = ::socket(AF_INET, SOCK_STREAM, NULL);
-	if (sock == INVALID_SOCKET)
-	{
+	if (sock == INVALID_SOCKET) {
 		kl::console::show();
 		std::cout << "Could not create a socket!";
 		std::cin.get();
@@ -46,35 +39,26 @@ kl::socket::socket()
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
 }
-kl::socket::socket(SOCKET sock)
-	: sock(sock)
-{
-}
-kl::socket::~socket()
-{
+kl::socket::socket(SOCKET sock) : sock(sock) {}
+kl::socket::~socket() {
 	close();
 }
 
-kl::socket::operator SOCKET()
-{
+kl::socket::operator SOCKET() {
 	return sock;
 }
 
 // Closes the socket
-void kl::socket::close()
-{
+void kl::socket::close() {
 	closesocket(sock);
 }
 
 // Info setters
-void kl::socket::setPort(uint16_t port)
-{
+void kl::socket::setPort(uint16_t port) {
 	addr.sin_port = htons(port);
 }
-void kl::socket::setAddr(const std::string& addrs)
-{
-	if (inet_pton(AF_INET, addrs.c_str(), &addr.sin_addr) != 1)
-	{
+void kl::socket::setAddr(const std::string& addrs) {
+	if (inet_pton(AF_INET, addrs.c_str(), &addr.sin_addr) != 1) {
 		kl::console::show();
 		std::cout << "Could not parse address \"" << addrs << "\"";
 		std::cin.get();
@@ -83,10 +67,8 @@ void kl::socket::setAddr(const std::string& addrs)
 }
 
 // Binds the socket
-void kl::socket::bind()
-{
-	if (::bind(sock, (sockaddr*)&addr, sizeof(addr)))
-	{
+void kl::socket::bind() {
+	if (::bind(sock, (sockaddr*)&addr, sizeof(addr))) {
 		kl::console::show();
 		std::cout << "Could not bind socket!";
 		std::cin.get();
@@ -95,10 +77,8 @@ void kl::socket::bind()
 }
 
 // Sets socket mode to listen
-void kl::socket::listen(int queueSize)
-{
-	if (::listen(sock, queueSize))
-	{
+void kl::socket::listen(int queueSize) {
+	if (::listen(sock, queueSize)) {
 		kl::console::show();
 		std::cout << "Could not listen on socket!";
 		std::cin.get();
@@ -107,12 +87,10 @@ void kl::socket::listen(int queueSize)
 }
 
 // Accepts new connections
-kl::socket kl::socket::accept()
-{
+kl::socket kl::socket::accept() {
 	int addrLen = sizeof(addr);
 	SOCKET accepted = ::accept(sock, (sockaddr*)&addr, &addrLen);
-	if (accepted == INVALID_SOCKET)
-	{
+	if (accepted == INVALID_SOCKET) {
 		kl::console::show();
 		std::cout << "Bad socket accepted!";
 		std::cin.get();
@@ -122,10 +100,8 @@ kl::socket kl::socket::accept()
 }
 
 // Connects to a socket
-void kl::socket::connect()
-{
-	if (::connect(sock, (sockaddr*)&addr, sizeof(addr)))
-	{
+void kl::socket::connect() {
+	if (::connect(sock, (sockaddr*)&addr, sizeof(addr))) {
 		kl::console::show();
 		std::cout << "Could not connect to socket!";
 		std::cin.get();
@@ -134,13 +110,11 @@ void kl::socket::connect()
 }
 
 // Sends data to socket
-int kl::socket::send(const void* data, int byteSize)
-{
+int kl::socket::send(const void* data, int byteSize) {
 	return ::send(sock, (const char*)data, byteSize, NULL);
 }
 
 // Receives data from socket
-int kl::socket::recieve(void* buff, int byteSize)
-{
+int kl::socket::recieve(void* buff, int byteSize) {
 	return recv(sock, (char*)buff, byteSize, NULL);
 }

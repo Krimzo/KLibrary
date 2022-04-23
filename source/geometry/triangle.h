@@ -6,10 +6,8 @@
 #include "geometry/vertex.h"
 
 
-namespace kl
-{
-	class triangle
-	{
+namespace kl {
+	class triangle {
 	public:
 		kl::vertex a;
 		kl::vertex b;

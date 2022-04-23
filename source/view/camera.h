@@ -6,10 +6,8 @@
 #undef near
 #undef far
 
-namespace kl
-{
-	class camera
-	{
+namespace kl {
+	class camera {
 	public:
 		kl::float3 forward = kl::float3::pos_z;
 		kl::float3 position;

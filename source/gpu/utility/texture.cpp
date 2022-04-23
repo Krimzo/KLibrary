@@ -4,13 +4,11 @@
 
 
 // Texture from backbuffer
-ID3D11Texture2D* kl::gpu::newTextureBB()
-{
+ID3D11Texture2D* kl::gpu::newTextureBB() {
 	// Getting the back buffer address
 	ID3D11Texture2D* buffAddrs = nullptr;
 	chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffAddrs);
-	if (!buffAddrs)
-	{
+	if (!buffAddrs) {
 		kl::console::show();
 		std::cout << "DirectX: Could not get back buffer address!";
 		std::cin.get();
@@ -25,13 +23,11 @@ ID3D11Texture2D* kl::gpu::newTextureBB()
 }
 
 // Texture from descriptors
-ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOURCE_DATA* subData)
-{
+ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOURCE_DATA* subData) {
 	// Texture creation
 	ID3D11Texture2D* tex = nullptr;
 	device->CreateTexture2D(desc, subData, &tex);
-	if (!tex)
-	{
+	if (!tex) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create a 2D texture!";
 		std::cin.get();
@@ -46,8 +42,7 @@ ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOUR
 }
 
 // Texture from image
-ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img)
-{
+ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img) {
 	// Getting the flipped image
 	const kl::image flipped = img.flipV();
 
@@ -72,11 +67,9 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img)
 }
 
 // Texture cube from images
-ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom)
-{
+ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
 	// Image size check
-	if (!(front.size() == back.size() && front.size() == left.size() && front.size() == right.size() && front.size() == top.size() && front.size() == bottom.size()))
-	{
+	if (!(front.size() == back.size() && front.size() == left.size() && front.size() == right.size() && front.size() == top.size() && front.size() == bottom.size())) {
 		kl::console::show();
 		std::cout << "Texture: Sizes of the 6 given images do not match!";
 		std::cin.get();
@@ -96,8 +89,7 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& ba
 	texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
 	// Texture data descriptor creation
-	D3D11_SUBRESOURCE_DATA texData[6]
-	{
+	D3D11_SUBRESOURCE_DATA texData[6] = {
 		{  right.pointer(), front.width() * sizeof(kl::color), 0 },
 		{   left.pointer(), front.width() * sizeof(kl::color), 0 },
 		{    top.pointer(), front.width() * sizeof(kl::color), 0 },
@@ -111,8 +103,7 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& ba
 }
 
 // Staging texture
-ID3D11Texture2D* kl::gpu::newTextureST(ID3D11Texture2D* tex, const kl::int2& size)
-{
+ID3D11Texture2D* kl::gpu::newTextureST(ID3D11Texture2D* tex, const kl::int2& size) {
 	// Getting the given tex desc
 	D3D11_TEXTURE2D_DESC oldDesc = {};
 	tex->GetDesc(&oldDesc);

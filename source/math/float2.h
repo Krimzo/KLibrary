@@ -5,19 +5,14 @@
 #include "math/int2.h"
 
 
-namespace kl
-{
-	class float2
-	{
+namespace kl {
+	class float2 {
 	public:
-		union
-		{
-			struct
-			{
+		union {
+			struct {
 				float x, y;
 			};
-			struct
-			{
+			struct {
 				float r, g;
 			};
 		};

@@ -3,13 +3,11 @@
 #include "utility/console.h"
 
 
-ID3D11RasterizerState* kl::gpu::newRasterState(D3D11_RASTERIZER_DESC* desc)
-{
+ID3D11RasterizerState* kl::gpu::newRasterState(D3D11_RASTERIZER_DESC* desc) {
 	// Raster creation
 	ID3D11RasterizerState* rasterState = nullptr;
 	device->CreateRasterizerState(desc, &rasterState);
-	if (!rasterState)
-	{
+	if (!rasterState) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create a raster state!";
 		std::cin.get();
@@ -23,8 +21,7 @@ ID3D11RasterizerState* kl::gpu::newRasterState(D3D11_RASTERIZER_DESC* desc)
 	return rasterState;
 }
 
-ID3D11RasterizerState* kl::gpu::newRasterState(bool wireframe, bool cull, bool cullBack)
-{
+ID3D11RasterizerState* kl::gpu::newRasterState(bool wireframe, bool cull, bool cullBack) {
 	// Raster descriptor
 	D3D11_RASTERIZER_DESC rasterStateDesc = {};
 	rasterStateDesc.FillMode = wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
@@ -38,7 +35,6 @@ ID3D11RasterizerState* kl::gpu::newRasterState(bool wireframe, bool cull, bool c
 }
 
 // Binds the raster state
-void kl::gpu::bind(ID3D11RasterizerState* state)
-{
+void kl::gpu::bind(ID3D11RasterizerState* state) {
 	devcon->RSSetState(state);
 }

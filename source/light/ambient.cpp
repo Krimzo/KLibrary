@@ -2,7 +2,6 @@
 
 
 // Returns the true light color
-kl::float4 kl::ambient::getCol() const
-{
+kl::float4 kl::ambient::getCol() const {
 	return color * intensity;
 }

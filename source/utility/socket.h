@@ -4,10 +4,8 @@
 #include <windows.h>
 
 
-namespace kl
-{
-	class socket
-	{
+namespace kl {
+	class socket {
 	private:
 		static WSADATA wsaData;
 		static bool wsaInited;

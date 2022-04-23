@@ -4,11 +4,9 @@
 
 
 // Constant buffer
-ID3D11Buffer* kl::gpu::newConstBuffer(int byteSize)
-{
+ID3D11Buffer* kl::gpu::newConstBuffer(int byteSize) {
 	// Checking the size
-	if (byteSize % 16 != 0)
-	{
+	if (byteSize % 16 != 0) {
 		kl::console::show();
 		std::cout << "DirectX: Constant buffer size has to be a multiple of 16!";
 		std::cin.get();
@@ -27,8 +25,7 @@ ID3D11Buffer* kl::gpu::newConstBuffer(int byteSize)
 }
 
 // Sets the buffer data
-void kl::gpu::setBuffData(ID3D11Buffer* buff, void* data)
-{
+void kl::gpu::setBuffData(ID3D11Buffer* buff, void* data) {
 	// Getting the buffer size
 	D3D11_BUFFER_DESC buffData = {};
 	buff->GetDesc(&buffData);
@@ -41,11 +38,9 @@ void kl::gpu::setBuffData(ID3D11Buffer* buff, void* data)
 }
 
 // Binds the buffer to shader
-void kl::gpu::bindVertCBuff(ID3D11Buffer* buff, int slot)
-{
+void kl::gpu::bindVertCBuff(ID3D11Buffer* buff, int slot) {
 	devcon->VSSetConstantBuffers(slot, 1, &buff);
 }
-void kl::gpu::bindPixlCBuff(ID3D11Buffer* buff, int slot)
-{
+void kl::gpu::bindPixlCBuff(ID3D11Buffer* buff, int slot) {
 	devcon->PSSetConstantBuffers(slot, 1, &buff);
 }

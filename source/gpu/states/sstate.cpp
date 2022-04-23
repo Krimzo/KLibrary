@@ -3,13 +3,11 @@
 #include "utility/console.h"
 
 
-ID3D11SamplerState* kl::gpu::newSamplerState(D3D11_SAMPLER_DESC* desc)
-{
+ID3D11SamplerState* kl::gpu::newSamplerState(D3D11_SAMPLER_DESC* desc) {
 	// Sampler state creation
 	ID3D11SamplerState* sampState = nullptr;
 	device->CreateSamplerState(desc, &sampState);
-	if (!sampState)
-	{
+	if (!sampState) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create a sampler state!";
 		std::cin.get();
@@ -23,8 +21,7 @@ ID3D11SamplerState* kl::gpu::newSamplerState(D3D11_SAMPLER_DESC* desc)
 	return sampState;
 }
 
-ID3D11SamplerState* kl::gpu::newSamplerState(bool linear, bool mirror)
-{
+ID3D11SamplerState* kl::gpu::newSamplerState(bool linear, bool mirror) {
 	// Sampler descriptor
 	D3D11_SAMPLER_DESC sampDesc = {};
 	sampDesc.Filter = linear ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -37,7 +34,6 @@ ID3D11SamplerState* kl::gpu::newSamplerState(bool linear, bool mirror)
 }
 
 // Binds the sampler
-void kl::gpu::bind(ID3D11SamplerState* sampState, int slot)
-{
+void kl::gpu::bind(ID3D11SamplerState* sampState, int slot) {
 	devcon->PSSetSamplers(slot, 1, &sampState);
 }

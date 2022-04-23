@@ -4,10 +4,8 @@
 #include <windows.h>
 
 
-namespace kl
-{
-	class time
-	{
+namespace kl {
+	class time {
 	public:
 		// Deleting the def constr
 		time() = delete;
@@ -22,8 +20,7 @@ namespace kl
 		static LARGE_INTEGER inStartTime;
 	};
 
-	class timer
-	{
+	class timer {
 	private:
 		LARGE_INTEGER inStartTime;
 		LARGE_INTEGER swStartTime;

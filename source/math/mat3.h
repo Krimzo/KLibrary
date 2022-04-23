@@ -6,10 +6,8 @@
 #include "math/float3.h"
 
 
-namespace kl
-{
-	class mat3
-	{
+namespace kl {
+	class mat3 {
 	private:
 		float data[9] = {};
 

@@ -15,8 +15,7 @@
 
 
 // Constructor
-kl::gpu::gpu(HWND hwnd)
-{
+kl::gpu::gpu(HWND hwnd) {
 	// Getting the window size
 	RECT clientArea = {};
 	GetClientRect(hwnd, &clientArea);
@@ -48,22 +47,19 @@ kl::gpu::gpu(HWND hwnd)
 		nullptr,
 		&devcon
 	);
-	if (!device)
-	{
+	if (!device) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create device!";
 		std::cin.get();
 		exit(69);
 	}
-	if (!devcon)
-	{
+	if (!devcon) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create device context!";
 		std::cin.get();
 		exit(69);
 	}
-	if (!chain)
-	{
+	if (!chain) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create swapchain!";
 		std::cin.get();
@@ -88,8 +84,7 @@ kl::gpu::gpu(HWND hwnd)
 }
 
 // Destructor
-kl::gpu::~gpu()
-{
+kl::gpu::~gpu() {
 #ifdef KL_USING_IMGUI
 	ImGui_ImplDX11_Shutdown();
 #endif
@@ -98,8 +93,9 @@ kl::gpu::~gpu()
 	chain->SetFullscreenState(false, nullptr);
 
 	// Child cleanup
-	for (auto& ref : children)
+	for (auto& ref : children) {
 		ref->Release();
+	}
 
 	// Chain cleanup
 	chain->Release();
@@ -108,24 +104,23 @@ kl::gpu::~gpu()
 }
 
 // Getters
-ID3D11Device* kl::gpu::dev()
-{
+ID3D11Device* kl::gpu::dev() {
 	return device;
 }
-ID3D11DeviceContext* kl::gpu::con()
-{
+ID3D11DeviceContext* kl::gpu::con() {
 	return devcon;
 }
 
 // Resizes the buffers
-void kl::gpu::regenBuffers(const kl::int2& size)
-{
+void kl::gpu::regenBuffers(const kl::int2& size) {
 	// Cleanup
 	bindTargets({});
-	if (interFrameBuff)
+	if (interFrameBuff) {
 		destroy(interFrameBuff);
-	if (interDepthBuff)
+	}
+	if (interDepthBuff) {
 		destroy(interDepthBuff);
+	}
 	chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
 	// Frame buffer creation
@@ -152,8 +147,7 @@ void kl::gpu::regenBuffers(const kl::int2& size)
 }
 
 // Sets the viewport
-void kl::gpu::viewport(const kl::int2& pos, const kl::int2& size)
-{
+void kl::gpu::viewport(const kl::int2& pos, const kl::int2& size) {
 	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX = float(pos.x);
 	viewport.TopLeftY = float(pos.y);
@@ -165,48 +159,40 @@ void kl::gpu::viewport(const kl::int2& pos, const kl::int2& size)
 }
 
 // Binds the internal render targets
-void kl::gpu::bindInternal(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView)
-{
+void kl::gpu::bindInternal(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView) {
 	std::vector<ID3D11RenderTargetView*> combinedTargets = { interFrameBuff };
-	for (auto& ref : targets)
+	for (auto& ref : targets) {
 		combinedTargets.push_back(ref);
+	}
 	devcon->OMSetRenderTargets(UINT(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : interDepthBuff);
 }
 
 // Binds given render target
-void kl::gpu::bindTargets(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView)
-{
+void kl::gpu::bindTargets(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView) {
 	devcon->OMSetRenderTargets(UINT(targets.size()), &targets[0], depthView);
 }
 
 // Clears the buffer
-void kl::gpu::clearColor(const kl::float4& color)
-{
+void kl::gpu::clearColor(const kl::float4& color) {
 	clear(interFrameBuff, color);
 }
-void kl::gpu::clearDepth()
-{
+void kl::gpu::clearDepth() {
 	clear(interDepthBuff);
 }
-void kl::gpu::clear(const kl::float4& color)
-{
+void kl::gpu::clear(const kl::float4& color) {
 	clear(interFrameBuff, color);
 	clear(interDepthBuff);
 }
 
 // Swaps the buffers
-void kl::gpu::swap(bool vSync)
-{
+void kl::gpu::swap(bool vSync) {
 	chain->Present(vSync, NULL);
 }
 
 // Deletes child instance
-bool kl::gpu::destroy(IUnknown* child)
-{
-	for (int i = 0; i < children.size(); i++)
-	{
-		if (children[i] == child)
-		{
+bool kl::gpu::destroy(IUnknown* child) {
+	for (int i = 0; i < children.size(); i++) {
+		if (children[i] == child) {
 			children[i]->Release();
 			children.erase(children.begin() + i);
 			return true;

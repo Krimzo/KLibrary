@@ -7,19 +7,14 @@
 #include "color/color.h"
 
 
-namespace kl
-{
-	class float3
-	{
+namespace kl {
+	class float3 {
 	public:
-		union
-		{
-			struct
-			{
+		union {
+			struct {
 				float x, y, z;
 			};
-			struct
-			{
+			struct {
 				float r, g, b;
 			};
 		};

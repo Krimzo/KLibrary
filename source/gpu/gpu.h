@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 #include <windows.h>
 #include <windowsx.h>
 #include <d3d11.h>
@@ -15,10 +16,8 @@
 #pragma comment (lib, "d3d11.lib")
 
 
-namespace kl
-{
-	class gpu
-	{
+namespace kl {
+	class gpu {
 	private:
 		// DirectX pointers
 		ID3D11Device* device = nullptr;

@@ -3,10 +3,8 @@
 #include <iostream>
 
 
-namespace kl
-{
-	class int2
-	{
+namespace kl {
+	class int2 {
 	public:
 		int x, y;
 

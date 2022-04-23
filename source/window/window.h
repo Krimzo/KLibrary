@@ -24,10 +24,8 @@
 #pragma comment(lib, "odbccp32.lib")
 
 
-namespace kl
-{
-	class window
-	{
+namespace kl {
+	class window {
 	private:
 		// Winapi variables
 		HINSTANCE hInstance = GetModuleHandleA(nullptr);
@@ -51,14 +49,8 @@ namespace kl
 		void handleMessage();
 
 	public:
-		// Screen
-		class screen
-		{
-		public:
-			screen() = delete;
-			static const int width;
-			static const int height;
-		};
+		// Screen size
+		static const kl::int2 screen;
 
 		// Input
 		kl::keys keys;

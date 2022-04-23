@@ -3,13 +3,11 @@
 #include "utility/console.h"
 
 
-ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc)
-{
+ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc) {
 	// State creation
 	ID3D11DepthStencilState* depthState = nullptr;
 	device->CreateDepthStencilState(desc, &depthState);
-	if (!depthState)
-	{
+	if (!depthState) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create a write depth/stencil state!";
 		std::cin.get();
@@ -23,27 +21,23 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc)
 	return depthState;
 }
 
-ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool mask)
-{
+ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool mask) {
 	// Depth descriptor
 	D3D11_DEPTH_STENCIL_DESC depthDesc = {};
 
 	// Depth testing
-	if (depth)
-	{
+	if (depth) {
 		depthDesc.DepthEnable = true;
 		depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	}
 
 	// Stencil testing
-	if (stencil)
-	{
+	if (stencil) {
 		depthDesc.StencilEnable = true;
 		depthDesc.StencilReadMask = 0xFF;
 		depthDesc.StencilWriteMask = 0xFF;
-		if (mask)
-		{
+		if (mask) {
 			depthDesc.DepthEnable = false;
 			depthDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 			depthDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
@@ -54,8 +48,7 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool m
 			depthDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 			depthDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
 		}
-		else
-		{
+		else {
 			depthDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_REPLACE;
 			depthDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
 			depthDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
@@ -71,7 +64,6 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool m
 	return this->newDepthState(&depthDesc);
 }
 
-void kl::gpu::bind(ID3D11DepthStencilState* state)
-{
+void kl::gpu::bind(ID3D11DepthStencilState* state) {
 	devcon->OMSetDepthStencilState(state, 0xFF);
 }

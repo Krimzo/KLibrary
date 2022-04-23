@@ -3,10 +3,8 @@
 #include "math/float3.h"
 
 
-namespace kl
-{
-	class plane
-	{
+namespace kl {
+	class plane {
 	public:
 		kl::float3 normal;
 		kl::float3 point;

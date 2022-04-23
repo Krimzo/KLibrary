@@ -14,10 +14,8 @@
 #include "gpu/gpu.h"
 
 
-namespace kl
-{
-	class direct
-	{
+namespace kl {
+	class direct {
 	public:
 		ID3D11DepthStencilView* shadowMapDV = nullptr;
 		ID3D11ShaderResourceView* shadowMapSV = nullptr;

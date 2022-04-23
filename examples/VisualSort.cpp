@@ -1,80 +1,71 @@
 #include "KrimzLib.h"
 
 
-struct stick
-{
+struct stick {
 	int val = 0;
 	kl::color col;
 };
 
-void renderSticks(kl::image& frameBuffer, std::vector<stick>& stickArray)
-{
+void renderSticks(kl::image& frameBuffer, std::vector<stick>& stickArray) {
 	// Clearing the frame buffer
 	frameBuffer.fill(kl::colors::gray);
 
 	// Drawing the sticks
-	for (int x = 0; x < stickArray.size(); x++)
-	{
-		for (int y = (frameBuffer.height() - 1 - stickArray[x].val); y < frameBuffer.height(); y++)
+	for (int x = 0; x < stickArray.size(); x++) {
+		for (int y = (frameBuffer.height() - 1 - stickArray[x].val); y < frameBuffer.height(); y++) {
 			frameBuffer.spixel(kl::int2(x, y), stickArray[x].col);
+		}
 	}
 }
 
-void swapSticks(stick& a, stick& b)
-{
+void swapSticks(stick& a, stick& b) {
 	stick t = a;
 	a = b;
 	b = t;
 }
 
-int main()
-{
+int main() {
 	kl::window testWindow;
 	kl::image frame(kl::int2(900, 900));
 
 	std::vector<stick> sticks(frame.width());
-	for (stick& stik : sticks)
-	{
+	for (stick& stik : sticks) {
 		// Setting the value
 		int randVal = 0;
-		do
-		{
+		do {
 			randVal = kl::random::INT(frame.height() + 1);
 		}
-		while ([&]()
-			{
-				for (int i = 0; i < sticks.size(); i++)
-				{
-					if (sticks[i].val == randVal)
-						return true;
+		while ([&]() {
+			for (int i = 0; i < sticks.size(); i++) {
+				if (sticks[i].val == randVal) {
+					return true;
 				}
-				return false;
-			}());
+			}
+			return false;
+		}());
 		stik.val = randVal;
 
 		// Setting the color
 		stik.col = kl::random::COLOR(true);
 	}
 
-	testWindow.update = [&]()
-	{
-		for (int i = 0; i <= sticks.size() / 2; i++)
-		{
+	testWindow.update = [&]() {
+		for (int i = 0; i <= sticks.size() / 2; i++) {
 			int min = i;
 			int max = int(sticks.size()) - 1 - i;
 
 			// Finding min
-			for (int j = i + 1; j < sticks.size(); j++)
-			{
-				if (sticks[j].val < sticks[min].val)
+			for (int j = i + 1; j < sticks.size(); j++) {
+				if (sticks[j].val < sticks[min].val) {
 					min = j;
+				}
 			}
 
 			// Finding max
-			for (int j = i + 1; j < sticks.size() - i; j++)
-			{
-				if (sticks[j].val > sticks[max].val)
+			for (int j = i + 1; j < sticks.size() - i; j++) {
+				if (sticks[j].val > sticks[max].val) {
 					max = j;
+				}
 			}
 
 			// Swapping

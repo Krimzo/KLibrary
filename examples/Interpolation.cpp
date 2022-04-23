@@ -1,8 +1,7 @@
 #include "KrimzLib.h"
 
 
-int main()
-{
+int main() {
 	// Window creation
 	kl::window window;
 	kl::image frame(kl::int2(900));
@@ -11,13 +10,13 @@ int main()
 	const int fpsLimit = 165;
 
 	// Triangle points
-	kl::float2 A(50.0f, (frame.height() - 1) / 3.0f);
+	kl::float2 A(50.0f, (frame.height() - 1.0f) / 3.0f);
 	kl::color colA(255, 0, 0);
-	kl::float2 B((frame.width() - 1) / 3.0f, frame.height() - 51.0f);
+	kl::float2 B((frame.width() - 1.0f) / 3.0f, frame.height() - 51.0f);
 	kl::color colB(255, 255, 255);
-	kl::float2 C(frame.width() - 51.0f, (frame.height() - 1) * 0.667f);
+	kl::float2 C(frame.width() - 51.0f, (frame.height() - 1.0f) * 0.667f);
 	kl::color colC(0, 0, 255);
-	kl::float2 D((frame.width() - 1) * 0.667f, 50.0f);
+	kl::float2 D((frame.width() - 1.0f) * 0.667f, 50.0f);
 	kl::color colD(0, 255, 0);
 
 	// Triangle creation
@@ -29,29 +28,24 @@ int main()
 	// Window update setups
 	kl::timer timer;
 	const float timeToSleep = 1.0f / fpsLimit;
-	window.update = [&]()
-	{
+	window.update = [&]() {
 		static int frameInd = 0;
-		for (int x = frameInd - frame.height(), y = 0; y < frame.height(); x++, y++)
-		{
+		for (int x = frameInd - frame.height(), y = 0; y < frame.height(); x++, y++) {
 			// Pixel buffer
 			kl::color pixel;
 
 			// Checkig if the point inside a triangle and coloring the pixel
-			if (T1.inTriangle(t1Consts, kl::float2(float(x), float(y))))
-			{
+			if (T1.inTriangle(t1Consts, kl::float2(float(x), float(y)))) {
 				pixel.r = byte(T1.interpolate(t1Consts, kl::float3(float(colA.r), float(colB.r), float(colC.r)), kl::float2(float(x), float(y))));
 				pixel.g = byte(T1.interpolate(t1Consts, kl::float3(float(colA.g), float(colB.g), float(colC.g)), kl::float2(float(x), float(y))));
 				pixel.b = byte(T1.interpolate(t1Consts, kl::float3(float(colA.b), float(colB.b), float(colC.b)), kl::float2(float(x), float(y))));
 			}
-			else if (T2.inTriangle(t2Consts, kl::float2(float(x), float(y))))
-			{
+			else if (T2.inTriangle(t2Consts, kl::float2(float(x), float(y)))) {
 				pixel.r = byte(T2.interpolate(t2Consts, kl::float3(float(colA.r), float(colD.r), float(colC.r)), kl::float2(float(x), float(y))));
 				pixel.g = byte(T2.interpolate(t2Consts, kl::float3(float(colA.g), float(colD.g), float(colC.g)), kl::float2(float(x), float(y))));
 				pixel.b = byte(T2.interpolate(t2Consts, kl::float3(float(colA.b), float(colD.b), float(colC.b)), kl::float2(float(x), float(y))));
 			}
-			else
-			{
+			else {
 				pixel = kl::colors::gray;
 			}
 
@@ -73,8 +67,7 @@ int main()
 		window.setTitle(std::to_string(int((100.0f * frameInd) / (frame.width() + frame.height() - 1))) + "%");
 
 		// Checking the i
-		if (++frameInd == frame.width() + frame.height())
-		{
+		if (++frameInd == frame.width() + frame.height()) {
 			window.setTitle("Finished!");
 			window.update = []() {};
 		}

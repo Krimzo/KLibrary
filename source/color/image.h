@@ -9,10 +9,8 @@
 #pragma comment(lib, "gdiplus.lib")
 
 
-namespace kl
-{
-	class image
-	{
+namespace kl {
+	class image {
 	private:
 		kl::int2 _size;
 		std::vector<kl::color> pixels;

@@ -7,19 +7,14 @@
 #include "math/int4.h"
 
 
-namespace kl
-{
-	class float4
-	{
+namespace kl {
+	class float4 {
 	public:
-		union
-		{
-			struct
-			{
+		union {
+			struct {
 				float x, y, z, w;
 			};
-			struct
-			{
+			struct {
 				float r, g, b, a;
 			};
 		};

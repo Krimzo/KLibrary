@@ -6,10 +6,8 @@
 #include <future>
 
 
-namespace kl
-{
-	namespace thread
-	{
+namespace kl {
+	namespace thread {
 		// Asynchronous for loop
 		void asyncFor(int startInclusive, int endExclusive, const std::function<void(int t, int i)>& loopBody, int threadCount = 4);
 	}

@@ -18,6 +18,87 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="examples\Raytracing.cpp" />
+    <ClCompile Include="source\color\color.cpp" />
+    <ClCompile Include="source\color\image.cpp" />
+    <ClCompile Include="source\geometry\plane.cpp" />
+    <ClCompile Include="source\geometry\ray.cpp" />
+    <ClCompile Include="source\geometry\sphere.cpp" />
+    <ClCompile Include="source\geometry\triangle.cpp" />
+    <ClCompile Include="source\geometry\vertex.cpp" />
+    <ClCompile Include="source\gpu\buffer\buffer.cpp" />
+    <ClCompile Include="source\gpu\buffer\cbuffer.cpp" />
+    <ClCompile Include="source\gpu\gpu.cpp" />
+    <ClCompile Include="source\gpu\states\dstate.cpp" />
+    <ClCompile Include="source\gpu\states\rstate.cpp" />
+    <ClCompile Include="source\gpu\states\sstate.cpp" />
+    <ClCompile Include="source\gpu\utility\shaders.cpp" />
+    <ClCompile Include="source\gpu\utility\texture.cpp" />
+    <ClCompile Include="source\gpu\utility\vbuffer.cpp" />
+    <ClCompile Include="source\gpu\views\dview.cpp" />
+    <ClCompile Include="source\gpu\views\sview.cpp" />
+    <ClCompile Include="source\gpu\views\tview.cpp" />
+    <ClCompile Include="source\light\ambient.cpp" />
+    <ClCompile Include="source\light\direct.cpp" />
+    <ClCompile Include="source\math\float2.cpp" />
+    <ClCompile Include="source\math\float3.cpp" />
+    <ClCompile Include="source\math\float4.cpp" />
+    <ClCompile Include="source\math\int2.cpp" />
+    <ClCompile Include="source\math\int3.cpp" />
+    <ClCompile Include="source\math\int4.cpp" />
+    <ClCompile Include="source\math\mat3.cpp" />
+    <ClCompile Include="source\math\mat4.cpp" />
+    <ClCompile Include="source\math\math.cpp" />
+    <ClCompile Include="source\utility\console.cpp" />
+    <ClCompile Include="source\utility\convert.cpp" />
+    <ClCompile Include="source\utility\file.cpp" />
+    <ClCompile Include="source\utility\random.cpp" />
+    <ClCompile Include="source\utility\socket.cpp" />
+    <ClCompile Include="source\utility\thread.cpp" />
+    <ClCompile Include="source\utility\time.cpp" />
+    <ClCompile Include="source\utility\web.cpp" />
+    <ClCompile Include="source\view\camera.cpp" />
+    <ClCompile Include="source\window\key.cpp" />
+    <ClCompile Include="source\window\keys.cpp" />
+    <ClCompile Include="source\window\mouse.cpp" />
+    <ClCompile Include="source\window\window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\color\color.h" />
+    <ClInclude Include="source\color\image.h" />
+    <ClInclude Include="source\geometry\plane.h" />
+    <ClInclude Include="source\geometry\ray.h" />
+    <ClInclude Include="source\geometry\sphere.h" />
+    <ClInclude Include="source\geometry\triangle.h" />
+    <ClInclude Include="source\geometry\vertex.h" />
+    <ClInclude Include="source\gpu\gpu.h" />
+    <ClInclude Include="source\KrimzLib.h" />
+    <ClInclude Include="source\light\ambient.h" />
+    <ClInclude Include="source\light\direct.h" />
+    <ClInclude Include="source\math\float2.h" />
+    <ClInclude Include="source\math\float3.h" />
+    <ClInclude Include="source\math\float4.h" />
+    <ClInclude Include="source\math\int2.h" />
+    <ClInclude Include="source\math\int3.h" />
+    <ClInclude Include="source\math\int4.h" />
+    <ClInclude Include="source\math\mat3.h" />
+    <ClInclude Include="source\math\mat4.h" />
+    <ClInclude Include="source\math\math.h" />
+    <ClInclude Include="source\utility\console.h" />
+    <ClInclude Include="source\utility\convert.h" />
+    <ClInclude Include="source\utility\file.h" />
+    <ClInclude Include="source\utility\random.h" />
+    <ClInclude Include="source\utility\socket.h" />
+    <ClInclude Include="source\utility\thread.h" />
+    <ClInclude Include="source\utility\time.h" />
+    <ClInclude Include="source\utility\web.h" />
+    <ClInclude Include="source\view\camera.h" />
+    <ClInclude Include="source\window\key.h" />
+    <ClInclude Include="source\window\keys.h" />
+    <ClInclude Include="source\window\mouse.h" />
+    <ClInclude Include="source\window\window.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -100,6 +181,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,6 +199,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,6 +218,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +236,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,88 +245,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="examples\Raytracing.cpp" />
-    <ClCompile Include="source\color\color.cpp" />
-    <ClCompile Include="source\color\image.cpp" />
-    <ClCompile Include="source\geometry\plane.cpp" />
-    <ClCompile Include="source\geometry\ray.cpp" />
-    <ClCompile Include="source\geometry\sphere.cpp" />
-    <ClCompile Include="source\geometry\triangle.cpp" />
-    <ClCompile Include="source\geometry\vertex.cpp" />
-    <ClCompile Include="source\gpu\buffer\buffer.cpp" />
-    <ClCompile Include="source\gpu\buffer\cbuffer.cpp" />
-    <ClCompile Include="source\gpu\gpu.cpp" />
-    <ClCompile Include="source\gpu\states\dstate.cpp" />
-    <ClCompile Include="source\gpu\states\rstate.cpp" />
-    <ClCompile Include="source\gpu\states\sstate.cpp" />
-    <ClCompile Include="source\gpu\utility\shaders.cpp" />
-    <ClCompile Include="source\gpu\utility\texture.cpp" />
-    <ClCompile Include="source\gpu\utility\vbuffer.cpp" />
-    <ClCompile Include="source\gpu\views\dview.cpp" />
-    <ClCompile Include="source\gpu\views\sview.cpp" />
-    <ClCompile Include="source\gpu\views\tview.cpp" />
-    <ClCompile Include="source\light\ambient.cpp" />
-    <ClCompile Include="source\light\direct.cpp" />
-    <ClCompile Include="source\math\float2.cpp" />
-    <ClCompile Include="source\math\float3.cpp" />
-    <ClCompile Include="source\math\float4.cpp" />
-    <ClCompile Include="source\math\int2.cpp" />
-    <ClCompile Include="source\math\int3.cpp" />
-    <ClCompile Include="source\math\int4.cpp" />
-    <ClCompile Include="source\math\mat3.cpp" />
-    <ClCompile Include="source\math\mat4.cpp" />
-    <ClCompile Include="source\math\math.cpp" />
-    <ClCompile Include="source\utility\console.cpp" />
-    <ClCompile Include="source\utility\convert.cpp" />
-    <ClCompile Include="source\utility\file.cpp" />
-    <ClCompile Include="source\utility\random.cpp" />
-    <ClCompile Include="source\utility\socket.cpp" />
-    <ClCompile Include="source\utility\thread.cpp" />
-    <ClCompile Include="source\utility\time.cpp" />
-    <ClCompile Include="source\utility\web.cpp" />
-    <ClCompile Include="source\view\camera.cpp" />
-    <ClCompile Include="source\window\key.cpp" />
-    <ClCompile Include="source\window\keys.cpp" />
-    <ClCompile Include="source\window\mouse.cpp" />
-    <ClCompile Include="source\window\window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="source\color\color.h" />
-    <ClInclude Include="source\color\image.h" />
-    <ClInclude Include="source\geometry\plane.h" />
-    <ClInclude Include="source\geometry\ray.h" />
-    <ClInclude Include="source\geometry\sphere.h" />
-    <ClInclude Include="source\geometry\triangle.h" />
-    <ClInclude Include="source\geometry\vertex.h" />
-    <ClInclude Include="source\gpu\gpu.h" />
-    <ClInclude Include="source\KrimzLib.h" />
-    <ClInclude Include="source\light\ambient.h" />
-    <ClInclude Include="source\light\direct.h" />
-    <ClInclude Include="source\math\float2.h" />
-    <ClInclude Include="source\math\float3.h" />
-    <ClInclude Include="source\math\float4.h" />
-    <ClInclude Include="source\math\int2.h" />
-    <ClInclude Include="source\math\int3.h" />
-    <ClInclude Include="source\math\int4.h" />
-    <ClInclude Include="source\math\mat3.h" />
-    <ClInclude Include="source\math\mat4.h" />
-    <ClInclude Include="source\math\math.h" />
-    <ClInclude Include="source\memory\pbuffer.h" />
-    <ClInclude Include="source\utility\console.h" />
-    <ClInclude Include="source\utility\convert.h" />
-    <ClInclude Include="source\utility\file.h" />
-    <ClInclude Include="source\utility\random.h" />
-    <ClInclude Include="source\utility\socket.h" />
-    <ClInclude Include="source\utility\thread.h" />
-    <ClInclude Include="source\utility\time.h" />
-    <ClInclude Include="source\utility\web.h" />
-    <ClInclude Include="source\view\camera.h" />
-    <ClInclude Include="source\window\key.h" />
-    <ClInclude Include="source\window\keys.h" />
-    <ClInclude Include="source\window\mouse.h" />
-    <ClInclude Include="source\window\window.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

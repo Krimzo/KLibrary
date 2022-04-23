@@ -5,10 +5,8 @@
 #include "math/int2.h"
 
 
-namespace kl
-{
-	class int3
-	{
+namespace kl {
+	class int3 {
 	public:
 		int x, y, z;
 

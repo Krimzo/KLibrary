@@ -4,10 +4,8 @@
 #include <windows.h>
 
 
-namespace kl
-{
-	class color
-	{
+namespace kl {
+	class color {
 	public:
 		byte b, g, r, a;
 
@@ -35,8 +33,7 @@ namespace kl
 	std::ostream& operator<<(std::ostream& os, const kl::color& obj);
 
 	// Predefined colors
-	namespace colors
-	{
+	namespace colors {
 		static const kl::color defaul = kl::color(204, 204, 204);
 		static const kl::color black = kl::color(0, 0, 0);
 		static const kl::color white = kl::color(255, 255, 255);

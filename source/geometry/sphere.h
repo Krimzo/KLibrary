@@ -3,10 +3,8 @@
 #include "math/float3.h"
 
 
-namespace kl
-{
-	class sphere
-	{
+namespace kl {
+	class sphere {
 	public:
 		// Geometry
 		kl::float3 center;

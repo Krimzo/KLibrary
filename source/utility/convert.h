@@ -6,10 +6,8 @@
 #include "color/color.h"
 
 
-namespace kl
-{
-	namespace convert
-	{
+namespace kl {
+	namespace convert {
 		// Converts degrees to radians
 		float toRadians(float degrees);
 
