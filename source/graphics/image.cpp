@@ -1,4 +1,4 @@
-#include "color/image.h"
+#include "graphics/image.h"
 
 #include <iostream>
 #include <sstream>
@@ -19,10 +19,18 @@ kl::image::image(const kl::int2& size, const kl::color& color) {
 	resize(size);
 	fill(color);
 }
-kl::image::image(const std::string& filePath) {
+kl::image::image(const String& filePath) {
 	if (!fromFile(filePath)) {
 		this->kl::image::image();
 	}
+}
+
+// Iterator
+std::vector<kl::color>::iterator kl::image::begin() {
+	return pixels.begin();
+}
+std::vector<kl::color>::iterator kl::image::end() {
+	return pixels.end();
 }
 
 // Getters
@@ -71,8 +79,10 @@ void kl::image::height(int height) {
 	resize(kl::int2(_size.x, height));
 }
 void kl::image::resize(const kl::int2& size) {
-	_size = size;
-	pixels.resize(size_t(_size.x * _size.y));
+	if (size != _size) {
+		_size = size;
+		pixels.resize(size_t(_size.x * _size.y));
+	}
 }
 void kl::image::spixel(const kl::int2& coords, const kl::color& color) {
 	if (coords.x >= 0 && coords.x < _size.x && coords.y >= 0 && coords.y < _size.y) {
@@ -81,7 +91,7 @@ void kl::image::spixel(const kl::int2& coords, const kl::color& color) {
 }
 
 // Reads an image file and stores it in the image instance
-bool kl::image::fromFile(const std::string& filePath) {
+bool kl::image::fromFile(const String& filePath) {
 	// Gdiplus init
 	uint64_t gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
@@ -117,10 +127,10 @@ bool kl::image::fromFile(const std::string& filePath) {
 const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-bool kl::image::toFile(const std::string& fileName) const {
+bool kl::image::toFile(const String& fileName) const {
 	// Checking the file extension is supported
 	const CLSID* formatToUse = nullptr;
-	std::string fileExtension = kl::file::getExtension(fileName);
+	String fileExtension = kl::file::getExtension(fileName);
 	if (fileExtension == "bmp") {
 		formatToUse = &bmpEncoderCLSID;
 	}
@@ -136,9 +146,9 @@ bool kl::image::toFile(const std::string& fileName) const {
 			for (int x = 0; x < _size.x; x++)
 				ss <<
 				x << " " << y << " => " <<
-				int(pixels[uint64_t(y) * _size.x + x].r) << " " <<
-				int(pixels[uint64_t(y) * _size.x + x].g) << " " <<
-				int(pixels[uint64_t(y) * _size.x + x].b) << "\n";
+				int(pixels[size_t(y) * _size.x + x].r) << " " <<
+				int(pixels[size_t(y) * _size.x + x].g) << " " <<
+				int(pixels[size_t(y) * _size.x + x].b) << "\n";
 		kl::file::write(fileName, ss.str());
 		return true;
 	}
@@ -322,25 +332,13 @@ void kl::image::drawImage(const kl::int2& pos, const kl::image& img, bool mixAlp
 }
 
 // Converts an image to an ASCII frame
-std::string kl::image::toASCII(const kl::int2& frameSize) const {
-	// ASCII 'table'
-	static const char asciiPixelTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
-
-	// Calculations
+String kl::image::toASCII(const kl::int2& frameSize) const {
 	const kl::int2 incr = _size / frameSize;
-
-	// Processing
 	std::stringstream frame;
-	const float toSatur = 9.0f / 255.0f;
 	for (kl::int2 pos = 0; pos.y < frameSize.y; pos.y++) {
 		for (pos.x = 0; pos.x < frameSize.x; pos.x++) {
-			// Pixels to grayscale
-			const kl::color grayPixel = gpixel(pos * incr).grayscale();
-
-			// Grayscaled values to ASCII
-			frame << asciiPixelTable[int(grayPixel.r * toSatur)];
+			frame << gpixel(pos * incr).toASCII();
 		}
-		frame << '\n';
 	}
 	return frame.str();
 }

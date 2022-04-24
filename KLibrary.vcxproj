@@ -19,9 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Raytracing.cpp" />
-    <ClCompile Include="source\color\color.cpp" />
-    <ClCompile Include="source\color\image.cpp" />
+    <ClCompile Include="examples\TimesTable.cpp" />
+    <ClCompile Include="source\graphics\color.cpp" />
+    <ClCompile Include="source\graphics\image.cpp" />
+    <ClCompile Include="source\graphics\video.cpp" />
     <ClCompile Include="source\geometry\plane.cpp" />
     <ClCompile Include="source\geometry\ray.cpp" />
     <ClCompile Include="source\geometry\sphere.cpp" />
@@ -65,8 +66,9 @@
     <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\color\color.h" />
-    <ClInclude Include="source\color\image.h" />
+    <ClInclude Include="source\graphics\color.h" />
+    <ClInclude Include="source\graphics\image.h" />
+    <ClInclude Include="source\graphics\video.h" />
     <ClInclude Include="source\geometry\plane.h" />
     <ClInclude Include="source\geometry\ray.h" />
     <ClInclude Include="source\geometry\sphere.h" />
@@ -74,6 +76,7 @@
     <ClInclude Include="source\geometry\vertex.h" />
     <ClInclude Include="source\gpu\gpu.h" />
     <ClInclude Include="source\KrimzLib.h" />
+    <ClInclude Include="source\libspec\using.h" />
     <ClInclude Include="source\light\ambient.h" />
     <ClInclude Include="source\light\direct.h" />
     <ClInclude Include="source\math\float2.h" />

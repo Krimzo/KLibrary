@@ -7,11 +7,12 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
+#include "libspec/using.h"
 #include "gpu/gpu.h"
 #include "math/int2.h"
 #include "math/float4.h"
 #include "geometry/vertex.h"
-#include "color/image.h"
+#include "graphics/image.h"
 
 #pragma comment (lib, "d3d11.lib")
 
@@ -71,8 +72,8 @@ namespace kl {
 		void bind(ID3D11DepthStencilState* state);
 
 		// Shaders
-		ID3D11VertexShader* newVertexShader(const std::string& source, ID3D11InputLayout** outLayout = nullptr, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
-		ID3D11PixelShader* newPixelShader(const std::string& source);
+		ID3D11VertexShader* newVertexShader(const String& source, ID3D11InputLayout** outLayout = nullptr, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
+		ID3D11PixelShader* newPixelShader(const String& source);
 		void bind(ID3D11VertexShader* sha);
 		void bind(ID3D11PixelShader* sha);
 		void bind(ID3D11InputLayout* layout);
@@ -88,7 +89,7 @@ namespace kl {
 
 		// Mesh
 		ID3D11Buffer* newVertBuffer(const std::vector<kl::vertex>& vertexData);
-		ID3D11Buffer* newVertBuffer(const std::string& filePath, bool flipZ = true);
+		ID3D11Buffer* newVertBuffer(const String& filePath, bool flipZ = true);
 		void draw(ID3D11Buffer* mesh);
 
 		// Sampler

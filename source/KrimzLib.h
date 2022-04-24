@@ -1,5 +1,8 @@
 #pragma once
 
+// Lib specific
+#include "libspec/using.h"
+
 // Math
 #include "math/math.h"
 #include "math/int2.h"
@@ -9,9 +12,10 @@
 #include "math/mat3.h"
 #include "math/mat4.h"
 
-// Color
-#include "color/color.h"
-#include "color/image.h"
+// Graphics
+#include "graphics/color.h"
+#include "graphics/image.h"
+#include "graphics/video.h"
 
 // Utility
 #include "utility/time.h"

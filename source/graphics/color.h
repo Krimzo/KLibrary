@@ -18,13 +18,11 @@ namespace kl {
 		bool operator==(const kl::color& obj) const;
 		bool operator!=(const kl::color& obj) const;
 
-		// Returns data as an int
 		int getInt() const;
-
-		// Returns grayscaled color
 		kl::color grayscale() const;
+		kl::color invert() const;
+		char toASCII() const;
 
-		// Mixes 2 colors
 		kl::color mix(const kl::color& col, float ratio) const;
 		kl::color mix(const kl::color& col) const;
 	};

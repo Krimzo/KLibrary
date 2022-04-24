@@ -2,8 +2,9 @@
 
 #include <string>
 
+#include "libspec/using.h"
 #include "math/float4.h"
-#include "color/color.h"
+#include "graphics/color.h"
 
 
 namespace kl {
@@ -21,10 +22,10 @@ namespace kl {
 		kl::color toColor(const kl::float4& colf);
 
 		// Converts a string to a wstring
-		std::wstring toWString(const std::string& data);
+		std::wstring toWString(const String& data);
 
 		// Alligns the minus sign
-		std::string toString(int a);
-		std::string toString(float a);
+		String toString(int a);
+		String toString(float a);
 	};
 }

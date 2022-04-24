@@ -44,7 +44,7 @@ char kl::random::LETTER(bool upperCase) {
 }
 
 // Returns a random string
-std::string kl::random::STRING(int len) {
+String kl::random::STRING(int len) {
 	std::stringstream ss;
 	for (int i = 0; i < len; i++) {
 		ss << kl::random::LETTER(kl::random::BOOL());

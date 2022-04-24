@@ -3,8 +3,9 @@
 #include <iostream>
 #include <conio.h>
 
+#include "libspec/using.h"
 #include "math/int2.h"
-#include "color/color.h"
+#include "graphics/color.h"
 
 
 namespace kl {
@@ -36,7 +37,7 @@ namespace kl {
 		static void showCursor();
 
 		// Sets the console title
-		static void setTitle(const std::string& text);
+		static void setTitle(const String& text);
 
 		// Returns screen buffer size
 		static kl::int2 getBufferSize();
@@ -51,7 +52,7 @@ namespace kl {
 		static void setSize(const kl::int2& size);
 
 		// Changes the console font size
-		static void setFont(const kl::int2& size, const std::string& fontName = "Consolas");
+		static void setFont(const kl::int2& size, const String& fontName = "Consolas");
 
 		// Returns a pressed key
 		static char getInput();
@@ -63,9 +64,9 @@ namespace kl {
 		static char waitForAny(bool echo = false);
 
 		// Outputs a progress bar on the console
-		static void progressBar(const std::string& message, int outputY, float percentage);
+		static void progressBar(const String& message, int outputY, float percentage);
 
 		// Fast console writing
-		static void fastOut(const std::string& data, const kl::int2& location = { 0, 0 });
+		static void fastOut(const String& data, const kl::int2& location = { 0, 0 });
 	};
 }

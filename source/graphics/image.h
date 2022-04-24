@@ -3,8 +3,9 @@
 #include <string>
 #include <vector>
 
+#include "libspec/using.h"
 #include "math/int2.h"
-#include "color/color.h"
+#include "graphics/color.h"
 
 #pragma comment(lib, "gdiplus.lib")
 
@@ -19,7 +20,11 @@ namespace kl {
 		// Constructor
 		image();
 		image(const kl::int2& size, const kl::color& color = {});
-		image(const std::string& filePath);
+		image(const String& filePath);
+
+		// Iterator
+		std::vector<kl::color>::iterator begin();
+		std::vector<kl::color>::iterator end();
 
 		// Getters
 		int width() const;
@@ -36,10 +41,10 @@ namespace kl {
 		void spixel(const kl::int2& coords, const kl::color& color);
 
 		// Reads an image file and stores it in the image instance
-		bool fromFile(const std::string& filePath);
+		bool fromFile(const String& filePath);
 
 		// Saves the image to a file
-		bool toFile(const std::string& fileName) const;
+		bool toFile(const String& fileName) const;
 
 		// Fils the image with solid color
 		void fill(const kl::color& color);
@@ -68,6 +73,6 @@ namespace kl {
 		void drawImage(const kl::int2& pos, const kl::image& img, bool mixAlpha = true);
 
 		// Converts an image to an ASCII frame
-		std::string toASCII(const kl::int2& frameSize) const;
+		String toASCII(const kl::int2& frameSize) const;
 	};
 }

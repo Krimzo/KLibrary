@@ -4,7 +4,7 @@
 
 #include "math/float2.h"
 #include "math/int3.h"
-#include "color/color.h"
+#include "graphics/color.h"
 
 
 namespace kl {

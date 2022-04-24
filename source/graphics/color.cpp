@@ -1,4 +1,4 @@
-#include "color/color.h"
+#include "graphics/color.h"
 
 
 // Constructors
@@ -16,18 +16,22 @@ bool kl::color::operator!=(const kl::color& obj) const {
 	return !this->equals(obj);
 }
 
-// Returns data as an int
 int kl::color::getInt() const {
 	return *(int*)this;
 }
-
-// Returns grayscaled color
 kl::color kl::color::grayscale() const {
 	const byte grayValue = byte(r * 0.299f + g * 0.587f + b * 0.114f);
-	return kl::color(grayValue, grayValue, grayValue);
+	return kl::color(grayValue, grayValue, grayValue, a);
+}
+kl::color kl::color::invert() const {
+	return kl::color(255 - r, 255 - g, 255 - b, a);
+}
+char kl::color::toASCII() const {
+	static const char asciiTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
+	static const float toSatur = 9.0f / 255.0f;
+	return asciiTable[int(grayscale().r * toSatur)];
 }
 
-// Mixes 2 colors
 kl::color kl::color::mix(const kl::color& col, float ratio) const {
 	// Calc r and ir
 	ratio = max(min(ratio, 1.0f), 0.0f);
@@ -35,14 +39,14 @@ kl::color kl::color::mix(const kl::color& col, float ratio) const {
 
 	// Calculating mixed color
 	return kl::color(
-		byte(this->r * iratio) + byte(col.r * ratio),
-		byte(this->g * iratio) + byte(col.g * ratio),
-		byte(this->b * iratio) + byte(col.b * ratio)
+		byte(r * iratio) + byte(col.r * ratio),
+		byte(g * iratio) + byte(col.g * ratio),
+		byte(b * iratio) + byte(col.b * ratio)
 	);
 }
 kl::color kl::color::mix(const kl::color& col) const {
 	static const float toFloatCol = 1.0f / 255;
-	return this->mix(col, col.a * toFloatCol);
+	return mix(col, col.a * toFloatCol);
 }
 
 // Overloading std::cout

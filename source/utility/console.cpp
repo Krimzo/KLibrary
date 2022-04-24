@@ -1,13 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "utility/console.h"
 
+#include "math/int2.h"
+#include "utility/convert.h"
+
 #include <iostream>
 #include <sstream>
 #include <windows.h>
-
-#include "math/int2.h"
-#include "color/color.h"
-#include "utility/convert.h"
 
 
 // Getting the console handle and rgb init
@@ -61,7 +60,7 @@ void kl::console::showCursor() {
 }
 
 // Sets the console title
-void kl::console::setTitle(const std::string& text) {
+void kl::console::setTitle(const String& text) {
 	SetConsoleTitleA(text.c_str());
 }
 
@@ -92,7 +91,7 @@ void kl::console::setSize(const kl::int2& size) {
 }
 
 // Changes the console font size
-void kl::console::setFont(const kl::int2& size, const std::string& fontName) {
+void kl::console::setFont(const kl::int2& size, const String& fontName) {
 	CONSOLE_FONT_INFOEX cfi = {};
 	cfi.cbSize = sizeof(cfi);
 	cfi.dwFontSize.X = SHORT(size.x);
@@ -134,7 +133,7 @@ char kl::console::waitForAny(bool echo) {
 }
 
 // Outputs a progress bar on the console
-void kl::console::progressBar(const std::string& message, int outputY, float percentage) {
+void kl::console::progressBar(const String& message, int outputY, float percentage) {
 	// Prep
 	percentage = max(min(percentage, 1.0f), 0.0f);
 	const int barLen = console::getSize().x - int(message.length()) - 12;
@@ -156,6 +155,6 @@ void kl::console::progressBar(const std::string& message, int outputY, float per
 
 // Fast console writing
 DWORD ignore = 0;
-void kl::console::fastOut(const std::string& data, const kl::int2& location) {
+void kl::console::fastOut(const String& data, const kl::int2& location) {
 	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
 }

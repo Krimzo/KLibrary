@@ -57,7 +57,7 @@ void kl::socket::close() {
 void kl::socket::setPort(uint16_t port) {
 	addr.sin_port = htons(port);
 }
-void kl::socket::setAddr(const std::string& addrs) {
+void kl::socket::setAddr(const String& addrs) {
 	if (inet_pton(AF_INET, addrs.c_str(), &addr.sin_addr) != 1) {
 		kl::console::show();
 		std::cout << "Could not parse address \"" << addrs << "\"";

@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\color\color.cpp">
+    <ClCompile Include="source\graphics\color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\color\image.cpp">
+    <ClCompile Include="source\graphics\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\geometry\plane.cpp">
@@ -144,15 +144,18 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\Raytracing.cpp">
+    <ClCompile Include="source\graphics\video.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\TimesTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\color\color.h">
+    <ClInclude Include="source\graphics\color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\color\image.h">
+    <ClInclude Include="source\graphics\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\geometry\plane.h">
@@ -246,6 +249,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\KrimzLib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\libspec\using.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

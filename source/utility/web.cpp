@@ -5,7 +5,7 @@
 
 
 // Downloads website data(bytes) from the given url
-std::string kl::web::getWebsiteData(const std::string& url, int bufferSize) {
+String kl::web::getWebsiteData(const String& url, int bufferSize) {
 	// Create browser
 	HINTERNET connection = InternetOpenA("Browser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
 	if (!connection) {
@@ -21,8 +21,8 @@ std::string kl::web::getWebsiteData(const std::string& url, int bufferSize) {
 	}
 
 	// Download data
-	std::string finalData;
-	std::string dataBuffer;
+	String finalData;
+	String dataBuffer;
 	dataBuffer.resize(bufferSize);
 	DWORD byteReadCount = 0;
 	while (InternetReadFile(openAddress, &dataBuffer[0], (DWORD)dataBuffer.size(), &byteReadCount) && byteReadCount) {
@@ -40,6 +40,6 @@ std::string kl::web::getWebsiteData(const std::string& url, int bufferSize) {
 }
 
 // Downloads data from the website and saves it in a file
-void kl::web::downloadToFile(const std::string& url, const std::string& fileName) {
+void kl::web::downloadToFile(const String& url, const String& fileName) {
 	kl::file::write(fileName, kl::web::getWebsiteData(url));
 }

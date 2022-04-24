@@ -9,7 +9,7 @@
 
 
 // Shader creation
-ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11InputLayout** outLayout, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc) {
+ID3D11VertexShader* kl::gpu::newVertexShader(const String& source, ID3D11InputLayout** outLayout, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc) {
 	// Blobs
 	ID3DBlob* blobData = nullptr;
 	ID3DBlob* blobError = nullptr;
@@ -69,7 +69,7 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11In
 	// Return
 	return vertShader;
 }
-ID3D11PixelShader* kl::gpu::newPixelShader(const std::string& source) {
+ID3D11PixelShader* kl::gpu::newPixelShader(const String& source) {
 	// Blobs
 	ID3DBlob* blobData = nullptr;
 	ID3DBlob* blobError = nullptr;

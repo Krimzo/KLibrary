@@ -3,6 +3,8 @@
 #include <iostream>
 #include <windows.h>
 
+#include "libspec/using.h"
+
 
 namespace kl {
 	class socket {
@@ -28,7 +30,7 @@ namespace kl {
 
 		// Info setters
 		void setPort(uint16_t port);
-		void setAddr(const std::string& addrs);
+		void setAddr(const String& addrs);
 
 		// Binds the socket
 		void bind();
