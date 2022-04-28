@@ -24,9 +24,6 @@
 namespace kl {
 	class video {
 	private:
-		static int instCount;
-		static bool inited;
-		static std::mutex lock;
 		IMFSourceReader* reader = nullptr;
 
 	public:

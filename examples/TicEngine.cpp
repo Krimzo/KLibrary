@@ -1,7 +1,7 @@
 #include "KrimzLib.h"
 
 
-const int BOARD_LEN = 3;
+const int BOARD_SIZE = 3;
 const int FRAME_SIZE = 900;
 
 const int ID_PLAYER = -1;
@@ -12,8 +12,8 @@ const kl::color COLOR_PLAYER = kl::colors::orange;
 const kl::color COLOR_ENGINE = kl::colors::green;
 
 bool HasEmpty(const std::vector<int>& board) {
-	for (int i = 0; i < board.size(); i++) {
-		if (board[i] == ID_EMPTY) {
+	for (auto& piece : board) {
+		if (piece == ID_EMPTY) {
 			return true;
 		}
 	}
@@ -22,73 +22,73 @@ bool HasEmpty(const std::vector<int>& board) {
 
 int Evaluate(const std::vector<int>& board) {
 	// Check rows
-	for (int y = 0; y < BOARD_LEN; y++) {
+	for (int y = 0; y < BOARD_SIZE; y++) {
 		// Check
 		int sum = 0;
-		for (int x = 0; x < BOARD_LEN; x++) {
-			sum += board[size_t(y * BOARD_LEN + x)];
+		for (int x = 0; x < BOARD_SIZE; x++) {
+			sum += board[size_t(y * BOARD_SIZE + x)];
 		}
 
 		// Player wins
-		if (sum == ID_PLAYER * BOARD_LEN) {
+		if (sum == ID_PLAYER * BOARD_SIZE) {
 			return ID_PLAYER;
 		}
 		// Engine wins
-		else if (sum == ID_ENGINE * BOARD_LEN) {
+		else if (sum == ID_ENGINE * BOARD_SIZE) {
 			return ID_ENGINE;
 		}
 	}
 
 	// Check cols
-	for (int x = 0; x < BOARD_LEN; x++) {
+	for (int x = 0; x < BOARD_SIZE; x++) {
 		// Check
 		int sum = 0;
-		for (int y = 0; y < BOARD_LEN; y++) {
-			sum += board[size_t(y * BOARD_LEN + x)];
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			sum += board[size_t(y * BOARD_SIZE + x)];
 		}
 
 		// Player wins
-		if (sum == ID_PLAYER * BOARD_LEN) {
+		if (sum == ID_PLAYER * BOARD_SIZE) {
 			return ID_PLAYER;
 		}
 		// Engine wins
-		else if (sum == ID_ENGINE * BOARD_LEN) {
+		else if (sum == ID_ENGINE * BOARD_SIZE) {
 			return ID_ENGINE;
 		}
 	}
 
-	// Main diagonal
+	/* Main diagonal */
 	{
 		// Check
 		int sum = 0;
-		for (int i = 0; i < BOARD_LEN; i++) {
-			sum += board[size_t(i * BOARD_LEN + i)];
+		for (int i = 0; i < BOARD_SIZE; i++) {
+			sum += board[size_t(i * BOARD_SIZE + i)];
 		}
 
 		// X wins
-		if (sum == ID_PLAYER * BOARD_LEN) {
+		if (sum == ID_PLAYER * BOARD_SIZE) {
 			return ID_PLAYER;
 		}
 		// O wins
-		else if (sum == ID_ENGINE * BOARD_LEN) {
+		else if (sum == ID_ENGINE * BOARD_SIZE) {
 			return ID_ENGINE;
 		}
 	}
 
-	// Second diagonal
+	/* Second diagonal */
 	{
 		// Check
 		int sum = 0;
-		for (int i = 0; i < BOARD_LEN; i++) {
-			sum += board[size_t(i * BOARD_LEN + (BOARD_LEN - 1 - i))];
+		for (int i = 0; i < BOARD_SIZE; i++) {
+			sum += board[size_t(i * BOARD_SIZE + (BOARD_SIZE - 1 - i))];
 		}
 
 		// X wins
-		if (sum == ID_PLAYER * BOARD_LEN) {
+		if (sum == ID_PLAYER * BOARD_SIZE) {
 			return ID_PLAYER;
 		}
 		// O wins
-		else if (sum == ID_ENGINE * BOARD_LEN) {
+		else if (sum == ID_ENGINE * BOARD_SIZE) {
 			return ID_ENGINE;
 		}
 	}
@@ -101,14 +101,8 @@ struct BoardInfo {
 	int eval = 0;
 	int move = -1;
 
-	BoardInfo() {
-		eval = 0;
-		move = -1;
-	}
-	BoardInfo(int eval, int move) {
-		this->eval = eval;
-		this->move = move;
-	}
+	BoardInfo() {}
+	BoardInfo(int eval, int move) : eval(eval), move(move) {}
 };
 
 BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, int alpha, int beta) {
@@ -182,12 +176,12 @@ BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, i
 int main() {
 	kl::console::hide();
 
-	std::vector<int> board(BOARD_LEN * BOARD_LEN);
+	std::vector<int> board(BOARD_SIZE * BOARD_SIZE);
 	bool playersTurn = kl::random::BOOL();
 
 	static const bool playerWasFirst = playersTurn;
 
-	const int squareSize = FRAME_SIZE / BOARD_LEN;
+	const int squareSize = FRAME_SIZE / BOARD_SIZE;
 	const int lineOffs = squareSize / 10;
 	const int circlOffs = squareSize / 2;
 
@@ -214,7 +208,7 @@ int main() {
 			if (win.mouse.lmb) {
 				if (!wasDown) {
 					const kl::int2 pos = win.mouse.position / kl::int2(squareSize);
-					const int ind = pos.y * BOARD_LEN + pos.x;
+					const int ind = pos.y * BOARD_SIZE + pos.x;
 					if (board[ind] == ID_EMPTY) {
 						board[ind] = ID_PLAYER;
 						playersTurn = false;
@@ -242,9 +236,9 @@ int main() {
 		}
 
 		// Drawing the data
-		for (kl::int2 pos = 0; pos.y < BOARD_LEN; pos.y++) {
-			for (pos.x = 0; pos.x < BOARD_LEN; pos.x++) {
-				const int posID = board[size_t(pos.y * BOARD_LEN + pos.x)];
+		for (kl::int2 pos = 0; pos.y < BOARD_SIZE; pos.y++) {
+			for (pos.x = 0; pos.x < BOARD_SIZE; pos.x++) {
+				const int posID = board[size_t(pos.y * BOARD_SIZE + pos.x)];
 				if (playerWasFirst) {
 					if (posID == ID_PLAYER) {
 						frame.drawLine(pos * squareSize + kl::int2(lineOffs), (pos + 1) * squareSize - kl::int2(lineOffs), COLOR_PLAYER);

@@ -154,7 +154,7 @@ void kl::console::progressBar(const String& message, int outputY, float percenta
 }
 
 // Fast console writing
-DWORD ignore = 0;
+static DWORD ignore = 0;
 void kl::console::fastOut(const String& data, const kl::int2& location) {
-	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), (DWORD)data.length(), { short(location.x), short(location.y) }, &ignore);
+	WriteConsoleOutputCharacterA(kl::console::handle, data.c_str(), DWORD(data.length()), { short(location.x), short(location.y) }, &ignore);
 }

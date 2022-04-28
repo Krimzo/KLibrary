@@ -18,14 +18,14 @@
 #include "graphics/video.h"
 
 // Utility
-#include "utility/time.h"
-#include "utility/convert.h"
-#include "utility/random.h"
 #include "utility/console.h"
+#include "utility/convert.h"
 #include "utility/file.h"
+#include "utility/random.h"
 #include "utility/socket.h"
-#include "utility/web.h"
 #include "utility/thread.h"
+#include "utility/time.h"
+#include "utility/web.h"
 
 // Geometry
 #include "geometry/ray.h"

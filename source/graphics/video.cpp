@@ -4,63 +4,69 @@
 #include "utility/convert.h"
 
 
-int kl::video::instCount = 0;
-bool kl::video::inited = false;
-std::mutex kl::video::lock = {};
-
-kl::video::video() {
-	lock.lock();
-	instCount++;
-	if (!inited) {
+static int vidInstCount = 0;
+static bool vidUtilInited = false;
+static std::mutex vidThrdLock = {};
+void VidUtilInit() {
+	vidThrdLock.lock();
+	vidInstCount++;
+	if (!vidUtilInited) {
 		if ((FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_SPEED_OVER_MEMORY)) || FAILED(MFStartup(MF_VERSION)))) {
 			kl::console::show();
 			std::cout << "Failed to init video loader!";
 			std::cin.get();
 			exit(69);
 		}
-		inited = true;
+		vidUtilInited = true;
 	}
-	lock.unlock();
+	vidThrdLock.unlock();
+}
+void VidUtilUninit() {
+	vidThrdLock.lock();
+	vidInstCount--;
+	if (vidUtilInited && vidInstCount == 0) {
+		MFShutdown();
+		CoUninitialize();
+		vidUtilInited = false;
+	}
+	vidThrdLock.unlock();
+}
+
+kl::video::video() {
+	VidUtilInit();
 }
 kl::video::video(const String& filePath) {
-	this->video::video();
+	VidUtilInit();
 	open(filePath);
 }
 kl::video::~video() {
 	close();
-	lock.lock();
-	instCount--;
-	if (inited && instCount == 0) {
-		MFShutdown();
-		CoUninitialize();
-		inited = false;
-	}
-	lock.unlock();
+	VidUtilUninit();
 }
 
 void ConfigureDecoder(IMFSourceReader* reader) {
 	// Getting default types
 	IMFMediaType* defType = nullptr;
-	if (reader->GetNativeMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &defType) < 0) {
+	if (FAILED(reader->GetNativeMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &defType))) {
 		exit(1);
 	}
 	GUID majorType = {};
-	if (defType->GetGUID(MF_MT_MAJOR_TYPE, &majorType) < 0) {
+	if (FAILED(defType->GetGUID(MF_MT_MAJOR_TYPE, &majorType))) {
 		exit(2);
 	}
 
 	// Creating/setting new type
 	IMFMediaType* newType = nullptr;
-	if (MFCreateMediaType(&newType) < 0) {
+	if (FAILED(MFCreateMediaType(&newType))) {
 		exit(3);
 	}
-	if (newType->SetGUID(MF_MT_MAJOR_TYPE, majorType) < 0) {
+	if (FAILED(newType->SetGUID(MF_MT_MAJOR_TYPE, majorType))) {
 		exit(4);
 	}
-	if (newType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32) < 0) {
+	if (FAILED(newType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32))) {
 		exit(6);
 	}
-	if (reader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, newType) < 0) {
+	if (FAILED(reader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, newType))) {
 		exit(7);
 	}
 
