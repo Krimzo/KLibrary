@@ -78,8 +78,8 @@ LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 }
 void kl::window::handleMessage(MSG& msg) {
 #ifdef KL_USING_IMGUI
-	TranslateMessage(&wndMsg);
-	if (ImGui_ImplWin32_WndProcHandler(wndMsg.hwnd, wndMsg.message, wndMsg.wParam, wndMsg.lParam)) {
+	TranslateMessage(&msg);
+	if (ImGui_ImplWin32_WndProcHandler(msg.hwnd, msg.message, msg.wParam, msg.lParam)) {
 		return;
 	}
 #endif
@@ -88,8 +88,8 @@ void kl::window::handleMessage(MSG& msg) {
 	switch (msg.message) {
 #ifdef KL_USING_IMGUI
 	case WM_CHAR:
-		if (*(short*)&wndMsg.lParam > 1) {
-			ImGui::GetIO().AddInputCharacter(uint32_t(wndMsg.wParam));
+		if (*(short*)&msg.lParam > 1) {
+			ImGui::GetIO().AddInputCharacter(uint32_t(msg.wParam));
 		}
 		break;
 #endif
@@ -152,7 +152,7 @@ void kl::window::startNew(const kl::int2& size, const String& name, bool resizea
 	mouse.bind(wnd);
 
 #ifdef KL_USING_IMGUI
-	ImGui_ImplWin32_Init(hwnd);
+	ImGui_ImplWin32_Init(wnd);
 #endif
 
 	// Starting the update loops
