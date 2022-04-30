@@ -39,6 +39,7 @@
 #include "window/keys.h"
 #include "window/mouse.h"
 #include "window/window.h"
+#include "window/double_buffer.h"
 
 // DirectX
 #include "gpu/gpu.h"

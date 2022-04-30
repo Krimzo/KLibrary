@@ -29,10 +29,9 @@ namespace kl {
 	class window {
 	private:
 		// Winapi variables
-		HINSTANCE hInstance = GetModuleHandleA(nullptr);
-		HWND hwnd = nullptr;
-		HDC hdc = nullptr;
-		MSG wndMsg = {};
+		HINSTANCE inst = GetModuleHandleA(nullptr);
+		HWND wnd = nullptr;
+		HDC dc = nullptr;
 
 		// Fullscreen data
 		bool inFull = false;
@@ -47,7 +46,7 @@ namespace kl {
 
 		// Handles the windows message
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		void handleMessage();
+		void handleMessage(MSG& msg);
 
 	public:
 		// Screen size
@@ -66,6 +65,8 @@ namespace kl {
 		window();
 		window(const kl::window&) = delete;
 		~window();
+
+		bool isOpen() const;
 
 		// Window creation
 		void startNew(const kl::int2& size, const String& name, bool resizeable, bool continuous);

@@ -80,8 +80,8 @@ void kl::image::height(int height) {
 }
 void kl::image::resize(const kl::int2& size) {
 	if (size != _size) {
+		pixels.resize(size_t(size.x * size.y));
 		_size = size;
-		pixels.resize(size_t(_size.x * _size.y));
 	}
 }
 void kl::image::spixel(const kl::int2& coords, const kl::color& color) {
@@ -230,7 +230,7 @@ kl::image kl::image::flipV() const {
 void kl::image::drawLine(const kl::int2& a, const kl::int2& b, const kl::color& col) {
 	// Calculations
 	const int len = max(abs(b.x - a.x), abs(b.y - a.y));
-	const kl::float2 incr((float(b.x) - a.x) / len, (float(b.y) - a.y) / len);
+	const kl::float2 incr(float(b.x - a.x) / len, float(b.y - a.y) / len);
 
 	// Drawing
 	kl::float2 drawPoint(float(a.x), float(a.y));

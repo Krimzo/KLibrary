@@ -15,10 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\graphics\color.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\graphics\image.cpp">
+    <ClCompile Include="examples\DataLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\geometry\plane.cpp">
@@ -36,19 +33,19 @@
     <ClCompile Include="source\geometry\vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gpu\buffer\buffer.cpp">
+    <ClCompile Include="source\gpu\buffer\constant_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gpu\buffer\cbuffer.cpp">
+    <ClCompile Include="source\gpu\buffer\gpu_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gpu\states\dstate.cpp">
+    <ClCompile Include="source\gpu\states\depth_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gpu\states\rstate.cpp">
+    <ClCompile Include="source\gpu\states\raster_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gpu\states\sstate.cpp">
+    <ClCompile Include="source\gpu\states\sampler_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gpu\utility\shaders.cpp">
@@ -60,16 +57,25 @@
     <ClCompile Include="source\gpu\utility\vbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gpu\views\dview.cpp">
+    <ClCompile Include="source\gpu\views\depth_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gpu\views\sview.cpp">
+    <ClCompile Include="source\gpu\views\shader_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gpu\views\tview.cpp">
+    <ClCompile Include="source\gpu\views\target_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gpu\gpu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\video.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\light\ambient.cpp">
@@ -132,6 +138,9 @@
     <ClCompile Include="source\view\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\window\double_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\window\key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -144,20 +153,8 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\graphics\video.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\Mandelbrot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\graphics\color.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\geometry\plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -174,6 +171,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gpu\gpu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\libspec\using.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\light\ambient.h">
@@ -236,6 +245,9 @@
     <ClInclude Include="source\view\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\window\double_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="source\window\key.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -249,12 +261,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\KrimzLib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\video.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\libspec\using.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

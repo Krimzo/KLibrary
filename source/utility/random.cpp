@@ -29,7 +29,7 @@ int kl::random::INT(int endExclusive) {
 
 // Returns a random float
 float kl::random::FLOAT(float startInclusive, float endInclusive) {
-	return INT(int(startInclusive * 1000), int(endInclusive * 1000) + 1) * 0.001f;
+	return INT(int(startInclusive * 1000.0f), int(endInclusive * 1000.0f) + 1) * 0.001f;
 }
 float kl::random::FLOAT(float endInclusive) {
 	return FLOAT(0, endInclusive);
