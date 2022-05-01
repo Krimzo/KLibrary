@@ -57,14 +57,14 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const String& source, ID3D11InputLa
 		}
 
 		// Saving child
-		children.push_back(*outLayout);
+		children.insert(*outLayout);
 	}
 
 	// Cleanup
 	blobData->Release();
 
 	// Saving child
-	children.push_back(vertShader);
+	children.insert(vertShader);
 
 	// Return
 	return vertShader;
@@ -102,7 +102,7 @@ ID3D11PixelShader* kl::gpu::newPixelShader(const String& source) {
 	blobData->Release();
 
 	// Saving child
-	children.push_back(pixlShader);
+	children.insert(pixlShader);
 
 	// Return
 	return pixlShader;

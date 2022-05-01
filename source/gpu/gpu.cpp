@@ -96,6 +96,7 @@ kl::gpu::~gpu() {
 	for (auto& ref : children) {
 		ref->Release();
 	}
+	children.clear();
 
 	// Chain cleanup
 	chain->Release();
@@ -191,12 +192,10 @@ void kl::gpu::swap(bool vSync) {
 
 // Deletes child instance
 bool kl::gpu::destroy(IUnknown* child) {
-	for (int i = 0; i < children.size(); i++) {
-		if (children[i] == child) {
-			children[i]->Release();
-			children.erase(children.begin() + i);
-			return true;
-		}
+	if (children.contains(child)) {
+		child->Release();
+		children.erase(child);
+		return true;
 	}
 	return false;
 }

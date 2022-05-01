@@ -15,7 +15,7 @@ ID3D11ShaderResourceView* kl::gpu::newShaderView(ID3D11Texture2D* tex, D3D11_SHA
 	}
 
 	// Saving child
-	children.push_back(shaderView);
+	children.insert(shaderView);
 
 	// Return
 	return shaderView;

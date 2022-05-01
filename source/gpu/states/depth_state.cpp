@@ -15,7 +15,7 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc) 
 	}
 
 	// Saving child
-	children.push_back(depthState);
+	children.insert(depthState);
 
 	// Return
 	return depthState;

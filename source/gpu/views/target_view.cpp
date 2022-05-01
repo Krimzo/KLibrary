@@ -15,7 +15,7 @@ ID3D11RenderTargetView* kl::gpu::newTargetView(ID3D11Texture2D* tex, D3D11_RENDE
 	}
 
 	// Saving child
-	children.push_back(targetView);
+	children.insert(targetView);
 
 	// Return
 	return targetView;

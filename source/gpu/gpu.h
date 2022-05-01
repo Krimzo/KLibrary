@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <set>
+#include <map>
 #include <windows.h>
 #include <windowsx.h>
 #include <d3d11.h>
@@ -30,7 +32,7 @@ namespace kl {
 		ID3D11DepthStencilView* interDepthBuff = nullptr;
 
 		// Buffers
-		std::vector<IUnknown*> children;
+		std::set<IUnknown*> children;
 
 	public:
 		gpu(HWND hwnd);

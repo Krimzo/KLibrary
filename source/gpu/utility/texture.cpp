@@ -16,7 +16,7 @@ ID3D11Texture2D* kl::gpu::newTextureBB() {
 	}
 
 	// Saving child
-	children.push_back(buffAddrs);
+	children.insert(buffAddrs);
 
 	// Return
 	return buffAddrs;
@@ -35,7 +35,7 @@ ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOUR
 	}
 
 	// Saving child
-	children.push_back(tex);
+	children.insert(tex);
 
 	// Return
 	return tex;

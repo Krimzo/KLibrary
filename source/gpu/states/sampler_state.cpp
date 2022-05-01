@@ -15,7 +15,7 @@ ID3D11SamplerState* kl::gpu::newSamplerState(D3D11_SAMPLER_DESC* desc) {
 	}
 
 	// Saving child
-	children.push_back(sampState);
+	children.insert(sampState);
 
 	// Return
 	return sampState;

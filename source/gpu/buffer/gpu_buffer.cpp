@@ -15,7 +15,7 @@ ID3D11Buffer* kl::gpu::newBuffer(D3D11_BUFFER_DESC* desc, D3D11_SUBRESOURCE_DATA
 	}
 
 	// Saving child
-	children.push_back(constBuff);
+	children.insert(constBuff);
 
 	// Return
 	return constBuff;

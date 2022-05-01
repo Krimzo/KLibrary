@@ -15,7 +15,7 @@ ID3D11RasterizerState* kl::gpu::newRasterState(D3D11_RASTERIZER_DESC* desc) {
 	}
 
 	// Saving child
-	children.push_back(rasterState);
+	children.insert(rasterState);
 
 	// Return
 	return rasterState;

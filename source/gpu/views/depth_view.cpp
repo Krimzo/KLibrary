@@ -15,7 +15,7 @@ ID3D11DepthStencilView* kl::gpu::newDepthView(ID3D11Texture2D* tex, D3D11_DEPTH_
 	}
 
 	// Saving child
-	children.push_back(depthView);
+	children.insert(depthView);
 
 	// Return
 	return depthView;
