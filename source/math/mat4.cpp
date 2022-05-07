@@ -9,8 +9,11 @@ kl::mat4::mat4() {
 	setIdentity();
 }
 
-// Getter
+// Getters
 float& kl::mat4::operator[](int i) {
+	return data[i];
+}
+const float& kl::mat4::operator[](int i) const {
 	return data[i];
 }
 
@@ -254,24 +257,6 @@ kl::mat4 kl::mat4::inverse() const {
 	return inv.div(det);
 }
 
-// Overloading std::cout
-std::ostream& kl::operator<<(std::ostream& os, kl::mat4& obj) {
-	os <<
-		kl::convert::toString(obj[0]) << " " << kl::convert::toString(obj[1]) << " " << kl::convert::toString(obj[2]) << " " << kl::convert::toString(obj[3]) << "\n" <<
-		kl::convert::toString(obj[4]) << " " << kl::convert::toString(obj[5]) << " " << kl::convert::toString(obj[6]) << " " << kl::convert::toString(obj[7]) << "\n" <<
-		kl::convert::toString(obj[8]) << " " << kl::convert::toString(obj[9]) << " " << kl::convert::toString(obj[10]) << " " << kl::convert::toString(obj[11]) << "\n" <<
-		kl::convert::toString(obj[12]) << " " << kl::convert::toString(obj[13]) << " " << kl::convert::toString(obj[14]) << " " << kl::convert::toString(obj[15]);
-	return os;
-}
-std::ostream& kl::operator<<(std::ostream& os, kl::mat4&& obj) {
-	os <<
-		kl::convert::toString(obj[0]) << " " << kl::convert::toString(obj[1]) << " " << kl::convert::toString(obj[2]) << " " << kl::convert::toString(obj[3]) << "\n" <<
-		kl::convert::toString(obj[4]) << " " << kl::convert::toString(obj[5]) << " " << kl::convert::toString(obj[6]) << " " << kl::convert::toString(obj[7]) << "\n" <<
-		kl::convert::toString(obj[8]) << " " << kl::convert::toString(obj[9]) << " " << kl::convert::toString(obj[10]) << " " << kl::convert::toString(obj[11]) << "\n" <<
-		kl::convert::toString(obj[12]) << " " << kl::convert::toString(obj[13]) << " " << kl::convert::toString(obj[14]) << " " << kl::convert::toString(obj[15]);
-	return os;
-}
-
 // Returns a translation matrix
 kl::mat4 kl::mat4::translate(const kl::float3& translation) {
 	kl::mat4 temp;
@@ -373,4 +358,14 @@ kl::mat4 kl::mat4::lookAt(const kl::float3& position, const kl::float3& target, 
 	temp[10] = f.z;
 	temp[11] = -f.dot(position);
 	return temp;
+}
+
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::mat4& obj) {
+	os <<
+		char(218) << obj.data[0] << " " << obj.data[1] << " " << obj.data[2] << " " << obj.data[3] << char(191) << "\n" <<
+		char(179) << obj.data[4] << " " << obj.data[5] << " " << obj.data[6] << " " << obj.data[7] << char(179) << "\n" <<
+		char(179) << obj.data[8] << " " << obj.data[9] << " " << obj.data[10] << " " << obj.data[11] << char(179) << "\n" <<
+		char(192) << obj.data[12] << " " << obj.data[13] << " " << obj.data[14] << " " << obj.data[15] << char(217);
+	return os;
 }

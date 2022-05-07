@@ -15,11 +15,23 @@ float kl::convert::toRadians(float degrees) {
 	static const float toRadians = kl::math::pi / 180.0f;
 	return degrees * toRadians;
 }
+kl::float2 kl::convert::toRadians(const kl::float2& degrees) {
+	return kl::float2(toRadians(degrees.x), toRadians(degrees.y));
+}
+kl::float3 kl::convert::toRadians(const kl::float3& degrees) {
+	return kl::float3(toRadians(degrees.x), toRadians(degrees.y), toRadians(degrees.z));
+}
 
 // Converts radians to degrees
 float kl::convert::toDegrees(float radians) {
 	static const float toDegrees = 180.0f / kl::math::pi;
 	return radians * toDegrees;
+}
+kl::float2 kl::convert::toDegrees(const kl::float2& radians) {
+	return kl::float2(toDegrees(radians.x), toDegrees(radians.y));
+}
+kl::float3 kl::convert::toDegrees(const kl::float3& radians) {
+	return kl::float3(toDegrees(radians.x), toDegrees(radians.y), toDegrees(radians.z));
 }
 
 // Byte to float color
@@ -39,16 +51,4 @@ std::wstring kl::convert::toWString(const String& data) {
 	toReturn.resize(data.size());
 	mbstowcs(&toReturn[0], &data[0], data.size());
 	return toReturn;
-}
-
-// Alligns the minus sign
-String kl::convert::toString(int a) {
-	std::stringstream ss;
-	ss << std::setw(5) << a;
-	return ss.str();
-}
-String kl::convert::toString(float a) {
-	std::stringstream ss;
-	ss << std::fixed << std::setprecision(2) << std::setw(8) << a;
-	return ss.str();
 }

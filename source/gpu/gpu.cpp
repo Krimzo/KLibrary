@@ -15,7 +15,7 @@
 
 
 // Constructor
-kl::gpu::gpu(HWND hwnd) {
+kl::gpu::gpu(HWND hwnd, bool predefineCBuffs) : cbuffsPredefined(predefineCBuffs) {
 	// Getting the window size
 	RECT clientArea = {};
 	GetClientRect(hwnd, &clientArea);
@@ -77,6 +77,14 @@ kl::gpu::gpu(HWND hwnd) {
 
 	// Setting the triangle as the main primitive type
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Generating predefined cbuffs
+	if (predefineCBuffs) {
+		for (int i = 0; i < 32; i++) {
+			vertCBuffs[i] = newConstBuffer((i + 1) * 16);
+			pixlCBuffs[i] = newConstBuffer((i + 1) * 16);
+		}
+	}
 
 #ifdef KL_USING_IMGUI
 	ImGui_ImplDX11_Init(device, devcon);
@@ -162,15 +170,15 @@ void kl::gpu::viewport(const kl::int2& pos, const kl::int2& size) {
 // Binds the internal render targets
 void kl::gpu::bindInternal(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView) {
 	std::vector<ID3D11RenderTargetView*> combinedTargets = { interFrameBuff };
-	for (auto& ref : targets) {
-		combinedTargets.push_back(ref);
+	for (auto& target : targets) {
+		combinedTargets.push_back(target);
 	}
 	devcon->OMSetRenderTargets(UINT(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : interDepthBuff);
 }
 
 // Binds given render target
 void kl::gpu::bindTargets(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView) {
-	devcon->OMSetRenderTargets(UINT(targets.size()), &targets[0], depthView);
+	devcon->OMSetRenderTargets(UINT(targets.size()), &targets[0], depthView ? depthView : interDepthBuff);
 }
 
 // Clears the buffer

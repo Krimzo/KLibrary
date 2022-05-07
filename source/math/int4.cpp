@@ -16,6 +16,14 @@ kl::int4::int4(const kl::int2& v1, const kl::int2& v2) : x(v1.x), y(v1.y), z(v2.
 kl::int4::int4(const kl::int3& v, int w) : x(v.x), y(v.y), z(v.z), w(w) {}
 kl::int4::int4(int x, const kl::int3& v) : x(x), y(v.x), z(v.y), w(v.z) {}
 
+// Getters
+int& kl::int4::operator[](int i) {
+	return data[i];
+}
+const int& kl::int4::operator[](int i) const {
+	return data[i];
+}
+
 // Addition
 kl::int4 kl::int4::add(const kl::int4& obj) const {
 	return kl::int4(x + obj.x, y + obj.y, z + obj.z, w + obj.w);
@@ -101,6 +109,6 @@ kl::int4 kl::int4::abso() const {
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::int4& obj) {
-	os << "(" << kl::convert::toString(obj.x) << ", " << kl::convert::toString(obj.y) << ", " << kl::convert::toString(obj.z) << ", " << kl::convert::toString(obj.w) << ")";
+	os << "(" << obj.x << ", " << obj.y << ", " << obj.z << ", " << obj.w << ")";
 	return os;
 }

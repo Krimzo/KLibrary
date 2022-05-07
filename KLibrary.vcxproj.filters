@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\DataLine.cpp">
+    <ClCompile Include="examples\Testing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\geometry\plane.cpp">
@@ -76,12 +76,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\graphics\video.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\light\ambient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\light\direct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\math\float2.cpp">
@@ -183,12 +177,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\libspec\using.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\light\ambient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\light\direct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\math\float2.h">

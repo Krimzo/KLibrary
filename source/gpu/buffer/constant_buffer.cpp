@@ -25,7 +25,7 @@ ID3D11Buffer* kl::gpu::newConstBuffer(int byteSize) {
 }
 
 // Sets the buffer data
-void kl::gpu::setBuffData(ID3D11Buffer* buff, void* data) {
+void kl::gpu::setBuffData(ID3D11Buffer* buff, const void* data) {
 	// Getting the buffer size
 	D3D11_BUFFER_DESC buffData = {};
 	buff->GetDesc(&buffData);

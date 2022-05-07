@@ -12,6 +12,14 @@ kl::int3::int3(int x, int y, int z) : x(x), y(y), z(z) {}
 kl::int3::int3(const kl::int2& v, int z) : x(v.x), y(v.y), z(z) {}
 kl::int3::int3(int x, const kl::int2& v) : x(x), y(v.x), z(v.y) {}
 
+// Getters
+int& kl::int3::operator[](int i) {
+	return data[i];
+}
+const int& kl::int3::operator[](int i) const {
+	return data[i];
+}
+
 // Addition
 kl::int3 kl::int3::add(const kl::int3& obj) const {
 	return kl::int3(x + obj.x, y + obj.y, z + obj.z);
@@ -97,6 +105,6 @@ kl::int3 kl::int3::abso() const {
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::int3& obj) {
-	os << "(" << kl::convert::toString(obj.x) << ", " << kl::convert::toString(obj.y) << ", " << kl::convert::toString(obj.z) << ")";
+	os << "(" << obj.x << ", " << obj.y << ", " << obj.z << ")";
 	return os;
 }

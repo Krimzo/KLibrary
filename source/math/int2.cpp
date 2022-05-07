@@ -10,6 +10,14 @@ kl::int2::int2() : x(0), y(0) {}
 kl::int2::int2(int a) : x(a), y(a) {}
 kl::int2::int2(int x, int y) : x(x), y(y) {}
 
+// Getters
+int& kl::int2::operator[](int i) {
+	return data[i];
+}
+const int& kl::int2::operator[](int i) const {
+	return data[i];
+}
+
 // Addition
 kl::int2 kl::int2::add(const kl::int2& obj) const {
 	return kl::int2(x + obj.x, y + obj.y);
@@ -95,6 +103,6 @@ kl::int2 kl::int2::abso() const {
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::int2& obj) {
-	os << "(" << kl::convert::toString(obj.x) << ", " << kl::convert::toString(obj.y) << ")";
+	os << "(" << obj.x << ", " << obj.y << ")";
 	return os;
 }

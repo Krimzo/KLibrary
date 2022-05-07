@@ -34,9 +34,15 @@ namespace kl {
 		// Buffers
 		std::set<IUnknown*> children;
 
+		// Predefined constant buffers
+		bool cbuffsPredefined = false;
+		ID3D11Buffer* vertCBuffs[32] = {};
+		ID3D11Buffer* pixlCBuffs[32] = {};
+
 	public:
-		gpu(HWND hwnd);
+		gpu(HWND hwnd, bool predefineCBuffs = true);
 		gpu(const kl::gpu&) = delete;
+		void operator=(const kl::gpu&) = delete;
 		~gpu();
 
 		// Getters
@@ -85,9 +91,29 @@ namespace kl {
 
 		// Constant buffer
 		ID3D11Buffer* newConstBuffer(int byteSize);
-		void setBuffData(ID3D11Buffer* buff, void* data);
+		void setBuffData(ID3D11Buffer* buff, const void* data);
 		void bindVertCBuff(ID3D11Buffer* buff, int slot);
 		void bindPixlCBuff(ID3D11Buffer* buff, int slot);
+		template<typename T> inline bool autoSetVertBuff(const T& data) {
+			const size_t dataSize = sizeof(T);
+			if (!cbuffsPredefined || dataSize > 512 || dataSize % 16) {
+				return false;
+			}
+			ID3D11Buffer* approBuffer = vertCBuffs[dataSize / 16 - 1];
+			bindVertCBuff(approBuffer, 0);
+			setBuffData(approBuffer, &data);
+			return true;
+		}
+		template<typename T> inline bool autoSetPixlBuff(const T& data) {
+			const size_t dataSize = sizeof(T);
+			if (!cbuffsPredefined || dataSize > 512 || dataSize % 16) {
+				return false;
+			}
+			ID3D11Buffer* approBuffer = pixlCBuffs[dataSize / 16 - 1];
+			bindPixlCBuff(approBuffer, 0);
+			setBuffData(approBuffer, &data);
+			return true;
+		}
 
 		// Mesh
 		ID3D11Buffer* newVertBuffer(const std::vector<kl::vertex>& vertexData);

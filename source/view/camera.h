@@ -12,12 +12,11 @@ namespace kl {
 		kl::float3 forward = kl::float3::pos_z;
 		kl::float3 position;
 		float aspect = 1.7778f;
-		float near = 0.01f;
 		float fov = 75.0f;
-		float far = 100.0f;
-		float shadows = 40.0f;
+		float near = 0.01f;
+		float far = 500.0f;
 		float speed = 2.0f;
-		float sens = 0.025f;
+		float sens = 0.1f;
 
 		// Camera direction getters
 		kl::float3 getForward() const;

@@ -14,9 +14,15 @@ kl::float3::float3(const kl::float2& v, float z) : x(v.x), y(v.y), z(z) {}
 kl::float3::float3(float x, const kl::float2& v) : x(x), y(v.x), z(v.y) {}
 kl::float3::float3(const kl::color& c) : x(kl::convert::toFloCol(c.r)), y(kl::convert::toFloCol(c.g)), z(kl::convert::toFloCol(c.b)) {}
 
-// Getter
+// Getters
 kl::float2 kl::float3::xy() const {
 	return kl::float2(x, y);
+}
+float& kl::float3::operator[](int i) {
+	return data[i];
+}
+const float& kl::float3::operator[](int i) const {
+	return data[i];
 }
 
 // Addition
@@ -166,6 +172,6 @@ const kl::float3 kl::float3::neg_z = kl::float3(0.0f, 0.0f, -1.0f);
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::float3& obj) {
-	os << "(" << kl::convert::toString(obj.x) << ", " << kl::convert::toString(obj.y) << ", " << kl::convert::toString(obj.z) << ")";
+	os << "(" << obj.x << ", " << obj.y << ", " << obj.z << ")";
 	return os;
 }

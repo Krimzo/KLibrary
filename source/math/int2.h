@@ -6,12 +6,21 @@
 namespace kl {
 	class int2 {
 	public:
-		int x, y;
+		union {
+			struct {
+				int x, y;
+			};
+			int data[2];
+		};
 
 		// Constr
 		int2();
 		int2(int a);
 		int2(int x, int y);
+
+		// Getters
+		int& operator[](int i);
+		const int& operator[](int i) const;
 
 		// Addition
 		kl::int2 add(const kl::int2& obj) const;

@@ -9,8 +9,11 @@ kl::mat3::mat3() {
 	setIdentity();
 }
 
-// Getter
+// Getters
 float& kl::mat3::operator[](int i) {
+	return data[i];
+}
+const float& kl::mat3::operator[](int i) const {
 	return data[i];
 }
 
@@ -155,22 +158,6 @@ kl::mat3 kl::mat3::inverse() const {
 	return inv.div(det);
 }
 
-// Overloading std::cout
-std::ostream& kl::operator<<(std::ostream& os, kl::mat3& obj) {
-	os <<
-		kl::convert::toString(obj[0]) << " " << kl::convert::toString(obj[1]) << " " << kl::convert::toString(obj[2]) << "\n" <<
-		kl::convert::toString(obj[3]) << " " << kl::convert::toString(obj[4]) << " " << kl::convert::toString(obj[5]) << "\n" <<
-		kl::convert::toString(obj[6]) << " " << kl::convert::toString(obj[7]) << " " << kl::convert::toString(obj[8]);
-	return os;
-}
-std::ostream& kl::operator<<(std::ostream& os, kl::mat3&& obj) {
-	os <<
-		kl::convert::toString(obj[0]) << " " << kl::convert::toString(obj[1]) << " " << kl::convert::toString(obj[2]) << "\n" <<
-		kl::convert::toString(obj[3]) << " " << kl::convert::toString(obj[4]) << " " << kl::convert::toString(obj[5]) << "\n" <<
-		kl::convert::toString(obj[6]) << " " << kl::convert::toString(obj[7]) << " " << kl::convert::toString(obj[8]);
-	return os;
-}
-
 // Returns a translation matrix
 kl::mat3 kl::mat3::translate(const kl::float2& translation) {
 	kl::mat3 temp;
@@ -200,4 +187,13 @@ kl::mat3 kl::mat3::scale(const kl::float2& size) {
 	temp[0] = size.x;
 	temp[4] = size.y;
 	return temp;
+}
+
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::mat3& obj) {
+	os <<
+		char(218) << obj.data[0] << " " << obj.data[1] << " " << obj.data[2] << char(191) << "\n" <<
+		char(179) << obj.data[3] << " " << obj.data[4] << " " << obj.data[5] << char(179) << "\n" <<
+		char(192) << obj.data[6] << " " << obj.data[7] << " " << obj.data[8] << char(217);
+	return os;
 }

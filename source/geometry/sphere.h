@@ -15,11 +15,13 @@ namespace kl {
 		float reflectivity = 0;
 		float emission = 0;
 
-		// Constructor
 		sphere();
 		sphere(const kl::float3& center, float radius, const kl::float3& color, float reflectivity = 0, float emission = 0);
 
 		// Calculates the emissive color
 		kl::float3 calcEmiss() const;
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::sphere& obj);
 }

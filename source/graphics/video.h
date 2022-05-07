@@ -30,6 +30,7 @@ namespace kl {
 		video();
 		video(const String& filePath);
 		video(const kl::video&) = delete;
+		void operator=(const kl::video&) = delete;
 		~video();
 
 		void open(const String& filePath);

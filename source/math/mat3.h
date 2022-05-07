@@ -8,14 +8,14 @@
 
 namespace kl {
 	class mat3 {
-	private:
+	public:
 		float data[9] = {};
 
-	public:
 		mat3();
 
-		// Getter
+		// Getters
 		float& operator[](int i);
+		const float& operator[](int i) const;
 
 		// Addition
 		kl::mat3 add(const kl::mat3& obj) const;
@@ -67,6 +67,5 @@ namespace kl {
 	};
 
 	// Overloading std::cout
-	std::ostream& operator<<(std::ostream& os, kl::mat3& obj);
-	std::ostream& operator<<(std::ostream& os, kl::mat3&& obj);
+	std::ostream& operator<<(std::ostream& os, const kl::mat3& obj);
 }

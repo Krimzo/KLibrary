@@ -18,3 +18,9 @@ bool kl::vertex::operator==(const kl::vertex& obj) const {
 bool kl::vertex::operator!=(const kl::vertex& obj) const {
 	return !this->equals(obj);
 }
+
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::vertex& obj) {
+	os << "{" << obj.world << ", " << obj.texture << ", " << obj.normal << "}";
+	return os;
+}

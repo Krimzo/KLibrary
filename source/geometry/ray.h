@@ -12,7 +12,6 @@ namespace kl {
 		kl::float3 origin;
 		kl::float3 direction;
 
-		// Constructors
 		kl::ray();
 		kl::ray(const kl::float3& origin, const kl::float3& direction);
 
@@ -25,4 +24,7 @@ namespace kl {
 		// Intersection with a sphere
 		bool intersect(const kl::sphere& sphere, kl::float3* outInter = nullptr, float* outDis = nullptr) const;
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::ray& obj);
 }

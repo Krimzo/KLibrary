@@ -46,7 +46,3 @@
 
 // View
 #include "view/camera.h"
-
-// Light
-#include "light/ambient.h"
-#include "light/direct.h"

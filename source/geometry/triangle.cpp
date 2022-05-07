@@ -55,3 +55,9 @@ kl::vertex kl::triangle::interpolate(const kl::float4& interConsts, const kl::fl
 		)
 	);
 }
+
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::triangle& obj) {
+	os << "{" << obj.a << ", " << obj.b << ", " << obj.c << "}";
+	return os;
+}

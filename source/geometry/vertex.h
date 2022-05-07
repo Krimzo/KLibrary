@@ -10,7 +10,6 @@ namespace kl {
 		kl::float2 texture;
 		kl::float3 normal;
 
-		// Constructors
 		vertex();
 		vertex(const kl::float3& world);
 		vertex(const kl::float3& world, const kl::float2& texture);
@@ -22,4 +21,7 @@ namespace kl {
 		bool operator==(const kl::vertex& obj) const;
 		bool operator!=(const kl::vertex& obj) const;
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::vertex& obj);
 }

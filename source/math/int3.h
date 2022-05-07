@@ -8,7 +8,12 @@
 namespace kl {
 	class int3 {
 	public:
-		int x, y, z;
+		union {
+			struct {
+				int x, y, z;
+			};
+			int data[3];
+		};
 
 		// Constr
 		int3();
@@ -16,6 +21,10 @@ namespace kl {
 		int3(int x, int y, int z);
 		int3(const kl::int2& v, int z);
 		int3(int x, const kl::int2& v);
+
+		// Getters
+		int& operator[](int i);
+		const int& operator[](int i) const;
 
 		// Addition
 		kl::int3 add(const kl::int3& obj) const;

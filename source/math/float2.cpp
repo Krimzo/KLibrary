@@ -11,6 +11,14 @@ kl::float2::float2(float a) : x(a), y(a) {}
 kl::float2::float2(float x, float y) : x(x), y(y) {}
 kl::float2::float2(const kl::int2& v) : x(float(v.x)), y(float(v.y)) {}
 
+// Getters
+float& kl::float2::operator[](int i) {
+	return data[i];
+}
+const float& kl::float2::operator[](int i) const {
+	return data[i];
+}
+
 // Addition
 kl::float2 kl::float2::add(const kl::float2& obj) const {
 	return kl::float2(x + obj.x, y + obj.y);
@@ -132,6 +140,6 @@ const kl::float2 kl::float2::neg_y = kl::float2(0.0f, -1.0f);
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::float2& obj) {
-	os << "(" << kl::convert::toString(obj.x) << ", " << kl::convert::toString(obj.y) << ")";
+	os << "(" << obj.x << ", " << obj.y << ")";
 	return os;
 }

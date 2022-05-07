@@ -15,6 +15,7 @@ namespace kl {
 			struct {
 				float r, g;
 			};
+			float data[2];
 		};
 
 		// Constr
@@ -22,6 +23,10 @@ namespace kl {
 		float2(float a);
 		float2(float x, float y);
 		float2(const kl::int2& v);
+
+		// Getters
+		float& operator[](int i);
+		const float& operator[](int i) const;
 
 		// Addition
 		kl::float2 add(const kl::float2& obj) const;

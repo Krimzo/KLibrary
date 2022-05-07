@@ -8,12 +8,13 @@
 
 namespace kl {
 	class triangle {
-	public:
-		kl::vertex a;
-		kl::vertex b;
-		kl::vertex c;
+	private:
+		// Calculates and returns the 3 barycentric weights of a triangle and a point
+		kl::float3 getWeights(const kl::float4& interConsts, const kl::float2& pos) const;
 
-		// Constructors
+	public:
+		kl::vertex a, b, c;
+
 		triangle();
 		triangle(const kl::vertex& a, const kl::vertex& b, const kl::vertex& c);
 
@@ -26,9 +27,8 @@ namespace kl {
 		// Interpolates and returns the given values
 		float interpolate(const kl::float4& interConsts, const kl::float3& values, const kl::float2& pos) const;
 		kl::vertex interpolate(const kl::float4& interConsts, const kl::float2& pos) const;
-
-	private:
-		// Calculates and returns the 3 barycentric weights of a triangle and a point
-		kl::float3 getWeights(const kl::float4& interConsts, const kl::float2& pos) const;
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::triangle& obj);
 }

@@ -19,9 +19,15 @@ kl::float4::float4(const kl::float3& v, float w) : x(v.x), y(v.y), z(v.z), w(w) 
 kl::float4::float4(float x, const kl::float3& v) : x(x), y(v.x), z(v.y), w(v.z) {}
 kl::float4::float4(const kl::color& c) : x(kl::convert::toFloCol(c.r)), y(kl::convert::toFloCol(c.g)), z(kl::convert::toFloCol(c.b)), w(kl::convert::toFloCol(c.a)) {}
 
-// Getter
+// Getters
 kl::float3 kl::float4::xyz() const {
 	return kl::float3(x, y, z);
+}
+float& kl::float4::operator[](int i) {
+	return data[i];
+}
+const float& kl::float4::operator[](int i) const {
+	return data[i];
 }
 
 // Addition
@@ -129,6 +135,6 @@ float kl::float4::angle(const kl::float4& a) const {
 
 // Overloading std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::float4& obj) {
-	os << "(" << kl::convert::toString(obj.x) << ", " << kl::convert::toString(obj.y) << ", " << kl::convert::toString(obj.z) << ", " << kl::convert::toString(obj.w) << ")";
+	os << "(" << obj.x << ", " << obj.y << ", " << obj.z << ", " << obj.w << ")";
 	return os;
 }

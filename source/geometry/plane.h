@@ -9,8 +9,10 @@ namespace kl {
 		kl::float3 normal;
 		kl::float3 point;
 
-		// Constructors
 		plane();
 		plane(const kl::float3& normal, const kl::float3& point);
 	};
+
+	// Overloading std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::plane& obj);
 }

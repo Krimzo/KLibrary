@@ -94,7 +94,7 @@ void kl::video::close() {
 }
 
 bool kl::video::isOpen() const {
-	return reader;
+	return bool(reader);
 }
 
 float kl::video::duration() const {

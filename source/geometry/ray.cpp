@@ -111,3 +111,9 @@ bool kl::ray::intersect(const kl::sphere& sphere, kl::float3* outInter, float* o
 	}
 	return true;
 }
+
+// Overloading std::cout
+std::ostream& kl::operator<<(std::ostream& os, const kl::ray& obj) {
+	os << "{" << obj.origin << ", " << obj.direction << "}";
+	return os;
+}
