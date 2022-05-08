@@ -101,5 +101,8 @@ namespace kl {
 
 		// Sets the pixels of the window
 		void drawImage(const kl::image& toDraw, const kl::int2& position = { 0, 0 });
+
+		// Sends null message to the window
+		void notify() const;
 	};
 }

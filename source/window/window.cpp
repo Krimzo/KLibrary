@@ -195,7 +195,7 @@ void kl::window::startNew(const kl::int2& size, const String& name, bool resizea
 	winPlace = {};
 }
 void kl::window::stop() const {
-	PostMessageA(wnd, WM_CLOSE, 0, 0);
+	PostMessageA(wnd, WM_CLOSE, NULL, NULL);
 }
 
 bool kl::window::isOpen() const {
@@ -294,4 +294,10 @@ void kl::window::drawImage(const kl::image& toDraw, const kl::int2& position) {
 
 	// Drawing
 	StretchDIBits(dc, position.x, position.y, size.x, size.y, 0, 0, size.x, size.y, toDraw.pointer(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+}
+
+// Sends null message to the window
+void kl::window::notify() const {
+	PostMessageA(wnd, WM_NULL, NULL, NULL);
+	PostMessageA(wnd, WM_NULL, NULL, NULL);
 }
