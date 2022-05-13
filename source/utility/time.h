@@ -17,7 +17,7 @@ namespace kl {
 		static void wait(float seconds);
 
 	private:
-		static LARGE_INTEGER inStartTime;
+		static LARGE_INTEGER interStartTime;
 	};
 
 	class timer {

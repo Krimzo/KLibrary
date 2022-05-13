@@ -17,7 +17,7 @@ namespace _ignore {
 
 /* TIME */
 // Static interval
-LARGE_INTEGER kl::time::inStartTime = [] {
+LARGE_INTEGER kl::time::interStartTime = [] {
 	LARGE_INTEGER currentTime = {};
 	QueryPerformanceCounter(&currentTime);
 	return currentTime;
@@ -25,10 +25,10 @@ LARGE_INTEGER kl::time::inStartTime = [] {
 
 // Returns a time since the the last interval() call
 float kl::time::interval() {
-	LARGE_INTEGER inEndTime = {};
-	QueryPerformanceCounter(&inEndTime);
-	const float elapsedTime = _ignore::CalcTime(inStartTime, inEndTime);
-	inStartTime = inEndTime;
+	LARGE_INTEGER interEndTime = {};
+	QueryPerformanceCounter(&interEndTime);
+	const float elapsedTime = _ignore::CalcTime(interStartTime, interEndTime);
+	interStartTime = interEndTime;
 	return elapsedTime;
 }
 

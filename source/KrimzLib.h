@@ -20,6 +20,7 @@
 // Utility
 #include "utility/console.h"
 #include "utility/convert.h"
+#include "utility/encrypter.h"
 #include "utility/file.h"
 #include "utility/random.h"
 #include "utility/socket.h"

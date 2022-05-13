@@ -17,6 +17,7 @@ namespace kl {
 	public:
 		double_buffer(const kl::int2& frameSize);
 		double_buffer(const double_buffer&) = delete;
+		void operator=(const double_buffer&) = delete;
 
 		kl::int2 size();
 

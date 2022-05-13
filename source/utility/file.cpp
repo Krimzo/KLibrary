@@ -48,8 +48,7 @@ String kl::file::read(const String& filePath) {
 std::vector<byte> kl::file::readB(const String& filePath) {
 	// Open file
 	FILE* file = nullptr;
-	fopen_s(&file, filePath.c_str(), "rb");
-	if (!file) {
+	if (fopen_s(&file, filePath.c_str(), "rb")) {
 		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
 		return {};
 	}
@@ -87,8 +86,7 @@ bool kl::file::write(const String& filePath, const String& data) {
 bool kl::file::writeB(const String& filePath, const std::vector<byte>& data) {
 	// Open file
 	FILE* file = nullptr;
-	fopen_s(&file, filePath.c_str(), "wb");
-	if (!file) {
+	if (fopen_s(&file, filePath.c_str(), "wb")) {
 		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
 		return false;
 	}
@@ -126,8 +124,7 @@ bool kl::file::append(const String& filePath, const String& data, int position) 
 bool kl::file::appendB(const String& filePath, const std::vector<byte>& data, int position) {
 	// Open file
 	FILE* file = nullptr;
-	fopen_s(&file, filePath.c_str(), "ab");
-	if (!file) {
+	if (fopen_s(&file, filePath.c_str(), "ab")) {
 		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
 		return false;
 	}

@@ -74,13 +74,13 @@ void kl::float4::operator*=(const kl::float4& obj) {
 
 // Division
 kl::float4 kl::float4::div(float a) const {
-	return mul(1 / a);
+	return mul(1.0f / a);
 }
 kl::float4 kl::float4::operator/(float a) const {
 	return div(a);
 }
 void kl::float4::operator/=(float a) {
-	operator*=(1 / a);
+	operator*=(1.0f / a);
 }
 kl::float4 kl::float4::div(const kl::float4& obj) const {
 	return kl::float4(x / obj.x, y / obj.y, z / obj.z, w / obj.w);
@@ -105,7 +105,7 @@ bool kl::float4::operator!=(const kl::float4& obj) const {
 
 // Returns a negated vector
 kl::float4 kl::float4::negate() const {
-	return mul(-1);
+	return mul(-1.0f);
 }
 
 // Returns an absolute vector

@@ -42,7 +42,7 @@ float kl::convert::toFloCol(byte val) {
 
 // Converts a float color to color
 kl::color kl::convert::toColor(const kl::float4& colf) {
-	return kl::color(byte(colf.x * 255), byte(colf.y * 255), byte(colf.z * 255), byte(colf.w * 255));
+	return kl::color(byte(min(max(colf.x, 0.0f), 1.0f) * 255), byte(min(max(colf.y, 0.0f), 1.0f) * 255), byte(min(max(colf.z, 0.0f), 1.0f) * 255), byte(min(max(colf.w, 0.0f), 1.0f) * 255));
 }
 
 // Converts a string to a wstring
