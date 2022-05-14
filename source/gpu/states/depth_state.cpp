@@ -61,7 +61,7 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool m
 	}
 
 	// Return
-	return this->newDepthState(&depthDesc);
+	return newDepthState(&depthDesc);
 }
 
 void kl::gpu::bind(ID3D11DepthStencilState* state) {

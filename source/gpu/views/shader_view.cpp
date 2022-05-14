@@ -22,6 +22,6 @@ ID3D11ShaderResourceView* kl::gpu::newShaderView(ID3D11Texture2D* tex, D3D11_SHA
 }
 
 // Binds the texture
-void kl::gpu::bindPixlTex(ID3D11ShaderResourceView* buff, int slot) {
+void kl::gpu::bindPixlTex(ID3D11ShaderResourceView* buff, uint32_t slot) {
 	devcon->PSSetShaderResources(slot, 1, &buff);
 }

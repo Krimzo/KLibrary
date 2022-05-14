@@ -4,10 +4,8 @@
 kl::window win;
 
 kl::gpu* gpu = nullptr;
-ID3D11VertexShader* vertSha = nullptr;
-ID3D11PixelShader* pixlSha = nullptr;
-ID3D11Buffer* cbuff = nullptr;
-ID3D11Buffer* screenMes = nullptr;
+kl::shaders shaders;
+ID3D11Buffer* screenMesh = nullptr;
 
 kl::timer timer;
 float deltaT = 0.0f;
@@ -51,14 +49,10 @@ void Start() {
 	gpu->bind(gpu->newRasterState(false, false));
 
 	// Compiling shaders
-	ID3D11InputLayout* defaultLayout = nullptr;
-	vertSha = gpu->newVertexShader(kl::file::read("examples/shaders/raytracing.hlsl"), &defaultLayout);
-	pixlSha = gpu->newPixelShader(kl::file::read("examples/shaders/raytracing.hlsl"));
-	cbuff = gpu->newConstBuffer(sizeof(PS_CB));
-	gpu->bind(defaultLayout);
+	shaders = gpu->newShaders(kl::file::read("examples/shaders/raytracing.hlsl"), kl::file::read("examples/shaders/raytracing.hlsl"));
 
 	// Screen mesh creation
-	screenMes = gpu->newVertBuffer({
+	screenMesh = gpu->newVertexBuffer({
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f, 1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
 		});
@@ -190,9 +184,7 @@ void Update() {
 	Phys();
 
 	// Binding
-	gpu->bind(vertSha);
-	gpu->bind(pixlSha);
-	gpu->bindPixlCBuff(cbuff, 0);
+	gpu->bind(shaders);
 
 	// Setting data
 	PS_CB psData = {};
@@ -206,10 +198,10 @@ void Update() {
 		psData.spheres[i].reflectivity = spheres[i].reflectivity;
 		psData.spheres[i].emission = spheres[i].calcEmiss();
 	}
-	gpu->setBuffData(cbuff, &psData);
+	gpu->autoPixelCBuffer(psData);
 
 	// Raytracing
-	gpu->draw(screenMes);
+	gpu->draw(screenMesh);
 
 	// Buffer swap
 	gpu->swap(true);
@@ -220,7 +212,7 @@ void Update() {
 
 void Resize(const kl::int2& newSize) {
 	if (gpu && newSize.x > 0 && newSize.y > 0) {
-		gpu->regenBuffers(newSize);
+		gpu->regenInternal(newSize);
 		gpu->viewport(kl::int2(0), newSize);
 		camera.aspect = float(newSize.x) / newSize.y;
 	}

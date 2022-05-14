@@ -31,7 +31,7 @@ ID3D11RasterizerState* kl::gpu::newRasterState(bool wireframe, bool cull, bool c
 	rasterStateDesc.AntialiasedLineEnable = true;
 
 	// Return
-	return this->newRasterState(&rasterStateDesc);
+	return newRasterState(&rasterStateDesc);
 }
 
 // Binds the raster state

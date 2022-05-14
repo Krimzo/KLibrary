@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Encryption.cpp" />
+    <ClCompile Include="examples\Raytracing.cpp" />
     <ClCompile Include="source\geometry\plane.cpp" />
     <ClCompile Include="source\geometry\ray.cpp" />
     <ClCompile Include="source\geometry\sphere.cpp" />

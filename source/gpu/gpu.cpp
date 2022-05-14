@@ -15,7 +15,7 @@
 
 
 // Constructor
-kl::gpu::gpu(HWND hwnd, bool predefineCBuffs) : cbuffsPredefined(predefineCBuffs) {
+kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : cbuffersPredefined(predefineCBuffers) {
 	// Getting the window size
 	RECT clientArea = {};
 	GetClientRect(hwnd, &clientArea);
@@ -66,23 +66,23 @@ kl::gpu::gpu(HWND hwnd, bool predefineCBuffs) : cbuffsPredefined(predefineCBuffs
 		exit(69);
 	}
 
-	// Generating the buffers
-	regenBuffers(kl::int2(clientArea.right, clientArea.bottom));
+	// Setting the triangle as the main primitive type
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// Creating a default rasterizer
-	bind(newRasterState(false, false));
+	// Generating the buffers
+	regenInternal(kl::int2(clientArea.right, clientArea.bottom));
 
 	// Viewport setup
 	viewport(kl::int2(clientArea.left, clientArea.top), kl::int2(clientArea.right, clientArea.bottom));
 
-	// Setting the triangle as the main primitive type
-	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// Creating a default rasterizer
+	bind(newRasterState(false, false));
 
 	// Generating predefined cbuffs
-	if (predefineCBuffs) {
-		for (int i = 0; i < 32; i++) {
-			vertCBuffs[i] = newConstBuffer((i + 1) * 16);
-			pixlCBuffs[i] = newConstBuffer((i + 1) * 16);
+	if (predefineCBuffers) {
+		for (uint32_t i = 0; i < KL_CBUFFER_PREDEFINED_SIZE; i++) {
+			vertexCBuffers[i] = newCBuffer((i + 1) * 16);
+			pixelCBuffers[i] = newCBuffer((i + 1) * 16);
 		}
 	}
 
@@ -121,20 +121,20 @@ ID3D11DeviceContext* kl::gpu::con() {
 }
 
 // Resizes the buffers
-void kl::gpu::regenBuffers(const kl::int2& size) {
+void kl::gpu::regenInternal(const kl::int2& size) {
 	// Cleanup
 	bindTargets({});
-	if (interFrameBuff) {
-		destroy(interFrameBuff);
+	if (internalFrameBuffer) {
+		destroy(internalFrameBuffer);
 	}
-	if (interDepthBuff) {
-		destroy(interDepthBuff);
+	if (internalDepthBuffer) {
+		destroy(internalDepthBuffer);
 	}
 	chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
 	// Frame buffer creation
 	ID3D11Texture2D* bbTex = newTextureBB();
-	interFrameBuff = newTargetView(bbTex);
+	internalFrameBuffer = newTargetView(bbTex);
 	destroy(bbTex);
 
 	// Depth buffer creation
@@ -148,7 +148,7 @@ void kl::gpu::regenBuffers(const kl::int2& size) {
 	dsTexDesc.Usage = D3D11_USAGE_DEFAULT;
 	dsTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	ID3D11Texture2D* depthTex = newTexture(&dsTexDesc);
-	interDepthBuff = newDepthView(depthTex);
+	internalDepthBuffer = newDepthView(depthTex);
 	destroy(depthTex);
 
 	// Buffer binding
@@ -169,28 +169,28 @@ void kl::gpu::viewport(const kl::int2& pos, const kl::int2& size) {
 
 // Binds the internal render targets
 void kl::gpu::bindInternal(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView) {
-	std::vector<ID3D11RenderTargetView*> combinedTargets = { interFrameBuff };
+	std::vector<ID3D11RenderTargetView*> combinedTargets = { internalFrameBuffer };
 	for (auto& target : targets) {
 		combinedTargets.push_back(target);
 	}
-	devcon->OMSetRenderTargets(UINT(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : interDepthBuff);
+	devcon->OMSetRenderTargets(UINT(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : internalDepthBuffer);
 }
 
 // Binds given render target
 void kl::gpu::bindTargets(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView) {
-	devcon->OMSetRenderTargets(UINT(targets.size()), &targets[0], depthView ? depthView : interDepthBuff);
+	devcon->OMSetRenderTargets(UINT(targets.size()), &targets[0], depthView ? depthView : internalDepthBuffer);
 }
 
 // Clears the buffer
 void kl::gpu::clearColor(const kl::float4& color) {
-	clear(interFrameBuff, color);
+	clear(internalFrameBuffer, color);
 }
 void kl::gpu::clearDepth() {
-	clear(interDepthBuff);
+	clear(internalDepthBuffer);
 }
 void kl::gpu::clear(const kl::float4& color) {
-	clear(interFrameBuff, color);
-	clear(interDepthBuff);
+	clear(internalFrameBuffer, color);
+	clear(internalDepthBuffer);
 }
 
 // Swaps the buffers

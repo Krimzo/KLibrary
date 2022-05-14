@@ -11,13 +11,13 @@ int main() {
 
 	// Triangle points
 	kl::float2 A(50.0f, (frame.height() - 1.0f) / 3.0f);
-	kl::color colA(255, 0, 0);
+	kl::color colA = kl::colors::red;
 	kl::float2 B((frame.width() - 1.0f) / 3.0f, frame.height() - 51.0f);
-	kl::color colB(255, 255, 255);
+	kl::color colB = kl::colors::white;
 	kl::float2 C(frame.width() - 51.0f, (frame.height() - 1.0f) * 0.667f);
-	kl::color colC(0, 0, 255);
+	kl::color colC = kl::colors::blue;
 	kl::float2 D((frame.width() - 1.0f) * 0.667f, 50.0f);
-	kl::color colD(0, 255, 0);
+	kl::color colD = kl::colors::green;
 
 	// Triangle creation
 	kl::triangle T1(kl::vertex(kl::float3(A, 0.5f)), kl::vertex(kl::float3(B, 0.5f)), kl::vertex(kl::float3(C, 0.5f)));

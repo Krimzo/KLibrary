@@ -30,10 +30,10 @@ ID3D11SamplerState* kl::gpu::newSamplerState(bool linear, bool mirror) {
 	sampDesc.AddressW = mirror ? D3D11_TEXTURE_ADDRESS_MIRROR : D3D11_TEXTURE_ADDRESS_WRAP;
 
 	// Return
-	return this->newSamplerState(&sampDesc);
+	return newSamplerState(&sampDesc);
 }
 
 // Binds the sampler
-void kl::gpu::bind(ID3D11SamplerState* sampState, int slot) {
+void kl::gpu::bind(ID3D11SamplerState* sampState, uint32_t slot) {
 	devcon->PSSetSamplers(slot, 1, &sampState);
 }

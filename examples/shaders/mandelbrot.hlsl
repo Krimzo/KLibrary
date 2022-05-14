@@ -1,14 +1,7 @@
 // Vertex shader
-struct vOut
+float4 vShader(float3 pos : POS_IN) : SV_POSITION
 {
-    float4 world : SV_POSITION;
-};
-
-vOut vShader(float3 pos : POS_IN)
-{
-    vOut data;
-    data.world = float4(pos, 1.0f);
-    return data;
+    return float4(pos, 1.0f);
 }
 
 // Pixel shader
@@ -23,22 +16,22 @@ cbuffer PS_CB : register(b0)
 // Computes a complex number power
 float2 ComplexSqr(float2 a)
 {
-    return float2(a.x * a.x - a.y * a.y, 2 * a.x * a.y);
+    return float2(a.x * a.x - a.y * a.y, 2.0f * a.x * a.y);
 }
 
-float4 pShader(vOut data) : SV_TARGET
+float4 pShader(float4 screen : SV_POSITION) : SV_TARGET
 {
     float4 pixel = float4(1.0f, 1.0f, 1.0f, 1.0f);
-
+    
     // Getting the uv coordinates
-    float2 uv = (data.world.xy / frameSize * 2.0f - 1.0f) * float2(frameSize.x / frameSize.y, 1.0f);
+    float2 uv = (screen.xy / frameSize * 2.0f - 1.0f) * float2(frameSize.x / frameSize.y, 1.0f);
 
     // Setting the zoom
     uv /= zoom.x;
 
     // Setting the position
     uv += pos;
-
+    
     // Calculating the reaction
     float n = 64.0f;
     float2 num = startPos.x + uv;
@@ -54,6 +47,6 @@ float4 pShader(vOut data) : SV_TARGET
         // Computing the next point
         num = ComplexSqr(num) + uv;
     }
-
+    
     return pixel;
 }

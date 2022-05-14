@@ -10,7 +10,6 @@
 #include <d3d11.h>
 
 #include "libspec/using.h"
-#include "gpu/gpu.h"
 #include "math/int2.h"
 #include "math/float4.h"
 #include "geometry/vertex.h"
@@ -18,6 +17,19 @@
 
 #pragma comment (lib, "d3d11.lib")
 
+#define KL_CBUFFER_PREDEFINED_SIZE 64
+
+
+namespace kl {
+	struct shaders {
+		ID3D11VertexShader* vertexS = nullptr;
+		ID3D11PixelShader* pixelS = nullptr;
+		ID3D11InputLayout* inLayout = nullptr;
+
+		shaders() {}
+		shaders(ID3D11VertexShader* vertexS, ID3D11PixelShader* pixelS, ID3D11InputLayout* inLayout) : vertexS(vertexS), pixelS(pixelS), inLayout(inLayout) {}
+	};
+}
 
 namespace kl {
 	class gpu {
@@ -28,19 +40,19 @@ namespace kl {
 		IDXGISwapChain* chain = nullptr;
 
 		// Internal buffers
-		ID3D11RenderTargetView* interFrameBuff = nullptr;
-		ID3D11DepthStencilView* interDepthBuff = nullptr;
+		ID3D11RenderTargetView* internalFrameBuffer = nullptr;
+		ID3D11DepthStencilView* internalDepthBuffer = nullptr;
 
 		// Buffers
 		std::set<IUnknown*> children;
 
 		// Predefined constant buffers
-		bool cbuffsPredefined = false;
-		ID3D11Buffer* vertCBuffs[32] = {};
-		ID3D11Buffer* pixlCBuffs[32] = {};
+		bool cbuffersPredefined = false;
+		ID3D11Buffer* vertexCBuffers[KL_CBUFFER_PREDEFINED_SIZE] = {};
+		ID3D11Buffer* pixelCBuffers[KL_CBUFFER_PREDEFINED_SIZE] = {};
 
 	public:
-		gpu(HWND hwnd, bool predefineCBuffs = true);
+		gpu(HWND hwnd, bool predefineCBuffers = true);
 		gpu(const kl::gpu&) = delete;
 		void operator=(const kl::gpu&) = delete;
 		~gpu();
@@ -52,10 +64,8 @@ namespace kl {
 		// Sets the viewport
 		void viewport(const kl::int2& pos, const kl::int2& size);
 
-		// Regenerates the buffers
-		void regenBuffers(const kl::int2& size);
-
-		// Binds the internal render targets
+		// Internal buffers
+		void regenInternal(const kl::int2& size);
 		void bindInternal(const std::vector<ID3D11RenderTargetView*> targets = {}, ID3D11DepthStencilView* depthView = nullptr);
 
 		// Binds given render target
@@ -82,48 +92,54 @@ namespace kl {
 		// Shaders
 		ID3D11VertexShader* newVertexShader(const String& source, ID3D11InputLayout** outLayout = nullptr, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
 		ID3D11PixelShader* newPixelShader(const String& source);
+		ID3D11GeometryShader* newGeometryShader(const String& source);
+		ID3D11ComputeShader* newComputeShader(const String& source);
+		kl::shaders newShaders(const String& vertSrc, const String& pixlSrc, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
 		void bind(ID3D11VertexShader* sha);
 		void bind(ID3D11PixelShader* sha);
+		void bind(ID3D11GeometryShader* sha);
+		void bind(ID3D11ComputeShader* sha);
 		void bind(ID3D11InputLayout* layout);
+		void bind(const kl::shaders& shaders, bool bindLayout = true);
+		void dispatch(const kl::int3& size);
+		void execute(ID3D11ComputeShader* sha, const kl::int3& size);
 
 		// Buffer
 		ID3D11Buffer* newBuffer(D3D11_BUFFER_DESC* desc, D3D11_SUBRESOURCE_DATA* subData = nullptr);
 
 		// Constant buffer
-		ID3D11Buffer* newConstBuffer(int byteSize);
-		void setBuffData(ID3D11Buffer* buff, const void* data);
-		void bindVertCBuff(ID3D11Buffer* buff, int slot);
-		void bindPixlCBuff(ID3D11Buffer* buff, int slot);
-		template<typename T> inline bool autoSetVertBuff(const T& data) {
-			const size_t dataSize = sizeof(T);
-			if (!cbuffsPredefined || dataSize > 512 || dataSize % 16) {
+		ID3D11Buffer* newCBuffer(uint32_t byteSize);
+		void setCBufferData(ID3D11Buffer* buff, const void* data);
+		void bindVertexCBuffer(ID3D11Buffer* buff, uint32_t slot);
+		void bindPixelCBuffer(ID3D11Buffer* buff, uint32_t slot);
+		template<typename T> inline bool autoVertexCBuffer(const T& data, uint32_t slot = 0) {
+			if ((!cbuffersPredefined) || (sizeof(T) > (KL_CBUFFER_PREDEFINED_SIZE * 16)) || (sizeof(T) % 16)) {
 				return false;
 			}
-			ID3D11Buffer* approBuffer = vertCBuffs[dataSize / 16 - 1];
-			bindVertCBuff(approBuffer, 0);
-			setBuffData(approBuffer, &data);
+			ID3D11Buffer* chosenBuffer = vertexCBuffers[(sizeof(T) / 16) - 1];
+			bindVertexCBuffer(chosenBuffer, slot);
+			setCBufferData(chosenBuffer, &data);
 			return true;
 		}
-		template<typename T> inline bool autoSetPixlBuff(const T& data) {
-			const size_t dataSize = sizeof(T);
-			if (!cbuffsPredefined || dataSize > 512 || dataSize % 16) {
+		template<typename T> inline bool autoPixelCBuffer(const T& data, uint32_t slot = 0) {
+			if ((!cbuffersPredefined) || (sizeof(T) > (KL_CBUFFER_PREDEFINED_SIZE * 16)) || (sizeof(T) % 16)) {
 				return false;
 			}
-			ID3D11Buffer* approBuffer = pixlCBuffs[dataSize / 16 - 1];
-			bindPixlCBuff(approBuffer, 0);
-			setBuffData(approBuffer, &data);
+			ID3D11Buffer* chosenBuffer = pixelCBuffers[(sizeof(T) / 16) - 1];
+			bindPixelCBuffer(chosenBuffer, slot);
+			setCBufferData(chosenBuffer, &data);
 			return true;
 		}
 
 		// Mesh
-		ID3D11Buffer* newVertBuffer(const std::vector<kl::vertex>& vertexData);
-		ID3D11Buffer* newVertBuffer(const String& filePath, bool flipZ = true);
+		ID3D11Buffer* newVertexBuffer(const std::vector<kl::vertex>& vertexData);
+		ID3D11Buffer* newVertexBuffer(const String& filePath, bool flipZ = true);
 		void draw(ID3D11Buffer* mesh);
 
 		// Sampler
 		ID3D11SamplerState* newSamplerState(D3D11_SAMPLER_DESC* desc);
 		ID3D11SamplerState* newSamplerState(bool linear, bool mirror);
-		void bind(ID3D11SamplerState* sampState, int slot);
+		void bind(ID3D11SamplerState* sampState, uint32_t slot);
 
 		// Texture
 		ID3D11Texture2D* newTextureBB();
@@ -142,7 +158,7 @@ namespace kl {
 
 		// Shader resource view
 		ID3D11ShaderResourceView* newShaderView(ID3D11Texture2D* tex, D3D11_SHADER_RESOURCE_VIEW_DESC* desc = nullptr);
-		void bindPixlTex(ID3D11ShaderResourceView* buff, int slot);
+		void bindPixlTex(ID3D11ShaderResourceView* buff, uint32_t slot);
 
 		// Deletes child instance
 		bool destroy(IUnknown* child);

@@ -79,7 +79,6 @@ int main() {
 	kl::double_buffer buff({ 1600, 900 });
 	win.update = [&]() {
 		buff >> win;
-		win.setTitle("FPS: " + std::to_string(int(1.0f / kl::time::interval())));
 	};
 	win.end = [&]() {
 		exit(0);
@@ -105,6 +104,8 @@ int main() {
 	};
 
 	while (true) {
+		win.setTitle("FPS: " + std::to_string(int(1.0f / kl::time::interval())));
+
 		kl::image* bb = buff.getBB();
 		bb->fill(kl::colors::gray);
 

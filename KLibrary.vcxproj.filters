@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Encryption.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\geometry\plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -148,6 +145,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\utility\encrypter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\Raytracing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

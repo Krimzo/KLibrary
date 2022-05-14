@@ -1,18 +1,11 @@
 // Vertex shader
-struct vOut
+float4 vShader(float3 pos : POS_IN) : SV_POSITION
 {
-    float4 screen : SV_POSITION;
-};
-
-vOut vShader(float3 pos : POS_IN)
-{
-    vOut data;
-    data.screen = float4(pos, 1.0f);
-    return data;
+    return float4(pos, 1.0f);
 }
 
 // Pixel shader
-class Sphere
+struct Sphere
 {
     // Geometry
     float3 center;
@@ -38,14 +31,18 @@ struct Ray
         // Center ray and main ray direction dot product
         const float cdDot = dot(centerRay, direction);
         if (cdDot < 0.0f)
+        {
             return false;
+        }
 
         // Calculations I don't understand
         const float ccDot = dot(centerRay, centerRay) - cdDot * cdDot;
         const float rr = sphere.radius * sphere.radius;
         if (ccDot > rr)
+        {
             return false;
-
+        }
+        
         // Intersect distance calculation
         const float thc = sqrt(rr - ccDot);
         const float dis0 = cdDot - thc;
@@ -79,12 +76,10 @@ cbuffer PS_CB : register(b0)
 float3 TraceRayDefault(Ray ray);
 float3 TraceRayDiffuse(Ray ray);
 
-float4 pShader(vOut data) : SV_TARGET
+float4 pShader(float4 screen : SV_POSITION) : SV_TARGET
 {
-    float4 pixel;
-
     // Calculating ndc pixel coordinates
-    float2 ndc = float2(data.screen.x, frameSize.y - data.screen.y) / float2(frameSize.x, frameSize.y);
+    float2 ndc = float2(screen.x, frameSize.y - screen.y) / float2(frameSize.x, frameSize.y);
     ndc *= 2.0f;
     ndc -= 1.0f;
 
@@ -94,9 +89,7 @@ float4 pShader(vOut data) : SV_TARGET
 
     // Tracing the pixel color
     Ray ray = { camPos.xyz, normalize(raydir.xyz) };
-    pixel = float4(TraceRayDefault(ray), 1.0f);
-
-    return pixel;
+    return float4(TraceRayDefault(ray), 1.0f);
 }
 
 float3 TraceRayDefault(Ray ray)
@@ -133,8 +126,10 @@ float3 TraceRayDefault(Ray ray)
 
     // Background draw
     if (interSphereID < 0)
+    {
         return 0.6f;
-
+    }
+    
     // Intersection normal calculation
     float3 interNorm = normalize(interPoin - spheres[interSphereID].center);
 
@@ -239,8 +234,10 @@ float3 TraceRayDiffuse(Ray ray)
 
     // Background draw
     if (interSphereID < 0)
+    {
         return 0.6f;
-
+    }
+        
     // Intersection normal calculation
     float3 interNorm = normalize(interPoin - spheres[interSphereID].center);
 
