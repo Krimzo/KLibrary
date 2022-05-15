@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Raytracing.cpp" />
+    <ClCompile Include="examples\Mandelbrot.cpp" />
     <ClCompile Include="source\geometry\plane.cpp" />
     <ClCompile Include="source\geometry\ray.cpp" />
     <ClCompile Include="source\geometry\sphere.cpp" />
@@ -34,6 +34,7 @@
     <ClCompile Include="source\gpu\utility\shaders.cpp" />
     <ClCompile Include="source\gpu\utility\texture.cpp" />
     <ClCompile Include="source\gpu\utility\vbuffer.cpp" />
+    <ClCompile Include="source\gpu\views\access_view.cpp" />
     <ClCompile Include="source\gpu\views\depth_view.cpp" />
     <ClCompile Include="source\gpu\views\shader_view.cpp" />
     <ClCompile Include="source\gpu\views\target_view.cpp" />

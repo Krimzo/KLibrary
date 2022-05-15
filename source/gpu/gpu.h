@@ -144,7 +144,7 @@ namespace kl {
 		// Texture
 		ID3D11Texture2D* newTextureBB();
 		ID3D11Texture2D* newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOURCE_DATA* subData = nullptr);
-		ID3D11Texture2D* newTexture(const kl::image& img);
+		ID3D11Texture2D* newTexture(const kl::image& img, bool enableUnorderedAccess = false);
 		ID3D11Texture2D* newTexture(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
 		ID3D11Texture2D* newTextureST(ID3D11Texture2D* tex, const kl::int2& size = {});
 
@@ -158,7 +158,12 @@ namespace kl {
 
 		// Shader resource view
 		ID3D11ShaderResourceView* newShaderView(ID3D11Texture2D* tex, D3D11_SHADER_RESOURCE_VIEW_DESC* desc = nullptr);
-		void bindPixlTex(ID3D11ShaderResourceView* buff, uint32_t slot);
+		void bindPixelShaderView(ID3D11ShaderResourceView* view, uint32_t slot);
+		void bindComputeShaderView(ID3D11ShaderResourceView* view, uint32_t slot);
+
+		// Shader access view
+		ID3D11UnorderedAccessView* newAccessView(ID3D11Texture2D* tex, D3D11_UNORDERED_ACCESS_VIEW_DESC* desc = nullptr);
+		void bindComputeAccessView(ID3D11UnorderedAccessView* view, uint32_t slot, uint32_t* initalCounts = nullptr);
 
 		// Deletes child instance
 		bool destroy(IUnknown* child);

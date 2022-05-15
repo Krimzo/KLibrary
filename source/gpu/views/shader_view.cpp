@@ -21,7 +21,10 @@ ID3D11ShaderResourceView* kl::gpu::newShaderView(ID3D11Texture2D* tex, D3D11_SHA
 	return shaderView;
 }
 
-// Binds the texture
-void kl::gpu::bindPixlTex(ID3D11ShaderResourceView* buff, uint32_t slot) {
-	devcon->PSSetShaderResources(slot, 1, &buff);
+// Binds the view
+void kl::gpu::bindPixelShaderView(ID3D11ShaderResourceView* view, uint32_t slot) {
+	devcon->PSSetShaderResources(slot, 1, &view);
+}
+void kl::gpu::bindComputeShaderView(ID3D11ShaderResourceView* view, uint32_t slot) {
+	devcon->CSSetShaderResources(slot, 1, &view);
 }

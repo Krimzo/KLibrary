@@ -147,7 +147,10 @@
     <ClCompile Include="source\utility\encrypter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\Raytracing.cpp">
+    <ClCompile Include="source\gpu\views\access_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\Mandelbrot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

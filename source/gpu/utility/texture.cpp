@@ -42,7 +42,7 @@ ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOUR
 }
 
 // Texture from image
-ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img) {
+ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img, bool enableUnorderedAccess) {
 	// Getting the flipped image
 	const kl::image flipped = img.flipV();
 
@@ -55,7 +55,7 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img) {
 	texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
-	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | (enableUnorderedAccess ? D3D11_BIND_UNORDERED_ACCESS : 0);
 
 	// Texture data descriptor creation
 	D3D11_SUBRESOURCE_DATA texData = {};
@@ -63,7 +63,7 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img) {
 	texData.SysMemPitch = img.width() * sizeof(uint32_t);
 
 	// Return
-	return this->newTexture(&texDesc, &texData);
+	return newTexture(&texDesc, &texData);
 }
 
 // Texture cube from images
@@ -99,7 +99,7 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& ba
 	};
 
 	// Return
-	return this->newTexture(&texDesc, texData);
+	return newTexture(&texDesc, texData);
 }
 
 // Staging texture
@@ -120,5 +120,5 @@ ID3D11Texture2D* kl::gpu::newTextureST(ID3D11Texture2D* tex, const kl::int2& siz
 	stagTexDes.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 
 	// Return
-	return this->newTexture(&stagTexDes);
+	return newTexture(&stagTexDes);
 }

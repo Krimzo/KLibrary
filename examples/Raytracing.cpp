@@ -112,10 +112,10 @@ void Input() {
 		if (win.keys.a) {
 			camera.moveLeft(deltaT);
 		}
-		if (win.keys.space) {
+		if (win.keys.e) {
 			camera.moveUp(deltaT);
 		}
-		if (win.keys.c) {
+		if (win.keys.q) {
 			camera.moveDown(deltaT);
 		}
 	}
@@ -132,10 +132,10 @@ void Input() {
 		if (win.keys.a) {
 			spheres[selected].center -= camera.getRight() * (camera.speed * deltaT);
 		}
-		if (win.keys.space) {
+		if (win.keys.e) {
 			spheres[selected].center += kl::float3::pos_y * (camera.speed * deltaT);
 		}
-		if (win.keys.c) {
+		if (win.keys.q) {
 			spheres[selected].center -= kl::float3::pos_y * (camera.speed * deltaT);
 		}
 	}
@@ -160,7 +160,6 @@ void Input() {
 		win.mouse.move(frameCenter);
 	}
 	else {
-		// Saving info
 		win.mouse.show();
 		camMoving = false;
 	}
