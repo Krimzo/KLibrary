@@ -1,2 +1,2 @@
-# My C++ library
-Mostly focused on Win32 and DirectX.
+# C++ Graphics Library
+Focused on Win32 and DirectX
