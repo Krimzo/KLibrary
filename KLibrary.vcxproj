@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Mandelbrot.cpp" />
+    <ClCompile Include="examples\TimesTable.cpp" />
     <ClCompile Include="source\geometry\plane.cpp" />
     <ClCompile Include="source\geometry\ray.cpp" />
     <ClCompile Include="source\geometry\sphere.cpp" />
@@ -173,7 +173,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <IntDir>grbg\</IntDir>
+    <IntDir>$(SolutionDir)inter\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -150,7 +150,7 @@
     <ClCompile Include="source\gpu\views\access_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\Mandelbrot.cpp">
+    <ClCompile Include="examples\TimesTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -213,7 +213,7 @@ void kl::gpu::bind(const kl::shaders& shaders, bool bindLayout) {
 
 // Compute shader specific
 void kl::gpu::dispatch(const kl::int3& size) {
-	devcon->Dispatch(size.x, size.y, size.z);
+	devcon->Dispatch(UINT(size.x), UINT(size.y), UINT(size.z));
 }
 void kl::gpu::execute(ID3D11ComputeShader* sha, const kl::int3& size) {
 	bind(sha);

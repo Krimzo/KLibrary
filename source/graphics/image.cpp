@@ -50,7 +50,7 @@ kl::color kl::image::gpixel(const kl::int2& coords) const {
 	return kl::colors::black;
 }
 kl::color* kl::image::pointer() const {
-	return (kl::color*)&pixels.front();
+	return (kl::color*)&pixels[0];
 }
 kl::image kl::image::rect(kl::int2 a, kl::int2 b) const {
 	// Sorting

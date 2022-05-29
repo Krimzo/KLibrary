@@ -34,7 +34,7 @@ char kl::color::toASCII() const {
 
 kl::color kl::color::mix(const kl::color& col, float ratio) const {
 	// Calc r and ir
-	ratio = max(min(ratio, 1.0f), 0.0f);
+	ratio = std::max(std::min(ratio, 1.0f), 0.0f);
 	const float iratio = 1.0f - ratio;
 
 	// Calculating mixed color

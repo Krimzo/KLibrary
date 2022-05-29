@@ -19,7 +19,6 @@
 
 #define KL_CBUFFER_PREDEFINED_SIZE 64
 
-
 namespace kl {
 	struct shaders {
 		ID3D11VertexShader* vertexS = nullptr;
