@@ -6,9 +6,8 @@
 #include <gdiplus.h>
 
 #include "math/math.h"
-#include "math/float2.h"
-#include "utility/convert.h"
 #include "utility/file.h"
+#include "utility/encrypter.h"
 
 
 // Constructor
@@ -101,7 +100,7 @@ bool kl::image::fromFile(const String& filePath) {
 	}
 
 	// Loading image file
-	Gdiplus::Bitmap* loadedBitmap = new Gdiplus::Bitmap(kl::convert::toWString(filePath).c_str());
+	Gdiplus::Bitmap* loadedBitmap = new Gdiplus::Bitmap(kl::toWString(filePath).c_str());
 	if (loadedBitmap->GetLastStatus()) {
 		std::cout << "Image: Could not open file \"" << filePath << "\"!" << std::endl;
 		return false;
@@ -179,7 +178,7 @@ bool kl::image::toFile(const String& fileName) const {
 	tempBitmap->UnlockBits(&bitmapData);
 
 	// Saving to file
-	tempBitmap->Save(kl::convert::toWString(fileName).c_str(), formatToUse, nullptr);
+	tempBitmap->Save(kl::toWString(fileName).c_str(), formatToUse, nullptr);
 
 	// Cleanup
 	delete tempBitmap;
@@ -256,7 +255,7 @@ void kl::image::drawTriangle(kl::int2 a, kl::int2 b, kl::int2 c, const kl::color
 
 		// Drawing
 		for (int y = a.y; y < c.y; y++) {
-			drawLine(kl::int2(int(kl::math::lineX((y < b.y) ? a : c, b, float(y))), int(y)), kl::int2(int(kl::math::lineX(a, c, float(y))), int(y)), col);
+			drawLine(kl::int2(int(kl::math::lineX<float>((y < b.y) ? a : c, b, float(y))), int(y)), kl::int2(int(kl::math::lineX<float>(a, c, float(y))), int(y)), col);
 		}
 	}
 	else {
@@ -313,7 +312,7 @@ void kl::image::drawCircle(const kl::int2& p, float r, const kl::color& col, boo
 }
 // Draws a circle between 1 center and 1 outer point
 void kl::image::drawCircle(const kl::int2& a, const kl::int2& b, const kl::color& col, bool fill) {
-	drawCircle(a, kl::float2(b - a).length(), col, fill);
+	drawCircle(a, kl::float2(b - a).len(), col, fill);
 }
 
 // Draws image on image

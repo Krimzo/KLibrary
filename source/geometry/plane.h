@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/float3.h"
+#include "math/math.h"
 
 
 namespace kl {
@@ -13,6 +13,6 @@ namespace kl {
 		plane(const kl::float3& normal, const kl::float3& point);
 	};
 
-	// Overloading std::cout
+	// std::cout
 	std::ostream& operator<<(std::ostream& os, const kl::plane& obj);
 }

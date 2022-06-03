@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/float3.h"
+#include "math/math.h"
 #include "geometry/plane.h"
 #include "geometry/sphere.h"
 #include "geometry/triangle.h"
@@ -25,6 +25,6 @@ namespace kl {
 		bool intersect(const kl::sphere& sphere, kl::float3* outInter = nullptr, float* outDis = nullptr) const;
 	};
 
-	// Overloading std::cout
+	// std::cout
 	std::ostream& operator<<(std::ostream& os, const kl::ray& obj);
 }

@@ -28,10 +28,10 @@ namespace kl {
 		kl::color mix(const kl::color& col) const;
 	};
 
-	// Overloading std::cout
+	// std::cout
 	std::ostream& operator<<(std::ostream& os, const kl::color& obj);
 
-	// Predefined colors
+	// Predefined
 	namespace colors {
 		inline const kl::color defaul = kl::color(204, 204, 204);
 		inline const kl::color black = kl::color(0, 0, 0);

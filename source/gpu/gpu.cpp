@@ -10,7 +10,6 @@
 #endif
 
 #include "geometry/vertex.h"
-#include "utility/convert.h"
 #include "utility/console.h"
 
 

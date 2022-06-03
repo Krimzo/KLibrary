@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/float3.h"
+#include "math/math.h"
 
 
 namespace kl {
@@ -16,12 +16,12 @@ namespace kl {
 		float emission = 0;
 
 		sphere();
-		sphere(const kl::float3& center, float radius, const kl::float3& color, float reflectivity = 0, float emission = 0);
+		sphere(const kl::float3& center, float radius, const kl::float3& color, float reflectivity, float emission);
 
-		// Calculates the emissive color
-		kl::float3 calcEmiss() const;
+		// Emissive color
+		kl::float3 emiss() const;
 	};
 
-	// Overloading std::cout
+	// std::cout
 	std::ostream& operator<<(std::ostream& os, const kl::sphere& obj);
 }

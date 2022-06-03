@@ -1,8 +1,6 @@
 #pragma once
 
-#include "math/float2.h"
-#include "math/float3.h"
-#include "math/float4.h"
+#include "math/math.h"
 #include "geometry/vertex.h"
 
 

@@ -45,8 +45,8 @@ int main() {
 		std::vector<kl::int2> circlePoints(n);
 		for (int i = 0; i < circlePoints.size(); i++) {
 			circlePoints[i] = kl::int2(
-				int(cos(kl::convert::toRadians(pointAngle * i + 180.0f)) * circleRadius) + frame.width() / 2,
-				int(sin(kl::convert::toRadians(pointAngle * i + 180.0f)) * circleRadius) + frame.height() / 2
+				int(cos(kl::math::toRad(pointAngle * i + 180.0f)) * circleRadius) + frame.width() / 2,
+				int(sin(kl::math::toRad(pointAngle * i + 180.0f)) * circleRadius) + frame.height() / 2
 			);
 		}
 

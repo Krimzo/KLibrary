@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "libspec/using.h"
-#include "math/int2.h"
 #include "graphics/color.h"
+#include "math/math.h"
 
 #pragma comment(lib, "gdiplus.lib")
 

@@ -10,10 +10,9 @@
 #include <d3d11.h>
 
 #include "libspec/using.h"
-#include "math/int2.h"
-#include "math/float4.h"
 #include "geometry/vertex.h"
 #include "graphics/image.h"
+#include "math/math.h"
 
 #pragma comment (lib, "d3d11.lib")
 

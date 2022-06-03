@@ -36,7 +36,7 @@ struct PS_CB {
 };
 
 void Start() {
-	// Window maximize
+	// Setup
 	win.maximize();
 
 	// Gpu creation
@@ -133,10 +133,10 @@ void Input() {
 			spheres[selected].center -= camera.getRight() * (camera.speed * deltaT);
 		}
 		if (win.keys.e) {
-			spheres[selected].center += kl::float3::pos_y * (camera.speed * deltaT);
+			spheres[selected].center += kl::float3(0.0f, 1.0f, 0.0f) * (camera.speed * deltaT);
 		}
 		if (win.keys.q) {
-			spheres[selected].center -= kl::float3::pos_y * (camera.speed * deltaT);
+			spheres[selected].center -= kl::float3(0.0f, 1.0f, 0.0f) * (camera.speed * deltaT);
 		}
 	}
 
@@ -146,7 +146,7 @@ void Input() {
 		// Getting the frame center
 		const kl::int2 frameCenter = win.getCenter();
 
-		// Fixing the camera jump on the first click
+		// Fixing the camera jump
 		if (!camMoving) {
 			win.mouse.position = frameCenter;
 		}
@@ -167,7 +167,7 @@ void Input() {
 
 void Phys() {
 	for (int i = 1; i < 5; i++) {
-		spheres[i].center.y = 1.5f * sin(elapsedT + i);
+		spheres[i].center.y = 1.5f * std::sin(elapsedT + i);
 	}
 }
 
@@ -188,14 +188,14 @@ void Update() {
 	// Setting data
 	PS_CB psData = {};
 	psData.frameSize = kl::float4(win.getSize(), 0.0f, 0.0f);
-	psData.invCam = camera.matrix().inverse();
-	psData.camPos = camera.position;
+	psData.invCam = camera.matrix().inv();
+	psData.camPos = kl::float4(camera.position, 1.0f);
 	for (int i = 0; i < 6; i++) {
 		psData.spheres[i].center = spheres[i].center;
 		psData.spheres[i].radius = spheres[i].radius;
 		psData.spheres[i].color = spheres[i].color;
 		psData.spheres[i].reflectivity = spheres[i].reflectivity;
-		psData.spheres[i].emission = spheres[i].calcEmiss();
+		psData.spheres[i].emission = kl::float4(spheres[i].emiss(), 1.0f);
 	}
 	gpu->autoPixelCBuffer(psData);
 

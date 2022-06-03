@@ -2,8 +2,7 @@
 
 #include <windows.h>
 
-#include "math/int2.h"
-#include "math/float2.h"
+#include "math/math.h"
 #include "window/keys.h"
 
 

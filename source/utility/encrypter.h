@@ -7,6 +7,15 @@
 
 
 namespace kl {
+	inline std::wstring toWString(const std::string& data) {
+		std::wstring temp;
+		temp.resize(data.size());
+		std::mbtowc(&temp[0], &data[0], data.size());
+		return temp;
+	}
+}
+
+namespace kl {
 	class encrypter {
 	public:
 		using key = std::vector<byte>;

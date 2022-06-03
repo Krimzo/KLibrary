@@ -1,7 +1,6 @@
 #pragma once 
 
-#include "math/float3.h"
-#include "math/mat4.h"
+#include "math/math.h"
 
 #undef near
 #undef far
@@ -9,7 +8,7 @@
 namespace kl {
 	class camera {
 	public:
-		kl::float3 forward = kl::float3::pos_z;
+		kl::float3 forward = { 0.0f, 0.0f, 1.0f };
 		kl::float3 position;
 		float aspect = 1.7778f;
 		float fov = 75.0f;
@@ -32,7 +31,7 @@ namespace kl {
 		void moveDown(float deltaTime);
 
 		// Camera rotation
-		void rotate(const kl::int2& mousePos, const kl::int2& frameCenter, float verticalAngleLimit = 85);
+		void rotate(const kl::float2& mousePos, const kl::float2& frameCenter, float verticalAngleLimit = 85.0f);
 
 		// Computes and returns the camera matrix
 		kl::mat4 matrix() const;

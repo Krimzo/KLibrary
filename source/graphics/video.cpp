@@ -1,7 +1,7 @@
 #include "graphics/video.h"
 
 #include "utility/console.h"
-#include "utility/convert.h"
+#include "utility/encrypter.h"
 
 
 static int vidInstCount = 0;
@@ -79,7 +79,7 @@ void kl::video::open(const String& filePath) {
 	IMFAttributes* attr = nullptr;
 	MFCreateAttributes(&attr, 1);
 	attr->SetUINT32(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, true);
-	std::wstring wFilePath = kl::convert::toWString(filePath);
+	std::wstring wFilePath = kl::toWString(filePath);
 	MFCreateSourceReaderFromURL(wFilePath.c_str(), attr, &reader);
 	if (reader) {
 		ConfigureDecoder(reader);

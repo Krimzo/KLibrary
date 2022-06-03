@@ -2,7 +2,6 @@
 
 #include <d3dcompiler.h>
 
-#include "utility/convert.h"
 #include "utility/console.h"
 
 #pragma comment (lib, "d3dcompiler.lib")

@@ -19,10 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\TimesTable.cpp" />
+    <ClCompile Include="examples\Raytracing.cpp" />
     <ClCompile Include="source\geometry\plane.cpp" />
     <ClCompile Include="source\geometry\ray.cpp" />
-    <ClCompile Include="source\geometry\sphere.cpp" />
     <ClCompile Include="source\geometry\triangle.cpp" />
     <ClCompile Include="source\geometry\vertex.cpp" />
     <ClCompile Include="source\gpu\buffer\constant_buffer.cpp" />
@@ -41,17 +40,8 @@
     <ClCompile Include="source\graphics\color.cpp" />
     <ClCompile Include="source\graphics\image.cpp" />
     <ClCompile Include="source\graphics\video.cpp" />
-    <ClCompile Include="source\math\float2.cpp" />
-    <ClCompile Include="source\math\float3.cpp" />
-    <ClCompile Include="source\math\float4.cpp" />
-    <ClCompile Include="source\math\int2.cpp" />
-    <ClCompile Include="source\math\int3.cpp" />
-    <ClCompile Include="source\math\int4.cpp" />
-    <ClCompile Include="source\math\mat3.cpp" />
-    <ClCompile Include="source\math\mat4.cpp" />
-    <ClCompile Include="source\math\math.cpp" />
+    <ClCompile Include="source\geometry\sphere.cpp" />
     <ClCompile Include="source\utility\console.cpp" />
-    <ClCompile Include="source\utility\convert.cpp" />
     <ClCompile Include="source\utility\encrypter.cpp" />
     <ClCompile Include="source\utility\file.cpp" />
     <ClCompile Include="source\utility\random.cpp" />
@@ -67,6 +57,7 @@
     <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\geometry\geometry.h" />
     <ClInclude Include="source\geometry\plane.h" />
     <ClInclude Include="source\geometry\ray.h" />
     <ClInclude Include="source\geometry\sphere.h" />
@@ -74,27 +65,27 @@
     <ClInclude Include="source\geometry\vertex.h" />
     <ClInclude Include="source\gpu\gpu.h" />
     <ClInclude Include="source\graphics\color.h" />
+    <ClInclude Include="source\graphics\graphics.h" />
     <ClInclude Include="source\graphics\image.h" />
     <ClInclude Include="source\graphics\video.h" />
     <ClInclude Include="source\KrimzLib.h" />
     <ClInclude Include="source\libspec\using.h" />
-    <ClInclude Include="source\math\float2.h" />
-    <ClInclude Include="source\math\float3.h" />
-    <ClInclude Include="source\math\float4.h" />
-    <ClInclude Include="source\math\int2.h" />
-    <ClInclude Include="source\math\int3.h" />
-    <ClInclude Include="source\math\int4.h" />
-    <ClInclude Include="source\math\mat3.h" />
-    <ClInclude Include="source\math\mat4.h" />
     <ClInclude Include="source\math\math.h" />
+    <ClInclude Include="source\math\matrix.h" />
+    <ClInclude Include="source\math\matrix2x2.h" />
+    <ClInclude Include="source\math\matrix3x3.h" />
+    <ClInclude Include="source\math\matrix4x4.h" />
+    <ClInclude Include="source\math\vector2.h" />
+    <ClInclude Include="source\math\vector3.h" />
+    <ClInclude Include="source\math\vector4.h" />
     <ClInclude Include="source\utility\console.h" />
-    <ClInclude Include="source\utility\convert.h" />
     <ClInclude Include="source\utility\encrypter.h" />
     <ClInclude Include="source\utility\file.h" />
     <ClInclude Include="source\utility\random.h" />
     <ClInclude Include="source\utility\socket.h" />
     <ClInclude Include="source\utility\thread.h" />
     <ClInclude Include="source\utility\time.h" />
+    <ClInclude Include="source\utility\utility.h" />
     <ClInclude Include="source\utility\web.h" />
     <ClInclude Include="source\view\camera.h" />
     <ClInclude Include="source\window\double_buffer.h" />

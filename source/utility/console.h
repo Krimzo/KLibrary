@@ -1,32 +1,27 @@
 #pragma once
 
 #include "libspec/using.h"
-#include "math/int2.h"
 #include "graphics/color.h"
+#include "math/math.h"
 
 
 namespace kl {
 	namespace console {
-		void clear();
-
 		void hide();
 		void show();
-
-		void setCursor(const kl::int2& position);
+		void clear();
 
 		void hideCursor();
 		void showCursor();
+		void moveCursor(const kl::int2& pos);
+
+		kl::int2 size();
+		void resize(const kl::int2& size);
 
 		void setTitle(const String& text);
 		void setFont(const kl::int2& size, const String& fontName = "Consolas");
 
-		kl::int2 getBufferSize();
-		kl::int2 getSize();
-
-		void setBufferSize(const kl::int2& size);
-		void setSize(const kl::int2& size);
-
-		char getInput();
+		char input();
 		void waitFor(char toWaitFor, bool echo = false);
 		char waitForAny(bool echo = false);
 

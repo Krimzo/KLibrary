@@ -6,10 +6,10 @@
 #include <windowsx.h>
 
 #include "libspec/using.h"
-#include "math/int2.h"
 #include "graphics/image.h"
 #include "window/keys.h"
 #include "window/mouse.h"
+#include "math/math.h"
 
 #pragma comment(lib, "kernel32.lib")
 #pragma comment(lib, "user32.lib")

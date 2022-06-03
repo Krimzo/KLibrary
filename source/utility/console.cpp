@@ -1,8 +1,6 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "utility/console.h"
-#include "math/int2.h"
-#include "utility/convert.h"
+#include "utility/encrypter.h"
+#include "math/math.h"
 
 #include <iostream>
 #include <sstream>
@@ -34,7 +32,7 @@ void kl::console::show() {
 }
 
 // Sets the console cursor position
-void kl::console::setCursor(const kl::int2& position) {
+void kl::console::moveCursor(const kl::int2& position) {
 	SetConsoleCursorPosition(consoleHandle, { short(position.x), short(position.y) });
 }
 
@@ -59,28 +57,15 @@ void kl::console::setTitle(const String& text) {
 	SetConsoleTitleA(text.c_str());
 }
 
-// Returns screen buffer size
-kl::int2 kl::console::getBufferSize() {
-	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
-	GetConsoleScreenBufferInfo(consoleHandle, &csbi);
-	return kl::int2(csbi.dwSize.X, csbi.dwSize.Y);
-}
-
 // Returns the current console size
-kl::int2 kl::console::getSize() {
+kl::int2 kl::console::size() {
 	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 	GetConsoleScreenBufferInfo(consoleHandle, &csbi);
 	return kl::int2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 }
 
-// Changes the console buffer size
-void kl::console::setBufferSize(const kl::int2& size) {
-	SetConsoleScreenBufferSize(consoleHandle, { (short)size.x, (short)size.y });
-}
-
 // Changes the console size
-void kl::console::setSize(const kl::int2& size) {
-	setBufferSize(size);
+void kl::console::resize(const kl::int2& size) {
 	SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
 	SetConsoleWindowInfo(consoleHandle, true, &consoleRect);
 }
@@ -93,12 +78,12 @@ void kl::console::setFont(const kl::int2& size, const String& fontName) {
 	cfi.dwFontSize.Y = SHORT(size.y);
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
-	wcscpy(cfi.FaceName, kl::convert::toWString(fontName).c_str());
+	wcscpy_s(cfi.FaceName, kl::toWString(fontName).c_str());
 	SetCurrentConsoleFontEx(consoleHandle, false, &cfi);
 }
 
 // Returns a pressed key
-char kl::console::getInput() {
+char kl::console::input() {
 	char input = 0;
 	while (_kbhit()) {
 		input = _getch();
@@ -131,7 +116,7 @@ char kl::console::waitForAny(bool echo) {
 void kl::console::progressBar(const String& message, int outputY, float percentage) {
 	// Prep
 	percentage = max(min(percentage, 1.0f), 0.0f);
-	const int barLen = console::getSize().x - int(message.length()) - 12;
+	const int barLen = console::size().x - int(message.length()) - 12;
 	const int finishLen = int(barLen * percentage);
 	const int emptyLen = barLen - finishLen;
 
@@ -144,7 +129,7 @@ void kl::console::progressBar(const String& message, int outputY, float percenta
 	for (int i = 0; i < emptyLen; i++) {
 		ss << ' ';
 	}
-	console::setCursor(kl::int2(0, outputY));
+	console::moveCursor(kl::int2(0, outputY));
 	printf("%s] %3d%% ", ss.str().c_str(), int(percentage * 100.0f));
 }
 
