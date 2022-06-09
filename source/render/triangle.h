@@ -1,7 +1,7 @@
 #pragma once
 
 #include "math/math.h"
-#include "geometry/vertex.h"
+#include "render/vertex.h"
 
 
 namespace kl {

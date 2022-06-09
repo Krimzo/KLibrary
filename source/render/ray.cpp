@@ -1,4 +1,4 @@
-#include "geometry/ray.h"
+#include "render/ray.h"
 
 
 // Constructors

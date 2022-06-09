@@ -35,7 +35,7 @@ void VidUtilUninit() {
 kl::video::video() {
 	VidUtilInit();
 }
-kl::video::video(const String& filePath) {
+kl::video::video(const std::string& filePath) {
 	VidUtilInit();
 	open(filePath);
 }
@@ -74,7 +74,7 @@ void ConfigureDecoder(IMFSourceReader* reader) {
 	defType->Release();
 	newType->Release();
 }
-void kl::video::open(const String& filePath) {
+void kl::video::open(const std::string& filePath) {
 	close();
 	IMFAttributes* attr = nullptr;
 	MFCreateAttributes(&attr, 1);

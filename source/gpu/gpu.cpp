@@ -9,7 +9,7 @@
 #include "imgui_impl_dx11.h"
 #endif
 
-#include "geometry/vertex.h"
+#include "render/vertex.h"
 #include "utility/console.h"
 
 

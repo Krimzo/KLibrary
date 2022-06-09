@@ -20,10 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\Raytracing.cpp" />
-    <ClCompile Include="source\geometry\plane.cpp" />
-    <ClCompile Include="source\geometry\ray.cpp" />
-    <ClCompile Include="source\geometry\triangle.cpp" />
-    <ClCompile Include="source\geometry\vertex.cpp" />
+    <ClCompile Include="source\render\plane.cpp" />
+    <ClCompile Include="source\render\ray.cpp" />
+    <ClCompile Include="source\render\triangle.cpp" />
+    <ClCompile Include="source\render\vertex.cpp" />
     <ClCompile Include="source\gpu\buffer\constant_buffer.cpp" />
     <ClCompile Include="source\gpu\buffer\gpu_buffer.cpp" />
     <ClCompile Include="source\gpu\gpu.cpp" />
@@ -40,7 +40,7 @@
     <ClCompile Include="source\graphics\color.cpp" />
     <ClCompile Include="source\graphics\image.cpp" />
     <ClCompile Include="source\graphics\video.cpp" />
-    <ClCompile Include="source\geometry\sphere.cpp" />
+    <ClCompile Include="source\render\sphere.cpp" />
     <ClCompile Include="source\utility\console.cpp" />
     <ClCompile Include="source\utility\encrypter.cpp" />
     <ClCompile Include="source\utility\file.cpp" />
@@ -49,7 +49,7 @@
     <ClCompile Include="source\utility\thread.cpp" />
     <ClCompile Include="source\utility\time.cpp" />
     <ClCompile Include="source\utility\web.cpp" />
-    <ClCompile Include="source\view\camera.cpp" />
+    <ClCompile Include="source\render\camera.cpp" />
     <ClCompile Include="source\window\double_buffer.cpp" />
     <ClCompile Include="source\window\key.cpp" />
     <ClCompile Include="source\window\keys.cpp" />
@@ -57,19 +57,16 @@
     <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\geometry\geometry.h" />
-    <ClInclude Include="source\geometry\plane.h" />
-    <ClInclude Include="source\geometry\ray.h" />
-    <ClInclude Include="source\geometry\sphere.h" />
-    <ClInclude Include="source\geometry\triangle.h" />
-    <ClInclude Include="source\geometry\vertex.h" />
+    <ClInclude Include="source\render\plane.h" />
+    <ClInclude Include="source\render\ray.h" />
+    <ClInclude Include="source\render\sphere.h" />
+    <ClInclude Include="source\render\triangle.h" />
+    <ClInclude Include="source\render\vertex.h" />
     <ClInclude Include="source\gpu\gpu.h" />
     <ClInclude Include="source\graphics\color.h" />
-    <ClInclude Include="source\graphics\graphics.h" />
     <ClInclude Include="source\graphics\image.h" />
     <ClInclude Include="source\graphics\video.h" />
     <ClInclude Include="source\KrimzLib.h" />
-    <ClInclude Include="source\libspec\using.h" />
     <ClInclude Include="source\math\math.h" />
     <ClInclude Include="source\math\matrix.h" />
     <ClInclude Include="source\math\matrix2x2.h" />
@@ -85,9 +82,8 @@
     <ClInclude Include="source\utility\socket.h" />
     <ClInclude Include="source\utility\thread.h" />
     <ClInclude Include="source\utility\time.h" />
-    <ClInclude Include="source\utility\utility.h" />
     <ClInclude Include="source\utility\web.h" />
-    <ClInclude Include="source\view\camera.h" />
+    <ClInclude Include="source\render\camera.h" />
     <ClInclude Include="source\window\double_buffer.h" />
     <ClInclude Include="source\window\key.h" />
     <ClInclude Include="source\window\keys.h" />

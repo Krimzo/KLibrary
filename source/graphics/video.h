@@ -10,7 +10,6 @@
 #include <propvarutil.h>
 #include <windows.h>
 
-#include "libspec/using.h"
 #include "graphics/image.h"
 
 #pragma comment(lib, "mf.lib")
@@ -28,12 +27,12 @@ namespace kl {
 
 	public:
 		video();
-		video(const String& filePath);
+		video(const std::string& filePath);
 		video(const kl::video&) = delete;
 		void operator=(const kl::video&) = delete;
 		~video();
 
-		void open(const String& filePath);
+		void open(const std::string& filePath);
 		void close();
 
 		bool isOpen() const;

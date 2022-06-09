@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "libspec/using.h"
 #include "graphics/color.h"
 #include "math/math.h"
 
@@ -20,7 +19,7 @@ namespace kl {
 		// Constructor
 		image();
 		image(const kl::int2& size, const kl::color& color = {});
-		image(const String& filePath);
+		image(const std::string& filePath);
 
 		// Iterator
 		std::vector<kl::color>::iterator begin();
@@ -41,10 +40,10 @@ namespace kl {
 		void spixel(const kl::int2& coords, const kl::color& color);
 
 		// Reads an image file and stores it in the image instance
-		bool fromFile(const String& filePath);
+		bool fromFile(const std::string& filePath);
 
 		// Saves the image to a file
-		bool toFile(const String& fileName) const;
+		bool toFile(const std::string& fileName) const;
 
 		// Fils the image with solid color
 		void fill(const kl::color& color);
@@ -73,6 +72,6 @@ namespace kl {
 		void drawImage(const kl::int2& pos, const kl::image& img, bool mixAlpha = true);
 
 		// Converts an image to an ASCII frame
-		String toASCII(const kl::int2& frameSize) const;
+		std::string toASCII(const kl::int2& frameSize) const;
 	};
 }

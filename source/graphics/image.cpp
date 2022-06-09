@@ -18,7 +18,7 @@ kl::image::image(const kl::int2& size, const kl::color& color) {
 	resize(size);
 	fill(color);
 }
-kl::image::image(const String& filePath) {
+kl::image::image(const std::string& filePath) {
 	if (!fromFile(filePath)) {
 		this->kl::image::image();
 	}
@@ -90,7 +90,7 @@ void kl::image::spixel(const kl::int2& coords, const kl::color& color) {
 }
 
 // Reads an image file and stores it in the image instance
-bool kl::image::fromFile(const String& filePath) {
+bool kl::image::fromFile(const std::string& filePath) {
 	// Gdiplus init
 	uint64_t gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
@@ -126,10 +126,10 @@ bool kl::image::fromFile(const String& filePath) {
 const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
-bool kl::image::toFile(const String& fileName) const {
+bool kl::image::toFile(const std::string& fileName) const {
 	// Checking the file extension is supported
 	const CLSID* formatToUse = nullptr;
-	String fileExtension = kl::file::getExtension(fileName);
+	std::string fileExtension = kl::file::getExtension(fileName);
 	if (fileExtension == "bmp") {
 		formatToUse = &bmpEncoderCLSID;
 	}
@@ -331,7 +331,7 @@ void kl::image::drawImage(const kl::int2& pos, const kl::image& img, bool mixAlp
 }
 
 // Converts an image to an ASCII frame
-String kl::image::toASCII(const kl::int2& frameSize) const {
+std::string kl::image::toASCII(const kl::int2& frameSize) const {
 	const kl::int2 incr = _size / frameSize;
 	std::stringstream frame;
 	for (kl::int2 pos = 0; pos.y < frameSize.y; pos.y++) {

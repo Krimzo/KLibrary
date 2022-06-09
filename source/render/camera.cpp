@@ -1,4 +1,4 @@
-#include "view/camera.h"
+#include "render/camera.h"
 
 
 // Camera direction getters

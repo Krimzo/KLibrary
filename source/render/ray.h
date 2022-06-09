@@ -1,9 +1,9 @@
 #pragma once
 
 #include "math/math.h"
-#include "geometry/plane.h"
-#include "geometry/sphere.h"
-#include "geometry/triangle.h"
+#include "render/plane.h"
+#include "render/sphere.h"
+#include "render/triangle.h"
 
 
 namespace kl {

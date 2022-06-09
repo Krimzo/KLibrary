@@ -8,7 +8,7 @@
 
 
 // Shader creation
-ID3D11VertexShader* kl::gpu::newVertexShader(const String& source, ID3D11InputLayout** outLayout, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc) {
+ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11InputLayout** outLayout, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc) {
 	// Blobs
 	ID3DBlob* blobData = nullptr;
 	ID3DBlob* blobError = nullptr;
@@ -68,7 +68,7 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const String& source, ID3D11InputLa
 	// Return
 	return vertShader;
 }
-ID3D11PixelShader* kl::gpu::newPixelShader(const String& source) {
+ID3D11PixelShader* kl::gpu::newPixelShader(const std::string& source) {
 	// Blobs
 	ID3DBlob* blobData = nullptr;
 	ID3DBlob* blobError = nullptr;
@@ -106,7 +106,7 @@ ID3D11PixelShader* kl::gpu::newPixelShader(const String& source) {
 	// Return
 	return pixlShader;
 }
-ID3D11GeometryShader* kl::gpu::newGeometryShader(const String& source) {
+ID3D11GeometryShader* kl::gpu::newGeometryShader(const std::string& source) {
 	// Blobs
 	ID3DBlob* blobData = nullptr;
 	ID3DBlob* blobError = nullptr;
@@ -144,7 +144,7 @@ ID3D11GeometryShader* kl::gpu::newGeometryShader(const String& source) {
 	// Return
 	return geomShader;
 }
-ID3D11ComputeShader* kl::gpu::newComputeShader(const String& source) {
+ID3D11ComputeShader* kl::gpu::newComputeShader(const std::string& source) {
 	// Blobs
 	ID3DBlob* blobData = nullptr;
 	ID3DBlob* blobError = nullptr;
@@ -182,7 +182,7 @@ ID3D11ComputeShader* kl::gpu::newComputeShader(const String& source) {
 	// Return
 	return compShader;
 }
-kl::shaders kl::gpu::newShaders(const String& vertSrc, const String& pixlSrc, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc) {
+kl::shaders kl::gpu::newShaders(const std::string& vertSrc, const std::string& pixlSrc, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc) {
 	ID3D11InputLayout* inLayout = nullptr;
 	ID3D11VertexShader* vertShader = newVertexShader(vertSrc, &inLayout, desc);
 	return kl::shaders(vertShader, newPixelShader(pixlSrc), inLayout);

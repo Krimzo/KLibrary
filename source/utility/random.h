@@ -5,7 +5,6 @@
 #include <sstream>
 #include <windows.h>
 
-#include "libspec/using.h"
 #include "graphics/color.h"
 
 
@@ -29,7 +28,7 @@ namespace kl {
 		char LETTER(bool upperCase = false);
 
 		// Returns a random string
-		String STRING(int len);
+		std::string STRING(int len);
 
 		// Returns a random color
 		kl::color COLOR(bool grayScaled = false);

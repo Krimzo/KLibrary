@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\geometry\ray.cpp">
+    <ClCompile Include="source\render\ray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\geometry\triangle.cpp">
+    <ClCompile Include="source\render\triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\geometry\vertex.cpp">
+    <ClCompile Include="source\render\vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gpu\buffer\constant_buffer.cpp">
@@ -90,7 +90,7 @@
     <ClCompile Include="source\utility\web.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\view\camera.cpp">
+    <ClCompile Include="source\render\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\window\double_buffer.cpp">
@@ -114,10 +114,10 @@
     <ClCompile Include="source\gpu\views\access_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\geometry\plane.cpp">
+    <ClCompile Include="source\render\plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\geometry\sphere.cpp">
+    <ClCompile Include="source\render\sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="examples\Raytracing.cpp">
@@ -125,19 +125,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\geometry\plane.h">
+    <ClInclude Include="source\render\plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\geometry\ray.h">
+    <ClInclude Include="source\render\ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\geometry\sphere.h">
+    <ClInclude Include="source\render\sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\geometry\triangle.h">
+    <ClInclude Include="source\render\triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\geometry\vertex.h">
+    <ClInclude Include="source\render\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gpu\gpu.h">
@@ -150,9 +150,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\graphics\video.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\libspec\using.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\math\math.h">
@@ -179,7 +176,7 @@
     <ClInclude Include="source\utility\web.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\view\camera.h">
+    <ClInclude Include="source\render\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\window\double_buffer.h">
@@ -222,15 +219,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\math\matrix4x4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\geometry\geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\utility\utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

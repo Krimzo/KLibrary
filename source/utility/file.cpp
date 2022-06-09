@@ -2,17 +2,17 @@
 
 
 // Returns the file extension from the given file path
-String kl::file::getExtension(const String& filePath) {
+std::string kl::file::getExtension(const std::string& filePath) {
 	const size_t lastDotPos = filePath.find_last_of(".");
-	if (lastDotPos == String::npos) {
+	if (lastDotPos == std::string::npos) {
 		return "";
 	}
 	return filePath.substr(lastDotPos + 1);
 }
 
 // Returns the files in the given directory
-std::vector<String> kl::file::getFiles(const String& dirPath, bool recursive) {
-	std::vector<String> files;
+std::vector<std::string> kl::file::getFiles(const std::string& dirPath, bool recursive) {
+	std::vector<std::string> files;
 	if (recursive) {
 		for (const auto& file : std::filesystem::recursive_directory_iterator(dirPath)) {
 			if (!file.is_directory()) {
@@ -31,7 +31,7 @@ std::vector<String> kl::file::getFiles(const String& dirPath, bool recursive) {
 }
 
 // Reads file data
-String kl::file::read(const String& filePath) {
+std::string kl::file::read(const std::string& filePath) {
 	// Open file
 	std::ifstream fileStream(filePath);
 	std::stringstream textBuffer;
@@ -45,7 +45,7 @@ String kl::file::read(const String& filePath) {
 	fileStream.close();
 	return textBuffer.str();
 }
-std::vector<byte> kl::file::readB(const String& filePath) {
+std::vector<byte> kl::file::readB(const std::string& filePath) {
 	// Open file
 	FILE* file = nullptr;
 	if (fopen_s(&file, filePath.c_str(), "rb")) {
@@ -70,7 +70,7 @@ std::vector<byte> kl::file::readB(const String& filePath) {
 }
 
 // Writes data to file
-bool kl::file::write(const String& filePath, const String& data) {
+bool kl::file::write(const std::string& filePath, const std::string& data) {
 	// Open file
 	std::ofstream fileStream(filePath);
 	if (!fileStream.is_open()) {
@@ -83,7 +83,7 @@ bool kl::file::write(const String& filePath, const String& data) {
 	fileStream.close();
 	return true;
 }
-bool kl::file::writeB(const String& filePath, const std::vector<byte>& data) {
+bool kl::file::writeB(const std::string& filePath, const std::vector<byte>& data) {
 	// Open file
 	FILE* file = nullptr;
 	if (fopen_s(&file, filePath.c_str(), "wb")) {
@@ -100,7 +100,7 @@ bool kl::file::writeB(const String& filePath, const std::vector<byte>& data) {
 }
 
 // Appends text to a text file
-bool kl::file::append(const String& filePath, const String& data, int position) {
+bool kl::file::append(const std::string& filePath, const std::string& data, int position) {
 	// Open file
 	std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 	if (!fileStream.is_open()) {
@@ -121,7 +121,7 @@ bool kl::file::append(const String& filePath, const String& data, int position) 
 	fileStream.close();
 	return true;
 }
-bool kl::file::appendB(const String& filePath, const std::vector<byte>& data, int position) {
+bool kl::file::appendB(const std::string& filePath, const std::vector<byte>& data, int position) {
 	// Open file
 	FILE* file = nullptr;
 	if (fopen_s(&file, filePath.c_str(), "ab")) {
@@ -146,7 +146,7 @@ bool kl::file::appendB(const String& filePath, const std::vector<byte>& data, in
 }
 
 // Parses given .obj file
-std::vector<kl::vertex> kl::file::parseObj(const String& filePath, bool flipZ) {
+std::vector<kl::vertex> kl::file::parseObj(const std::string& filePath, bool flipZ) {
 	// Temp vertex buffer
 	std::vector<kl::vertex> vertexData;
 
@@ -167,11 +167,11 @@ std::vector<kl::vertex> kl::file::parseObj(const String& filePath, bool flipZ) {
 	const int zFlip = flipZ ? -1 : 1;
 
 	// Parsing data
-	for (String fileLine; std::getline(fileStream, fileLine);) {
+	for (std::string fileLine; std::getline(fileStream, fileLine);) {
 		// Splitting the string by spaces
-		std::vector<String> lineParts;
+		std::vector<std::string> lineParts;
 		std::stringstream lineStream(fileLine);
-		for (String linePart; std::getline(lineStream, linePart, ' ');) {
+		for (std::string linePart; std::getline(lineStream, linePart, ' ');) {
 			lineParts.push_back(linePart);
 		}
 
@@ -188,9 +188,9 @@ std::vector<kl::vertex> kl::file::parseObj(const String& filePath, bool flipZ) {
 		else if (lineParts[0] == "f") {
 			for (int i = 1; i < 4; i++) {
 				// Getting the world, texture and normal indexes
-				std::vector<String> linePartParts;
+				std::vector<std::string> linePartParts;
 				std::stringstream linePartStream(lineParts[i]);
-				for (String linePartPart; std::getline(linePartStream, linePartPart, '/');)
+				for (std::string linePartPart; std::getline(linePartStream, linePartPart, '/');)
 					linePartParts.push_back(linePartPart);
 
 				// Saving the data

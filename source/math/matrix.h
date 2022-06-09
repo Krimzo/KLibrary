@@ -127,24 +127,8 @@ namespace kl {
 			return temp;
 		}
 
-		// Division
-		void div(const T& val, kl::matrix<T, W, H>& out) const {
-			const double recVal = 1.0 / val;
-			for (size_t i = 0; i < (W * H); i++) {
-				out[i] = T((*this)[i] * recVal);
-			}
-		}
-		kl::matrix<T, W, H> operator/(const T& val) const {
-			kl::matrix<T, W, H> temp;
-			div(val, temp);
-			return temp;
-		}
-		void operator/=(const T& val) {
-			div(val, *this);
-		}
-
 		// Comparison
-		bool equals(const kl::matrix<T, W, H>& obj) const {
+		bool equ(const kl::matrix<T, W, H>& obj) const {
 			for (size_t i = 0; i < (W * H); i++) {
 				if ((*this)[i] != obj[i]) {
 					return false;
@@ -153,10 +137,10 @@ namespace kl {
 			return true;
 		}
 		bool operator==(const kl::matrix<T, W, H>& obj) const {
-			return equals(obj);
+			return equ(obj);
 		}
 		bool operator!=(const kl::matrix<T, W, H>& obj) const {
-			return !equals(obj);
+			return !equ(obj);
 		}
 
 		// Sign change
@@ -180,30 +164,120 @@ namespace kl {
 		}
 
 		// Transpose
-		void transp(kl::matrix<T, H, W>& out) const {
+		void tra(kl::matrix<T, H, W>& out) const {
 			for (size_t y = 0; y < H; y++) {
 				for (size_t x = 0; x < W; x++) {
 					out[x * H + y] = (*this)[y * W + x];
 				}
 			}
 		}
-		kl::matrix<T, H, W> transp() const {
+		kl::matrix<T, H, W> tra() const {
 			kl::matrix<T, H, W> temp;
-			transp(temp);
+			tra(temp);
 			return temp;
 		}
 
-		// std::cout
-		template<typename T, size_t W, size_t H> friend std::ostream& operator<<(std::ostream& stream, const kl::matrix<T, W, H>& mat) {
-			stream << std::fixed << std::setprecision(2);
-			for (size_t y = 0; y < H; y++) {
-				stream << ((y == 0) ? char(218) : (y == (H - 1) ? char(192) : char(179)));
-				for (size_t x = 0; x < (W - 1); x++) {
-					stream << mat[y * W + x] << " ";
+		// Cofactor
+		bool cof(size_t ind, kl::matrix<T, W - 1, H - 1>& out) const {
+			if constexpr (W == H) {
+				if (ind < (W * H)) {
+					size_t counter = 0;
+					const size_t xInd = ind % W;
+					const size_t yInd = ind / W;
+					for (size_t y = 0; y < H; y++) {
+						for (size_t x = 0; x < W; x++) {
+							if (x != xInd && y != yInd) {
+								out[counter++] = (*this)[y * W + x];
+							}
+						}
+					}
+					return true;
 				}
-				stream << mat[y * W + (W - 1)] << ((y == 0) ? char(191) : (y == (H - 1) ? char(217) : char(179))) << '\n';
 			}
-			return stream;
+			return false;
+		}
+		kl::matrix<T, W - 1, H - 1> cof(size_t ind) const {
+			kl::matrix<T, W - 1, H - 1> temp;
+			cof(ind, temp);
+			return temp;
+		}
+		bool cof(kl::matrix<T, W, H>& out) const {
+			if constexpr (W == H) {
+				for (size_t y = 0; y < H; y++) {
+					for (size_t x = 0; x < W; x++) {
+						out[y * W + x] = (((y + x + 2) % 2) ? -1 : 1) * cof(y * W + x).det();
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+		kl::matrix<T, W, H> cof() const {
+			kl::matrix<T, W, H> temp;
+			cof(temp);
+			return temp;
+		}
+
+		// Determinant
+		T det() const {
+			if constexpr (W == H) {
+				if constexpr (W == 2) {
+					return (*this)[0] * (*this)[3] - (*this)[1] * (*this)[2];
+				}
+				if constexpr (W > 2) {
+					T val = {};
+					int multi = -1;
+					for (size_t i = 0; i < W; i++) {
+						val += (multi *= -1) * (*this)[i] * cof(i).det();
+					}
+					return val;
+				}
+			}
+			return T(0);
+		}
+
+		// Adjoint
+		bool adj(kl::matrix<T, W, H>& out) const {
+			if constexpr (W == H) {
+				out = cof().tra();
+				return true;
+			}
+			return false;
+		}
+		kl::matrix<T, W, H> adj() const {
+			kl::matrix<T, W, H> temp;
+			adj(temp);
+			return temp;
+		}
+
+		// Inverse
+		bool inv(kl::matrix<T, W, H>& out) const {
+			if constexpr (W == H) {
+				const T det = this->det();
+				if (det) {
+					out = adj() * T(1.0 / det);
+					return true;
+				}
+			}
+			return false;
+		}
+		kl::matrix<T, W, H> inv() const {
+			kl::matrix<T, W, H> temp;
+			inv(temp);
+			return temp;
 		}
 	};
+
+	// std::cout
+	template<typename T, size_t W, size_t H> inline std::ostream& operator<<(std::ostream& stream, const kl::matrix<T, W, H>& mat) {
+		stream << std::fixed << std::setprecision(2);
+		for (size_t y = 0; y < H; y++) {
+			stream << ((y == 0) ? char(218) : (y == (H - 1) ? char(192) : char(179)));
+			for (size_t x = 0; x < (W - 1); x++) {
+				stream << std::setw(6) << mat[y * W + x] << " ";
+			}
+			stream << std::setw(6) << mat[y * W + (W - 1)] << ((y == 0) ? char(191) : (y == (H - 1) ? char(217) : char(179))) << '\n';
+		}
+		return stream;
+	}
 }

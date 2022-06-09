@@ -18,7 +18,7 @@ ID3D11Buffer* kl::gpu::newVertexBuffer(const std::vector<kl::vertex>& vertexData
 	// Return
 	return this->newBuffer(&bufferDesc, &bufferData);
 }
-ID3D11Buffer* kl::gpu::newVertexBuffer(const String& filePath, bool flipZ) {
+ID3D11Buffer* kl::gpu::newVertexBuffer(const std::string& filePath, bool flipZ) {
 	return this->newVertexBuffer(kl::file::parseObj(filePath, flipZ));
 }
 

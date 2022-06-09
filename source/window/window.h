@@ -5,7 +5,6 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#include "libspec/using.h"
 #include "graphics/image.h"
 #include "window/keys.h"
 #include "window/mouse.h"
@@ -39,10 +38,10 @@ namespace kl {
 		WINDOWPLACEMENT winPlace = {};
 
 		// Registers a new window class
-		void registerWindowClass(const String& name);
+		void registerWindowClass(const std::string& name);
 
 		// Creates a new window
-		void createWindow(const kl::int2& size, const String& name, bool resizeable);
+		void createWindow(const kl::int2& size, const std::string& name, bool resizeable);
 
 		// Handles the windows message
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -69,7 +68,7 @@ namespace kl {
 		bool isOpen() const;
 
 		// Window creation
-		void startNew(const kl::int2& size, const String& name, bool resizeable, bool continuous);
+		void startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous);
 
 		// Window stop
 		void stop() const;
@@ -94,10 +93,10 @@ namespace kl {
 		kl::int2 getCenter() const;
 
 		// Sets the window title
-		void setTitle(const String& data);
+		void setTitle(const std::string& data);
 
 		// Sets the window icons
-		bool setIcon(const String& filePath);
+		bool setIcon(const std::string& filePath);
 
 		// Sets the pixels of the window
 		void drawImage(const kl::image& toDraw, const kl::int2& position = { 0, 0 });

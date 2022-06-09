@@ -15,29 +15,6 @@ namespace kl {
 		}
 		matrix3x3(const kl::matrix<T, 3, 3>& obj) : kl::matrix<T, 3, 3>(obj) {}
 
-		// Inverse matrix
-		void inv(kl::matrix3x3<T>& out) const {
-			out[0] = (*this)[4] * (*this)[8] - (*this)[7] * (*this)[5];
-			out[1] = (*this)[2] * (*this)[7] - (*this)[1] * (*this)[8];
-			out[2] = (*this)[1] * (*this)[5] - (*this)[2] * (*this)[4];
-			out[3] = (*this)[5] * (*this)[6] - (*this)[3] * (*this)[8];
-			out[4] = (*this)[0] * (*this)[8] - (*this)[2] * (*this)[6];
-			out[5] = (*this)[3] * (*this)[2] - (*this)[0] * (*this)[5];
-			out[6] = (*this)[3] * (*this)[7] - (*this)[6] * (*this)[4];
-			out[7] = (*this)[6] * (*this)[1] - (*this)[0] * (*this)[7];
-			out[8] = (*this)[0] * (*this)[4] - (*this)[3] * (*this)[1];
-			out /= (
-				(*this)[0] * ((*this)[4] * (*this)[8] - (*this)[7] * (*this)[5]) -
-				(*this)[1] * ((*this)[3] * (*this)[8] - (*this)[5] * (*this)[6]) +
-				(*this)[2] * ((*this)[3] * (*this)[7] - (*this)[4] * (*this)[6])
-				);
-		}
-		kl::matrix3x3<T> inv() const {
-			kl::matrix3x3<T> temp;
-			inv(temp);
-			return temp;
-		}
-
 		// Translation matrix
 		static kl::matrix3x3<T> translation(const kl::vector2<T>& val) {
 			kl::matrix3x3<T> temp;

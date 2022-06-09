@@ -122,7 +122,7 @@ namespace kl {
 		}
 
 		// Conditional
-		bool equals(const kl::vector4<T>& obj) const {
+		bool equ(const kl::vector4<T>& obj) const {
 			for (int i = 0; i < 4; i++) {
 				if (data[i] != obj[i]) {
 					return false;
@@ -131,10 +131,10 @@ namespace kl {
 			return true;
 		}
 		bool operator==(const kl::vector4<T>& obj) const {
-			return equals(obj);
+			return equ(obj);
 		}
 		bool operator!=(const kl::vector4<T>& obj) const {
-			return !equals(obj);
+			return !equ(obj);
 		}
 
 		// Sign change
@@ -187,7 +187,7 @@ namespace kl {
 
 		// Angle between vectors
 		T angle(const kl::vector4<T>& vec, bool full = false) const {
-			return std::acos(norm().dot(vec.norm())) * 57.29577951f;
+			return kl::math::toDegs(std::acos(norm().dot(vec.norm())));
 		}
 	};
 

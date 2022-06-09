@@ -9,8 +9,7 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
-#include "libspec/using.h"
-#include "geometry/vertex.h"
+#include "render/vertex.h"
 #include "graphics/image.h"
 #include "math/math.h"
 
@@ -88,11 +87,11 @@ namespace kl {
 		void bind(ID3D11DepthStencilState* state);
 
 		// Shaders
-		ID3D11VertexShader* newVertexShader(const String& source, ID3D11InputLayout** outLayout = nullptr, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
-		ID3D11PixelShader* newPixelShader(const String& source);
-		ID3D11GeometryShader* newGeometryShader(const String& source);
-		ID3D11ComputeShader* newComputeShader(const String& source);
-		kl::shaders newShaders(const String& vertSrc, const String& pixlSrc, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
+		ID3D11VertexShader* newVertexShader(const std::string& source, ID3D11InputLayout** outLayout = nullptr, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
+		ID3D11PixelShader* newPixelShader(const std::string& source);
+		ID3D11GeometryShader* newGeometryShader(const std::string& source);
+		ID3D11ComputeShader* newComputeShader(const std::string& source);
+		kl::shaders newShaders(const std::string& vertSrc, const std::string& pixlSrc, const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc = {});
 		void bind(ID3D11VertexShader* sha);
 		void bind(ID3D11PixelShader* sha);
 		void bind(ID3D11GeometryShader* sha);
@@ -131,7 +130,7 @@ namespace kl {
 
 		// Mesh
 		ID3D11Buffer* newVertexBuffer(const std::vector<kl::vertex>& vertexData);
-		ID3D11Buffer* newVertexBuffer(const String& filePath, bool flipZ = true);
+		ID3D11Buffer* newVertexBuffer(const std::string& filePath, bool flipZ = true);
 		void draw(ID3D11Buffer* mesh);
 
 		// Sampler

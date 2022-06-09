@@ -2,16 +2,14 @@
 
 
 kl::window win;
-
-kl::gpu* gpu = nullptr;
+std::unique_ptr<kl::gpu> gpu;
 kl::shaders shaders;
 ID3D11Buffer* screenMesh = nullptr;
+kl::camera camera;
 
 kl::timer timer;
 float deltaT = 0.0f;
 float elapsedT = 0.0f;
-
-kl::camera camera;
 
 kl::sphere spheres[6] = {};
 
@@ -40,7 +38,7 @@ void Start() {
 	win.maximize();
 
 	// Gpu creation
-	gpu = new kl::gpu(win.getWND());
+	gpu = std::make_unique<kl::gpu>(win.getWND());
 
 	// Disabling depth test
 	gpu->bind(gpu->newDepthState(false, false, false));

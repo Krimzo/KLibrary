@@ -132,7 +132,7 @@ namespace kl {
 		}
 
 		// Conditional
-		bool equals(const kl::vector3<T>& obj) const {
+		bool equ(const kl::vector3<T>& obj) const {
 			for (int i = 0; i < 3; i++) {
 				if (data[i] != obj[i]) {
 					return false;
@@ -141,10 +141,10 @@ namespace kl {
 			return true;
 		}
 		bool operator==(const kl::vector3<T>& obj) const {
-			return equals(obj);
+			return equ(obj);
 		}
 		bool operator!=(const kl::vector3<T>& obj) const {
-			return !equals(obj);
+			return !equ(obj);
 		}
 
 		// Sign change

@@ -18,7 +18,7 @@ kl::window::~window() {
 }
 
 // Registers a new window class
-void kl::window::registerWindowClass(const String& name) {
+void kl::window::registerWindowClass(const std::string& name) {
 	WNDCLASSEXA windowClass = {};
 	windowClass.cbSize = sizeof(WNDCLASSEXA);
 	windowClass.style = CS_OWNDC;
@@ -37,7 +37,7 @@ void kl::window::registerWindowClass(const String& name) {
 }
 
 // Creates a new window
-void kl::window::createWindow(const kl::int2& size, const String& name, bool resizeable) {
+void kl::window::createWindow(const kl::int2& size, const std::string& name, bool resizeable) {
 	// Setting the window properties
 	winStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 	RECT adjustedWindowSize = { 0, 0, LONG(size.x), LONG(size.y) };
@@ -140,7 +140,7 @@ void kl::window::handleMessage(MSG& msg) {
 }
 
 // Window creation
-void kl::window::startNew(const kl::int2& size, const String& name, bool resizeable, bool continuous) {
+void kl::window::startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous) {
 	// Registering winapi window class
 	registerWindowClass(name);
 
@@ -257,12 +257,12 @@ kl::int2 kl::window::getCenter() const {
 }
 
 // Sets the window title
-void kl::window::setTitle(const String& data) {
+void kl::window::setTitle(const std::string& data) {
 	SetWindowTextA(wnd, data.c_str());
 }
 
 // Sets the window icons
-bool kl::window::setIcon(const String& filePath) {
+bool kl::window::setIcon(const std::string& filePath) {
 	// Loading the icon
 	HICON loadedIcon = ExtractIconA(nullptr, filePath.c_str(), NULL);
 	if (!loadedIcon) {
