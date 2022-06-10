@@ -1,8 +1,7 @@
 #include "utility/file.h"
 
 
-// Returns the file extension from the given file path
-std::string kl::file::getExtension(const std::string& filePath) {
+std::string kl::file::extension(const std::string& filePath) {
 	const size_t lastDotPos = filePath.find_last_of(".");
 	if (lastDotPos == std::string::npos) {
 		return "";
@@ -10,7 +9,6 @@ std::string kl::file::getExtension(const std::string& filePath) {
 	return filePath.substr(lastDotPos + 1);
 }
 
-// Returns the files in the given directory
 std::vector<std::string> kl::file::getFiles(const std::string& dirPath, bool recursive) {
 	std::vector<std::string> files;
 	if (recursive) {
@@ -30,7 +28,6 @@ std::vector<std::string> kl::file::getFiles(const std::string& dirPath, bool rec
 	return files;
 }
 
-// Reads file data
 std::string kl::file::read(const std::string& filePath) {
 	// Open file
 	std::ifstream fileStream(filePath);
@@ -69,7 +66,6 @@ std::vector<byte> kl::file::readB(const std::string& filePath) {
 	return buff;
 }
 
-// Writes data to file
 bool kl::file::write(const std::string& filePath, const std::string& data) {
 	// Open file
 	std::ofstream fileStream(filePath);
@@ -99,7 +95,6 @@ bool kl::file::writeB(const std::string& filePath, const std::vector<byte>& data
 	return true;
 }
 
-// Appends text to a text file
 bool kl::file::append(const std::string& filePath, const std::string& data, int position) {
 	// Open file
 	std::fstream fileStream(filePath, std::ios::in | std::ios::out);
@@ -145,8 +140,7 @@ bool kl::file::appendB(const std::string& filePath, const std::vector<byte>& dat
 	return true;
 }
 
-// Parses given .obj file
-std::vector<kl::vertex> kl::file::parseObj(const std::string& filePath, bool flipZ) {
+std::vector<kl::vertex> kl::file::parseMesh(const std::string& filePath, bool flipZ) {
 	// Temp vertex buffer
 	std::vector<kl::vertex> vertexData;
 

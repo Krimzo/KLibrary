@@ -1,64 +1,59 @@
 #include <ws2tcpip.h>
 #include "utility/socket.h"
-
 #include "utility/console.h"
 
 #pragma comment(lib,"Ws2_32.lib")
 
 
-WSADATA kl::socket::wsaData = {};
-bool kl::socket::wsaInited = false;
-
-// WSA setup
+WSADATA kl::socket::m_WSAData = {};
+bool kl::socket::m_WSAInit = false;
 void kl::socket::initWSA() {
-	if (!wsaInited) {
-		if (WSAStartup(MAKEWORD(2, 2), &wsaData)) {
+	if (!m_WSAInit) {
+		if (WSAStartup(MAKEWORD(2, 2), &m_WSAData)) {
 			kl::console::show();
 			std::cout << "Could not startup WSA!";
 			std::cin.get();
 			exit(69);
 		}
-		wsaInited = true;
+		m_WSAInit = true;
 	}
 }
 void kl::socket::uninitWSA() {
-	if (wsaInited) {
+	if (m_WSAInit) {
 		WSACleanup();
-		wsaInited = false;
+		m_WSAInit = false;
 	}
 }
 
 kl::socket::socket() {
-	sock = ::socket(AF_INET, SOCK_STREAM, NULL);
-	if (sock == INVALID_SOCKET) {
+	m_Socket = ::socket(AF_INET, SOCK_STREAM, NULL);
+	if (m_Socket == INVALID_SOCKET) {
 		kl::console::show();
 		std::cout << "Could not create a socket!";
 		std::cin.get();
 		exit(69);
 	}
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = INADDR_ANY;
+	m_Address.sin_family = AF_INET;
+	m_Address.sin_addr.s_addr = INADDR_ANY;
 }
-kl::socket::socket(SOCKET sock) : sock(sock) {}
+kl::socket::socket(const SOCKET& sock) : m_Socket(sock) {}
 kl::socket::~socket() {
 	close();
 }
 
 kl::socket::operator SOCKET() {
-	return sock;
+	return m_Socket;
 }
 
-// Closes the socket
 void kl::socket::close() {
-	closesocket(sock);
+	closesocket(m_Socket);
 }
 
-// Info setters
-void kl::socket::setPort(uint16_t port) {
-	addr.sin_port = htons(port);
+void kl::socket::port(uint port) {
+	m_Address.sin_port = htons(port);
 }
-void kl::socket::setAddr(const std::string& addrs) {
-	if (inet_pton(AF_INET, addrs.c_str(), &addr.sin_addr) != 1) {
+void kl::socket::address(const std::string& addrs) {
+	if (inet_pton(AF_INET, addrs.c_str(), &m_Address.sin_addr) != 1) {
 		kl::console::show();
 		std::cout << "Could not parse address \"" << addrs << "\"";
 		std::cin.get();
@@ -66,9 +61,17 @@ void kl::socket::setAddr(const std::string& addrs) {
 	}
 }
 
-// Binds the socket
+uint kl::socket::port() const {
+	return ntohs(m_Address.sin_port);
+}
+std::string kl::socket::address() const {
+	char buffer[INET_ADDRSTRLEN] = {};
+	inet_ntop(AF_INET, &m_Address.sin_addr, buffer, INET_ADDRSTRLEN);
+	return buffer;
+}
+
 void kl::socket::bind() {
-	if (::bind(sock, (sockaddr*)&addr, sizeof(addr))) {
+	if (::bind(m_Socket, (sockaddr*)&m_Address, sizeof(m_Address))) {
 		kl::console::show();
 		std::cout << "Could not bind socket!";
 		std::cin.get();
@@ -76,9 +79,8 @@ void kl::socket::bind() {
 	}
 }
 
-// Sets socket mode to listen
 void kl::socket::listen(int queueSize) {
-	if (::listen(sock, queueSize)) {
+	if (::listen(m_Socket, queueSize)) {
 		kl::console::show();
 		std::cout << "Could not listen on socket!";
 		std::cin.get();
@@ -86,10 +88,9 @@ void kl::socket::listen(int queueSize) {
 	}
 }
 
-// Accepts new connections
 kl::socket kl::socket::accept() {
-	int addrLen = sizeof(addr);
-	SOCKET accepted = ::accept(sock, (sockaddr*)&addr, &addrLen);
+	int addrLen = sizeof(m_Address);
+	SOCKET accepted = ::accept(m_Socket, (sockaddr*)&m_Address, &addrLen);
 	if (accepted == INVALID_SOCKET) {
 		kl::console::show();
 		std::cout << "Bad socket accepted!";
@@ -99,9 +100,8 @@ kl::socket kl::socket::accept() {
 	return kl::socket(accepted);
 }
 
-// Connects to a socket
 void kl::socket::connect() {
-	if (::connect(sock, (sockaddr*)&addr, sizeof(addr))) {
+	if (::connect(m_Socket, (sockaddr*)&m_Address, sizeof(m_Address))) {
 		kl::console::show();
 		std::cout << "Could not connect to socket!";
 		std::cin.get();
@@ -109,12 +109,10 @@ void kl::socket::connect() {
 	}
 }
 
-// Sends data to socket
-int kl::socket::send(const void* data, int byteSize) {
-	return ::send(sock, (const char*)data, byteSize, NULL);
+int kl::socket::send(const void* data, uint byteSize) {
+	return ::send(m_Socket, (const char*)data, byteSize, NULL);
 }
 
-// Receives data from socket
-int kl::socket::recieve(void* buff, int byteSize) {
-	return recv(sock, (char*)buff, byteSize, NULL);
+int kl::socket::receive(void* buff, uint byteSize) {
+	return recv(m_Socket, (char*)buff, byteSize, NULL);
 }

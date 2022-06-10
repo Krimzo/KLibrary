@@ -1,70 +1,52 @@
 #include "utility/time.h"
 
 
-namespace _ignore {
-	// Getting the pc frequency
-	static const float recFreq = [] {
-		LARGE_INTEGER tempFreq = {};
-		QueryPerformanceFrequency(&tempFreq);
-		return 1.0f / tempFreq.QuadPart;
-	}();
-
-	// Calculates elapsed time from 2 given LARGE_INTEGERS
-	float CalcTime(const LARGE_INTEGER& startTime, const LARGE_INTEGER& endTime) {
-		return (endTime.QuadPart - startTime.QuadPart) * recFreq;
-	}
+// Time
+int64 kl::time::get() {
+	LARGE_INTEGER time = {};
+	QueryPerformanceCounter(&time);
+	return time.QuadPart;
 }
-
-/* TIME */
-// Static interval
-LARGE_INTEGER kl::time::interStartTime = [] {
-	LARGE_INTEGER currentTime = {};
-	QueryPerformanceCounter(&currentTime);
-	return currentTime;
-}();
-
-// Returns a time since the the last interval() call
+int64 kl::time::frequency() {
+	LARGE_INTEGER frequency = {};
+	QueryPerformanceFrequency(&frequency);
+	return frequency.QuadPart;
+}
+float kl::time::calculate(int64 start, int64 end) {
+	static const float recFrequency = 1.0f / kl::time::frequency();
+	return (end - start) * recFrequency;
+}
 float kl::time::interval() {
-	LARGE_INTEGER interEndTime = {};
-	QueryPerformanceCounter(&interEndTime);
-	const float elapsedTime = _ignore::CalcTime(interStartTime, interEndTime);
-	interStartTime = interEndTime;
+	static int64 startTime = kl::time::get();
+	const int64 endTime = kl::time::get();
+	const float elapsedTime = kl::time::calculate(startTime, endTime);
+	startTime = endTime;
 	return elapsedTime;
 }
-
-// Waits for the given time in seconds
 void kl::time::wait(float seconds) {
-	LARGE_INTEGER sleepStartT = {}, sleepEndT = {};
-	QueryPerformanceCounter(&sleepStartT);
-	do {
-		QueryPerformanceCounter(&sleepEndT);
+	const int64 startTime = kl::time::get();
+	int64 endTime = kl::time::get();
+	while (kl::time::calculate(startTime, endTime) < seconds) {
+		endTime = kl::time::get();
 	}
-	while (_ignore::CalcTime(sleepStartT, sleepEndT) < seconds);
 }
 
-/* TIMER */
+// Timer
 kl::timer::timer() {
 	interval();
 	reset();
 }
 
-// Returns the interval between 2 calls
 float kl::timer::interval() {
-	LARGE_INTEGER inEndTime = {};
-	QueryPerformanceCounter(&inEndTime);
-	const float elapsedTime = _ignore::CalcTime(inStartTime, inEndTime);
-	inStartTime = inEndTime;
+	const int64 endTime = kl::time::get();
+	const float elapsedTime = kl::time::calculate(m_IntervalStart, endTime);
+	m_IntervalStart = endTime;
 	return elapsedTime;
 }
 
-// Resets the last stopwatch time
 void kl::timer::reset() {
-	QueryPerformanceCounter(&swStartTime);
+	m_StopwatchStart = kl::time::get();
 }
-
-// Returns the passed time since the last reset
 float kl::timer::elapsed() const {
-	LARGE_INTEGER swEndTime = {};
-	QueryPerformanceCounter(&swEndTime);
-	return _ignore::CalcTime(swStartTime, swEndTime);
+	return kl::time::calculate(m_StopwatchStart, kl::time::get());
 }

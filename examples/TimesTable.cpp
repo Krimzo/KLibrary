@@ -45,8 +45,8 @@ int main() {
 		std::vector<kl::int2> circlePoints(n);
 		for (int i = 0; i < circlePoints.size(); i++) {
 			circlePoints[i] = kl::int2(
-				int(cos(kl::math::toRad(pointAngle * i + 180.0f)) * circleRadius) + frame.width() / 2,
-				int(sin(kl::math::toRad(pointAngle * i + 180.0f)) * circleRadius) + frame.height() / 2
+				int(cos(kl::math::toRads(pointAngle * i + 180.0f)) * circleRadius) + frame.width() / 2,
+				int(sin(kl::math::toRads(pointAngle * i + 180.0f)) * circleRadius) + frame.height() / 2
 			);
 		}
 
@@ -62,17 +62,16 @@ int main() {
 		}
 
 		// Displaying
-		win.drawImage(frame);
+		win.draw(frame);
 
 		// Incrementing m
 		m += mIncr * kl::time::interval();
-		win.setTitle("n: " + std::to_string(n) + " m: " + std::to_string(m));
+		win.title("n: " + std::to_string(n) + " m: " + std::to_string(m));
 	};
 
 	win.resize = [&](const kl::int2& size) {
 		frame.resize(size);
 	};
 
-	// Creating the window
-	win.startNew(frame.size(), "Times Table", true, true);
+	win.run(frame.size(), "Times Table", true, true);
 }

@@ -1,12 +1,8 @@
 #include "utility/thread.h"
 
 
-// Asynchronous for loop
 void kl::thread::asyncFor(int startInclusive, int endExclusive, const std::function<void(int, int)>& loopBody, int threadCount) {
-	// Res storage
 	std::vector<std::future<void>> futRes(threadCount);
-
-	// Thread creation
 	const int runsPerThread = (endExclusive - startInclusive) / threadCount;
 	for (int t = 0; t < threadCount; t++) {
 		const int loopStart = runsPerThread * t + startInclusive;
@@ -17,8 +13,6 @@ void kl::thread::asyncFor(int startInclusive, int endExclusive, const std::funct
 			}
 		}, loopStart, loopEnd);
 	}
-
-	// Wait for end
 	for (auto& res : futRes) {
 		res.wait();
 	}

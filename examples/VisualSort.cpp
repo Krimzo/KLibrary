@@ -13,7 +13,7 @@ void renderSticks(kl::image& frameBuffer, std::vector<stick>& stickArray) {
 	// Drawing the sticks
 	for (int x = 0; x < stickArray.size(); x++) {
 		for (int y = (frameBuffer.height() - 1 - stickArray[x].val); y < frameBuffer.height(); y++) {
-			frameBuffer.spixel(kl::int2(x, y), stickArray[x].col);
+			frameBuffer.pixel(kl::int2(x, y), stickArray[x].col);
 		}
 	}
 }
@@ -76,15 +76,15 @@ int main() {
 			renderSticks(frame, sticks);
 
 			// Displaying the frame
-			testWindow.drawImage(frame);
+			testWindow.draw(frame);
 
 			// Updating title
-			testWindow.setTitle(std::to_string(i + 1) + "/" + std::to_string(sticks.size()));
+			testWindow.title(std::to_string(i + 1) + "/" + std::to_string(sticks.size()));
 		}
 
-		testWindow.setTitle("Finished!");
+		testWindow.title("Finished!");
 		testWindow.update = []() {};
 	};
 
-	testWindow.startNew(frame.size(), "Bubble Sort", false, true);
+	testWindow.run(frame.size(), "Bubble Sort", false, true);
 }

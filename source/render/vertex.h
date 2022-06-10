@@ -4,8 +4,7 @@
 
 
 namespace kl {
-	class vertex {
-	public:
+	struct vertex {
 		kl::float3 world;
 		kl::float2 texture;
 		kl::float3 normal;
@@ -15,13 +14,8 @@ namespace kl {
 		vertex(const kl::float3& world, const kl::float2& texture);
 		vertex(const kl::float3& world, const kl::float3& normal);
 		vertex(const kl::float3& world, const kl::float2& texture, const kl::float3& normal);
-
-		// Comparison
-		bool equals(const kl::vertex& obj) const;
-		bool operator==(const kl::vertex& obj) const;
-		bool operator!=(const kl::vertex& obj) const;
 	};
 
-	// Overloading std::cout
+	// std::cout
 	std::ostream& operator<<(std::ostream& os, const kl::vertex& obj);
 }

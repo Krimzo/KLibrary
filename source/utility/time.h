@@ -1,40 +1,31 @@
 #pragma once
 
-#include <iostream>
 #include <windows.h>
+
+#include "math/math.h"
 
 
 namespace kl {
-	class time {
-	public:
-		// Deleting the def constr
-		time() = delete;
+	namespace time {
+		int64 get();
+		int64 frequency();
+		float calculate(int64 start, int64 end);
 
-		// Returns a time since the the last interval() call
-		static float interval();
-
-		// Waits for the given time in seconds
-		static void wait(float seconds);
-
-	private:
-		static LARGE_INTEGER interStartTime;
+		float interval();
+		void wait(float seconds);
 	};
 
 	class timer {
 	private:
-		LARGE_INTEGER inStartTime;
-		LARGE_INTEGER swStartTime;
+		int64 m_IntervalStart;
+		int64 m_StopwatchStart;
 
 	public:
 		timer();
 
-		// Returns the interval between 2 calls
 		float interval();
 
-		// Resets the last time
 		void reset();
-
-		// Returns the passed time since the last reset
 		float elapsed() const;
 	};
 }

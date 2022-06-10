@@ -6,7 +6,7 @@
 ID3D11SamplerState* kl::gpu::newSamplerState(D3D11_SAMPLER_DESC* desc) {
 	// Sampler state creation
 	ID3D11SamplerState* sampState = nullptr;
-	device->CreateSamplerState(desc, &sampState);
+	m_Device->CreateSamplerState(desc, &sampState);
 	if (!sampState) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create a sampler state!";
@@ -15,7 +15,7 @@ ID3D11SamplerState* kl::gpu::newSamplerState(D3D11_SAMPLER_DESC* desc) {
 	}
 
 	// Saving child
-	children.insert(sampState);
+	m_Children.insert(sampState);
 
 	// Return
 	return sampState;
@@ -34,6 +34,6 @@ ID3D11SamplerState* kl::gpu::newSamplerState(bool linear, bool mirror) {
 }
 
 // Binds the sampler
-void kl::gpu::bind(ID3D11SamplerState* sampState, uint32_t slot) {
-	devcon->PSSetSamplers(slot, 1, &sampState);
+void kl::gpu::bind(ID3D11SamplerState* sampState, uint slot) {
+	m_Context->PSSetSamplers(slot, 1, &sampState);
 }

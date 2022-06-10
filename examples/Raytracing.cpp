@@ -38,7 +38,7 @@ void Start() {
 	win.maximize();
 
 	// Gpu creation
-	gpu = std::make_unique<kl::gpu>(win.getWND());
+	gpu = std::make_unique<kl::gpu>(win);
 
 	// Disabling depth test
 	gpu->bind(gpu->newDepthState(false, false, false));
@@ -119,16 +119,16 @@ void Input() {
 	}
 	else {
 		if (win.keys.w) {
-			spheres[selected].center += camera.getForward() * (camera.speed * deltaT);
+			spheres[selected].center += camera.forward() * (camera.speed * deltaT);
 		}
 		if (win.keys.s) {
-			spheres[selected].center -= camera.getForward() * (camera.speed * deltaT);
+			spheres[selected].center -= camera.forward() * (camera.speed * deltaT);
 		}
 		if (win.keys.d) {
-			spheres[selected].center += camera.getRight() * (camera.speed * deltaT);
+			spheres[selected].center += camera.right() * (camera.speed * deltaT);
 		}
 		if (win.keys.a) {
-			spheres[selected].center -= camera.getRight() * (camera.speed * deltaT);
+			spheres[selected].center -= camera.right() * (camera.speed * deltaT);
 		}
 		if (win.keys.e) {
 			spheres[selected].center += kl::float3(0.0f, 1.0f, 0.0f) * (camera.speed * deltaT);
@@ -142,7 +142,7 @@ void Input() {
 	static bool camMoving = false;
 	if (win.mouse.lmb || win.mouse.rmb) {
 		// Getting the frame center
-		const kl::int2 frameCenter = win.getCenter();
+		const kl::int2 frameCenter = win.center();
 
 		// Fixing the camera jump
 		if (!camMoving) {
@@ -185,7 +185,7 @@ void Update() {
 
 	// Setting data
 	PS_CB psData = {};
-	psData.frameSize = kl::float4(win.getSize(), 0.0f, 0.0f);
+	psData.frameSize = kl::float4(win.size(), 0.0f, 0.0f);
 	psData.invCam = camera.matrix().inv();
 	psData.camPos = kl::float4(camera.position, 1.0f);
 	for (int i = 0; i < 6; i++) {
@@ -204,7 +204,7 @@ void Update() {
 	gpu->swap(true);
 
 	// Fps display
-	win.setTitle(std::to_string(int(1 / deltaT)));
+	win.title(std::to_string(int(1 / deltaT)));
 }
 
 void Resize(const kl::int2& newSize) {
@@ -225,5 +225,5 @@ int main() {
 		}
 	};
 	timer.elapsed();
-	win.startNew(kl::int2(1600, 900), "Raytracing", true, true);
+	win.run(kl::int2(1600, 900), "Raytracing", true, true);
 }

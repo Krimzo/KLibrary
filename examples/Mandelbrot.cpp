@@ -3,7 +3,7 @@
 
 kl::window win;
 
-kl::gpu* gpu = nullptr;
+std::unique_ptr<kl::gpu> gpu;
 kl::shaders shaders;
 ID3D11Buffer* screenMesh = nullptr;
 
@@ -24,7 +24,7 @@ const kl::int2 frameSize(1600, 900);
 
 void start() {
 	// DirectX init
-	gpu = new kl::gpu(win.getWND());
+	gpu = std::make_unique<kl::gpu>(win);
 
 	// Setting the raster
 	gpu->bind(gpu->newRasterState(false, false));
@@ -113,7 +113,7 @@ void update() {
 	gpu->swap(true);
 
 	// Updating the title
-	win.setTitle(
+	win.title(
 		"Fps: " + std::to_string(int(1.0f / deltaT)) +
 		" Zoom: " + std::to_string(int(zoom)) +
 		" Position: " + std::to_string(pos.x) + " " + std::to_string(pos.y)
@@ -125,5 +125,5 @@ int main() {
 	win.update = update;
 	timer.reset();
 	timer.interval();
-	win.startNew(frameSize, "Mandelbrot", false, true);
+	win.run(frameSize, "Mandelbrot", false, true);
 }

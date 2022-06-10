@@ -29,7 +29,7 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11In
 
 	// Shader creation
 	ID3D11VertexShader* vertShader = nullptr;
-	device->CreateVertexShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &vertShader);
+	m_Device->CreateVertexShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &vertShader);
 	if (!vertShader) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create vertex shader!";
@@ -47,7 +47,7 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11In
 		};
 
 		// Creating the input layout
-		device->CreateInputLayout(desc.size() > 0 ? &desc[0] : defaulDesc, desc.size() > 0 ? UINT(desc.size()) : 3, blobData->GetBufferPointer(), blobData->GetBufferSize(), outLayout);
+		m_Device->CreateInputLayout(desc.size() > 0 ? &desc[0] : defaulDesc, desc.size() > 0 ? UINT(desc.size()) : 3, blobData->GetBufferPointer(), blobData->GetBufferSize(), outLayout);
 		if (!*outLayout) {
 			kl::console::show();
 			std::cout << "DirectX: Could not create an input layout!";
@@ -56,14 +56,14 @@ ID3D11VertexShader* kl::gpu::newVertexShader(const std::string& source, ID3D11In
 		}
 
 		// Saving child
-		children.insert(*outLayout);
+		m_Children.insert(*outLayout);
 	}
 
 	// Cleanup
 	blobData->Release();
 
 	// Saving child
-	children.insert(vertShader);
+	m_Children.insert(vertShader);
 
 	// Return
 	return vertShader;
@@ -89,7 +89,7 @@ ID3D11PixelShader* kl::gpu::newPixelShader(const std::string& source) {
 
 	// Shader creation
 	ID3D11PixelShader* pixlShader = nullptr;
-	device->CreatePixelShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &pixlShader);
+	m_Device->CreatePixelShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &pixlShader);
 	if (!pixlShader) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create pixel shader!";
@@ -101,7 +101,7 @@ ID3D11PixelShader* kl::gpu::newPixelShader(const std::string& source) {
 	blobData->Release();
 
 	// Saving child
-	children.insert(pixlShader);
+	m_Children.insert(pixlShader);
 
 	// Return
 	return pixlShader;
@@ -127,7 +127,7 @@ ID3D11GeometryShader* kl::gpu::newGeometryShader(const std::string& source) {
 
 	// Shader creation
 	ID3D11GeometryShader* geomShader = nullptr;
-	device->CreateGeometryShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &geomShader);
+	m_Device->CreateGeometryShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &geomShader);
 	if (!geomShader) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create geometry shader!";
@@ -139,7 +139,7 @@ ID3D11GeometryShader* kl::gpu::newGeometryShader(const std::string& source) {
 	blobData->Release();
 
 	// Saving child
-	children.insert(geomShader);
+	m_Children.insert(geomShader);
 
 	// Return
 	return geomShader;
@@ -165,7 +165,7 @@ ID3D11ComputeShader* kl::gpu::newComputeShader(const std::string& source) {
 
 	// Shader creation
 	ID3D11ComputeShader* compShader = nullptr;
-	device->CreateComputeShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &compShader);
+	m_Device->CreateComputeShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &compShader);
 	if (!compShader) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create compute shader!";
@@ -177,7 +177,7 @@ ID3D11ComputeShader* kl::gpu::newComputeShader(const std::string& source) {
 	blobData->Release();
 
 	// Saving child
-	children.insert(compShader);
+	m_Children.insert(compShader);
 
 	// Return
 	return compShader;
@@ -190,19 +190,19 @@ kl::shaders kl::gpu::newShaders(const std::string& vertSrc, const std::string& p
 
 // Shader binding
 void kl::gpu::bind(ID3D11VertexShader* sha) {
-	devcon->VSSetShader(sha, nullptr, 0);
+	m_Context->VSSetShader(sha, nullptr, 0);
 }
 void kl::gpu::bind(ID3D11PixelShader* sha) {
-	devcon->PSSetShader(sha, nullptr, 0);
+	m_Context->PSSetShader(sha, nullptr, 0);
 }
 void kl::gpu::bind(ID3D11GeometryShader* sha) {
-	devcon->GSSetShader(sha, nullptr, 0);
+	m_Context->GSSetShader(sha, nullptr, 0);
 }
 void kl::gpu::bind(ID3D11ComputeShader* sha) {
-	devcon->CSSetShader(sha, nullptr, 0);
+	m_Context->CSSetShader(sha, nullptr, 0);
 }
 void kl::gpu::bind(ID3D11InputLayout* layout) {
-	devcon->IASetInputLayout(layout);
+	m_Context->IASetInputLayout(layout);
 }
 void kl::gpu::bind(const kl::shaders& shaders, bool bindLayout) {
 	bind(shaders.vertexS);
@@ -211,10 +211,10 @@ void kl::gpu::bind(const kl::shaders& shaders, bool bindLayout) {
 }
 
 // Compute shader specific
-void kl::gpu::dispatch(const kl::int3& size) {
-	devcon->Dispatch(UINT(size.x), UINT(size.y), UINT(size.z));
+void kl::gpu::dispatch(const kl::uint3& size) {
+	m_Context->Dispatch(size.x, size.y, size.z);
 }
-void kl::gpu::execute(ID3D11ComputeShader* sha, const kl::int3& size) {
+void kl::gpu::execute(ID3D11ComputeShader* sha, const kl::uint3& size) {
 	bind(sha);
 	dispatch(size);
 }

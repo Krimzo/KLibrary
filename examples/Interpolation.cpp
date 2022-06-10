@@ -21,9 +21,9 @@ int main() {
 
 	// Triangle creation
 	kl::triangle T1(kl::vertex(kl::float3(A, 0.5f)), kl::vertex(kl::float3(B, 0.5f)), kl::vertex(kl::float3(C, 0.5f)));
-	const kl::float4 t1Consts = T1.getConsts();
+	const kl::float4 t1Consts = T1.constants();
 	kl::triangle T2(kl::vertex(kl::float3(A, 0.5f)), kl::vertex(kl::float3(D, 0.5f)), kl::vertex(kl::float3(C, 0.5f)));
-	const kl::float4 t2Consts = T2.getConsts();
+	const kl::float4 t2Consts = T2.constants();
 
 	// Window update setups
 	kl::timer timer;
@@ -35,40 +35,40 @@ int main() {
 			kl::color pixel;
 
 			// Checkig if the point inside a triangle and coloring the pixel
-			if (T1.inTriangle(t1Consts, kl::float2(float(x), float(y)))) {
-				pixel.r = byte(T1.interpolate(t1Consts, kl::float3(float(colA.r), float(colB.r), float(colC.r)), kl::float2(float(x), float(y))));
-				pixel.g = byte(T1.interpolate(t1Consts, kl::float3(float(colA.g), float(colB.g), float(colC.g)), kl::float2(float(x), float(y))));
-				pixel.b = byte(T1.interpolate(t1Consts, kl::float3(float(colA.b), float(colB.b), float(colC.b)), kl::float2(float(x), float(y))));
+			if (T1.in(t1Consts, kl::float2(x, y))) {
+				pixel.r = byte(T1.interpolate(t1Consts, kl::float3(colA.r, colB.r, colC.r), kl::float2(x, y)));
+				pixel.g = byte(T1.interpolate(t1Consts, kl::float3(colA.g, colB.g, colC.g), kl::float2(x, y)));
+				pixel.b = byte(T1.interpolate(t1Consts, kl::float3(colA.b, colB.b, colC.b), kl::float2(x, y)));
 			}
-			else if (T2.inTriangle(t2Consts, kl::float2(float(x), float(y)))) {
-				pixel.r = byte(T2.interpolate(t2Consts, kl::float3(float(colA.r), float(colD.r), float(colC.r)), kl::float2(float(x), float(y))));
-				pixel.g = byte(T2.interpolate(t2Consts, kl::float3(float(colA.g), float(colD.g), float(colC.g)), kl::float2(float(x), float(y))));
-				pixel.b = byte(T2.interpolate(t2Consts, kl::float3(float(colA.b), float(colD.b), float(colC.b)), kl::float2(float(x), float(y))));
+			else if (T2.in(t2Consts, kl::float2(x, y))) {
+				pixel.r = byte(T2.interpolate(t2Consts, kl::float3(colA.r, colD.r, colC.r), kl::float2(x, y)));
+				pixel.g = byte(T2.interpolate(t2Consts, kl::float3(colA.g, colD.g, colC.g), kl::float2(x, y)));
+				pixel.b = byte(T2.interpolate(t2Consts, kl::float3(colA.b, colD.b, colC.b), kl::float2(x, y)));
 			}
 			else {
 				pixel = kl::colors::gray;
 			}
 
 			// Drawing the pixel to the frame
-			frame.spixel(kl::int2(x, y), pixel);
+			frame.pixel(kl::int2(x, y), pixel);
 
 			// Drawing the rand scanline
-			frame.spixel(kl::int2(x + 1, y), kl::random::COLOR());
+			frame.pixel(kl::int2(x + 1, y), kl::random::COLOR());
 
 			// Drawing the yellow scanlinepa
 			int yellowStrength = kl::random::INT(0, 256);
-			frame.spixel(kl::int2(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
+			frame.pixel(kl::int2(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
 		}
 
 		// Rendering the frame
-		window.drawImage(frame);
+		window.draw(frame);
 
 		// Updating the title
-		window.setTitle(std::to_string(int((100.0f * frameInd) / (frame.width() + frame.height() - 1))) + "%");
+		window.title(std::to_string(int((100.0f * frameInd) / (frame.width() + frame.height() - 1))) + "%");
 
 		// Checking the i
 		if (++frameInd == frame.width() + frame.height()) {
-			window.setTitle("Finished!");
+			window.title("Finished!");
 			window.update = []() {};
 		}
 
@@ -77,6 +77,5 @@ int main() {
 		timer.reset();
 	};
 
-	// Window start
-	window.startNew(frame.size(), "Triangle Interpolation", false, true);
+	window.run(frame.size(), "Triangle Interpolation", false, true);
 }

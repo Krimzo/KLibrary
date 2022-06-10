@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
 	}
 
 	// Opening video
-	const String filePath = argv[1];
+	const std::string filePath = argv[1];
 	kl::video video(filePath);
 	if (!video.isOpen()) {
 		std::cout << "Video file could not be opened!" << std::endl;
@@ -20,17 +20,17 @@ int main(int argc, char** argv) {
 	kl::console::clear();
 	std::cout << "Resize the console and press enter..";
 	std::cin.get();
-	const kl::int2 consoleSize = kl::console::getSize() - kl::int2(0, 1);
+	const kl::int2 consoleSize = kl::console::size() - kl::int2(0, 1);
 	kl::console::hideCursor();
 
 	// Processing frames
 	kl::console::clear();
-	std::vector<String> asciiFrames;
+	std::vector<std::string> asciiFrames;
 	kl::image videoFrame;
 	while (video.getFrame(videoFrame)) {
 		static int counter = 0;
-		asciiFrames.push_back(videoFrame.toASCII(consoleSize));
-		kl::console::setCursor(kl::int2(0));
+		asciiFrames.push_back(videoFrame.ascii(consoleSize));
+		kl::console::moveCursor(0);
 		std::cout << "Processed " << ++counter << " frames!";
 	}
 

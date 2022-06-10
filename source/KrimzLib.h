@@ -19,14 +19,6 @@
 #include "utility/time.h"
 #include "utility/web.h"
 
-// Render
-#include "render/camera.h"
-#include "render/plane.h"
-#include "render/sphere.h"
-#include "render/vertex.h"
-#include "render/triangle.h"
-#include "render/ray.h"
-
 // Window
 #include "window/keys.h"
 #include "window/mouse.h"
@@ -35,3 +27,11 @@
 
 // DirectX
 #include "gpu/gpu.h"
+
+// Render
+#include "render/camera.h"
+#include "render/plane.h"
+#include "render/sphere.h"
+#include "render/vertex.h"
+#include "render/triangle.h"
+#include "render/ray.h"

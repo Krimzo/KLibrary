@@ -218,11 +218,15 @@ namespace kl {
 	}
 }
 
+using uint = uint32_t;
+using int64 = int64_t;
+using uint64 = uint64_t;
+
 namespace kl {
 	using float2 = kl::vector2<float>;
 	using double2 = kl::vector2<double>;
 	using int2 = kl::vector2<int>;
-	using uint2 = kl::vector2<unsigned int>;
+	using uint2 = kl::vector2<uint>;
 	using bool2 = kl::vector2<bool>;
 
 	using vec2 = float2;

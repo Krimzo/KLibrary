@@ -4,10 +4,9 @@
 int main() {
 	kl::encrypter enc;
 
-	std::cout << kl::colors::wheat;
-	enc.printKeys();
+	std::cout << kl::colors::wheat << enc;
 
-	String message = "This is a test!";
+	std::string message = "This is a test!";
 	std::cout << kl::colors::sky << message << std::endl;
 
 	enc.encrypt(&message[0], message.size());

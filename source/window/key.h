@@ -6,7 +6,7 @@
 namespace kl {
 	class key {
 	private:
-		bool state;
+		bool m_State;
 
 	public:
 		std::function<void()> press;
@@ -18,5 +18,6 @@ namespace kl {
 		operator bool();
 
 		void update(bool newState);
+		bool update() const;
 	};
 }

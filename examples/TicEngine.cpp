@@ -192,12 +192,12 @@ int main() {
 		// Eval check
 		const int eval = Evaluate(board);
 		if (eval) {
-			win.setTitle((eval == ID_PLAYER) ? "Player wins!" : "Engine wins!");
+			win.title((eval == ID_PLAYER) ? "Player wins!" : "Engine wins!");
 			win.update = []() {};
 			return;
 		}
 		else if (!HasEmpty(board)) {
-			win.setTitle("Draw!");
+			win.title("Draw!");
 			win.update = []() {};
 			return;
 		}
@@ -260,9 +260,8 @@ int main() {
 			}
 		}
 
-		// Image draw
-		win.drawImage(frame);
+		win.draw(frame);
 	};
 
-	win.startNew(kl::int2(FRAME_SIZE + 1), "TicEngine", false, false);
+	win.run(FRAME_SIZE + 1, "TicEngine", false, false);
 }

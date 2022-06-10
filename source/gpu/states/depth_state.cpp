@@ -6,7 +6,7 @@
 ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc) {
 	// State creation
 	ID3D11DepthStencilState* depthState = nullptr;
-	device->CreateDepthStencilState(desc, &depthState);
+	m_Device->CreateDepthStencilState(desc, &depthState);
 	if (!depthState) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create a write depth/stencil state!";
@@ -15,7 +15,7 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc) 
 	}
 
 	// Saving child
-	children.insert(depthState);
+	m_Children.insert(depthState);
 
 	// Return
 	return depthState;
@@ -65,5 +65,5 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool m
 }
 
 void kl::gpu::bind(ID3D11DepthStencilState* state) {
-	devcon->OMSetDepthStencilState(state, 0xFF);
+	m_Context->OMSetDepthStencilState(state, 0xFF);
 }

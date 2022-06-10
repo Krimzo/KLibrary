@@ -22,6 +22,7 @@ namespace kl {
 			struct {
 				T x, y, z;
 			};
+			kl::vector2<T> xy;
 			T data[3] = {};
 		};
 
@@ -242,7 +243,7 @@ namespace kl {
 	using float3 = kl::vector3<float>;
 	using double3 = kl::vector3<double>;
 	using int3 = kl::vector3<int>;
-	using uint3 = kl::vector3<unsigned int>;
+	using uint3 = kl::vector3<uint>;
 	using bool3 = kl::vector3<bool>;
 
 	using vec3 = float3;

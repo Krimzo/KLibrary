@@ -1,50 +1,52 @@
 #include "render/camera.h"
 
 
+static const kl::float3 globalUP = { 0.0f, 1.0f, 0.0f };
+
 // Camera direction getters
-kl::float3 kl::camera::getForward() const {
-	return forward.norm();
+kl::float3 kl::camera::forward() const {
+	return direction.norm();
 }
-kl::float3 kl::camera::getRight() const {
-	return kl::float3(0.0f, 1.0f, 0.0f).cross(getForward()).norm();
+kl::float3 kl::camera::right() const {
+	return globalUP.cross(forward()).norm();
 }
-kl::float3 kl::camera::getUp() const {
-	return getForward().cross(getRight()).norm();
+kl::float3 kl::camera::up() const {
+	return forward().cross(right()).norm();
 }
 
 // Camera movement
 void kl::camera::moveForward(float deltaTime) {
-	position = position + getForward() * (speed * deltaTime);
+	position = position + forward() * (speed * deltaTime);
 }
 void kl::camera::moveBack(float deltaTime) {
-	position = position - getForward() * (speed * deltaTime);
+	position = position - forward() * (speed * deltaTime);
 }
 void kl::camera::moveRight(float deltaTime) {
-	position = position + getRight() * (speed * deltaTime);
+	position = position + right() * (speed * deltaTime);
 }
 void kl::camera::moveLeft(float deltaTime) {
-	position = position - getRight() * (speed * deltaTime);
+	position = position - right() * (speed * deltaTime);
 }
 void kl::camera::moveUp(float deltaTime) {
-	position = position + kl::float3(0.0f, 1.0f, 0.0f) * (speed * deltaTime);
+	position = position + globalUP * (speed * deltaTime);
 }
 void kl::camera::moveDown(float deltaTime) {
-	position = position - kl::float3(0.0f, 1.0f, 0.0f) * (speed * deltaTime);
+	position = position - globalUP * (speed * deltaTime);
 }
 
 // Camera rotation
 void kl::camera::rotate(const kl::float2& mousePos, const kl::float2& frameCenter, float verticalAngleLimit) {
 	const kl::float2 rotation = (mousePos - frameCenter) * sens;
-	const kl::float3 forwardVert = getForward().rotate(rotation.y, getRight());
-	if (std::abs(forwardVert.angle({ 0.0f, 1.0f, 0.0f }) - 90.0f) <= verticalAngleLimit) {
-		forward = forwardVert;
+	const kl::float3 forwardVert = forward().rotate(rotation.y, right());
+	if (std::abs(forwardVert.angle(globalUP) - 90.0f) <= verticalAngleLimit) {
+		direction = forwardVert;
 	}
-	forward = getForward().rotate(rotation.x, { 0.0f, 1.0f, 0.0f });
+	direction = forward().rotate(rotation.x, globalUP);
 }
 
 // Camera matrix
 kl::mat4 kl::camera::matrix() const {
-	const kl::mat4 view = kl::mat4::lookAt(position, position + getForward(), { 0.0f, 1.0f, 0.0f });
+	const kl::mat4 view = kl::mat4::lookAt(position, position + forward(), globalUP);
 	const kl::mat4 proj = kl::mat4::persp(fov, aspect, near, far);
 	return proj * view;
 }

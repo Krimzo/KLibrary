@@ -4,7 +4,7 @@
 
 
 // Constant buffer
-ID3D11Buffer* kl::gpu::newCBuffer(uint32_t byteSize) {
+ID3D11Buffer* kl::gpu::newCBuffer(uint byteSize) {
 	// Checking the size
 	if (byteSize % 16 != 0) {
 		kl::console::show();
@@ -32,15 +32,15 @@ void kl::gpu::setCBufferData(ID3D11Buffer* buff, const void* data) {
 
 	// Mapping and setting buffer data
 	D3D11_MAPPED_SUBRESOURCE ms = {};
-	devcon->Map(buff, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+	m_Context->Map(buff, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
 	memcpy(ms.pData, data, buffData.ByteWidth);
-	devcon->Unmap(buff, NULL);
+	m_Context->Unmap(buff, NULL);
 }
 
 // Binds the buffer to shader
-void kl::gpu::bindVertexCBuffer(ID3D11Buffer* buff, uint32_t slot) {
-	devcon->VSSetConstantBuffers(slot, 1, &buff);
+void kl::gpu::bindVertexCBuffer(ID3D11Buffer* buff, uint slot) {
+	m_Context->VSSetConstantBuffers(slot, 1, &buff);
 }
-void kl::gpu::bindPixelCBuffer(ID3D11Buffer* buff, uint32_t slot) {
-	devcon->PSSetConstantBuffers(slot, 1, &buff);
+void kl::gpu::bindPixelCBuffer(ID3D11Buffer* buff, uint slot) {
+	m_Context->PSSetConstantBuffers(slot, 1, &buff);
 }

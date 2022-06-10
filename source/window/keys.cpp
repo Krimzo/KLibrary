@@ -3,7 +3,7 @@
 #include <windows.h>
 
 
-void kl::keys::updateKey(kl::id key, bool state) {
+void kl::keys::update(int64 key, bool state) {
 	switch (key) {
 		// Letters
 	case 'Q':
@@ -220,72 +220,71 @@ void kl::keys::updateKey(kl::id key, bool state) {
 	}
 }
 
-// Calls all key down functions
-void kl::keys::callAllDowns() {
-	if (q) q.down();
-	if (w) w.down();
-	if (e) e.down();
-	if (r) r.down();
-	if (t) t.down();
-	if (z) z.down();
-	if (u) u.down();
-	if (i) i.down();
-	if (o) o.down();
-	if (p) p.down();
-	if (a) a.down();
-	if (s) s.down();
-	if (d) d.down();
-	if (f) f.down();
-	if (g) g.down();
-	if (h) h.down();
-	if (j) j.down();
-	if (k) k.down();
-	if (l) l.down();
-	if (y) y.down();
-	if (x) x.down();
-	if (c) c.down();
-	if (v) v.down();
-	if (b) b.down();
-	if (n) n.down();
-	if (m) m.down();
-	if (num0) num0.down();
-	if (num1) num1.down();
-	if (num2) num2.down();
-	if (num3) num3.down();
-	if (num4) num4.down();
-	if (num5) num5.down();
-	if (num6) num6.down();
-	if (num7) num7.down();
-	if (num8) num8.down();
-	if (num9) num9.down();
-	if (period) period.down();
-	if (comma) comma.down();
-	if (plus) plus.down();
-	if (minus) minus.down();
-	if (esc) esc.down();
-	if (tab) tab.down();
-	if (caps) caps.down();
-	if (shift) shift.down();
-	if (ctrl) ctrl.down();
-	if (alt) alt.down();
-	if (space) space.down();
-	if (enter) enter.down();
-	if (insert) insert.down();
-	if (delet) delet.down();
-	if (up) up.down();
-	if (left) left.down();
-	if (down) down.down();
-	if (right) right.down();
-	if (f1) f1.down();
-	if (f2) f2.down();
-	if (f3) f3.down();
-	if (f4) f4.down();
-	if (f5) f5.down();
-	if (f6) f6.down();
-	if (f7) f7.down();
-	if (f8) f8.down();
-	if (f9) f9.down();
-	if (f10) f10.down();
-	if (f11) f11.down();
-	if (f12) f12.down();
+void kl::keys::update() const {
+	q.update();
+	w.update();
+	e.update();
+	r.update();
+	t.update();
+	z.update();
+	u.update();
+	i.update();
+	o.update();
+	p.update();
+	a.update();
+	s.update();
+	d.update();
+	f.update();
+	g.update();
+	h.update();
+	j.update();
+	k.update();
+	l.update();
+	y.update();
+	x.update();
+	c.update();
+	v.update();
+	b.update();
+	n.update();
+	m.update();
+	num0.update();
+	num1.update();
+	num2.update();
+	num3.update();
+	num4.update();
+	num5.update();
+	num6.update();
+	num7.update();
+	num8.update();
+	num9.update();
+	period.update();
+	comma.update();
+	plus.update();
+	minus.update();
+	esc.update();
+	tab.update();
+	caps.update();
+	shift.update();
+	ctrl.update();
+	alt.update();
+	space.update();
+	enter.update();
+	insert.update();
+	delet.update();
+	up.update();
+	left.update();
+	down.update();
+	right.update();
+	f1.update();
+	f2.update();
+	f3.update();
+	f4.update();
+	f5.update();
+	f6.update();
+	f7.update();
+	f8.update();
+	f9.update();
+	f10.update();
+	f11.update();
+	f12.update();
 }

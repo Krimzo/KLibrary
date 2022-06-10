@@ -32,7 +32,7 @@ void kl::console::show() {
 }
 
 // Sets the console cursor position
-void kl::console::moveCursor(const kl::int2& position) {
+void kl::console::moveCursor(const kl::uint2& position) {
 	SetConsoleCursorPosition(consoleHandle, { short(position.x), short(position.y) });
 }
 
@@ -58,20 +58,20 @@ void kl::console::setTitle(const std::string& text) {
 }
 
 // Returns the current console size
-kl::int2 kl::console::size() {
+kl::uint2 kl::console::size() {
 	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 	GetConsoleScreenBufferInfo(consoleHandle, &csbi);
-	return kl::int2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
+	return kl::uint2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 }
 
 // Changes the console size
-void kl::console::resize(const kl::int2& size) {
+void kl::console::resize(const kl::uint2& size) {
 	SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
 	SetConsoleWindowInfo(consoleHandle, true, &consoleRect);
 }
 
 // Changes the console font size
-void kl::console::setFont(const kl::int2& size, const std::string& fontName) {
+void kl::console::setFont(const kl::uint2& size, const std::string& fontName) {
 	CONSOLE_FONT_INFOEX cfi = {};
 	cfi.cbSize = sizeof(cfi);
 	cfi.dwFontSize.X = SHORT(size.x);
@@ -135,6 +135,6 @@ void kl::console::progressBar(const std::string& message, int outputY, float per
 
 // Fast console writing
 static DWORD ignore = 0;
-void kl::console::fastOut(const std::string& data, const kl::int2& location) {
+void kl::console::fastOut(const std::string& data, const kl::uint2& location) {
 	WriteConsoleOutputCharacterA(consoleHandle, data.c_str(), DWORD(data.length()), { short(location.x), short(location.y) }, &ignore);
 }

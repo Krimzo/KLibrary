@@ -1,12 +1,14 @@
 #pragma once
 
 #include "window/key.h"
+#include "math/math.h"
 
 
 namespace kl {
-	typedef unsigned long long id;
-	class keys {
-	public:
+	struct keys {
+		void update(int64 key, bool state);
+		void update() const;
+
 		// Letters
 		kl::key q;
 		kl::key w;
@@ -83,13 +85,7 @@ namespace kl {
 		kl::key f11;
 		kl::key f12;
 
-		// Unknown
-		kl::id unknown = 0;
-
-		// Updates the given key to the given value
-		void updateKey(kl::id key, bool state);
-
-		// Calls all key down functions
-		void callAllDowns();
+		// Unknown :)
+		int64 unknown = 0;
 	};
 }

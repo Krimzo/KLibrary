@@ -19,19 +19,19 @@ ID3D11Buffer* kl::gpu::newVertexBuffer(const std::vector<kl::vertex>& vertexData
 	return this->newBuffer(&bufferDesc, &bufferData);
 }
 ID3D11Buffer* kl::gpu::newVertexBuffer(const std::string& filePath, bool flipZ) {
-	return this->newVertexBuffer(kl::file::parseObj(filePath, flipZ));
+	return this->newVertexBuffer(kl::file::parseMesh(filePath, flipZ));
 }
 
 // Renders the mesh
 void kl::gpu::draw(ID3D11Buffer* mesh) {
 	// Binding the mesh
 	const UINT stride = sizeof(kl::vertex); UINT offset = 0;
-	devcon->IASetVertexBuffers(0, 1, &mesh, &stride, &offset);
+	m_Context->IASetVertexBuffers(0, 1, &mesh, &stride, &offset);
 
 	// Getting the byte size
 	D3D11_BUFFER_DESC buffDesc = {};
 	mesh->GetDesc(&buffDesc);
 
 	// Drawing
-	devcon->Draw(buffDesc.ByteWidth / stride, 0);
+	m_Context->Draw(buffDesc.ByteWidth / stride, 0);
 }

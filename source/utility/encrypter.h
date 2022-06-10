@@ -5,6 +5,8 @@
 #include <ctime>
 #include <windows.h>
 
+#include "math/math.h"
+
 
 namespace kl {
 	inline std::wstring toWString(const std::string& data) {
@@ -26,9 +28,10 @@ namespace kl {
 		void operator=(const kl::encrypter&) = delete;
 
 		void genKeys();
-		void printKey(uint32_t ind);
-		void printKeys();
-		void encrypt(void* data, size_t dataSize);
-		void decrypt(void* data, size_t dataSize);
+		void encrypt(void* data, uint64 dataSize) const;
+		void decrypt(void* data, uint64 dataSize) const;
 	};
+
+	// std::cout
+	std::ostream& operator<<(std::ostream& os, const kl::encrypter& encrypter);
 }

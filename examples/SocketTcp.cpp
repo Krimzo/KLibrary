@@ -4,7 +4,7 @@
 void Server() {
 	kl::socket server;
 
-	server.setPort(1709);
+	server.port(1709);
 
 	server.bind();
 	server.listen(2);
@@ -20,13 +20,13 @@ void Server() {
 void Client() {
 	kl::socket client;
 
-	client.setAddr("127.0.0.1");
-	client.setPort(1709);
+	client.address("127.0.0.1");
+	client.port(1709);
 
 	client.connect();
 
 	char buff[10] = {};
-	while (client.recieve(buff, sizeof(buff))) {
+	while (client.receive(buff, sizeof(buff))) {
 		printf("Client: Server sent: %s\n", buff);
 	}
 }

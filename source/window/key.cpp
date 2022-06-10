@@ -1,18 +1,26 @@
 #include "window/key.h"
 
 
-kl::key::key() : state(false), press([]() {}), down([]() {}), release([]() {}) {}
+kl::key::key() : m_State(false), press([]() {}), down([]() {}), release([]() {}) {}
 
 kl::key::operator bool() {
-	return state;
+	return m_State;
 }
 
 void kl::key::update(bool newState) {
-	if (!state && newState) {
+	if (!m_State && newState) {
 		press();
 	}
-	else if (state && !newState) {
+	else if (m_State && !newState) {
 		release();
 	}
-	state = newState;
+	m_State = newState;
+}
+
+bool kl::key::update() const {
+	if (m_State) {
+		down();
+		return true;
+	}
+	return false;
 }

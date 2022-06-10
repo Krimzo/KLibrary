@@ -10,98 +10,60 @@
 #include "window/mouse.h"
 #include "math/math.h"
 
-#pragma comment(lib, "kernel32.lib")
-#pragma comment(lib, "user32.lib")
-#pragma comment(lib, "gdi32.lib")
-#pragma comment(lib, "winspool.lib")
-#pragma comment(lib, "comdlg32.lib")
-#pragma comment(lib, "advapi32.lib")
-#pragma comment(lib, "shell32.lib")
-#pragma comment(lib, "ole32.lib")
-#pragma comment(lib, "oleaut32.lib")
-#pragma comment(lib, "uuid.lib")
-#pragma comment(lib, "odbc32.lib")
-#pragma comment(lib, "odbccp32.lib")
-
 
 namespace kl {
+	namespace screen {
+		inline kl::uint2 size = kl::int2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	}
+
 	class window {
 	private:
-		// Winapi variables
-		HINSTANCE inst = GetModuleHandleA(nullptr);
-		HWND wnd = nullptr;
-		HDC dc = nullptr;
+		HINSTANCE m_Instance = GetModuleHandleA(nullptr);
+		HWND m_Window = nullptr;
+		HDC m_DeviceContext = nullptr;
 
-		// Fullscreen data
-		bool inFull = false;
-		DWORD winStyle = NULL;
-		WINDOWPLACEMENT winPlace = {};
+		bool m_Fullscreened = false;
+		DWORD m_WindowStyle = NULL;
+		WINDOWPLACEMENT m_Placement = {};
 
-		// Registers a new window class
 		void registerWindowClass(const std::string& name);
-
-		// Creates a new window
-		void createWindow(const kl::int2& size, const std::string& name, bool resizeable);
-
-		// Handles the windows message
+		void createWindow(const kl::uint2& size, const std::string& name, bool resizeable);
 		LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		void handleMessage(MSG& msg);
 
 	public:
-		// Screen size
-		static const kl::int2 screen;
-
-		// Input
 		kl::keys keys;
 		kl::mouse mouse;
 
-		// User functions
 		std::function<void(void)> start = []() {};
 		std::function<void(void)> update = []() {};
 		std::function<void(void)> end = []() {};
-		std::function<void(const kl::int2&)> resize = [](const kl::int2&) {};
+		std::function<void(const kl::uint2&)> resize = [](const kl::uint2&) {};
 
 		window();
 		window(const kl::window&) = delete;
 		~window();
 
-		bool isOpen() const;
-
-		// Window creation
-		void startNew(const kl::int2& size, const std::string& name, bool resizeable, bool continuous);
-
-		// Window stop
+		void run(const kl::uint2& size, const std::string& name, bool resizeable, bool continuous);
 		void stop() const;
+		bool running() const;
 
-		// Returns a handle to the window
-		HWND getWND();
+		operator HWND();
+		operator const HWND() const;
 
-		// Sets the fullscreen mode
-		void setFullscreen(bool enable);
-
-		// Max/min functions
 		void maximize();
 		void minimize();
+		void fullscreen(bool enable);
 
-		// Returns the window size
-		kl::int2 getSize() const;
+		kl::uint2 size() const;
+		float aspect() const;
+		kl::uint2 center() const;
 
-		// Returns the aspect ratio
-		float getAspect() const;
+		void title(const std::string& data);
+		bool icon(const std::string& filePath);
 
-		// Returns the center point of the frame
-		kl::int2 getCenter() const;
+		void draw(const kl::image& toDraw, const kl::int2& position = {});
 
-		// Sets the window title
-		void setTitle(const std::string& data);
-
-		// Sets the window icons
-		bool setIcon(const std::string& filePath);
-
-		// Sets the pixels of the window
-		void drawImage(const kl::image& toDraw, const kl::int2& position = { 0, 0 });
-
-		// Sends null message to the window
 		void notify() const;
 	};
 }

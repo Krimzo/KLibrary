@@ -10,19 +10,16 @@ namespace kl {
 	public:
 		byte b, g, r, a;
 
-		// Constructors
 		color();
 		color(byte r, byte g, byte b, byte a = 255);
 
-		// Operator overloading
-		bool equals(const kl::color& obj) const;
+		bool equ(const kl::color& obj) const;
 		bool operator==(const kl::color& obj) const;
 		bool operator!=(const kl::color& obj) const;
 
-		int getInt() const;
-		kl::color grayscale() const;
+		kl::color gray() const;
 		kl::color invert() const;
-		char toASCII() const;
+		char ascii() const;
 
 		kl::color mix(const kl::color& col, float ratio) const;
 		kl::color mix(const kl::color& col) const;

@@ -8,7 +8,7 @@ void DrawAxis(kl::image* frame, const kl::color& col = kl::colors::lgray) {
 void DrawData(kl::image* frame, std::vector<kl::int2>& data, const kl::color& col = kl::colors::orange) {
 	const kl::int2 halfSize = frame->size() / 2;
 	for (auto& val : data) {
-		frame->spixel(val * kl::int2(1, -1) + halfSize, col);
+		frame->pixel(val * kl::int2(1, -1) + halfSize, col);
 	}
 }
 void DrawLine(kl::image* frame, const kl::float2& equat, const kl::color& col = kl::colors::sky) {
@@ -84,7 +84,7 @@ int main() {
 		exit(0);
 	};
 	std::thread([&]() {
-		win.startNew(buff.size(), "Data Display", false, true);
+		win.run(buff.size(), "Data Display", false, true);
 	}).detach();
 
 	// Data
@@ -93,7 +93,7 @@ int main() {
 
 	win.mouse.lmb.down = [&]() {
 		static kl::int2 lastData = {};
-		const kl::int2 newData = win.mouse.position * kl::int2(1, -1) - buff.size() / kl::int2(2, -2);
+		const kl::int2 newData = win.mouse.position * kl::int2(1, -1) - kl::int2(buff.size()) / kl::int2(2, -2);
 		if (newData != lastData) {
 			data.push_back(newData);
 			lastData = newData;
@@ -104,7 +104,7 @@ int main() {
 	};
 
 	while (true) {
-		win.setTitle("FPS: " + std::to_string(int(1.0f / kl::time::interval())));
+		win.title("FPS: " + std::to_string(int(1.0f / kl::time::interval())));
 
 		kl::image* bb = buff.getBB();
 		bb->fill(kl::colors::gray);

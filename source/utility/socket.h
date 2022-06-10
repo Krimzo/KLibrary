@@ -3,49 +3,41 @@
 #include <iostream>
 #include <windows.h>
 
+#include "math/math.h"
+
 
 namespace kl {
 	class socket {
 	private:
-		static WSADATA wsaData;
-		static bool wsaInited;
-		sockaddr_in addr = {};
-		SOCKET sock = NULL;
+		static WSADATA m_WSAData;
+		static bool m_WSAInit;
+		sockaddr_in m_Address = {};
+		SOCKET m_Socket = NULL;
 
 	public:
-		// WSA setup
 		static void initWSA();
 		static void uninitWSA();
 
 		socket();
-		socket(SOCKET sock);
+		socket(const SOCKET& sock);
 		~socket();
 
 		operator SOCKET();
 
-		// Closes the socket
 		void close();
 
-		// Info setters
-		void setPort(uint16_t port);
-		void setAddr(const std::string& addrs);
+		void port(uint port);
+		void address(const std::string& addrs);
 
-		// Binds the socket
+		uint port() const;
+		std::string address() const;
+
 		void bind();
-
-		// Sets socket mode to listen
 		void listen(int queueSize);
-
-		// Accepts new connections
 		kl::socket accept();
-
-		// Connects to a socket
 		void connect();
 
-		// Sends data to socket
-		int send(const void* data, int byteSize);
-
-		// Receives data from socket
-		int recieve(void* buff, int byteSize);
+		int send(const void* data, uint byteSize);
+		int receive(void* buff, uint byteSize);
 	};
 }

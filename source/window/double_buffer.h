@@ -2,24 +2,23 @@
 
 #include <mutex>
 
-#include "graphics/image.h"
 #include "window/window.h"
 
 
 namespace kl {
 	class double_buffer {
 	private:
-		kl::image buff1;
-		kl::image buff2;
-		kl::image* fb;
-		std::mutex lock;
+		kl::image m_Buffer1;
+		kl::image m_Buffer2;
+		kl::image* m_FrontBuffer;
+		std::mutex m_Lock;
 
 	public:
-		double_buffer(const kl::int2& frameSize);
+		double_buffer(const kl::uint2& frameSize);
 		double_buffer(const double_buffer&) = delete;
 		void operator=(const double_buffer&) = delete;
 
-		kl::int2 size();
+		kl::uint2 size();
 
 		kl::image* getBB();
 

@@ -7,7 +7,7 @@
 ID3D11Texture2D* kl::gpu::newTextureBB() {
 	// Getting the back buffer address
 	ID3D11Texture2D* buffAddrs = nullptr;
-	chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffAddrs);
+	m_Chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffAddrs);
 	if (!buffAddrs) {
 		kl::console::show();
 		std::cout << "DirectX: Could not get back buffer address!";
@@ -16,7 +16,7 @@ ID3D11Texture2D* kl::gpu::newTextureBB() {
 	}
 
 	// Saving child
-	children.insert(buffAddrs);
+	m_Children.insert(buffAddrs);
 
 	// Return
 	return buffAddrs;
@@ -26,7 +26,7 @@ ID3D11Texture2D* kl::gpu::newTextureBB() {
 ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOURCE_DATA* subData) {
 	// Texture creation
 	ID3D11Texture2D* tex = nullptr;
-	device->CreateTexture2D(desc, subData, &tex);
+	m_Device->CreateTexture2D(desc, subData, &tex);
 	if (!tex) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create a 2D texture!";
@@ -35,7 +35,7 @@ ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOUR
 	}
 
 	// Saving child
-	children.insert(tex);
+	m_Children.insert(tex);
 
 	// Return
 	return tex;
@@ -59,7 +59,7 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img, bool enableUnorderedA
 
 	// Texture data descriptor creation
 	D3D11_SUBRESOURCE_DATA texData = {};
-	texData.pSysMem = flipped.pointer();
+	texData.pSysMem = flipped.data();
 	texData.SysMemPitch = img.width() * sizeof(uint32_t);
 
 	// Return
@@ -90,12 +90,12 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& ba
 
 	// Texture data descriptor creation
 	D3D11_SUBRESOURCE_DATA texData[6] = {
-		{  right.pointer(), front.width() * sizeof(kl::color), 0 },
-		{   left.pointer(), front.width() * sizeof(kl::color), 0 },
-		{    top.pointer(), front.width() * sizeof(kl::color), 0 },
-		{ bottom.pointer(), front.width() * sizeof(kl::color), 0 },
-		{  front.pointer(), front.width() * sizeof(kl::color), 0 },
-		{   back.pointer(), front.width() * sizeof(kl::color), 0 }
+		{  right.data(), front.width() * sizeof(kl::color), 0 },
+		{   left.data(), front.width() * sizeof(kl::color), 0 },
+		{    top.data(), front.width() * sizeof(kl::color), 0 },
+		{ bottom.data(), front.width() * sizeof(kl::color), 0 },
+		{  front.data(), front.width() * sizeof(kl::color), 0 },
+		{   back.data(), front.width() * sizeof(kl::color), 0 }
 	};
 
 	// Return

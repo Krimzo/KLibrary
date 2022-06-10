@@ -6,7 +6,7 @@
 ID3D11RasterizerState* kl::gpu::newRasterState(D3D11_RASTERIZER_DESC* desc) {
 	// Raster creation
 	ID3D11RasterizerState* rasterState = nullptr;
-	device->CreateRasterizerState(desc, &rasterState);
+	m_Device->CreateRasterizerState(desc, &rasterState);
 	if (!rasterState) {
 		kl::console::show();
 		std::cout << "DirectX: Could not create a raster state!";
@@ -15,7 +15,7 @@ ID3D11RasterizerState* kl::gpu::newRasterState(D3D11_RASTERIZER_DESC* desc) {
 	}
 
 	// Saving child
-	children.insert(rasterState);
+	m_Children.insert(rasterState);
 
 	// Return
 	return rasterState;
@@ -36,5 +36,5 @@ ID3D11RasterizerState* kl::gpu::newRasterState(bool wireframe, bool cull, bool c
 
 // Binds the raster state
 void kl::gpu::bind(ID3D11RasterizerState* state) {
-	devcon->RSSetState(state);
+	m_Context->RSSetState(state);
 }

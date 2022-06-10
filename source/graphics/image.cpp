@@ -9,12 +9,16 @@
 #include "utility/file.h"
 #include "utility/encrypter.h"
 
+#undef min
+#undef max
 
-// Constructor
+#pragma comment(lib, "gdiplus.lib")
+
+
 kl::image::image() {
 	resize(0);
 }
-kl::image::image(const kl::int2& size, const kl::color& color) {
+kl::image::image(const kl::uint2& size, const kl::color& color) {
 	resize(size);
 	fill(color);
 }
@@ -24,74 +28,73 @@ kl::image::image(const std::string& filePath) {
 	}
 }
 
-// Iterator
 std::vector<kl::color>::iterator kl::image::begin() {
-	return pixels.begin();
+	return m_Pixels.begin();
 }
 std::vector<kl::color>::iterator kl::image::end() {
-	return pixels.end();
+	return m_Pixels.end();
 }
 
-// Getters
-int kl::image::width() const {
-	return _size.x;
+uint kl::image::width() const {
+	return m_Size.x;
 }
-int kl::image::height() const {
-	return _size.y;
+uint kl::image::height() const {
+	return m_Size.y;
 }
-kl::int2 kl::image::size() const {
-	return _size;
+kl::uint2 kl::image::size() const {
+	return m_Size;
 }
-kl::color kl::image::gpixel(const kl::int2& coords) const {
-	if (coords.x >= 0 && coords.x < _size.x && coords.y >= 0 && coords.y < _size.y) {
-		return pixels[size_t(coords.y * _size.x + coords.x)];
+kl::color kl::image::pixel(const kl::uint2& coords) const {
+	if (coords.x >= 0 && coords.x < m_Size.x && coords.y >= 0 && coords.y < m_Size.y) {
+		return m_Pixels[coords.y * m_Size.x + coords.x];
 	}
 	return kl::colors::black;
 }
-kl::color* kl::image::pointer() const {
-	return (kl::color*)&pixels[0];
+kl::color* kl::image::data() {
+	return &m_Pixels[0];
 }
-kl::image kl::image::rect(kl::int2 a, kl::int2 b) const {
-	// Sorting
+const kl::color* kl::image::data() const {
+	return &m_Pixels[0];
+}
+kl::image kl::image::rect(kl::uint2 a, kl::uint2 b) const {
 	if (b.x < a.x) {
 		std::swap(a.x, b.x);
 	}
 	if (b.y < a.y) {
 		std::swap(a.y, b.y);
 	}
-
-	// Saving data
 	kl::image temp(b - a);
 	for (kl::int2 pos = 0; pos.y < temp.height(); pos.y++) {
 		for (pos.x = 0; pos.x < temp.width(); pos.x++) {
-			temp.spixel(pos, gpixel(pos + a));
+			temp.pixel(pos, pixel(pos + a));
 		}
 	}
 	return temp;
 }
 
-// Setters
-void kl::image::width(int width) {
-	resize(kl::int2(width, _size.y));
+bool kl::image::width(uint width) {
+	return resize(kl::int2(width, m_Size.y));
 }
-void kl::image::height(int height) {
-	resize(kl::int2(_size.x, height));
+bool kl::image::height(uint height) {
+	return resize(kl::int2(m_Size.x, height));
 }
-void kl::image::resize(const kl::int2& size) {
-	if (size != _size) {
-		pixels.resize(size_t(size.x * size.y));
-		_size = size;
+bool kl::image::resize(const kl::uint2& size) {
+	if (size != m_Size) {
+		m_Pixels.resize(size.x * size.y);
+		m_Size = size;
+		return true;
 	}
+	return false;
 }
-void kl::image::spixel(const kl::int2& coords, const kl::color& color) {
-	if (coords.x >= 0 && coords.x < _size.x && coords.y >= 0 && coords.y < _size.y) {
-		pixels[size_t(coords.y * _size.x + coords.x)] = color;
+bool kl::image::pixel(const kl::uint2& coords, const kl::color& color) {
+	if (coords.x >= 0 && coords.x < m_Size.x && coords.y >= 0 && coords.y < m_Size.y) {
+		m_Pixels[coords.y * m_Size.x + coords.x] = color;
+		return true;
 	}
+	return false;
 }
 
-// Reads an image file and stores it in the image instance
 bool kl::image::fromFile(const std::string& filePath) {
-	// Gdiplus init
 	uint64_t gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
 	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
@@ -99,37 +102,28 @@ bool kl::image::fromFile(const std::string& filePath) {
 		return false;
 	}
 
-	// Loading image file
-	Gdiplus::Bitmap* loadedBitmap = new Gdiplus::Bitmap(kl::toWString(filePath).c_str());
-	if (loadedBitmap->GetLastStatus()) {
-		std::cout << "Image: Could not open file \"" << filePath << "\"!" << std::endl;
-		return false;
+	{
+		Gdiplus::Bitmap loadedBitmap(kl::toWString(filePath).c_str());
+		Gdiplus::BitmapData bitmapData;
+		if (loadedBitmap.GetLastStatus()) {
+			std::cout << "Image: Could not open file \"" << filePath << "\"!" << std::endl;
+			return false;
+		}
+		resize(kl::int2(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
+		loadedBitmap.LockBits(nullptr, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
+		memcpy(&m_Pixels[0], bitmapData.Scan0, m_Pixels.size() * sizeof(kl::color));
 	}
 
-	// Resizing the self
-	resize(kl::int2(loadedBitmap->GetWidth(), loadedBitmap->GetHeight()));
-
-	// Locking the bitmap data
-	Gdiplus::BitmapData bitmapData;
-	loadedBitmap->LockBits(nullptr, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
-
-	// Loading the pixel data
-	memcpy(&pixels[0], bitmapData.Scan0, pixels.size() * sizeof(kl::color));
-
-	// Cleanup
-	delete loadedBitmap;
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 	return true;
 }
 
-// Saves the image to a file
 const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0x00,0x00,0xf8,0x1e,0xf3,0x2e } };
 bool kl::image::toFile(const std::string& fileName) const {
-	// Checking the file extension is supported
 	const CLSID* formatToUse = nullptr;
-	std::string fileExtension = kl::file::getExtension(fileName);
+	const std::string fileExtension = kl::file::extension(fileName);
 	if (fileExtension == "bmp") {
 		formatToUse = &bmpEncoderCLSID;
 	}
@@ -141,22 +135,20 @@ bool kl::image::toFile(const std::string& fileName) const {
 	}
 	else if (fileExtension == "txt") {
 		std::stringstream ss;
-		for (int y = 0; y < _size.y; y++)
-			for (int x = 0; x < _size.x; x++)
+		for (uint y = 0; y < m_Size.y; y++)
+			for (uint x = 0; x < m_Size.x; x++)
 				ss <<
 				x << " " << y << " => " <<
-				int(pixels[size_t(y) * _size.x + x].r) << " " <<
-				int(pixels[size_t(y) * _size.x + x].g) << " " <<
-				int(pixels[size_t(y) * _size.x + x].b) << "\n";
+				uint(m_Pixels[y * m_Size.x + x].r) << " " <<
+				uint(m_Pixels[y * m_Size.x + x].g) << " " <<
+				uint(m_Pixels[y * m_Size.x + x].b) << "\n";
 		kl::file::write(fileName, ss.str());
 		return true;
 	}
 	else {
-		std::cout << "Image: File extension \"" << fileExtension << "\" is not supported!" << std::endl;
 		return false;
 	}
 
-	// Gdiplus init
 	ULONG_PTR gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
 	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
@@ -164,85 +156,57 @@ bool kl::image::toFile(const std::string& fileName) const {
 		return false;
 	}
 
-	// Temp bitmap creation
-	Gdiplus::Bitmap* tempBitmap = new Gdiplus::Bitmap(_size.x, _size.y, PixelFormat32bppARGB);
+	{
+		Gdiplus::Bitmap tempBitmap(m_Size.x, m_Size.y, PixelFormat32bppARGB);
+		Gdiplus::BitmapData bitmapData;
+		tempBitmap.LockBits(nullptr, Gdiplus::ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
+		memcpy(bitmapData.Scan0, &m_Pixels[0], m_Pixels.size() * sizeof(kl::color));
+		tempBitmap.UnlockBits(&bitmapData);
+		tempBitmap.Save(kl::toWString(fileName).c_str(), formatToUse, nullptr);
+	}
 
-	// Locking the bitmap data
-	Gdiplus::BitmapData bitmapData;
-	tempBitmap->LockBits(nullptr, Gdiplus::ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
-
-	// Pixel data transfer
-	memcpy(bitmapData.Scan0, &pixels[0], pixels.size() * sizeof(kl::color));
-
-	// Unlocking the bitmap
-	tempBitmap->UnlockBits(&bitmapData);
-
-	// Saving to file
-	tempBitmap->Save(kl::toWString(fileName).c_str(), formatToUse, nullptr);
-
-	// Cleanup
-	delete tempBitmap;
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 	return true;
 }
 
-// Fils the image with solid color
 void kl::image::fill(const kl::color& color) {
-	for (int i = 0; i < pixels.size(); i++) {
-		pixels[i] = color;
+	for (auto& pixel : m_Pixels) {
+		pixel = color;
 	}
 }
 
-// Flips the pixel on x axis
 kl::image kl::image::flipH() const {
-	// Temp image
 	kl::image temp(size());
-
-	// Flipping
-	for (int y = 0; y < _size.y; y++) {
-		for (int x = 0; x < _size.x; x++) {
-			temp.pixels[size_t(y) * _size.x + x] = pixels[size_t(y) * _size.x + _size.x - 1 - x];
+	for (uint y = 0; y < m_Size.y; y++) {
+		for (uint x = 0; x < m_Size.x; x++) {
+			temp.m_Pixels[y * m_Size.x + x] = m_Pixels[y * m_Size.x + m_Size.x - 1 - x];
 		}
 	}
-
-	// Returning the edited
 	return temp;
 }
 
-// Flips the pixel on y axis
 kl::image kl::image::flipV() const {
-	// Temp image
 	kl::image temp(size());
-
-	// Flipping
-	for (int x = 0; x < _size.x; x++) {
-		for (int y = 0; y < _size.y; y++) {
-			temp.pixels[size_t(y) * _size.x + x] = pixels[size_t(_size.y - 1 - y) * _size.x + x];
+	for (uint x = 0; x < m_Size.x; x++) {
+		for (uint y = 0; y < m_Size.y; y++) {
+			temp.m_Pixels[y * m_Size.x + x] = m_Pixels[(m_Size.y - 1 - y) * m_Size.x + x];
 		}
 	}
-
-	// Returning the edited
 	return temp;
 }
 
-// Draws a line between 2 points
 void kl::image::drawLine(const kl::int2& a, const kl::int2& b, const kl::color& col) {
-	// Calculations
-	const int len = max(abs(b.x - a.x), abs(b.y - a.y));
+	const int len = std::max(std::abs(b.x - a.x), std::abs(b.y - a.y));
 	const kl::float2 incr(float(b.x - a.x) / len, float(b.y - a.y) / len);
-
-	// Drawing
-	kl::float2 drawPoint(float(a.x), float(a.y));
+	kl::float2 drawPoint(a.x, a.y);
 	for (int i = 0; i <= len; i++) {
-		spixel(kl::int2(int(drawPoint.x), int(drawPoint.y)), col);
+		pixel(kl::int2(drawPoint.x, drawPoint.y), col);
 		drawPoint += incr;
 	}
 }
 
-// Draws a triangle between 3 points
 void kl::image::drawTriangle(kl::int2 a, kl::int2 b, kl::int2 c, const kl::color& col, bool fill) {
 	if (fill) {
-		// Sorting by y
 		if (a.y > b.y) {
 			std::swap(a, b);
 		}
@@ -252,10 +216,9 @@ void kl::image::drawTriangle(kl::int2 a, kl::int2 b, kl::int2 c, const kl::color
 		if (b.y > c.y) {
 			std::swap(b, c);
 		}
-
-		// Drawing
 		for (int y = a.y; y < c.y; y++) {
-			drawLine(kl::int2(int(kl::math::lineX<float>((y < b.y) ? a : c, b, float(y))), int(y)), kl::int2(int(kl::math::lineX<float>(a, c, float(y))), int(y)), col);
+			drawLine(kl::int2(kl::math::lineX<float>((y < b.y) ? a : c, b, y), y),
+				kl::int2(kl::math::lineX<float>(a, c, y), y), col);
 		}
 	}
 	else {
@@ -265,15 +228,11 @@ void kl::image::drawTriangle(kl::int2 a, kl::int2 b, kl::int2 c, const kl::color
 	}
 }
 
-// Draws a rectangle between 2 points
 void kl::image::drawRectangle(kl::int2 a, kl::int2 b, const kl::color& col, bool fill) {
 	if (fill) {
-		// Sorting by y
 		if (a.y > b.y) {
 			std::swap(a, b);
 		}
-
-		// Drawing
 		for (int y = a.y; y <= b.y; y++) {
 			drawLine(kl::int2(a.x, y), kl::int2(b.x, y), col);
 		}
@@ -286,57 +245,50 @@ void kl::image::drawRectangle(kl::int2 a, kl::int2 b, const kl::color& col, bool
 	}
 }
 
-// Draws a circle with the given center point and radius
 void kl::image::drawCircle(const kl::int2& p, float r, const kl::color& col, bool fill) {
 	if (fill) {
 		for (int y = int(p.y - r); y <= int(p.y + r); y++) {
-			const int x = int(p.x + sqrt(r * r - float(y - p.y) * float(y - p.y)));
+			const int x = p.x + std::sqrt(r * r - (y - p.y) * (y - p.y));
 			drawLine(kl::int2(2 * p.x - x, y), kl::int2(x, y), col);
 		}
 	}
 	else {
 		for (int i = 0; i < 2 * r; i++) {
-			// X run
-			const int x1 = int(p.x - r + i);
-			const int y1 = int(p.y + sqrt(r * r - float(x1 - p.x) * float(x1 - p.x)));
-			spixel(kl::int2(x1, y1), col);
-			spixel(kl::int2(x1, 2 * p.y - y1), col);
+			const int x1 = p.x - r + i;
+			const int y1 = p.y + std::sqrt(r * r - (x1 - p.x) * (x1 - p.x));
+			pixel(kl::int2(x1, y1), col);
+			pixel(kl::int2(x1, 2 * p.y - y1), col);
 
-			// Y run
-			const int y2 = int(p.y - r + i);
-			const int x2 = int(p.x + sqrt(r * r - float(y2 - p.y) * float(y2 - p.y)));
-			spixel(kl::int2(x2, y2), col);
-			spixel(kl::int2(2 * p.x - x2, y2), col);
+			const int y2 = p.y - r + i;
+			const int x2 = p.x + std::sqrt(r * r - (y2 - p.y) * (y2 - p.y));
+			pixel(kl::int2(x2, y2), col);
+			pixel(kl::int2(2 * p.x - x2, y2), col);
 		}
 	}
 }
-// Draws a circle between 1 center and 1 outer point
 void kl::image::drawCircle(const kl::int2& a, const kl::int2& b, const kl::color& col, bool fill) {
 	drawCircle(a, kl::float2(b - a).len(), col, fill);
 }
 
-// Draws image on image
 void kl::image::drawImage(const kl::int2& pos, const kl::image& img, bool mixAlpha) {
 	for (kl::int2 coords = 0; coords.y < img.height(); coords.y++) {
 		for (coords.x = 0; coords.x < img.width(); coords.x++) {
-			const kl::color imgPxl = img.gpixel(coords);
 			if (mixAlpha) {
-				spixel(pos + coords, gpixel(pos + coords).mix(img.gpixel(coords)));
+				pixel(pos + coords, pixel(pos + coords).mix(img.pixel(coords)));
 			}
 			else {
-				spixel(pos + coords, img.gpixel(coords));
+				pixel(pos + coords, img.pixel(coords));
 			}
 		}
 	}
 }
 
-// Converts an image to an ASCII frame
-std::string kl::image::toASCII(const kl::int2& frameSize) const {
-	const kl::int2 incr = _size / frameSize;
+std::string kl::image::ascii(const kl::int2& frameSize) const {
+	const kl::int2 incr = m_Size / frameSize;
 	std::stringstream frame;
 	for (kl::int2 pos = 0; pos.y < frameSize.y; pos.y++) {
 		for (pos.x = 0; pos.x < frameSize.x; pos.x++) {
-			frame << gpixel(pos * incr).toASCII();
+			frame << pixel(pos * incr).ascii();
 		}
 	}
 	return frame.str();

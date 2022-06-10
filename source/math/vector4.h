@@ -9,6 +9,8 @@ namespace kl {
 			struct {
 				T x, y, z, w;
 			};
+			kl::vector2<T> xy;
+			kl::vector3<T> xyz;
 			T data[4] = {};
 		};
 
@@ -203,7 +205,7 @@ namespace kl {
 	using float4 = kl::vector4<float>;
 	using double4 = kl::vector4<double>;
 	using int4 = kl::vector4<int>;
-	using uint4 = kl::vector4<unsigned int>;
+	using uint4 = kl::vector4<uint>;
 	using bool4 = kl::vector4<bool>;
 
 	using vec4 = float4;

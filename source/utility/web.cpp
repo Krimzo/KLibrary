@@ -3,9 +3,10 @@
 #include <windows.h>
 #include <wininet.h>
 
+#pragma comment(lib, "wininet.lib")
 
-// Downloads website data(bytes) from the given url
-std::string kl::web::getWebsiteData(const std::string& url, int bufferSize) {
+
+std::string kl::web::siteData(const std::string& url, uint bufferSize) {
 	// Create browser
 	HINTERNET connection = InternetOpenA("Browser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
 	if (!connection) {
@@ -39,7 +40,6 @@ std::string kl::web::getWebsiteData(const std::string& url, int bufferSize) {
 	return finalData;
 }
 
-// Downloads data from the website and saves it in a file
-void kl::web::downloadToFile(const std::string& url, const std::string& fileName) {
-	kl::file::write(fileName, kl::web::getWebsiteData(url));
+void kl::web::toFile(const std::string& url, const std::string& fileName) {
+	kl::file::write(fileName, kl::web::siteData(url));
 }

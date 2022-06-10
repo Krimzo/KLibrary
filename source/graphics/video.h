@@ -12,18 +12,11 @@
 
 #include "graphics/image.h"
 
-#pragma comment(lib, "mf.lib")
-#pragma comment(lib, "mfplay.lib")
-#pragma comment(lib, "mfplat.lib")
-#pragma comment(lib, "mfuuid.lib")
-#pragma comment(lib, "mfreadwrite.lib")
-#pragma comment(lib, "propsys.lib")
-
 
 namespace kl {
 	class video {
 	private:
-		IMFSourceReader* reader = nullptr;
+		IMFSourceReader* m_Reader = nullptr;
 
 	public:
 		video();
@@ -38,7 +31,7 @@ namespace kl {
 		bool isOpen() const;
 		float duration() const;
 		size_t byteSize() const;
-		kl::int2 frameSize() const;
+		kl::uint2 frameSize() const;
 		float frameRate() const;
 		bool getFrame(kl::image& out);
 	};
