@@ -9,12 +9,7 @@ WSADATA kl::socket::m_WSAData = {};
 bool kl::socket::m_WSAInit = false;
 void kl::socket::initWSA() {
 	if (!m_WSAInit) {
-		if (WSAStartup(MAKEWORD(2, 2), &m_WSAData)) {
-			kl::console::show();
-			std::cout << "Could not startup WSA!";
-			std::cin.get();
-			exit(69);
-		}
+		kl::console::error(WSAStartup(MAKEWORD(2, 2), &m_WSAData), "Failed to initialize WSA");
 		m_WSAInit = true;
 	}
 }
@@ -27,12 +22,7 @@ void kl::socket::uninitWSA() {
 
 kl::socket::socket() {
 	m_Socket = ::socket(AF_INET, SOCK_STREAM, NULL);
-	if (m_Socket == INVALID_SOCKET) {
-		kl::console::show();
-		std::cout << "Could not create a socket!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(m_Socket == INVALID_SOCKET, "Failed to create socket");
 	m_Address.sin_family = AF_INET;
 	m_Address.sin_addr.s_addr = INADDR_ANY;
 }
@@ -53,12 +43,7 @@ void kl::socket::port(uint port) {
 	m_Address.sin_port = htons(port);
 }
 void kl::socket::address(const std::string& addrs) {
-	if (inet_pton(AF_INET, addrs.c_str(), &m_Address.sin_addr) != 1) {
-		kl::console::show();
-		std::cout << "Could not parse address \"" << addrs << "\"";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(inet_pton(AF_INET, addrs.c_str(), &m_Address.sin_addr) != 1, "Could not convert address");
 }
 
 uint kl::socket::port() const {
@@ -71,42 +56,22 @@ std::string kl::socket::address() const {
 }
 
 void kl::socket::bind() {
-	if (::bind(m_Socket, (sockaddr*)&m_Address, sizeof(m_Address))) {
-		kl::console::show();
-		std::cout << "Could not bind socket!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(::bind(m_Socket, (sockaddr*)&m_Address, sizeof(m_Address)), "Could not bind socket");
 }
 
 void kl::socket::listen(int queueSize) {
-	if (::listen(m_Socket, queueSize)) {
-		kl::console::show();
-		std::cout << "Could not listen on socket!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(::listen(m_Socket, queueSize), "Could not listen on socket");
 }
 
 kl::socket kl::socket::accept() {
 	int addrLen = sizeof(m_Address);
 	SOCKET accepted = ::accept(m_Socket, (sockaddr*)&m_Address, &addrLen);
-	if (accepted == INVALID_SOCKET) {
-		kl::console::show();
-		std::cout << "Bad socket accepted!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(accepted == INVALID_SOCKET, "Could not accept socket");
 	return kl::socket(accepted);
 }
 
 void kl::socket::connect() {
-	if (::connect(m_Socket, (sockaddr*)&m_Address, sizeof(m_Address))) {
-		kl::console::show();
-		std::cout << "Could not connect to socket!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(::connect(m_Socket, (sockaddr*)&m_Address, sizeof(m_Address)), "Could not connect to socket");
 }
 
 int kl::socket::send(const void* data, uint byteSize) {

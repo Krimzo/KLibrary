@@ -3,50 +3,27 @@
 #include "utility/console.h"
 
 
-// Texture from backbuffer
 ID3D11Texture2D* kl::gpu::newTextureBB() {
-	// Getting the back buffer address
 	ID3D11Texture2D* buffAddrs = nullptr;
 	m_Chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffAddrs);
-	if (!buffAddrs) {
-		kl::console::show();
-		std::cout << "DirectX: Could not get back buffer address!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(!buffAddrs, "Failed to create backbuffer texture");
 
-	// Saving child
 	m_Children.insert(buffAddrs);
-
-	// Return
 	return buffAddrs;
 }
 
-// Texture from descriptors
 ID3D11Texture2D* kl::gpu::newTexture(D3D11_TEXTURE2D_DESC* desc, D3D11_SUBRESOURCE_DATA* subData) {
-	// Texture creation
 	ID3D11Texture2D* tex = nullptr;
 	m_Device->CreateTexture2D(desc, subData, &tex);
-	if (!tex) {
-		kl::console::show();
-		std::cout << "DirectX: Could not create a 2D texture!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(!tex, "Failed to create texture");
 
-	// Saving child
 	m_Children.insert(tex);
-
-	// Return
 	return tex;
 }
 
-// Texture from image
 ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img, bool enableUnorderedAccess) {
-	// Getting the flipped image
 	const kl::image flipped = img.flipV();
 
-	// Texture descriptor creation
 	D3D11_TEXTURE2D_DESC texDesc = {};
 	texDesc.Width = img.width();
 	texDesc.Height = img.height();
@@ -57,26 +34,17 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& img, bool enableUnorderedA
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
 	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | (enableUnorderedAccess ? D3D11_BIND_UNORDERED_ACCESS : 0);
 
-	// Texture data descriptor creation
 	D3D11_SUBRESOURCE_DATA texData = {};
 	texData.pSysMem = flipped.data();
 	texData.SysMemPitch = img.width() * sizeof(uint32_t);
 
-	// Return
 	return newTexture(&texDesc, &texData);
 }
 
-// Texture cube from images
 ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
-	// Image size check
-	if (!(front.size() == back.size() && front.size() == left.size() && front.size() == right.size() && front.size() == top.size() && front.size() == bottom.size())) {
-		kl::console::show();
-		std::cout << "Texture: Sizes of the 6 given images do not match!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(!(front.size() == back.size() && front.size() == left.size() && front.size() == right.size() && front.size() == top.size() && front.size() == bottom.size()),
+		"Sizes of the 6 given images do not match");
 
-	// Texture descriptor creation
 	D3D11_TEXTURE2D_DESC texDesc = {};
 	texDesc.Width = front.width();
 	texDesc.Height = front.height();
@@ -88,7 +56,6 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& ba
 	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-	// Texture data descriptor creation
 	D3D11_SUBRESOURCE_DATA texData[6] = {
 		{  right.data(), front.width() * sizeof(kl::color), 0 },
 		{   left.data(), front.width() * sizeof(kl::color), 0 },
@@ -98,17 +65,13 @@ ID3D11Texture2D* kl::gpu::newTexture(const kl::image& front, const kl::image& ba
 		{   back.data(), front.width() * sizeof(kl::color), 0 }
 	};
 
-	// Return
 	return newTexture(&texDesc, texData);
 }
 
-// Staging texture
 ID3D11Texture2D* kl::gpu::newTextureST(ID3D11Texture2D* tex, const kl::int2& size) {
-	// Getting the given tex desc
 	D3D11_TEXTURE2D_DESC oldDesc = {};
 	tex->GetDesc(&oldDesc);
 
-	// Staging texture descriptor
 	D3D11_TEXTURE2D_DESC stagTexDes = {};
 	stagTexDes.Width = (size.x > 0) ? size.x : oldDesc.Width;
 	stagTexDes.Height = (size.y > 0) ? size.y : oldDesc.Height;
@@ -119,6 +82,5 @@ ID3D11Texture2D* kl::gpu::newTextureST(ID3D11Texture2D* tex, const kl::int2& siz
 	stagTexDes.Usage = D3D11_USAGE_STAGING;
 	stagTexDes.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 
-	// Return
 	return newTexture(&stagTexDes);
 }

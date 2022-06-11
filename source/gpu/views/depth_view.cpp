@@ -4,20 +4,11 @@
 
 
 ID3D11DepthStencilView* kl::gpu::newDepthView(ID3D11Texture2D* tex, D3D11_DEPTH_STENCIL_VIEW_DESC* desc) {
-	// Creating the render target view
 	ID3D11DepthStencilView* depthView = nullptr;
 	m_Device->CreateDepthStencilView(tex, desc, &depthView);
-	if (!depthView) {
-		kl::console::show();
-		std::cout << "DirectX: Could not create a backbuffer!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(!depthView, "Failed to create depth stencil view");
 
-	// Saving child
 	m_Children.insert(depthView);
-
-	// Return
 	return depthView;
 }
 

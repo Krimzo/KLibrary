@@ -16,27 +16,22 @@ static const HANDLE consoleHandle = []() {
 	return tempHandle;
 }();
 
-// Clears the console screen
 void kl::console::clear() {
 	system("cls");
 }
 
-// Hides the console
 void kl::console::hide() {
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
 }
 
-// Shows the console
 void kl::console::show() {
 	ShowWindow(GetConsoleWindow(), SW_SHOW);
 }
 
-// Sets the console cursor position
 void kl::console::moveCursor(const kl::uint2& position) {
 	SetConsoleCursorPosition(consoleHandle, { short(position.x), short(position.y) });
 }
 
-// Hides the console cursor
 void kl::console::hideCursor() {
 	CONSOLE_CURSOR_INFO cursorInfo = {};
 	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
@@ -44,7 +39,6 @@ void kl::console::hideCursor() {
 	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 }
 
-// Shows the console cursor
 void kl::console::showCursor() {
 	CONSOLE_CURSOR_INFO cursorInfo = {};
 	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
@@ -52,25 +46,21 @@ void kl::console::showCursor() {
 	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 }
 
-// Sets the console title
 void kl::console::setTitle(const std::string& text) {
 	SetConsoleTitleA(text.c_str());
 }
 
-// Returns the current console size
 kl::uint2 kl::console::size() {
 	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 	GetConsoleScreenBufferInfo(consoleHandle, &csbi);
 	return kl::uint2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 }
 
-// Changes the console size
 void kl::console::resize(const kl::uint2& size) {
 	SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
 	SetConsoleWindowInfo(consoleHandle, true, &consoleRect);
 }
 
-// Changes the console font size
 void kl::console::setFont(const kl::uint2& size, const std::string& fontName) {
 	CONSOLE_FONT_INFOEX cfi = {};
 	cfi.cbSize = sizeof(cfi);
@@ -82,7 +72,6 @@ void kl::console::setFont(const kl::uint2& size, const std::string& fontName) {
 	SetCurrentConsoleFontEx(consoleHandle, false, &cfi);
 }
 
-// Returns a pressed key
 char kl::console::input() {
 	char input = 0;
 	while (_kbhit()) {
@@ -91,28 +80,48 @@ char kl::console::input() {
 	return input;
 }
 
-// Waits until the wanted key is pressed
 void kl::console::waitFor(char toWaitFor, bool echo) {
 	if (echo) {
 		if (toWaitFor > 31 && toWaitFor < 127) {
-			printf("Press '%c' to continue\n", toWaitFor);
+			std::cout << "Press '" << toWaitFor << "' to continue..." << std::endl;
 		}
 		else {
-			printf("Press %d to continue\n", toWaitFor);
+			std::cout << "Press '" << int(toWaitFor) << "' to continue..." << std::endl;
 		}
 	}
 	while (_getch() != toWaitFor);
 }
 
-// Waits for any key to be pressed
 char kl::console::waitForAny(bool echo) {
 	if (echo) {
-		printf("Press any key to continue\n");
+		std::cout << "Press any key to continue..." << std::endl;
 	}
 	return _getch();
 }
 
-// Outputs a progress bar on the console
+void kl::console::warning(bool occured, const std::string& message, bool wait) {
+	if (occured) {
+		kl::console::show();
+		std::cout << kl::colors::orange << "Warning: " << message << std::endl;
+		if (wait) {
+			kl::console::waitForAny(false);
+		}
+		std::cout << kl::colors::defaul;
+	}
+}
+
+void kl::console::error(bool occured, const std::string& message, bool wait) {
+	if (occured) {
+		kl::console::show();
+		std::cout << kl::colors::red << "Error: " << message << std::endl;
+		if (wait) {
+			kl::console::waitForAny(false);
+		}
+		std::cout << kl::colors::defaul;
+		exit(1);
+	}
+}
+
 void kl::console::progressBar(const std::string& message, int outputY, float percentage) {
 	// Prep
 	percentage = max(min(percentage, 1.0f), 0.0f);
@@ -133,7 +142,6 @@ void kl::console::progressBar(const std::string& message, int outputY, float per
 	printf("%s] %3d%% ", ss.str().c_str(), int(percentage * 100.0f));
 }
 
-// Fast console writing
 static DWORD ignore = 0;
 void kl::console::fastOut(const std::string& data, const kl::uint2& location) {
 	WriteConsoleOutputCharacterA(consoleHandle, data.c_str(), DWORD(data.length()), { short(location.x), short(location.y) }, &ignore);

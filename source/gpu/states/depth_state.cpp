@@ -4,35 +4,23 @@
 
 
 ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc) {
-	// State creation
 	ID3D11DepthStencilState* depthState = nullptr;
 	m_Device->CreateDepthStencilState(desc, &depthState);
-	if (!depthState) {
-		kl::console::show();
-		std::cout << "DirectX: Could not create a write depth/stencil state!";
-		std::cin.get();
-		exit(69);
-	}
+	kl::console::error(!depthState, "Failed to create depth stencil state");
 
-	// Saving child
 	m_Children.insert(depthState);
-
-	// Return
 	return depthState;
 }
 
 ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool mask) {
-	// Depth descriptor
 	D3D11_DEPTH_STENCIL_DESC depthDesc = {};
 
-	// Depth testing
 	if (depth) {
 		depthDesc.DepthEnable = true;
 		depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	}
 
-	// Stencil testing
 	if (stencil) {
 		depthDesc.StencilEnable = true;
 		depthDesc.StencilReadMask = 0xFF;
@@ -60,7 +48,6 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool m
 		}
 	}
 
-	// Return
 	return newDepthState(&depthDesc);
 }
 

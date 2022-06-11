@@ -18,12 +18,8 @@ void VidUtilInit() {
 	vidThrdLock.lock();
 	vidInstCount++;
 	if (!vidUtilInited) {
-		if ((FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_SPEED_OVER_MEMORY)) || FAILED(MFStartup(MF_VERSION)))) {
-			kl::console::show();
-			std::cout << "Failed to init video loader!";
-			std::cin.get();
-			exit(69);
-		}
+		kl::console::error((FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_SPEED_OVER_MEMORY)) || FAILED(MFStartup(MF_VERSION))),
+			"Failed to initialize video utility");
 		vidUtilInited = true;
 	}
 	vidThrdLock.unlock();
@@ -52,32 +48,18 @@ kl::video::~video() {
 }
 
 void ConfigureDecoder(IMFSourceReader* reader) {
-	// Getting default types
 	IMFMediaType* defType = nullptr;
-	if (FAILED(reader->GetNativeMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &defType))) {
-		exit(1);
-	}
+	kl::console::error(FAILED(reader->GetNativeMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &defType)), "Failed to get default video type");
+
 	GUID majorType = {};
-	if (FAILED(defType->GetGUID(MF_MT_MAJOR_TYPE, &majorType))) {
-		exit(2);
-	}
+	kl::console::error(FAILED(defType->GetGUID(MF_MT_MAJOR_TYPE, &majorType)), "Failed to get major video type");
 
-	// Creating/setting new type
 	IMFMediaType* newType = nullptr;
-	if (FAILED(MFCreateMediaType(&newType))) {
-		exit(3);
-	}
-	if (FAILED(newType->SetGUID(MF_MT_MAJOR_TYPE, majorType))) {
-		exit(4);
-	}
-	if (FAILED(newType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32))) {
-		exit(6);
-	}
-	if (FAILED(reader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, newType))) {
-		exit(7);
-	}
+	kl::console::error(FAILED(MFCreateMediaType(&newType)), "Failed to create new video type");
+	kl::console::error(FAILED(newType->SetGUID(MF_MT_MAJOR_TYPE, majorType)), "Failed to set major video type");
+	kl::console::error(FAILED(newType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32)), "Failed to set sub video type");
+	kl::console::error(FAILED(reader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, newType)), "Failed to set video type");
 
-	// Cleanup
 	defType->Release();
 	newType->Release();
 }

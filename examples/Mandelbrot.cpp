@@ -23,16 +23,12 @@ const float maxZoom = 10000.0f;
 const kl::int2 frameSize(1600, 900);
 
 void start() {
-	// DirectX init
 	gpu = std::make_unique<kl::gpu>(win);
 
-	// Setting the raster
 	gpu->bind(gpu->newRasterState(false, false));
 
-	// Compiling shaders
 	shaders = gpu->newShaders(kl::file::read("examples/shaders/mandelbrot.hlsl"), kl::file::read("examples/shaders/mandelbrot.hlsl"));
 
-	// Creating the box mesh
 	screenMesh = gpu->newVertexBuffer({
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f,  1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
@@ -41,11 +37,9 @@ void start() {
 
 kl::timer timer;
 void update() {
-	// Time calculations
 	const float deltaT = timer.interval();
 	const float elapsedT = timer.elapsed();
 
-	/* Checking the input */
 	if (win.keys.esc) {
 		win.stop();
 	}
@@ -66,10 +60,8 @@ void update() {
 		pos.x -= (1.0f / zoom) * deltaT;
 	}
 	if (win.mouse.lmb) {
-		// Calculating the zoom
 		zoom += zoom * zoomSpeed * deltaT;
 
-		// Checking the zoom
 		if (zoom < maxZoom) {
 			const kl::float2 uv = ((kl::float2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
 			pos += (uv / zoom) * deltaT;
@@ -79,10 +71,8 @@ void update() {
 		}
 	}
 	if (win.mouse.rmb) {
-		// Calculating the zoom
 		zoom -= zoom * zoomSpeed * deltaT;
 
-		// Checking the zoom
 		if (zoom > minZoom) {
 			const kl::float2 uv = ((kl::float2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
 			pos -= (uv / zoom) * deltaT;
@@ -92,13 +82,10 @@ void update() {
 		}
 	}
 
-	// Clearing
 	gpu->clear(kl::colors::black);
 
-	// Shaders
 	gpu->bind(shaders);
 
-	// CBuffer data
 	PS_CB pxData = {};
 	pxData.frameSize = frameSize;
 	pxData.zoom.x = zoom;
@@ -106,13 +93,10 @@ void update() {
 	pxData.startPos.x = 0.0f;
 	gpu->autoPixelCBuffer(pxData);
 
-	// Rendering the box
 	gpu->draw(screenMesh);
 
-	// Swapping the frame buffers
 	gpu->swap(true);
 
-	// Updating the title
 	win.title(
 		"Fps: " + std::to_string(int(1.0f / deltaT)) +
 		" Zoom: " + std::to_string(int(zoom)) +
