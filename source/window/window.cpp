@@ -30,7 +30,7 @@ void kl::window::run(const kl::uint2& size, const std::string& name, bool resize
 	createWindow(size, name, resizeable);
 	mouse.bind(m_Window);
 #ifdef KL_USING_IMGUI
-	ImGui_ImplWin32_Init(wnd);
+	ImGui_ImplWin32_Init(m_Window);
 #endif
 
 	MSG msg = {};

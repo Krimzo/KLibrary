@@ -1,8 +1,6 @@
 #include "window/key.h"
 
 
-kl::key::key() : m_State(false), press([]() {}), down([]() {}), release([]() {}) {}
-
 kl::key::operator bool() {
 	return m_State;
 }
