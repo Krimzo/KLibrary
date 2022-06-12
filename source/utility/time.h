@@ -9,10 +9,11 @@ namespace kl {
 	namespace time {
 		int64 get();
 		int64 frequency();
-		float calculate(int64 start, int64 end);
+		double calculate(int64 start, int64 end);
 
-		float interval();
-		void wait(float seconds);
+		double interval();
+		void wait(double seconds);
+		bool sleep(double seconds);
 	};
 
 	class timer {
@@ -23,9 +24,9 @@ namespace kl {
 	public:
 		timer();
 
-		float interval();
+		double interval();
 
 		void reset();
-		float elapsed() const;
+		double elapsed() const;
 	};
 }

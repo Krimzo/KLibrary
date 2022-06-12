@@ -8,17 +8,17 @@
 
 
 namespace kl {
-	template<typename T, size_t W, size_t H> struct matrix : public std::array<T, W* H> {
+	template<typename T, uint64 W, uint64 H> struct matrix : public std::array<T, W* H> {
 
 		matrix() : std::array<T, W* H>() {
-			for (size_t i = 0; i < (W * H); i += (W + 1)) {
+			for (uint64 i = 0; i < (W * H); i += (W + 1)) {
 				(*this)[i] = 1;
 			}
 		}
 
 		// Addition
 		void add(const kl::matrix<T, W, H>& obj, kl::matrix<T, W, H>& out) const {
-			for (size_t i = 0; i < (W * H); i++) {
+			for (uint64 i = 0; i < (W * H); i++) {
 				out[i] = (*this)[i] + obj[i];
 			}
 		}
@@ -33,7 +33,7 @@ namespace kl {
 
 		// Subtraction
 		void sub(const kl::matrix<T, W, H>& obj, kl::matrix<T, W, H>& out) const {
-			for (size_t i = 0; i < (W * H); i++) {
+			for (uint64 i = 0; i < (W * H); i++) {
 				out[i] = (*this)[i] - obj[i];
 			}
 		}
@@ -48,7 +48,7 @@ namespace kl {
 
 		// Multiplication
 		void mul(const T& val, kl::matrix<T, W, H>& out) const {
-			for (size_t i = 0; i < (W * H); i++) {
+			for (uint64 i = 0; i < (W * H); i++) {
 				out[i] = (*this)[i] * val;
 			}
 		}
@@ -60,29 +60,29 @@ namespace kl {
 		void operator*=(const T& val) {
 			mul(val, *this);
 		}
-		template<size_t S> void mul(const kl::matrix<T, S, W>& obj, kl::matrix<T, S, H>& out) const {
-			for (size_t y = 0; y < H; y++) {
-				for (size_t x = 0; x < S; x++) {
+		template<uint64 S> void mul(const kl::matrix<T, S, W>& obj, kl::matrix<T, S, H>& out) const {
+			for (uint64 y = 0; y < H; y++) {
+				for (uint64 x = 0; x < S; x++) {
 					out[y * S + x] = {};
-					for (size_t i = 0; i < W; i++) {
+					for (uint64 i = 0; i < W; i++) {
 						out[y * S + x] += (*this)[y * W + i] * obj[i * S + x];
 					}
 				}
 			}
 		}
-		template<size_t S> kl::matrix<T, S, H> operator*(const kl::matrix<T, S, W>& obj) const {
+		template<uint64 S> kl::matrix<T, S, H> operator*(const kl::matrix<T, S, W>& obj) const {
 			kl::matrix<T, S, H> temp;
 			mul(obj, temp);
 			return temp;
 		}
-		template<size_t S> void operator*=(const kl::matrix<T, S, W>& obj) {
+		template<uint64 S> void operator*=(const kl::matrix<T, S, W>& obj) {
 			mul(obj, *this);
 		}
 		void mul(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
 			if constexpr (W == 2 && H == 2) {
-				for (size_t y = 0; y < 2; y++) {
+				for (uint64 y = 0; y < 2; y++) {
 					T sum = {};
-					for (size_t i = 0; i < 2; i++) {
+					for (uint64 i = 0; i < 2; i++) {
 						sum += (*this)[y * 2 + i] * obj[i];
 					}
 					out[y] = sum;
@@ -96,9 +96,9 @@ namespace kl {
 		}
 		void mul(const kl::vector3<T>& obj, kl::vector3<T>& out) const {
 			if constexpr (W == 3 && H == 3) {
-				for (size_t y = 0; y < 3; y++) {
+				for (uint64 y = 0; y < 3; y++) {
 					T sum = {};
-					for (size_t i = 0; i < 3; i++) {
+					for (uint64 i = 0; i < 3; i++) {
 						sum += (*this)[y * 3 + i] * obj[i];
 					}
 					out[y] = sum;
@@ -112,9 +112,9 @@ namespace kl {
 		}
 		void mul(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
 			if constexpr (W == 4 && H == 4) {
-				for (size_t y = 0; y < 4; y++) {
+				for (uint64 y = 0; y < 4; y++) {
 					T sum = {};
-					for (size_t i = 0; i < 4; i++) {
+					for (uint64 i = 0; i < 4; i++) {
 						sum += (*this)[y * 4 + i] * obj[i];
 					}
 					out[y] = sum;
@@ -129,7 +129,7 @@ namespace kl {
 
 		// Comparison
 		bool equ(const kl::matrix<T, W, H>& obj) const {
-			for (size_t i = 0; i < (W * H); i++) {
+			for (uint64 i = 0; i < (W * H); i++) {
 				if ((*this)[i] != obj[i]) {
 					return false;
 				}
@@ -145,7 +145,7 @@ namespace kl {
 
 		// Sign change
 		void abs(kl::matrix<T, W, H>& out) const {
-			for (size_t i = 0; i < (W * H); i++) {
+			for (uint64 i = 0; i < (W * H); i++) {
 				out[i] = std::abs((*this)[i]);
 			}
 		}
@@ -165,8 +165,8 @@ namespace kl {
 
 		// Transpose
 		void tra(kl::matrix<T, H, W>& out) const {
-			for (size_t y = 0; y < H; y++) {
-				for (size_t x = 0; x < W; x++) {
+			for (uint64 y = 0; y < H; y++) {
+				for (uint64 x = 0; x < W; x++) {
 					out[x * H + y] = (*this)[y * W + x];
 				}
 			}
@@ -178,14 +178,14 @@ namespace kl {
 		}
 
 		// Cofactor
-		bool cof(size_t ind, kl::matrix<T, W - 1, H - 1>& out) const {
+		bool cof(uint64 ind, kl::matrix<T, W - 1, H - 1>& out) const {
 			if constexpr (W == H) {
 				if (ind < (W * H)) {
-					size_t counter = 0;
-					const size_t xInd = ind % W;
-					const size_t yInd = ind / W;
-					for (size_t y = 0; y < H; y++) {
-						for (size_t x = 0; x < W; x++) {
+					uint64 counter = 0;
+					const uint64 xInd = ind % W;
+					const uint64 yInd = ind / W;
+					for (uint64 y = 0; y < H; y++) {
+						for (uint64 x = 0; x < W; x++) {
 							if (x != xInd && y != yInd) {
 								out[counter++] = (*this)[y * W + x];
 							}
@@ -196,15 +196,15 @@ namespace kl {
 			}
 			return false;
 		}
-		kl::matrix<T, W - 1, H - 1> cof(size_t ind) const {
+		kl::matrix<T, W - 1, H - 1> cof(uint64 ind) const {
 			kl::matrix<T, W - 1, H - 1> temp;
 			cof(ind, temp);
 			return temp;
 		}
 		bool cof(kl::matrix<T, W, H>& out) const {
 			if constexpr (W == H) {
-				for (size_t y = 0; y < H; y++) {
-					for (size_t x = 0; x < W; x++) {
+				for (uint64 y = 0; y < H; y++) {
+					for (uint64 x = 0; x < W; x++) {
 						out[y * W + x] = (((y + x + 2) % 2) ? -1 : 1) * cof(y * W + x).det();
 					}
 				}
@@ -227,7 +227,7 @@ namespace kl {
 				if constexpr (W > 2) {
 					T val = {};
 					int multi = -1;
-					for (size_t i = 0; i < W; i++) {
+					for (uint64 i = 0; i < W; i++) {
 						val += (multi *= -1) * (*this)[i] * cof(i).det();
 					}
 					return val;
@@ -269,11 +269,11 @@ namespace kl {
 	};
 
 	// std::cout
-	template<typename T, size_t W, size_t H> inline std::ostream& operator<<(std::ostream& stream, const kl::matrix<T, W, H>& mat) {
+	template<typename T, uint64 W, uint64 H> inline std::ostream& operator<<(std::ostream& stream, const kl::matrix<T, W, H>& mat) {
 		stream << std::fixed << std::setprecision(2);
-		for (size_t y = 0; y < H; y++) {
+		for (uint64 y = 0; y < H; y++) {
 			stream << ((y == 0) ? char(218) : (y == (H - 1) ? char(192) : char(179)));
-			for (size_t x = 0; x < (W - 1); x++) {
+			for (uint64 x = 0; x < (W - 1); x++) {
 				stream << std::setw(6) << mat[y * W + x] << " ";
 			}
 			stream << std::setw(6) << mat[y * W + (W - 1)] << ((y == 0) ? char(191) : (y == (H - 1) ? char(217) : char(179))) << '\n';

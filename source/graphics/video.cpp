@@ -99,11 +99,11 @@ float kl::video::duration() const {
 	return 0.0f;
 }
 
-size_t kl::video::byteSize() const {
+uint64 kl::video::byteSize() const {
 	if (m_Reader) {
 		PROPVARIANT var = {};
 		if (SUCCEEDED(m_Reader->GetPresentationAttribute(MF_SOURCE_READER_MEDIASOURCE, MF_PD_TOTAL_FILE_SIZE, &var))) {
-			size_t byteSize = 0;
+			uint64 byteSize = 0;
 			PropVariantToInt64(var, (LONGLONG*)&byteSize);
 			PropVariantClear(&var);
 			return byteSize;

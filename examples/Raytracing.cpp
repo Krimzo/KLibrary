@@ -153,8 +153,8 @@ void Phys() {
 }
 
 void Update() {
-	deltaT = timer.interval();
-	elapsedT = timer.elapsed();
+	deltaT = float(timer.interval());
+	elapsedT = float(timer.elapsed());
 
 	Input();
 

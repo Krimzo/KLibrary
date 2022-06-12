@@ -4,17 +4,17 @@
 #include <iomanip>
 
 
+using uint = uint32_t;
+using int64 = int64_t;
+using uint64 = uint64_t;
+
 namespace kl::math {
-	// PI
 	inline const double pi = 3.14159265358979;
 
-	// Degrees to radians
 	template<typename T> inline T toRads(const T& degs) {
 		static const double conv = kl::math::pi / 180.0;
 		return T(degs * conv);
 	}
-
-	// Radians to degrees
 	template<typename T> inline T toDegs(const T& rads) {
 		static const double toDegrees = 180.0 / kl::math::pi;
 		return T(rads * toDegrees);
@@ -36,10 +36,10 @@ namespace kl {
 		template<typename V> vector2(const kl::vector2<V>& obj) : x(T(obj.x)), y(T(obj.y)) {}
 
 		// Getters
-		T& operator[](size_t ind) {
+		T& operator[](uint64 ind) {
 			return data[ind];
 		}
-		const T& operator[](size_t ind) const {
+		const T& operator[](uint64 ind) const {
 			return data[ind];
 		}
 
@@ -148,7 +148,7 @@ namespace kl {
 
 		// Sign change
 		void abs(kl::vector2<T>& out) const {
-			for (size_t i = 0; i < 2; i++) {
+			for (uint64 i = 0; i < 2; i++) {
 				out[i] = std::abs(data[i]);
 			}
 		}
@@ -169,7 +169,7 @@ namespace kl {
 		// Length
 		T len() const {
 			T sum = {};
-			for (size_t i = 0; i < 2; i++) {
+			for (uint64 i = 0; i < 2; i++) {
 				sum += data[i] * data[i];
 			}
 			return std::sqrt(sum);
@@ -188,7 +188,7 @@ namespace kl {
 		// Dot product
 		T dot(const kl::vector2<T>& vec) const {
 			T sum = {};
-			for (size_t i = 0; i < 2; i++) {
+			for (uint64 i = 0; i < 2; i++) {
 				sum += data[i] * vec[i];
 			}
 			return sum;
@@ -217,10 +217,6 @@ namespace kl {
 		return stream;
 	}
 }
-
-using uint = uint32_t;
-using int64 = int64_t;
-using uint64 = uint64_t;
 
 namespace kl {
 	using float2 = kl::vector2<float>;

@@ -7,6 +7,9 @@
 #include <conio.h>
 #include <windows.h>
 
+#undef min
+#undef max
+
 
 static const HANDLE consoleHandle = []() {
 	HANDLE tempHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -123,14 +126,12 @@ void kl::console::error(bool occured, const std::string& message, bool wait) {
 	}
 }
 
-void kl::console::progressBar(const std::string& message, int outputY, float percentage) {
-	// Prep
-	percentage = max(min(percentage, 1.0f), 0.0f);
-	const int barLen = console::size().x - int(message.length()) - 12;
+void kl::console::progressBar(const std::string& message, uint outputY, float percentage) {
+	percentage = std::max(std::min(percentage, 1.0f), 0.0f);
+	const int barLen = kl::console::size().x - int(message.length()) - 12;
 	const int finishLen = int(barLen * percentage);
 	const int emptyLen = barLen - finishLen;
 
-	// Printing
 	std::stringstream ss;
 	ss << "  " << message << " [";
 	for (int i = 0; i < finishLen; i++) {
@@ -139,7 +140,7 @@ void kl::console::progressBar(const std::string& message, int outputY, float per
 	for (int i = 0; i < emptyLen; i++) {
 		ss << ' ';
 	}
-	console::moveCursor(kl::int2(0, outputY));
+	kl::console::moveCursor(kl::uint2(0, outputY));
 	printf("%s] %3d%% ", ss.str().c_str(), int(percentage * 100.0f));
 }
 

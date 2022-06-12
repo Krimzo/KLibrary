@@ -46,7 +46,7 @@ char kl::random::CHAR(bool upperCase) {
 }
 std::string kl::random::STRING(uint len) {
 	std::stringstream ss;
-	for (int i = 0; i < len; i++) {
+	for (uint i = 0; i < len; i++) {
 		ss << kl::random::CHAR(kl::random::BOOL());
 	}
 	return ss.str();

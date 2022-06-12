@@ -46,7 +46,7 @@
     <ClCompile Include="source\utility\file.cpp" />
     <ClCompile Include="source\utility\random.cpp" />
     <ClCompile Include="source\utility\socket.cpp" />
-    <ClCompile Include="source\utility\thread.cpp" />
+    <ClCompile Include="source\utility\async.cpp" />
     <ClCompile Include="source\utility\time.cpp" />
     <ClCompile Include="source\utility\web.cpp" />
     <ClCompile Include="source\render\camera.cpp" />
@@ -82,7 +82,7 @@
     <ClInclude Include="source\utility\file.h" />
     <ClInclude Include="source\utility\random.h" />
     <ClInclude Include="source\utility\socket.h" />
-    <ClInclude Include="source\utility\thread.h" />
+    <ClInclude Include="source\utility\async.h" />
     <ClInclude Include="source\utility\time.h" />
     <ClInclude Include="source\utility\web.h" />
     <ClInclude Include="source\render\camera.h" />

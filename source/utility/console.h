@@ -29,6 +29,6 @@ namespace kl {
 
 		void fastOut(const std::string& data, const kl::uint2& location = {});
 
-		void progressBar(const std::string& message, int outputY, float percentage);
+		void progressBar(const std::string& message, uint outputY, float percentage);
 	};
 }

@@ -81,7 +81,7 @@
     <ClCompile Include="source\utility\socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\utility\thread.cpp">
+    <ClCompile Include="source\utility\async.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\utility\time.cpp">
@@ -170,7 +170,7 @@
     <ClInclude Include="source\utility\socket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\utility\thread.h">
+    <ClInclude Include="source\utility\async.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\utility\time.h">

@@ -35,10 +35,10 @@ namespace kl {
 		template<typename V> vector3(const kl::vector3<V>& obj) : x(T(obj.x)), y(T(obj.y)), z(T(obj.z)) {}
 
 		// Getters
-		T& operator[](size_t ind) {
+		T& operator[](uint64 ind) {
 			return data[ind];
 		}
-		const T& operator[](size_t ind) const {
+		const T& operator[](uint64 ind) const {
 			return data[ind];
 		}
 		kl::color toColor() const {
@@ -150,7 +150,7 @@ namespace kl {
 
 		// Sign change
 		void abs(kl::vector3<T>& out) const {
-			for (size_t i = 0; i < 3; i++) {
+			for (uint64 i = 0; i < 3; i++) {
 				out[i] = std::abs(data[i]);
 			}
 		}
@@ -171,7 +171,7 @@ namespace kl {
 		// Length
 		T len() const {
 			T sum = {};
-			for (size_t i = 0; i < 3; i++) {
+			for (uint64 i = 0; i < 3; i++) {
 				sum += data[i] * data[i];
 			}
 			return std::sqrt(sum);
@@ -190,7 +190,7 @@ namespace kl {
 		// Dot product
 		T dot(const kl::vector3<T>& vec) const {
 			T sum = {};
-			for (size_t i = 0; i < 3; i++) {
+			for (uint64 i = 0; i < 3; i++) {
 				sum += data[i] * vec[i];
 			}
 			return sum;

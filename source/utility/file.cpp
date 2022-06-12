@@ -4,7 +4,7 @@
 
 
 std::string kl::file::extension(const std::string& filePath) {
-	const size_t lastDotPos = filePath.find_last_of(".");
+	const uint64 lastDotPos = filePath.find_last_of(".");
 	if (lastDotPos == std::string::npos) {
 		return "";
 	}

@@ -46,7 +46,7 @@ kl::uint2 kl::image::size() const {
 }
 kl::color kl::image::pixel(const kl::uint2& coords) const {
 	if (coords.x >= 0 && coords.x < m_Size.x && coords.y >= 0 && coords.y < m_Size.y) {
-		return m_Pixels[coords.y * m_Size.x + coords.x];
+		return m_Pixels[uint64(coords.y * m_Size.x + coords.x)];
 	}
 	return kl::colors::black;
 }
@@ -64,7 +64,7 @@ kl::image kl::image::rect(kl::uint2 a, kl::uint2 b) const {
 		std::swap(a.y, b.y);
 	}
 	kl::image temp(b - a);
-	for (kl::int2 pos = 0; pos.y < temp.height(); pos.y++) {
+	for (kl::uint2 pos = 0; pos.y < temp.height(); pos.y++) {
 		for (pos.x = 0; pos.x < temp.width(); pos.x++) {
 			temp.pixel(pos, pixel(pos + a));
 		}
@@ -80,7 +80,7 @@ bool kl::image::height(uint height) {
 }
 bool kl::image::resize(const kl::uint2& size) {
 	if (size != m_Size) {
-		m_Pixels.resize(size.x * size.y);
+		m_Pixels.resize(uint64(size.x * size.y));
 		m_Size = size;
 		return true;
 	}
@@ -88,7 +88,7 @@ bool kl::image::resize(const kl::uint2& size) {
 }
 bool kl::image::pixel(const kl::uint2& coords, const kl::color& color) {
 	if (coords.x >= 0 && coords.x < m_Size.x && coords.y >= 0 && coords.y < m_Size.y) {
-		m_Pixels[coords.y * m_Size.x + coords.x] = color;
+		m_Pixels[uint64(coords.y * m_Size.x + coords.x)] = color;
 		return true;
 	}
 	return false;
@@ -139,9 +139,9 @@ bool kl::image::toFile(const std::string& fileName) const {
 			for (uint x = 0; x < m_Size.x; x++)
 				ss <<
 				x << " " << y << " => " <<
-				uint(m_Pixels[y * m_Size.x + x].r) << " " <<
-				uint(m_Pixels[y * m_Size.x + x].g) << " " <<
-				uint(m_Pixels[y * m_Size.x + x].b) << "\n";
+				uint(m_Pixels[uint64(y * m_Size.x + x)].r) << " " <<
+				uint(m_Pixels[uint64(y * m_Size.x + x)].g) << " " <<
+				uint(m_Pixels[uint64(y * m_Size.x + x)].b) << "\n";
 		kl::file::write(fileName, ss.str());
 		return true;
 	}
@@ -179,7 +179,7 @@ kl::image kl::image::flipH() const {
 	kl::image temp(size());
 	for (uint y = 0; y < m_Size.y; y++) {
 		for (uint x = 0; x < m_Size.x; x++) {
-			temp.m_Pixels[y * m_Size.x + x] = m_Pixels[y * m_Size.x + m_Size.x - 1 - x];
+			temp.m_Pixels[uint64(y * m_Size.x + x)] = m_Pixels[uint64(y * m_Size.x + m_Size.x - 1 - x)];
 		}
 	}
 	return temp;
@@ -189,7 +189,7 @@ kl::image kl::image::flipV() const {
 	kl::image temp(size());
 	for (uint x = 0; x < m_Size.x; x++) {
 		for (uint y = 0; y < m_Size.y; y++) {
-			temp.m_Pixels[y * m_Size.x + x] = m_Pixels[(m_Size.y - 1 - y) * m_Size.x + x];
+			temp.m_Pixels[uint64(y * m_Size.x + x)] = m_Pixels[uint64((m_Size.y - 1 - y) * m_Size.x + x)];
 		}
 	}
 	return temp;
@@ -198,9 +198,9 @@ kl::image kl::image::flipV() const {
 void kl::image::drawLine(const kl::int2& a, const kl::int2& b, const kl::color& col) {
 	const int len = std::max(std::abs(b.x - a.x), std::abs(b.y - a.y));
 	const kl::float2 incr(float(b.x - a.x) / len, float(b.y - a.y) / len);
-	kl::float2 drawPoint(a.x, a.y);
+	kl::float2 drawPoint(float(a.x), float(a.y));
 	for (int i = 0; i <= len; i++) {
-		pixel(kl::int2(drawPoint.x, drawPoint.y), col);
+		pixel(kl::int2(int(drawPoint.x), int(drawPoint.y)), col);
 		drawPoint += incr;
 	}
 }
@@ -217,8 +217,8 @@ void kl::image::drawTriangle(kl::int2 a, kl::int2 b, kl::int2 c, const kl::color
 			std::swap(b, c);
 		}
 		for (int y = a.y; y < c.y; y++) {
-			drawLine(kl::int2(kl::math::lineX<float>((y < b.y) ? a : c, b, y), y),
-				kl::int2(kl::math::lineX<float>(a, c, y), y), col);
+			drawLine(kl::int2(int(kl::math::lineX<float>((y < b.y) ? a : c, b, float(y))), y),
+				kl::int2(int(kl::math::lineX<float>(a, c, float(y))), y), col);
 		}
 	}
 	else {
@@ -248,19 +248,19 @@ void kl::image::drawRectangle(kl::int2 a, kl::int2 b, const kl::color& col, bool
 void kl::image::drawCircle(const kl::int2& p, float r, const kl::color& col, bool fill) {
 	if (fill) {
 		for (int y = int(p.y - r); y <= int(p.y + r); y++) {
-			const int x = p.x + std::sqrt(r * r - (y - p.y) * (y - p.y));
+			const int x = int(p.x + std::sqrt(r * r - (y - p.y) * (y - p.y)));
 			drawLine(kl::int2(2 * p.x - x, y), kl::int2(x, y), col);
 		}
 	}
 	else {
 		for (int i = 0; i < 2 * r; i++) {
-			const int x1 = p.x - r + i;
-			const int y1 = p.y + std::sqrt(r * r - (x1 - p.x) * (x1 - p.x));
+			const int x1 = int(p.x - r + i);
+			const int y1 = int(p.y + std::sqrt(r * r - (x1 - p.x) * (x1 - p.x)));
 			pixel(kl::int2(x1, y1), col);
 			pixel(kl::int2(x1, 2 * p.y - y1), col);
 
-			const int y2 = p.y - r + i;
-			const int x2 = p.x + std::sqrt(r * r - (y2 - p.y) * (y2 - p.y));
+			const int y2 = int(p.y - r + i);
+			const int x2 = int(p.x + std::sqrt(r * r - (y2 - p.y) * (y2 - p.y)));
 			pixel(kl::int2(x2, y2), col);
 			pixel(kl::int2(2 * p.x - x2, y2), col);
 		}
@@ -271,7 +271,7 @@ void kl::image::drawCircle(const kl::int2& a, const kl::int2& b, const kl::color
 }
 
 void kl::image::drawImage(const kl::int2& pos, const kl::image& img, bool mixAlpha) {
-	for (kl::int2 coords = 0; coords.y < img.height(); coords.y++) {
+	for (kl::uint2 coords = 0; coords.y < img.height(); coords.y++) {
 		for (coords.x = 0; coords.x < img.width(); coords.x++) {
 			if (mixAlpha) {
 				pixel(pos + coords, pixel(pos + coords).mix(img.pixel(coords)));
