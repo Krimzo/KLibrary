@@ -99,7 +99,7 @@ char kl::console::waitForAny(bool echo) {
 	return _getch();
 }
 
-void kl::console::warning(bool occured, const std::string& message, bool wait) {
+bool kl::console::warning(bool occured, const std::string& message, bool wait) {
 	if (occured) {
 		kl::console::show();
 		std::cout << kl::colors::orange << "Warning: " << message << std::endl;
@@ -108,6 +108,7 @@ void kl::console::warning(bool occured, const std::string& message, bool wait) {
 		}
 		std::cout << kl::colors::defaul;
 	}
+	return occured;
 }
 
 void kl::console::error(bool occured, const std::string& message, bool wait) {

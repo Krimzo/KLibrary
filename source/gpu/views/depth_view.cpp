@@ -3,8 +3,8 @@
 #include "utility/console.h"
 
 
-ID3D11DepthStencilView* kl::gpu::newDepthView(ID3D11Texture2D* tex, D3D11_DEPTH_STENCIL_VIEW_DESC* desc) {
-	ID3D11DepthStencilView* depthView = nullptr;
+kl::dx::view::depth kl::gpu::newDepthView(kl::dx::texture tex, kl::dx::view::desc::depth* desc) {
+	kl::dx::view::depth depthView = nullptr;
 	m_Device->CreateDepthStencilView(tex, desc, &depthView);
 	kl::console::error(!depthView, "Failed to create depth stencil view");
 
@@ -12,6 +12,6 @@ ID3D11DepthStencilView* kl::gpu::newDepthView(ID3D11Texture2D* tex, D3D11_DEPTH_
 	return depthView;
 }
 
-void kl::gpu::clear(ID3D11DepthStencilView* view, float depth, byte stencil) {
+void kl::gpu::clear(kl::dx::view::depth view, float depth, byte stencil) {
 	m_Context->ClearDepthStencilView(view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, stencil);
 }

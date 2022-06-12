@@ -5,7 +5,7 @@ kl::window win;
 
 std::unique_ptr<kl::gpu> gpu;
 kl::shaders shaders;
-ID3D11Buffer* screenMesh = nullptr;
+kl::dx::mesh screenMesh = nullptr;
 
 struct PS_CB {
 	kl::float2 frameSize;

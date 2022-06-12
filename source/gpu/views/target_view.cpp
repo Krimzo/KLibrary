@@ -3,8 +3,8 @@
 #include "utility/console.h"
 
 
-ID3D11RenderTargetView* kl::gpu::newTargetView(ID3D11Texture2D* tex, D3D11_RENDER_TARGET_VIEW_DESC* desc) {
-	ID3D11RenderTargetView* targetView = nullptr;
+kl::dx::view::target kl::gpu::newTargetView(kl::dx::texture tex, kl::dx::view::desc::target* desc) {
+	kl::dx::view::target targetView = nullptr;
 	m_Device->CreateRenderTargetView(tex, desc, &targetView);
 	kl::console::error(!targetView, "Failed to create render target view");
 
@@ -12,6 +12,6 @@ ID3D11RenderTargetView* kl::gpu::newTargetView(ID3D11Texture2D* tex, D3D11_RENDE
 	return targetView;
 }
 
-void kl::gpu::clear(ID3D11RenderTargetView* view, const kl::float4& color) {
+void kl::gpu::clear(kl::dx::view::target view, const kl::float4& color) {
 	m_Context->ClearRenderTargetView(view, (float*)&color);
 }

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Mandelbrot.cpp" />
+    <ClCompile Include="examples\Raytracing.cpp" />
     <ClCompile Include="source\render\plane.cpp" />
     <ClCompile Include="source\render\ray.cpp" />
     <ClCompile Include="source\render\triangle.cpp" />
@@ -58,6 +58,7 @@
     <ClCompile Include="source\window\window_private.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\gpu\dx_types.h" />
     <ClInclude Include="source\render\plane.h" />
     <ClInclude Include="source\render\ray.h" />
     <ClInclude Include="source\render\sphere.h" />

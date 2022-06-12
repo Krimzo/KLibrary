@@ -4,7 +4,7 @@
 kl::window win;
 std::unique_ptr<kl::gpu> gpu;
 kl::shaders shaders;
-ID3D11Buffer* screenMesh = nullptr;
+kl::dx::mesh screenMesh = nullptr;
 kl::camera camera;
 
 kl::timer timer;
@@ -16,11 +16,9 @@ kl::sphere spheres[6] = {};
 int selected = -1;
 
 struct PS_SP {
-	// Geometry
 	kl::float3 center;
 	float radius = 0;
 
-	// Light
 	kl::float3 color;
 	float reflectivity = 0;
 	kl::float4 emission = 0;
@@ -34,28 +32,21 @@ struct PS_CB {
 };
 
 void Start() {
-	// Setup
 	win.maximize();
 
-	// Gpu creation
 	gpu = std::make_unique<kl::gpu>(win);
 
-	// Disabling depth test
 	gpu->bind(gpu->newDepthState(false, false, false));
 
-	// Raster setup
 	gpu->bind(gpu->newRasterState(false, false));
 
-	// Compiling shaders
 	shaders = gpu->newShaders(kl::file::read("examples/shaders/raytracing.hlsl"), kl::file::read("examples/shaders/raytracing.hlsl"));
 
-	// Screen mesh creation
 	screenMesh = gpu->newVertexBuffer({
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f, 1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
 		});
 
-	// Sphere setup
 	spheres[0] = kl::sphere(kl::float3(0.0f, -9005.0f, 20.0f), 9000.0f, kl::color(50, 50, 50), 0.0f, 0.0f);
 	spheres[1] = kl::sphere(kl::float3(0.0f, 0.0f, 20.0f), 4.00f, kl::random::COLOR(), 0.8f, 0.0f);
 	spheres[2] = kl::sphere(kl::float3(-5.0f, -1.0f, 15.0f), 2.00f, kl::random::COLOR(), 0.9f, 0.0f);
@@ -65,7 +56,6 @@ void Start() {
 }
 
 void Input() {
-	// Selection
 	if (win.keys.num0) {
 		selected = -1;
 	}
@@ -88,7 +78,6 @@ void Input() {
 		selected = 5;
 	}
 
-	// Speed
 	if (win.keys.shift) {
 		camera.speed = 5;
 	}
@@ -96,7 +85,6 @@ void Input() {
 		camera.speed = 2;
 	}
 
-	// Movement
 	if (selected == -1) {
 		if (win.keys.w) {
 			camera.moveForward(deltaT);
@@ -138,22 +126,17 @@ void Input() {
 		}
 	}
 
-	// Camera rotation
 	static bool camMoving = false;
 	if (win.mouse.lmb || win.mouse.rmb) {
-		// Getting the frame center
 		const kl::int2 frameCenter = win.center();
 
-		// Fixing the camera jump
 		if (!camMoving) {
 			win.mouse.position = frameCenter;
 		}
 
-		// Saving info
 		win.mouse.hide();
 		camMoving = true;
 
-		// Updating the cam
 		camera.rotate(win.mouse.position, frameCenter);
 		win.mouse.move(frameCenter);
 	}
@@ -170,20 +153,15 @@ void Phys() {
 }
 
 void Update() {
-	// Time
 	deltaT = timer.interval();
 	elapsedT = timer.elapsed();
 
-	// Input
 	Input();
 
-	// Physics
 	Phys();
 
-	// Binding
 	gpu->bind(shaders);
 
-	// Setting data
 	PS_CB psData = {};
 	psData.frameSize = kl::float4(win.size(), 0.0f, 0.0f);
 	psData.invCam = camera.matrix().inv();
@@ -197,13 +175,10 @@ void Update() {
 	}
 	gpu->autoPixelCBuffer(psData);
 
-	// Raytracing
 	gpu->draw(screenMesh);
 
-	// Buffer swap
 	gpu->swap(true);
 
-	// Fps display
 	win.title(std::to_string(int(1 / deltaT)));
 }
 

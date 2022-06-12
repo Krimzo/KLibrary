@@ -1,5 +1,7 @@
 #include "utility/file.h"
 
+#include "utility/console.h"
+
 
 std::string kl::file::extension(const std::string& filePath) {
 	const size_t lastDotPos = filePath.find_last_of(".");
@@ -29,147 +31,110 @@ std::vector<std::string> kl::file::getFiles(const std::string& dirPath, bool rec
 }
 
 std::string kl::file::read(const std::string& filePath) {
-	// Open file
 	std::ifstream fileStream(filePath);
 	std::stringstream textBuffer;
-	if (!fileStream.is_open()) {
-		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return {};
 	}
 
-	// Read/close
 	textBuffer << fileStream.rdbuf();
 	fileStream.close();
 	return textBuffer.str();
 }
 std::vector<byte> kl::file::readB(const std::string& filePath) {
-	// Open file
 	FILE* file = nullptr;
-	if (fopen_s(&file, filePath.c_str(), "rb")) {
-		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+	if (kl::console::warning(fopen_s(&file, filePath.c_str(), "rb"), "Failed to open file \"" + filePath + "\"")) {
 		return {};
 	}
 
-	// Seek to end and get pos
 	fseek(file, 0, SEEK_END);
 	const int byteSize = ftell(file);
 
-	// Create buff and read data
 	std::vector<byte> buff(byteSize);
 	rewind(file);
 	fread(&buff[0], 1, byteSize, file);
 
-	// Close file
 	fclose(file);
-
-	// Return data
 	return buff;
 }
 
 bool kl::file::write(const std::string& filePath, const std::string& data) {
-	// Open file
 	std::ofstream fileStream(filePath);
-	if (!fileStream.is_open()) {
-		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return false;
 	}
 
-	// Write/close
 	fileStream << data;
 	fileStream.close();
 	return true;
 }
-bool kl::file::writeB(const std::string& filePath, const std::vector<byte>& data) {
-	// Open file
+uint64 kl::file::writeB(const std::string& filePath, const std::vector<byte>& data) {
 	FILE* file = nullptr;
-	if (fopen_s(&file, filePath.c_str(), "wb")) {
-		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
-		return false;
+	if (kl::console::warning(fopen_s(&file, filePath.c_str(), "wb"), "Failed to open file \"" + filePath + "\"")) {
+		return 0;
 	}
 
-	// Write
-	fwrite(&data[0], 1, data.size(), file);
+	const uint64 bytesWritten = fwrite(&data[0], 1, data.size(), file);
 
-	// Close
 	fclose(file);
-	return true;
+	return bytesWritten;
 }
 
 bool kl::file::append(const std::string& filePath, const std::string& data, int position) {
-	// Open file
 	std::fstream fileStream(filePath, std::ios::in | std::ios::out);
-	if (!fileStream.is_open()) {
-		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return false;
 	}
 
-	// Set pos
 	if (position < 0) {
 		fileStream.seekp(0, std::ios_base::end);
 	}
 	else {
 		fileStream.seekp(position);
 	}
-
-	// Write and close
 	fileStream << data;
+
 	fileStream.close();
 	return true;
 }
-bool kl::file::appendB(const std::string& filePath, const std::vector<byte>& data, int position) {
-	// Open file
+uint64 kl::file::appendB(const std::string& filePath, const std::vector<byte>& data, int position) {
 	FILE* file = nullptr;
-	if (fopen_s(&file, filePath.c_str(), "ab")) {
-		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
-		return false;
+	if (kl::console::warning(fopen_s(&file, filePath.c_str(), "ab"), "Failed to open file \"" + filePath + "\"")) {
+		return 0;
 	}
 
-	// Set pos
 	if (position < 0) {
 		fseek(file, 0, SEEK_END);
 	}
 	else {
 		fseek(file, position, SEEK_SET);
 	}
+	const uint64 bytesWritten = fwrite(&data[0], 1, data.size(), file);
 
-	// Write
-	fwrite(&data[0], 1, data.size(), file);
-
-	// Close
 	fclose(file);
-	return true;
+	return bytesWritten;
 }
 
 std::vector<kl::vertex> kl::file::parseMesh(const std::string& filePath, bool flipZ) {
-	// Temp vertex buffer
-	std::vector<kl::vertex> vertexData;
-
-	// Opening the file
 	std::fstream fileStream;
 	fileStream.open(filePath, std::ios::in);
-	if (!fileStream.is_open()) {
-		std::cout << "Could not open file \"" << filePath << "\"!" << std::endl;
+	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return {};
 	}
 
-	// Temp load buffers
+	std::vector<kl::vertex> vertexData;
 	std::vector<kl::float3> xyzBuffer;
 	std::vector<kl::float2> uvBuffer;
 	std::vector<kl::float3> normBuffer;
 
-	// Z flipper
 	const int zFlip = flipZ ? -1 : 1;
-
-	// Parsing data
 	for (std::string fileLine; std::getline(fileStream, fileLine);) {
-		// Splitting the string by spaces
 		std::vector<std::string> lineParts;
 		std::stringstream lineStream(fileLine);
 		for (std::string linePart; std::getline(lineStream, linePart, ' ');) {
 			lineParts.push_back(linePart);
 		}
 
-		// Parsing the data
 		if (lineParts[0] == "v") {
 			xyzBuffer.push_back(kl::float3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
 		}
@@ -181,13 +146,12 @@ std::vector<kl::vertex> kl::file::parseMesh(const std::string& filePath, bool fl
 		}
 		else if (lineParts[0] == "f") {
 			for (int i = 1; i < 4; i++) {
-				// Getting the world, texture and normal indexes
 				std::vector<std::string> linePartParts;
 				std::stringstream linePartStream(lineParts[i]);
-				for (std::string linePartPart; std::getline(linePartStream, linePartPart, '/');)
+				for (std::string linePartPart; std::getline(linePartStream, linePartPart, '/');) {
 					linePartParts.push_back(linePartPart);
+				}
 
-				// Saving the data
 				vertexData.push_back(
 					kl::vertex(
 						xyzBuffer[std::stoi(linePartParts[0]) - 1],
@@ -199,9 +163,6 @@ std::vector<kl::vertex> kl::file::parseMesh(const std::string& filePath, bool fl
 		}
 	}
 
-	// Closing the file
 	fileStream.close();
-
-	// Data return
 	return vertexData;
 }

@@ -3,8 +3,8 @@
 #include "utility/console.h"
 
 
-ID3D11ShaderResourceView* kl::gpu::newShaderView(ID3D11Texture2D* tex, D3D11_SHADER_RESOURCE_VIEW_DESC* desc) {
-	ID3D11ShaderResourceView* shaderView = nullptr;
+kl::dx::view::shader kl::gpu::newShaderView(kl::dx::texture tex, kl::dx::view::desc::shader* desc) {
+	kl::dx::view::shader shaderView = nullptr;
 	m_Device->CreateShaderResourceView(tex, desc, &shaderView);
 	kl::console::error(!shaderView, "Failed to create shader view");
 
@@ -12,9 +12,9 @@ ID3D11ShaderResourceView* kl::gpu::newShaderView(ID3D11Texture2D* tex, D3D11_SHA
 	return shaderView;
 }
 
-void kl::gpu::bindPixelShaderView(ID3D11ShaderResourceView* view, uint slot) {
+void kl::gpu::bindPixelShaderView(kl::dx::view::shader view, uint slot) {
 	m_Context->PSSetShaderResources(slot, 1, &view);
 }
-void kl::gpu::bindComputeShaderView(ID3D11ShaderResourceView* view, uint slot) {
+void kl::gpu::bindComputeShaderView(kl::dx::view::shader view, uint slot) {
 	m_Context->CSSetShaderResources(slot, 1, &view);
 }

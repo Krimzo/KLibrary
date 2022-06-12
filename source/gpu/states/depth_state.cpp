@@ -3,8 +3,8 @@
 #include "utility/console.h"
 
 
-ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc) {
-	ID3D11DepthStencilState* depthState = nullptr;
+kl::dx::state::depth kl::gpu::newDepthState(kl::dx::state::desc::depth* desc) {
+	kl::dx::state::depth depthState = nullptr;
 	m_Device->CreateDepthStencilState(desc, &depthState);
 	kl::console::error(!depthState, "Failed to create depth stencil state");
 
@@ -12,8 +12,8 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(D3D11_DEPTH_STENCIL_DESC* desc) 
 	return depthState;
 }
 
-ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool mask) {
-	D3D11_DEPTH_STENCIL_DESC depthDesc = {};
+kl::dx::state::depth kl::gpu::newDepthState(bool depth, bool stencil, bool mask) {
+	kl::dx::state::desc::depth depthDesc = {};
 
 	if (depth) {
 		depthDesc.DepthEnable = true;
@@ -51,6 +51,6 @@ ID3D11DepthStencilState* kl::gpu::newDepthState(bool depth, bool stencil, bool m
 	return newDepthState(&depthDesc);
 }
 
-void kl::gpu::bind(ID3D11DepthStencilState* state) {
+void kl::gpu::bind(kl::dx::state::depth state) {
 	m_Context->OMSetDepthStencilState(state, 0xFF);
 }

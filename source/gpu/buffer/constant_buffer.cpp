@@ -3,20 +3,20 @@
 #include "utility/console.h"
 
 
-ID3D11Buffer* kl::gpu::newCBuffer(uint byteSize) {
+kl::dx::buffer kl::gpu::newCBuffer(uint byteSize) {
 	kl::console::error(byteSize % 16, "Constant buffer size has to be a multiple of 16");
 
-	D3D11_BUFFER_DESC buffDesc = {};
+	kl::dx::desc::buffer buffDesc = {};
 	buffDesc.ByteWidth = byteSize;
 	buffDesc.Usage = D3D11_USAGE_DYNAMIC;
 	buffDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	buffDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	return this->newBuffer(&buffDesc);
+	return newBuffer(&buffDesc);
 }
 
-void kl::gpu::setCBufferData(ID3D11Buffer* buff, const void* data) {
-	D3D11_BUFFER_DESC buffData = {};
+void kl::gpu::setCBufferData(kl::dx::buffer buff, const void* data) {
+	kl::dx::desc::buffer buffData = {};
 	buff->GetDesc(&buffData);
 
 	D3D11_MAPPED_SUBRESOURCE ms = {};
@@ -25,9 +25,9 @@ void kl::gpu::setCBufferData(ID3D11Buffer* buff, const void* data) {
 	m_Context->Unmap(buff, NULL);
 }
 
-void kl::gpu::bindVertexCBuffer(ID3D11Buffer* buff, uint slot) {
+void kl::gpu::bindVertexCBuffer(kl::dx::buffer buff, uint slot) {
 	m_Context->VSSetConstantBuffers(slot, 1, &buff);
 }
-void kl::gpu::bindPixelCBuffer(ID3D11Buffer* buff, uint slot) {
+void kl::gpu::bindPixelCBuffer(kl::dx::buffer buff, uint slot) {
 	m_Context->PSSetConstantBuffers(slot, 1, &buff);
 }

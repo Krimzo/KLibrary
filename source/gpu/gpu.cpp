@@ -20,15 +20,15 @@ kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : m_CBuffersPredefined(predefine
 	GetClientRect(hwnd, &clientArea);
 
 	DXGI_SWAP_CHAIN_DESC chaindes = {};
-	chaindes.BufferCount = 1;                                 // One back buffer
-	chaindes.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;  // 32-bit color
-	chaindes.BufferDesc.Width = clientArea.right;             // Setting the backbuffer width
-	chaindes.BufferDesc.Height = clientArea.bottom;           // Setting the backbuffer height
-	chaindes.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;   // Usage
-	chaindes.OutputWindow = hwnd;                             // Window
-	chaindes.SampleDesc.Count = 1;                            // MSAA
-	chaindes.Windowed = true;                                 // Windowed/fullscreen
-	chaindes.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;  // Allowing fullscreen switching
+	chaindes.BufferCount = 1;
+	chaindes.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	chaindes.BufferDesc.Width = clientArea.right;
+	chaindes.BufferDesc.Height = clientArea.bottom;
+	chaindes.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	chaindes.OutputWindow = hwnd;
+	chaindes.SampleDesc.Count = 1;
+	chaindes.Windowed = true;
+	chaindes.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	D3D11CreateDeviceAndSwapChain(
 		nullptr,
@@ -54,14 +54,14 @@ kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : m_CBuffersPredefined(predefine
 	bind(newRasterState(false, false));
 
 	if (predefineCBuffers) {
-		for (uint32_t i = 0; i < KL_CBUFFER_PREDEFINED_SIZE; i++) {
+		for (uint i = 0; i < KL_CBUFFER_PREDEFINED_SIZE; i++) {
 			m_VertexCBuffers[i] = newCBuffer((i + 1) * 16);
 			m_PixelCBuffers[i] = newCBuffer((i + 1) * 16);
 		}
 	}
 
 #ifdef KL_USING_IMGUI
-	ImGui_ImplDX11_Init(device, devcon);
+	ImGui_ImplDX11_Init(m_Device, m_Context);
 #endif
 }
 
@@ -81,10 +81,10 @@ kl::gpu::~gpu() {
 	m_Device->Release();
 }
 
-ID3D11Device* kl::gpu::dev() {
+kl::dx::device kl::gpu::dev() {
 	return m_Device;
 }
-ID3D11DeviceContext* kl::gpu::con() {
+kl::dx::context kl::gpu::con() {
 	return m_Context;
 }
 
@@ -98,11 +98,11 @@ void kl::gpu::regenInternal(const kl::uint2& size) {
 	}
 	m_Chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
-	ID3D11Texture2D* bbTex = newTextureBB();
+	kl::dx::texture bbTex = newTextureBB();
 	m_FrameBuffer = newTargetView(bbTex);
 	destroy(bbTex);
 
-	D3D11_TEXTURE2D_DESC dsTexDesc = {};
+	kl::dx::desc::texture dsTexDesc = {};
 	dsTexDesc.Width = size.x;
 	dsTexDesc.Height = size.y;
 	dsTexDesc.MipLevels = 1;
@@ -111,7 +111,7 @@ void kl::gpu::regenInternal(const kl::uint2& size) {
 	dsTexDesc.SampleDesc.Count = 1;
 	dsTexDesc.Usage = D3D11_USAGE_DEFAULT;
 	dsTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	ID3D11Texture2D* depthTex = newTexture(&dsTexDesc);
+	kl::dx::texture depthTex = newTexture(&dsTexDesc);
 	m_DepthBuffer = newDepthView(depthTex);
 	destroy(depthTex);
 
@@ -129,15 +129,15 @@ void kl::gpu::viewport(const kl::int2& pos, const kl::uint2& size) {
 	m_Context->RSSetViewports(1, &viewport);
 }
 
-void kl::gpu::bindInternal(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView) {
-	std::vector<ID3D11RenderTargetView*> combinedTargets = { m_FrameBuffer };
+void kl::gpu::bindInternal(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView) {
+	std::vector<kl::dx::view::target> combinedTargets = { m_FrameBuffer };
 	for (auto& target : targets) {
 		combinedTargets.push_back(target);
 	}
 	m_Context->OMSetRenderTargets(UINT(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : m_DepthBuffer);
 }
 
-void kl::gpu::bindTargets(const std::vector<ID3D11RenderTargetView*> targets, ID3D11DepthStencilView* depthView) {
+void kl::gpu::bindTargets(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView) {
 	m_Context->OMSetRenderTargets(UINT(targets.size()), &targets[0], depthView ? depthView : m_DepthBuffer);
 }
 

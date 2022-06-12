@@ -24,7 +24,7 @@ namespace kl {
 		void waitFor(char toWaitFor, bool echo = false);
 		char waitForAny(bool echo = false);
 
-		void warning(bool occured, const std::string& message, bool wait = true);
+		bool warning(bool occured, const std::string& message, bool wait = false);
 		void error(bool occured, const std::string& message, bool wait = true);
 
 		void fastOut(const std::string& data, const kl::uint2& location = {});
