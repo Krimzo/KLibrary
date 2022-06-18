@@ -45,7 +45,7 @@ kl::uint2 kl::image::size() const {
 	return m_Size;
 }
 kl::color kl::image::pixel(const kl::uint2& coords) const {
-	if (coords.x >= 0 && coords.x < m_Size.x && coords.y >= 0 && coords.y < m_Size.y) {
+	if (coords.x < m_Size.x && coords.y < m_Size.y) {
 		return m_Pixels[uint64(coords.y * m_Size.x + coords.x)];
 	}
 	return kl::colors::black;
@@ -87,7 +87,7 @@ bool kl::image::resize(const kl::uint2& size) {
 	return false;
 }
 bool kl::image::pixel(const kl::uint2& coords, const kl::color& color) {
-	if (coords.x >= 0 && coords.x < m_Size.x && coords.y >= 0 && coords.y < m_Size.y) {
+	if (coords.x < m_Size.x && coords.y < m_Size.y) {
 		m_Pixels[uint64(coords.y * m_Size.x + coords.x)] = color;
 		return true;
 	}

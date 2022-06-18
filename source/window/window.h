@@ -49,7 +49,6 @@ namespace kl {
 		bool running() const;
 
 		operator HWND();
-		operator const HWND() const;
 
 		void maximize();
 		void minimize();

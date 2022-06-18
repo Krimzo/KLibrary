@@ -79,9 +79,6 @@ bool kl::window::running() const {
 kl::window::operator HWND() {
 	return m_Window;
 }
-kl::window::operator const HWND() const {
-	return m_Window;
-}
 
 void kl::window::fullscreen(bool enable) {
 	if (!m_Fullscreened && enable) {

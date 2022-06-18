@@ -90,7 +90,7 @@ float kl::video::duration() const {
 	if (m_Reader) {
 		PROPVARIANT var = {};
 		if (SUCCEEDED(m_Reader->GetPresentationAttribute(MF_SOURCE_READER_MEDIASOURCE, MF_PD_DURATION, &var))) {
-			LONGLONG nanoTime = 0;
+			int64 nanoTime = 0;
 			PropVariantToInt64(var, &nanoTime);
 			PropVariantClear(&var);
 			return (nanoTime * 1e-7f);
@@ -104,7 +104,7 @@ uint64 kl::video::byteSize() const {
 		PROPVARIANT var = {};
 		if (SUCCEEDED(m_Reader->GetPresentationAttribute(MF_SOURCE_READER_MEDIASOURCE, MF_PD_TOTAL_FILE_SIZE, &var))) {
 			uint64 byteSize = 0;
-			PropVariantToInt64(var, (LONGLONG*)&byteSize);
+			PropVariantToUInt64(var, &byteSize);
 			PropVariantClear(&var);
 			return byteSize;
 		}
@@ -117,8 +117,8 @@ kl::uint2 kl::video::frameSize() const {
 		IMFMediaType* currentType = nullptr;
 		m_Reader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, &currentType);
 		if (currentType) {
-			kl::int2 frameSize;
-			MFGetAttributeSize(currentType, MF_MT_FRAME_SIZE, (UINT32*)&frameSize.x, (UINT32*)&frameSize.y);
+			kl::uint2 frameSize;
+			MFGetAttributeSize(currentType, MF_MT_FRAME_SIZE, &frameSize.x, &frameSize.y);
 			currentType->Release();
 			return frameSize;
 		}
@@ -131,7 +131,7 @@ float kl::video::frameRate() const {
 		IMFMediaType* currentType = nullptr;
 		m_Reader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, &currentType);
 		if (currentType) {
-			UINT32 num = 0, den = 0;
+			uint num = 0, den = 0;
 			MFGetAttributeRatio(currentType, MF_MT_FRAME_RATE, &num, &den);
 			currentType->Release();
 			return float(num) / den;

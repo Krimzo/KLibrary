@@ -49,7 +49,7 @@ namespace kl {
 		}
 
 		// minmax
-		template<typename T> T minmax(const T& val, const T& min, const T& max) {
+		template<typename T> inline T minmax(const T& val, const T& min, const T& max) {
 			return std::min(std::max(val, min), max);
 		}
 

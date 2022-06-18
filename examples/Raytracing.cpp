@@ -200,5 +200,5 @@ int main() {
 		}
 	};
 	timer.elapsed();
-	win.run(kl::int2(1600, 900), "Raytracing", true, true);
+	win.run({ 1600, 900 }, "Raytracing", true, true);
 }

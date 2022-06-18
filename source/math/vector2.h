@@ -16,8 +16,8 @@ namespace kl::math {
 		return T(degs * conv);
 	}
 	template<typename T> inline T toDegs(const T& rads) {
-		static const double toDegrees = 180.0 / kl::math::pi;
-		return T(rads * toDegrees);
+		static const double conv = 180.0 / kl::math::pi;
+		return T(rads * conv);
 	}
 }
 
