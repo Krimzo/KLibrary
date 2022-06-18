@@ -27,6 +27,12 @@ namespace kl {
 			struct {
 				T x, y;
 			};
+			struct {
+				T u, v;
+			};
+			struct {
+				T width, height;
+			};
 			T data[2] = {};
 		};
 

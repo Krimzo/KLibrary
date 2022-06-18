@@ -50,6 +50,25 @@ kl::vertex kl::triangle::interpolate(const kl::float4& consts, const kl::float2&
 		}
 	};
 }
+kl::vertex kl::triangle::interpolate(const kl::float3& point) const {
+	const kl::float3 v0 = a.world - c.world;
+	const kl::float3 v1 = b.world - c.world;
+	const kl::float3 v2 = point - c.world;
+	const float d00 = v0.dot(v0);
+	const float d01 = v0.dot(v1);
+	const float d11 = v1.dot(v1);
+	const float d20 = v2.dot(v0);
+	const float d21 = v2.dot(v1);
+	const float invDenom = 1.0f / (d00 * d11 - d01 * d01);
+	const float w1 = (d11 * d20 - d01 * d21) * invDenom;
+	const float w2 = (d00 * d21 - d01 * d20) * invDenom;
+	const float w3 = 1.0f - w1 - w2;
+	return {
+		point,
+		a.texture * w1 + b.texture * w2 + c.texture * w3,
+		a.normal * w1 + b.normal * w2 + c.normal * w3
+	};
+}
 
 // std::cout
 std::ostream& kl::operator<<(std::ostream& os, const kl::triangle& obj) {

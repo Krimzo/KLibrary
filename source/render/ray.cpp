@@ -1,9 +1,13 @@
 #include "render/ray.h"
 
 
-// Constructors
 kl::ray::ray() {}
 kl::ray::ray(const kl::float3& origin, const kl::float3& direction) : origin(origin), direction(direction) {}
+kl::ray::ray(const kl::float3& origin, const kl::mat4& invCamMat, const kl::float2& ndc) : origin(origin) {
+	const kl::float4 pixelDir = invCamMat * kl::float4(ndc, 1.0f, 1.0f);
+	direction = (pixelDir / pixelDir.w).xyz.norm();
+}
+kl::ray::ray(const kl::camera& cam, const kl::float2& ndc) : ray(cam.position, cam.matrix().inv(), ndc) {}
 
 // Intersection with a plane
 bool kl::ray::intersect(const kl::plane& plane, kl::float3* outInter) const {

@@ -22,6 +22,12 @@ namespace kl {
 			struct {
 				T x, y, z;
 			};
+			struct {
+				T r, g, b;
+			};
+			struct {
+				T width, height, depth;
+			};
 			kl::vector2<T> xy;
 			T data[3] = {};
 		};
@@ -228,6 +234,12 @@ namespace kl {
 				(xy + zw + zw + xy) * x + (y2 - z2 + w2 - x2) * y + (yz + yz - xw - xw) * z,
 				(xz - yw + xz - yw) * x + (yz + yz + xw + xw) * y + (z2 - y2 - x2 + w2) * z
 			};
+		}
+
+		// Reflect vector around other vector
+		kl::vector3<T> reflect(const kl::vector3<T>& vec) const {
+			const kl::vector3<T> normal = vec.norm();
+			return sub(normal * dot(normal) * 2.0);
 		}
 	};
 

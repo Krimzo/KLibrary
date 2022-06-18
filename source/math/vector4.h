@@ -9,6 +9,9 @@ namespace kl {
 			struct {
 				T x, y, z, w;
 			};
+			struct {
+				T r, g, b, a;
+			};
 			kl::vector2<T> xy;
 			kl::vector3<T> xyz;
 			T data[4] = {};
