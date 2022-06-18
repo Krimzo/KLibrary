@@ -21,6 +21,7 @@ namespace kl {
 
 		ALL float interpolate(const kl::float4& consts, const kl::float3& values, const kl::float2& pos) const;
 		ALL kl::vertex interpolate(const kl::float4& consts, const kl::float2& pos) const;
+		ALL kl::vertex interpolate(const kl::float3& point) const;
 	};
 
 	// std::cout

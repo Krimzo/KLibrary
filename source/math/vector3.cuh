@@ -1,5 +1,7 @@
 #pragma once
 
+#include <windows.h>
+
 #include "math/vector2.cuh"
 #include "graphics/color.cuh"
 
@@ -18,6 +20,12 @@ namespace kl {
 		union {
 			struct {
 				T x, y, z;
+			};
+			struct {
+				T r, g, b;
+			};
+			struct {
+				T width, height, depth;
 			};
 			kl::vector2<T> xy;
 			T data[3] = {};
@@ -203,7 +211,7 @@ namespace kl {
 			return kl::math::toDegs(std::acos(norm().dot(vec.norm())));
 		}
 
-		// Rotate vector by around other vector
+		// Rotate vector around other vector
 		ALL kl::vector3<T> rotate(const T& angle, const kl::vector3<T>& axis) const {
 			const T angleSin = T(std::sin(kl::math::toRads(angle) * 0.5));
 			const T angleCos = T(std::cos(kl::math::toRads(angle) * 0.5));
@@ -225,6 +233,12 @@ namespace kl {
 				(xy + zw + zw + xy) * x + (y2 - z2 + w2 - x2) * y + (yz + yz - xw - xw) * z,
 				(xz - yw + xz - yw) * x + (yz + yz + xw + xw) * y + (z2 - y2 - x2 + w2) * z
 			};
+		}
+
+		// Reflect vector around other vector
+		ALL kl::vector3<T> reflect(const kl::vector3<T>& vec) const {
+			const kl::vector3<T> normal = vec.norm();
+			return (*this) - (normal * dot(normal) * 2.0);
 		}
 	};
 
