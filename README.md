@@ -1,2 +1,2 @@
-# C++/Cuda) Graphics Library
+# C++/Cuda Graphics Library
 Focused on Win32 and DirectX
