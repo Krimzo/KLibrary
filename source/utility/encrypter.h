@@ -12,7 +12,9 @@ namespace kl {
 	inline std::wstring toWString(const std::string& data) {
 		std::wstring temp;
 		temp.resize(data.size());
-		std::mbtowc(&temp[0], &data[0], data.size());
+		for (uint64 i = 0; i < data.size(); i++) {
+			temp[i] = data[i];
+		}
 		return temp;
 	}
 }
