@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <iostream>
+#include <windows.h>
 
 #include "cuda/cu_types.cuh"
 
@@ -8,27 +9,55 @@
 using byte = unsigned char;
 
 namespace kl {
-	class color {
-	public:
+	struct color {
 		byte b, g, r, a;
 
-		ALL color();
-		ALL color(byte r, byte g, byte b, byte a = 255);
+		ALL color() : b(0), g(0), r(0), a(0) {}
+		ALL color(byte r, byte g, byte b, byte a = 255) : b(b), g(g), r(r), a(a) {}
 
-		ALL bool equ(const kl::color& obj) const;
-		ALL bool operator==(const kl::color& obj) const;
-		ALL bool operator!=(const kl::color& obj) const;
+		ALL bool equ(const kl::color& obj) const {
+			return r == obj.r && g == obj.g && b == obj.b && a == obj.a;
+		}
+		ALL bool operator==(const kl::color& obj) const {
+			return equ(obj);
+		}
+		ALL bool operator!=(const kl::color& obj) const {
+			return !equ(obj);
+		}
 
-		ALL kl::color gray() const;
-		ALL kl::color invert() const;
-		ALL char ascii() const;
+		ALL kl::color gray() const {
+			const byte grayValue = byte(r * 0.3f + g * 0.585f + b * 0.115f);
+			return kl::color(grayValue, grayValue, grayValue, a);
+		}
+		ALL kl::color invert() const {
+			return kl::color(255 - r, 255 - g, 255 - b, a);
+		}
+		ALL char ascii() const {
+			static const char asciiTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
+			static const float toSatur = 9.0f / 255.0f;
+			return asciiTable[int(gray().r * toSatur)];
+		}
 
-		ALL kl::color mix(const kl::color& col, float ratio) const;
-		ALL kl::color mix(const kl::color& col) const;
+		ALL kl::color mix(const kl::color& col, float ratio) const {
+			ratio = min(max(ratio, 0.0f), 1.0f);
+			const float iratio = 1.0f - ratio;
+			return kl::color(
+				byte(r * iratio) + byte(col.r * ratio),
+				byte(g * iratio) + byte(col.g * ratio),
+				byte(b * iratio) + byte(col.b * ratio)
+			);
+		}
+		ALL kl::color mix(const kl::color& col) const {
+			static const float toFloatCol = 1.0f / 255;
+			return mix(col, col.a * toFloatCol);
+		}
 	};
 
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::color& obj);
+	inline std::ostream& operator<<(std::ostream& os, const kl::color& obj) {
+		os << "\033[38;2;" << int(obj.r) << ";" << int(obj.g) << ";" << int(obj.b) << "m";
+		return os;
+	}
 
 	// Predefined
 	namespace colors {

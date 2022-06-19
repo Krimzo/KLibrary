@@ -25,15 +25,8 @@
     <CudaCompile Include="source\gpu\views\depth_view.cu" />
     <CudaCompile Include="source\gpu\views\shader_view.cu" />
     <CudaCompile Include="source\gpu\views\target_view.cu" />
-    <CudaCompile Include="source\graphics\color.cu" />
     <CudaCompile Include="source\graphics\image.cu" />
     <CudaCompile Include="source\graphics\video.cu" />
-    <CudaCompile Include="source\render\camera.cu" />
-    <CudaCompile Include="source\render\plane.cu" />
-    <CudaCompile Include="source\render\ray.cu" />
-    <CudaCompile Include="source\render\sphere.cu" />
-    <CudaCompile Include="source\render\triangle.cu" />
-    <CudaCompile Include="source\render\vertex.cu" />
     <CudaCompile Include="source\utility\async.cu" />
     <CudaCompile Include="source\utility\console.cu" />
     <CudaCompile Include="source\utility\encrypter.cu" />
@@ -50,10 +43,10 @@
     <CudaCompile Include="source\window\window_private.cu" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\cuda\cu_types.cuh" />
     <ClInclude Include="source\cuda\kcuda.cuh" />
     <ClInclude Include="source\cuda\kernel.cuh" />
     <ClInclude Include="source\cuda\object.cuh" />
-    <ClInclude Include="source\cuda\cu_types.cuh" />
     <ClInclude Include="source\cuda\vector.cuh" />
     <ClInclude Include="source\gpu\dx_types.cuh" />
     <ClInclude Include="source\gpu\gpu.cuh" />

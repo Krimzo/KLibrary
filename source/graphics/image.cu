@@ -95,7 +95,7 @@ bool kl::image::pixel(const kl::uint2& coords, const kl::color& color) {
 }
 
 bool kl::image::fromFile(const std::string& filePath) {
-	uint64_t gdiplusToken = NULL;
+	uint64 gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
 	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
 		std::cout << "Image: GdiPlus failed to init!" << std::endl;
