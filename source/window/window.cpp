@@ -128,16 +128,18 @@ bool kl::window::icon(const std::string& filePath) {
 	return true;
 }
 
-void kl::window::draw(const kl::image& toDraw, const kl::int2& position) {
-	const kl::int2 size = toDraw.size();
+void kl::window::draw(const kl::color* data, const kl::uint2& size, const kl::int2& position) {
 	BITMAPINFO bmpInfo = {};
 	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 	bmpInfo.bmiHeader.biBitCount = 32;
 	bmpInfo.bmiHeader.biPlanes = 1;
 	bmpInfo.bmiHeader.biWidth = size.x;
-	bmpInfo.bmiHeader.biHeight = -size.y;
-	StretchDIBits(m_DeviceContext, position.x, position.y, size.x, size.y, 0, 0, size.x, size.y, toDraw.data(), &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+	bmpInfo.bmiHeader.biHeight = -int(size.y);
+	StretchDIBits(m_DeviceContext, position.x, position.y, size.x, size.y, 0, 0, size.x, size.y, data, &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
+}
+void kl::window::draw(const kl::image& toDraw, const kl::int2& position) {
+	draw(toDraw.data(), toDraw.size(), position);
 }
 
 void kl::window::notify() const {

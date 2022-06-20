@@ -61,6 +61,7 @@ namespace kl {
 		void title(const std::string& data);
 		bool icon(const std::string& filePath);
 
+		void draw(const kl::color* data, const kl::uint2& size, const kl::int2& position = {});
 		void draw(const kl::image& toDraw, const kl::int2& position = {});
 
 		void notify() const;
