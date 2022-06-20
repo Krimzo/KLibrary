@@ -239,7 +239,7 @@ namespace kl {
 		// Reflect vector around other vector
 		kl::vector3<T> reflect(const kl::vector3<T>& vec) const {
 			const kl::vector3<T> normal = vec.normalize();
-			return subtract(normal * dot(normal) * 2.0);
+			return (*this) - (normal * dot(normal) * 2.0);
 		}
 	};
 
