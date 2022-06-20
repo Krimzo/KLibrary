@@ -2,6 +2,10 @@
 
 #include "utility/console.h"
 
+#ifdef KL_USING_IMGUI
+#include "imgui.h"
+#endif
+
 
 void kl::window::registerWindowClass(const std::string& name) {
 	WNDCLASSEXA windowClass = {};

@@ -199,6 +199,7 @@ int main() {
 			spheres[i].color = kl::random::COLOR();
 		}
 	};
-	timer.elapsed();
+	timer.interval();
+	timer.reset();
 	win.run({ 1600, 900 }, "Raytracing", true, true);
 }
