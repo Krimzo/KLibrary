@@ -29,10 +29,10 @@ namespace kl {
 			const T cy = T(std::cos(kl::math::toRads(eul.z) * 0.5));
 			const T sy = T(std::sin(kl::math::toRads(eul.z) * 0.5));
 			return {
-				sr * cp * cy - cr * sp * sy,
-				cr * sp * cy + sr * cp * sy,
-				cr * cp * sy - sr * sp * cy,
-				cr * cp * cy + sr * sp * sy
+				T(sr * cp * cy - cr * sp * sy),
+				T(cr * sp * cy + sr * cp * sy),
+				T(cr * cp * sy - sr * sp * cy),
+				T(cr * cp * cy + sr * sp * sy)
 			};
 		}
 		template<typename T> inline kl::vector3<T> toEul(const kl::vector4<T>& quat) {
@@ -42,9 +42,9 @@ namespace kl {
 			const T sinyCosp = T(2.0 * (quat.w * quat.z + quat.x * quat.y));
 			const T cosyCosp = T(1.0 - 2.0 * (quat.y * quat.y + quat.z * quat.z));
 			return {
-				kl::math::toDegs(std::atan2(sinrCosp, cosrCosp)),
-				kl::math::toDegs((std::abs(sinp) >= 1.0) ? std::copysign(kl::math::pi * 0.5, sinp) : std::asin(sinp)),
-				kl::math::toDegs(std::atan2(sinyCosp, cosyCosp))
+				T(kl::math::toDegs(std::atan2(sinrCosp, cosrCosp))),
+				T(kl::math::toDegs((std::abs(sinp) >= 1.0) ? std::copysign(kl::math::pi * 0.5, sinp) : std::asin(sinp))),
+				T(kl::math::toDegs(std::atan2(sinyCosp, cosyCosp)))
 			};
 		}
 
