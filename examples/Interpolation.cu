@@ -1,67 +1,86 @@
-#include "KrimzLib.cuh"
+#include "KrimzLib.h"
+
+
+const uint frameSize = 900;
+
+struct Point : public kl::float2 {
+	kl::color color = kl::colors::black;
+
+	Point() : kl::float2() {}
+	Point(float x, float y, const kl::color& color) : kl::float2(x, y), color(color) {}
+};
+
+RUN void InterpolationKernel(uint64 n, kl::color* outBuffer, kl::triangle T1, kl::triangle T2, kl::color colA, kl::color colB, kl::color colC, kl::color colD) {
+	const uint64 i = kl::cuda::index();
+	if (i < n) {
+		const kl::uint2 pixelPos = { i % frameSize, i / frameSize };
+
+		const kl::float3 t1Weights = T1.weights(T1.constants(), pixelPos);
+		const kl::float3 t2Weights = T2.weights(T2.constants(), pixelPos);
+
+		kl::color pixelCol = { 50, 50, 50 };
+		if (T1.in(t1Weights)) {
+			pixelCol.r = byte(T1.interpolate(t1Weights, kl::float3(colA.r, colB.r, colC.r)));
+			pixelCol.g = byte(T1.interpolate(t1Weights, kl::float3(colA.g, colB.g, colC.g)));
+			pixelCol.b = byte(T1.interpolate(t1Weights, kl::float3(colA.b, colB.b, colC.b)));
+		}
+		else if (T2.in(t2Weights)) {
+			pixelCol.r = byte(T2.interpolate(t2Weights, kl::float3(colA.r, colD.r, colC.r)));
+			pixelCol.g = byte(T2.interpolate(t2Weights, kl::float3(colA.g, colD.g, colC.g)));
+			pixelCol.b = byte(T2.interpolate(t2Weights, kl::float3(colA.b, colD.b, colC.b)));
+		}
+		outBuffer[i] = pixelCol;
+	}
+}
+static kl::cuda::kernel interpolationKernel = InterpolationKernel;
 
 
 int main() {
 	kl::window window;
-	kl::image frame(900);
 
-	const int fpsLimit = 165;
-
-	kl::float2 A(50.0f, (frame.height() - 1.0f) / 3.0f);
-	kl::color colA = kl::colors::red;
-	kl::float2 B((frame.width() - 1.0f) / 3.0f, frame.height() - 51.0f);
-	kl::color colB = kl::colors::white;
-	kl::float2 C(frame.width() - 51.0f, (frame.height() - 1.0f) * 0.667f);
-	kl::color colC = kl::colors::blue;
-	kl::float2 D((frame.width() - 1.0f) * 0.667f, 50.0f);
-	kl::color colD = kl::colors::green;
-
-	kl::triangle T1(kl::vertex(kl::float3(A, 0.5f)), kl::vertex(kl::float3(B, 0.5f)), kl::vertex(kl::float3(C, 0.5f)));
-	const kl::float4 t1Consts = T1.constants();
-	kl::triangle T2(kl::vertex(kl::float3(A, 0.5f)), kl::vertex(kl::float3(D, 0.5f)), kl::vertex(kl::float3(C, 0.5f)));
-	const kl::float4 t2Consts = T2.constants();
-
-	kl::timer timer;
-	const float timeToSleep = 1.0f / fpsLimit;
-	window.update = [&]() {
-		static uint frameInd = 0;
-		for (uint x = frameInd - frame.height(), y = 0; y < frame.height(); x++, y++) {
-			kl::color pixel;
-
-			if (T1.in(t1Consts, kl::float2(float(x), float(y)))) {
-				pixel.r = byte(T1.interpolate(t1Consts, kl::float3(colA.r, colB.r, colC.r), kl::float2(float(x), float(y))));
-				pixel.g = byte(T1.interpolate(t1Consts, kl::float3(colA.g, colB.g, colC.g), kl::float2(float(x), float(y))));
-				pixel.b = byte(T1.interpolate(t1Consts, kl::float3(colA.b, colB.b, colC.b), kl::float2(float(x), float(y))));
-			}
-			else if (T2.in(t2Consts, kl::float2(float(x), float(y)))) {
-				pixel.r = byte(T2.interpolate(t2Consts, kl::float3(colA.r, colD.r, colC.r), kl::float2(float(x), float(y))));
-				pixel.g = byte(T2.interpolate(t2Consts, kl::float3(colA.g, colD.g, colC.g), kl::float2(float(x), float(y))));
-				pixel.b = byte(T2.interpolate(t2Consts, kl::float3(colA.b, colD.b, colC.b), kl::float2(float(x), float(y))));
-			}
-			else {
-				pixel = kl::colors::gray;
-			}
-
-			frame.pixel(kl::int2(x, y), pixel);
-
-			frame.pixel(kl::int2(x + 1, y), kl::random::COLOR());
-
-			int yellowStrength = kl::random::INT(0, 256);
-			frame.pixel(kl::int2(x + 2, y), kl::color(yellowStrength, yellowStrength, 0));
-		}
-
-		window.draw(frame);
-
-		window.title(std::to_string(int((100.0f * frameInd) / (frame.width() + frame.height() - 1))) + "%");
-
-		if (++frameInd == frame.width() + frame.height()) {
-			window.title("Finished!");
-			window.update = []() {};
-		}
-
-		while (timer.elapsed() < timeToSleep);
-		timer.reset();
+	Point points[4] = {
+		Point(50.0f, (frameSize - 1.0f) / 3.0f, kl::colors::red),
+		Point((frameSize - 1.0f) / 3.0f, frameSize - 51.0f, kl::colors::green),
+		Point(frameSize - 51.0f, (frameSize - 1.0f) * 0.667f, kl::colors::blue),
+		Point((frameSize - 1.0f) * 0.667f, 50.0f, kl::colors::white)
 	};
 
-	window.run(frame.size(), "Triangle Interpolation", false, true);
+	kl::color* frameBuffer = nullptr;
+	window.start = [&]() {
+		kl::cuda::alloc(frameBuffer, frameSize * frameSize);
+	};
+
+	kl::image frameImage(frameSize);
+	Point* pointToMove = nullptr;
+	window.update = [&]() {
+		interpolationKernel.runs = frameSize * frameSize;
+		interpolationKernel.run(interpolationKernel.runs, frameBuffer,
+			kl::triangle(kl::vertex(kl::float3(points[0], 0.5f)), kl::vertex(kl::float3(points[1], 0.5f)), kl::vertex(kl::float3(points[2], 0.5f))),
+			kl::triangle(kl::vertex(kl::float3(points[0], 0.5f)), kl::vertex(kl::float3(points[3], 0.5f)), kl::vertex(kl::float3(points[2], 0.5f))),
+			points[0].color, points[1].color, points[2].color, points[3].color);
+
+		kl::cuda::copy(frameImage.data(), frameBuffer, frameSize * frameSize, kl::cuda::transfer::DH);
+
+		float minDis = FLT_MAX;
+		for (auto& point : points) {
+			float dis = (window.mouse.position - point).length();
+			if (dis < minDis) {
+				minDis = dis;
+				pointToMove = &point;
+			}
+		}
+		frameImage.drawCircle(*pointToMove, window.mouse.position, pointToMove->color);
+
+		window.draw(frameImage);
+	};
+	window.mouse.lmb.down = [&]() {
+		pointToMove->x = window.mouse.position.x;
+		pointToMove->y = window.mouse.position.y;
+	};
+
+	window.end = [&]() {
+		kl::cuda::free(frameBuffer);
+	};
+
+	window.run(frameSize, "Triangle Interpolation", false, false);
 }
