@@ -8,8 +8,7 @@
 
 
 namespace kl {
-	class ray {
-	public:
+	struct ray {
 		kl::float3 origin;
 		kl::float3 direction;
 
@@ -20,7 +19,8 @@ namespace kl {
 
 		bool intersect(const kl::plane& plane, kl::float3* outInter = nullptr) const;
 		bool intersect(const kl::triangle& triangle, kl::float3* outInter = nullptr) const;
-		bool intersect(const kl::sphere& sphere, kl::float3* outInter = nullptr, float* outDis = nullptr) const;
+		bool intersect(const kl::sphere& sphere, kl::float3& outInter, float& outDis) const;
+		bool intersect(const kl::sphere& sphere) const;
 	};
 
 	// std::cout

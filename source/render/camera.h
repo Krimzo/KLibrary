@@ -7,8 +7,12 @@
 
 namespace kl {
 	class camera {
+	private:
+		kl::float3 m_Forward = { 0.0f, 0.0f, 1.0f };
+		kl::float3 m_Right = { 1.0f, 0.0f, 0.0f };
+		kl::float3 m_Up = { 0.0f, 1.0f, 0.0f };
+
 	public:
-		kl::float3 direction = { 0.0f, 0.0f, 1.0f };
 		kl::float3 position;
 		float aspect = 1.7778f;
 		float fov = 75.0f;
@@ -17,6 +21,7 @@ namespace kl {
 		float speed = 2.0f;
 		float sens = 0.1f;
 
+		void forward(const kl::float3& dir);
 		kl::float3 forward() const;
 		kl::float3 right() const;
 		kl::float3 up() const;

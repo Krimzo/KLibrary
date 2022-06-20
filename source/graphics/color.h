@@ -13,7 +13,7 @@ namespace kl {
 		color();
 		color(byte r, byte g, byte b, byte a = 255);
 
-		bool equ(const kl::color& obj) const;
+		bool equals(const kl::color& obj) const;
 		bool operator==(const kl::color& obj) const;
 		bool operator!=(const kl::color& obj) const;
 

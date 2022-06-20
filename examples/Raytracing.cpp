@@ -164,14 +164,14 @@ void Update() {
 
 	PS_CB psData = {};
 	psData.frameSize = kl::float4(win.size(), 0.0f, 0.0f);
-	psData.invCam = camera.matrix().inv();
+	psData.invCam = camera.matrix().inverse();
 	psData.camPos = kl::float4(camera.position, 1.0f);
 	for (int i = 0; i < 6; i++) {
 		psData.spheres[i].center = spheres[i].center;
 		psData.spheres[i].radius = spheres[i].radius;
 		psData.spheres[i].color = spheres[i].color;
 		psData.spheres[i].reflectivity = spheres[i].reflectivity;
-		psData.spheres[i].emission = kl::float4(spheres[i].emiss(), 1.0f);
+		psData.spheres[i].emission = kl::float4(spheres[i].emissive(), 1.0f);
 	}
 	gpu->autoPixelCBuffer(psData);
 

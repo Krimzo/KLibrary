@@ -22,6 +22,35 @@ namespace kl {
 		float FLOAT(float endInclusive);
 
 		char CHAR(bool upper = false);
-		std::string STRING(uint len);
+		std::string STRING(uint length);
+
+		template<typename T> kl::vector2<T> VECTOR2(T startInclusive, T endInclusive) {
+			return kl::vector2<T>(
+				FLOAT(startInclusive, endInclusive),
+				FLOAT(startInclusive, endInclusive)
+				);
+		}
+		template<typename T> kl::vector3<T> VECTOR3(T startInclusive, T endInclusive) {
+			return kl::vector3<T>(
+				FLOAT(startInclusive, endInclusive),
+				FLOAT(startInclusive, endInclusive),
+				FLOAT(startInclusive, endInclusive)
+				);
+		}
+		template<typename T> kl::vector4<T> VECTOR4(T startInclusive, T endInclusive) {
+			return kl::vector4<T>(
+				FLOAT(startInclusive, endInclusive),
+				FLOAT(startInclusive, endInclusive),
+				FLOAT(startInclusive, endInclusive),
+				FLOAT(startInclusive, endInclusive)
+				);
+		}
+		template<typename T, uint64 W, uint64 H> kl::matrix<T, W, H> MATRIX(T startInclusive, T endInclusive) {
+			kl::matrix<T, W, H> m;
+			for (auto& val : m) {
+				val = FLOAT(startInclusive, endInclusive);
+			}
+			return m;
+		}
 	};
 }

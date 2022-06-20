@@ -28,7 +28,7 @@ void kl::mouse::move(const kl::int2& pos) {
 	SetCursorPos(clientPos.x, clientPos.y);
 }
 
-kl::float2 kl::mouse::norm(const kl::uint2& frameSize) const {
+kl::float2 kl::mouse::normalize(const kl::uint2& frameSize) const {
 	kl::float2 pos(
 		float(position.x) / frameSize.x,
 		float(frameSize.y - position.y) / frameSize.y

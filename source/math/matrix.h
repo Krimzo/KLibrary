@@ -32,35 +32,35 @@ namespace kl {
 		}
 
 		// Subtraction
-		void sub(const kl::matrix<T, W, H>& obj, kl::matrix<T, W, H>& out) const {
+		void subtract(const kl::matrix<T, W, H>& obj, kl::matrix<T, W, H>& out) const {
 			for (uint64 i = 0; i < (W * H); i++) {
 				out[i] = (*this)[i] - obj[i];
 			}
 		}
 		kl::matrix<T, W, H> operator-(const kl::matrix<T, W, H>& obj) const {
 			kl::matrix<T, W, H> temp;
-			sub(obj, temp);
+			subtract(obj, temp);
 			return temp;
 		}
 		void operator-=(const kl::matrix<T, W, H>& obj) {
-			sub(obj, *this);
+			subtract(obj, *this);
 		}
 
 		// Multiplication
-		void mul(const T& val, kl::matrix<T, W, H>& out) const {
+		void multiply(const T& val, kl::matrix<T, W, H>& out) const {
 			for (uint64 i = 0; i < (W * H); i++) {
 				out[i] = (*this)[i] * val;
 			}
 		}
 		kl::matrix<T, W, H> operator*(const T& val) const {
 			kl::matrix<T, W, H> temp;
-			mul(val, temp);
+			multiply(val, temp);
 			return temp;
 		}
 		void operator*=(const T& val) {
-			mul(val, *this);
+			multiply(val, *this);
 		}
-		template<uint64 S> void mul(const kl::matrix<T, S, W>& obj, kl::matrix<T, S, H>& out) const {
+		template<uint64 S> void multiply(const kl::matrix<T, S, W>& obj, kl::matrix<T, S, H>& out) const {
 			for (uint64 y = 0; y < H; y++) {
 				for (uint64 x = 0; x < S; x++) {
 					out[y * S + x] = {};
@@ -72,13 +72,13 @@ namespace kl {
 		}
 		template<uint64 S> kl::matrix<T, S, H> operator*(const kl::matrix<T, S, W>& obj) const {
 			kl::matrix<T, S, H> temp;
-			mul(obj, temp);
+			multiply(obj, temp);
 			return temp;
 		}
 		template<uint64 S> void operator*=(const kl::matrix<T, S, W>& obj) {
-			mul(obj, *this);
+			multiply(obj, *this);
 		}
-		void mul(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
+		void multiply(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
 			if constexpr (W == 2 && H == 2) {
 				for (uint64 y = 0; y < 2; y++) {
 					T sum = {};
@@ -91,10 +91,10 @@ namespace kl {
 		}
 		kl::vector2<T> operator*(const kl::vector2<T>& obj) const {
 			kl::vector2<T> temp;
-			mul(obj, temp);
+			multiply(obj, temp);
 			return temp;
 		}
-		void mul(const kl::vector3<T>& obj, kl::vector3<T>& out) const {
+		void multiply(const kl::vector3<T>& obj, kl::vector3<T>& out) const {
 			if constexpr (W == 3 && H == 3) {
 				for (uint64 y = 0; y < 3; y++) {
 					T sum = {};
@@ -107,10 +107,10 @@ namespace kl {
 		}
 		kl::vector3<T> operator*(const kl::vector3<T>& obj) const {
 			kl::vector3<T> temp;
-			mul(obj, temp);
+			multiply(obj, temp);
 			return temp;
 		}
-		void mul(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
+		void multiply(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
 			if constexpr (W == 4 && H == 4) {
 				for (uint64 y = 0; y < 4; y++) {
 					T sum = {};
@@ -123,12 +123,12 @@ namespace kl {
 		}
 		kl::vector4<T> operator*(const kl::vector4<T>& obj) const {
 			kl::vector4<T> temp;
-			mul(obj, temp);
+			multiply(obj, temp);
 			return temp;
 		}
 
 		// Comparison
-		bool equ(const kl::matrix<T, W, H>& obj) const {
+		bool equals(const kl::matrix<T, W, H>& obj) const {
 			for (uint64 i = 0; i < (W * H); i++) {
 				if ((*this)[i] != obj[i]) {
 					return false;
@@ -137,48 +137,48 @@ namespace kl {
 			return true;
 		}
 		bool operator==(const kl::matrix<T, W, H>& obj) const {
-			return equ(obj);
+			return equals(obj);
 		}
 		bool operator!=(const kl::matrix<T, W, H>& obj) const {
-			return !equ(obj);
+			return !equals(obj);
 		}
 
 		// Sign change
-		void abs(kl::matrix<T, W, H>& out) const {
+		void absolute(kl::matrix<T, W, H>& out) const {
 			for (uint64 i = 0; i < (W * H); i++) {
 				out[i] = std::abs((*this)[i]);
 			}
 		}
-		kl::matrix<T, W, H> abs() const {
+		kl::matrix<T, W, H> absolute() const {
 			kl::matrix<T, W, H> temp;
-			abs(temp);
+			absolute(temp);
 			return temp;
 		}
-		void neg(kl::matrix<T, W, H>& out) const {
-			mul(-1.0f, out);
+		void negate(kl::matrix<T, W, H>& out) const {
+			multiply(-1.0f, out);
 		}
-		kl::matrix<T, W, H> neg() const {
+		kl::matrix<T, W, H> negate() const {
 			kl::matrix<T, W, H> temp;
-			neg(temp);
+			negate(temp);
 			return temp;
 		}
 
 		// Transpose
-		void tra(kl::matrix<T, H, W>& out) const {
+		void transpose(kl::matrix<T, H, W>& out) const {
 			for (uint64 y = 0; y < H; y++) {
 				for (uint64 x = 0; x < W; x++) {
 					out[x * H + y] = (*this)[y * W + x];
 				}
 			}
 		}
-		kl::matrix<T, H, W> tra() const {
+		kl::matrix<T, H, W> transpose() const {
 			kl::matrix<T, H, W> temp;
-			tra(temp);
+			transpose(temp);
 			return temp;
 		}
 
 		// Cofactor
-		bool cof(uint64 ind, kl::matrix<T, W - 1, H - 1>& out) const {
+		bool cofactor(uint64 ind, kl::matrix<T, W - 1, H - 1>& out) const {
 			if constexpr (W == H) {
 				if (ind < (W * H)) {
 					uint64 counter = 0;
@@ -196,30 +196,30 @@ namespace kl {
 			}
 			return false;
 		}
-		kl::matrix<T, W - 1, H - 1> cof(uint64 ind) const {
+		kl::matrix<T, W - 1, H - 1> cofactor(uint64 ind) const {
 			kl::matrix<T, W - 1, H - 1> temp;
-			cof(ind, temp);
+			cofactor(ind, temp);
 			return temp;
 		}
-		bool cof(kl::matrix<T, W, H>& out) const {
+		bool cofactor(kl::matrix<T, W, H>& out) const {
 			if constexpr (W == H) {
 				for (uint64 y = 0; y < H; y++) {
 					for (uint64 x = 0; x < W; x++) {
-						out[y * W + x] = (((y + x + 2) % 2) ? -1 : 1) * cof(y * W + x).det();
+						out[y * W + x] = (((y + x + 2) % 2) ? -1 : 1) * cofactor(y * W + x).determinant();
 					}
 				}
 				return true;
 			}
 			return false;
 		}
-		kl::matrix<T, W, H> cof() const {
+		kl::matrix<T, W, H> cofactor() const {
 			kl::matrix<T, W, H> temp;
-			cof(temp);
+			cofactor(temp);
 			return temp;
 		}
 
 		// Determinant
-		T det() const {
+		T determinant() const {
 			if constexpr (W == H) {
 				if constexpr (W == 2) {
 					return (*this)[0] * (*this)[3] - (*this)[1] * (*this)[2];
@@ -228,7 +228,7 @@ namespace kl {
 					T val = {};
 					int multi = -1;
 					for (uint64 i = 0; i < W; i++) {
-						val += (multi *= -1) * (*this)[i] * cof(i).det();
+						val += (multi *= -1) * (*this)[i] * cofactor(i).determinant();
 					}
 					return val;
 				}
@@ -237,33 +237,33 @@ namespace kl {
 		}
 
 		// Adjoint
-		bool adj(kl::matrix<T, W, H>& out) const {
+		bool adjoint(kl::matrix<T, W, H>& out) const {
 			if constexpr (W == H) {
-				out = cof().tra();
+				out = cofactor().transpose();
 				return true;
 			}
 			return false;
 		}
-		kl::matrix<T, W, H> adj() const {
+		kl::matrix<T, W, H> adjoint() const {
 			kl::matrix<T, W, H> temp;
-			adj(temp);
+			adjoint(temp);
 			return temp;
 		}
 
 		// Inverse
-		bool inv(kl::matrix<T, W, H>& out) const {
+		bool inverse(kl::matrix<T, W, H>& out) const {
 			if constexpr (W == H) {
-				const T det = this->det();
+				const T det = determinant();
 				if (det) {
-					out = adj() * T(1.0 / det);
+					out = adjoint() * T(1.0 / det);
 					return true;
 				}
 			}
 			return false;
 		}
-		kl::matrix<T, W, H> inv() const {
+		kl::matrix<T, W, H> inverse() const {
 			kl::matrix<T, W, H> temp;
-			inv(temp);
+			inverse(temp);
 			return temp;
 		}
 	};

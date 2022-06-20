@@ -196,10 +196,10 @@ kl::image kl::image::flipV() const {
 }
 
 void kl::image::drawLine(const kl::int2& a, const kl::int2& b, const kl::color& col) {
-	const int len = std::max(std::abs(b.x - a.x), std::abs(b.y - a.y));
-	const kl::float2 incr(float(b.x - a.x) / len, float(b.y - a.y) / len);
+	const int length = std::max(std::abs(b.x - a.x), std::abs(b.y - a.y));
+	const kl::float2 incr(float(b.x - a.x) / length, float(b.y - a.y) / length);
 	kl::float2 drawPoint(float(a.x), float(a.y));
-	for (int i = 0; i <= len; i++) {
+	for (int i = 0; i <= length; i++) {
 		pixel(kl::int2(int(drawPoint.x), int(drawPoint.y)), col);
 		drawPoint += incr;
 	}
@@ -267,7 +267,7 @@ void kl::image::drawCircle(const kl::int2& p, float r, const kl::color& col, boo
 	}
 }
 void kl::image::drawCircle(const kl::int2& a, const kl::int2& b, const kl::color& col, bool fill) {
-	drawCircle(a, kl::float2(b - a).len(), col, fill);
+	drawCircle(a, kl::float2(b - a).length(), col, fill);
 }
 
 void kl::image::drawImage(const kl::int2& pos, const kl::image& img, bool mixAlpha) {

@@ -28,7 +28,7 @@ void kl::window::createWindow(const kl::uint2& size, const std::string& name, bo
 	m_Window = CreateWindowExA(0, name.c_str(), name.c_str(), m_WindowStyle, (kl::screen::size.x / 2 - adjSize.x / 2), (kl::screen::size.y / 2 - adjSize.y / 2), adjSize.x, adjSize.y, nullptr, nullptr, m_Instance, nullptr);
 	kl::console::error(!m_Window, "Failed to create window");
 
-	SetWindowLongPtrA(m_Window, GWLP_USERDATA, (long long)this);
+	SetWindowLongPtrA(m_Window, GWLP_USERDATA, int64(this));
 	ShowWindow(m_Window, SW_SHOW);
 	m_DeviceContext = GetDC(m_Window);
 	m_WindowStyle = GetWindowLongA(m_Window, GWL_STYLE);

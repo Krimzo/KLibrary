@@ -4,8 +4,7 @@
 
 
 namespace kl {
-	class plane {
-	public:
+	struct plane {
 		kl::float3 normal;
 		kl::float3 point;
 

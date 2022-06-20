@@ -7,14 +7,14 @@ kl::color::color() : b(0), g(0), r(0), a(0) {}
 kl::color::color(byte r, byte g, byte b, byte a) : b(b), g(g), r(r), a(a) {}
 
 // Operator overloading
-bool kl::color::equ(const kl::color& obj) const {
+bool kl::color::equals(const kl::color& obj) const {
 	return r == obj.r && g == obj.g && b == obj.b && a == obj.a;
 }
 bool kl::color::operator==(const kl::color& obj) const {
-	return equ(obj);
+	return equals(obj);
 }
 bool kl::color::operator!=(const kl::color& obj) const {
-	return !equ(obj);
+	return !equals(obj);
 }
 
 kl::color kl::color::gray() const {

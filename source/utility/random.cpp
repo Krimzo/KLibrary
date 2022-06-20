@@ -44,9 +44,9 @@ char kl::random::CHAR(bool upperCase) {
 	}
 	return char(kl::random::INT(97, 123));
 }
-std::string kl::random::STRING(uint len) {
+std::string kl::random::STRING(uint length) {
 	std::stringstream ss;
-	for (uint i = 0; i < len; i++) {
+	for (uint i = 0; i < length; i++) {
 		ss << kl::random::CHAR(kl::random::BOOL());
 	}
 	return ss.str();

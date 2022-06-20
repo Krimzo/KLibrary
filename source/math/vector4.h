@@ -55,50 +55,50 @@ namespace kl {
 		}
 
 		// Subtraction
-		void sub(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
+		void subtract(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
 			for (int i = 0; i < 4; i++) {
 				out[i] = data[i] - obj[i];
 			}
 		}
 		kl::vector4<T> operator-(const kl::vector4<T>& obj) const {
 			kl::vector4<T> temp;
-			sub(obj, temp);
+			subtract(obj, temp);
 			return temp;
 		}
 		void operator-=(const kl::vector4<T>& obj) {
-			sub(obj, *this);
+			subtract(obj, *this);
 		}
 
 		// Multiplication
-		void mul(const T& val, kl::vector4<T>& out) const {
+		void multiply(const T& val, kl::vector4<T>& out) const {
 			for (int i = 0; i < 4; i++) {
 				out[i] = data[i] * val;
 			}
 		}
 		kl::vector4<T> operator*(const T& val) const {
 			kl::vector4<T> temp;
-			mul(val, temp);
+			multiply(val, temp);
 			return temp;
 		}
 		void operator*=(const T& val) {
-			mul(val, *this);
+			multiply(val, *this);
 		}
-		void mul(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
+		void multiply(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
 			for (int i = 0; i < 4; i++) {
 				out[i] = data[i] * obj[i];
 			}
 		}
 		kl::vector4<T> operator*(const kl::vector4<T>& obj) const {
 			kl::vector4<T> temp;
-			mul(obj, temp);
+			multiply(obj, temp);
 			return temp;
 		}
 		void operator*=(const kl::vector4<T>& obj) {
-			mul(obj, *this);
+			multiply(obj, *this);
 		}
 
 		// Division
-		void div(const T& val, kl::vector4<T>& out) const {
+		void divide(const T& val, kl::vector4<T>& out) const {
 			const double recVal = 1.0 / val;
 			for (int i = 0; i < 4; i++) {
 				out[i] = T(data[i] * recVal);
@@ -106,28 +106,28 @@ namespace kl {
 		}
 		kl::vector4<T> operator/(const T& val) const {
 			kl::vector4<T> temp;
-			div(val, temp);
+			divide(val, temp);
 			return temp;
 		}
 		void operator/=(const T& val) {
-			div(val, *this);
+			divide(val, *this);
 		}
-		void div(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
+		void divide(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
 			for (int i = 0; i < 4; i++) {
 				out[i] = data[i] / obj[i];
 			}
 		}
 		kl::vector4<T> operator/(const kl::vector4<T>& obj) const {
 			kl::vector4<T> temp;
-			div(obj, temp);
+			divide(obj, temp);
 			return temp;
 		}
 		void operator/=(const kl::vector4<T>& obj) {
-			div(obj, *this);
+			divide(obj, *this);
 		}
 
 		// Conditional
-		bool equ(const kl::vector4<T>& obj) const {
+		bool equals(const kl::vector4<T>& obj) const {
 			for (int i = 0; i < 4; i++) {
 				if (data[i] != obj[i]) {
 					return false;
@@ -136,34 +136,34 @@ namespace kl {
 			return true;
 		}
 		bool operator==(const kl::vector4<T>& obj) const {
-			return equ(obj);
+			return equals(obj);
 		}
 		bool operator!=(const kl::vector4<T>& obj) const {
-			return !equ(obj);
+			return !equals(obj);
 		}
 
 		// Sign change
-		void abs(kl::vector4<T>& out) const {
+		void absolute(kl::vector4<T>& out) const {
 			for (uint64 i = 0; i < 4; i++) {
 				out[i] = std::abs(data[i]);
 			}
 		}
-		kl::vector4<T> abs() const {
+		kl::vector4<T> absolute() const {
 			kl::vector4<T> temp;
-			abs(temp);
+			absolute(temp);
 			return temp;
 		}
-		void neg(kl::vector4<T>& out) const {
-			mul(-1.0f, out);
+		void negate(kl::vector4<T>& out) const {
+			multiply(-1.0f, out);
 		}
-		kl::vector4<T> neg() const {
+		kl::vector4<T> negate() const {
 			kl::vector4<T> temp;
-			neg(temp);
+			negate(temp);
 			return temp;
 		}
 
 		// Length
-		T len() const {
+		T length() const {
 			T sum = {};
 			for (uint64 i = 0; i < 4; i++) {
 				sum += data[i] * data[i];
@@ -172,12 +172,12 @@ namespace kl {
 		}
 
 		// Normalized
-		void norm(kl::vector4<T>& out) const {
-			out = (*this) / len();
+		void normalize(kl::vector4<T>& out) const {
+			out = (*this) / length();
 		}
-		kl::vector4<T> norm() const {
+		kl::vector4<T> normalize() const {
 			kl::vector4<T> temp;
-			norm(temp);
+			normalize(temp);
 			return temp;
 		}
 
@@ -192,7 +192,7 @@ namespace kl {
 
 		// Angle between vectors
 		T angle(const kl::vector4<T>& vec, bool full = false) const {
-			return kl::math::toDegs(std::acos(norm().dot(vec.norm())));
+			return kl::math::toDegrees(std::acos(normalize().dot(vec.normalize())));
 		}
 	};
 

@@ -27,6 +27,6 @@ namespace kl {
 		void show();
 		void move(const kl::int2& pos);
 
-		kl::float2 norm(const kl::uint2& frameSize) const;
+		kl::float2 normalize(const kl::uint2& frameSize) const;
 	};
 }

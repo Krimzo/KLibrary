@@ -22,12 +22,12 @@ namespace kl {
 
 		// Euluer/quat angles
 		template<typename T> inline kl::vector4<T> toQuat(const kl::vector3<T>& eul) {
-			const T cr = T(std::cos(kl::math::toRads(eul.x) * 0.5));
-			const T sr = T(std::sin(kl::math::toRads(eul.x) * 0.5));
-			const T cp = T(std::cos(kl::math::toRads(eul.y) * 0.5));
-			const T sp = T(std::sin(kl::math::toRads(eul.y) * 0.5));
-			const T cy = T(std::cos(kl::math::toRads(eul.z) * 0.5));
-			const T sy = T(std::sin(kl::math::toRads(eul.z) * 0.5));
+			const T cr = T(std::cos(kl::math::toRadians(eul.x) * 0.5));
+			const T sr = T(std::sin(kl::math::toRadians(eul.x) * 0.5));
+			const T cp = T(std::cos(kl::math::toRadians(eul.y) * 0.5));
+			const T sp = T(std::sin(kl::math::toRadians(eul.y) * 0.5));
+			const T cy = T(std::cos(kl::math::toRadians(eul.z) * 0.5));
+			const T sy = T(std::sin(kl::math::toRadians(eul.z) * 0.5));
 			return {
 				T(sr * cp * cy - cr * sp * sy),
 				T(cr * sp * cy + sr * cp * sy),
@@ -42,15 +42,15 @@ namespace kl {
 			const T sinyCosp = T(2.0 * (quat.w * quat.z + quat.x * quat.y));
 			const T cosyCosp = T(1.0 - 2.0 * (quat.y * quat.y + quat.z * quat.z));
 			return {
-				T(kl::math::toDegs(std::atan2(sinrCosp, cosrCosp))),
-				T(kl::math::toDegs((std::abs(sinp) >= 1.0) ? std::copysign(kl::math::pi * 0.5, sinp) : std::asin(sinp))),
-				T(kl::math::toDegs(std::atan2(sinyCosp, cosyCosp)))
+				T(kl::math::toDegrees(std::atan2(sinrCosp, cosrCosp))),
+				T(kl::math::toDegrees((std::abs(sinp) >= 1.0) ? std::copysign(kl::math::pi * 0.5, sinp) : std::asin(sinp))),
+				T(kl::math::toDegrees(std::atan2(sinyCosp, cosyCosp)))
 			};
 		}
 
 		// minmax
 		template<typename T> inline T minmax(const T& val, const T& min, const T& max) {
-			return std::min(std::max(val, min), max);
+			return T(std::min(std::max(val, min), max));
 		}
 
 	};

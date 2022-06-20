@@ -11,11 +11,11 @@ using uint64 = uint64_t;
 namespace kl::math {
 	inline const double pi = 3.14159265358979;
 
-	template<typename T> inline T toRads(const T& degs) {
+	template<typename T> inline T toRadians(const T& degs) {
 		static const double conv = kl::math::pi / 180.0;
 		return T(degs * conv);
 	}
-	template<typename T> inline T toDegs(const T& rads) {
+	template<typename T> inline T toDegrees(const T& rads) {
 		static const double conv = 180.0 / kl::math::pi;
 		return T(rads * conv);
 	}
@@ -65,50 +65,50 @@ namespace kl {
 		}
 
 		// Subtraction
-		void sub(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
+		void subtract(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
 			for (int i = 0; i < 2; i++) {
 				out[i] = data[i] - obj[i];
 			}
 		}
 		kl::vector2<T> operator-(const kl::vector2<T>& obj) const {
 			kl::vector2<T> temp;
-			sub(obj, temp);
+			subtract(obj, temp);
 			return temp;
 		}
 		void operator-=(const kl::vector2<T>& obj) {
-			sub(obj, *this);
+			subtract(obj, *this);
 		}
 
 		// Multiplication
-		void mul(const T& val, kl::vector2<T>& out) const {
+		void multiply(const T& val, kl::vector2<T>& out) const {
 			for (int i = 0; i < 2; i++) {
 				out[i] = data[i] * val;
 			}
 		}
 		kl::vector2<T> operator*(const T& val) const {
 			kl::vector2<T> temp;
-			mul(val, temp);
+			multiply(val, temp);
 			return temp;
 		}
 		void operator*=(const T& val) {
-			mul(val, *this);
+			multiply(val, *this);
 		}
-		void mul(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
+		void multiply(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
 			for (int i = 0; i < 2; i++) {
 				out[i] = data[i] * obj[i];
 			}
 		}
 		kl::vector2<T> operator*(const kl::vector2<T>& obj) const {
 			kl::vector2<T> temp;
-			mul(obj, temp);
+			multiply(obj, temp);
 			return temp;
 		}
 		void operator*=(const kl::vector2<T>& obj) {
-			mul(obj, *this);
+			multiply(obj, *this);
 		}
 
 		// Division
-		void div(const T& val, kl::vector2<T>& out) const {
+		void divide(const T& val, kl::vector2<T>& out) const {
 			const double recVal = 1.0 / val;
 			for (int i = 0; i < 2; i++) {
 				out[i] = T(data[i] * recVal);
@@ -116,28 +116,28 @@ namespace kl {
 		}
 		kl::vector2<T> operator/(const T& val) const {
 			kl::vector2<T> temp;
-			div(val, temp);
+			divide(val, temp);
 			return temp;
 		}
 		void operator/=(const T& val) {
-			div(val, *this);
+			divide(val, *this);
 		}
-		void div(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
+		void divide(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
 			for (int i = 0; i < 2; i++) {
 				out[i] = data[i] / obj[i];
 			}
 		}
 		kl::vector2<T> operator/(const kl::vector2<T>& obj) const {
 			kl::vector2<T> temp;
-			div(obj, temp);
+			divide(obj, temp);
 			return temp;
 		}
 		void operator/=(const kl::vector2<T>& obj) {
-			div(obj, *this);
+			divide(obj, *this);
 		}
 
 		// Conditional
-		bool equ(const kl::vector2<T>& obj) const {
+		bool equals(const kl::vector2<T>& obj) const {
 			for (int i = 0; i < 2; i++) {
 				if (data[i] != obj[i]) {
 					return false;
@@ -146,34 +146,34 @@ namespace kl {
 			return true;
 		}
 		bool operator==(const kl::vector2<T>& obj) const {
-			return equ(obj);
+			return equals(obj);
 		}
 		bool operator!=(const kl::vector2<T>& obj) const {
-			return !equ(obj);
+			return !equals(obj);
 		}
 
 		// Sign change
-		void abs(kl::vector2<T>& out) const {
+		void absolute(kl::vector2<T>& out) const {
 			for (uint64 i = 0; i < 2; i++) {
 				out[i] = std::abs(data[i]);
 			}
 		}
-		kl::vector2<T> abs() const {
+		kl::vector2<T> absolute() const {
 			kl::vector2<T> temp;
 			abs(temp);
 			return temp;
 		}
-		void neg(kl::vector2<T>& out) const {
-			mul(-1.0f, out);
+		void negate(kl::vector2<T>& out) const {
+			multiply(-1.0f, out);
 		}
-		kl::vector2<T> neg() const {
+		kl::vector2<T> negate() const {
 			kl::vector2<T> temp;
-			neg(temp);
+			negate(temp);
 			return temp;
 		}
 
 		// Length
-		T len() const {
+		T length() const {
 			T sum = {};
 			for (uint64 i = 0; i < 2; i++) {
 				sum += data[i] * data[i];
@@ -182,12 +182,12 @@ namespace kl {
 		}
 
 		// Normalized
-		void norm(kl::vector2<T>& out) const {
-			out = (*this) / len();
+		void normalize(kl::vector2<T>& out) const {
+			out = (*this) / length();
 		}
-		kl::vector2<T> norm() const {
+		kl::vector2<T> normalize() const {
 			kl::vector2<T> temp;
-			norm(temp);
+			normalize(temp);
 			return temp;
 		}
 
@@ -202,13 +202,13 @@ namespace kl {
 
 		// Angle between vectors
 		T angle(const kl::vector2<T>& vec, bool full = false) const {
-			return kl::math::toDegs(std::acos(norm().dot(vec.norm())));
+			return kl::math::toDegrees(std::acos(normalize().dot(vec.normalize())));
 		}
 
 		// Rotate vector by angle
 		kl::vector2<T> rotate(const T& angle) const {
-			const T sinA = T(std::sin(kl::math::toRads(angle)));
-			const T cosA = T(std::cos(kl::math::toRads(angle)));
+			const T sinA = T(std::sin(kl::math::toRadians(angle)));
+			const T cosA = T(std::cos(kl::math::toRadians(angle)));
 			return {
 				cosA * x - sinA * y,
 				sinA * x + cosA * y
