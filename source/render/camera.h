@@ -59,7 +59,7 @@ namespace kl {
 			position = position - kl::globals::up * (speed * deltaTime);
 		}
 
-		ALL void rotate(const kl::float2& mousePos, const kl::float2& frameCenter, float verticalAngleLimit) {
+		ALL void rotate(const kl::float2& mousePos, const kl::float2& frameCenter, float verticalAngleLimit = 85.0f) {
 			const kl::float2 rotation = (mousePos - frameCenter) * sens;
 			const kl::float3 forwardVert = m_Forward.rotate(rotation.y, m_Right);
 			if (std::abs(forwardVert.angle(kl::globals::up) - 90.0f) <= verticalAngleLimit) {

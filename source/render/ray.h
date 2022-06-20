@@ -20,7 +20,7 @@ namespace kl {
 		}
 		ALL ray(const kl::camera& cam, const kl::float2& ndc) : ray(cam.position, cam.matrix().inverse(), ndc) {}
 
-		ALL bool intersect(const kl::plane& plane, kl::float3* outInter) const {
+		ALL bool intersect(const kl::plane& plane, kl::float3* outInter = nullptr) const {
 			const float dnDot = direction.dot(plane.normal);
 			if (dnDot != 0.0f) {
 				if (outInter) {
@@ -31,7 +31,7 @@ namespace kl {
 			return false;
 		}
 
-		ALL bool intersect(const kl::triangle& triangle, kl::float3* outInter) const {
+		ALL bool intersect(const kl::triangle& triangle, kl::float3* outInter = nullptr) const {
 			const kl::float3 edge1 = triangle.b.world - triangle.a.world;
 			const kl::float3 edge2 = triangle.c.world - triangle.a.world;
 			const kl::float3 h = direction.cross(edge2);
