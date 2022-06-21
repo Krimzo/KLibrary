@@ -202,6 +202,9 @@ namespace kl {
 
 		// Angle between vectors
 		T angle(const kl::vector2<T>& vec, bool full = false) const {
+			if (full) {
+				return kl::math::toDegrees(std::atan2(x * vec.y - y * vec.x, x * vec.x + y * vec.y));
+			}
 			return kl::math::toDegrees(std::acos(normalize().dot(vec.normalize())));
 		}
 
