@@ -91,9 +91,9 @@ namespace kl {
 			return temp;
 		}
 		template<uint64 S> ALL void operator*=(const kl::matrix<T, S, W>& obj) {
-			multiply(obj, *this);
+			*this = (*this) * obj;
 		}
-		ALL void multiply(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
+		ALL bool multiply(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
 			if constexpr (W == 2 && H == 2) {
 				for (uint64 y = 0; y < 2; y++) {
 					T sum = {};
@@ -102,14 +102,16 @@ namespace kl {
 					}
 					out[y] = sum;
 				}
+				return true;
 			}
+			return false;
 		}
 		ALL kl::vector2<T> operator*(const kl::vector2<T>& obj) const {
 			kl::vector2<T> temp;
 			multiply(obj, temp);
 			return temp;
 		}
-		ALL void multiply(const kl::vector3<T>& obj, kl::vector3<T>& out) const {
+		ALL bool multiply(const kl::vector3<T>& obj, kl::vector3<T>& out) const {
 			if constexpr (W == 3 && H == 3) {
 				for (uint64 y = 0; y < 3; y++) {
 					T sum = {};
@@ -118,14 +120,16 @@ namespace kl {
 					}
 					out[y] = sum;
 				}
+				return true;
 			}
+			return false;
 		}
 		ALL kl::vector3<T> operator*(const kl::vector3<T>& obj) const {
 			kl::vector3<T> temp;
 			multiply(obj, temp);
 			return temp;
 		}
-		ALL void multiply(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
+		ALL bool multiply(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
 			if constexpr (W == 4 && H == 4) {
 				for (uint64 y = 0; y < 4; y++) {
 					T sum = {};
@@ -134,7 +138,9 @@ namespace kl {
 					}
 					out[y] = sum;
 				}
+				return true;
 			}
+			return false;
 		}
 		ALL kl::vector4<T> operator*(const kl::vector4<T>& obj) const {
 			kl::vector4<T> temp;

@@ -6,7 +6,7 @@
 
 namespace kl {
 	ALL inline float toFloatColor(byte val) {
-		return val * 0.00392156862;
+		return val * 0.00392156862f;
 	}
 	ALL inline byte toByteColor(float val) {
 		return byte(min(max(val, 0.0f), 1.0f) * 255);
