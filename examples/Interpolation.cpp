@@ -3,7 +3,7 @@
 
 int main() {
 	kl::window window;
-	kl::image frame(kl::int2(900));
+	kl::image frame(900);
 
 	const int fpsLimit = 165;
 
@@ -25,10 +25,10 @@ int main() {
 	kl::timer timer;
 	const float timeToSleep = 1.0f / fpsLimit;
 	window.update = [&]() {
-		static int frameInd = 0;
-		for (int x = frameInd - frame.height(), y = 0; y < frame.height(); x++, y++) {
-			const kl::float3 t1Weights = T1.weights(t1Consts, kl::float2(x, y));
-			const kl::float3 t2Weights = T2.weights(t2Consts, kl::float2(x, y));
+		static uint frameInd = 0;
+		for (uint x = frameInd - frame.height(), y = 0; y < frame.height(); x++, y++) {
+			const kl::float3 t1Weights = T1.weights(t1Consts, kl::float2(float(x), float(y)));
+			const kl::float3 t2Weights = T2.weights(t2Consts, kl::float2(float(x), float(y)));
 
 			kl::color pixel;
 			if (T1.in(t1Weights)) {
