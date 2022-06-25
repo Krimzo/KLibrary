@@ -1,7 +1,4 @@
-import kl.graphics.*;
-import kl.math.*;
 import kl.utility.*;
-
 
 public class Testing {
     public static void main(String[] args) throws Exception {
