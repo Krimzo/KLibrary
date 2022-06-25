@@ -1,2 +1,2 @@
-# C++ Graphics Library
-Focused on Win32 and DirectX
+# Java Version of My C++ Library
+Focused on Vector Math and OpenGL

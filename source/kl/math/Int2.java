@@ -1,0 +1,77 @@
+package kl.math;
+
+public class Int2 {
+    public int x, y;
+
+    public Int2() {
+        x = 0;
+        y = 0;
+    }
+    public Int2(int a) {
+        x = a;
+        y = a;
+    }
+    public Int2(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+    public Int2(Int2 v) {
+        x = v.x;
+        y = v.y;
+    }
+    public Int2(Float2 v) {
+        x = (int)v.x;
+        y = (int)v.y;
+    }
+
+    public Int2 add(Int2 v) {
+        return new Int2(x + v.x, y + v.y);
+    }
+
+    public Int2 subtract(Int2 v) {
+        return new Int2(x - v.x, y - v.y);
+    }
+
+    public Int2 multiply(int a) {
+        return new Int2(x * a, y * a);
+    }
+    public Int2 multiply(Int2 v) {
+        return new Int2(x * v.x, y * v.y);
+    }
+
+    public Int2 divide(int a) {
+        return new Int2(x / a, y / a);
+    }
+    public Int2 divide(Int2 v) {
+        return new Int2(x / v.x, y / v.y);
+    }
+
+    public boolean equals(Int2 v) {
+        return x == v.x && y == v.y;
+    }
+
+    public Int2 negate() {
+        return multiply(-1);
+    }
+
+    public Int2 absolute() {
+        return new Int2(Math.abs(x), Math.abs(y));
+    }
+
+    public static Int2 getPosX() {
+        return new Int2(1, 0);
+    }
+    public static Int2 getNegX() {
+        return new Int2(-1, 0);
+    }
+    public static Int2 getPosY() {
+        return new Int2(0, 1);
+    }
+    public static Int2 getNegY() {
+        return new Int2(0, -1);
+    }
+
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+}
