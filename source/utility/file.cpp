@@ -4,11 +4,7 @@
 
 
 std::string kl::file::extension(const std::string& filePath) {
-	const uint64 lastDotPos = filePath.find_last_of(".");
-	if (lastDotPos == std::string::npos) {
-		return "";
-	}
-	return filePath.substr(lastDotPos + 1);
+	return std::filesystem::path(filePath).extension().string();
 }
 
 std::vector<std::string> kl::file::getFiles(const std::string& dirPath, bool recursive) {

@@ -2,7 +2,7 @@
 
 
 kl::ray::ray() {}
-kl::ray::ray(const kl::float3& origin, const kl::float3& direction) : origin(origin), direction(direction) {}
+kl::ray::ray(const kl::float3& origin, const kl::float3& direction) : origin(origin), direction(direction.normalize()) {}
 kl::ray::ray(const kl::float3& origin, const kl::mat4& invCamMat, const kl::float2& ndc) : origin(origin) {
 	const kl::float4 pixelDir = invCamMat * kl::float4(ndc, 1.0f, 1.0f);
 	direction = (pixelDir / pixelDir.w).xyz.normalize();
@@ -71,10 +71,7 @@ bool kl::ray::intersect(const kl::sphere& sphere) const {
 	const float rayDis = (sphere.center - origin).dot(direction);
 	const kl::float3 rayPoint = origin + direction * rayDis;
 	const float sphRayDis = (sphere.center - rayPoint).length();
-	if (sphRayDis > sphere.radius) {
-		return false;
-	}
-	return true;
+	return !(sphRayDis > sphere.radius);
 }
 
 // std::cout
