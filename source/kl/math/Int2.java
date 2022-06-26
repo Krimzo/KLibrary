@@ -1,5 +1,7 @@
 package kl.math;
 
+import java.awt.*;
+
 public class Int2 {
     public int x, y;
 
@@ -22,6 +24,14 @@ public class Int2 {
     public Int2(Float2 v) {
         x = (int)v.x;
         y = (int)v.y;
+    }
+    public Int2(Point point) {
+        x = point.x;
+        y = point.y;
+    }
+    public Int2(Dimension dimension) {
+        x = dimension.width;
+        y = dimension.height;
     }
 
     public Int2 add(Int2 v) {

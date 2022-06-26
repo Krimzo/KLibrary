@@ -53,6 +53,12 @@ public class Image extends BufferedImage {
         return new Color();
     }
 
+    public void fill(Color color) {
+        final int colorValue = color.getRGB();
+        final int[] colorBuffer = getBuffer();
+        Arrays.fill(colorBuffer, colorValue);
+    }
+
     public Image flipHorizontal() {
         final Image temp = new Image(getSize());
         final int[] readBuffer = getBuffer();
@@ -74,6 +80,39 @@ public class Image extends BufferedImage {
             }
         }
         return temp;
+    }
+
+    public Image getRectangle(Int2 a, Int2 b) {
+        a = new Int2(a);
+        b = new Int2(b);
+        if (b.x < a.x) {
+            final int temp = a.x;
+            a.x = b.x;
+            b.x = temp;
+        }
+        if (b.y < a.y) {
+            final int temp = a.y;
+            a.y = b.y;
+            b.y = temp;
+        }
+        Image temp = new Image(b.subtract(a));
+        for (Int2 pos = new Int2(); pos.y < temp.getHeight(); pos.y++) {
+            for (pos.x = 0; pos.x < temp.getWidth(); pos.x++) {
+                temp.setPixel(pos, getPixel(pos.add(a)));
+            }
+        }
+        return temp;
+    }
+
+    public void toFile(String filePath) throws IOException {
+        String extension = "";
+        final int periodIndex = filePath.lastIndexOf('.');
+        if (periodIndex > 0) {
+            extension = filePath.substring(periodIndex + 1);
+        }
+        if (!ImageIO.write(this, extension, new File(filePath))) {
+            throw new IOException("Failed to find appropriate image writer for format: " + extension);
+        }
     }
 
     public String toASCII(Int2 frameSize) {
