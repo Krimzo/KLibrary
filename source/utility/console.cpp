@@ -86,10 +86,10 @@ char kl::console::input() {
 void kl::console::waitFor(char toWaitFor, bool echo) {
 	if (echo) {
 		if (toWaitFor > 31 && toWaitFor < 127) {
-			std::cout << "Press '" << toWaitFor << "' to continue..." << std::endl;
+			kl::print("Press '", toWaitFor, "' to continue...");
 		}
 		else {
-			std::cout << "Press '" << int(toWaitFor) << "' to continue..." << std::endl;
+			kl::print("Press '", int(toWaitFor), "' to continue...");
 		}
 	}
 	while (_getch() != toWaitFor);
@@ -97,7 +97,7 @@ void kl::console::waitFor(char toWaitFor, bool echo) {
 
 char kl::console::waitForAny(bool echo) {
 	if (echo) {
-		std::cout << "Press any key to continue..." << std::endl;
+		kl::print("Press any key to continue...");
 	}
 	return _getch();
 }
@@ -105,11 +105,11 @@ char kl::console::waitForAny(bool echo) {
 bool kl::console::warning(bool occured, const std::string& message, bool wait) {
 	if (occured) {
 		kl::console::show();
-		std::cout << kl::colors::orange << "Warning: " << message << std::endl;
+		kl::print(kl::colors::orange, "Warning: ", message);
 		if (wait) {
 			kl::console::waitForAny(false);
 		}
-		std::cout << kl::colors::defaul;
+		kl::print<kl::NONE>(kl::colors::defaul);
 	}
 	return occured;
 }
@@ -117,17 +117,22 @@ bool kl::console::warning(bool occured, const std::string& message, bool wait) {
 void kl::console::error(bool occured, const std::string& message, bool wait) {
 	if (occured) {
 		kl::console::show();
-		std::cout << kl::colors::red << "Error: " << message << std::endl;
+		kl::print(kl::colors::red, "Error: ", message);
 		if (wait) {
 			kl::console::waitForAny(false);
 		}
-		std::cout << kl::colors::defaul;
+		kl::print<kl::NONE>(kl::colors::defaul);
 		exit(1);
 	}
 }
 
-void kl::console::progressBar(const std::string& message, uint outputY, float percentage) {
-	percentage = std::max(std::min(percentage, 1.0f), 0.0f);
+static DWORD ignore = 0;
+void kl::console::dump(const std::string& data, const kl::uint2& location) {
+	WriteConsoleOutputCharacterA(consoleHandle, data.c_str(), DWORD(data.length()), { short(location.x), short(location.y) }, &ignore);
+}
+
+void kl::console::bar(const std::string& message, uint outputY, float percentage) {
+	percentage = kl::math::minmax(percentage, 0.0f, 1.0f);
 	const int barLen = kl::console::size().x - int(message.length()) - 12;
 	const int finishLen = int(barLen * percentage);
 	const int emptyLen = barLen - finishLen;
@@ -142,9 +147,4 @@ void kl::console::progressBar(const std::string& message, uint outputY, float pe
 	}
 	kl::console::moveCursor(kl::uint2(0, outputY));
 	printf("%s] %3d%% ", ss.str().c_str(), int(percentage * 100.0f));
-}
-
-static DWORD ignore = 0;
-void kl::console::fastOut(const std::string& data, const kl::uint2& location) {
-	WriteConsoleOutputCharacterA(consoleHandle, data.c_str(), DWORD(data.length()), { short(location.x), short(location.y) }, &ignore);
 }

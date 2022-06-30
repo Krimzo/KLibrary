@@ -8,36 +8,41 @@
 
 namespace kl {
 	class socket {
+	public:
+		static void init();
+		static void uninit();
+		static const std::string self;
+
 	private:
-		static WSADATA m_WSAData;
-		static bool m_WSAInit;
 		sockaddr_in m_Address = {};
-		SOCKET m_Socket = NULL;
+		uint64 m_Socket = {};
 
 	public:
-		static void initWSA();
-		static void uninitWSA();
-
 		socket();
-		socket(const SOCKET& sock);
+		socket(const std::string& address, uint port);
+		socket(uint64 socket);
 		~socket();
 
-		operator SOCKET();
+		operator uint64();
 
 		void close();
 
-		void port(uint port);
-		void address(const std::string& addrs);
-
-		uint port() const;
 		std::string address() const;
+		void address(const std::string& addrs);
+		uint port() const;
+		void port(uint port);
 
-		void bind();
-		void listen(int queueSize);
+		void listen(uint queueSize);
 		kl::socket accept();
 		void connect();
 
 		int send(const void* data, uint byteSize);
 		int receive(void* buff, uint byteSize);
+		template<typename T> int send(const T& obj) {
+			return send(&obj, sizeof(T));
+		}
+		template<typename T> int receive(T& obj) {
+			return receive(&obj, sizeof(T));
+		}
 	};
 }

@@ -8,6 +8,7 @@
 #include "math/math.h"
 #include "utility/file.h"
 #include "utility/encrypter.h"
+#include "utility/console.h"
 
 #undef min
 #undef max
@@ -95,18 +96,16 @@ bool kl::image::pixel(const kl::uint2& coords, const kl::color& color) {
 }
 
 bool kl::image::fromFile(const std::string& filePath) {
-	uint64_t gdiplusToken = NULL;
+	uint64 gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
-	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
-		std::cout << "Image: GdiPlus failed to init!" << std::endl;
+	if (kl::console::warning(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "Failed to init GDIPlus")) {
 		return false;
 	}
 
 	{
 		Gdiplus::Bitmap loadedBitmap(kl::toWString(filePath).c_str());
 		Gdiplus::BitmapData bitmapData;
-		if (loadedBitmap.GetLastStatus()) {
-			std::cout << "Image: Could not open file \"" << filePath << "\"!" << std::endl;
+		if (kl::console::warning(loadedBitmap.GetLastStatus(), "Failed to open image file \"" + filePath + "\"")) {
 			return false;
 		}
 		resize(kl::int2(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
@@ -149,10 +148,9 @@ bool kl::image::toFile(const std::string& fileName) const {
 		return false;
 	}
 
-	ULONG_PTR gdiplusToken = NULL;
+	uint64 gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
-	if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr)) {
-		std::cout << "Image: GdiPlus failed to init!" << std::endl;
+	if (kl::console::warning(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "Failed to init GDIPlus")) {
 		return false;
 	}
 

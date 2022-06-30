@@ -2,42 +2,31 @@
 
 
 void Server() {
-	kl::socket server;
+	kl::socket server(kl::socket::self, 1709);
 
-	server.port(1709);
+	server.listen(1);
 
-	server.bind();
-	server.listen(2);
-
-	printf("Server: Waiting for clients..\n");
 	kl::socket client = server.accept();
-	printf("Server: Client connected!\n");
-
-	const char mess[10] = "It works!";
-	client.send(mess, sizeof(mess));
+	client.send<kl::float3>({ 1.0f, 2.0f, 3.0f });
 }
 
 void Client() {
-	kl::socket client;
-
-	client.address("127.0.0.1");
-	client.port(1709);
+	kl::socket client(kl::socket::self, 1709);
 
 	client.connect();
 
-	char buff[10] = {};
-	while (client.receive(buff, sizeof(buff))) {
-		printf("Client: Server sent: %s\n", buff);
-	}
+	kl::float3 res;
+	client.receive(res);
+	kl::print("Result: ", res);
 }
 
 int main() {
-	kl::socket::initWSA();
+	kl::socket::init();
 
 	std::thread(Server).detach();
+	kl::time::wait(0.25);
 	std::thread(Client).detach();
 
 
 	std::cin.get();
-	kl::socket::uninitWSA();
 }
