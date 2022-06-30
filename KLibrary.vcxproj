@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\SocketTcp.cpp" />
+    <ClCompile Include="examples\Encryption.cpp" />
     <ClCompile Include="source\render\plane.cpp" />
     <ClCompile Include="source\render\ray.cpp" />
     <ClCompile Include="source\render\triangle.cpp" />

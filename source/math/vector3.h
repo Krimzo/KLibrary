@@ -29,6 +29,8 @@ namespace kl {
 				T width, height, depth;
 			};
 			kl::vector2<T> xy;
+			kl::vector2<T> rg;
+			kl::vector2<T> wh;
 			T data[3] = {};
 		};
 

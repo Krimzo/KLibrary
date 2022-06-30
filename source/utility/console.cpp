@@ -109,7 +109,7 @@ bool kl::console::warning(bool occured, const std::string& message, bool wait) {
 		if (wait) {
 			kl::console::waitForAny(false);
 		}
-		kl::print<kl::NONE>(kl::colors::defaul);
+		kl::print<kl::none>(kl::colors::defaul);
 	}
 	return occured;
 }
@@ -121,7 +121,7 @@ void kl::console::error(bool occured, const std::string& message, bool wait) {
 		if (wait) {
 			kl::console::waitForAny(false);
 		}
-		kl::print<kl::NONE>(kl::colors::defaul);
+		kl::print<kl::none>(kl::colors::defaul);
 		exit(1);
 	}
 }

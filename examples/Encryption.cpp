@@ -4,16 +4,14 @@
 int main() {
 	kl::encrypter enc;
 
-	std::cout << kl::colors::wheat << enc;
+	kl::float3 data = { 1.0f, 2.0f, 3.0f };
+	kl::print(kl::colors::sky, data);
 
-	std::string message = "This is a test!";
-	std::cout << kl::colors::sky << message << std::endl;
+	enc.encrypt(data);
+	kl::print(kl::colors::orange, data);
 
-	enc.encrypt(&message[0], message.size());
-	std::cout << kl::colors::orange << message << std::endl;
-
-	enc.decrypt(&message[0], message.size());
-	std::cout << kl::colors::cyan << message << std::endl;
+	enc.decrypt(data);
+	kl::print(kl::colors::cyan, data);
 
 
 	std::cin.get();

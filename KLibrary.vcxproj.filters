@@ -123,7 +123,7 @@
     <ClCompile Include="source\window\window_private.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\SocketTcp.cpp">
+    <ClCompile Include="examples\Encryption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

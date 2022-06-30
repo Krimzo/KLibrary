@@ -14,6 +14,8 @@ namespace kl {
 			};
 			kl::vector2<T> xy;
 			kl::vector3<T> xyz;
+			kl::vector2<T> rg;
+			kl::vector3<T> rgb;
 			T data[4] = {};
 		};
 

@@ -5,7 +5,7 @@
 
 
 namespace kl {
-	inline const int NONE = 0;
+	inline constexpr int none = 0;
 	template<const char END = '\n', typename... Args> inline void print(const Args&... args) {
 		(std::cout << ... << args) << END;
 	}

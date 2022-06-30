@@ -79,10 +79,10 @@ void kl::socket::connect() {
 	kl::console::error(::connect(m_Socket, (sockaddr*)&m_Address, sizeof(m_Address)), "Could not connect to socket");
 }
 
-int kl::socket::send(const void* data, uint byteSize) {
+int kl::socket::send(const void* data, uint byteSize) const {
 	return ::send(m_Socket, (const char*)data, byteSize, NULL);
 }
 
-int kl::socket::receive(void* buff, uint byteSize) {
+int kl::socket::receive(void* buff, uint byteSize) const {
 	return recv(m_Socket, (char*)buff, byteSize, NULL);
 }
