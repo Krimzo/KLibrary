@@ -1,8 +1,9 @@
 #pragma once
 
 #include <array>
-#include <functional>
+#include <format>
 #include <iomanip>
+#include <functional>
 
 #include "math/vector4.h"
 
@@ -276,13 +277,24 @@ namespace kl {
 
 	// std::cout
 	template<typename T, uint64 W, uint64 H> inline std::ostream& operator<<(std::ostream& stream, const kl::matrix<T, W, H>& mat) {
-		stream << std::fixed << std::setprecision(2);
+		uint64 maxLenghts[W] = {};
+		std::string outputData[W * H] = {};
+
+		for (uint64 x = 0; x < W; x++) {
+			for (uint64 y = 0; y < H; y++) {
+				outputData[y * W + x] = std::format("{:.2f}", mat[y * W + x]);
+				maxLenghts[x] = std::max(maxLenghts[x], outputData[y * W + x].size());
+			}
+		}
+
 		for (uint64 y = 0; y < H; y++) {
 			stream << ((y == 0) ? char(218) : (y == (H - 1) ? char(192) : char(179)));
 			for (uint64 x = 0; x < (W - 1); x++) {
-				stream << std::setw(6) << mat[y * W + x] << " ";
+				stream << std::setw(maxLenghts[x]) << outputData[y * W + x] << " ";
 			}
-			stream << std::setw(6) << mat[y * W + (W - 1)] << ((y == 0) ? char(191) : (y == (H - 1) ? char(217) : char(179))) << '\n';
+			stream << std::setw(maxLenghts[W - 1]) << outputData[y * W + (W - 1)]
+				<< ((y == 0) ? char(191) : (y == (H - 1) ? char(217) : char(179)))
+				<< (y == (H - 1) ? "" : "\n");
 		}
 		return stream;
 	}

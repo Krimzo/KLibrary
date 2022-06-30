@@ -4,7 +4,7 @@
 int main() {
 	kl::encrypter enc;
 
-	kl::float3 data = { 1.0f, 2.0f, 3.0f };
+	kl::mat4 data = kl::mat4::scaling({ 1.0f, 2.0f, 3.0f });
 	kl::print(kl::colors::sky, data);
 
 	enc.encrypt(data);
