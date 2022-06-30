@@ -13,7 +13,15 @@
 #include "render/vertex.h"
 #include "graphics/image.h"
 
-#define KL_CBUFFER_PREDEFINED_SIZE 64
+
+inline constexpr uint KL_CBUFFER_PREDEFINED_SIZE = 64;
+
+namespace kl {
+	template<typename T> using reference = std::shared_ptr<T>;
+	template<typename T, typename... Args> inline kl::reference<T> make(const Args&... args) {
+		return std::make_shared<T>(args...);
+	}
+}
 
 namespace kl {
 	struct shaders {

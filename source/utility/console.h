@@ -3,11 +3,13 @@
 #include "graphics/color.h"
 #include "math/math.h"
 
+#include <syncstream>
+
 
 namespace kl {
 	inline constexpr int none = 0;
 	template<const char END = '\n', typename... Args> inline void print(const Args&... args) {
-		(std::cout << ... << args) << END;
+		(std::osyncstream(std::cout) << ... << args) << END;
 	}
 
 	namespace console {

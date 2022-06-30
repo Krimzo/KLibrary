@@ -44,7 +44,7 @@ namespace kl {
 		window(const kl::window&) = delete;
 		~window();
 
-		void run(const kl::uint2& size, const std::string& name, bool resizeable, bool continuous);
+		void run(const kl::uint2& size, const std::string& name, bool resizeable = true, bool continuous = false);
 		void stop() const;
 		bool running() const;
 
