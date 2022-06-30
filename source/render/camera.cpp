@@ -51,6 +51,6 @@ void kl::camera::rotate(const kl::float2& mousePos, const kl::float2& frameCente
 // Camera matrix
 kl::mat4 kl::camera::matrix() const {
 	const kl::mat4 view = kl::mat4::lookAt(position, position + m_Forward, globalUP);
-	const kl::mat4 proj = kl::mat4::persp(fov, aspect, near, far);
+	const kl::mat4 proj = kl::mat4::perspective(fov, aspect, near, far);
 	return proj * view;
 }

@@ -67,7 +67,7 @@ namespace kl {
 		}
 
 		// Perspective projection matrix
-		static kl::matrix4x4<T> persp(T fov, T ar, T zNear, T zFar) {
+		static kl::matrix4x4<T> perspective(T fov, T ar, T zNear, T zFar) {
 			const T tanHalf = T(1.0 / tan(kl::math::toRadians(fov) * 0.5));
 			kl::matrix4x4<T> temp;
 			temp[0] = T(tanHalf / ar);
@@ -80,7 +80,7 @@ namespace kl {
 		}
 
 		// Orthographics projection matrix
-		static kl::matrix4x4<T> ortho(T left, T right, T bottom, T top, T nearZ, T farZ) {
+		static kl::matrix4x4<T> orthographic(T left, T right, T bottom, T top, T nearZ, T farZ) {
 			kl::matrix4x4<T> temp;
 			temp[0] = T(2.0 / (right - left));
 			temp[5] = T(2.0 / (top - bottom));
