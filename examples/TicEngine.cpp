@@ -1,12 +1,12 @@
 #include "KrimzLib.h"
 
 
-const int BOARD_SIZE = 3;
-const int FRAME_SIZE = 900;
+constexpr int BOARD_SIZE = 3;
+constexpr int FRAME_SIZE = 900;
 
-const int ID_PLAYER = -1;
-const int ID_EMPTY = 0;
-const int ID_ENGINE = 1;
+constexpr int ID_PLAYER = -1;
+constexpr int ID_EMPTY = 0;
+constexpr int ID_ENGINE = 1;
 
 const kl::color COLOR_PLAYER = kl::colors::orange;
 const kl::color COLOR_ENGINE = kl::colors::green;
@@ -21,119 +21,96 @@ bool HasEmpty(const std::vector<int>& board) {
 }
 
 int Evaluate(const std::vector<int>& board) {
-	// Check rows
 	for (int y = 0; y < BOARD_SIZE; y++) {
-		// Check
 		int sum = 0;
 		for (int x = 0; x < BOARD_SIZE; x++) {
 			sum += board[size_t(y * BOARD_SIZE + x)];
 		}
 
-		// Player wins
 		if (sum == ID_PLAYER * BOARD_SIZE) {
 			return ID_PLAYER;
 		}
-		// Engine wins
 		else if (sum == ID_ENGINE * BOARD_SIZE) {
 			return ID_ENGINE;
 		}
 	}
 
-	// Check cols
 	for (int x = 0; x < BOARD_SIZE; x++) {
-		// Check
 		int sum = 0;
 		for (int y = 0; y < BOARD_SIZE; y++) {
 			sum += board[size_t(y * BOARD_SIZE + x)];
 		}
 
-		// Player wins
 		if (sum == ID_PLAYER * BOARD_SIZE) {
 			return ID_PLAYER;
 		}
-		// Engine wins
 		else if (sum == ID_ENGINE * BOARD_SIZE) {
 			return ID_ENGINE;
 		}
 	}
 
-	/* Main diagonal */
 	{
-		// Check
 		int sum = 0;
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			sum += board[size_t(i * BOARD_SIZE + i)];
 		}
 
-		// X wins
 		if (sum == ID_PLAYER * BOARD_SIZE) {
 			return ID_PLAYER;
 		}
-		// O wins
 		else if (sum == ID_ENGINE * BOARD_SIZE) {
 			return ID_ENGINE;
 		}
 	}
 
-	/* Second diagonal */
 	{
-		// Check
 		int sum = 0;
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			sum += board[size_t(i * BOARD_SIZE + (BOARD_SIZE - 1 - i))];
 		}
 
-		// X wins
 		if (sum == ID_PLAYER * BOARD_SIZE) {
 			return ID_PLAYER;
 		}
-		// O wins
 		else if (sum == ID_ENGINE * BOARD_SIZE) {
 			return ID_ENGINE;
 		}
 	}
 
-	// Draw
 	return ID_EMPTY;
 }
 
 struct BoardInfo {
-	int eval = 0;
-	int move = -1;
+	int eval;
+	int move;
 
-	BoardInfo() {}
+	BoardInfo() : eval(0), move(-1) {}
 	BoardInfo(int eval, int move) : eval(eval), move(move) {}
 };
 
 BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, int alpha, int beta) {
-	// Game finished check
 	const int currEval = Evaluate(board);
 	if (currEval != ID_EMPTY || !HasEmpty(board)) {
 		return BoardInfo(currEval, -1);
 	}
 
-	// Turn select
 	if (!playersTurn) {
 		BoardInfo maxInfo(-1, -1);
 		for (int i = 0; i < board.size(); i++) {
 			if (board[i] == ID_EMPTY) {
-				// First move setup
 				if (maxInfo.move == -1) {
 					maxInfo.move = i;
 				}
 
-				// Copy board and play the move
 				std::vector<int> futureBoard = board;
 				futureBoard[i] = ID_ENGINE;
 
-				// Find best move for future board
 				const int futureEval = FindBest(futureBoard, true, depth + 1, alpha, beta).eval;
 				if (futureEval > maxInfo.eval) {
 					maxInfo.eval = futureEval;
 					maxInfo.move = i;
 				}
 
-				// Alpha beta pruning
 				alpha = max(alpha, futureEval);
 				if (beta <= alpha) {
 					break;
@@ -146,23 +123,19 @@ BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, i
 		BoardInfo minInfo(1, -1);
 		for (int i = 0; i < board.size(); i++) {
 			if (board[i] == ID_EMPTY) {
-				// First move setup
 				if (minInfo.move == -1) {
 					minInfo.move = i;
 				}
 
-				// Copy board and play the move
 				std::vector<int> futureBoard = board;
 				futureBoard[i] = ID_PLAYER;
 
-				// Find best move for future board
 				const int futureEval = FindBest(futureBoard, false, depth + 1, alpha, beta).eval;
 				if (futureEval < minInfo.eval) {
 					minInfo.eval = futureEval;
 					minInfo.move = i;
 				}
 
-				// Alpha beat pruning
 				beta = min(beta, futureEval);
 				if (beta <= alpha) {
 					break;
@@ -179,7 +152,7 @@ int main() {
 	std::vector<int> board(BOARD_SIZE * BOARD_SIZE);
 	bool playersTurn = kl::random::BOOL();
 
-	static const bool playerWasFirst = playersTurn;
+	const bool playerWasFirst = playersTurn;
 
 	const int squareSize = FRAME_SIZE / BOARD_SIZE;
 	const int lineOffs = squareSize / 10;
@@ -189,7 +162,6 @@ int main() {
 	kl::image frame(kl::int2(FRAME_SIZE), kl::colors::gray);
 
 	win.update = [&]() {
-		// Eval check
 		const int eval = Evaluate(board);
 		if (eval) {
 			win.title((eval == ID_PLAYER) ? "Player wins!" : "Engine wins!");
@@ -202,7 +174,6 @@ int main() {
 			return;
 		}
 
-		// Logic/input
 		if (playersTurn) {
 			static bool wasDown = false;
 			if (win.mouse.lmb) {
@@ -225,17 +196,14 @@ int main() {
 			playersTurn = true;
 		}
 
-		// Clearing the image
 		frame.fill(kl::colors::gray);
 
-		// Drawing the squares
 		for (kl::int2 pos = 0; pos.y < FRAME_SIZE; pos.y += squareSize) {
 			for (pos.x = 0; pos.x < FRAME_SIZE; pos.x += squareSize) {
 				frame.drawRectangle(pos, pos + kl::int2(squareSize), kl::colors::white);
 			}
 		}
 
-		// Drawing the data
 		for (kl::int2 pos = 0; pos.y < BOARD_SIZE; pos.y++) {
 			for (pos.x = 0; pos.x < BOARD_SIZE; pos.x++) {
 				const int posID = board[size_t(pos.y * BOARD_SIZE + pos.x)];
@@ -263,5 +231,5 @@ int main() {
 		win.draw(frame);
 	};
 
-	win.run(FRAME_SIZE + 1, "TicEngine", false, false);
+	win.run(FRAME_SIZE + 1, "TicEngine", false);
 }

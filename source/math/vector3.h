@@ -35,12 +35,12 @@ namespace kl {
 		};
 
 		vector3() {}
-		vector3(const T& a) : x(a), y(a), z(a) {}
-		vector3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {}
-		vector3(const kl::vector2<T>& v, const T& z) : x(v.x), y(v.y), z(z) {}
-		vector3(const T& x, const kl::vector2<T>& v) : x(x), y(v.x), z(v.y) {}
+		template<typename T0> vector3(const T0& a) : x(T(a)), y(T(a)), z(T(a)) {}
+		template<typename T0, typename T1, typename T2> vector3(const T0& x, const T1& y, const T2& z) : x(T(x)), y(T(y)), z(T(z)) {}
+		template<typename T0, typename T1> vector3(const kl::vector2<T0>& v, const T1& z) : x(T(v.x)), y(T(v.y)), z(T(z)) {}
+		template<typename T0, typename T1> vector3(const T0& x, const kl::vector2<T1>& v) : x(T(x)), y(T(v.x)), z(T(v.y)) {}
+		template<typename T0> vector3(const kl::vector3<T0>& obj) : x(T(obj.x)), y(T(obj.y)), z(T(obj.z)) {}
 		vector3(const kl::color& col) : x(toFloatColor(col.r)), y(toFloatColor(col.g)), z(toFloatColor(col.b)) {}
-		template<typename V> vector3(const kl::vector3<V>& obj) : x(T(obj.x)), y(T(obj.y)), z(T(obj.z)) {}
 
 		// Getters
 		T& operator[](uint64 ind) {
@@ -211,13 +211,13 @@ namespace kl {
 
 		// Angle between vectors
 		T angle(const kl::vector3<T>& vec) const {
-			return kl::math::toDegrees(std::acos(normalize().dot(vec.normalize())));
+			return kl::to::degrees(std::acos(normalize().dot(vec.normalize())));
 		}
 
 		// Rotate vector by around other vector
 		kl::vector3<T> rotate(const T& angle, const kl::vector3<T>& axis) const {
-			const T angleSin = T(std::sin(kl::math::toRadians(angle) * 0.5));
-			const T angleCos = T(std::cos(kl::math::toRadians(angle) * 0.5));
+			const T angleSin = T(std::sin(kl::to::radians(angle) * 0.5));
+			const T angleCos = T(std::cos(kl::to::radians(angle) * 0.5));
 			const T qx = T(axis.x * angleSin);
 			const T qy = T(axis.y * angleSin);
 			const T qz = T(axis.z * angleSin);

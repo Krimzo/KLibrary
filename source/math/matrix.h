@@ -16,6 +16,11 @@ namespace kl {
 				(*this)[i] = 1;
 			}
 		}
+		template<typename T0> matrix(const kl::matrix<T0, W, H>& mat) {
+			for (uint64 i = 0; i < (W * H); i++) {
+				(*this)[i] = T(mat[i]);
+			}
+		}
 
 		// Addition
 		void add(const kl::matrix<T, W, H>& obj, kl::matrix<T, W, H>& out) const {

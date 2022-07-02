@@ -123,7 +123,10 @@
     <ClCompile Include="source\window\window_private.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\OutputTest.cpp">
+    <ClCompile Include="source\utility\strings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\VisualSort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -225,6 +228,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gpu\dx_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\strings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

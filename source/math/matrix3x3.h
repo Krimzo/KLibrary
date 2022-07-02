@@ -25,8 +25,8 @@ namespace kl {
 
 		// Rotation matrix
 		static kl::matrix3x3<T> rotation(const T& val) {
-			const T zSin = std::sin(kl::math::toRadians(val));
-			const T zCos = std::cos(kl::math::toRadians(val));
+			const T zSin = std::sin(kl::to::radians(val));
+			const T zCos = std::cos(kl::to::radians(val));
 			kl::matrix3x3<T> temp;
 			temp[0] = zCos;
 			temp[1] = -zSin;

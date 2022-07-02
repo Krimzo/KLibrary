@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\OutputTest.cpp" />
+    <ClCompile Include="examples\VisualSort.cpp" />
     <ClCompile Include="source\render\plane.cpp" />
     <ClCompile Include="source\render\ray.cpp" />
     <ClCompile Include="source\render\triangle.cpp" />
@@ -47,6 +47,7 @@
     <ClCompile Include="source\utility\random.cpp" />
     <ClCompile Include="source\utility\socket.cpp" />
     <ClCompile Include="source\utility\async.cpp" />
+    <ClCompile Include="source\utility\strings.cpp" />
     <ClCompile Include="source\utility\time.cpp" />
     <ClCompile Include="source\utility\web.cpp" />
     <ClCompile Include="source\render\camera.cpp" />
@@ -83,6 +84,7 @@
     <ClInclude Include="source\utility\random.h" />
     <ClInclude Include="source\utility\socket.h" />
     <ClInclude Include="source\utility\async.h" />
+    <ClInclude Include="source\utility\strings.h" />
     <ClInclude Include="source\utility\time.h" />
     <ClInclude Include="source\utility\web.h" />
     <ClInclude Include="source\render\camera.h" />
@@ -157,7 +159,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <IntDir>grbg\</IntDir>
+    <IntDir>$(SolutionDir)inter\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -211,8 +213,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>MaxSpeed</Optimization>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>

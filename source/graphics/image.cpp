@@ -7,7 +7,7 @@
 
 #include "math/math.h"
 #include "utility/file.h"
-#include "utility/encrypter.h"
+#include "utility/strings.h"
 #include "utility/console.h"
 
 #undef min
@@ -103,7 +103,7 @@ bool kl::image::fromFile(const std::string& filePath) {
 	}
 
 	{
-		Gdiplus::Bitmap loadedBitmap(kl::toWString(filePath).c_str());
+		Gdiplus::Bitmap loadedBitmap(kl::to::wstring(filePath).c_str());
 		Gdiplus::BitmapData bitmapData;
 		if (kl::console::warning(loadedBitmap.GetLastStatus(), "Failed to open image file \"" + filePath + "\"")) {
 			return false;
@@ -160,7 +160,7 @@ bool kl::image::toFile(const std::string& fileName) const {
 		tempBitmap.LockBits(nullptr, Gdiplus::ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
 		memcpy(bitmapData.Scan0, &m_Pixels[0], m_Pixels.size() * sizeof(kl::color));
 		tempBitmap.UnlockBits(&bitmapData);
-		tempBitmap.Save(kl::toWString(fileName).c_str(), formatToUse, nullptr);
+		tempBitmap.Save(kl::to::wstring(fileName).c_str(), formatToUse, nullptr);
 	}
 
 	Gdiplus::GdiplusShutdown(gdiplusToken);

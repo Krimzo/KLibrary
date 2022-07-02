@@ -27,12 +27,15 @@ namespace kl {
 
 		void open(const std::string& filePath);
 		void close();
-
 		bool isOpen() const;
-		float duration() const;
+
 		uint64 byteSize() const;
+		double duration() const;
+
+		double frameRate() const;
+		double frameTime() const;
+		uint64 frameCount() const;
 		kl::uint2 frameSize() const;
-		float frameRate() const;
 		bool getFrame(kl::image& out);
 	};
 }

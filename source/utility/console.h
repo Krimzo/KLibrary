@@ -3,15 +3,8 @@
 #include "graphics/color.h"
 #include "math/math.h"
 
-#include <syncstream>
-
 
 namespace kl {
-	inline constexpr int none = 0;
-	template<const char END = '\n', typename... Args> inline void print(const Args&... args) {
-		(std::osyncstream(std::cout) << ... << args) << END;
-	}
-
 	namespace console {
 		void hide();
 		void show();
@@ -24,8 +17,8 @@ namespace kl {
 		kl::uint2 size();
 		void resize(const kl::uint2& size);
 
-		void setTitle(const std::string& text);
-		void setFont(const kl::uint2& size, const std::string& fontName = "Consolas");
+		void title(const std::string& text);
+		void font(const kl::uint2& size, const std::string& fontName = "Consolas");
 
 		char input();
 		void waitFor(char toWaitFor, bool echo = false);

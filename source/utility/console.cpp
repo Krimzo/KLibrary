@@ -1,5 +1,5 @@
 #include "utility/console.h"
-#include "utility/encrypter.h"
+#include "utility/strings.h"
 #include "math/math.h"
 
 #include <iostream>
@@ -20,7 +20,17 @@ static const HANDLE consoleHandle = []() {
 }();
 
 void kl::console::clear() {
-	system("cls");
+	CONSOLE_SCREEN_BUFFER_INFO consoleScreenInfo = {};
+	GetConsoleScreenBufferInfo(consoleHandle, &consoleScreenInfo);
+
+	DWORD charsWritten = {};
+	FillConsoleOutputCharacterA(consoleHandle, ' ', consoleScreenInfo.dwSize.X * consoleScreenInfo.dwSize.Y, {}, &charsWritten);
+
+	FillConsoleOutputAttribute(
+		consoleHandle, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
+		consoleScreenInfo.dwSize.X * consoleScreenInfo.dwSize.Y, {}, &charsWritten
+	);
+	kl::console::moveCursor({});
 }
 
 void kl::console::hide() {
@@ -49,7 +59,7 @@ void kl::console::showCursor() {
 	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 }
 
-void kl::console::setTitle(const std::string& text) {
+void kl::console::title(const std::string& text) {
 	SetConsoleTitleA(text.c_str());
 }
 
@@ -64,14 +74,14 @@ void kl::console::resize(const kl::uint2& size) {
 	SetConsoleWindowInfo(consoleHandle, true, &consoleRect);
 }
 
-void kl::console::setFont(const kl::uint2& size, const std::string& fontName) {
+void kl::console::font(const kl::uint2& size, const std::string& fontName) {
 	CONSOLE_FONT_INFOEX cfi = {};
 	cfi.cbSize = sizeof(cfi);
 	cfi.dwFontSize.X = SHORT(size.x);
 	cfi.dwFontSize.Y = SHORT(size.y);
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
-	wcscpy_s(cfi.FaceName, kl::toWString(fontName).c_str());
+	wcscpy_s(cfi.FaceName, kl::to::wstring(fontName).c_str());
 	SetCurrentConsoleFontEx(consoleHandle, false, &cfi);
 }
 
@@ -92,7 +102,9 @@ void kl::console::waitFor(char toWaitFor, bool echo) {
 			kl::print("Press '", int(toWaitFor), "' to continue...");
 		}
 	}
-	while (_getch() != toWaitFor);
+
+	char c = 0;
+	while ((c = _getch()) != toWaitFor) kl::print(int(c));
 }
 
 char kl::console::waitForAny(bool echo) {

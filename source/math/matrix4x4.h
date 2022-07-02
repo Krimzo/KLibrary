@@ -27,7 +27,7 @@ namespace kl {
 
 		// Rotation matrix
 		static kl::matrix4x4<T> rotation(const kl::vector3<T>& val) {
-			const T xRad = T(kl::math::toRadians(val.x));
+			const T xRad = T(kl::to::radians(val.x));
 			const T xSin = T(std::sin(xRad));
 			const T xCos = T(std::cos(xRad));
 			kl::matrix4x4<T> xRot;
@@ -36,7 +36,7 @@ namespace kl {
 			xRot[9] = T(xSin);
 			xRot[10] = T(xCos);
 
-			const T yRad = T(kl::math::toRadians(val.y));
+			const T yRad = T(kl::to::radians(val.y));
 			const T ySin = T(std::sin(yRad));
 			const T yCos = T(std::cos(yRad));
 			kl::matrix4x4<T> yRot;
@@ -45,7 +45,7 @@ namespace kl {
 			yRot[8] = T(-ySin);
 			yRot[10] = T(yCos);
 
-			const T zRad = T(kl::math::toRadians(val.z));
+			const T zRad = T(kl::to::radians(val.z));
 			const T zSin = T(std::sin(zRad));
 			const T zCos = T(std::cos(zRad));
 			kl::matrix4x4<T> zRot;
@@ -68,7 +68,7 @@ namespace kl {
 
 		// Perspective projection matrix
 		static kl::matrix4x4<T> perspective(T fov, T ar, T zNear, T zFar) {
-			const T tanHalf = T(1.0 / tan(kl::math::toRadians(fov) * 0.5));
+			const T tanHalf = T(1.0 / tan(kl::to::radians(fov) * 0.5));
 			kl::matrix4x4<T> temp;
 			temp[0] = T(tanHalf / ar);
 			temp[5] = T(tanHalf);

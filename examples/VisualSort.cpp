@@ -1,90 +1,59 @@
 #include "KrimzLib.h"
 
 
-struct stick {
-	int val = 0;
-	kl::color col;
+struct Stick {
+	uint value = 0;
+	kl::color color;
 };
 
-void renderSticks(kl::image& frameBuffer, std::vector<stick>& stickArray) {
-	// Clearing the frame buffer
-	frameBuffer.fill(kl::colors::gray);
-
-	// Drawing the sticks
-	for (int x = 0; x < stickArray.size(); x++) {
-		for (int y = (frameBuffer.height() - 1 - stickArray[x].val); y < frameBuffer.height(); y++) {
-			frameBuffer.pixel(kl::int2(x, y), stickArray[x].col);
-		}
+std::vector<Stick> GenSticks(uint count, uint minValueIncl, uint maxValueExcl) {
+	uint storedMinValue = maxValueExcl;
+	uint storedMaxValue = minValueIncl;
+	std::vector<Stick> sticks(count);
+	for (auto& stick : sticks) {
+		stick.value = kl::random::INT(minValueIncl, maxValueExcl);
+		storedMinValue = min(storedMinValue, stick.value);
+		storedMaxValue = max(storedMaxValue, stick.value);
 	}
+	for (auto& stick : sticks) {
+		const byte grayValue = byte(kl::math::normalize(stick.value, storedMinValue, storedMaxValue) * 255);
+		stick.color = kl::color(grayValue, grayValue, grayValue);
+	}
+	return sticks;
 }
 
-void swapSticks(stick& a, stick& b) {
-	stick t = a;
-	a = b;
-	b = t;
+void DrawSticks(kl::image& frame, const std::vector<Stick>& sticks) {
+	for (int i = 0; i < sticks.size(); i++) {
+		frame.drawLine({ i, frame.height() - 1 }, { i, frame.height() - 1 - sticks[i].value }, sticks[i].color);
+	}
 }
 
 int main() {
-	kl::window testWindow;
-	kl::image frame(kl::int2(900, 900));
+	kl::window window;
+	kl::image frame({ 1600, 900 }, kl::colors::gray);
 
-	std::vector<stick> sticks(frame.width());
-	for (stick& stik : sticks) {
-		// Setting the value
-		int randVal = 0;
-		do {
-			randVal = kl::random::INT(frame.height() + 1);
-		}
-		while ([&]() {
-			for (int i = 0; i < sticks.size(); i++) {
-				if (sticks[i].val == randVal) {
-					return true;
+	std::vector<Stick> sticks = GenSticks(frame.width(), 1, frame.height());
+
+	window.start = [&]() {
+		std::thread([&]() {
+			window.title("Sorting...");
+			for (int i = 0; i < sticks.size() - 1; i++) {
+				for (int j = i + 1; j < sticks.size(); j++) {
+					if (sticks[j].value < sticks[i].value) {
+						std::swap(sticks[i], sticks[j]);
+					}
+					kl::time::wait(0.000005);
 				}
 			}
-			return false;
-		}());
-		stik.val = randVal;
-
-		// Setting the color
-		stik.col = kl::random::COLOR(true);
-	}
-
-	testWindow.update = [&]() {
-		for (int i = 0; i <= sticks.size() / 2; i++) {
-			int min = i;
-			int max = int(sticks.size()) - 1 - i;
-
-			// Finding min
-			for (int j = i + 1; j < sticks.size(); j++) {
-				if (sticks[j].val < sticks[min].val) {
-					min = j;
-				}
-			}
-
-			// Finding max
-			for (int j = i + 1; j < sticks.size() - i; j++) {
-				if (sticks[j].val > sticks[max].val) {
-					max = j;
-				}
-			}
-
-			// Swapping
-			swapSticks(sticks[i], sticks[min]);
-			swapSticks(sticks[sticks.size() - 1 - i], sticks[max]);
-
-			// Rendering the sticks
-			renderSticks(frame, sticks);
-
-			// Displaying the frame
-			testWindow.draw(frame);
-
-			// Updating title
-			testWindow.title(std::to_string(i + 1) + "/" + std::to_string(sticks.size()));
-		}
-
-		testWindow.title("Finished!");
-		testWindow.update = []() {};
+			window.title("Finished!");
+		}).detach();
 	};
 
-	testWindow.run(frame.size(), "Bubble Sort", false, true);
+	window.update = [&]() {
+		frame.fill(kl::colors::gray);
+		DrawSticks(frame, sticks);
+		window.draw(frame);
+	};
+
+	window.run(frame.size(), "Sort", false, true);
 }
