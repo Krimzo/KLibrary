@@ -141,7 +141,7 @@ bool kl::image::toFile(const std::string& fileName) const {
 				uint(m_Pixels[uint64(y * m_Size.x + x)].r) << " " <<
 				uint(m_Pixels[uint64(y * m_Size.x + x)].g) << " " <<
 				uint(m_Pixels[uint64(y * m_Size.x + x)].b) << "\n";
-		kl::file::write(fileName, ss.str());
+		kl::file::writeString(fileName, ss.str());
 		return true;
 	}
 	else {

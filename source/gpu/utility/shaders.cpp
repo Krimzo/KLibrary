@@ -89,6 +89,9 @@ kl::shaders kl::gpu::newShaders(const std::string& vertSrc, const std::string& p
 	kl::dx::shader::vertex vertShader = newVertexShader(vertSrc, &inLayout, desc);
 	return kl::shaders(vertShader, newPixelShader(pixlSrc), inLayout);
 }
+kl::shaders kl::gpu::newShaders(const std::string& fullSrc, const std::vector<kl::dx::shader::desc::input>& desc) {
+	return kl::gpu::newShaders(fullSrc, fullSrc, desc);
+}
 
 void kl::gpu::bind(kl::dx::shader::vertex sha) {
 	m_Context->VSSetShader(sha, nullptr, 0);

@@ -1,6 +1,6 @@
 #include "utility/file.h"
-
 #include "utility/console.h"
+#include "utility/strings.h"
 
 
 std::string kl::file::extension(const std::string& filePath) {
@@ -26,7 +26,7 @@ std::vector<std::string> kl::file::getFiles(const std::string& dirPath, bool rec
 	return files;
 }
 
-std::string kl::file::read(const std::string& filePath) {
+std::string kl::file::readString(const std::string& filePath) {
 	std::ifstream fileStream(filePath);
 	std::stringstream textBuffer;
 	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
@@ -37,24 +37,8 @@ std::string kl::file::read(const std::string& filePath) {
 	fileStream.close();
 	return textBuffer.str();
 }
-std::vector<byte> kl::file::readB(const std::string& filePath) {
-	FILE* file = nullptr;
-	if (kl::console::warning(fopen_s(&file, filePath.c_str(), "rb"), "Failed to open file \"" + filePath + "\"")) {
-		return {};
-	}
 
-	fseek(file, 0, SEEK_END);
-	const int byteSize = ftell(file);
-
-	std::vector<byte> buff(byteSize);
-	rewind(file);
-	fread(&buff[0], 1, byteSize, file);
-
-	fclose(file);
-	return buff;
-}
-
-bool kl::file::write(const std::string& filePath, const std::string& data) {
+bool kl::file::writeString(const std::string& filePath, const std::string& data) {
 	std::ofstream fileStream(filePath);
 	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return false;
@@ -64,19 +48,8 @@ bool kl::file::write(const std::string& filePath, const std::string& data) {
 	fileStream.close();
 	return true;
 }
-uint64 kl::file::writeB(const std::string& filePath, const std::vector<byte>& data) {
-	FILE* file = nullptr;
-	if (kl::console::warning(fopen_s(&file, filePath.c_str(), "wb"), "Failed to open file \"" + filePath + "\"")) {
-		return 0;
-	}
 
-	const uint64 bytesWritten = fwrite(&data[0], 1, data.size(), file);
-
-	fclose(file);
-	return bytesWritten;
-}
-
-bool kl::file::append(const std::string& filePath, const std::string& data, int position) {
+bool kl::file::appendString(const std::string& filePath, const std::string& data, int position) {
 	std::fstream fileStream(filePath, std::ios::in | std::ios::out);
 	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return false;
@@ -93,23 +66,6 @@ bool kl::file::append(const std::string& filePath, const std::string& data, int 
 	fileStream.close();
 	return true;
 }
-uint64 kl::file::appendB(const std::string& filePath, const std::vector<byte>& data, int position) {
-	FILE* file = nullptr;
-	if (kl::console::warning(fopen_s(&file, filePath.c_str(), "ab"), "Failed to open file \"" + filePath + "\"")) {
-		return 0;
-	}
-
-	if (position < 0) {
-		fseek(file, 0, SEEK_END);
-	}
-	else {
-		fseek(file, position, SEEK_SET);
-	}
-	const uint64 bytesWritten = fwrite(&data[0], 1, data.size(), file);
-
-	fclose(file);
-	return bytesWritten;
-}
 
 std::vector<kl::vertex> kl::file::parseMesh(const std::string& filePath, bool flipZ) {
 	std::fstream fileStream;
@@ -125,11 +81,7 @@ std::vector<kl::vertex> kl::file::parseMesh(const std::string& filePath, bool fl
 
 	const int zFlip = flipZ ? -1 : 1;
 	for (std::string fileLine; std::getline(fileStream, fileLine);) {
-		std::vector<std::string> lineParts;
-		std::stringstream lineStream(fileLine);
-		for (std::string linePart; std::getline(lineStream, linePart, ' ');) {
-			lineParts.push_back(linePart);
-		}
+		const std::vector<std::string> lineParts = kl::string::split(fileLine, ' ');
 
 		if (lineParts[0] == "v") {
 			xyzBuffer.push_back(kl::float3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
@@ -142,12 +94,7 @@ std::vector<kl::vertex> kl::file::parseMesh(const std::string& filePath, bool fl
 		}
 		else if (lineParts[0] == "f") {
 			for (int i = 1; i < 4; i++) {
-				std::vector<std::string> linePartParts;
-				std::stringstream linePartStream(lineParts[i]);
-				for (std::string linePartPart; std::getline(linePartStream, linePartPart, '/');) {
-					linePartParts.push_back(linePartPart);
-				}
-
+				const std::vector<std::string> linePartParts = kl::string::split(lineParts[i], '/');
 				vertexData.push_back(
 					kl::vertex(
 						xyzBuffer[std::stoi(linePartParts[0]) - 1],
@@ -161,4 +108,71 @@ std::vector<kl::vertex> kl::file::parseMesh(const std::string& filePath, bool fl
 
 	fileStream.close();
 	return vertexData;
+}
+
+kl::file::file() {}
+kl::file::file(const std::string& filePath, bool clear) {
+	open(filePath, clear);
+}
+kl::file::~file() {
+	close();
+}
+
+bool kl::file::open(const std::string& filePath, bool clear) {
+	close();
+	if (kl::console::warning(fopen_s(&m_File, filePath.c_str(), clear ? "wb+" : "ab+"), "Failed to open file \"" + filePath + "\"")) {
+		return false;
+	}
+	return true;
+}
+bool kl::file::close() {
+	if (m_File) {
+		fclose(m_File);
+		m_File = nullptr;
+		return true;
+	}
+	return false;
+}
+bool kl::file::isOpen() const {
+	return bool(m_File);
+}
+
+bool kl::file::seek(int64 pos) {
+	if (m_File) {
+		if (pos >= 0) {
+			return !fseek(m_File, long(pos), SEEK_SET);
+		}
+		return !fseek(m_File, long(pos + 1), SEEK_END);
+	}
+	return false;
+}
+
+bool kl::file::move(int64 delta) {
+	if (m_File) {
+		return !fseek(m_File, long(delta), SEEK_CUR);
+	}
+	return false;
+}
+
+bool kl::file::rewind() {
+	if (m_File) {
+		seek(0);
+		return true;
+	}
+	return false;
+}
+
+bool kl::file::unwind() {
+	if (m_File) {
+		seek(-1);
+		return true;
+	}
+	return false;
+}
+
+int64 kl::file::tell() const {
+	if (m_File) {
+		return ftell(m_File);
+	}
+	return -1;
 }

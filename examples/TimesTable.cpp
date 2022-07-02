@@ -29,10 +29,10 @@ int main() {
 		const float pointAngle = 360.0f / n;
 		std::vector<kl::int2> circlePoints(n);
 		for (int i = 0; i < circlePoints.size(); i++) {
-			circlePoints[i] = kl::int2(
-				int(cos(kl::math::toRadians(pointAngle * i + 180.0f)) * circleRadius) + frame.width() / 2,
-				int(sin(kl::math::toRadians(pointAngle * i + 180.0f)) * circleRadius) + frame.height() / 2
-			);
+			circlePoints[i] = {
+				int(std::cos(kl::to::radians(pointAngle * i + 180.0f)) * circleRadius) + frame.width() / 2,
+				int(std::sin(kl::to::radians(pointAngle * i + 180.0f)) * circleRadius) + frame.height() / 2
+			};
 		}
 
 		for (kl::int2& point : circlePoints) {

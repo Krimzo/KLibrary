@@ -3,31 +3,31 @@
 
 kl::window win;
 
-std::unique_ptr<kl::gpu> gpu;
-kl::shaders shaders;
+kl::reference<kl::gpu> gpu;
 kl::dx::mesh screenMesh = nullptr;
+kl::shaders shaders;
 
 struct PS_CB {
 	kl::float2 frameSize;
 	kl::float2 zoom;
-	kl::float2 pos;
-	kl::float2 startPos;
+	kl::float2 position;
+	kl::float2 startPosition;
 };
 
 float zoom = 1.0f;
 float zoomSpeed = 1.0f;
-kl::float2 pos(-0.5f, 0.0f);
+kl::float2 pos = { -0.5f, 0.0f };
 
 const float minZoom = 0.5f;
 const float maxZoom = 10000.0f;
-const kl::int2 frameSize(1600, 900);
+const kl::int2 frameSize = { 1600, 900 };
 
 void start() {
-	gpu = std::make_unique<kl::gpu>(win);
+	gpu = kl::make<kl::gpu>(win);
 
 	gpu->bind(gpu->newRasterState(false, false));
 
-	shaders = gpu->newShaders(kl::file::read("examples/shaders/mandelbrot.hlsl"), kl::file::read("examples/shaders/mandelbrot.hlsl"));
+	shaders = gpu->newShaders(kl::file::readString("examples/shaders/mandelbrot.hlsl"));
 
 	screenMesh = gpu->newVertexBuffer({
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f,  1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
@@ -37,14 +37,14 @@ void start() {
 
 kl::timer timer;
 void update() {
-	const float deltaT = timer.interval();
-	const float elapsedT = timer.elapsed();
+	const float deltaT = float(timer.interval());
+	const float elapsedT = float(timer.elapsed());
 
 	if (win.keys.esc) {
 		win.stop();
 	}
 	if (win.keys.r) {
-		pos = kl::float2(-0.5, 0.0f);
+		pos = { -0.5, 0.0f };
 		zoom = 1.0f;
 	}
 	if (win.keys.w) {
@@ -88,20 +88,20 @@ void update() {
 
 	PS_CB pxData = {};
 	pxData.frameSize = frameSize;
-	pxData.zoom.x = zoom;
-	pxData.pos = pos;
-	pxData.startPos.x = 0.0f;
+	pxData.zoom = zoom;
+	pxData.position = pos;
+	pxData.startPosition = 0.0f;
 	gpu->autoPixelCBuffer(pxData);
 
 	gpu->draw(screenMesh);
 
 	gpu->swap(true);
 
-	win.title(
-		"Fps: " + std::to_string(int(1.0f / deltaT)) +
-		" Zoom: " + std::to_string(int(zoom)) +
-		" Position: " + std::to_string(pos.x) + " " + std::to_string(pos.y)
-	);
+	win.title(kl::format(
+		"Fps: ", int(1.0 / deltaT),
+		" Zoom: ", int(zoom),
+		" Position: ", pos
+	));
 }
 
 int main() {

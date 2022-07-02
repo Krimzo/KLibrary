@@ -75,7 +75,7 @@ bool kl::window::running() const {
 	return bool(m_Window);
 }
 
-kl::window::operator HWND() {
+kl::window::operator HWND() const {
 	return m_Window;
 }
 

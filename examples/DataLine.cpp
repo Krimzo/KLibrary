@@ -6,7 +6,7 @@ void DrawAxis(kl::image* frame, const kl::color& col = kl::colors::lgray) {
 	frame->drawLine(kl::int2(frame->width() / 2, 0), kl::int2(frame->width() / 2, frame->height()), col);
 }
 void DrawData(kl::image* frame, std::vector<kl::int2>& data, const kl::color& col = kl::colors::orange) {
-	const kl::int2 halfSize = frame->size() / 2;
+	const kl::uint2 halfSize = frame->size() / 2;
 	for (auto& val : data) {
 		frame->pixel(val * kl::int2(1, -1) + halfSize, col);
 	}
@@ -74,20 +74,21 @@ void CalcBetterLine(const std::vector<kl::int2>& data, kl::float2& lineEquat) {
 int main() {
 	kl::console::hide();
 
-	// Render
 	kl::window win;
 	kl::double_buffer buff({ 1600, 900 });
+
 	win.update = [&]() {
 		buff >> win;
 	};
+
 	win.end = [&]() {
 		exit(0);
 	};
+
 	std::thread([&]() {
 		win.run(buff.size(), "Data Display", false, true);
 	}).detach();
 
-	// Data
 	std::vector<kl::int2> data;
 	kl::float2 lineEquat(1.0f, 0.0f);
 
@@ -104,7 +105,7 @@ int main() {
 	};
 
 	while (true) {
-		win.title("FPS: " + std::to_string(int(1.0f / kl::time::interval())));
+		win.title(kl::format("FPS: ", int(1.0f / kl::time::interval())));
 
 		kl::image* bb = buff.getBB();
 		bb->fill(kl::colors::gray);

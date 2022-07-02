@@ -28,7 +28,7 @@ namespace kl {
 		template<typename T0, typename T1, typename T2> vector4(const T0& x, const kl::vector2<T1>& v, const T2& w) : x(T(x)), y(T(v.x)), z(T(v.y)), w(T(w)) {}
 		template<typename T0, typename T1, typename T2> vector4(const T0& x, const T1& y, const kl::vector2<T2>& v) : x(T(x)), y(T(y)), z(T(v.x)), w(T(v.y)) {}
 		template<typename T0> vector4(const kl::vector4<T0>& obj) : x(T(obj.x)), y(T(obj.y)), z(T(obj.z)), w(T(obj.w)) {}
-		template<typename T0> vector4(const kl::color& col) : x(toFloatColor(col.r)), y(toFloatColor(col.g)), z(toFloatColor(col.b)), w(toFloatColor(col.a)) {}
+		vector4(const kl::color& col) : x(toFloatColor(col.r)), y(toFloatColor(col.g)), z(toFloatColor(col.b)), w(toFloatColor(col.a)) {}
 
 		// Getters
 		T& operator[](uint64 ind) {

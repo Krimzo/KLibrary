@@ -24,7 +24,7 @@ int Evaluate(const std::vector<int>& board) {
 	for (int y = 0; y < BOARD_SIZE; y++) {
 		int sum = 0;
 		for (int x = 0; x < BOARD_SIZE; x++) {
-			sum += board[size_t(y * BOARD_SIZE + x)];
+			sum += board[uint64(y * BOARD_SIZE + x)];
 		}
 
 		if (sum == ID_PLAYER * BOARD_SIZE) {
@@ -38,7 +38,7 @@ int Evaluate(const std::vector<int>& board) {
 	for (int x = 0; x < BOARD_SIZE; x++) {
 		int sum = 0;
 		for (int y = 0; y < BOARD_SIZE; y++) {
-			sum += board[size_t(y * BOARD_SIZE + x)];
+			sum += board[uint64(y * BOARD_SIZE + x)];
 		}
 
 		if (sum == ID_PLAYER * BOARD_SIZE) {
@@ -52,7 +52,7 @@ int Evaluate(const std::vector<int>& board) {
 	{
 		int sum = 0;
 		for (int i = 0; i < BOARD_SIZE; i++) {
-			sum += board[size_t(i * BOARD_SIZE + i)];
+			sum += board[uint64(i * BOARD_SIZE + i)];
 		}
 
 		if (sum == ID_PLAYER * BOARD_SIZE) {
@@ -66,7 +66,7 @@ int Evaluate(const std::vector<int>& board) {
 	{
 		int sum = 0;
 		for (int i = 0; i < BOARD_SIZE; i++) {
-			sum += board[size_t(i * BOARD_SIZE + (BOARD_SIZE - 1 - i))];
+			sum += board[uint64(i * BOARD_SIZE + (BOARD_SIZE - 1 - i))];
 		}
 
 		if (sum == ID_PLAYER * BOARD_SIZE) {
@@ -159,7 +159,7 @@ int main() {
 	const int circlOffs = squareSize / 2;
 
 	kl::window win;
-	kl::image frame(kl::int2(FRAME_SIZE), kl::colors::gray);
+	kl::image frame(FRAME_SIZE, kl::colors::gray);
 
 	win.update = [&]() {
 		const int eval = Evaluate(board);
@@ -178,7 +178,7 @@ int main() {
 			static bool wasDown = false;
 			if (win.mouse.lmb) {
 				if (!wasDown) {
-					const kl::int2 pos = win.mouse.position / kl::int2(squareSize);
+					const kl::int2 pos = win.mouse.position / squareSize;
 					const int ind = pos.y * BOARD_SIZE + pos.x;
 					if (board[ind] == ID_EMPTY) {
 						board[ind] = ID_PLAYER;
@@ -206,7 +206,7 @@ int main() {
 
 		for (kl::int2 pos = 0; pos.y < BOARD_SIZE; pos.y++) {
 			for (pos.x = 0; pos.x < BOARD_SIZE; pos.x++) {
-				const int posID = board[size_t(pos.y * BOARD_SIZE + pos.x)];
+				const int posID = board[uint64(pos.y * BOARD_SIZE + pos.x)];
 				if (playerWasFirst) {
 					if (posID == ID_PLAYER) {
 						frame.drawLine(pos * squareSize + kl::int2(lineOffs), (pos + 1) * squareSize - kl::int2(lineOffs), COLOR_PLAYER);

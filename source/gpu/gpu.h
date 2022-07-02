@@ -87,6 +87,7 @@ namespace kl {
 		kl::dx::shader::geometry newGeometryShader(const std::string& source);
 		kl::dx::shader::compute newComputeShader(const std::string& source);
 		kl::shaders newShaders(const std::string& vertSrc, const std::string& pixlSrc, const std::vector<kl::dx::shader::desc::input>& desc = {});
+		kl::shaders newShaders(const std::string& fullSrc, const std::vector<kl::dx::shader::desc::input>& desc = {});
 		void bind(kl::dx::shader::vertex sha);
 		void bind(kl::dx::shader::pixel sha);
 		void bind(kl::dx::shader::geometry sha);

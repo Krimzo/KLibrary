@@ -41,5 +41,5 @@ std::string kl::web::siteData(const std::string& url, uint bufferSize) {
 }
 
 void kl::web::toFile(const std::string& url, const std::string& fileName) {
-	kl::file::write(fileName, kl::web::siteData(url));
+	kl::file::writeString(fileName, kl::web::siteData(url));
 }

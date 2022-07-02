@@ -2,9 +2,9 @@
 
 
 kl::window win;
-std::unique_ptr<kl::gpu> gpu;
-kl::shaders shaders;
+kl::reference<kl::gpu> gpu;
 kl::dx::mesh screenMesh = nullptr;
+kl::shaders shaders;
 kl::camera camera;
 
 kl::timer timer;
@@ -18,7 +18,6 @@ int selected = -1;
 struct PS_SP {
 	kl::float3 center;
 	float radius = 0;
-
 	kl::float3 color;
 	float reflectivity = 0;
 	kl::float4 emission = 0;
@@ -34,25 +33,31 @@ struct PS_CB {
 void Start() {
 	win.maximize();
 
+	win.keys.r.press = [&]() {
+		for (int i = 1; i < 5; i++) {
+			spheres[i].color = kl::random::COLOR();
+		}
+	};
+
 	gpu = std::make_unique<kl::gpu>(win);
 
 	gpu->bind(gpu->newDepthState(false, false, false));
 
 	gpu->bind(gpu->newRasterState(false, false));
 
-	shaders = gpu->newShaders(kl::file::read("examples/shaders/raytracing.hlsl"), kl::file::read("examples/shaders/raytracing.hlsl"));
+	shaders = gpu->newShaders(kl::file::readString("examples/shaders/raytracing.hlsl"));
 
 	screenMesh = gpu->newVertexBuffer({
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f, 1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
 		});
 
-	spheres[0] = kl::sphere(kl::float3(0.0f, -9005.0f, 20.0f), 9000.0f, kl::color(50, 50, 50), 0.0f, 0.0f);
-	spheres[1] = kl::sphere(kl::float3(0.0f, 0.0f, 20.0f), 4.00f, kl::random::COLOR(), 0.8f, 0.0f);
-	spheres[2] = kl::sphere(kl::float3(-5.0f, -1.0f, 15.0f), 2.00f, kl::random::COLOR(), 0.9f, 0.0f);
-	spheres[3] = kl::sphere(kl::float3(-5.0f, 0.0f, 25.0f), 3.00f, kl::random::COLOR(), 0.9f, 0.0f);
-	spheres[4] = kl::sphere(kl::float3(5.5f, 0.0f, 15.0f), 3.00f, kl::random::COLOR(), 0.9f, 0.0f);
-	spheres[5] = kl::sphere(kl::float3(0.0f, 20.0f, 30.0f), 0.25f, kl::color(255, 255, 255), 0.0f, 3.0f);
+	spheres[0] = kl::sphere({ 0.0f, -9005.0f, 20.0f }, 9000.0f, kl::colors::gray, 0.0f, 0.0f);
+	spheres[1] = kl::sphere({ 0.0f, 0.0f, 20.0f }, 4.00f, kl::random::COLOR(), 0.8f, 0.0f);
+	spheres[2] = kl::sphere({ -5.0f, -1.0f, 15.0f }, 2.00f, kl::random::COLOR(), 0.9f, 0.0f);
+	spheres[3] = kl::sphere({ -5.0f, 0.0f, 25.0f }, 3.00f, kl::random::COLOR(), 0.9f, 0.0f);
+	spheres[4] = kl::sphere({ 5.5f, 0.0f, 15.0f }, 3.00f, kl::random::COLOR(), 0.9f, 0.0f);
+	spheres[5] = kl::sphere({ 0.0f, 20.0f, 30.0f }, 0.25f, kl::colors::white, 0.0f, 3.0f);
 }
 
 void Input() {
@@ -128,7 +133,7 @@ void Input() {
 
 	static bool camMoving = false;
 	if (win.mouse.lmb || win.mouse.rmb) {
-		const kl::int2 frameCenter = win.center();
+		const kl::uint2 frameCenter = win.center();
 
 		if (!camMoving) {
 			win.mouse.position = frameCenter;
@@ -163,15 +168,15 @@ void Update() {
 	gpu->bind(shaders);
 
 	PS_CB psData = {};
-	psData.frameSize = kl::float4(win.size(), 0.0f, 0.0f);
+	psData.frameSize = { win.size(), 0.0f, 0.0f };
 	psData.invCam = camera.matrix().inverse();
-	psData.camPos = kl::float4(camera.position, 1.0f);
+	psData.camPos = { camera.position, 1.0f };
 	for (int i = 0; i < 6; i++) {
 		psData.spheres[i].center = spheres[i].center;
 		psData.spheres[i].radius = spheres[i].radius;
 		psData.spheres[i].color = spheres[i].color;
 		psData.spheres[i].reflectivity = spheres[i].reflectivity;
-		psData.spheres[i].emission = kl::float4(spheres[i].emissive(), 1.0f);
+		psData.spheres[i].emission = { spheres[i].emissive(), 1.0f };
 	}
 	gpu->autoPixelCBuffer(psData);
 
@@ -179,13 +184,13 @@ void Update() {
 
 	gpu->swap(true);
 
-	win.title(std::to_string(int(1 / deltaT)));
+	win.title(kl::format(int(1.0 / deltaT)));
 }
 
 void Resize(const kl::int2& newSize) {
 	if (gpu && newSize.x > 0 && newSize.y > 0) {
 		gpu->regenInternal(newSize);
-		gpu->viewport(kl::int2(0), newSize);
+		gpu->viewport({ 0 }, newSize);
 		camera.aspect = float(newSize.x) / newSize.y;
 	}
 }
@@ -194,11 +199,6 @@ int main() {
 	win.start = Start;
 	win.update = Update;
 	win.resize = Resize;
-	win.keys.r.press = [&]() {
-		for (int i = 1; i < 5; i++) {
-			spheres[i].color = kl::random::COLOR();
-		}
-	};
 	timer.interval();
 	timer.reset();
 	win.run({ 1600, 900 }, "Raytracing", true, true);
