@@ -16,11 +16,11 @@ namespace kl {
 	namespace to {
 		template<typename T> inline T radians(const T& degs) {
 			static const double conv = kl::math::pi / 180.0;
-			return degs * T(conv);
+			return T(degs * conv);
 		}
 		template<typename T> inline T degrees(const T& rads) {
 			static const double conv = 180.0 / kl::math::pi;
-			return rads * T(conv);
+			return T(rads * conv);
 		}
 	}
 }
