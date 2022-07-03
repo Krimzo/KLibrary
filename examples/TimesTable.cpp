@@ -30,22 +30,22 @@ int main() {
 		std::vector<kl::int2> circlePoints(n);
 		for (int i = 0; i < circlePoints.size(); i++) {
 			circlePoints[i] = {
-				int(std::cos(kl::to::radians(pointAngle * i + 180.0f)) * circleRadius) + frame.width() / 2,
-				int(std::sin(kl::to::radians(pointAngle * i + 180.0f)) * circleRadius) + frame.height() / 2
+				int(std::cos(kl::to::radians(pointAngle * i + 180.0f)) * circleRadius + frame.width() / 2),
+				int(std::sin(kl::to::radians(pointAngle * i + 180.0f)) * circleRadius + frame.height() / 2)
 			};
 		}
 
-		for (kl::int2& point : circlePoints) {
+		for (auto& point : circlePoints) {
 			frame.drawCircle(point, 3.0f, pointColor, true);
 		}
 
 		for (int i = 0; i < circlePoints.size(); i++) {
-			frame.drawLine(circlePoints[i], circlePoints[abs(int(i * m) % n)], lineColor);
+			frame.drawLine(circlePoints[i], circlePoints[std::abs(int64(i * m) % n)], lineColor);
 		}
 
 		win.draw(frame);
 
-		win.title("n: " + std::to_string(n) + " m: " + std::to_string(m));
+		win.title(kl::format("n: ", n, " m: ", m));
 	};
 
 	win.resize = [&](const kl::uint2& size) {

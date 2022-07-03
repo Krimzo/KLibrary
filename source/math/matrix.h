@@ -16,10 +16,14 @@ namespace kl {
 				(*this)[i] = 1;
 			}
 		}
-		template<typename T0> matrix(const kl::matrix<T0, W, H>& mat) {
+
+		// Getter
+		template<typename T0> operator kl::matrix<T0, W, H>() const {
+			kl::matrix<T0, W, H> temp;
 			for (uint64 i = 0; i < (W * H); i++) {
-				(*this)[i] = T(mat[i]);
+				temp[i] = T0((*this)[i]);
 			}
+			return temp;
 		}
 
 		// Addition

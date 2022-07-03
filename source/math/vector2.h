@@ -41,9 +41,8 @@ namespace kl {
 		};
 
 		vector2() {}
-		template<typename T0> vector2(const T0& a) : x(T(a)), y(T(a)) {}
-		template<typename T0, typename T1> vector2(const T0& x, const T1& y) : x(T(x)), y(T(y)) {}
-		template<typename T0> vector2(const kl::vector2<T0>& obj) : x(T(obj.x)), y(T(obj.y)) {}
+		vector2(const T& a) : x(a), y(a) {}
+		vector2(const T& x, const T& y) : x(x), y(y) {}
 
 		// Getters
 		T& operator[](uint64 ind) {
@@ -51,6 +50,9 @@ namespace kl {
 		}
 		const T& operator[](uint64 ind) const {
 			return data[ind];
+		}
+		template<typename T0> operator kl::vector2<T0>() const {
+			return { T0(x), T0(y) };
 		}
 
 		// Addition

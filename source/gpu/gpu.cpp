@@ -49,8 +49,8 @@ kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : m_CBuffersPredefined(predefine
 	kl::console::error(!m_Chain, "Failed to create swapchain");
 
 	m_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	regenInternal(kl::int2(clientArea.right, clientArea.bottom));
-	viewport(kl::int2(clientArea.left, clientArea.top), kl::int2(clientArea.right, clientArea.bottom));
+	regenInternal({ uint(clientArea.right), uint(clientArea.bottom) });
+	viewport({ int(clientArea.left), int(clientArea.top) }, { uint(clientArea.right), uint(clientArea.bottom) });
 	bind(newRasterState(false, false));
 
 	if (predefineCBuffers) {
@@ -134,11 +134,11 @@ void kl::gpu::bindInternal(const std::vector<kl::dx::view::target> targets, kl::
 	for (auto& target : targets) {
 		combinedTargets.push_back(target);
 	}
-	m_Context->OMSetRenderTargets(UINT(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : m_DepthBuffer);
+	m_Context->OMSetRenderTargets(uint(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : m_DepthBuffer);
 }
 
 void kl::gpu::bindTargets(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView) {
-	m_Context->OMSetRenderTargets(UINT(targets.size()), &targets[0], depthView ? depthView : m_DepthBuffer);
+	m_Context->OMSetRenderTargets(uint(targets.size()), &targets[0], depthView ? depthView : m_DepthBuffer);
 }
 
 void kl::gpu::clearColor(const kl::float4& color) {

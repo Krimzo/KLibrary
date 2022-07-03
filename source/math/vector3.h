@@ -35,11 +35,10 @@ namespace kl {
 		};
 
 		vector3() {}
-		template<typename T0> vector3(const T0& a) : x(T(a)), y(T(a)), z(T(a)) {}
-		template<typename T0, typename T1, typename T2> vector3(const T0& x, const T1& y, const T2& z) : x(T(x)), y(T(y)), z(T(z)) {}
-		template<typename T0, typename T1> vector3(const kl::vector2<T0>& v, const T1& z) : x(T(v.x)), y(T(v.y)), z(T(z)) {}
-		template<typename T0, typename T1> vector3(const T0& x, const kl::vector2<T1>& v) : x(T(x)), y(T(v.x)), z(T(v.y)) {}
-		template<typename T0> vector3(const kl::vector3<T0>& obj) : x(T(obj.x)), y(T(obj.y)), z(T(obj.z)) {}
+		vector3(const T& a) : x(a), y(a), z(a) {}
+		vector3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {}
+		vector3(const kl::vector2<T>& v, const T& z) : x(v.x), y(v.y), z(z) {}
+		vector3(const T& x, const kl::vector2<T>& v) : x(x), y(v.x), z(v.y) {}
 		vector3(const kl::color& col) : x(toFloatColor(col.r)), y(toFloatColor(col.g)), z(toFloatColor(col.b)) {}
 
 		// Getters
@@ -49,8 +48,11 @@ namespace kl {
 		const T& operator[](uint64 ind) const {
 			return data[ind];
 		}
-		kl::color toColor() const {
-			return kl::color(toByteColor(x), toByteColor(y), toByteColor(z));
+		template<typename T0> operator kl::vector3<T0>() const {
+			return { T0(x), T0(y), T0(z) };
+		}
+		operator kl::color() const {
+			return { toByteColor(x), toByteColor(y), toByteColor(z) };
 		}
 
 		// Addition
