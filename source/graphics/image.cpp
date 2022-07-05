@@ -123,16 +123,16 @@ static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a,0x73,0
 bool kl::image::toFile(const std::string& fileName) const {
 	const CLSID* formatToUse = nullptr;
 	const std::string fileExtension = kl::file::extension(fileName);
-	if (fileExtension == "bmp") {
+	if (fileExtension == ".bmp") {
 		formatToUse = &bmpEncoderCLSID;
 	}
-	else if (fileExtension == "jpg") {
+	else if (fileExtension == ".jpg") {
 		formatToUse = &jpgEncoderCLSID;
 	}
-	else if (fileExtension == "png") {
+	else if (fileExtension == ".png") {
 		formatToUse = &pngEncoderCLSID;
 	}
-	else if (fileExtension == "txt") {
+	else if (fileExtension == ".txt") {
 		std::stringstream ss;
 		for (uint y = 0; y < m_Size.y; y++)
 			for (uint x = 0; x < m_Size.x; x++)
