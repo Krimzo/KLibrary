@@ -4,14 +4,15 @@
 void kl::async::loop(int64 startInclusive, int64 endExclusive, const std::function<void(uint t, int64 i)>& loopBody, uint threadCount) {
 	std::vector<std::thread> workers(threadCount);
 
-	const int64 runsPerThread = (endExclusive - startInclusive) / threadCount;
+	std::atomic<int64> workCounter = startInclusive;
 	for (uint t = 0; t < threadCount; t++) {
-		const int64 loopStart = runsPerThread * t + startInclusive;
-		const int64 loopEnd = (t == threadCount - 1) ? endExclusive : (loopStart + runsPerThread);
-		workers[t] = std::thread([&loopBody, t, loopStart, loopEnd]() {
-			for (int64 i = loopStart; i < loopEnd; i++) {
-				loopBody(t, i);
+		workers[t] = std::thread([&, t]() {
+			int64 workIndex = startInclusive;
+			do {
+				workIndex = workCounter++;
+				loopBody(t, workIndex);
 			}
+			while (workIndex < endExclusive);
 		});
 	}
 

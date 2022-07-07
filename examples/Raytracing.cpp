@@ -39,7 +39,7 @@ void Start() {
 		}
 	};
 
-	gpu = std::make_unique<kl::gpu>(win);
+	gpu = kl::make<kl::gpu>(win);
 
 	gpu->bind(gpu->newDepthState(false, false, false));
 
