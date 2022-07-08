@@ -59,6 +59,7 @@ namespace kl {
 		kl::dx::device dev();
 		kl::dx::context con();
 
+		void viewport(const kl::uint2& size);
 		void viewport(const kl::int2& pos, const kl::uint2& size);
 
 		void regenInternal(const kl::uint2& size);

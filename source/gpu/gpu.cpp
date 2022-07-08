@@ -118,6 +118,9 @@ void kl::gpu::regenInternal(const kl::uint2& size) {
 	bindInternal();
 }
 
+void kl::gpu::viewport(const kl::uint2& size) {
+	viewport({}, size);
+}
 void kl::gpu::viewport(const kl::int2& pos, const kl::uint2& size) {
 	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX = float(pos.x);
