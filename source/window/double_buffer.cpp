@@ -9,7 +9,7 @@ kl::uint2 kl::double_buffer::size() {
 	return m_Buffer1.size();
 }
 
-kl::image* kl::double_buffer::getBB() {
+kl::image* kl::double_buffer::bbuffer() {
 	return (m_FrontBuffer == &m_Buffer1) ? &m_Buffer2 : &m_Buffer1;
 }
 
@@ -24,6 +24,6 @@ void kl::double_buffer::operator>>(kl::window& win) {
 
 void kl::double_buffer::swap() {
 	m_Lock.lock();
-	m_FrontBuffer = getBB();
+	m_FrontBuffer = bbuffer();
 	m_Lock.unlock();
 }

@@ -147,8 +147,8 @@ void kl::gpu::bindTargets(const std::vector<kl::dx::view::target> targets, kl::d
 void kl::gpu::clearColor(const kl::float4& color) {
 	clear(m_FrameBuffer, color);
 }
-void kl::gpu::clearDepth() {
-	clear(m_DepthBuffer);
+void kl::gpu::clearDepth(float depth) {
+	clear(m_DepthBuffer, depth);
 }
 void kl::gpu::clear(const kl::float4& color) {
 	clear(m_FrameBuffer, color);

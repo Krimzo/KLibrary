@@ -2,7 +2,7 @@
 
 
 void kl::mouse::bind(HWND hwnd) {
-	m_Win = hwnd;
+	m_Window = hwnd;
 }
 
 void kl::mouse::update() const {
@@ -24,10 +24,18 @@ void kl::mouse::show() {
 
 void kl::mouse::move(const kl::int2& pos) {
 	POINT clientPos = { pos.x, pos.y };
-	ClientToScreen(m_Win, &clientPos);
+	ClientToScreen(m_Window, &clientPos);
 	SetCursorPos(clientPos.x, clientPos.y);
 }
 
+kl::float2 kl::mouse::normalized() const {
+	RECT clientArea = {};
+	GetClientRect(m_Window, &clientArea);
+	return normalize({
+		uint(clientArea.right - clientArea.left),
+		uint(clientArea.bottom - clientArea.top)
+		});
+}
 kl::float2 kl::mouse::normalize(const kl::uint2& frameSize) const {
 	kl::float2 pos(
 		float(position.x) / frameSize.x,

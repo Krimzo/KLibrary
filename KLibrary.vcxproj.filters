@@ -126,7 +126,7 @@
     <ClCompile Include="source\utility\strings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\Raytracing.cpp">
+    <ClCompile Include="examples\DataLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

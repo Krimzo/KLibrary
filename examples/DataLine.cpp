@@ -105,9 +105,7 @@ int main() {
 	};
 
 	while (true) {
-		win.title(kl::format("FPS: ", int(1.0f / kl::time::interval())));
-
-		kl::image* bb = buff.getBB();
+		kl::image* bb = buff.bbuffer();
 		bb->fill(kl::colors::gray);
 
 		DrawAxis(bb);
@@ -117,5 +115,7 @@ int main() {
 		CalcBetterLine(data, lineEquat);
 
 		buff.swap();
+
+		win.title(kl::format("FPS: ", int(1.0 / kl::time::interval())));
 	}
 }

@@ -67,7 +67,7 @@ namespace kl {
 		void bindTargets(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView = nullptr);
 
 		void clearColor(const kl::float4& color);
-		void clearDepth();
+		void clearDepth(float depth);
 		void clear(const kl::float4& color);
 
 		void swap(bool vSync);

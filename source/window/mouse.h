@@ -9,7 +9,7 @@
 namespace kl {
 	class mouse {
 	private:
-		HWND m_Win = nullptr;
+		HWND m_Window = nullptr;
 		int m_ShowCounter = 0;
 
 	public:
@@ -27,6 +27,7 @@ namespace kl {
 		void show();
 		void move(const kl::int2& pos);
 
+		kl::float2 normalized() const;
 		kl::float2 normalize(const kl::uint2& frameSize) const;
 	};
 }

@@ -20,7 +20,7 @@ namespace kl {
 
 		kl::uint2 size();
 
-		kl::image* getBB();
+		kl::image* bbuffer();
 
 		void draw(kl::window& win);
 		void operator>>(kl::window& win);
