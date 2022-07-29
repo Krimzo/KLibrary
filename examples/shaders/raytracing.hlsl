@@ -1,289 +1,196 @@
 // Vertex shader
 float4 vShader(float3 pos : POS_IN) : SV_POSITION
 {
-    return float4(pos, 1.0f);
+	return float4(pos, 1.0f);
 }
 
 // Pixel shader
 struct Sphere
 {
-    // Geometry
-    float3 center;
-    float radius;
+	float3 center;
+	float radius;
+	float4 color;
+};
 
-    // Light
-    float3 color;
-    float reflectivity;
-    float4 emission;
+struct Plane
+{
+	float3 position;
+	float3 normal;
+	float3 color;
 };
 
 struct Ray
 {
-    float3 origin;
-    float3 direction;
-
-    // Intersection with a sphere
-    bool intersect(Sphere sphere, out float3 outInter, out float outDis)
-    {
-        // Ray sphere center ray
-        const float3 centerRay = sphere.center - origin;
-
-        // Center ray and main ray direction dot product
-        const float cdDot = dot(centerRay, direction);
-        if (cdDot < 0.0f)
-        {
-            return false;
-        }
-
-        // Calculations I don't understand
-        const float ccDot = dot(centerRay, centerRay) - cdDot * cdDot;
-        const float rr = sphere.radius * sphere.radius;
-        if (ccDot > rr)
-        {
-            return false;
-        }
-        
-        // Intersect distance calculation
-        const float thc = sqrt(rr - ccDot);
-        const float dis0 = cdDot - thc;
-        const float dis1 = cdDot + thc;
-
-        // Origin in sphere test
-        if (dis0 < 0.0f)
-        {
-            outInter = origin + direction * dis1;
-            outDis = dis1;
-        }
-        else
-        {
-            outInter = origin + direction * dis0;
-            outDis = dis0;
-        }
-        return true;
-    }
+	float3 origin;
+	float3 direction;
+	
+	bool intersectSphere(Sphere sphere, out float3 outInter)
+	{
+		const float3 centerRay = sphere.center - origin;
+		
+		const float cdDot = dot(centerRay, direction);
+		if (cdDot < 0.0f)
+		{
+			return false;
+		}
+		
+		const float ccDot = dot(centerRay, centerRay) - cdDot * cdDot;
+		const float rr = sphere.radius * sphere.radius;
+		if (ccDot > rr)
+		{
+			return false;
+		}
+		
+		const float thc = sqrt(rr - ccDot);
+		const float dis0 = cdDot - thc;
+		const float dis1 = cdDot + thc;
+		
+		if (dis0 < 0.0f)
+		{
+			outInter = origin + direction * dis1;
+		}
+		else
+		{
+			outInter = origin + direction * dis0;
+		}
+		return true;
+	}
+	
+	bool intersectPlane(Plane plane, out float3 outInter)
+	{
+		float denom = dot(normalize(plane.normal), direction);
+		if (abs(denom) > 0.0001f)
+		{
+			float t = dot(plane.position - origin, plane.normal) / denom;
+			if (t >= 0.0f)
+			{
+				outInter = origin + direction * t;
+				return true;
+			}
+		}
+		return false;
+	}
 };
 
-#define SPHERE_COUNT 6
-
+#define SPHERE_COUNT 8
 cbuffer PS_CB : register(b0)
 {
-    float4 frameSize;
-    matrix invCam;
-    float4 camPos;
-    Sphere spheres[SPHERE_COUNT];
+	float4 frameSize;
+	matrix inverseCamera;
+	float4 cameraPosition;
+	float4 sunDirection;
+	Sphere spheres[SPHERE_COUNT];
 };
 
-float3 TraceRayDefault(Ray ray);
-float3 TraceRayDiffuse(Ray ray);
+float3 TraceRay(Ray ray);
 
 float4 pShader(float4 screen : SV_POSITION) : SV_TARGET
 {
-    // Calculating ndc pixel coordinates
-    float2 ndc = float2(screen.x, frameSize.y - screen.y) / float2(frameSize.x, frameSize.y);
-    ndc *= 2.0f;
-    ndc -= 1.0f;
-
-    // Calculating pixel ray direction
-    float4 raydir = mul(float4(ndc, 1.0f, 1.0f), invCam);
-    raydir /= raydir.w;
-
-    // Tracing the pixel color
-    Ray ray = { camPos.xyz, normalize(raydir.xyz) };
-    return float4(TraceRayDefault(ray), 1.0f);
+	float2 ndc = float2(screen.x, frameSize.y - screen.y) / float2(frameSize.x, frameSize.y);
+	ndc *= 2.0f;
+	ndc -= 1.0f;
+	
+	float4 raydir = mul(float4(ndc, 1.0f, 1.0f), inverseCamera);
+	raydir /= raydir.w;
+	
+	Ray ray = { cameraPosition.xyz, normalize(raydir.xyz) };
+	return float4(TraceRay(ray), 1.0f);
 }
 
-float3 TraceRayDefault(Ray ray)
+bool SpherePointInShadow(Plane plane, float3 spherePoint, int sphereIndex)
 {
-    // Intersected point and sphere
-    float3 interPoin;
-    int interSphereID = -1;
-
-    // Finding the intersection point
-    float interDis = 3.14e38f;
-    for (int i = 0; i < SPHERE_COUNT; i++)
-    {
-        // Data buffers
-        float3 tempInter;
-        float tempDis = 0;
-
-        // Intersection test
-        if (ray.intersect(spheres[i], tempInter, tempDis))
-        {
-            // Depth test
-            if (tempDis < interDis)
-            {
-                // Saving the depth
-                interDis = tempDis;
-
-                // Saving the point
-                interPoin = tempInter;
-
-                // Saving the sphere
-                interSphereID = i;
-            }
-        }
-    }
-
-    // Background draw
-    if (interSphereID < 0)
-    {
-        return 0.6f;
-    }
-    
-    // Intersection normal calculation
-    float3 interNorm = normalize(interPoin - spheres[interSphereID].center);
-
-    // In sphere test
-    bool insideSph = false;
-    if (dot(ray.direction, interNorm) > 0.0f)
-    {
-        interNorm = -interNorm;
-        insideSph = true;
-    }
-
-    // Reflection test
-    float3 rayColor = 0.0f;
-    if (spheres[interSphereID].reflectivity > 0.0f)
-    {
-        // Facing ratio
-        const float facingRatio = dot(-ray.direction, interNorm);
-
-        // Fresnel effect
-        const float mixRatio = 0.1f;
-        const float fresnelEffect = mixRatio + pow(1.0f - facingRatio, 3.0f) * (1.0f - mixRatio);
-
-        // Reflection
-        float3 reflDir = normalize(ray.direction - interNorm * 2 * dot(ray.direction, interNorm));
-        Ray reflRay = { interPoin + interNorm, reflDir };
-        float3 reflection = TraceRayDiffuse(reflRay);
-
-        // Ray color
-        rayColor = (reflection * fresnelEffect) * spheres[interSphereID].color;
-    }
-    else
-    {
-        for (int i = 0; i < SPHERE_COUNT; i++)
-        {
-            // Light direction           
-            float3 lightDirection = normalize(spheres[i].center - interPoin);
-            
-            // Shadow testing
-            bool inShadow = false;
-            for (int j = 0; j < SPHERE_COUNT; j++)
-            {
-                if (j != i)
-                {
-                    Ray lightRay = { interPoin + interNorm, lightDirection };
-                    float3 ignoreOut1;
-                    float ignoreOut2;
-                    if (lightRay.intersect(spheres[j], ignoreOut1, ignoreOut2))
-                    {
-                        inShadow = true;
-                        break;
-                    }
-                }
-            }
-        
-            // Ray color
-            rayColor += (spheres[interSphereID].color * spheres[i].emission.xyz * max(0.0f, dot(interNorm, lightDirection))) * !inShadow;
-        }
-    }
-
-    // Calculating the pixel color
-    float3 pixel = rayColor + spheres[interSphereID].emission.xyz;
-
-    // Clamping the color channels
-    pixel.x = max(min(pixel.x, 1.0f), 0.0f);
-    pixel.y = max(min(pixel.y, 1.0f), 0.0f);
-    pixel.z = max(min(pixel.z, 1.0f), 0.0f);
-
-    // Color return
-    return pixel;
+	Ray lightRay = { spherePoint, -sunDirection.xyz };
+	
+	float3 ignoreOut;
+	
+	if (lightRay.intersectPlane(plane, ignoreOut))
+	{
+		return true;
+	}
+	
+	for (int i = 0; i < SPHERE_COUNT; i++)
+	{
+		if (i != sphereIndex && lightRay.intersectSphere(spheres[i], ignoreOut))
+		{
+			return true;
+		}
+	}
+	
+	return false;
 }
-float3 TraceRayDiffuse(Ray ray)
+
+bool PlanePointInShadow(float3 planePoint)
 {
-    // Intersected point and sphere
-    float3 interPoin;
-    int interSphereID = -1;
+	Ray lightRay = { planePoint, -sunDirection.xyz };
+	
+	float3 ignoreOut;
+	
+	for (int i = 0; i < SPHERE_COUNT; i++)
+	{
+		if (lightRay.intersectSphere(spheres[i], ignoreOut))
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
 
-    // Finding the intersection point
-    float interDis = 3.14e38f;
-    for (int i = 0; i < SPHERE_COUNT; i++)
-    {
-        // Data buffers
-        float3 tempInter;
-        float tempDis = 0;
+float3 TraceRay(Ray ray)
+{
+	Plane xzPlane = { float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(0.2f, 0.2f, 0.2f) };
+	
+	float3 intersectPoint;
+	float intersectDistance = 3.14e38f;
+	int intersectedSphereID = -2;
+	float3 tempIntersect;
 
-        // Intersection test
-        if (ray.intersect(spheres[i], tempInter, tempDis))
-        {
-            // Depth test
-            if (tempDis < interDis)
-            {
-                // Saving the depth
-                interDis = tempDis;
-
-                // Saving the point
-                interPoin = tempInter;
-
-                // Saving the sphere
-                interSphereID = i;
-            }
-        }
-    }
-
-    // Background draw
-    if (interSphereID < 0)
-    {
-        return 0.6f;
-    }
-        
-    // Intersection normal calculation
-    float3 interNorm = normalize(interPoin - spheres[interSphereID].center);
-
-    // In sphere test
-    bool insideSph = false;
-    if (dot(ray.direction, interNorm) > 0.0f)
-    {
-        interNorm = -interNorm;
-        insideSph = true;
-    }
-
-    float3 rayColor = 0.0f;
-    for (i = 0; i < SPHERE_COUNT; i++)
-    {
-        // Light direction           
-        float3 lightDirection = normalize(spheres[i].center - interPoin);
-
-        // Shadow testing
-        bool inShadow = false;
-        for (int j = 0; j < SPHERE_COUNT; j++)
-        {
-            if (j != i)
-            {
-                Ray lightRay = { interPoin + interNorm, lightDirection };
-                float3 ignoreOut1;
-                float ignoreOut2;
-                if (lightRay.intersect(spheres[j], ignoreOut1, ignoreOut2))
-                {
-                    inShadow = true;
-                    break;
-                }
-            }
-        }
-
-        // Ray color
-        rayColor += (spheres[interSphereID].color * spheres[i].emission.xyz * max(0.0f, dot(interNorm, lightDirection))) * !inShadow;
-    }
-
-    // Calculating the pixel color
-    float3 pixel = rayColor + spheres[interSphereID].emission.xyz;
-
-    // Clamping the color channels
-    pixel.x = max(min(pixel.x, 1.0f), 0.0f);
-    pixel.y = max(min(pixel.y, 1.0f), 0.0f);
-    pixel.z = max(min(pixel.z, 1.0f), 0.0f);
-
-    // Color return
-    return pixel;
+	if (ray.intersectPlane(xzPlane, tempIntersect))
+	{
+		intersectDistance = length(tempIntersect - cameraPosition.xyz);
+		intersectPoint = tempIntersect;
+		intersectedSphereID = -1;
+	}
+	
+	for (int i = 0; i < SPHERE_COUNT; i++)
+	{
+		if (ray.intersectSphere(spheres[i], tempIntersect))
+		{
+			float tempDistance = length(tempIntersect - cameraPosition.xyz);
+			if (tempDistance < intersectDistance)
+			{
+				intersectDistance = tempDistance;
+				intersectPoint = tempIntersect;
+				intersectedSphereID = i;
+			}
+		}
+	}
+	
+	float3 pixel;
+	if (intersectedSphereID == -1)
+	{
+		const float sunIntensity = dot(-sunDirection.xyz, xzPlane.normal);
+		pixel = xzPlane.color * sunIntensity * !PlanePointInShadow(intersectPoint);
+	}
+	else if (intersectedSphereID > -1)
+	{
+		const float3 intersectNormal = normalize(intersectPoint - spheres[intersectedSphereID].center);
+		const float sunIntensity = dot(-sunDirection.xyz, intersectNormal);
+		pixel = spheres[intersectedSphereID].color.xyz * sunIntensity * !SpherePointInShadow(xzPlane, intersectPoint, intersectedSphereID);
+	}
+	else
+	{
+		const float3 skyTopColor = { 0.45f, 0.75f, 0.88f };
+		const float3 skyBottomColor = { 0.78f, 0.78f, 0.78f };
+		const float3 sunSkyColor = { 0.98f, 0.9f, 0.76f };
+		const float2 sunRadiuses = { 0.75f, 1.55f };
+		
+		const float skyMixValue = (dot(-ray.direction, float3(0.0f, 1.0f, 0.0f)) + 1.0f) * 0.5f;
+		pixel = lerp(skyTopColor, skyBottomColor, skyMixValue);
+		
+		const float sunAngle = acos(dot(ray.direction, -sunDirection.xyz)) * 57.2957795131f;
+		const float sunMixValue = (sunAngle - sunRadiuses.x) / (sunRadiuses.y - sunRadiuses.x);
+		pixel = lerp(sunSkyColor, pixel, min(max(sunMixValue, 0.0f), 1.0f));
+	}
+	return pixel;
 }

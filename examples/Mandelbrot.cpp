@@ -1,13 +1,14 @@
 #include "KrimzLib.h"
 
 
-kl::window win;
+kl::window window;
 
-kl::reference<kl::gpu> gpu;
+kl::ref<kl::gpu> gpu;
 kl::dx::mesh screenMesh = nullptr;
 kl::shaders shaders;
 
-struct PS_CB {
+struct PS_CB
+{
 	kl::float2 frameSize;
 	kl::float2 zoom;
 	kl::float2 position;
@@ -16,68 +17,84 @@ struct PS_CB {
 
 float zoom = 1.0f;
 float zoomSpeed = 1.0f;
-kl::float2 pos = { -0.5f, 0.0f };
+kl::float2 position = { -0.5f, 0.0f };
 
 const float minZoom = 0.5f;
 const float maxZoom = 10000.0f;
 const kl::int2 frameSize = { 1600, 900 };
 
-void start() {
-	gpu = kl::make<kl::gpu>(win);
+void start()
+{
+	gpu = kl::make<kl::gpu>(window);
 
 	gpu->bind(gpu->newRasterState(false, false));
 
 	shaders = gpu->newShaders(kl::file::readString("examples/shaders/mandelbrot.hlsl"));
 
 	screenMesh = gpu->newVertexBuffer({
-		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f,  1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
+		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f, 1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
 		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
 		});
 }
 
 kl::timer timer;
-void update() {
-	const float deltaT = float(timer.interval());
-	const float elapsedT = float(timer.elapsed());
+void update()
+{
+	timer.newInterval();
+	timer.newElapsed();
 
-	if (win.keys.esc) {
-		win.stop();
+	if (window.keys.esc)
+	{
+		window.stop();
 	}
-	if (win.keys.r) {
-		pos = { -0.5, 0.0f };
+	if (window.keys.r)
+	{
+		position = { -0.5, 0.0f };
 		zoom = 1.0f;
 	}
-	if (win.keys.w) {
-		pos.y -= (1.0f / zoom) * deltaT;
+	if (window.keys.w)
+	{
+		position.y -= (1.0f / zoom) * timer.interval();
 	}
-	if (win.keys.s) {
-		pos.y += (1.0f / zoom) * deltaT;
+	if (window.keys.s)
+	{
+		position.y += (1.0f / zoom) * timer.interval();
 	}
-	if (win.keys.d) {
-		pos.x += (1.0f / zoom) * deltaT;
+	if (window.keys.d)
+	{
+		position.x += (1.0f / zoom) * timer.interval();
 	}
-	if (win.keys.a) {
-		pos.x -= (1.0f / zoom) * deltaT;
+	if (window.keys.a)
+	{
+		position.x -= (1.0f / zoom) * timer.interval();
 	}
-	if (win.mouse.lmb) {
-		zoom += zoom * zoomSpeed * deltaT;
+	if (window.mouse.lmb)
+	{
+		zoom += zoom * zoomSpeed * timer.interval();
 
-		if (zoom < maxZoom) {
-			const kl::float2 uv = ((kl::float2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
-			pos += (uv / zoom) * deltaT;
+		if (zoom < maxZoom)
+		{
+			const kl::float2 uv = ((kl::float2(window.mouse.position) / frameSize) * 2.0f
+				- kl::float2(1.0f, 1.0f)) * (float(frameSize.x) / frameSize.y);
+			position += (uv / zoom) * timer.interval();
 		}
-		else {
+		else
+		{
 			zoom = maxZoom;
 		}
 	}
-	if (win.mouse.rmb) {
-		zoom -= zoom * zoomSpeed * deltaT;
+	if (window.mouse.rmb)
+	{
+		zoom -= zoom * zoomSpeed * timer.interval();
 
-		if (zoom > minZoom) {
-			const kl::float2 uv = ((kl::float2(win.mouse.position) / frameSize) * 2.0f - 1.0f) * (float(frameSize.x) / frameSize.y);
-			pos -= (uv / zoom) * deltaT;
+		if (zoom > minZoom)
+		{
+			const kl::float2 uv = ((kl::float2(window.mouse.position) / frameSize) * 2.0f
+				- kl::float2(1.0f, 1.0f)) * (float(frameSize.x) / frameSize.y);
+			position -= (uv / zoom) * timer.interval();
 		}
-		else {
+		else
+		{
 			zoom = minZoom;
 		}
 	}
@@ -88,26 +105,27 @@ void update() {
 
 	PS_CB pxData = {};
 	pxData.frameSize = frameSize;
-	pxData.zoom = zoom;
-	pxData.position = pos;
-	pxData.startPosition = 0.0f;
+	pxData.zoom = kl::float2(zoom, zoom);
+	pxData.position = position;
+	pxData.startPosition = kl::float2();
 	gpu->autoPixelCBuffer(pxData);
 
 	gpu->draw(screenMesh);
 
 	gpu->swap(true);
 
-	win.title(kl::format(
-		"Fps: ", int(1.0 / deltaT),
+	window.title(kl::format(
+		"Fps: ", int(1.0 / timer.interval()),
 		" Zoom: ", int(zoom),
-		" Position: ", pos
+		" Position: ", position
 	));
 }
 
-int main() {
-	win.start = start;
-	win.update = update;
+int main()
+{
+	window.start = start;
+	window.update = update;
 	timer.reset();
 	timer.interval();
-	win.run(frameSize, "Mandelbrot", false, true);
+	window.run(frameSize, "Mandelbrot", false, true);
 }

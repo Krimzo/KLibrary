@@ -8,36 +8,65 @@
 #include <syncstream>
 
 
-namespace kl {
+namespace kl
+{
+	using wchar = wchar_t;
+
 	inline constexpr int none = 0;
 	inline constexpr char enter = 13;
 	inline constexpr char space = 32;
 
-	namespace to {
+	namespace to
+	{
 		std::string string(const std::wstring& data);
 		std::wstring wstring(const std::string& data);
 	}
 
-	namespace string {
+	namespace string
+	{
 		std::vector<std::string> split(const std::string& data, char delimeter);
 		std::vector<std::wstring> split(const std::wstring& data, wchar_t delimeter);
 	}
 
-	template<typename... Args> inline std::string format(const Args&... args) {
-		std::stringstream ss;
-		(ss << ... << args);
-		return ss.str();
+	template<const char END = '\n', typename Arg0, typename... Args>
+	inline void print(const Arg0& arg0, const Args&... args)
+	{
+		if constexpr (std::derived_from<Arg0, std::ostream>)
+		{
+			(std::osyncstream((std::ostream&) arg0) << ... << args) << END;
+		}
+		else
+		{
+			((std::osyncstream(std::cout) << arg0) << ... << args) << END;
+		}
 	}
-	template<typename... Args> inline std::wstring wformat(const Args&... args) {
-		std::wstringstream ss;
-		(ss << ... << args);
+
+	template<const wchar END = L'\n', typename Arg0, typename... Args>
+	inline void wprint(const Arg0& arg0, const Args&... args)
+	{
+		if constexpr (std::derived_from<Arg0, std::wostream>)
+		{
+			(std::wosyncstream((std::wostream&) arg0) << ... << args) << END;
+		}
+		else
+		{
+			((std::wosyncstream(std::wcout) << arg0) << ... << args) << END;
+		}
+	}
+
+	template<typename... Args>
+	inline std::string format(const Args&... args)
+	{
+		std::stringstream ss;
+		kl::print(ss, args...);
 		return ss.str();
 	}
 
-	template<const char END = '\n', typename... Args> inline void print(const Args&... args) {
-		(std::osyncstream(std::cout) << ... << args) << END;
-	}
-	template<const char END = '\n', typename... Args> inline void wprint(const Args&... args) {
-		(std::wosyncstream(std::wcout) << ... << args) << END;
+	template<typename... Args>
+	inline std::wstring wformat(const Args&... args)
+	{
+		std::wstringstream ss;
+		kl::wprint(ss, args...);
+		return ss.str();
 	}
 }

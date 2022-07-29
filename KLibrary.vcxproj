@@ -19,11 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\DataLine.cpp" />
-    <ClCompile Include="source\render\plane.cpp" />
-    <ClCompile Include="source\render\ray.cpp" />
-    <ClCompile Include="source\render\triangle.cpp" />
-    <ClCompile Include="source\render\vertex.cpp" />
+    <ClCompile Include="examples\Raytracing.cpp" />
     <ClCompile Include="source\gpu\buffer\constant_buffer.cpp" />
     <ClCompile Include="source\gpu\buffer\gpu_buffer.cpp" />
     <ClCompile Include="source\gpu\gpu.cpp" />
@@ -40,17 +36,21 @@
     <ClCompile Include="source\graphics\color.cpp" />
     <ClCompile Include="source\graphics\image.cpp" />
     <ClCompile Include="source\graphics\video.cpp" />
+    <ClCompile Include="source\render\camera.cpp" />
+    <ClCompile Include="source\render\plane.cpp" />
+    <ClCompile Include="source\render\ray.cpp" />
     <ClCompile Include="source\render\sphere.cpp" />
+    <ClCompile Include="source\render\triangle.cpp" />
+    <ClCompile Include="source\render\vertex.cpp" />
+    <ClCompile Include="source\utility\async.cpp" />
     <ClCompile Include="source\utility\console.cpp" />
     <ClCompile Include="source\utility\encrypter.cpp" />
     <ClCompile Include="source\utility\file.cpp" />
     <ClCompile Include="source\utility\random.cpp" />
     <ClCompile Include="source\utility\socket.cpp" />
-    <ClCompile Include="source\utility\async.cpp" />
     <ClCompile Include="source\utility\strings.cpp" />
     <ClCompile Include="source\utility\time.cpp" />
     <ClCompile Include="source\utility\web.cpp" />
-    <ClCompile Include="source\render\camera.cpp" />
     <ClCompile Include="source\window\double_buffer.cpp" />
     <ClCompile Include="source\window\key.cpp" />
     <ClCompile Include="source\window\keys.cpp" />
@@ -60,11 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gpu\dx_types.h" />
-    <ClInclude Include="source\render\plane.h" />
-    <ClInclude Include="source\render\ray.h" />
-    <ClInclude Include="source\render\sphere.h" />
-    <ClInclude Include="source\render\triangle.h" />
-    <ClInclude Include="source\render\vertex.h" />
     <ClInclude Include="source\gpu\gpu.h" />
     <ClInclude Include="source\graphics\color.h" />
     <ClInclude Include="source\graphics\image.h" />
@@ -78,16 +73,21 @@
     <ClInclude Include="source\math\vector2.h" />
     <ClInclude Include="source\math\vector3.h" />
     <ClInclude Include="source\math\vector4.h" />
+    <ClInclude Include="source\render\camera.h" />
+    <ClInclude Include="source\render\plane.h" />
+    <ClInclude Include="source\render\ray.h" />
+    <ClInclude Include="source\render\sphere.h" />
+    <ClInclude Include="source\render\triangle.h" />
+    <ClInclude Include="source\render\vertex.h" />
+    <ClInclude Include="source\utility\async.h" />
     <ClInclude Include="source\utility\console.h" />
     <ClInclude Include="source\utility\encrypter.h" />
     <ClInclude Include="source\utility\file.h" />
     <ClInclude Include="source\utility\random.h" />
     <ClInclude Include="source\utility\socket.h" />
-    <ClInclude Include="source\utility\async.h" />
     <ClInclude Include="source\utility\strings.h" />
     <ClInclude Include="source\utility\time.h" />
     <ClInclude Include="source\utility\web.h" />
-    <ClInclude Include="source\render\camera.h" />
     <ClInclude Include="source\window\double_buffer.h" />
     <ClInclude Include="source\window\key.h" />
     <ClInclude Include="source\window\keys.h" />
@@ -118,13 +118,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -158,13 +158,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\</OutDir>
-    <IntDir>$(SolutionDir)inter\</IntDir>
+    <OutDir>$(SolutionDir)bin\debug\</OutDir>
+    <IntDir>$(SolutionDir)inter\debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\</OutDir>
-    <IntDir>$(SolutionDir)inter\</IntDir>
+    <OutDir>$(SolutionDir)bin\release\</OutDir>
+    <IntDir>$(SolutionDir)inter\release\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -216,7 +216,7 @@
       <Optimization>Disabled</Optimization>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

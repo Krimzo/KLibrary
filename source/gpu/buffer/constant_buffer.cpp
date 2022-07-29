@@ -3,7 +3,8 @@
 #include "utility/console.h"
 
 
-kl::dx::buffer kl::gpu::newCBuffer(uint byteSize) {
+kl::dx::buffer kl::gpu::newCBuffer(uint byteSize)
+{
 	kl::console::error(byteSize % 16, "Constant buffer size has to be a multiple of 16");
 
 	kl::dx::desc::buffer buffDesc = {};
@@ -15,7 +16,8 @@ kl::dx::buffer kl::gpu::newCBuffer(uint byteSize) {
 	return newBuffer(&buffDesc);
 }
 
-void kl::gpu::setCBufferData(kl::dx::buffer buff, const void* data) {
+void kl::gpu::setCBufferData(kl::dx::buffer buff, const void* data)
+{
 	kl::dx::desc::buffer buffData = {};
 	buff->GetDesc(&buffData);
 
@@ -25,9 +27,11 @@ void kl::gpu::setCBufferData(kl::dx::buffer buff, const void* data) {
 	m_Context->Unmap(buff, NULL);
 }
 
-void kl::gpu::bindVertexCBuffer(kl::dx::buffer buff, uint slot) {
+void kl::gpu::bindVertexCBuffer(kl::dx::buffer buff, uint slot)
+{
 	m_Context->VSSetConstantBuffers(slot, 1, &buff);
 }
-void kl::gpu::bindPixelCBuffer(kl::dx::buffer buff, uint slot) {
+void kl::gpu::bindPixelCBuffer(kl::dx::buffer buff, uint slot)
+{
 	m_Context->PSSetConstantBuffers(slot, 1, &buff);
 }

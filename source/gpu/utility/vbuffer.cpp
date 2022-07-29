@@ -3,7 +3,8 @@
 #include "utility/file.h"
 
 
-kl::dx::mesh kl::gpu::newVertexBuffer(const std::vector<kl::vertex>& vertexData) {
+kl::dx::mesh kl::gpu::newVertexBuffer(const std::vector<kl::vertex>& vertexData)
+{
 	kl::dx::desc::buffer bufferDesc = {};
 	bufferDesc.ByteWidth = uint(vertexData.size() * sizeof(kl::vertex));
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -14,11 +15,13 @@ kl::dx::mesh kl::gpu::newVertexBuffer(const std::vector<kl::vertex>& vertexData)
 
 	return newBuffer(&bufferDesc, &bufferData);
 }
-kl::dx::mesh kl::gpu::newVertexBuffer(const std::string& filePath, bool flipZ) {
+kl::dx::mesh kl::gpu::newVertexBuffer(const std::string& filePath, bool flipZ)
+{
 	return newVertexBuffer(kl::file::parseMesh(filePath, flipZ));
 }
 
-void kl::gpu::draw(kl::dx::mesh mesh) {
+void kl::gpu::draw(kl::dx::mesh mesh)
+{
 	const uint stride = sizeof(kl::vertex); uint offset = 0;
 	m_Context->IASetVertexBuffers(0, 1, &mesh, &stride, &offset);
 

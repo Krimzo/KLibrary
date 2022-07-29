@@ -3,9 +3,11 @@
 #include <windows.h>
 
 
-void kl::keys::update(int64 key, bool state) {
-	switch (key) {
-		// Letters
+void kl::keys::update(int64 key, bool state)
+{
+	switch (key)
+	{
+// Letters
 	case 'Q':
 		q.update(state);
 		break;
@@ -220,7 +222,8 @@ void kl::keys::update(int64 key, bool state) {
 	}
 }
 
-void kl::keys::update() const {
+void kl::keys::update() const
+{
 	q.update();
 	w.update();
 	e.update();

@@ -4,8 +4,10 @@
 #include "math/math.h"
 
 
-namespace kl {
-	struct keys {
+namespace kl
+{
+	struct keys
+	{
 		void update(int64 key, bool state);
 		void update() const;
 
@@ -88,4 +90,5 @@ namespace kl {
 		// Unknown :)
 		int64 unknown = 0;
 	};
+	using keyboard = keys;
 }

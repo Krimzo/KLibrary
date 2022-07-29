@@ -7,8 +7,10 @@
 #include "math/math.h"
 
 
-namespace kl {
-	class image {
+namespace kl
+{
+	class image
+	{
 	private:
 		kl::uint2 m_Size;
 		std::vector<kl::color> m_Pixels;

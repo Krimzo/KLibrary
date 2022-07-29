@@ -3,7 +3,8 @@
 #include <d3d11.h>
 
 
-namespace kl::dx {
+namespace kl::dx
+{
 	using device = ID3D11Device*;
 	using context = ID3D11DeviceContext*;
 	using chain = IDXGISwapChain*;
@@ -12,19 +13,22 @@ namespace kl::dx {
 	using buffer = ID3D11Buffer*;
 	using texture = ID3D11Texture2D*;
 
-	namespace desc {
+	namespace desc
+	{
 		using buffer = D3D11_BUFFER_DESC;
 		using texture = D3D11_TEXTURE2D_DESC;
 		using subres = D3D11_SUBRESOURCE_DATA;
 	}
 
-	namespace state {
+	namespace state
+	{
 		using raster = ID3D11RasterizerState*;
 		using depth = ID3D11DepthStencilState*;
 		using sampler = ID3D11SamplerState*;
 		using blend = ID3D11BlendState*;
 
-		namespace desc {
+		namespace desc
+		{
 			using raster = D3D11_RASTERIZER_DESC;
 			using depth = D3D11_DEPTH_STENCIL_DESC;
 			using sampler = D3D11_SAMPLER_DESC;
@@ -32,13 +36,15 @@ namespace kl::dx {
 		}
 	}
 
-	namespace view {
+	namespace view
+	{
 		using target = ID3D11RenderTargetView*;
 		using depth = ID3D11DepthStencilView*;
 		using shader = ID3D11ShaderResourceView*;
 		using access = ID3D11UnorderedAccessView*;
 
-		namespace desc {
+		namespace desc
+		{
 			using target = D3D11_RENDER_TARGET_VIEW_DESC;
 			using depth = D3D11_DEPTH_STENCIL_VIEW_DESC;
 			using shader = D3D11_SHADER_RESOURCE_VIEW_DESC;
@@ -46,7 +52,8 @@ namespace kl::dx {
 		}
 	}
 
-	namespace shader {
+	namespace shader
+	{
 		using vertex = ID3D11VertexShader*;
 		using pixel = ID3D11PixelShader*;
 		using geometry = ID3D11GeometryShader*;
@@ -56,7 +63,8 @@ namespace kl::dx {
 
 		using input = ID3D11InputLayout*;
 
-		namespace desc {
+		namespace desc
+		{
 			using input = D3D11_INPUT_ELEMENT_DESC;
 		}
 	}

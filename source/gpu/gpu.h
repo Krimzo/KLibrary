@@ -14,28 +14,43 @@
 #include "graphics/image.h"
 
 
+inline constexpr nullptr_t null = nullptr;
 inline constexpr uint KL_CBUFFER_PREDEFINED_SIZE = 64;
 
-namespace kl {
-	template<typename T> using reference = std::shared_ptr<T>;
-	template<typename T, typename... Args> inline kl::reference<T> make(const Args&... args) {
+namespace kl
+{
+	template<typename T>
+	using ref = std::shared_ptr<T>;
+
+	template<typename T, typename... Args>
+	inline kl::ref<T> make(const Args&... args)
+	{
 		return std::make_shared<T>(args...);
 	}
 }
 
-namespace kl {
-	struct shaders {
+namespace kl
+{
+	struct shaders
+	{
 		kl::dx::shader::vertex vertexS = nullptr;
 		kl::dx::shader::pixel pixelS = nullptr;
 		kl::dx::shader::input inLayout = nullptr;
 
-		shaders() {}
-		shaders(kl::dx::shader::vertex vertexS, kl::dx::shader::pixel pixelS, kl::dx::shader::input inLayout) : vertexS(vertexS), pixelS(pixelS), inLayout(inLayout) {}
+		shaders()
+		{
+		}
+		shaders(kl::dx::shader::vertex vertexS, kl::dx::shader::pixel pixelS, kl::dx::shader::input inLayout)
+			: vertexS(vertexS), pixelS(pixelS), inLayout(inLayout)
+		{
+		}
 	};
 }
 
-namespace kl {
-	class gpu {
+namespace kl
+{
+	class gpu
+	{
 	private:
 		kl::dx::device m_Device = nullptr;
 		kl::dx::context m_Context = nullptr;
@@ -67,7 +82,7 @@ namespace kl {
 		void bindTargets(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView = nullptr);
 
 		void clearColor(const kl::float4& color);
-		void clearDepth(float depth);
+		void clearDepth();
 		void clear(const kl::float4& color);
 
 		void swap(bool vSync);
@@ -106,8 +121,12 @@ namespace kl {
 		void setCBufferData(kl::dx::buffer buff, const void* data);
 		void bindVertexCBuffer(kl::dx::buffer buff, uint slot);
 		void bindPixelCBuffer(kl::dx::buffer buff, uint slot);
-		template<typename T> inline bool autoVertexCBuffer(const T& data, uint slot = 0) {
-			if ((!m_CBuffersPredefined) || (sizeof(T) > (KL_CBUFFER_PREDEFINED_SIZE * 16)) || (sizeof(T) % 16)) {
+
+		template<typename T>
+		inline bool autoVertexCBuffer(const T& data, uint slot = 0)
+		{
+			if ((!m_CBuffersPredefined) || (sizeof(T) > (KL_CBUFFER_PREDEFINED_SIZE * 16)) || (sizeof(T) % 16))
+			{
 				return false;
 			}
 			kl::dx::buffer chosenBuffer = m_VertexCBuffers[(sizeof(T) / 16) - 1];
@@ -115,8 +134,12 @@ namespace kl {
 			setCBufferData(chosenBuffer, &data);
 			return true;
 		}
-		template<typename T> inline bool autoPixelCBuffer(const T& data, uint slot = 0) {
-			if ((!m_CBuffersPredefined) || (sizeof(T) > (KL_CBUFFER_PREDEFINED_SIZE * 16)) || (sizeof(T) % 16)) {
+
+		template<typename T>
+		inline bool autoPixelCBuffer(const T& data, uint slot = 0)
+		{
+			if ((!m_CBuffersPredefined) || (sizeof(T) > (KL_CBUFFER_PREDEFINED_SIZE * 16)) || (sizeof(T) % 16))
+			{
 				return false;
 			}
 			kl::dx::buffer chosenBuffer = m_PixelCBuffers[(sizeof(T) / 16) - 1];

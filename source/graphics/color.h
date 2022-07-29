@@ -5,8 +5,10 @@
 
 using byte = unsigned char;
 
-namespace kl {
-	class color {
+namespace kl
+{
+	class color
+	{
 	public:
 		byte b, g, r, a;
 
@@ -29,7 +31,8 @@ namespace kl {
 	std::ostream& operator<<(std::ostream& os, const kl::color& obj);
 
 	// Predefined
-	namespace colors {
+	namespace colors
+	{
 		inline const kl::color defaul = kl::color(204, 204, 204);
 		inline const kl::color black = kl::color(0, 0, 0);
 		inline const kl::color white = kl::color(255, 255, 255);

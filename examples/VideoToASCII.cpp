@@ -1,12 +1,15 @@
 #include "KrimzLib.h"
 
 
-int main(int argc, char** argv) {
+int main(int argc, const char** argv)
+{
 	std::string filePath;
-	if (argc == 2) {
+	if (argc == 2)
+	{
 		filePath = argv[1];
 	}
-	else {
+	else
+	{
 		kl::print<kl::none>("Video file path: ");
 		std::getline(std::cin, filePath);
 	}
@@ -25,7 +28,8 @@ int main(int argc, char** argv) {
 	const uint64 frameCount = video.frameCount();
 	std::vector<std::string> asciiFrames;
 	asciiFrames.reserve(frameCount);
-	while (video.getFrame(videoFrame)) {
+	while (video.getFrame(videoFrame))
+	{
 		asciiFrames.push_back(videoFrame.ascii(consoleSize));
 		kl::console::moveCursor({});
 		kl::print<kl::none>("Processed: ", asciiFrames.size(), "/", frameCount);
@@ -34,8 +38,10 @@ int main(int argc, char** argv) {
 	kl::timer timer;
 	kl::console::clear();
 	const double toWait = video.frameTime();
-	while (true) {
-		for (uint64 i = 0; i < asciiFrames.size(); i++) {
+	while (true)
+	{
+		for (uint64 i = 0; i < asciiFrames.size(); i++)
+		{
 			timer.reset();
 			kl::console::dump(asciiFrames[i]);
 			kl::console::title(kl::format(i + 1, "/", asciiFrames.size()));

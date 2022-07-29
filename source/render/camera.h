@@ -5,8 +5,10 @@
 #undef near
 #undef far
 
-namespace kl {
-	class camera {
+namespace kl
+{
+	class camera
+	{
 	private:
 		kl::float3 m_Forward = { 0.0f, 0.0f, 1.0f };
 		kl::float3 m_Right = { 1.0f, 0.0f, 0.0f };
@@ -20,6 +22,12 @@ namespace kl {
 		float far = 500.0f;
 		float speed = 2.0f;
 		float sens = 0.1f;
+
+		template<typename T>
+		void resize(const kl::vector2<T>& size)
+		{
+			aspect = float(size.x) / float(size.y);
+		}
 
 		void forward(const kl::float3& dir);
 		kl::float3 forward() const;

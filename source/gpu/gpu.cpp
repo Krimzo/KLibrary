@@ -5,17 +5,14 @@
 #include <fstream>
 #include <vector>
 
-#ifdef KL_USING_IMGUI
-#include "imgui_impl_dx11.h"
-#endif
-
 #include "render/vertex.h"
 #include "utility/console.h"
 
 #pragma comment (lib, "d3d11.lib")
 
 
-kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : m_CBuffersPredefined(predefineCBuffers) {
+kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : m_CBuffersPredefined(predefineCBuffers)
+{
 	RECT clientArea = {};
 	GetClientRect(hwnd, &clientArea);
 
@@ -53,26 +50,22 @@ kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : m_CBuffersPredefined(predefine
 	viewport({ int(clientArea.left), int(clientArea.top) }, { uint(clientArea.right), uint(clientArea.bottom) });
 	bind(newRasterState(false, false));
 
-	if (predefineCBuffers) {
-		for (uint i = 0; i < KL_CBUFFER_PREDEFINED_SIZE; i++) {
+	if (predefineCBuffers)
+	{
+		for (uint i = 0; i < KL_CBUFFER_PREDEFINED_SIZE; i++)
+		{
 			m_VertexCBuffers[i] = newCBuffer((i + 1) * 16);
 			m_PixelCBuffers[i] = newCBuffer((i + 1) * 16);
 		}
 	}
-
-#ifdef KL_USING_IMGUI
-	ImGui_ImplDX11_Init(m_Device, m_Context);
-#endif
 }
 
-kl::gpu::~gpu() {
-#ifdef KL_USING_IMGUI
-	ImGui_ImplDX11_Shutdown();
-#endif
-
+kl::gpu::~gpu()
+{
 	m_Chain->SetFullscreenState(false, nullptr);
 
-	for (auto& ref : m_Children) {
+	for (auto& ref : m_Children)
+	{
 		ref->Release();
 	}
 	m_Children.clear();
@@ -81,19 +74,24 @@ kl::gpu::~gpu() {
 	m_Device->Release();
 }
 
-kl::dx::device kl::gpu::dev() {
+kl::dx::device kl::gpu::dev()
+{
 	return m_Device;
 }
-kl::dx::context kl::gpu::con() {
+kl::dx::context kl::gpu::con()
+{
 	return m_Context;
 }
 
-void kl::gpu::regenInternal(const kl::uint2& size) {
+void kl::gpu::regenInternal(const kl::uint2& size)
+{
 	bindTargets({});
-	if (m_FrameBuffer) {
+	if (m_FrameBuffer)
+	{
 		destroy(m_FrameBuffer);
 	}
-	if (m_DepthBuffer) {
+	if (m_DepthBuffer)
+	{
 		destroy(m_DepthBuffer);
 	}
 	m_Chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
@@ -118,10 +116,12 @@ void kl::gpu::regenInternal(const kl::uint2& size) {
 	bindInternal();
 }
 
-void kl::gpu::viewport(const kl::uint2& size) {
+void kl::gpu::viewport(const kl::uint2& size)
+{
 	viewport({}, size);
 }
-void kl::gpu::viewport(const kl::int2& pos, const kl::uint2& size) {
+void kl::gpu::viewport(const kl::int2& pos, const kl::uint2& size)
+{
 	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX = float(pos.x);
 	viewport.TopLeftY = float(pos.y);
@@ -132,35 +132,44 @@ void kl::gpu::viewport(const kl::int2& pos, const kl::uint2& size) {
 	m_Context->RSSetViewports(1, &viewport);
 }
 
-void kl::gpu::bindInternal(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView) {
+void kl::gpu::bindInternal(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView)
+{
 	std::vector<kl::dx::view::target> combinedTargets = { m_FrameBuffer };
-	for (auto& target : targets) {
+	for (auto& target : targets)
+	{
 		combinedTargets.push_back(target);
 	}
 	m_Context->OMSetRenderTargets(uint(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : m_DepthBuffer);
 }
 
-void kl::gpu::bindTargets(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView) {
-	m_Context->OMSetRenderTargets(uint(targets.size()), &targets[0], depthView ? depthView : m_DepthBuffer);
+void kl::gpu::bindTargets(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView)
+{
+	m_Context->OMSetRenderTargets(uint(targets.size()), targets.data(), depthView ? depthView : m_DepthBuffer);
 }
 
-void kl::gpu::clearColor(const kl::float4& color) {
+void kl::gpu::clearColor(const kl::float4& color)
+{
 	clear(m_FrameBuffer, color);
 }
-void kl::gpu::clearDepth(float depth) {
-	clear(m_DepthBuffer, depth);
+void kl::gpu::clearDepth()
+{
+	clear(m_DepthBuffer);
 }
-void kl::gpu::clear(const kl::float4& color) {
+void kl::gpu::clear(const kl::float4& color)
+{
 	clear(m_FrameBuffer, color);
 	clear(m_DepthBuffer);
 }
 
-void kl::gpu::swap(bool vSync) {
+void kl::gpu::swap(bool vSync)
+{
 	m_Chain->Present(vSync, NULL);
 }
 
-bool kl::gpu::destroy(IUnknown* child) {
-	if (m_Children.contains(child)) {
+bool kl::gpu::destroy(IUnknown* child)
+{
+	if (m_Children.contains(child))
+	{
 		child->Release();
 		m_Children.erase(child);
 		return true;

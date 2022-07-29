@@ -13,8 +13,10 @@
 #include "graphics/image.h"
 
 
-namespace kl {
-	class video {
+namespace kl
+{
+	class video
+	{
 	private:
 		IMFSourceReader* m_Reader = nullptr;
 

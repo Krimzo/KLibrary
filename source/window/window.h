@@ -11,12 +11,15 @@
 #include "math/math.h"
 
 
-namespace kl {
-	namespace screen {
+namespace kl
+{
+	namespace screen
+	{
 		inline kl::uint2 size = kl::int2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	}
 
-	class window {
+	class window
+	{
 	private:
 		HINSTANCE m_Instance = GetModuleHandleA(nullptr);
 		HWND m_Window = nullptr;
@@ -35,10 +38,14 @@ namespace kl {
 		kl::keys keys;
 		kl::mouse mouse;
 
-		std::function<void(void)> start = []() {};
-		std::function<void(void)> update = []() {};
-		std::function<void(void)> end = []() {};
-		std::function<void(const kl::uint2&)> resize = [](const kl::uint2&) {};
+		std::function<void(void)> start = []()
+		{};
+		std::function<void(void)> update = []()
+		{};
+		std::function<void(void)> end = []()
+		{};
+		std::function<void(const kl::uint2&)> resize = [](const kl::uint2&)
+		{};
 
 		window();
 		window(const kl::window&) = delete;

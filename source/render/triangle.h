@@ -4,8 +4,10 @@
 #include "render/vertex.h"
 
 
-namespace kl {
-	struct triangle {
+namespace kl
+{
+	struct triangle
+	{
 		kl::vertex a, b, c;
 
 		triangle();

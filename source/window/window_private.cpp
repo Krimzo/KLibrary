@@ -7,19 +7,22 @@
 #endif
 
 
-void kl::window::registerWindowClass(const std::string& name) {
+void kl::window::registerWindowClass(const std::string& name)
+{
 	WNDCLASSEXA windowClass = {};
 	windowClass.cbSize = sizeof(WNDCLASSEXA);
 	windowClass.style = CS_OWNDC;
-	windowClass.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		return ((kl::window*)GetWindowLongPtrA(hwnd, GWLP_USERDATA))->WndProc(hwnd, msg, wParam, lParam);
+	windowClass.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		return ((kl::window*) GetWindowLongPtrA(hwnd, GWLP_USERDATA))->WndProc(hwnd, msg, wParam, lParam);
 	};
 	windowClass.hInstance = m_Instance;
 	windowClass.lpszClassName = name.c_str();
 	kl::console::error(!RegisterClassExA(&windowClass), "Failed to register window class");
 }
 
-void kl::window::createWindow(const kl::uint2& size, const std::string& name, bool resizeable) {
+void kl::window::createWindow(const kl::uint2& size, const std::string& name, bool resizeable)
+{
 	m_WindowStyle = resizeable ? WS_OVERLAPPEDWINDOW : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 	RECT adjustedWindowSize = { 0, 0, LONG(size.x), LONG(size.y) };
 	AdjustWindowRect(&adjustedWindowSize, m_WindowStyle, false);
@@ -38,8 +41,10 @@ void kl::window::createWindow(const kl::uint2& size, const std::string& name, bo
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #endif
 
-LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	switch (msg) {
+LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
 	case WM_SIZE:
 		resize(kl::int2(LOWORD(lParam), HIWORD(lParam)));
 		break;
@@ -47,19 +52,23 @@ LRESULT CALLBACK kl::window::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 	return DefWindowProcA(hwnd, msg, wParam, lParam);
 }
 
-void kl::window::handleMessage(MSG& msg) {
+void kl::window::handleMessage(MSG& msg)
+{
 #ifdef KL_USING_IMGUI
 	TranslateMessage(&msg);
-	if (ImGui_ImplWin32_WndProcHandler(msg.hwnd, msg.message, msg.wParam, msg.lParam)) {
+	if (ImGui_ImplWin32_WndProcHandler(msg.hwnd, msg.message, msg.wParam, msg.lParam))
+	{
 		return;
 	}
 #endif
 
 	// Default
-	switch (msg.message) {
+	switch (msg.message)
+	{
 #ifdef KL_USING_IMGUI
 	case WM_CHAR:
-		if (*(short*)&msg.lParam > 1) {
+		if (*(short*) &msg.lParam > 1)
+		{
 			ImGui::GetIO().AddInputCharacter(uint(msg.wParam));
 		}
 		break;
