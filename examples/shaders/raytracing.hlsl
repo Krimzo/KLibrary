@@ -21,8 +21,8 @@ struct Plane
 
 struct Ray
 {
-	float3 origin;
-	float3 direction;
+    float3 origin;
+    float3 direction;
 	
 	bool intersectSphere(Sphere sphere, out float3 outInter)
 	{
@@ -86,15 +86,15 @@ float3 TraceRay(Ray ray);
 
 float4 pShader(float4 screen : SV_POSITION) : SV_TARGET
 {
-	float2 ndc = float2(screen.x, frameSize.y - screen.y) / float2(frameSize.x, frameSize.y);
-	ndc *= 2.0f;
-	ndc -= 1.0f;
+    float2 ndc = float2(screen.x, frameSize.y - screen.y) / float2(frameSize.x, frameSize.y);
+    ndc *= 2.0f;
+    ndc -= 1.0f;
 	
-	float4 raydir = mul(float4(ndc, 1.0f, 1.0f), inverseCamera);
-	raydir /= raydir.w;
+    float4 raydir = mul(float4(ndc, 1.0f, 1.0f), inverseCamera);
+    raydir /= raydir.w;
 	
-	Ray ray = { cameraPosition.xyz, normalize(raydir.xyz) };
-	return float4(TraceRay(ray), 1.0f);
+    Ray ray = { cameraPosition.xyz, normalize(raydir.xyz) };
+    return float4(TraceRay(ray), 1.0f);
 }
 
 bool SpherePointInShadow(Plane plane, float3 spherePoint, int sphereIndex)
@@ -138,7 +138,7 @@ bool PlanePointInShadow(float3 planePoint)
 
 float3 TraceRay(Ray ray)
 {
-	Plane xzPlane = { float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(0.2f, 0.2f, 0.2f) };
+	Plane xzPlane = { float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(0.15f, 0.15f, 0.15f) };
 	
 	float3 intersectPoint;
 	float intersectDistance = 3.14e38f;
@@ -166,31 +166,34 @@ float3 TraceRay(Ray ray)
 		}
 	}
 	
+    const float3 skyTopColor = { 0.03f, 0.04f, 0.05f };
+    const float3 skyBottomColor = { 0.08f, 0.09f, 0.09f };
+    const float3 sunSkyColor = { 0.98f, 0.9f, 0.76f };
+	
+    const float2 sunRadiuses = { 0.75f, 1.55f };
+    const float2 lightRadiuses = { 40.0f, 50.0f };
+	
 	float3 pixel;
 	if (intersectedSphereID == -1)
 	{
-		const float sunIntensity = dot(-sunDirection.xyz, xzPlane.normal);
-		pixel = xzPlane.color * sunIntensity * !PlanePointInShadow(intersectPoint);
-	}
+		const float lightIntensity = dot(-sunDirection.xyz, xzPlane.normal);
+        const float centerDistance = length(intersectPoint);
+        const float lightValue = 1.0f - smoothstep(lightRadiuses.x, lightRadiuses.y, centerDistance);
+        pixel = xzPlane.color * lightIntensity * lightValue * !PlanePointInShadow(intersectPoint) + skyTopColor;
+    }
 	else if (intersectedSphereID > -1)
 	{
-		const float3 intersectNormal = normalize(intersectPoint - spheres[intersectedSphereID].center);
+        const float3 intersectNormal = normalize(intersectPoint - spheres[intersectedSphereID].center);
 		const float sunIntensity = dot(-sunDirection.xyz, intersectNormal);
 		pixel = spheres[intersectedSphereID].color.xyz * sunIntensity * !SpherePointInShadow(xzPlane, intersectPoint, intersectedSphereID);
 	}
 	else
 	{
-		const float3 skyTopColor = { 0.45f, 0.75f, 0.88f };
-		const float3 skyBottomColor = { 0.78f, 0.78f, 0.78f };
-		const float3 sunSkyColor = { 0.98f, 0.9f, 0.76f };
-		const float2 sunRadiuses = { 0.75f, 1.55f };
-		
 		const float skyMixValue = (dot(-ray.direction, float3(0.0f, 1.0f, 0.0f)) + 1.0f) * 0.5f;
 		pixel = lerp(skyTopColor, skyBottomColor, skyMixValue);
 		
-		const float sunAngle = acos(dot(ray.direction, -sunDirection.xyz)) * 57.2957795131f;
-		const float sunMixValue = (sunAngle - sunRadiuses.x) / (sunRadiuses.y - sunRadiuses.x);
-		pixel = lerp(sunSkyColor, pixel, min(max(sunMixValue, 0.0f), 1.0f));
-	}
+        const float sunAngle = degrees(acos(dot(ray.direction, -sunDirection.xyz)));
+        pixel = lerp(sunSkyColor, pixel, smoothstep(sunRadiuses.x, sunRadiuses.y, sunAngle));
+    }
 	return pixel;
 }
