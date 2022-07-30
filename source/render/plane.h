@@ -3,10 +3,8 @@
 #include "math/math.h"
 
 
-namespace kl
-{
-	struct plane
-	{
+namespace kl {
+	struct plane {
 		kl::float3 normal;
 		kl::float3 point;
 

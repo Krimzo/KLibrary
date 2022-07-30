@@ -4,28 +4,20 @@
 #include "math/vector4.h"
 
 
-namespace kl
-{
+namespace kl {
 	template<typename T>
-	struct matrix4x4 : public kl::matrix<T, 4, 4>
-	{
-		matrix4x4()
-		{
-		}
-		matrix4x4(const kl::vector4<T>& r0, const kl::vector4<T>& r1, const kl::vector4<T>& r2, const kl::vector4<T>& r3)
-		{
+	struct matrix4x4 : public kl::matrix<T, 4, 4> {
+		matrix4x4() {}
+		matrix4x4(const kl::vector4<T>& r0, const kl::vector4<T>& r1, const kl::vector4<T>& r2, const kl::vector4<T>& r3) {
 			(*this)[0] = r0.x; (*this)[1] = r0.y; (*this)[2] = r0.z; (*this)[3] = r0.w;
 			(*this)[4] = r1.x; (*this)[5] = r1.y; (*this)[6] = r1.z; (*this)[7] = r1.w;
 			(*this)[8] = r2.x; (*this)[9] = r2.y; (*this)[10] = r2.z; (*this)[11] = r2.w;
 			(*this)[12] = r3.x; (*this)[13] = r3.y; (*this)[14] = r3.z; (*this)[15] = r3.w;
 		}
-		matrix4x4(const kl::matrix<T, 4, 4>& obj) : kl::matrix<T, 4, 4>(obj)
-		{
-		}
+		matrix4x4(const kl::matrix<T, 4, 4>& obj) : kl::matrix<T, 4, 4>(obj) {}
 
 		// Translation matrix
-		static kl::matrix4x4<T> translation(const kl::vector3<T>& val)
-		{
+		static kl::matrix4x4<T> translation(const kl::vector3<T>& val) {
 			kl::matrix4x4<T> temp;
 			temp[3] = val.x;
 			temp[7] = val.y;
@@ -34,8 +26,7 @@ namespace kl
 		}
 
 		// Rotation matrix
-		static kl::matrix4x4<T> rotation(const kl::vector3<T>& val)
-		{
+		static kl::matrix4x4<T> rotation(const kl::vector3<T>& val) {
 			const T xRad = kl::to::radians(val.x);
 			const T xSin = std::sin(xRad);
 			const T xCos = std::cos(xRad);
@@ -67,8 +58,7 @@ namespace kl
 		}
 
 		// Scaling matrix
-		static kl::matrix4x4<T> scaling(const kl::vector3<T>& size)
-		{
+		static kl::matrix4x4<T> scaling(const kl::vector3<T>& size) {
 			kl::matrix4x4<T> temp;
 			temp[0] = size.x;
 			temp[5] = size.y;
@@ -77,8 +67,7 @@ namespace kl
 		}
 
 		// Perspective projection matrix
-		static kl::matrix4x4<T> perspective(T fov, T ar, T zNear, T zFar)
-		{
+		static kl::matrix4x4<T> perspective(T fov, T ar, T zNear, T zFar) {
 			const T tanHalf = T(1.0f / tan(kl::to::radians(fov) * 0.5f));
 			kl::matrix4x4<T> temp;
 			temp[0] = tanHalf / ar;
@@ -91,8 +80,7 @@ namespace kl
 		}
 
 		// Orthographics projection matrix
-		static kl::matrix4x4<T> orthographic(T left, T right, T bottom, T top, T nearZ, T farZ)
-		{
+		static kl::matrix4x4<T> orthographic(T left, T right, T bottom, T top, T nearZ, T farZ) {
 			kl::matrix4x4<T> temp;
 			temp[0] = T(2.0f) / (right - left);
 			temp[5] = T(2.0f) / (top - bottom);
@@ -104,8 +92,7 @@ namespace kl
 		}
 
 		// "Look at" matrix
-		static kl::matrix4x4<T> lookAt(const kl::vector3<T>& position, const kl::vector3<T>& target, const kl::vector3<T>& up)
-		{
+		static kl::matrix4x4<T> lookAt(const kl::vector3<T>& position, const kl::vector3<T>& target, const kl::vector3<T>& up) {
 			const kl::vector3<T> f = (target - position).normalize();
 			const kl::vector3<T> s = up.cross(f).normalize();
 			const kl::vector3<T> u = f.cross(s);
@@ -127,8 +114,7 @@ namespace kl
 	};
 }
 
-namespace kl
-{
+namespace kl {
 	using float4x4 = kl::matrix4x4<float>;
 	using double4x4 = kl::matrix4x4<double>;
 	using int4x4 = kl::matrix4x4<int>;

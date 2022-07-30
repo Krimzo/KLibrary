@@ -3,8 +3,7 @@
 #include "utility/console.h"
 
 
-kl::dx::texture kl::gpu::newTextureBB()
-{
+kl::dx::texture kl::gpu::newTextureBB() {
 	kl::dx::texture buffAddrs = nullptr;
 	m_Chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &buffAddrs);
 	kl::console::error(!buffAddrs, "Failed to create backbuffer texture");
@@ -13,8 +12,7 @@ kl::dx::texture kl::gpu::newTextureBB()
 	return buffAddrs;
 }
 
-kl::dx::texture kl::gpu::newTexture(kl::dx::desc::texture* desc, kl::dx::desc::subres* subData)
-{
+kl::dx::texture kl::gpu::newTexture(kl::dx::desc::texture* desc, kl::dx::desc::subres* subData) {
 	kl::dx::texture tex = nullptr;
 	m_Device->CreateTexture2D(desc, subData, &tex);
 	kl::console::error(!tex, "Failed to create texture");
@@ -23,8 +21,7 @@ kl::dx::texture kl::gpu::newTexture(kl::dx::desc::texture* desc, kl::dx::desc::s
 	return tex;
 }
 
-kl::dx::texture kl::gpu::newTexture(const kl::image& img, bool enableUnorderedAccess)
-{
+kl::dx::texture kl::gpu::newTexture(const kl::image& img, bool enableUnorderedAccess) {
 	const kl::image flipped = img.flipV();
 
 	kl::dx::desc::texture texDesc = {};
@@ -44,8 +41,7 @@ kl::dx::texture kl::gpu::newTexture(const kl::image& img, bool enableUnorderedAc
 	return newTexture(&texDesc, &texData);
 }
 
-kl::dx::texture kl::gpu::newTexture(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom)
-{
+kl::dx::texture kl::gpu::newTexture(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
 	kl::console::error(!(front.size() == back.size() && front.size() == left.size() && front.size() == right.size() && front.size() == top.size() && front.size() == bottom.size()),
 		"Sizes of the 6 given images do not match");
 
@@ -72,8 +68,7 @@ kl::dx::texture kl::gpu::newTexture(const kl::image& front, const kl::image& bac
 	return newTexture(&texDesc, texData);
 }
 
-kl::dx::texture kl::gpu::newTextureST(kl::dx::texture tex, const kl::uint2& size)
-{
+kl::dx::texture kl::gpu::newTextureST(kl::dx::texture tex, const kl::uint2& size) {
 	kl::dx::desc::texture oldDesc = {};
 	tex->GetDesc(&oldDesc);
 

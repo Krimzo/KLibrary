@@ -5,10 +5,8 @@
 #include "math/math.h"
 
 
-namespace kl
-{
-	namespace time
-	{
+namespace kl {
+	namespace time {
 		int64 get();
 		int64 frequency();
 		float calculate(int64 start, int64 end);
@@ -17,8 +15,7 @@ namespace kl
 		void wait(float seconds);
 		bool sleep(float seconds);
 
-		struct date
-		{
+		struct date {
 			int year;
 			int month;
 			int day;
@@ -26,8 +23,7 @@ namespace kl
 			int minute;
 			int second;
 
-			date()
-			{
+			date() {
 				int64 time = std::time(nullptr);
 				std::tm now = {};
 				localtime_s(&now, &time);
@@ -44,8 +40,7 @@ namespace kl
 		std::ostream& operator<<(std::ostream& stream, const date& date);
 	}
 
-	class timer
-	{
+	class timer {
 		int64 m_IntervalStart;
 		int64 m_IntervalEnd;
 		int64 m_ElapsedStart;
@@ -58,16 +53,14 @@ namespace kl
 		void newInterval();
 
 		template<typename T = float>
-		T interval() const
-		{
+		T interval() const {
 			return T(kl::time::calculate(m_IntervalStart, m_IntervalEnd));
 		}
 
 		void newElapsed();
 
 		template<typename T = float>
-		T elapsed() const
-		{
+		T elapsed() const {
 			return T(kl::time::calculate(m_ElapsedStart, kl::time::get()));
 		}
 	};

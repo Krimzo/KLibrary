@@ -1,8 +1,7 @@
 #include "KrimzLib.h"
 
 
-void Server()
-{
+void Server() {
 	kl::socket server(kl::socket::self, 1709);
 
 	server.listen(1);
@@ -11,8 +10,7 @@ void Server()
 	client.send<kl::float3>({ 1.0f, 2.0f, 3.0f });
 }
 
-void Client()
-{
+void Client() {
 	kl::socket client(kl::socket::self, 1709);
 
 	client.connect();
@@ -22,8 +20,7 @@ void Client()
 	kl::print("Result: ", res);
 }
 
-int main()
-{
+int main() {
 	kl::socket::init();
 
 	std::thread(Server).detach();

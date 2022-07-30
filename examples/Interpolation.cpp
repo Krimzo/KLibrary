@@ -3,8 +3,7 @@
 
 constexpr float fpsLimit = 165.0f;
 
-int main()
-{
+int main() {
 	kl::window window;
 	kl::image frame(kl::uint2(900, 900));
 	kl::timer timer;
@@ -25,31 +24,26 @@ int main()
 	const kl::float4 t1Consts = T1.constants();
 	const kl::float4 t2Consts = T2.constants();
 
-	window.update = [&]()
-	{
+	window.update = [&]() {
 		timer.reset();
 
 		static uint frameInd = 0;
-		for (uint x = frameInd - frame.height(), y = 0; y < frame.height(); x++, y++)
-		{
+		for (uint x = frameInd - frame.height(), y = 0; y < frame.height(); x++, y++) {
 			const kl::float3 t1Weights = T1.weights(t1Consts, { x, y });
 			const kl::float3 t2Weights = T2.weights(t2Consts, { x, y });
 
 			kl::color pixel;
-			if (T1.in(t1Weights))
-			{
+			if (T1.in(t1Weights)) {
 				pixel.r = byte(T1.interpolate(t1Weights, { colA.r, colB.r, colC.r }));
 				pixel.g = byte(T1.interpolate(t1Weights, { colA.g, colB.g, colC.g }));
 				pixel.b = byte(T1.interpolate(t1Weights, { colA.b, colB.b, colC.b }));
 			}
-			else if (T2.in(t2Weights))
-			{
+			else if (T2.in(t2Weights)) {
 				pixel.r = byte(T2.interpolate(t2Weights, { colA.r, colD.r, colC.r }));
 				pixel.g = byte(T2.interpolate(t2Weights, { colA.g, colD.g, colC.g }));
 				pixel.b = byte(T2.interpolate(t2Weights, { colA.b, colD.b, colC.b }));
 			}
-			else
-			{
+			else {
 				pixel = kl::colors::gray;
 			}
 			frame.pixel({ x, y }, pixel);
@@ -64,11 +58,9 @@ int main()
 		static const float timeToSleep = 1.0f / fpsLimit;
 		while (timer.elapsed() < timeToSleep);
 
-		if (++frameInd == frame.width() + frame.height())
-		{
+		if (++frameInd == frame.width() + frame.height()) {
 			window.title("Finished!");
-			window.update = []()
-			{};
+			window.update = []() {};
 		}
 	};
 

@@ -6,10 +6,8 @@
 #include "math/math.h"
 
 
-namespace kl
-{
-	class socket
-	{
+namespace kl {
+	class socket {
 	public:
 		static void init();
 		static void uninit();
@@ -42,14 +40,12 @@ namespace kl
 		int receive(void* buff, uint byteSize) const;
 
 		template<typename T>
-		int send(const T& obj) const
-		{
+		int send(const T& obj) const {
 			return send(&obj, sizeof(T));
 		}
 
 		template<typename T>
-		int receive(T& obj) const
-		{
+		int receive(T& obj) const {
 			return receive(&obj, sizeof(T));
 		}
 	};

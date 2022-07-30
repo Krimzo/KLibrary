@@ -3,10 +3,8 @@
 #include "math/math.h"
 
 
-namespace kl
-{
-	struct sphere
-	{
+namespace kl {
+	struct sphere {
 		kl::float3 center;
 		float radius = 0;
 

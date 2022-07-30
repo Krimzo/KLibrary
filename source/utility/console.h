@@ -4,10 +4,8 @@
 #include "math/math.h"
 
 
-namespace kl
-{
-	namespace console
-	{
+namespace kl {
+	namespace console {
 		void hide();
 		void show();
 		void clear();

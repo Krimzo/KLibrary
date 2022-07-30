@@ -7,10 +7,8 @@
 #include "render/camera.h"
 
 
-namespace kl
-{
-	struct ray
-	{
+namespace kl {
+	struct ray {
 		kl::float3 origin;
 		kl::float3 direction;
 

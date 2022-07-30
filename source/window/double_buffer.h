@@ -5,10 +5,8 @@
 #include "window/window.h"
 
 
-namespace kl
-{
-	class double_buffer
-	{
+namespace kl {
+	class double_buffer {
 	private:
 		kl::image m_Buffer1;
 		kl::image m_Buffer2;
