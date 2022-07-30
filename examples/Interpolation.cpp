@@ -1,7 +1,7 @@
 #include "KrimzLib.h"
 
 
-constexpr double fpsLimit = 165.0;
+constexpr float fpsLimit = 165.0f;
 
 int main()
 {
@@ -61,7 +61,7 @@ int main()
 
 		window.title(kl::format(int((100.0f * frameInd) / (frame.width() + frame.height() - 1)), "%"));
 
-		static const double timeToSleep = 1.0 / fpsLimit;
+		static const float timeToSleep = 1.0f / fpsLimit;
 		while (timer.elapsed() < timeToSleep);
 
 		if (++frameInd == frame.width() + frame.height())

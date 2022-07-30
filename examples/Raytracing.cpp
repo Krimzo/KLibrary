@@ -124,9 +124,10 @@ void Input()
 
 void Phys()
 {
-	for (int i = 0; i < SPHERE_COUNT - 1; i++)
+	for (int i = 0; i < SPHERE_COUNT; i++)
 	{
-		psData.spheres[i].center.y = 5.0f * (std::sin(timer.elapsed() + i) + 1.0f) * 0.5f + 2.0f;
+		float oscilation = (std::sin(timer.elapsed() + i) + 1.0f) * 0.5f;
+		psData.spheres[i].center.y = (oscilation * (i + 1.0f)) + psData.spheres[i].radius;
 	}
 }
 
@@ -150,7 +151,7 @@ void Update()
 
 	gpu->swap(true);
 
-	window.title(kl::format(int(1.0 / timer.interval())));
+	window.title(kl::format(int(1.0f / timer.interval())));
 }
 
 void Resize(const kl::int2& newSize)

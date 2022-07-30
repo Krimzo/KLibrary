@@ -116,7 +116,7 @@ uint64 kl::video::byteSize() const
 	return 0;
 }
 
-double kl::video::duration() const
+float kl::video::duration() const
 {
 	if (m_Reader)
 	{
@@ -126,13 +126,13 @@ double kl::video::duration() const
 			int64 nanoTime = 0;
 			PropVariantToInt64(var, &nanoTime);
 			PropVariantClear(&var);
-			return (nanoTime * 1e-7);
+			return (nanoTime * 1e-7f);
 		}
 	}
-	return 0.0;
+	return 0.0f;
 }
 
-double kl::video::frameRate() const
+float kl::video::frameRate() const
 {
 	if (m_Reader)
 	{
@@ -143,15 +143,15 @@ double kl::video::frameRate() const
 			uint num = 0, den = 0;
 			MFGetAttributeRatio(currentType, MF_MT_FRAME_RATE, &num, &den);
 			currentType->Release();
-			return double(num) / den;
+			return float(num) / den;
 		}
 	}
-	return 0.0;
+	return 0.0f;
 }
 
-double kl::video::frameTime() const
+float kl::video::frameTime() const
 {
-	return 1.0 / frameRate();
+	return 1.0f / frameRate();
 }
 
 uint64 kl::video::frameCount() const

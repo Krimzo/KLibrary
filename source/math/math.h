@@ -42,32 +42,32 @@ namespace kl
 		template<typename T>
 		inline kl::vector4<T> quaternion(const kl::vector3<T>& eul)
 		{
-			const T cr = T(std::cos(kl::to::radians(eul.x) * 0.5));
-			const T sr = T(std::sin(kl::to::radians(eul.x) * 0.5));
-			const T cp = T(std::cos(kl::to::radians(eul.y) * 0.5));
-			const T sp = T(std::sin(kl::to::radians(eul.y) * 0.5));
-			const T cy = T(std::cos(kl::to::radians(eul.z) * 0.5));
-			const T sy = T(std::sin(kl::to::radians(eul.z) * 0.5));
+			const T cr = T(std::cos(kl::to::radians(eul.x) * 0.5f));
+			const T sr = T(std::sin(kl::to::radians(eul.x) * 0.5f));
+			const T cp = T(std::cos(kl::to::radians(eul.y) * 0.5f));
+			const T sp = T(std::sin(kl::to::radians(eul.y) * 0.5f));
+			const T cy = T(std::cos(kl::to::radians(eul.z) * 0.5f));
+			const T sy = T(std::sin(kl::to::radians(eul.z) * 0.5f));
 			return {
-				T(sr * cp * cy - cr * sp * sy),
-				T(cr * sp * cy + sr * cp * sy),
-				T(cr * cp * sy - sr * sp * cy),
-				T(cr * cp * cy + sr * sp * sy)
+				sr * cp * cy - cr * sp * sy,
+				cr * sp * cy + sr * cp * sy,
+				cr * cp * sy - sr * sp * cy,
+				cr * cp * cy + sr * sp * sy
 			};
 		}
 
 		template<typename T>
 		inline kl::vector3<T> euler(const kl::vector4<T>& quat)
 		{
-			const T sinp = T(2.0 * (quat.w * quat.y - quat.z * quat.x));
-			const T sinrCosp = T(2.0 * (quat.w * quat.x + quat.y * quat.z));
-			const T cosrCosp = T(1.0 - 2.0 * (quat.x * quat.x + quat.y * quat.y));
-			const T sinyCosp = T(2.0 * (quat.w * quat.z + quat.x * quat.y));
-			const T cosyCosp = T(1.0 - 2.0 * (quat.y * quat.y + quat.z * quat.z));
+			const T sinp = T(2.0f * (quat.w * quat.y - quat.z * quat.x));
+			const T sinrCosp = T(2.0f * (quat.w * quat.x + quat.y * quat.z));
+			const T cosrCosp = T(1.0f - 2.0f * (quat.x * quat.x + quat.y * quat.y));
+			const T sinyCosp = T(2.0f * (quat.w * quat.z + quat.x * quat.y));
+			const T cosyCosp = T(1.0f - 2.0f * (quat.y * quat.y + quat.z * quat.z));
 			return {
-				T(kl::to::degrees(std::atan2(sinrCosp, cosrCosp))),
-				T(kl::to::degrees((std::abs(sinp) >= 1.0) ? std::copysign(kl::math::pi * 0.5, sinp) : std::asin(sinp))),
-				T(kl::to::degrees(std::atan2(sinyCosp, cosyCosp)))
+				kl::to::degrees<T>(std::atan2(sinrCosp, cosrCosp)),
+				kl::to::degrees<T>((std::abs(sinp) >= 1.0f) ? std::copysign(kl::math::pi * 0.5f, sinp) : std::asin(sinp)),
+				kl::to::degrees<T>(std::atan2(sinyCosp, cosyCosp))
 			};
 		}
 	}

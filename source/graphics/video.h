@@ -32,10 +32,10 @@ namespace kl
 		bool isOpen() const;
 
 		uint64 byteSize() const;
-		double duration() const;
+		float duration() const;
 
-		double frameRate() const;
-		double frameTime() const;
+		float frameRate() const;
+		float frameTime() const;
 		uint64 frameCount() const;
 		kl::uint2 frameSize() const;
 		bool getFrame(kl::image& out);

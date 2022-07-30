@@ -170,7 +170,7 @@ namespace kl
 		// Division
 		void divide(const T& val, kl::vector4<T>& out) const
 		{
-			const double recVal = 1.0 / val;
+			const float recVal = 1.0f / val;
 			for (int i = 0; i < 4; i++)
 			{
 				out[i] = T(data[i] * recVal);

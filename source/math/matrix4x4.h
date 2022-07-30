@@ -9,7 +9,6 @@ namespace kl
 	template<typename T>
 	struct matrix4x4 : public kl::matrix<T, 4, 4>
 	{
-
 		matrix4x4()
 		{
 		}
@@ -28,41 +27,41 @@ namespace kl
 		static kl::matrix4x4<T> translation(const kl::vector3<T>& val)
 		{
 			kl::matrix4x4<T> temp;
-			temp[3] = T(val.x);
-			temp[7] = T(val.y);
-			temp[11] = T(val.z);
+			temp[3] = val.x;
+			temp[7] = val.y;
+			temp[11] = val.z;
 			return temp;
 		}
 
 		// Rotation matrix
 		static kl::matrix4x4<T> rotation(const kl::vector3<T>& val)
 		{
-			const T xRad = T(kl::to::radians(val.x));
-			const T xSin = T(std::sin(xRad));
-			const T xCos = T(std::cos(xRad));
+			const T xRad = kl::to::radians(val.x);
+			const T xSin = std::sin(xRad);
+			const T xCos = std::cos(xRad);
 			kl::matrix4x4<T> xRot;
-			xRot[5] = T(xCos);
-			xRot[6] = T(-xSin);
-			xRot[9] = T(xSin);
-			xRot[10] = T(xCos);
+			xRot[5] = xCos;
+			xRot[6] = -xSin;
+			xRot[9] = xSin;
+			xRot[10] = xCos;
 
-			const T yRad = T(kl::to::radians(val.y));
-			const T ySin = T(std::sin(yRad));
-			const T yCos = T(std::cos(yRad));
+			const T yRad = kl::to::radians(val.y);
+			const T ySin = std::sin(yRad);
+			const T yCos = std::cos(yRad);
 			kl::matrix4x4<T> yRot;
-			yRot[0] = T(yCos);
-			yRot[2] = T(ySin);
-			yRot[8] = T(-ySin);
-			yRot[10] = T(yCos);
+			yRot[0] = yCos;
+			yRot[2] = ySin;
+			yRot[8] = -ySin;
+			yRot[10] = yCos;
 
-			const T zRad = T(kl::to::radians(val.z));
-			const T zSin = T(std::sin(zRad));
-			const T zCos = T(std::cos(zRad));
+			const T zRad = kl::to::radians(val.z);
+			const T zSin = std::sin(zRad);
+			const T zCos = std::cos(zRad);
 			kl::matrix4x4<T> zRot;
-			zRot[0] = T(zCos);
-			zRot[1] = T(-zSin);
-			zRot[4] = T(zSin);
-			zRot[5] = T(zCos);
+			zRot[0] = zCos;
+			zRot[1] = -zSin;
+			zRot[4] = zSin;
+			zRot[5] = zCos;
 
 			return zRot * yRot * xRot;
 		}
@@ -71,23 +70,23 @@ namespace kl
 		static kl::matrix4x4<T> scaling(const kl::vector3<T>& size)
 		{
 			kl::matrix4x4<T> temp;
-			temp[0] = T(size.x);
-			temp[5] = T(size.y);
-			temp[10] = T(size.z);
+			temp[0] = size.x;
+			temp[5] = size.y;
+			temp[10] = size.z;
 			return temp;
 		}
 
 		// Perspective projection matrix
 		static kl::matrix4x4<T> perspective(T fov, T ar, T zNear, T zFar)
 		{
-			const T tanHalf = T(1.0 / tan(kl::to::radians(fov) * 0.5));
+			const T tanHalf = T(1.0f / tan(kl::to::radians(fov) * 0.5f));
 			kl::matrix4x4<T> temp;
-			temp[0] = T(tanHalf / ar);
-			temp[5] = T(tanHalf);
-			temp[10] = T((-zFar - zNear) / (zNear - zFar));
-			temp[11] = T((2.0 * zNear * zFar) / (zNear - zFar));
-			temp[14] = T(1.0);
-			temp[15] = T(0.0);
+			temp[0] = tanHalf / ar;
+			temp[5] = tanHalf;
+			temp[10] = (-zFar - zNear) / (zNear - zFar);
+			temp[11] = T(2.0f * zNear * zFar) / (zNear - zFar);
+			temp[14] = T(1.0f);
+			temp[15] = T(0.0f);
 			return temp;
 		}
 
@@ -95,12 +94,12 @@ namespace kl
 		static kl::matrix4x4<T> orthographic(T left, T right, T bottom, T top, T nearZ, T farZ)
 		{
 			kl::matrix4x4<T> temp;
-			temp[0] = T(2.0 / (right - left));
-			temp[5] = T(2.0 / (top - bottom));
-			temp[10] = T(-2.0 / (farZ - nearZ));
-			temp[3] = T(-(right + left) / (right - left));
-			temp[7] = T(-(top + bottom) / (top - bottom));
-			temp[11] = T(-(farZ + nearZ) / (farZ - nearZ));
+			temp[0] = T(2.0f) / (right - left);
+			temp[5] = T(2.0f) / (top - bottom);
+			temp[10] = T(-2.0f) / (farZ - nearZ);
+			temp[3] = -(right + left) / (right - left);
+			temp[7] = -(top + bottom) / (top - bottom);
+			temp[11] = -(farZ + nearZ) / (farZ - nearZ);
 			return temp;
 		}
 
@@ -111,21 +110,20 @@ namespace kl
 			const kl::vector3<T> s = up.cross(f).normalize();
 			const kl::vector3<T> u = f.cross(s);
 			kl::matrix4x4<T> temp;
-			temp[0] = T(s.x);
-			temp[1] = T(s.y);
-			temp[2] = T(s.z);
-			temp[3] = T(-s.dot(position));
-			temp[4] = T(u.x);
-			temp[5] = T(u.y);
-			temp[6] = T(u.z);
-			temp[7] = T(-u.dot(position));
-			temp[8] = T(f.x);
-			temp[9] = T(f.y);
-			temp[10] = T(f.z);
-			temp[11] = T(-f.dot(position));
+			temp[0] = s.x;
+			temp[1] = s.y;
+			temp[2] = s.z;
+			temp[3] = -s.dot(position);
+			temp[4] = u.x;
+			temp[5] = u.y;
+			temp[6] = u.z;
+			temp[7] = -u.dot(position);
+			temp[8] = f.x;
+			temp[9] = f.y;
+			temp[10] = f.z;
+			temp[11] = -f.dot(position);
 			return temp;
 		}
-
 	};
 }
 

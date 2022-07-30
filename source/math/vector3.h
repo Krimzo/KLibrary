@@ -171,7 +171,7 @@ namespace kl
 		// Division
 		void divide(const T& val, kl::vector3<T>& out) const
 		{
-			const double recVal = 1.0 / val;
+			const float recVal = 1.0f / val;
 			for (int i = 0; i < 3; i++)
 			{
 				out[i] = T(data[i] * recVal);
@@ -326,7 +326,7 @@ namespace kl
 		kl::vector3<T> reflect(const kl::vector3<T>& vec) const
 		{
 			const kl::vector3<T> normal = vec.normalize();
-			return (*this) - (normal * dot(normal) * 2.0);
+			return (*this) - (normal * dot(normal) * 2.0f);
 		}
 	};
 

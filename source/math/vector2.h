@@ -12,7 +12,7 @@ namespace kl
 {
 	namespace math
 	{
-		inline constexpr double pi = 3.14159265358979;
+		inline constexpr float pi = 3.14159265358979f;
 	}
 
 	namespace to
@@ -20,14 +20,14 @@ namespace kl
 		template<typename T>
 		inline T radians(const T& degs)
 		{
-			static const double conversion = kl::math::pi / 180.0;
+			static const float conversion = kl::math::pi / 180.0f;
 			return T(degs * conversion);
 		}
 
 		template<typename T>
 		inline T degrees(const T& rads)
 		{
-			static const double conversion = 180.0 / kl::math::pi;
+			static const float conversion = 180.0f / kl::math::pi;
 			return T(rads * conversion);
 		}
 	}
@@ -160,7 +160,7 @@ namespace kl
 		// Division
 		void divide(const T& val, kl::vector2<T>& out) const
 		{
-			const double recVal = 1.0 / val;
+			const float recVal = 1.0f / val;
 			for (int i = 0; i < 2; i++)
 			{
 				out[i] = T(data[i] * recVal);

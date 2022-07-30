@@ -351,7 +351,7 @@ namespace kl
 				const T det = determinant();
 				if (det)
 				{
-					out = adjoint() * T(1.0 / det);
+					out = adjoint() * T(1.0f / det);
 					return true;
 				}
 			}

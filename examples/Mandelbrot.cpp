@@ -115,7 +115,7 @@ void update()
 	gpu->swap(true);
 
 	window.title(kl::format(
-		"Fps: ", int(1.0 / timer.interval()),
+		"Fps: ", int(1.0f / timer.interval()),
 		" Zoom: ", int(zoom),
 		" Position: ", position
 	));

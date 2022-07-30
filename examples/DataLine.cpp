@@ -145,6 +145,6 @@ int main()
 
 		frameBuffer.swap();
 
-		window.title(kl::format("FPS: ", int(1.0 / kl::time::interval())));
+		window.title(kl::format("FPS: ", int(1.0f / kl::time::interval())));
 	}
 }

@@ -9,7 +9,6 @@ namespace kl
 	template<typename T>
 	struct matrix3x3 : public kl::matrix<T, 3, 3>
 	{
-
 		matrix3x3()
 		{
 		}
@@ -53,7 +52,6 @@ namespace kl
 			temp[4] = val.y;
 			return temp;
 		}
-
 	};
 }
 
