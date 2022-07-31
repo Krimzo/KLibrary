@@ -13,8 +13,10 @@ namespace kl {
 	struct matrix : public std::array<T, W* H> {
 
 		matrix() : std::array<T, W* H>() {
-			for (uint64 i = 0; i < (W * H); i += (W + 1)) {
-				(*this)[i] = 1;
+			if constexpr (W == H) {
+				for (uint64 i = 0; i < (W * H); i += (W + 1)) {
+					(*this)[i] = 1;
+				}
 			}
 		}
 

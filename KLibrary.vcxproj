@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\OutputTest.cpp" />
+    <ClCompile Include="examples\Raytracing.cpp" />
     <ClCompile Include="source\gpu\buffer\constant_buffer.cpp" />
     <ClCompile Include="source\gpu\buffer\gpu_buffer.cpp" />
     <ClCompile Include="source\gpu\gpu.cpp" />
