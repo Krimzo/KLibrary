@@ -1,7 +1,7 @@
 #include "KrimzLib.h"
 
 
-constexpr int N = 10000;
+static constexpr int N = 10000;
 
 int main() {
 	double times[3] = {};

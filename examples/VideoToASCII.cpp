@@ -7,7 +7,7 @@ int main(int argc, const char** argv) {
 		filePath = argv[1];
 	}
 	else {
-		kl::print<kl::none>("Video file path: ");
+		kl::print<false>("Video file path: ");
 		std::getline(std::cin, filePath);
 	}
 
@@ -15,7 +15,7 @@ int main(int argc, const char** argv) {
 	kl::console::error(!video.isOpen(), "Failed to open video file \"" + filePath + "\"");
 
 	kl::console::clear();
-	kl::print<kl::none>("Resize the console and press enter..");
+	kl::print<false>("Resize the console and press enter..");
 	kl::console::waitFor(kl::enter);
 	const kl::int2 consoleSize = kl::console::size() - kl::int2(0, 1);
 	kl::console::hideCursor();
@@ -28,7 +28,7 @@ int main(int argc, const char** argv) {
 	while (video.getFrame(videoFrame)) {
 		asciiFrames.push_back(videoFrame.ascii(consoleSize));
 		kl::console::moveCursor({});
-		kl::print<kl::none>("Processed: ", asciiFrames.size(), "/", frameCount);
+		kl::print<false>("Processed: ", asciiFrames.size(), "/", frameCount);
 	}
 
 	kl::timer timer;
