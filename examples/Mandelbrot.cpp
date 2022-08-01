@@ -8,13 +8,12 @@ struct PS_CB {
 	kl::float2 startPosition;
 };
 
-static float zoom = 1.0f;
-static float zoomSpeed = 1.0f;
-static kl::float2 position = { -0.5f, 0.0f };
+static constexpr float zoomSpeed = 1.0f;
+static constexpr float minZoom = 0.5f;
+static constexpr float maxZoom = 10000.0f;
 
-static const float minZoom = 0.5f;
-static const float maxZoom = 10000.0f;
-static const kl::int2 frameSize = { 1600, 900 };
+static float zoom = 1.0f;
+static kl::float2 position = { -0.5f, 0.0f };
 
 int main() {
 	kl::window window = { { 1600, 900 }, "Mandelbrot" };
@@ -30,6 +29,7 @@ int main() {
 			gpu.viewport(newSize);
 		}
 	};
+	window.maximize();
 
 	// Start
 	gpu.bind(gpu.newRasterState(false, false));
@@ -44,6 +44,9 @@ int main() {
 		timer.newInterval();
 		timer.newElapsed();
 
+		const kl::uint2 frameSize = window.size();
+
+		// Input
 		if (window.keys.esc) {
 			window.close();
 		}
@@ -88,6 +91,7 @@ int main() {
 			}
 		}
 
+		// Render
 		gpu.clear(kl::colors::black);
 
 		gpu.bind(shaders);

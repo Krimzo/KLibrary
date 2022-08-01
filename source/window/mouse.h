@@ -31,6 +31,8 @@ namespace kl {
 		};
 
 		mouse();
+		mouse(const kl::mouse&) = delete;
+		void operator=(const kl::mouse&) = delete;
 		~mouse();
 
 		void bind(HWND hwnd);

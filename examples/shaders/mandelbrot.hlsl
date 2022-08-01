@@ -7,8 +7,8 @@ float4 vShader(float3 pos : POS_IN) : SV_POSITION {
 cbuffer PS_CB : register(b0) {
     float2 frameSize;
     float2 zoom;
-    float2 pos;
-    float2 startPos;
+    float2 position;
+    float2 startPosition;
 }
 
 float2 ComplexSqr(float2 a) {
@@ -20,10 +20,10 @@ float4 pShader(float4 screen : SV_POSITION) : SV_TARGET {
 	
     float2 uv = (screen.xy / frameSize * 2.0f - 1.0f) * float2(frameSize.x / frameSize.y, 1.0f);
     uv /= zoom.x;
-    uv += pos;
+    uv += position;
 	
     float n = 64.0f;
-    float2 num = startPos.x + uv;
+    float2 num = startPosition.x + uv;
     for (int i = 0; i < n; i++) {
         if (length(num) > 2.0f) {
             pixel *= (i / n);

@@ -6,17 +6,17 @@
 
 namespace kl {
 	class key {
-	private:
 		bool m_State = false;
-		int64 m_Type = NULL;
+		int64 m_Type = 0;
 
 	public:
 		std::function<void()> press = []() {};
 		std::function<void()> down = []() {};
 		std::function<void()> release = []() {};
 
-		key();
-		key(int type);
+		key(int64 type);
+		key(const kl::key&) = delete;
+		void operator=(const kl::key&) = delete;
 		~key();
 
 		operator bool() const;

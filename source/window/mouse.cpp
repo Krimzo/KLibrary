@@ -1,11 +1,10 @@
 #include "window/mouse.h"
 
 
-kl::mouse::mouse() {
-	lmb = { type::LMB };
-	mmb = { type::MMB };
-	rmb = { type::RMB };
-}
+kl::mouse::mouse() :
+	lmb(type::LMB),
+	mmb(type::MMB),
+	rmb(type::RMB) {}
 
 kl::mouse::~mouse() {}
 

@@ -1,9 +1,7 @@
 #include "window/key.h"
 
 
-kl::key::key() : m_Type(NULL) {}
-
-kl::key::key(int type) : m_Type(type) {}
+kl::key::key(int64 type) : m_Type(type) {}
 
 kl::key::~key() {}
 

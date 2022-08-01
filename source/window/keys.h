@@ -83,6 +83,8 @@ namespace kl {
 		};
 
 		keys();
+		keys(const kl::keys&) = delete;
+		void operator=(const kl::keys&) = delete;
 		~keys();
 
 		void update(int64 type, bool state);
