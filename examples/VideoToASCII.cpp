@@ -21,12 +21,13 @@ int main(int argc, const char** argv) {
 	const kl::int2 consoleSize = kl::console::size() - kl::int2(0, 1);
 	kl::console::cursor(false);
 
-	kl::console::clear();
-	kl::image videoFrame;
-	const uint64 frameCount = video.frameCount();
+	const uint64 frameCount = video.count();
 	std::vector<std::string> asciiFrames;
 	asciiFrames.reserve(frameCount);
-	while (video.getFrame(videoFrame)) {
+
+	kl::image videoFrame;
+	kl::console::clear();
+	while (video.get(videoFrame)) {
 		asciiFrames.push_back(videoFrame.ascii(consoleSize));
 		kl::console::cursor(kl::uint2());
 		kl::print<false>("Processed: ", asciiFrames.size(), "/", frameCount);
@@ -34,7 +35,8 @@ int main(int argc, const char** argv) {
 
 	kl::timer timer;
 	kl::console::clear();
-	const double toWait = video.frameTime();
+	float toWait = 1.0f / video.fps();
+
 	while (true) {
 		for (uint64 i = 0; i < asciiFrames.size(); i++) {
 			timer.reset();

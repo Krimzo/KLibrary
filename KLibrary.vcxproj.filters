@@ -126,7 +126,7 @@
     <ClCompile Include="source\window\window_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\VisualSort.cpp">
+    <ClCompile Include="examples\VideoToASCII.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
