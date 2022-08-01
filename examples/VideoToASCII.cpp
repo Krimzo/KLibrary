@@ -12,13 +12,14 @@ int main(int argc, const char** argv) {
 	}
 
 	kl::video video(filePath);
-	kl::console::error(!video.isOpen(), "Failed to open video file \"" + filePath + "\"");
+	kl::console::error(!video, "Failed to open video file \"" + filePath + "\"");
 
 	kl::console::clear();
 	kl::print<false>("Resize the console and press enter..");
-	kl::console::waitFor(kl::enter);
+	kl::get();
+
 	const kl::int2 consoleSize = kl::console::size() - kl::int2(0, 1);
-	kl::console::hideCursor();
+	kl::console::cursor(false);
 
 	kl::console::clear();
 	kl::image videoFrame;
@@ -27,7 +28,7 @@ int main(int argc, const char** argv) {
 	asciiFrames.reserve(frameCount);
 	while (video.getFrame(videoFrame)) {
 		asciiFrames.push_back(videoFrame.ascii(consoleSize));
-		kl::console::moveCursor({});
+		kl::console::cursor(kl::uint2());
 		kl::print<false>("Processed: ", asciiFrames.size(), "/", frameCount);
 	}
 

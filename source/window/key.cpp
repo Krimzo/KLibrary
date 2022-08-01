@@ -1,24 +1,30 @@
 #include "window/key.h"
 
 
-kl::key::operator bool() {
+kl::key::key() : m_Type(NULL) {}
+
+kl::key::key(int type) : m_Type(type) {}
+
+kl::key::~key() {}
+
+kl::key::operator bool() const {
 	return m_State;
 }
 
-void kl::key::update(bool newState) {
-	if (!m_State && newState) {
-		press();
+void kl::key::update(int64 type, bool newState) {
+	if (type == m_Type) {
+		if (!m_State && newState) {
+			press();
+		}
+		else if (m_State && !newState) {
+			release();
+		}
+		m_State = newState;
 	}
-	else if (m_State && !newState) {
-		release();
-	}
-	m_State = newState;
 }
 
-bool kl::key::update() const {
+void kl::key::update() const {
 	if (m_State) {
 		down();
-		return true;
 	}
-	return false;
 }

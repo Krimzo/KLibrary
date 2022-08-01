@@ -6,7 +6,7 @@ struct Stick {
 	kl::color color;
 };
 
-std::vector<Stick> GenSticks(uint count, uint minValueIncl, uint maxValueExcl) {
+static std::vector<Stick> GenerateSticks(uint count, uint minValueIncl, uint maxValueExcl) {
 	uint storedMinValue = maxValueExcl;
 	uint storedMaxValue = minValueIncl;
 	std::vector<Stick> sticks(count);
@@ -22,38 +22,34 @@ std::vector<Stick> GenSticks(uint count, uint minValueIncl, uint maxValueExcl) {
 	return sticks;
 }
 
-void DrawSticks(kl::image& frame, const std::vector<Stick>& sticks) {
+static void DrawSticks(kl::image& frame, const std::vector<Stick>& sticks) {
 	for (int i = 0; i < sticks.size(); i++) {
 		frame.drawLine({ i, frame.height() - 1 }, { i, frame.height() - 1 - sticks[i].value }, sticks[i].color);
 	}
 }
 
 int main() {
-	kl::window window;
-	kl::image frame({ 1600, 900 }, kl::colors::gray);
+	kl::window window = { { 1600, 900 }, "Visual Sort" };
+	kl::image frame(window.size(), kl::colors::gray);
 
-	std::vector<Stick> sticks = GenSticks(frame.width(), 1, frame.height());
+	std::vector<Stick> sticks = GenerateSticks(frame.width(), 1, frame.height());
 
-	window.start = [&]() {
-		std::thread([&]() {
-			window.title("Sorting...");
-			for (int i = 0; i < sticks.size() - 1; i++) {
-				for (int j = i + 1; j < sticks.size(); j++) {
-					if (sticks[j].value < sticks[i].value) {
-						std::swap(sticks[i], sticks[j]);
-					}
-					kl::time::wait(0.000005);
+	std::thread([&]() {
+		window.title("Sorting...");
+		for (int i = 0; i < sticks.size() - 1; i++) {
+			for (int j = i + 1; j < sticks.size(); j++) {
+				if (sticks[j].value < sticks[i].value) {
+					std::swap(sticks[i], sticks[j]);
 				}
+				kl::time::wait(0.000005f);
 			}
-			window.title("Finished!");
-		}).detach();
-	};
+		}
+		window.title("Finished!");
+	}).detach();
 
-	window.update = [&]() {
+	while (window.process(false)) {
 		frame.fill(kl::colors::gray);
 		DrawSticks(frame, sticks);
 		window.draw(frame);
-	};
-
-	window.run(frame.size(), "Sort", false, true);
+	}
 }

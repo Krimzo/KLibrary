@@ -19,6 +19,18 @@ static const HANDLE consoleHandle = []() {
 	return tempHandle;
 }();
 
+void kl::get() {
+	std::cin.get();
+}
+
+void kl::console::hide() {
+	ShowWindow(GetConsoleWindow(), SW_HIDE);
+}
+
+void kl::console::show() {
+	ShowWindow(GetConsoleWindow(), SW_SHOW);
+}
+
 void kl::console::clear() {
 	CONSOLE_SCREEN_BUFFER_INFO consoleScreenInfo = {};
 	GetConsoleScreenBufferInfo(consoleHandle, &consoleScreenInfo);
@@ -30,33 +42,18 @@ void kl::console::clear() {
 		consoleHandle, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
 		consoleScreenInfo.dwSize.X * consoleScreenInfo.dwSize.Y, {}, &charsWritten
 	);
-	kl::console::moveCursor({});
+	kl::console::cursor(kl::uint2(0, 0));
 }
 
-void kl::console::hide() {
-	ShowWindow(GetConsoleWindow(), SW_HIDE);
+void kl::console::cursor(bool enable) {
+	CONSOLE_CURSOR_INFO cursorInfo = {};
+	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
+	cursorInfo.bVisible = enable;
+	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 }
 
-void kl::console::show() {
-	ShowWindow(GetConsoleWindow(), SW_SHOW);
-}
-
-void kl::console::moveCursor(const kl::uint2& position) {
+void kl::console::cursor(const kl::uint2& position) {
 	SetConsoleCursorPosition(consoleHandle, { short(position.x), short(position.y) });
-}
-
-void kl::console::hideCursor() {
-	CONSOLE_CURSOR_INFO cursorInfo = {};
-	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
-	cursorInfo.bVisible = false;
-	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
-}
-
-void kl::console::showCursor() {
-	CONSOLE_CURSOR_INFO cursorInfo = {};
-	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
-	cursorInfo.bVisible = true;
-	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 }
 
 void kl::console::title(const std::string& text) {
@@ -69,7 +66,7 @@ kl::uint2 kl::console::size() {
 	return kl::uint2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
 }
 
-void kl::console::resize(const kl::uint2& size) {
+void kl::console::size(const kl::uint2& size) {
 	SMALL_RECT consoleRect = { 0, 0, SHORT(size.x - 1), SHORT(size.y - 1) };
 	SetConsoleWindowInfo(consoleHandle, true, &consoleRect);
 }
@@ -93,7 +90,7 @@ char kl::console::input() {
 	return input;
 }
 
-void kl::console::waitFor(char toWaitFor, bool echo) {
+void kl::console::wait(char toWaitFor, bool echo) {
 	if (echo) {
 		if (toWaitFor > 31 && toWaitFor < 127) {
 			kl::print("Press '", toWaitFor, "' to continue...");
@@ -107,7 +104,7 @@ void kl::console::waitFor(char toWaitFor, bool echo) {
 	while ((c = _getch()) != toWaitFor) kl::print(int(c));
 }
 
-char kl::console::waitForAny(bool echo) {
+char kl::console::waitAny(bool echo) {
 	if (echo) {
 		kl::print("Press any key to continue...");
 	}
@@ -119,7 +116,7 @@ bool kl::console::warning(bool occured, const std::string& message, bool wait) {
 		kl::console::show();
 		kl::print(kl::colors::orange, "Warning: ", message);
 		if (wait) {
-			kl::console::waitForAny(false);
+			kl::console::waitAny();
 		}
 		kl::print<false>(kl::colors::defaul);
 	}
@@ -131,7 +128,7 @@ void kl::console::error(bool occured, const std::string& message, bool wait) {
 		kl::console::show();
 		kl::print(kl::colors::red, "Error: ", message);
 		if (wait) {
-			kl::console::waitForAny(false);
+			kl::console::waitAny();
 		}
 		kl::print<false>(kl::colors::defaul);
 		exit(1);
@@ -157,6 +154,6 @@ void kl::console::bar(const std::string& message, uint outputY, float percentage
 	for (int i = 0; i < emptyLen; i++) {
 		ss << ' ';
 	}
-	kl::console::moveCursor(kl::uint2(0, outputY));
+	kl::console::cursor(kl::uint2(0, outputY));
 	printf("%s] %3d%% ", ss.str().c_str(), int(percentage * 100.0f));
 }

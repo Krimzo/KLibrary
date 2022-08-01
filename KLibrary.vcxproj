@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Raytracing.cpp" />
+    <ClCompile Include="examples\VisualSort.cpp" />
     <ClCompile Include="source\gpu\buffer\constant_buffer.cpp" />
     <ClCompile Include="source\gpu\buffer\gpu_buffer.cpp" />
     <ClCompile Include="source\gpu\gpu.cpp" />
@@ -56,7 +56,7 @@
     <ClCompile Include="source\window\keys.cpp" />
     <ClCompile Include="source\window\mouse.cpp" />
     <ClCompile Include="source\window\window.cpp" />
-    <ClCompile Include="source\window\window_private.cpp" />
+    <ClCompile Include="source\window\window_handler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gpu\dx_types.h" />

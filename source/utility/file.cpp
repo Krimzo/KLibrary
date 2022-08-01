@@ -118,6 +118,10 @@ kl::file::~file() {
 	close();
 }
 
+kl::file::operator bool() const {
+	return bool(m_File);
+}
+
 bool kl::file::open(const std::string& filePath, bool clear) {
 	close();
 	if (kl::console::warning(fopen_s(&m_File, filePath.c_str(), clear ? "wb+" : "ab+"), "Failed to open file \"" + filePath + "\"")) {
@@ -132,9 +136,6 @@ bool kl::file::close() {
 		return true;
 	}
 	return false;
-}
-bool kl::file::isOpen() const {
-	return bool(m_File);
 }
 
 bool kl::file::seek(int64 pos) {

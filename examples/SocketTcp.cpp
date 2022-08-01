@@ -24,7 +24,7 @@ int main() {
 	kl::socket::init();
 
 	std::thread(Server).detach();
-	kl::time::wait(0.25);
+	kl::time::wait(0.25f);
 	std::thread(Client).detach();
 
 

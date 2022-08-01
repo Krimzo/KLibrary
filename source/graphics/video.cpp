@@ -46,7 +46,11 @@ kl::video::~video() {
 	VidUtilUninit();
 }
 
-void ConfigureDecoder(IMFSourceReader* reader) {
+kl::video::operator bool() const {
+	return bool(m_Reader);
+}
+
+static void ConfigureDecoder(IMFSourceReader* reader) {
 	IMFMediaType* defType = nullptr;
 	kl::console::error(FAILED(reader->GetNativeMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &defType)), "Failed to get default video type");
 
@@ -81,10 +85,6 @@ void kl::video::close() {
 		m_Reader->Release();
 		m_Reader = nullptr;
 	}
-}
-
-bool kl::video::isOpen() const {
-	return bool(m_Reader);
 }
 
 uint64 kl::video::byteSize() const {
@@ -160,7 +160,7 @@ bool kl::video::getFrame(kl::image& out) {
 			if (frameBuff) {
 				byte* frameData = nullptr; DWORD dataLen = 0;
 				frameBuff->Lock(&frameData, nullptr, &dataLen);
-				out.resize(frameSize());
+				out.size(frameSize());
 				memcpy(out.data(), frameData, dataLen);
 				frameBuff->Release();
 				state = true;

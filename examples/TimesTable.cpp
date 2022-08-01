@@ -3,22 +3,28 @@
 
 static constexpr int n = 200;
 static constexpr float increment = 0.15f;
-static double m = 0.0f;
+static float m = 0.0f;
 
 int main() {
 	kl::color circleColor = kl::colors::defaul;
 	kl::color pointColor = kl::random::COLOR();
 	kl::color lineColor = kl::random::COLOR();
 
-	kl::window window;
-	kl::image frame({ 900, 900 }, kl::colors::gray);
+	kl::window window = { { 900, 900 }, "Times Table" };
+	kl::image frame(window.size(), kl::colors::gray);
+
+	window.resize = [&](const kl::uint2& size) {
+		if (size.x > 0 && size.y > 0) {
+			frame.size(size);
+		}
+	};
 
 	window.keys.r.press = [&]() {
 		pointColor = kl::random::COLOR();
 		lineColor = kl::random::COLOR();
 	};
 
-	window.update = [&]() {
+	while (window.process(false)) {
 		m += increment * kl::time::interval();
 
 		frame.fill(kl::colors::gray);
@@ -46,11 +52,5 @@ int main() {
 		window.draw(frame);
 
 		window.title(kl::format("n: ", n, " m: ", m));
-	};
-
-	window.resize = [&](const kl::uint2& size) {
-		frame.resize(size);
-	};
-
-	window.run(frame.size(), "Times Table", true, true);
+	}
 }

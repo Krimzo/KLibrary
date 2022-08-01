@@ -26,6 +26,7 @@ bool kl::ray::intersect(const kl::plane& plane, kl::float3* outInter) const {
 bool kl::ray::intersect(const kl::triangle& triangle, kl::float3* outInter) const {
 	const kl::float3 edge1 = triangle.b.world - triangle.a.world;
 	const kl::float3 edge2 = triangle.c.world - triangle.a.world;
+
 	const kl::float3 h = direction.cross(edge2);
 	const kl::float3 s = origin - triangle.a.world;
 	const float f = 1.0f / edge1.dot(h);

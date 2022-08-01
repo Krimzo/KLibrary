@@ -75,30 +75,16 @@ static void CalculateImprovedLine(const std::vector<kl::int2>& data, kl::float2&
 }
 
 int main() {
-	kl::console::hide();
-
-	kl::window window;
-	kl::double_buffer frameBuffer({ 1600, 900 });
-
-	window.update = [&]() {
-		frameBuffer >> window;
-	};
-
-	window.end = [&]() {
-		exit(0);
-	};
-
-	std::thread([&]() {
-		window.run(frameBuffer.size(), "Data Display", false, true);
-	}).detach();
+	kl::window window = { { 1600, 900 }, "Data Line" };
+	kl::image frame = { window.size() };
 
 	std::vector<kl::int2> data;
 	kl::float2 lineEquat(1.0f, 0.0f);
 
 	window.mouse.lmb.down = [&]() {
 		static kl::int2 lastData = {};
-		const kl::int2 newData = window.mouse.position * kl::int2(1, -1) -
-			kl::int2(frameBuffer.size()) / kl::int2(2, -2);
+		kl::int2 newData = window.mouse.position() * kl::int2(1, -1);
+		newData -= kl::int2(frame.size()) / kl::int2(2, -2);
 		if (newData != lastData) {
 			data.push_back(newData);
 			lastData = newData;
@@ -109,18 +95,16 @@ int main() {
 		data.clear();
 	};
 
-	while (true) {
-		kl::image* bb = frameBuffer.bbuffer();
-		bb->fill(kl::colors::gray);
+	while (window.process(false)) {
+		frame.fill(kl::colors::gray);
 
-		DrawAxis(bb);
-		DrawData(bb, data);
-		DrawLine(bb, lineEquat);
-		DrawOffset(bb, data, lineEquat);
+		DrawAxis(&frame);
+		DrawData(&frame, data);
+		DrawLine(&frame, lineEquat);
+		DrawOffset(&frame, data, lineEquat);
+
 		CalculateImprovedLine(data, lineEquat);
 
-		frameBuffer.swap();
-
-		window.title(kl::format("FPS: ", int(1.0f / kl::time::interval())));
+		window.draw(frame);
 	}
 }

@@ -11,7 +11,15 @@ static constexpr int ID_ENGINE = 1;
 static const kl::color COLOR_PLAYER = kl::colors::orange;
 static const kl::color COLOR_ENGINE = kl::colors::green;
 
-bool HasEmpty(const std::vector<int>& board) {
+struct BoardInfo {
+	int eval;
+	int move;
+
+	BoardInfo() : eval(0), move(-1) {}
+	BoardInfo(int eval, int move) : eval(eval), move(move) {}
+};
+
+static bool HasEmpty(const std::vector<int>& board) {
 	for (auto& piece : board) {
 		if (piece == ID_EMPTY) {
 			return true;
@@ -20,7 +28,7 @@ bool HasEmpty(const std::vector<int>& board) {
 	return false;
 }
 
-int Evaluate(const std::vector<int>& board) {
+static int Evaluate(const std::vector<int>& board) {
 	for (int y = 0; y < BOARD_SIZE; y++) {
 		int sum = 0;
 		for (int x = 0; x < BOARD_SIZE; x++) {
@@ -80,15 +88,7 @@ int Evaluate(const std::vector<int>& board) {
 	return ID_EMPTY;
 }
 
-struct BoardInfo {
-	int eval;
-	int move;
-
-	BoardInfo() : eval(0), move(-1) {}
-	BoardInfo(int eval, int move) : eval(eval), move(move) {}
-};
-
-BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, int alpha, int beta) {
+static BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, int alpha, int beta) {
 	const int currEval = Evaluate(board);
 	if (currEval != ID_EMPTY || !HasEmpty(board)) {
 		return BoardInfo(currEval, -1);
@@ -147,8 +147,6 @@ BoardInfo FindBest(const std::vector<int>& board, bool playersTurn, int depth, i
 }
 
 int main() {
-	kl::console::hide();
-
 	std::vector<int> board(BOARD_SIZE * BOARD_SIZE);
 	bool playersTurn = kl::random::BOOL();
 
@@ -158,27 +156,29 @@ int main() {
 	const int lineOffs = squareSize / 10;
 	const int circlOffs = squareSize / 2;
 
-	kl::window window = {};
-	kl::image frame({ FRAME_SIZE, FRAME_SIZE }, kl::colors::gray);
+	kl::window window = { { FRAME_SIZE, FRAME_SIZE }, "Tic Engine" };
+	kl::image frame(window.size(), kl::colors::gray);
 
-	window.update = [&]() {
+	while (window.process(false)) {
 		const int eval = Evaluate(board);
 		if (eval) {
 			window.title((eval == ID_PLAYER) ? "Player wins!" : "Engine wins!");
-			window.update = []() {};
-			return;
+			window.close();
+			kl::get();
+			continue;
 		}
 		else if (!HasEmpty(board)) {
 			window.title("Draw!");
-			window.update = []() {};
-			return;
+			window.close();
+			kl::get();
+			continue;
 		}
 
 		if (playersTurn) {
 			static bool wasDown = false;
 			if (window.mouse.lmb) {
 				if (!wasDown) {
-					const kl::int2 pos = window.mouse.position / squareSize;
+					const kl::int2 pos = window.mouse.position() / squareSize;
 					const int ind = pos.y * BOARD_SIZE + pos.x;
 					if (board[ind] == ID_EMPTY) {
 						board[ind] = ID_PLAYER;
@@ -235,7 +235,5 @@ int main() {
 		}
 
 		window.draw(frame);
-	};
-
-	window.run({ FRAME_SIZE + 1, FRAME_SIZE + 1 }, "TicEngine", false);
+	}
 }

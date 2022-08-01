@@ -1,5 +1,5 @@
 #include "window/window.h"
-
+#include "utility/console.h"
 
 #pragma comment(lib, "kernel32.lib")
 #pragma comment(lib, "user32.lib")
@@ -15,58 +15,118 @@
 #pragma comment(lib, "odbccp32.lib")
 
 
-kl::window::window() {}
-kl::window::~window() {
-	stop();
-}
+kl::window::window(const kl::uint2& size, const std::string& name) : m_Name(name) {
+	// Instance
+	m_Instance = GetModuleHandleA(nullptr);
 
-void kl::window::run(const kl::uint2& size, const std::string& name, bool resizeable, bool continuous) {
-	registerWindowClass(name);
-	createWindow(size, name, resizeable);
-	mouse.bind(m_Window);
+	// Registering window class
+	WNDCLASSEXA windowClass = {};
+	windowClass.cbSize = sizeof(WNDCLASSEXA);
+	windowClass.style = CS_OWNDC;
+	windowClass.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		return ((kl::window*) GetWindowLongPtrA(hwnd, GWLP_USERDATA))->WndProc(hwnd, msg, wParam, lParam);
+	};
+	windowClass.hInstance = m_Instance;
+	windowClass.lpszClassName = name.c_str();
+	kl::console::error(!RegisterClassExA(&windowClass), "Failed to register window class");
 
-	MSG msg = {};
+	// Creating the window
+	m_WindowStyle = WS_OVERLAPPEDWINDOW;
+
+	RECT sizeBuffer = { 0, 0, LONG(size.x), LONG(size.y) };
+	AdjustWindowRect(&sizeBuffer, m_WindowStyle, false);
+
+	kl::uint2 newSize = { sizeBuffer.right - sizeBuffer.left, sizeBuffer.bottom - sizeBuffer.top };
+	kl::int2 newPosition = (kl::screen::size / 2) - (newSize / 2);
+
+	m_Window = CreateWindowExA(NULL, name.c_str(), name.c_str(), m_WindowStyle,
+		newPosition.x, newPosition.y, newSize.x, newSize.y, nullptr, nullptr, m_Instance, nullptr);
+	kl::console::error(!m_Window, "Failed to create window");
+
+	// Getting data
+	m_DeviceContext = GetDC(m_Window);
+	m_WindowStyle = GetWindowLongA(m_Window, GWL_STYLE);
+
+	// Setting data
+	SetWindowLongPtrA(m_Window, GWLP_USERDATA, int64(this));
+	ShowWindow(m_Window, SW_SHOW);
 	SetCursor(LoadCursorA(nullptr, LPCSTR(IDC_ARROW)));
-	if (continuous) {
-		start();
-		while (IsWindow(m_Window)) {
-			while (PeekMessageA(&msg, m_Window, 0, 0, PM_REMOVE)) {
-				handleMessage(msg);
-			}
-			keys.update();
-			mouse.update();
-			update();
-		}
-		end();
-	}
-	else {
-		start();
-		while (IsWindow(m_Window)) {
-			GetMessageA(&msg, m_Window, 0, 0);
-			handleMessage(msg);
-			keys.update();
-			mouse.update();
-			update();
-		}
-		end();
-	}
+	mouse.bind(m_Window);
+}
 
-	UnregisterClassA(name.c_str(), m_Instance);
-	m_Window = nullptr;
-	m_DeviceContext = nullptr;
-	m_Fullscreened = false;
-	m_WindowStyle = NULL;
-	m_Placement = {};
-}
-void kl::window::stop() const {
-	PostMessageA(m_Window, WM_CLOSE, NULL, NULL);
-}
-bool kl::window::running() const {
-	return bool(m_Window);
+kl::window::~window() {
+	// Clearing DC
+	ReleaseDC(m_Window, m_DeviceContext);
+	DeleteDC(m_DeviceContext);
+
+	// Clearing window
+	DestroyWindow(m_Window);
+	UnregisterClassA(m_Name.c_str(), m_Instance);
 }
 
 kl::window::operator HWND() const {
 	return m_Window;
+}
+
+kl::window::operator bool() const {
+	return running();
+}
+
+bool kl::window::process(bool wait) {
+	MSG message;
+	if (wait) {
+		GetMessageA(&message, m_Window, 0, 0);
+		HandleMessage(message);
+	}
+	else {
+		while (PeekMessageA(&message, m_Window, 0, 0, PM_REMOVE)) {
+			HandleMessage(message);
+		}
+	}
+	keys.update();
+	mouse.update();
+	return running();
+}
+
+bool kl::window::running() const {
+	return IsWindow(m_Window);
+}
+
+void kl::window::close() const {
+	PostMessageA(m_Window, WM_CLOSE, NULL, NULL);
+}
+
+bool kl::window::resizeable() const {
+	if (!m_Fullscreened) {
+		return m_Resizeable;
+	}
+	return false;
+}
+
+void kl::window::resizeable(bool enabled) {
+	if (!m_Fullscreened) {
+		if (!m_Resizeable && enabled) {
+			SetWindowLongA(m_Window, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+			m_WindowStyle = GetWindowLongA(m_Window, GWL_STYLE);
+		}
+		else if (m_Resizeable && !enabled) {
+			SetWindowLongA(m_Window, GWL_STYLE, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+			m_WindowStyle = GetWindowLongA(m_Window, GWL_STYLE);
+		}
+		m_Resizeable = enabled;
+	}
+}
+
+void kl::window::maximize() {
+	ShowWindow(m_Window, SW_MAXIMIZE);
+}
+
+void kl::window::minimize() {
+	ShowWindow(m_Window, SW_MINIMIZE);
+}
+
+bool kl::window::fullscreen() const {
+	return m_Fullscreened;
 }
 
 void kl::window::fullscreen(bool enable) {
@@ -74,32 +134,69 @@ void kl::window::fullscreen(bool enable) {
 		GetWindowPlacement(m_Window, &m_Placement);
 		SetWindowLongA(m_Window, GWL_STYLE, m_WindowStyle & ~WS_OVERLAPPEDWINDOW);
 		SetWindowPos(m_Window, HWND_TOP, 0, 0, kl::screen::size.x, kl::screen::size.y, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-		m_Fullscreened = true;
 	}
 	else if (m_Fullscreened && !enable) {
 		SetWindowLongA(m_Window, GWL_STYLE, m_WindowStyle);
 		SetWindowPlacement(m_Window, &m_Placement);
 		SetWindowPos(m_Window, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-		m_Fullscreened = false;
+	}
+	m_Fullscreened = enable;
+}
+
+kl::int2 kl::window::position(bool client) const {
+	RECT rect = {};
+	if (client) {
+		GetClientRect(m_Window, &rect);
+	}
+	else {
+		GetWindowRect(m_Window, &rect);
+	}
+	return { rect.left, rect.top };
+}
+
+void kl::window::position(const kl::int2& position) {
+	if (!m_Fullscreened) {
+		kl::uint2 size = this->size(false);
+		MoveWindow(m_Window, position.x, position.y, size.x, size.y, false);
 	}
 }
 
-void kl::window::maximize() {
-	ShowWindow(m_Window, SW_MAXIMIZE);
-}
-void kl::window::minimize() {
-	ShowWindow(m_Window, SW_MINIMIZE);
+kl::uint2 kl::window::size(bool client) const {
+	RECT rect = {};
+	if (client) {
+		GetClientRect(m_Window, &rect);
+	}
+	else {
+		GetWindowRect(m_Window, &rect);
+	}
+	return { rect.right - rect.left, rect.bottom - rect.top };
 }
 
-kl::uint2 kl::window::size() const {
-	RECT clientArea = {};
-	GetClientRect(m_Window, &clientArea);
-	return kl::uint2(clientArea.right - clientArea.left, clientArea.bottom - clientArea.top);
+void kl::window::size(const kl::uint2& size, bool client) {
+	if (!m_Fullscreened) {
+		kl::int2 position = this->position();
+		kl::uint2 newSize = size;
+
+		if (client) {
+			RECT rect = {
+				LONG(position.x),
+				LONG(position.y),
+				LONG(position.x + size.x),
+				LONG(position.y + size.y)
+			};
+			AdjustWindowRect(&rect, m_WindowStyle, false);
+			newSize = { rect.right - rect.left, rect.bottom - rect.top };
+		}
+
+		MoveWindow(m_Window, position.x, position.y, newSize.x, newSize.y, false);
+	}
 }
+
 float kl::window::aspect() const {
 	const kl::uint2 winSize = size();
 	return float(winSize.x) / winSize.y;
 }
+
 kl::uint2 kl::window::center() const {
 	return size() / 2;
 }
@@ -128,6 +225,7 @@ void kl::window::draw(const kl::color* data, const kl::uint2& size, const kl::in
 	bmpInfo.bmiHeader.biHeight = -int(size.y);
 	StretchDIBits(m_DeviceContext, position.x, position.y, size.x, size.y, 0, 0, size.x, size.y, data, &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 }
+
 void kl::window::draw(const kl::image& toDraw, const kl::int2& position) {
 	draw(toDraw.data(), toDraw.size(), position);
 }

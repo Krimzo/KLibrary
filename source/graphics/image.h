@@ -22,17 +22,21 @@ namespace kl {
 		std::vector<kl::color>::iterator end();
 
 		uint width() const;
+		void width(uint width);
+
 		uint height() const;
+		void height(uint height);
+
 		kl::uint2 size() const;
+		void size(const kl::uint2& size);
+
 		kl::color pixel(const kl::uint2& coords) const;
+		void pixel(const kl::uint2& coords, const kl::color& color);
+
 		kl::color* data();
 		const kl::color* data() const;
-		kl::image rect(kl::uint2 a, kl::uint2 b) const;
 
-		bool width(uint width);
-		bool height(uint height);
-		bool resize(const kl::uint2& size);
-		bool pixel(const kl::uint2& coords, const kl::color& color);
+		kl::image rect(kl::uint2 a, kl::uint2 b) const;
 
 		bool fromFile(const std::string& filePath);
 		bool toFile(const std::string& fileName) const;

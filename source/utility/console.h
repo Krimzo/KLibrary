@@ -5,24 +5,25 @@
 
 
 namespace kl {
+	void get();
+
 	namespace console {
 		void hide();
 		void show();
 		void clear();
 
-		void hideCursor();
-		void showCursor();
-		void moveCursor(const kl::uint2& pos);
+		void cursor(bool enable);
+		void cursor(const kl::uint2& position);
 
 		kl::uint2 size();
-		void resize(const kl::uint2& size);
+		void size(const kl::uint2& size);
 
 		void title(const std::string& text);
 		void font(const kl::uint2& size, const std::string& fontName = "Consolas");
 
 		char input();
-		void waitFor(char toWaitFor, bool echo = false);
-		char waitForAny(bool echo = false);
+		void wait(char toWaitFor, bool echo = false);
+		char waitAny(bool echo = false);
 
 		bool warning(bool occured, const std::string& message, bool wait = false);
 		void error(bool occured, const std::string& message, bool wait = true);

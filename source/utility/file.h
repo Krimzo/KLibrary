@@ -28,9 +28,10 @@ namespace kl {
 		void operator=(const kl::file&) = delete;
 		~file();
 
+		operator bool() const;
+
 		bool open(const std::string& filePath, bool clear = true);
 		bool close();
-		bool isOpen() const;
 
 		bool seek(int64 position);
 		bool move(int64 delta);

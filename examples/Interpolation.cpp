@@ -1,11 +1,11 @@
 #include "KrimzLib.h"
 
 
-constexpr float fpsLimit = 165.0f;
+static constexpr float fpsLimit = 165.0f;
 
 int main() {
-	kl::window window;
-	kl::image frame(kl::uint2(900, 900));
+	kl::window window = { { 900, 900 }, "Interpolation" };
+	kl::image frame(window.size());
 	kl::timer timer;
 
 	kl::float2 A = { 50.0f, (frame.height() - 1.0f) / 3.0f };
@@ -24,7 +24,7 @@ int main() {
 	const kl::float4 t1Consts = T1.constants();
 	const kl::float4 t2Consts = T2.constants();
 
-	window.update = [&]() {
+	while (window.process(false)) {
 		timer.reset();
 
 		static uint frameInd = 0;
@@ -60,9 +60,8 @@ int main() {
 
 		if (++frameInd == frame.width() + frame.height()) {
 			window.title("Finished!");
-			window.update = []() {};
+			window.close();
+			kl::get();
 		}
-	};
-
-	window.run(frame.size(), "Triangle Interpolation", false, true);
+	}
 }

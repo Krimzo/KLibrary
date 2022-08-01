@@ -25,9 +25,10 @@ namespace kl {
 		void operator=(const kl::video&) = delete;
 		~video();
 
+		operator bool() const;
+
 		void open(const std::string& filePath);
 		void close();
-		bool isOpen() const;
 
 		uint64 byteSize() const;
 		float duration() const;

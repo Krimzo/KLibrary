@@ -17,12 +17,14 @@
 
 
 kl::image::image() {
-	resize({});
+	size({});
 }
+
 kl::image::image(const kl::uint2& size, const kl::color& color) {
-	resize(size);
+	this->size(size);
 	fill(color);
 }
+
 kl::image::image(const std::string& filePath) {
 	if (!fromFile(filePath)) {
 		this->kl::image::image();
@@ -32,6 +34,7 @@ kl::image::image(const std::string& filePath) {
 std::vector<kl::color>::iterator kl::image::begin() {
 	return m_Pixels.begin();
 }
+
 std::vector<kl::color>::iterator kl::image::end() {
 	return m_Pixels.end();
 }
@@ -39,24 +42,51 @@ std::vector<kl::color>::iterator kl::image::end() {
 uint kl::image::width() const {
 	return m_Size.x;
 }
+
+void kl::image::width(uint width) {
+	size(kl::int2(width, m_Size.y));
+}
+
 uint kl::image::height() const {
 	return m_Size.y;
 }
+
+void kl::image::height(uint height) {
+	size(kl::int2(m_Size.x, height));
+}
+
 kl::uint2 kl::image::size() const {
 	return m_Size;
 }
+
+void kl::image::size(const kl::uint2& size) {
+	if (size != m_Size) {
+		m_Pixels.resize(uint64(size.x) * size.y);
+		m_Size = size;
+	}
+}
+
 kl::color kl::image::pixel(const kl::uint2& coords) const {
 	if (coords.x < m_Size.x && coords.y < m_Size.y) {
-		return m_Pixels[uint64(coords.y * m_Size.x + coords.x)];
+		return m_Pixels[uint64(coords.y) * m_Size.x + coords.x];
 	}
 	return kl::colors::black;
 }
+
+void kl::image::pixel(const kl::uint2& coords, const kl::color& color) {
+	if (coords.x < m_Size.x && coords.y < m_Size.y) {
+		m_Pixels[uint64(coords.y) * m_Size.x + coords.x] = color;
+	}
+}
+
 kl::color* kl::image::data() {
 	return &m_Pixels[0];
 }
+
 const kl::color* kl::image::data() const {
 	return &m_Pixels[0];
 }
+
 kl::image kl::image::rect(kl::uint2 a, kl::uint2 b) const {
 	if (b.x < a.x) {
 		std::swap(a.x, b.x);
@@ -73,28 +103,6 @@ kl::image kl::image::rect(kl::uint2 a, kl::uint2 b) const {
 	return temp;
 }
 
-bool kl::image::width(uint width) {
-	return resize(kl::int2(width, m_Size.y));
-}
-bool kl::image::height(uint height) {
-	return resize(kl::int2(m_Size.x, height));
-}
-bool kl::image::resize(const kl::uint2& size) {
-	if (size != m_Size) {
-		m_Pixels.resize(uint64(size.x * size.y));
-		m_Size = size;
-		return true;
-	}
-	return false;
-}
-bool kl::image::pixel(const kl::uint2& coords, const kl::color& color) {
-	if (coords.x < m_Size.x && coords.y < m_Size.y) {
-		m_Pixels[uint64(coords.y * m_Size.x + coords.x)] = color;
-		return true;
-	}
-	return false;
-}
-
 bool kl::image::fromFile(const std::string& filePath) {
 	uint64 gdiplusToken = NULL;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
@@ -108,7 +116,7 @@ bool kl::image::fromFile(const std::string& filePath) {
 		if (kl::console::warning(loadedBitmap.GetLastStatus(), "Failed to open image file \"" + filePath + "\"")) {
 			return false;
 		}
-		resize(kl::int2(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
+		size(kl::int2(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
 		loadedBitmap.LockBits(nullptr, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
 		memcpy(&m_Pixels[0], bitmapData.Scan0, m_Pixels.size() * sizeof(kl::color));
 	}
@@ -117,9 +125,10 @@ bool kl::image::fromFile(const std::string& filePath) {
 	return true;
 }
 
-static const CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a, 0x73, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e } };
-static const CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a, 0x73, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e } };
-static const CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a, 0x73, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e } };
+static constexpr CLSID bmpEncoderCLSID = { 0x557cf400, 0x1a04, 0x11d3, { 0x9a, 0x73, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e } };
+static constexpr CLSID jpgEncoderCLSID = { 0x557cf401, 0x1a04, 0x11d3, { 0x9a, 0x73, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e } };
+static constexpr CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a, 0x73, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e } };
+
 bool kl::image::toFile(const std::string& fileName) const {
 	const CLSID* formatToUse = nullptr;
 	const std::string fileExtension = kl::file::extension(fileName);
@@ -138,9 +147,9 @@ bool kl::image::toFile(const std::string& fileName) const {
 			for (uint x = 0; x < m_Size.x; x++)
 				ss <<
 				x << " " << y << " => " <<
-				uint(m_Pixels[uint64(y * m_Size.x + x)].r) << " " <<
-				uint(m_Pixels[uint64(y * m_Size.x + x)].g) << " " <<
-				uint(m_Pixels[uint64(y * m_Size.x + x)].b) << "\n";
+				uint(m_Pixels[uint64(y) * m_Size.x + x].r) << " " <<
+				uint(m_Pixels[uint64(y) * m_Size.x + x].g) << " " <<
+				uint(m_Pixels[uint64(y) * m_Size.x + x].b) << "\n";
 		kl::file::writeString(fileName, ss.str());
 		return true;
 	}
@@ -177,7 +186,7 @@ kl::image kl::image::flipH() const {
 	kl::image temp(size());
 	for (uint y = 0; y < m_Size.y; y++) {
 		for (uint x = 0; x < m_Size.x; x++) {
-			temp.m_Pixels[uint64(y * m_Size.x + x)] = m_Pixels[uint64(y * m_Size.x + m_Size.x - 1 - x)];
+			temp.m_Pixels[uint64(y) * m_Size.x + x] = m_Pixels[uint64(y) * m_Size.x + m_Size.x - 1 - x];
 		}
 	}
 	return temp;
@@ -187,7 +196,7 @@ kl::image kl::image::flipV() const {
 	kl::image temp(size());
 	for (uint x = 0; x < m_Size.x; x++) {
 		for (uint y = 0; y < m_Size.y; y++) {
-			temp.m_Pixels[uint64(y * m_Size.x + x)] = m_Pixels[uint64((m_Size.y - 1 - y) * m_Size.x + x)];
+			temp.m_Pixels[uint64(y) * m_Size.x + x] = m_Pixels[(uint64(m_Size.y) - 1 - y) * m_Size.x + x];
 		}
 	}
 	return temp;
