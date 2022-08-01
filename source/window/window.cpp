@@ -106,11 +106,11 @@ bool kl::window::resizeable() const {
 void kl::window::resizeable(bool enabled) {
 	if (!m_Fullscreened) {
 		if (!m_Resizeable && enabled) {
-			SetWindowLongA(m_Window, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+			SetWindowLongA(m_Window, GWL_STYLE, GetWindowLongA(m_Window, GWL_STYLE) | WS_SIZEBOX | WS_MAXIMIZEBOX);
 			m_WindowStyle = GetWindowLongA(m_Window, GWL_STYLE);
 		}
 		else if (m_Resizeable && !enabled) {
-			SetWindowLongA(m_Window, GWL_STYLE, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+			SetWindowLongA(m_Window, GWL_STYLE, GetWindowLongA(m_Window, GWL_STYLE) & ~WS_SIZEBOX & ~WS_MAXIMIZEBOX);
 			m_WindowStyle = GetWindowLongA(m_Window, GWL_STYLE);
 		}
 		m_Resizeable = enabled;
