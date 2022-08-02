@@ -16,6 +16,8 @@ namespace kl {
 		vertex(const kl::float3& world, const kl::float2& texture, const kl::float3& normal);
 	};
 
+	using mesh = std::vector<kl::vertex>;
+
 	// std::cout
 	std::ostream& operator<<(std::ostream& os, const kl::vertex& obj);
 }

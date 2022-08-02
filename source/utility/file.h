@@ -15,12 +15,26 @@ namespace kl {
 		FILE* m_File = nullptr;
 
 	public:
-		static std::string extension(const std::string& filePath);
-		static std::vector<std::string> getFiles(const std::string& dirPath, bool recursive = false);
-		static std::string readString(const std::string& filePath);
-		static bool writeString(const std::string& filePath, const std::string& data);
-		static bool appendString(const std::string& filePath, const std::string& data, int position = -1);
-		static std::vector<kl::vertex> parseMesh(const std::string& filePath, bool flipZ = true);
+		class get {
+			get() {}
+		public:
+			static std::string extension(const std::string& filePath);
+			static std::vector<std::string> files(const std::string& dirPath, bool recursive = false);
+		};
+
+		class strings {
+			strings() {}
+		public:
+			static std::string read(const std::string& filePath);
+			static bool write(const std::string& filePath, const std::string& data);
+			static bool append(const std::string& filePath, const std::string& data, int position = -1);
+		};
+
+		class parse {
+			parse() {}
+		public:
+			static kl::mesh mesh(const std::string& filePath, bool flipZ = true);
+		};
 
 		file();
 		file(const std::string& filePath, bool clear = true);
@@ -40,11 +54,8 @@ namespace kl {
 		int64 tell() const;
 
 		template<typename T>
-		bool read(T& object) const {
-			if (m_File) {
-				return bool(fread(&object, sizeof(T), 1, m_File));
-			}
-			return false;
+		uint64 read(T& object) const {
+			return read(&object, 1);
 		}
 
 		template<typename T>
@@ -52,15 +63,12 @@ namespace kl {
 			if (m_File) {
 				return fread(buffer, sizeof(T), count, m_File);
 			}
-			return false;
+			return 0;
 		}
 
 		template<typename T>
-		bool write(const T& object) {
-			if (m_File) {
-				return bool(fwrite(&object, sizeof(T), 1, m_File));
-			}
-			return false;
+		uint64 write(const T& object) {
+			return write(&object, 1);
 		}
 
 		template<typename T>
@@ -68,7 +76,7 @@ namespace kl {
 			if (m_File) {
 				return fwrite(buffer, sizeof(T), count, m_File);
 			}
-			return false;
+			return 0;
 		}
 	};
 }

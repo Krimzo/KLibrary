@@ -14,8 +14,9 @@ kl::dx::mesh kl::gpu::newVertexBuffer(const std::vector<kl::vertex>& vertexData)
 
 	return newBuffer(&bufferDesc, &bufferData);
 }
+
 kl::dx::mesh kl::gpu::newVertexBuffer(const std::string& filePath, bool flipZ) {
-	return newVertexBuffer(kl::file::parseMesh(filePath, flipZ));
+	return newVertexBuffer(kl::file::parse::mesh(filePath, flipZ));
 }
 
 void kl::gpu::draw(kl::dx::mesh mesh) {

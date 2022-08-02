@@ -8,9 +8,9 @@
 #include <syncstream>
 
 
-namespace kl {
-	using wchar = wchar_t;
+using wchar = wchar_t;
 
+namespace kl {
 	namespace to {
 		std::string string(const std::wstring& data);
 		std::wstring wstring(const std::string& data);

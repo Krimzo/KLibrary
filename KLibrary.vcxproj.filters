@@ -126,7 +126,7 @@
     <ClCompile Include="source\window\window_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\Mandelbrot.cpp">
+    <ClCompile Include="examples\Interpolation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

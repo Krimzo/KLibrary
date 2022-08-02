@@ -131,7 +131,8 @@ static constexpr CLSID pngEncoderCLSID = { 0x557cf406, 0x1a04, 0x11d3, { 0x9a, 0
 
 bool kl::image::toFile(const std::string& fileName) const {
 	const CLSID* formatToUse = nullptr;
-	const std::string fileExtension = kl::file::extension(fileName);
+	const std::string fileExtension = kl::file::get::extension(fileName);
+
 	if (fileExtension == ".bmp") {
 		formatToUse = &bmpEncoderCLSID;
 	}
@@ -141,19 +142,20 @@ bool kl::image::toFile(const std::string& fileName) const {
 	else if (fileExtension == ".png") {
 		formatToUse = &pngEncoderCLSID;
 	}
-	else if (fileExtension == ".txt") {
-		std::stringstream ss;
-		for (uint y = 0; y < m_Size.y; y++)
-			for (uint x = 0; x < m_Size.x; x++)
-				ss <<
-				x << " " << y << " => " <<
-				uint(m_Pixels[uint64(y) * m_Size.x + x].r) << " " <<
-				uint(m_Pixels[uint64(y) * m_Size.x + x].g) << " " <<
-				uint(m_Pixels[uint64(y) * m_Size.x + x].b) << "\n";
-		kl::file::writeString(fileName, ss.str());
-		return true;
-	}
 	else {
+		if (fileExtension == ".txt") {
+			std::ofstream file(fileName);
+			if (file.is_open()) {
+				for (uint y = 0; y < m_Size.y; y++) {
+					for (uint x = 0; x < m_Size.x; x++) {
+						kl::color pixel = m_Pixels[uint64(y) * m_Size.x + x];
+						kl::write(file, x, " ", y, " => ", uint(pixel.r), " ", uint(pixel.g), " ", uint(pixel.b));
+					}
+				}
+				file.close();
+				return true;
+			}
+		}
 		return false;
 	}
 

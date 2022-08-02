@@ -55,8 +55,7 @@ int main() {
 
 		window.title(kl::format(int((100.0f * frameInd) / (frame.width() + frame.height() - 1)), "%"));
 
-		static const float timeToSleep = 1.0f / fpsLimit;
-		while (timer.elapsed() < timeToSleep);
+		kl::time::wait((1.0f / fpsLimit) - timer.elapsed());
 
 		if (++frameInd == frame.width() + frame.height()) {
 			window.title("Finished!");
