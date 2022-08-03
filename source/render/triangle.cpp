@@ -2,6 +2,7 @@
 
 
 kl::triangle::triangle() {}
+
 kl::triangle::triangle(const kl::vertex& a, const kl::vertex& b, const kl::vertex& c) : a(a), b(b), c(c) {}
 
 kl::float4 kl::triangle::constants() const {
@@ -13,6 +14,7 @@ kl::float4 kl::triangle::constants() const {
 		(a.world.x - c.world.x) * tempConst
 	};
 }
+
 kl::float3 kl::triangle::weights(const kl::float4& consts, const kl::float2& pos) const {
 	const float dx = pos.x - c.world.x;
 	const float dy = pos.y - c.world.y;
@@ -20,6 +22,7 @@ kl::float3 kl::triangle::weights(const kl::float4& consts, const kl::float2& pos
 	const float w2 = dx * consts.z + dy * consts.w;
 	return { w1, w2, 1.0f - w1 - w2 };
 }
+
 kl::float3 kl::triangle::weights(const kl::float3& point) const {
 	const kl::float3 v0 = a.world - c.world;
 	const kl::float3 v1 = b.world - c.world;
@@ -42,6 +45,7 @@ bool kl::triangle::in(const kl::float3& weights) const {
 float kl::triangle::interpolate(const kl::float3& weights, const kl::float3& values) const {
 	return weights.dot(values);
 }
+
 kl::vertex kl::triangle::interpolate(const kl::float3& weights) const {
 	return {
 		kl::float3{

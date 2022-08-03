@@ -46,6 +46,7 @@ int main() {
 			else {
 				pixel = kl::colors::gray;
 			}
+
 			frame.pixel({ x, y }, pixel);
 			frame.pixel({ x + 1, y }, kl::random::COLOR());
 			frame.pixel({ x + 2, y }, kl::random::COLOR());

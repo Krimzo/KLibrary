@@ -29,10 +29,7 @@ float kl::time::interval() {
 
 void kl::time::wait(float seconds) {
 	const int64 startTime = kl::time::get();
-	int64 endTime = kl::time::get();
-	while (kl::time::calculate(startTime, endTime) < seconds) {
-		endTime = kl::time::get();
-	}
+	while (kl::time::calculate(startTime, kl::time::get()) < seconds);
 }
 
 bool kl::time::sleep(float seconds) {
