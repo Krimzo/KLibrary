@@ -59,8 +59,7 @@ int main() {
 
 		if (++frameInd == frame.width() + frame.height()) {
 			window.title("Finished!");
-			window.close();
-			kl::get();
+			while (window.process());
 		}
 	}
 }
