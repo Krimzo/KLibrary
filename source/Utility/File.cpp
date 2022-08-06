@@ -141,12 +141,12 @@ bool kl::File::close() {
 	return false;
 }
 
-bool kl::File::seek(int64 pos) {
+bool kl::File::seek(int64 position) {
 	if (m_File) {
-		if (pos >= 0) {
-			return !fseek(m_File, long(pos), SEEK_SET);
+		if (position >= 0) {
+			return !fseek(m_File, long(position), SEEK_SET);
 		}
-		return !fseek(m_File, long(pos + 1), SEEK_END);
+		return !fseek(m_File, long(position + 1), SEEK_END);
 	}
 	return false;
 }
