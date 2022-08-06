@@ -5,7 +5,7 @@
 
 namespace kl {
 	template<typename T>
-	struct vector4 {
+	struct Vector4 {
 		union {
 			struct {
 				T x, y, z, w;
@@ -13,150 +13,125 @@ namespace kl {
 			struct {
 				T r, g, b, a;
 			};
-			kl::vector2<T> xy;
-			kl::vector3<T> xyz;
-			kl::vector2<T> rg;
-			kl::vector3<T> rgb;
+			Vector2<T> xy;
+			Vector3<T> xyz;
+			Vector2<T> rg;
+			Vector3<T> rgb;
 			T data[4] = {};
 		};
 
-		vector4()
-			: x(), y(), z(), w() {}
+		Vector4() {}
 
 		template<typename T0, typename T1, typename T2, typename T3>
-		vector4(const T0& x, const T1& y, const T2& z, const T3& w)
-			: x(T(x)), y(T(y)), z(T(z)), w(T(w)) {}
+		Vector4(const T0& x, const T1& y, const T2& z, const T3& w) : x(T(x)), y(T(y)), z(T(z)), w(T(w)) {}
 
 		template<typename T0>
-		vector4(const kl::vector3<T>& v, const T0& w)
-			: x(v.x), y(v.y), z(v.z), w(T(w)) {}
+		Vector4(const kl::Vector3<T>& v, const T0& w) : x(v.x), y(v.y), z(v.z), w(T(w)) {}
 
 		template<typename T0>
-		vector4(const T0& x, const kl::vector3<T>& v)
-			: x(T(x)), y(v.x), z(v.y), w(v.z) {}
+		Vector4(const T0& x, const kl::Vector3<T>& v) : x(T(x)), y(v.x), z(v.y), w(v.z) {}
 
 		template<typename T0, typename T1>
-		vector4(const kl::vector2<T>& v, const T0& z, const T1& w)
-			: x(v.x), y(v.y), z(T(z)), w(T(w)) {}
+		Vector4(const Vector2<T>& v, const T0& z, const T1& w) : x(v.x), y(v.y), z(T(z)), w(T(w)) {}
 
 		template<typename T0, typename T1>
-		vector4(const T0& x, const kl::vector2<T>& v, const T1& w)
-			: x(T(x)), y(v.x), z(v.y), w(T(w)) {}
+		Vector4(const T0& x, const Vector2<T>& v, const T1& w) : x(T(x)), y(v.x), z(v.y), w(T(w)) {}
 
 		template<typename T0, typename T1>
-		vector4(const T0& x, const T1& y, const kl::vector2<T>& v)
-			: x(T(x)), y(T(y)), z(v.x), w(v.y) {}
+		Vector4(const T0& x, const T1& y, const Vector2<T>& v) : x(T(x)), y(T(y)), z(v.x), w(v.y) {}
 
-		vector4(const kl::color& col)
-			: x(toFloatColor(col.r)), y(toFloatColor(col.g)), z(toFloatColor(col.b)), w(toFloatColor(col.a)) {}
+		Vector4(const Color& color) : x(ToFloatColor(color.r)), y(ToFloatColor(color.g)), z(ToFloatColor(color.b)), w(ToFloatColor(color.a)) {}
 
-		// Getters
-		T& operator[](uint64 ind) {
+		T& operator[](int ind) {
 			return data[ind];
 		}
 
-		const T& operator[](uint64 ind) const {
+		const T& operator[](int ind) const {
 			return data[ind];
 		}
 
 		template<typename T0>
-		operator kl::vector4<T0>() const {
+		operator Vector4<T0>() const {
 			return { T0(x), T0(y), T0(z), T0(w) };
 		}
 
-		operator kl::color() const {
-			return { toByteColor(x), toByteColor(y), toByteColor(z), toByteColor(w) };
+		operator Color() const {
+			return { ToByteColor(x), ToByteColor(y), ToByteColor(z), ToByteColor(w) };
 		}
 
-		// Addition
-		void add(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
+		Vector4<T> operator+(const Vector4<T>& obj) const {
+			Vector4<T> result;
 			for (int i = 0; i < 4; i++) {
-				out[i] = data[i] + obj[i];
+				result[i] = data[i] + obj[i];
 			}
-		}
-		kl::vector4<T> operator+(const kl::vector4<T>& obj) const {
-			kl::vector4<T> temp;
-			add(obj, temp);
-			return temp;
-		}
-		void operator+=(const kl::vector4<T>& obj) {
-			add(obj, *this);
+			return result;
 		}
 
-		// Subtraction
-		void subtract(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
-			for (int i = 0; i < 4; i++) {
-				out[i] = data[i] - obj[i];
-			}
-		}
-		kl::vector4<T> operator-(const kl::vector4<T>& obj) const {
-			kl::vector4<T> temp;
-			subtract(obj, temp);
-			return temp;
-		}
-		void operator-=(const kl::vector4<T>& obj) {
-			subtract(obj, *this);
+		void operator+=(const kl::Vector4<T>& obj) {
+			*this = *this + obj;
 		}
 
-		// Multiplication
-		void multiply(const T& val, kl::vector4<T>& out) const {
+		Vector4<T> operator-(const Vector4<T>& obj) const {
+			Vector4<T> result;
 			for (int i = 0; i < 4; i++) {
-				out[i] = data[i] * val;
+				result[i] = data[i] - obj[i];
 			}
+			return result;
 		}
-		kl::vector4<T> operator*(const T& val) const {
-			kl::vector4<T> temp;
-			multiply(val, temp);
-			return temp;
+
+		void operator-=(const Vector4<T>& obj) {
+			*this = *this - obj;
 		}
+
+		Vector4<T> operator*(const T& val) const {
+			Vector4<T> result;
+			for (int i = 0; i < 4; i++) {
+				result[i] = data[i] * val;
+			}
+			return result;
+		}
+
 		void operator*=(const T& val) {
-			multiply(val, *this);
-		}
-		void multiply(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
-			for (int i = 0; i < 4; i++) {
-				out[i] = data[i] * obj[i];
-			}
-		}
-		kl::vector4<T> operator*(const kl::vector4<T>& obj) const {
-			kl::vector4<T> temp;
-			multiply(obj, temp);
-			return temp;
-		}
-		void operator*=(const kl::vector4<T>& obj) {
-			multiply(obj, *this);
+			*this = *this * val;
 		}
 
-		// Division
-		void divide(const T& val, kl::vector4<T>& out) const {
-			const float recVal = 1.0f / val;
+		Vector4<T> operator*(const Vector4<T>& obj) const {
+			Vector4<T> result;
 			for (int i = 0; i < 4; i++) {
-				out[i] = T(data[i] * recVal);
+				result[i] = data[i] * obj[i];
 			}
+			return result;
 		}
-		kl::vector4<T> operator/(const T& val) const {
-			kl::vector4<T> temp;
-			divide(val, temp);
-			return temp;
+
+		void operator*=(const Vector4<T>& obj) {
+			*this = *this * obj;
 		}
+
+		Vector4<T> operator/(const T& val) const {
+			Vector4<T> result;
+			for (int i = 0; i < 4; i++) {
+				result[i] = data[i] / val;
+			}
+			return result;
+		}
+
 		void operator/=(const T& val) {
-			divide(val, *this);
-		}
-		void divide(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
-			for (int i = 0; i < 4; i++) {
-				out[i] = data[i] / obj[i];
-			}
-		}
-		kl::vector4<T> operator/(const kl::vector4<T>& obj) const {
-			kl::vector4<T> temp;
-			divide(obj, temp);
-			return temp;
-		}
-		void operator/=(const kl::vector4<T>& obj) {
-			divide(obj, *this);
+			*this = *this / val;
 		}
 
-		// Conditional
-		bool equals(const kl::vector4<T>& obj) const {
+		Vector4<T> operator/(const Vector4<T>& obj) const {
+			Vector4<T> result;
+			for (int i = 0; i < 4; i++) {
+				result[i] = data[i] / obj[i];
+			}
+			return result;
+		}
+
+		void operator/=(const kl::Vector4<T>& obj) {
+			*this = *this / obj;
+		}
+
+		bool operator==(const kl::Vector4<T>& obj) const {
 			for (int i = 0; i < 4; i++) {
 				if (data[i] != obj[i]) {
 					return false;
@@ -164,70 +139,50 @@ namespace kl {
 			}
 			return true;
 		}
-		bool operator==(const kl::vector4<T>& obj) const {
-			return equals(obj);
-		}
-		bool operator!=(const kl::vector4<T>& obj) const {
-			return !equals(obj);
+
+		bool operator!=(const kl::Vector4<T>& obj) const {
+			return !(*this == obj);
 		}
 
-		// Sign change
-		void absolute(kl::vector4<T>& out) const {
-			for (uint64 i = 0; i < 4; i++) {
-				out[i] = std::abs(data[i]);
+		Vector4<T> absolute() const {
+			Vector4<T> result;
+			for (int i = 0; i < 4; i++) {
+				result[i] = std::abs(data[i]);
 			}
-		}
-		kl::vector4<T> absolute() const {
-			kl::vector4<T> temp;
-			absolute(temp);
-			return temp;
-		}
-		void negate(kl::vector4<T>& out) const {
-			multiply(-1.0f, out);
-		}
-		kl::vector4<T> negate() const {
-			kl::vector4<T> temp;
-			negate(temp);
-			return temp;
+			return result;
 		}
 
-		// Length
+		Vector4<T> negate() const {
+			return *this * -1.0f;
+		}
+
 		T length() const {
 			T sum = {};
-			for (uint64 i = 0; i < 4; i++) {
+			for (int i = 0; i < 4; i++) {
 				sum += data[i] * data[i];
 			}
 			return std::sqrt(sum);
 		}
 
-		// Normalized
-		void normalize(kl::vector4<T>& out) const {
-			out = (*this) / length();
-		}
-		kl::vector4<T> normalize() const {
-			kl::vector4<T> temp;
-			normalize(temp);
-			return temp;
+		Vector4<T> normalize() const {
+			return *this / length();
 		}
 
-		// Dot product
-		T dot(const kl::vector4<T>& vec) const {
+		T dot(const Vector4<T>& vec) const {
 			T sum = {};
-			for (uint64 i = 0; i < 4; i++) {
+			for (int i = 0; i < 4; i++) {
 				sum += data[i] * vec[i];
 			}
 			return sum;
 		}
 
-		// Angle between vectors
-		T angle(const kl::vector4<T>& vec) const {
-			return kl::to::degrees(std::acos(normalize().dot(vec.normalize())));
+		T angle(const Vector4<T>& vec) const {
+			return Math::ToDegrees(std::acos(normalize().dot(vec.normalize())));
 		}
 	};
 
-	// std::cout
 	template<typename T>
-	inline std::ostream& operator<<(std::ostream& stream, const kl::vector4<T>& obj) {
+	inline std::ostream& operator<<(std::ostream& stream, const kl::Vector4<T>& obj) {
 		stream << std::fixed << std::setprecision(2);
 		stream << "(" << obj.x << ", " << obj.y << ", " << obj.z << ", " << obj.w << ")";
 		return stream;
@@ -235,15 +190,15 @@ namespace kl {
 }
 
 namespace kl {
-	using float4 = kl::vector4<float>;
-	using double4 = kl::vector4<double>;
-	using int4 = kl::vector4<int>;
-	using uint4 = kl::vector4<uint>;
-	using bool4 = kl::vector4<bool>;
+	using Float4 = Vector4<float>;
+	using Double4 = Vector4<double>;
+	using Int4 = Vector4<int>;
+	using UInt4 = Vector4<uint>;
+	using Bool4 = Vector4<bool>;
 
-	using vec4 = float4;
-	using dvec4 = double4;
-	using ivec4 = int4;
-	using uvec4 = uint4;
-	using bvec4 = bool4;
+	using Vec4 = Float4;
+	using DVec4 = Double4;
+	using IVec4 = Int4;
+	using UVec4 = UInt4;
+	using BVec4 = Bool4;
 }

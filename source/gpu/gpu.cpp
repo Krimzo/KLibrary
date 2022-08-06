@@ -11,17 +11,17 @@
 #pragma comment (lib, "d3d11.lib")
 
 
-kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : m_CBuffersPredefined(predefineCBuffers) {
-	RECT clientArea = {};
-	GetClientRect(hwnd, &clientArea);
+kl::GPU::GPU(HWND window) {
+	RECT windowClientArea = {};
+	GetClientRect(window, &windowClientArea);
 
 	DXGI_SWAP_CHAIN_DESC chaindes = {};
 	chaindes.BufferCount = 1;
 	chaindes.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	chaindes.BufferDesc.Width = clientArea.right;
-	chaindes.BufferDesc.Height = clientArea.bottom;
+	chaindes.BufferDesc.Width = windowClientArea.right;
+	chaindes.BufferDesc.Height = windowClientArea.bottom;
 	chaindes.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	chaindes.OutputWindow = hwnd;
+	chaindes.OutputWindow = window;
 	chaindes.SampleDesc.Count = 1;
 	chaindes.Windowed = true;
 	chaindes.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
@@ -40,79 +40,58 @@ kl::gpu::gpu(HWND hwnd, bool predefineCBuffers) : m_CBuffersPredefined(predefine
 		nullptr,
 		&m_Context
 	);
-	kl::console::error(!m_Device, "Failed to create device");
-	kl::console::error(!m_Context, "Failed to create device context");
-	kl::console::error(!m_Chain, "Failed to create swapchain");
+	Assert(!m_Device, "Failed to create device");
+	Assert(!m_Context, "Failed to create device context");
+	Assert(!m_Chain, "Failed to create swapchain");
 
 	m_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	regenInternal({ uint(clientArea.right), uint(clientArea.bottom) });
-	viewport({ int(clientArea.left), int(clientArea.top) }, { uint(clientArea.right), uint(clientArea.bottom) });
-	bind(newRasterState(false, false));
 
-	if (predefineCBuffers) {
-		for (uint i = 0; i < KL_CBUFFER_PREDEFINED_SIZE; i++) {
-			m_VertexCBuffers[i] = newCBuffer((i + 1) * 16);
-			m_PixelCBuffers[i] = newCBuffer((i + 1) * 16);
-		}
+	resizeInternal({ windowClientArea.right, windowClientArea.bottom });
+	setViewport({ windowClientArea.right, windowClientArea.bottom });
+
+	for (int i = 0; i < CBUFFER_PREDEFINED_SIZE; i++) {
+		m_VertexCBuffers[i] = newCBuffer((i + 1) * 16);
+		m_PixelCBuffers[i] = newCBuffer((i + 1) * 16);
 	}
 }
 
-kl::gpu::~gpu() {
+kl::GPU::~GPU() {
 	m_Chain->SetFullscreenState(false, nullptr);
 
 	for (auto& ref : m_Children) {
 		ref->Release();
 	}
 	m_Children.clear();
+
 	m_Chain->Release();
 	m_Context->Release();
 	m_Device->Release();
 }
 
-kl::dx::device kl::gpu::dev() {
+kl::dx::Device kl::GPU::getDevice() {
 	return m_Device;
 }
-kl::dx::context kl::gpu::con() {
+
+const kl::dx::Device kl::GPU::getDevice() const {
+	return m_Device;
+}
+
+kl::dx::Context kl::GPU::getContext() {
 	return m_Context;
 }
 
-void kl::gpu::regenInternal(const kl::uint2& size) {
-	bindTargets({});
-	if (m_FrameBuffer) {
-		destroy(m_FrameBuffer);
-	}
-	if (m_DepthBuffer) {
-		destroy(m_DepthBuffer);
-	}
-	m_Chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
-
-	kl::dx::texture bbTex = newTextureBB();
-	m_FrameBuffer = newTargetView(bbTex);
-	destroy(bbTex);
-
-	kl::dx::desc::texture dsTexDesc = {};
-	dsTexDesc.Width = size.x;
-	dsTexDesc.Height = size.y;
-	dsTexDesc.MipLevels = 1;
-	dsTexDesc.ArraySize = 1;
-	dsTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsTexDesc.SampleDesc.Count = 1;
-	dsTexDesc.Usage = D3D11_USAGE_DEFAULT;
-	dsTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	kl::dx::texture depthTex = newTexture(&dsTexDesc);
-	m_DepthBuffer = newDepthView(depthTex);
-	destroy(depthTex);
-
-	bindInternal();
+const kl::dx::Context kl::GPU::getContext() const {
+	return m_Context;
 }
 
-void kl::gpu::viewport(const kl::uint2& size) {
-	viewport({}, size);
+void kl::GPU::setViewport(const UInt2& size) {
+	setViewport({}, size);
 }
-void kl::gpu::viewport(const kl::int2& pos, const kl::uint2& size) {
+
+void kl::GPU::setViewport(const Int2& position, const UInt2& size) {
 	D3D11_VIEWPORT viewport = {};
-	viewport.TopLeftX = float(pos.x);
-	viewport.TopLeftY = float(pos.y);
+	viewport.TopLeftX = float(position.x);
+	viewport.TopLeftY = float(position.y);
 	viewport.Width = float(size.x);
 	viewport.Height = float(size.y);
 	viewport.MinDepth = 0.0f;
@@ -120,38 +99,77 @@ void kl::gpu::viewport(const kl::int2& pos, const kl::uint2& size) {
 	m_Context->RSSetViewports(1, &viewport);
 }
 
-void kl::gpu::bindInternal(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView) {
-	std::vector<kl::dx::view::target> combinedTargets = { m_FrameBuffer };
-	for (auto& target : targets) {
-		combinedTargets.push_back(target);
-	}
-	m_Context->OMSetRenderTargets(uint(combinedTargets.size()), &combinedTargets[0], depthView ? depthView : m_DepthBuffer);
+void kl::GPU::unbindAllTargets() {
+	m_Context->OMSetRenderTargets(0, nullptr, nullptr);
 }
 
-void kl::gpu::bindTargets(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView) {
+void kl::GPU::bindInternalTargets() {
+	m_Context->OMSetRenderTargets(1, &m_FrameBuffer, m_DepthBuffer);
+}
+
+void kl::GPU::bindTargets(const Vector<dx::TargetView>& targets, dx::DepthView depthView) {
 	m_Context->OMSetRenderTargets(uint(targets.size()), targets.data(), depthView ? depthView : m_DepthBuffer);
 }
 
-void kl::gpu::clearColor(const kl::float4& color) {
-	clear(m_FrameBuffer, color);
-}
-void kl::gpu::clearDepth() {
-	clear(m_DepthBuffer);
-}
-void kl::gpu::clear(const kl::float4& color) {
-	clear(m_FrameBuffer, color);
-	clear(m_DepthBuffer);
+void kl::GPU::bindTargetsWithInternal(const Vector<dx::TargetView>& additionalTargets, dx::DepthView depthView) {
+	Vector<dx::TargetView> combinedTargets = { m_FrameBuffer };
+	combinedTargets.insert(combinedTargets.end(), additionalTargets.begin(), additionalTargets.end());
+	m_Context->OMSetRenderTargets(uint(combinedTargets.size()), combinedTargets.data(), depthView ? depthView : m_DepthBuffer);
 }
 
-void kl::gpu::swap(bool vSync) {
+void kl::GPU::resizeInternal(const UInt2& size) {
+	unbindAllTargets();
+
+	if (m_FrameBuffer) {
+		destroy(m_FrameBuffer);
+	}
+	if (m_DepthBuffer) {
+		destroy(m_DepthBuffer);
+	}
+
+	m_Chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, NULL);
+
+	dx::Texture backbufferTexture = getBackBuffer();
+	m_FrameBuffer = newTargetView(backbufferTexture);
+	destroy(backbufferTexture);
+
+	dx::TextureDesc descriptor = {};
+	descriptor.Width = size.x;
+	descriptor.Height = size.y;
+	descriptor.MipLevels = 1;
+	descriptor.ArraySize = 1;
+	descriptor.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descriptor.SampleDesc.Count = 1;
+	descriptor.Usage = D3D11_USAGE_DEFAULT;
+	descriptor.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+	dx::Texture depthTexture = newTexture(&descriptor);
+	m_DepthBuffer = newDepthView(depthTexture);
+	destroy(depthTexture);
+
+	bindInternalTargets();
+}
+
+void kl::GPU::clearInternalColor(const Float4& color) {
+	clearTargetView(m_FrameBuffer, color);
+}
+
+void kl::GPU::clearInternalDepth(float value) {
+	clearDepthView(m_DepthBuffer, value);
+}
+
+void kl::GPU::clearInternal() {
+	clearInternalColor(Colors::Gray);
+	clearInternalDepth(1.0f);
+}
+
+void kl::GPU::swapBuffers(bool vSync) {
 	m_Chain->Present(vSync, NULL);
 }
 
-bool kl::gpu::destroy(IUnknown* child) {
+void kl::GPU::destroy(IUnknown* child) {
 	if (m_Children.contains(child)) {
 		child->Release();
 		m_Children.erase(child);
-		return true;
 	}
-	return false;
 }

@@ -1,44 +1,44 @@
 #include "utility/time.h"
 
 
-// Time
-int64 kl::time::get() {
+/* Time */
+kl::int64 kl::Time::Get() {
 	LARGE_INTEGER time = {};
 	QueryPerformanceCounter(&time);
 	return time.QuadPart;
 }
 
-int64 kl::time::frequency() {
+kl::int64 kl::Time::CPUFrequency() {
 	LARGE_INTEGER frequency = {};
 	QueryPerformanceFrequency(&frequency);
 	return frequency.QuadPart;
 }
 
-float kl::time::calculate(int64 start, int64 end) {
-	static const float recFrequency = 1.0f / kl::time::frequency();
+float kl::Time::Calculate(int64 start, int64 end) {
+	static const float recFrequency = 1.0f / Time::CPUFrequency();
 	return (end - start) * recFrequency;
 }
 
-float kl::time::interval() {
-	static int64 startTime = kl::time::get();
-	const int64 endTime = kl::time::get();
-	const float elapsedTime = kl::time::calculate(startTime, endTime);
+float kl::Time::GetInterval() {
+	static int64 startTime = Time::Get();
+	const int64 endTime = Time::Get();
+	const float elapsedTime = Time::Calculate(startTime, endTime);
 	startTime = endTime;
 	return elapsedTime;
 }
 
-void kl::time::wait(float seconds) {
-	const int64 startTime = kl::time::get();
-	while (kl::time::calculate(startTime, kl::time::get()) < seconds);
+void kl::Time::Wait(float seconds) {
+	const int64 startTime = Time::Get();
+	while (Time::Calculate(startTime, Time::Get()) < seconds);
 }
 
-bool kl::time::sleep(float seconds) {
+bool kl::Time::Sleep(float seconds) {
 	HANDLE timer = CreateWaitableTimerA(nullptr, true, nullptr);
 	if (!timer) {
 		return false;
 	}
 
-	static const int64 frequency = kl::time::frequency();
+	static const int64 frequency = Time::CPUFrequency();
 	const int64 toSleep = -int64(seconds * frequency);
 	if (!SetWaitableTimer(timer, (LARGE_INTEGER*) &toSleep, 0, nullptr, nullptr, false)) {
 		CloseHandle(timer);
@@ -50,7 +50,8 @@ bool kl::time::sleep(float seconds) {
 	return true;
 }
 
-std::ostream& kl::time::operator<<(std::ostream& stream, const kl::time::date& date) {
+/* Date */
+std::ostream& kl::operator<<(std::ostream& stream, const Date& date) {
 	stream << date.year <<
 		'.' << date.month <<
 		'.' << date.day <<
@@ -60,24 +61,32 @@ std::ostream& kl::time::operator<<(std::ostream& stream, const kl::time::date& d
 	return stream;
 }
 
-// Timer
-kl::timer::timer() {
-	int64 now = kl::time::get();
+/* Timer */
+kl::Timer::Timer() {
+	int64 now = Time::Get();
 	m_IntervalStart = now;
 	m_IntervalEnd = now;
 	m_ElapsedStart = now;
 }
 
-void kl::timer::reset() {
-	newInterval();
-	newElapsed();
+void kl::Timer::reset() {
+	updateInterval();
+	updateElapsed();
 }
 
-void kl::timer::newInterval() {
+void kl::Timer::updateInterval() {
 	m_IntervalStart = m_IntervalEnd;
-	m_IntervalEnd = kl::time::get();
+	m_IntervalEnd = Time::Get();
 }
 
-void kl::timer::newElapsed() {
-	m_ElapsedStart = kl::time::get();
+float kl::Timer::getInterval() const {
+	return Time::Calculate(m_IntervalStart, m_IntervalEnd);
+}
+
+void kl::Timer::updateElapsed() {
+	m_ElapsedStart = Time::Get();
+}
+
+float kl::Timer::getElapsed() const {
+	return Time::Calculate(m_ElapsedStart, Time::Get());
 }

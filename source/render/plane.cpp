@@ -1,11 +1,11 @@
 #include "render/plane.h"
 
 
-kl::plane::plane() {}
-kl::plane::plane(const kl::float3& normal, const kl::float3& point) : normal(normal.normalize()), point(point) {}
+kl::Plane::Plane() {}
+kl::Plane::Plane(const kl::Float3& normal, const kl::Float3& point) : normal(normal.normalize()), point(point) {}
 
 // std::cout
-std::ostream& kl::operator<<(std::ostream& os, const kl::plane& obj) {
+std::ostream& kl::operator<<(std::ostream& os, const kl::Plane& obj) {
 	os << "{" << obj.normal << ", " << obj.point << "}";
 	return os;
 }

@@ -5,63 +5,52 @@
 #include "math/math.h"
 
 
+namespace kl::Time {
+	int64 Get();
+	int64 CPUFrequency();
+	float Calculate(int64 start, int64 end);
+
+	float GetInterval();
+	void Wait(float seconds);
+	bool Sleep(float seconds);
+}
+
 namespace kl {
-	namespace time {
-		int64 get();
-		int64 frequency();
-		float calculate(int64 start, int64 end);
+	struct Date {
+		int year, month, day, hour, minute, second;
 
-		float interval();
-		void wait(float seconds);
-		bool sleep(float seconds);
+		Date() {
+			int64 time = std::time(nullptr);
+			std::tm now = {};
+			localtime_s(&now, &time);
 
-		struct date {
-			int year;
-			int month;
-			int day;
-			int hour;
-			int minute;
-			int second;
+			year = now.tm_year + 1900;
+			month = now.tm_mon + 1;
+			day = now.tm_mday;
+			hour = now.tm_hour;
+			minute = now.tm_min;
+			second = now.tm_sec;
+		}
+	};
 
-			date() {
-				int64 time = std::time(nullptr);
-				std::tm now = {};
-				localtime_s(&now, &time);
+	std::ostream& operator<<(std::ostream& stream, const Date& date);
+}
 
-				year = now.tm_year + 1900;
-				month = now.tm_mon + 1;
-				day = now.tm_mday;
-				hour = now.tm_hour;
-				minute = now.tm_min;
-				second = now.tm_sec;
-			}
-		};
-
-		std::ostream& operator<<(std::ostream& stream, const date& date);
-	}
-
-	class timer {
+namespace kl {
+	class Timer {
 		int64 m_IntervalStart;
 		int64 m_IntervalEnd;
 		int64 m_ElapsedStart;
 
 	public:
-		timer();
+		Timer();
 
 		void reset();
 
-		void newInterval();
+		void updateInterval();
+		float getInterval() const;
 
-		template<typename T = float>
-		T interval() const {
-			return T(kl::time::calculate(m_IntervalStart, m_IntervalEnd));
-		}
-
-		void newElapsed();
-
-		template<typename T = float>
-		T elapsed() const {
-			return T(kl::time::calculate(m_ElapsedStart, kl::time::get()));
-		}
+		void updateElapsed();
+		float getElapsed() const;
 	};
 }

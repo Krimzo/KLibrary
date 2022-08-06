@@ -6,30 +6,30 @@
 #undef far
 
 namespace kl {
-	class camera {
-	private:
-		kl::float3 m_Forward = { 0.0f, 0.0f, 1.0f };
-		kl::float3 m_Right = { 1.0f, 0.0f, 0.0f };
-		kl::float3 m_Up = { 0.0f, 1.0f, 0.0f };
+	class Camera {
+		Float3 m_Forward = { 0.0f, 0.0f, 1.0f };
+		Float3 m_Right = { 1.0f, 0.0f, 0.0f };
+		Float3 m_Up = { 0.0f, 1.0f, 0.0f };
 
 	public:
-		kl::float3 position;
-		float aspect = 1.7778f;
-		float fov = 75.0f;
-		float near = 0.01f;
-		float far = 500.0f;
+		Float3 position;
+		float aspectRatio = 1.7778f;
+		float fieldOfView = 75.0f;
+		float nearPlane = 0.01f;
+		float farPlane = 500.0f;
+		float sensitivity = 0.1f;
 		float speed = 2.0f;
-		float sens = 0.1f;
 
 		template<typename T>
-		void resize(const kl::vector2<T>& size) {
-			aspect = float(size.x) / float(size.y);
+		void updateAspectRatio(const Vector2<T>& size) {
+			aspectRatio = float(size.x) / float(size.y);
 		}
 
-		void forward(const kl::float3& dir);
-		kl::float3 forward() const;
-		kl::float3 right() const;
-		kl::float3 up() const;
+		void setForward(const Float3& dir);
+
+		Float3 getForward() const;
+		Float3 getRight() const;
+		Float3 getUp() const;
 
 		void moveForward(float deltaTime);
 		void moveBack(float deltaTime);
@@ -38,8 +38,8 @@ namespace kl {
 		void moveUp(float deltaTime);
 		void moveDown(float deltaTime);
 
-		void rotate(const kl::float2& mousePos, const kl::float2& frameCenter, float verticalAngleLimit = 85.0f);
+		void rotate(const Float2& mousePos, const Float2& frameCenter, float verticalAngleLimit = 85.0f);
 
-		kl::mat4 matrix() const;
+		Mat4 matrix() const;
 	};
 }

@@ -11,40 +11,32 @@
 
 
 namespace kl {
-	class file {
+	namespace Files {
+		String GetExtension(const String& filePath);
+		Vector<String> GetFiles(const String& dirPath, bool recursive = false);
+
+		String ReadString(const String& filePath);
+		bool WriteString(const String& filePath, const String& data);
+		bool AppendString(const String& filePath, const String& data, int position = -1);
+
+		Vector<Vertex> ParseMesh(const String& filePath, bool flipZ = true);
+	}
+
+	class File {
 		FILE* m_File = nullptr;
 
 	public:
-		class get {
-			get() {}
-		public:
-			static std::string extension(const std::string& filePath);
-			static std::vector<std::string> files(const std::string& dirPath, bool recursive = false);
-		};
-
-		class strings {
-			strings() {}
-		public:
-			static std::string read(const std::string& filePath);
-			static bool write(const std::string& filePath, const std::string& data);
-			static bool append(const std::string& filePath, const std::string& data, int position = -1);
-		};
-
-		class parse {
-			parse() {}
-		public:
-			static kl::mesh mesh(const std::string& filePath, bool flipZ = true);
-		};
-
-		file();
-		file(const std::string& filePath, bool clear = true);
-		file(const kl::file&) = delete;
-		void operator=(const kl::file&) = delete;
-		~file();
+		File();
+		File(const String& filePath, bool clear = true);
+		File(const File&) = delete;
+		void operator=(const File&) = delete;
+		~File();
 
 		operator bool() const;
 
-		bool open(const std::string& filePath, bool clear = true);
+		bool isOpen() const;
+
+		bool open(const String& filePath, bool clear = true);
 		bool close();
 
 		bool seek(int64 position);

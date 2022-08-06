@@ -4,20 +4,18 @@
 
 
 namespace kl {
-	struct vertex {
-		kl::float3 world;
-		kl::float2 texture;
-		kl::float3 normal;
+	struct Vertex {
+		Float3 world;
+		Float2 texture;
+		Float3 normal;
 
-		vertex();
-		vertex(const kl::float3& world);
-		vertex(const kl::float3& world, const kl::float2& texture);
-		vertex(const kl::float3& world, const kl::float3& normal);
-		vertex(const kl::float3& world, const kl::float2& texture, const kl::float3& normal);
+		Vertex();
+		Vertex(const Float3& world);
+		Vertex(const Float3& world, const Float2& texture);
+		Vertex(const Float3& world, const Float3& normal);
+		Vertex(const Float3& world, const Float2& texture, const Float3& normal);
 	};
 
-	using mesh = std::vector<kl::vertex>;
-
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::vertex& obj);
+	std::ostream& operator<<(std::ostream& os, const Vertex& vertex);
 }

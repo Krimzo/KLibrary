@@ -60,7 +60,7 @@ struct Ray {
     }
 };
 
-#define SPHERE_COUNT 8
+#define SPHERE_COUNT 10
 
 cbuffer PS_CB : register(b0) {
     float4 frameSize;
@@ -117,7 +117,7 @@ bool PlanePointInShadow(float3 planePoint) {
 }
 
 float3 TraceRay(Ray ray) {
-    Plane xzPlane = { float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(0.15f, 0.15f, 0.15f) };
+    Plane xzPlane = { float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(0.4f, 0.4f, 0.4f) };
 	
     float3 intersectPoint;
     float intersectDistance = 3.14e38f;
@@ -141,19 +141,16 @@ float3 TraceRay(Ray ray) {
         }
     }
 	
-    const float3 skyTopColor = { 0.03f, 0.04f, 0.05f };
-    const float3 skyBottomColor = { 0.08f, 0.09f, 0.09f };
+    const float3 skyTopColor = { 0.62f, 0.77f, 0.88f };
+    const float3 skyBottomColor = { 0.89f, 0.93f, 0.96f };
     const float3 sunSkyColor = { 0.98f, 0.9f, 0.76f };
 	
     const float2 sunRadiuses = { 0.75f, 1.55f };
-    const float2 lightRadiuses = { 40.0f, 50.0f };
 	
     float3 pixel;
     if (intersectedSphereID == -1) {
         const float lightIntensity = dot(-sunDirection.xyz, xzPlane.normal);
-        const float centerDistance = length(intersectPoint);
-        const float lightValue = 1.0f - smoothstep(lightRadiuses.x, lightRadiuses.y, centerDistance);
-        pixel = xzPlane.color * lightIntensity * lightValue * !PlanePointInShadow(intersectPoint) + skyTopColor;
+        pixel = xzPlane.color * lightIntensity * !PlanePointInShadow(intersectPoint);
     }
     else if (intersectedSphereID > -1) {
         const float3 intersectNormal = normalize(intersectPoint - spheres[intersectedSphereID].center);
@@ -163,6 +160,7 @@ float3 TraceRay(Ray ray) {
     else {
         const float skyMixValue = (dot(-ray.direction, float3(0.0f, 1.0f, 0.0f)) + 1.0f) * 0.5f;
         pixel = lerp(skyTopColor, skyBottomColor, skyMixValue);
+        pixel *= dot(-sunDirection.xyz, float3(0.0f, 1.0f, 0.0f));
 		
         const float sunAngle = degrees(acos(dot(ray.direction, -sunDirection.xyz)));
         pixel = lerp(sunSkyColor, pixel, smoothstep(sunRadiuses.x, sunRadiuses.y, sunAngle));

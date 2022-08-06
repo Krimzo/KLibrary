@@ -1,11 +1,11 @@
 #include "utility/encrypter.h"
 
 
-kl::encrypter::encrypter() {
-	genKeys();
+kl::Encrypter::Encrypter() {
+	generateNewKeys();
 }
 
-void kl::encrypter::genKeys() {
+void kl::Encrypter::generateNewKeys() {
 	for (auto& key : keys) {
 		uint keySize = 0;
 		do {
@@ -26,7 +26,7 @@ void kl::encrypter::genKeys() {
 	}
 }
 
-void kl::encrypter::encrypt(void* data, uint64 dataSize) const {
+void kl::Encrypter::encrypt(void* data, uint64 dataSize) const {
 	for (auto& key : keys) {
 		for (uint64 i = 0; i < dataSize; i++) {
 			((byte*) data)[i] ^= key[i % key.size()];
@@ -34,11 +34,11 @@ void kl::encrypter::encrypt(void* data, uint64 dataSize) const {
 	}
 }
 
-void kl::encrypter::decrypt(void* data, uint64 dataSize) const {
+void kl::Encrypter::decrypt(void* data, uint64 dataSize) const {
 	encrypt(data, dataSize);
 }
 
-std::ostream& kl::operator<<(std::ostream& os, const kl::encrypter& encrypter) {
+std::ostream& kl::operator<<(std::ostream& os, const kl::Encrypter& encrypter) {
 	for (uint i = 0; i < 5; i++) {
 		os << "keys[" << i << "] = { ";
 		for (uint k = 0; k < encrypter.keys[i].size() - 1; k++) {

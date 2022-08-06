@@ -9,304 +9,249 @@
 
 
 namespace kl {
-	template<typename T, uint64 W, uint64 H>
-	struct matrix : public std::array<T, W* H> {
+	template<typename T, int W, int H>
+	struct Matrix : public std::array<T, W* H> {
 
-		matrix() : std::array<T, W* H>() {
+		Matrix() : std::array<T, W* H>() {
 			if constexpr (W == H) {
-				for (uint64 i = 0; i < (W * H); i += (W + 1)) {
-					(*this)[i] = 1;
+				for (int i = 0; i < (W * H); i += (W + 1)) {
+					get(i) = 1;
 				}
 			}
 		}
 
-		// Getter
+		T& get(int index) {
+			return (*this)[index];
+		}
+
+		const T& get(int index) const {
+			return (*this)[index];
+		}
+
+		T& get(int x, int y) {
+			return (*this)[y * W + x];
+		}
+
+		const T& get(int x, int y) const {
+			return (*this)[y * W + x];
+		}
+
 		template<typename T0>
-		operator kl::matrix<T0, W, H>() const {
-			kl::matrix<T0, W, H> temp;
-			for (uint64 i = 0; i < (W * H); i++) {
-				temp[i] = T0((*this)[i]);
+		operator Matrix<T0, W, H>() const {
+			Matrix<T0, W, H> temp;
+			for (int i = 0; i < (W * H); i++) {
+				temp[i] = T0(get(i));
 			}
 			return temp;
 		}
 
-		// Addition
-		void add(const kl::matrix<T, W, H>& obj, kl::matrix<T, W, H>& out) const {
-			for (uint64 i = 0; i < (W * H); i++) {
-				out[i] = (*this)[i] + obj[i];
+		Matrix<T, W, H> operator+(const Matrix<T, W, H>& obj) const {
+			Matrix<T, W, H> result;
+			for (int i = 0; i < (W * H); i++) {
+				result[i] = get(i) + obj[i];
 			}
-		}
-		kl::matrix<T, W, H> operator+(const kl::matrix<T, W, H>& obj) const {
-			kl::matrix<T, W, H> temp;
-			add(obj, temp);
-			return temp;
-		}
-		void operator+=(const kl::matrix<T, W, H>& obj) {
-			add(obj, *this);
+			return result;
 		}
 
-		// Subtraction
-		void subtract(const kl::matrix<T, W, H>& obj, kl::matrix<T, W, H>& out) const {
-			for (uint64 i = 0; i < (W * H); i++) {
-				out[i] = (*this)[i] - obj[i];
-			}
-		}
-		kl::matrix<T, W, H> operator-(const kl::matrix<T, W, H>& obj) const {
-			kl::matrix<T, W, H> temp;
-			subtract(obj, temp);
-			return temp;
-		}
-		void operator-=(const kl::matrix<T, W, H>& obj) {
-			subtract(obj, *this);
+		void operator+=(const Matrix<T, W, H>& obj) {
+			*this = *this + obj;
 		}
 
-		// Multiplication
-		void multiply(const T& val, kl::matrix<T, W, H>& out) const {
-			for (uint64 i = 0; i < (W * H); i++) {
-				out[i] = (*this)[i] * val;
+		Matrix<T, W, H> operator-(const Matrix<T, W, H>& obj) const {
+			Matrix<T, W, H> result;
+			for (int i = 0; i < (W * H); i++) {
+				result[i] = get(i) - obj[i];
 			}
+			return result;
 		}
-		kl::matrix<T, W, H> operator*(const T& val) const {
-			kl::matrix<T, W, H> temp;
-			multiply(val, temp);
-			return temp;
+
+		void operator-=(const Matrix<T, W, H>& obj) {
+			*this = *this - obj;
 		}
+
+		Matrix<T, W, H> operator*(const T& val) const {
+			Matrix<T, W, H> result;
+			for (int i = 0; i < (W * H); i++) {
+				result[i] = get(i) * val;
+			}
+			return result;
+		}
+
 		void operator*=(const T& val) {
-			multiply(val, *this);
-		}
-		template<uint64 S>
-		void multiply(const kl::matrix<T, S, W>& obj, kl::matrix<T, S, H>& out) const {
-			for (uint64 y = 0; y < H; y++) {
-				for (uint64 x = 0; x < S; x++) {
-					out[y * S + x] = {};
-					for (uint64 i = 0; i < W; i++) {
-						out[y * S + x] += (*this)[y * W + i] * obj[i * S + x];
-					}
-				}
-			}
-		}
-		template<uint64 S>
-		kl::matrix<T, S, H> operator*(const kl::matrix<T, S, W>& obj) const {
-			kl::matrix<T, S, H> temp;
-			multiply(obj, temp);
-			return temp;
-		}
-		template<uint64 S>
-		void operator*=(const kl::matrix<T, S, W>& obj) {
-			*this = (*this) * obj;
-		}
-		bool multiply(const kl::vector2<T>& obj, kl::vector2<T>& out) const {
-			if constexpr (W == 2 && H == 2) {
-				for (uint64 y = 0; y < 2; y++) {
-					T sum = {};
-					for (uint64 i = 0; i < 2; i++) {
-						sum += (*this)[y * 2 + i] * obj[i];
-					}
-					out[y] = sum;
-				}
-				return true;
-			}
-			return false;
-		}
-		kl::vector2<T> operator*(const kl::vector2<T>& obj) const {
-			kl::vector2<T> temp;
-			multiply(obj, temp);
-			return temp;
-		}
-		bool multiply(const kl::vector3<T>& obj, kl::vector3<T>& out) const {
-			if constexpr (W == 3 && H == 3) {
-				for (uint64 y = 0; y < 3; y++) {
-					T sum = {};
-					for (uint64 i = 0; i < 3; i++) {
-						sum += (*this)[y * 3 + i] * obj[i];
-					}
-					out[y] = sum;
-				}
-				return true;
-			}
-			return false;
-		}
-		kl::vector3<T> operator*(const kl::vector3<T>& obj) const {
-			kl::vector3<T> temp;
-			multiply(obj, temp);
-			return temp;
-		}
-		bool multiply(const kl::vector4<T>& obj, kl::vector4<T>& out) const {
-			if constexpr (W == 4 && H == 4) {
-				for (uint64 y = 0; y < 4; y++) {
-					T sum = {};
-					for (uint64 i = 0; i < 4; i++) {
-						sum += (*this)[y * 4 + i] * obj[i];
-					}
-					out[y] = sum;
-				}
-				return true;
-			}
-			return false;
-		}
-		kl::vector4<T> operator*(const kl::vector4<T>& obj) const {
-			kl::vector4<T> temp;
-			multiply(obj, temp);
-			return temp;
+			*this = *this * val;
 		}
 
-		// Comparison
-		bool equals(const kl::matrix<T, W, H>& obj) const {
-			for (uint64 i = 0; i < (W * H); i++) {
-				if ((*this)[i] != obj[i]) {
+		template<int S>
+		Matrix<T, S, H> operator*(const Matrix<T, S, W>& obj) const {
+			Matrix<T, S, H> result;
+			for (int y = 0; y < H; y++) {
+				for (int x = 0; x < S; x++) {
+					result.get(x, y) = {};
+					for (int i = 0; i < W; i++) {
+						result.get(x, y) += get(i, y) * obj.get(x, i);
+					}
+				}
+			}
+			return result;
+		}
+
+		template<int S>
+		void operator*=(const Matrix<T, S, W>& obj) {
+			*this = *this * obj;
+		}
+
+		Vector2<T> operator*(const Vector2<T>& obj) const {
+			Vector2<T> result;
+			if constexpr (W == 2 && H == 2) {
+				for (int y = 0; y < 2; y++) {
+					for (int i = 0; i < 2; i++) {
+						result[y] += get(i, y) * obj[i];
+					}
+				}
+			}
+			return result;
+		}
+
+		Vector3<T> operator*(const Vector3<T>& obj) const {
+			Vector3<T> result;
+			if constexpr (W == 3 && H == 3) {
+				for (int y = 0; y < 3; y++) {
+					for (int i = 0; i < 3; i++) {
+						result[y] += get(i, y) * obj[i];
+					}
+				}
+			}
+			return result;
+		}
+
+		Vector4<T> operator*(const Vector4<T>& obj) const {
+			Vector4<T> result;
+			if constexpr (W == 4 && H == 4) {
+				for (int y = 0; y < 4; y++) {
+					for (int i = 0; i < 4; i++) {
+						result[y] += get(i, y) * obj[i];
+					}
+				}
+			}
+			return result;
+		}
+
+		bool operator==(const Matrix<T, W, H>& obj) const {
+			for (int i = 0; i < (W * H); i++) {
+				if (get(i) != obj[i]) {
 					return false;
 				}
 			}
 			return true;
 		}
-		bool operator==(const kl::matrix<T, W, H>& obj) const {
-			return equals(obj);
-		}
-		bool operator!=(const kl::matrix<T, W, H>& obj) const {
-			return !equals(obj);
+
+		bool operator!=(const Matrix<T, W, H>& obj) const {
+			return !(*this == obj);
 		}
 
-		// Sign change
-		void absolute(kl::matrix<T, W, H>& out) const {
-			for (uint64 i = 0; i < (W * H); i++) {
-				out[i] = std::abs((*this)[i]);
+		Matrix<T, W, H> absolute() const {
+			Matrix<T, W, H> result;
+			for (int i = 0; i < (W * H); i++) {
+				result[i] = std::abs(get(i));
 			}
-		}
-		kl::matrix<T, W, H> absolute() const {
-			kl::matrix<T, W, H> temp;
-			absolute(temp);
-			return temp;
-		}
-		void negate(kl::matrix<T, W, H>& out) const {
-			multiply(-1.0f, out);
-		}
-		kl::matrix<T, W, H> negate() const {
-			kl::matrix<T, W, H> temp;
-			negate(temp);
-			return temp;
+			return result;
 		}
 
-		// Transpose
-		void transpose(kl::matrix<T, H, W>& out) const {
-			for (uint64 y = 0; y < H; y++) {
-				for (uint64 x = 0; x < W; x++) {
-					out[x * H + y] = (*this)[y * W + x];
+		Matrix<T, W, H> negate() const {
+			return *this * -1.0f;
+		}
+
+		Matrix<T, H, W> transpose() const {
+			Matrix<T, H, W> result;
+			for (int y = 0; y < H; y++) {
+				for (int x = 0; x < W; x++) {
+					result.get(x, y) = get(y, x);
 				}
 			}
-		}
-		kl::matrix<T, H, W> transpose() const {
-			kl::matrix<T, H, W> temp;
-			transpose(temp);
-			return temp;
+			return result;
 		}
 
-		// Cofactor
-		bool cofactor(uint64 ind, kl::matrix<T, W - 1, H - 1>& out) const {
+		Matrix<T, W - 1, H - 1> cofactor(int index) const {
+			return cofactor(index % W, index / W);
+		}
+
+		Matrix<T, W - 1, H - 1> cofactor(int X, int Y) const {
+			Matrix<T, W - 1, H - 1> result;
 			if constexpr (W == H) {
-				if (ind < (W * H)) {
-					uint64 counter = 0;
-					const uint64 xInd = ind % W;
-					const uint64 yInd = ind / W;
-					for (uint64 y = 0; y < H; y++) {
-						for (uint64 x = 0; x < W; x++) {
-							if (x != xInd && y != yInd) {
-								out[counter++] = (*this)[y * W + x];
-							}
+				int counter = 0;
+				for (int y = 0; y < H; y++) {
+					for (int x = 0; x < W; x++) {
+						if (x != X && y != Y) {
+							result[counter++] = get(x, y);
 						}
 					}
-					return true;
 				}
 			}
-			return false;
-		}
-		kl::matrix<T, W - 1, H - 1> cofactor(uint64 ind) const {
-			kl::matrix<T, W - 1, H - 1> temp;
-			cofactor(ind, temp);
-			return temp;
-		}
-		bool cofactor(kl::matrix<T, W, H>& out) const {
-			if constexpr (W == H) {
-				for (uint64 y = 0; y < H; y++) {
-					for (uint64 x = 0; x < W; x++) {
-						out[y * W + x] = (((y + x + 2) % 2) ? -1 : 1) * cofactor(y * W + x).determinant();
-					}
-				}
-				return true;
-			}
-			return false;
-		}
-		kl::matrix<T, W, H> cofactor() const {
-			kl::matrix<T, W, H> temp;
-			cofactor(temp);
-			return temp;
+			return result;
 		}
 
-		// Determinant
+		Matrix<T, W, H> cofactor() const {
+			Matrix<T, W, H> result;
+			if constexpr (W == H) {
+				for (int y = 0; y < H; y++) {
+					for (int x = 0; x < W; x++) {
+						result.get(x, y) = (((y + x + 2) % 2) ? -1 : 1) * cofactor(y * W + x).determinant();
+					}
+				}
+			}
+			return result;
+		}
+
 		T determinant() const {
 			if constexpr (W == H) {
 				if constexpr (W == 2) {
-					return (*this)[0] * (*this)[3] - (*this)[1] * (*this)[2];
+					return get(0) * get(3) - get(1) * get(2);
 				}
 				if constexpr (W > 2) {
-					T val = {};
+					T result = {};
 					int multi = -1;
-					for (uint64 i = 0; i < W; i++) {
-						val += (multi *= -1) * (*this)[i] * cofactor(i).determinant();
+					for (int i = 0; i < W; i++) {
+						result += (multi *= -1) * get(i) * cofactor(i).determinant();
 					}
-					return val;
+					return result;
 				}
 			}
-			return T(0);
+			return {};
 		}
 
-		// Adjoint
-		bool adjoint(kl::matrix<T, W, H>& out) const {
+		Matrix<T, W, H> adjoint() const {
 			if constexpr (W == H) {
-				out = cofactor().transpose();
-				return true;
+				return cofactor().transpose();
 			}
-			return false;
-		}
-		kl::matrix<T, W, H> adjoint() const {
-			kl::matrix<T, W, H> temp;
-			adjoint(temp);
-			return temp;
+			return {};
 		}
 
-		// Inverse
-		bool inverse(kl::matrix<T, W, H>& out) const {
+		Matrix<T, W, H> inverse() const {
 			if constexpr (W == H) {
-				const T det = determinant();
-				if (det) {
-					out = adjoint() * T(1.0f / det);
-					return true;
+				T deter = determinant();
+				if (deter) {
+					return adjoint() * T(1.0f / deter);
 				}
 			}
-			return false;
-		}
-		kl::matrix<T, W, H> inverse() const {
-			kl::matrix<T, W, H> temp;
-			inverse(temp);
-			return temp;
+			return {};
 		}
 	};
 
-	// std::cout
-	template<typename T, uint64 W, uint64 H>
-	inline std::ostream& operator<<(std::ostream& stream, const kl::matrix<T, W, H>& mat) {
-		uint64 maxLenghts[W] = {};
-		std::string outputData[W * H] = {};
+	template<typename T, int W, int H>
+	inline std::ostream& operator<<(std::ostream& stream, const Matrix<T, W, H>& mat) {
+		int maxLenghts[W] = {};
+		String outputData[W * H] = {};
 
-		for (uint64 x = 0; x < W; x++) {
-			for (uint64 y = 0; y < H; y++) {
+		for (int x = 0; x < W; x++) {
+			for (int y = 0; y < H; y++) {
 				outputData[y * W + x] = std::format("{:.2f}", mat[y * W + x]);
-				maxLenghts[x] = std::max(maxLenghts[x], outputData[y * W + x].size());
+				maxLenghts[x] = std::max(maxLenghts[x], int(outputData[y * W + x].size()));
 			}
 		}
 
-		for (uint64 y = 0; y < H; y++) {
+		for (int y = 0; y < H; y++) {
 			stream << ((y == 0) ? char(218) : (y == (H - 1) ? char(192) : char(179)));
-			for (uint64 x = 0; x < (W - 1); x++) {
+			for (int x = 0; x < (W - 1); x++) {
 				stream << std::setw(maxLenghts[x]) << outputData[y * W + x] << " ";
 			}
 			stream << std::setw(maxLenghts[W - 1]) << outputData[y * W + (W - 1)]

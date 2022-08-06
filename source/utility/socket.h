@@ -7,33 +7,32 @@
 
 
 namespace kl {
-	class socket {
-	public:
-		static void init();
-		static void uninit();
-		static const std::string self;
-
-	private:
+	class Socket {
 		sockaddr_in m_Address = {};
 		uint64 m_Socket = {};
 
 	public:
-		socket();
-		socket(const std::string& address, uint port);
-		socket(uint64 socket);
-		~socket();
+		static void Init();
+		static void Uninit();
+		static const String Self;
+
+		Socket();
+		Socket(const String& address, uint port);
+		Socket(uint64 socket);
+		~Socket();
 
 		operator uint64();
 
 		void close();
 
-		std::string address() const;
-		void address(const std::string& addrs);
-		uint port() const;
-		void port(uint port);
+		String getAddress() const;
+		void setAddress(const String& addrs);
+
+		uint getPort() const;
+		void setPort(uint port);
 
 		void listen(uint queueSize);
-		kl::socket accept();
+		kl::Socket accept();
 		void connect();
 
 		int send(const void* data, uint byteSize) const;

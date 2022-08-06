@@ -2,50 +2,47 @@
 #include "math/math.h"
 
 
-// Constructors
-kl::color::color() : b(0), g(0), r(0), a(255) {}
-kl::color::color(byte r, byte g, byte b, byte a) : b(b), g(g), r(r), a(a) {}
+kl::Color::Color() : b(0), g(0), r(0), a(255) {}
 
-// Operator overloading
-bool kl::color::equals(const kl::color& obj) const {
+kl::Color::Color(byte r, byte g, byte b, byte a) : b(b), g(g), r(r), a(a) {}
+
+bool kl::Color::operator==(const Color& obj) const {
 	return r == obj.r && g == obj.g && b == obj.b && a == obj.a;
 }
-bool kl::color::operator==(const kl::color& obj) const {
-	return equals(obj);
-}
-bool kl::color::operator!=(const kl::color& obj) const {
-	return !equals(obj);
+
+bool kl::Color::operator!=(const Color& obj) const {
+	return !(*this == obj);
 }
 
-kl::color kl::color::gray() const {
+kl::Color kl::Color::asGray() const {
 	const byte grayValue = byte(r * 0.3f + g * 0.585f + b * 0.115f);
-	return kl::color(grayValue, grayValue, grayValue, a);
+	return Color(grayValue, grayValue, grayValue, a);
 }
-kl::color kl::color::invert() const {
-	return kl::color(255 - r, 255 - g, 255 - b, a);
+
+kl::Color kl::Color::asInverted() const {
+	return Color(255 - r, 255 - g, 255 - b, a);
 }
-char kl::color::ascii() const {
+
+char kl::Color::asASCII() const {
 	static const char asciiTable[10] = { '@', '%', '#', 'x', '+', '=', ':', '-', '.', ' ' };
 	static const float toSatur = 9.0f / 255.0f;
-	return asciiTable[int(gray().r * toSatur)];
+	return asciiTable[int(asGray().r * toSatur)];
 }
 
-kl::color kl::color::mix(const kl::color& col, float ratio) const {
-	ratio = kl::math::minmax(ratio, 0.0f, 1.0f);
-	const float iratio = 1.0f - ratio;
-	return kl::color(
-		byte(r * iratio) + byte(col.r * ratio),
-		byte(g * iratio) + byte(col.g * ratio),
-		byte(b * iratio) + byte(col.b * ratio)
+kl::Color kl::Color::mix(const Color& col, float ratio) const {
+	ratio = Math::MinMax(ratio, 0.0f, 1.0f);
+	return Color(
+		byte(r * (1.0f - ratio)) + byte(col.r * ratio),
+		byte(g * (1.0f - ratio)) + byte(col.g * ratio),
+		byte(b * (1.0f - ratio)) + byte(col.b * ratio)
 	);
 }
-kl::color kl::color::mix(const kl::color& col) const {
-	static const float toFloatCol = 1.0f / 255;
-	return mix(col, col.a * toFloatCol);
+
+kl::Color kl::Color::mix(const Color& col) const {
+	return mix(col, ToFloatColor(col.a));
 }
 
-// std::cout
-std::ostream& kl::operator<<(std::ostream& os, const kl::color& obj) {
+std::ostream& kl::operator<<(std::ostream& os, const Color& obj) {
 	os << "\033[38;2;" << int(obj.r) << ";" << int(obj.g) << ";" << int(obj.b) << "m";
 	return os;
 }

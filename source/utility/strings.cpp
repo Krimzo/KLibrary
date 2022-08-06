@@ -1,8 +1,9 @@
-#include "utility/strings.h"
+#include "Utility/Strings.h"
+#include "Math/Math.h"
 
 
-std::string kl::to::string(const std::wstring& data) {
-	std::string temp;
+kl::String kl::Strings::ToString(const WString& data) {
+	String temp;
 	temp.reserve(data.size());
 	for (uint64 i = 0; i < data.size(); i++) {
 		if (data[i] < 256) {
@@ -12,8 +13,8 @@ std::string kl::to::string(const std::wstring& data) {
 	return temp;
 }
 
-std::wstring kl::to::wstring(const std::string& data) {
-	std::wstring temp;
+kl::WString kl::Strings::ToWString(const String& data) {
+	WString temp;
 	temp.resize(data.size());
 	for (uint64 i = 0; i < data.size(); i++) {
 		temp[i] = data[i];
@@ -21,19 +22,19 @@ std::wstring kl::to::wstring(const std::string& data) {
 	return temp;
 }
 
-std::vector<std::string> kl::string::split(const std::string& data, char delimeter) {
-	std::vector<std::string> parts;
-	std::stringstream dataStream(data);
-	for (std::string part; std::getline(dataStream, part, delimeter);) {
+kl::Vector<kl::String> kl::Strings::Split(const String& data, char delimeter) {
+	Vector<String> parts;
+	StringStream dataStream(data);
+	for (String part; std::getline(dataStream, part, delimeter);) {
 		parts.push_back(part);
 	}
 	return parts;
 }
 
-std::vector<std::wstring> kl::string::split(const std::wstring& data, wchar_t delimeter) {
-	std::vector<std::wstring> parts;
-	std::wstringstream dataStream(data);
-	for (std::wstring part; std::getline(dataStream, part, delimeter);) {
+kl::Vector<kl::WString> kl::Strings::WSplit(const WString& data, wchar_t delimeter) {
+	Vector<WString> parts;
+	WStringStream dataStream(data);
+	for (WString part; std::getline(dataStream, part, delimeter);) {
 		parts.push_back(part);
 	}
 	return parts;

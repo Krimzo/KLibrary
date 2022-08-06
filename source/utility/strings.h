@@ -1,29 +1,26 @@
 #pragma once
 
-#include "math/math.h"
-
-#include <vector>
 #include <string>
+#include <vector>
+#include <iostream>
 #include <sstream>
 #include <syncstream>
 
+#include "KLTypes.h"
 
-using wchar = wchar_t;
 
 namespace kl {
-	namespace to {
-		std::string string(const std::wstring& data);
-		std::wstring wstring(const std::string& data);
-	}
+	namespace Strings {
+		String ToString(const WString& data);
+		WString ToWString(const String& data);
 
-	namespace string {
-		std::vector<std::string> split(const std::string& data, char delimeter);
-		std::vector<std::wstring> split(const std::wstring& data, wchar_t delimeter);
+		Vector<String> Split(const String& data, char delimeter);
+		Vector<WString> WSplit(const WString& data, wchar delimeter);
 	}
 
 	// 8 bit chars
 	template<bool NewLine = true, typename... Args>
-	inline void write(std::ostream& stream, const Args&... args) {
+	inline void Write(std::ostream& stream, const Args&... args) {
 		std::osyncstream syncedStream(stream);
 		(syncedStream << ... << args);
 		if constexpr (NewLine) {
@@ -32,20 +29,20 @@ namespace kl {
 	}
 
 	template<bool NewLine = true, typename... Args>
-	inline void print(const Args&... args) {
-		kl::write<NewLine>(std::cout, args...);
+	inline void Print(const Args&... args) {
+		Write<NewLine>(std::cout, args...);
 	}
 
 	template<typename... Args>
-	inline std::string format(const Args&... args) {
-		std::stringstream stream;
-		kl::write<false>(stream, args...);
+	inline String Format(const Args&... args) {
+		StringStream stream;
+		Write<false>(stream, args...);
 		return stream.str();
 	}
 
 	// 16 bit chars
 	template<bool NewLine = true, typename... Args>
-	inline void wwrite(std::wostream& wstream, const Args&... args) {
+	inline void WWrite(std::wostream& wstream, const Args&... args) {
 		std::wosyncstream wsyncedStream(wstream);
 		(wsyncedStream << ... << args);
 		if constexpr (NewLine) {
@@ -54,14 +51,14 @@ namespace kl {
 	}
 
 	template<bool NewLine = true, typename... Args>
-	inline void wprint(const Args&... args) {
-		kl::wwrite<NewLine>(std::wcout, args...);
+	inline void WPrint(const Args&... args) {
+		WWrite<NewLine>(std::wcout, args...);
 	}
 
 	template<typename... Args>
-	inline std::wstring wformat(const Args&... args) {
-		std::wstringstream wstream;
-		kl::wwrite<false>(wstream, args...);
+	inline WString WFormat(const Args&... args) {
+		WStringStream wstream;
+		WWrite<false>(wstream, args...);
 		return wstream.str();
 	}
 }

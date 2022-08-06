@@ -2,20 +2,20 @@
 
 #include <windows.h>
 
-#include "math/math.h"
-#include "window/keys.h"
+#include "Math/Math.h"
+#include "Window/Key.h"
 
 
 namespace kl {
-	class mouse {
+	class Mouse {
 		HWND m_Window = nullptr;
-		kl::int2 m_Position = {};
+		Int2 m_Position = {};
 		bool m_Hidden = false;
 		int m_ShowCounter = 0;
 		int m_Scroll = 0;
 
 	public:
-		enum type {
+		enum Type {
 			LMB = 0,
 			MMB,
 			RMB
@@ -23,33 +23,34 @@ namespace kl {
 
 		union {
 			struct {
-				kl::key lmb;
-				kl::key mmb;
-				kl::key rmb;
+				kl::Key left;
+				kl::Key middle;
+				kl::Key right;
 			};
-			kl::key buffer[3];
+			kl::Key buffer[3];
 		};
 
-		mouse();
-		mouse(const kl::mouse&) = delete;
-		void operator=(const kl::mouse&) = delete;
-		~mouse();
+		Mouse();
+		Mouse(const Mouse&) = delete;
+		void operator=(const Mouse&) = delete;
+		~Mouse();
 
-		void bind(HWND hwnd);
+		void bindToWindow(HWND hwnd);
 
-		void update(int64 type, bool state);
-		void update() const;
+		void updateValue(int64 type, bool state);
 
-		bool hidden() const;
-		void hidden(bool enabled);
+		void updateCall() const;
 
-		int scroll() const;
-		void scroll(HWND check, int deltaScroll);
+		bool isHidden() const;
+		void setHidden(bool enabled);
 
-		kl::int2 position(bool client = true) const;
-		void position(HWND check, const kl::int2& position);
-		void position(const kl::int2& position);
+		int getScroll() const;
+		void updateScroll(HWND check, int deltaScroll);
 
-		kl::float2 normalized() const;
+		Int2 getPosition(bool client = true) const;
+		void updatePosition(HWND check, const Int2& position);
+		void setPosition(const kl::Int2& position);
+
+		Float2 getNormalizedPosition() const;
 	};
 }

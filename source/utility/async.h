@@ -5,11 +5,9 @@
 #include <mutex>
 #include <future>
 
-#include "math/math.h"
+#include "KLTypes.h"
 
 
-namespace kl {
-	namespace async {
-		void loop(int64 startInclusive, int64 endExclusive, const std::function<void(uint t, int64 i)>& loopBody, uint threadCount = std::thread::hardware_concurrency());
-	}
+namespace kl::ASync {
+	void For(int64 startInclusive, int64 endExclusive, const Function<void(uint t, int64 i)>& loopBody, uint threadCount = Thread::hardware_concurrency());
 }

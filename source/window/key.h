@@ -1,27 +1,28 @@
 #pragma once
 
-#include <functional>
-#include "math/math.h"
+#include "Math/Math.h"
+#include "Utility/ASync.h"
 
 
 namespace kl {
-	class key {
+	class Key {
 		bool m_State = false;
 		int64 m_Type = 0;
 
 	public:
-		std::function<void()> press = []() {};
-		std::function<void()> down = []() {};
-		std::function<void()> release = []() {};
+		Function<void()> onPress = []() {};
+		Function<void()> onDown = []() {};
+		Function<void()> onRelease = []() {};
 
-		key(int64 type);
-		key(const kl::key&) = delete;
-		void operator=(const kl::key&) = delete;
-		~key();
+		Key(int64 type);
+		Key(const Key&) = delete;
+		void operator=(const Key&) = delete;
+		~Key();
 
 		operator bool() const;
 
-		void update(int64 type, bool newState);
-		void update() const;
+		void updateValue(int64 type, bool newState);
+
+		void updateCall() const;
 	};
 }

@@ -5,31 +5,36 @@
 
 
 namespace kl {
-	void get();
+	void Get();
 
-	namespace console {
-		void hide();
-		void show();
-		void clear();
+	bool Warning(bool occured, const String& message, bool wait = false);
+	void Assert(bool occured, const String& message, bool wait = true);
 
-		void cursor(bool enable);
-		void cursor(const kl::uint2& position);
+	namespace Console {
+		void SetEnabled(bool state);
+		void Clear();
 
-		kl::uint2 size();
-		void size(const kl::uint2& size);
+		void SetCursorEnabled(bool state);
+		void MoveCursor(const UInt2& position);
 
-		void title(const std::string& text);
-		void font(const kl::uint2& size, const std::string& fontName = "Consolas");
+		uint GetWidth();
+		void SetWidth(uint width);
 
-		char input();
-		void wait(char toWaitFor, bool echo = false);
-		char waitAny(bool echo = false);
+		uint GetHeight();
+		void SetHeight(uint height);
 
-		bool warning(bool occured, const std::string& message, bool wait = false);
-		void error(bool occured, const std::string& message, bool wait = true);
+		UInt2 GetSize();
+		void SetSize(const UInt2& size);
 
-		void dump(const std::string& data, const kl::uint2& location = {});
+		void SetTitle(const String& text);
+		void SetFont(const UInt2& size, const String& fontName = "Consolas");
 
-		void bar(const std::string& message, uint outputY, float percentage);
+		char GetInput();
+		void Wait(char toWaitFor, bool echo = false);
+		char WaitAny(bool echo = false);
+
+		void DumpData(const String& data, const UInt2& location = {});
+
+		void ProgressBar(const String& message, uint outputY, float percentage);
 	};
 }

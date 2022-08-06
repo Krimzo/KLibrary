@@ -3,12 +3,12 @@
 #include "utility/strings.h"
 
 
-std::string kl::file::get::extension(const std::string& filePath) {
+kl::String kl::Files::GetExtension(const String& filePath) {
 	return std::filesystem::path(filePath).extension().string();
 }
 
-std::vector<std::string> kl::file::get::files(const std::string& dirPath, bool recursive) {
-	std::vector<std::string> files;
+kl::Vector<kl::String> kl::Files::GetFiles(const String& dirPath, bool recursive) {
+	Vector<String> files;
 	if (recursive) {
 		for (const auto& file : std::filesystem::recursive_directory_iterator(dirPath)) {
 			if (!file.is_directory()) {
@@ -26,10 +26,10 @@ std::vector<std::string> kl::file::get::files(const std::string& dirPath, bool r
 	return files;
 }
 
-std::string kl::file::strings::read(const std::string& filePath) {
+kl::String kl::Files::ReadString(const String& filePath) {
 	std::ifstream fileStream(filePath);
-	std::stringstream textBuffer;
-	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
+	StringStream textBuffer;
+	if (Warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return {};
 	}
 
@@ -38,9 +38,9 @@ std::string kl::file::strings::read(const std::string& filePath) {
 	return textBuffer.str();
 }
 
-bool kl::file::strings::write(const std::string& filePath, const std::string& data) {
+bool kl::Files::WriteString(const String& filePath, const String& data) {
 	std::ofstream fileStream(filePath);
-	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
+	if (Warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return false;
 	}
 
@@ -49,9 +49,9 @@ bool kl::file::strings::write(const std::string& filePath, const std::string& da
 	return true;
 }
 
-bool kl::file::strings::append(const std::string& filePath, const std::string& data, int position) {
+bool kl::Files::AppendString(const String& filePath, const String& data, int position) {
 	std::fstream fileStream(filePath, std::ios::in | std::ios::out);
-	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
+	if (Warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return false;
 	}
 
@@ -67,36 +67,36 @@ bool kl::file::strings::append(const std::string& filePath, const std::string& d
 	return true;
 }
 
-kl::mesh kl::file::parse::mesh(const std::string& filePath, bool flipZ) {
+kl::Vector<kl::Vertex> kl::Files::ParseMesh(const String& filePath, bool flipZ) {
 	std::fstream fileStream;
 	fileStream.open(filePath, std::ios::in);
-	if (kl::console::warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
+	if (Warning(!fileStream.is_open(), "Failed to open file \"" + filePath + "\"")) {
 		return {};
 	}
 
-	std::vector<kl::vertex> vertexData;
-	std::vector<kl::float3> xyzBuffer;
-	std::vector<kl::float2> uvBuffer;
-	std::vector<kl::float3> normBuffer;
+	Vector<Vertex> vertexData;
+	Vector<Float3> xyzBuffer;
+	Vector<Float2> uvBuffer;
+	Vector<Float3> normBuffer;
 
 	const int zFlip = flipZ ? -1 : 1;
-	for (std::string fileLine; std::getline(fileStream, fileLine);) {
-		const std::vector<std::string> lineParts = kl::string::split(fileLine, ' ');
+	for (String fileLine; std::getline(fileStream, fileLine);) {
+		const Vector<String> lineParts = Strings::Split(fileLine, ' ');
 
 		if (lineParts[0] == "v") {
-			xyzBuffer.push_back(kl::float3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
+			xyzBuffer.push_back(Float3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
 		}
 		else if (lineParts[0] == "vt") {
-			uvBuffer.push_back(kl::float2(std::stof(lineParts[1]), std::stof(lineParts[2])));
+			uvBuffer.push_back(Float2(std::stof(lineParts[1]), std::stof(lineParts[2])));
 		}
 		else if (lineParts[0] == "vn") {
-			normBuffer.push_back(kl::float3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
+			normBuffer.push_back(Float3(std::stof(lineParts[1]), std::stof(lineParts[2]), zFlip * std::stof(lineParts[3])));
 		}
 		else if (lineParts[0] == "f") {
 			for (int i = 1; i < 4; i++) {
-				const std::vector<std::string> linePartParts = kl::string::split(lineParts[i], '/');
+				const Vector<String> linePartParts = Strings::Split(lineParts[i], '/');
 				vertexData.push_back(
-					kl::vertex(
+					kl::Vertex(
 						xyzBuffer[std::stoull(linePartParts[0]) - 1],
 						uvBuffer[std::stoull(linePartParts[1]) - 1],
 						normBuffer[std::stoull(linePartParts[2]) - 1]
@@ -109,29 +109,30 @@ kl::mesh kl::file::parse::mesh(const std::string& filePath, bool flipZ) {
 	return vertexData;
 }
 
-kl::file::file() {}
+kl::File::File() {}
 
-kl::file::file(const std::string& filePath, bool clear) {
+kl::File::File(const String& filePath, bool clear) {
 	open(filePath, clear);
 }
 
-kl::file::~file() {
+kl::File::~File() {
 	close();
 }
 
-kl::file::operator bool() const {
+kl::File::operator bool() const {
+	return isOpen();
+}
+
+bool kl::File::isOpen() const {
 	return bool(m_File);
 }
 
-bool kl::file::open(const std::string& filePath, bool clear) {
+bool kl::File::open(const String& filePath, bool clear) {
 	close();
-	if (kl::console::warning(fopen_s(&m_File, filePath.c_str(), clear ? "wb+" : "ab+"), "Failed to open file \"" + filePath + "\"")) {
-		return false;
-	}
-	return true;
+	return !Warning(fopen_s(&m_File, filePath.c_str(), clear ? "wb+" : "ab+"), "Failed to open file \"" + filePath + "\"");
 }
 
-bool kl::file::close() {
+bool kl::File::close() {
 	if (m_File) {
 		fclose(m_File);
 		m_File = nullptr;
@@ -140,7 +141,7 @@ bool kl::file::close() {
 	return false;
 }
 
-bool kl::file::seek(int64 pos) {
+bool kl::File::seek(int64 pos) {
 	if (m_File) {
 		if (pos >= 0) {
 			return !fseek(m_File, long(pos), SEEK_SET);
@@ -150,14 +151,14 @@ bool kl::file::seek(int64 pos) {
 	return false;
 }
 
-bool kl::file::move(int64 delta) {
+bool kl::File::move(int64 delta) {
 	if (m_File) {
 		return !fseek(m_File, long(delta), SEEK_CUR);
 	}
 	return false;
 }
 
-bool kl::file::rewind() {
+bool kl::File::rewind() {
 	if (m_File) {
 		seek(0);
 		return true;
@@ -165,7 +166,7 @@ bool kl::file::rewind() {
 	return false;
 }
 
-bool kl::file::unwind() {
+bool kl::File::unwind() {
 	if (m_File) {
 		seek(-1);
 		return true;
@@ -173,7 +174,7 @@ bool kl::file::unwind() {
 	return false;
 }
 
-int64 kl::file::tell() const {
+kl::int64 kl::File::tell() const {
 	if (m_File) {
 		return ftell(m_File);
 	}

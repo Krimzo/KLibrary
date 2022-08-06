@@ -1,21 +1,24 @@
 #include "render/ray.h"
 
 
-kl::ray::ray() {}
-kl::ray::ray(const kl::float3& origin, const kl::float3& direction) : origin(origin), direction(direction.normalize()) {}
-kl::ray::ray(const kl::float3& origin, const kl::mat4& invCamMat, const kl::float2& ndc) : origin(origin) {
-	const kl::float4 pixelDir = invCamMat * kl::float4(ndc, 1.0f, 1.0f);
-	direction = (pixelDir / pixelDir.w).xyz.normalize();
-}
-kl::ray::ray(const kl::camera& cam, const kl::float2& ndc) : ray(cam.position, cam.matrix().inverse(), ndc) {}
+kl::Ray::Ray() {}
 
-bool kl::ray::intersect(const kl::plane& plane, kl::float3* outInter) const {
+kl::Ray::Ray(const kl::Float3& origin, const kl::Float3& direction) : origin(origin), direction(direction.normalize()) {}
+
+kl::Ray::Ray(const kl::Float3& origin, const Mat4& inverseMatrix, const Float2& NDC) : origin(origin) {
+	const Float4 pixelDirection = inverseMatrix * Float4(NDC, 1.0f, 1.0f);
+	direction = (pixelDirection / pixelDirection.w).xyz.normalize();
+}
+
+kl::Ray::Ray(const Camera& camera, const Float2& NDC) : Ray(camera.position, camera.matrix().inverse(), NDC) {}
+
+bool kl::Ray::intersectPlane(const kl::Plane& plane, kl::Float3* outIntersection) const {
 	const float denom = plane.normal.normalize().dot(direction.normalize());
 	if (std::abs(denom) > 0.0001f) {
 		const float t = (plane.point - origin).dot(plane.normal) / denom;
 		if (t >= 0.0f) {
-			if (outInter) {
-				*outInter = origin + direction * t;
+			if (outIntersection) {
+				*outIntersection = origin + direction * t;
 			}
 			return true;
 		}
@@ -23,19 +26,19 @@ bool kl::ray::intersect(const kl::plane& plane, kl::float3* outInter) const {
 	return false;
 }
 
-bool kl::ray::intersect(const kl::triangle& triangle, kl::float3* outInter) const {
-	const kl::float3 edge1 = triangle.b.world - triangle.a.world;
-	const kl::float3 edge2 = triangle.c.world - triangle.a.world;
+bool kl::Ray::intersectTriangle(const kl::Triangle& triangle, kl::Float3* outIntersection) const {
+	const kl::Float3 edge1 = triangle.b.world - triangle.a.world;
+	const kl::Float3 edge2 = triangle.c.world - triangle.a.world;
 
-	const kl::float3 h = direction.cross(edge2);
-	const kl::float3 s = origin - triangle.a.world;
+	const kl::Float3 h = direction.cross(edge2);
+	const kl::Float3 s = origin - triangle.a.world;
 	const float f = 1.0f / edge1.dot(h);
 	const float u = s.dot(h) * f;
 	if (u < 0.0f || u > 1.0f) {
 		return false;
 	}
 
-	const kl::float3 q = s.cross(edge1);
+	const kl::Float3 q = s.cross(edge1);
 	const float v = direction.dot(q) * f;
 	if (v < 0.0f || (u + v) > 1.0f) {
 		return false;
@@ -43,16 +46,16 @@ bool kl::ray::intersect(const kl::triangle& triangle, kl::float3* outInter) cons
 
 	const float t = edge2.dot(q) * f;
 	if (t > 0.0f) {
-		if (outInter) {
-			*outInter = origin + direction * t;
+		if (outIntersection) {
+			*outIntersection = origin + direction * t;
 		}
 		return true;
 	}
 	return false;
 }
 
-bool kl::ray::intersect(const kl::sphere& sphere, kl::float3& outInter, float& outDis) const {
-	const kl::float3 centerRay = sphere.center - origin;
+bool kl::Ray::intersectSphere(const kl::Sphere& sphere, kl::Float3* outIntersection, float* outDistance) const {
+	const kl::Float3 centerRay = sphere.center - origin;
 	const float cdDot = centerRay.dot(direction);
 	if (cdDot < 0.0f) {
 		return false;
@@ -67,19 +70,26 @@ bool kl::ray::intersect(const kl::sphere& sphere, kl::float3& outInter, float& o
 	const float thc = sqrt(rr - ccDot);
 	const float dis0 = cdDot - thc;
 	const float dis1 = cdDot + thc;
-	outInter = origin + direction * ((dis0 < 0.0f) ? dis1 : dis0);
-	outDis = (dis0 < 0.0f) ? dis1 : dis0;
+
+	if (outIntersection) {
+		*outIntersection = origin + direction * ((dis0 < 0.0f) ? dis1 : dis0);
+	}
+	if (outDistance) {
+		*outDistance = (dis0 < 0.0f) ? dis1 : dis0;
+	}
+
 	return true;
 }
-bool kl::ray::intersect(const kl::sphere& sphere) const {
+
+bool kl::Ray::intersectSphere(const kl::Sphere& sphere) const {
 	const float rayDis = (sphere.center - origin).dot(direction);
-	const kl::float3 rayPoint = origin + direction * rayDis;
+	const kl::Float3 rayPoint = origin + direction * rayDis;
 	const float sphRayDis = (sphere.center - rayPoint).length();
 	return !(sphRayDis > sphere.radius);
 }
 
 // std::cout
-std::ostream& kl::operator<<(std::ostream& os, const kl::ray& obj) {
+std::ostream& kl::operator<<(std::ostream& os, const kl::Ray& obj) {
 	os << "{" << obj.origin << ", " << obj.direction << "}";
 	return os;
 }

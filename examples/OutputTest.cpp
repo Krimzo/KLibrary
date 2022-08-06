@@ -6,30 +6,30 @@ static constexpr int N = 10000;
 int main() {
 	double times[3] = {};
 
-	kl::console::clear();
-	kl::time::interval();
+	kl::Console::Clear();
+	kl::Time::GetInterval();
 	for (int i = 0; i < N; i++) {
 		printf("%d\n", i);
 	}
-	times[0] = kl::time::interval();
+	times[0] = kl::Time::GetInterval();
 
-	kl::console::clear();
-	kl::time::interval();
+	kl::Console::Clear();
+	kl::Time::GetInterval();
 	for (int i = 0; i < N; i++) {
 		std::cout << i << '\n';
 	}
-	times[1] = kl::time::interval();
+	times[1] = kl::Time::GetInterval();
 
-	kl::console::clear();
-	kl::time::interval();
+	kl::Console::Clear();
+	kl::Time::GetInterval();
 	for (int i = 0; i < N; i++) {
-		kl::print(i);
+		kl::Print(i);
 	}
-	times[2] = kl::time::interval();
+	times[2] = kl::Time::GetInterval();
 
-	kl::print(kl::colors::yellow, "printf time: ", times[0]);
-	kl::print(kl::colors::cyan, "std::cout time: ", times[1]);
-	kl::print(kl::colors::orange, "kl::print time: ", times[2]);
+	kl::Print(kl::Colors::Yellow, "printf time: ", times[0]);
+	kl::Print(kl::Colors::Cyan, "std::cout time: ", times[1]);
+	kl::Print(kl::Colors::Orange, "kl::print time: ", times[2]);
 
 
 	std::cin.get();

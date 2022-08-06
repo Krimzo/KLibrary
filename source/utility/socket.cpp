@@ -6,83 +6,87 @@
 
 
 static bool WSAInited = false;
-const std::string kl::socket::self = "127.0.0.1";
+const kl::String kl::Socket::Self = "127.0.0.1";
 
-void kl::socket::init() {
+void kl::Socket::Init() {
 	if (!WSAInited) {
 		WSADATA WSAData = {};
-		kl::console::error(WSAStartup(MAKEWORD(2, 2), &WSAData), "Failed to initialize WSA");
+		Assert(WSAStartup(MAKEWORD(2, 2), &WSAData), "Failed to initialize WSA");
 		WSAInited = true;
 	}
 }
-void kl::socket::uninit() {
+
+void kl::Socket::Uninit() {
 	if (WSAInited) {
 		WSACleanup();
 		WSAInited = false;
 	}
 }
 
-kl::socket::socket() {
+kl::Socket::Socket() {
 	m_Socket = ::socket(AF_INET, SOCK_STREAM, NULL);
-	kl::console::error(m_Socket == INVALID_SOCKET, "Failed to create socket");
+	Assert(m_Socket == INVALID_SOCKET, "Failed to create socket");
 	m_Address.sin_family = AF_INET;
 	m_Address.sin_addr.s_addr = INADDR_ANY;
 }
-kl::socket::socket(const std::string& address, uint port) : kl::socket() {
-	this->address(address);
-	this->port(port);
+
+kl::Socket::Socket(const String& address, uint port) : kl::Socket() {
+	setAddress(address);
+	setPort(port);
 }
-kl::socket::socket(uint64 socket) : m_Socket(socket) {}
-kl::socket::~socket() {
+
+kl::Socket::Socket(uint64 socket) : m_Socket(socket) {}
+
+kl::Socket::~Socket() {
 	close();
 }
 
-kl::socket::operator uint64() {
+kl::Socket::operator kl::uint64() {
 	return m_Socket;
 }
 
-void kl::socket::close() {
+void kl::Socket::close() {
 	closesocket(m_Socket);
 }
 
-std::string kl::socket::address() const {
+kl::String kl::Socket::getAddress() const {
 	char buffer[INET_ADDRSTRLEN] = {};
 	inet_ntop(AF_INET, &m_Address.sin_addr, buffer, INET_ADDRSTRLEN);
 	return buffer;
 }
 
-void kl::socket::address(const std::string& addrs) {
-	kl::console::error(inet_pton(AF_INET, addrs.c_str(), &m_Address.sin_addr) != 1, "Could not convert address");
+void kl::Socket::setAddress(const String& addrs) {
+	Assert(inet_pton(AF_INET, addrs.c_str(), &m_Address.sin_addr) != 1, "Could not convert address");
 }
 
-uint kl::socket::port() const {
+kl::uint kl::Socket::getPort() const {
 	return ntohs(m_Address.sin_port);
 }
 
-void kl::socket::port(uint port) {
+void kl::Socket::setPort(uint port) {
 	m_Address.sin_port = htons(port);
 }
 
-void kl::socket::listen(uint queueSize) {
-	kl::console::error(::bind(m_Socket, (sockaddr*) &m_Address, sizeof(m_Address)), "Could not bind socket");
-	kl::console::error(::listen(m_Socket, queueSize), "Could not listen on socket");
+void kl::Socket::listen(uint queueSize) {
+	Assert(::bind(m_Socket, (sockaddr*) &m_Address, sizeof(m_Address)), "Could not bind socket");
+	Assert(::listen(m_Socket, queueSize), "Could not listen on socket");
 }
 
-kl::socket kl::socket::accept() {
+kl::Socket kl::Socket::accept() {
 	int addrLen = sizeof(m_Address);
 	uint64 accepted = ::accept(m_Socket, (sockaddr*) &m_Address, &addrLen);
-	kl::console::error(accepted == INVALID_SOCKET, "Could not accept socket");
+	Assert(accepted == INVALID_SOCKET, "Could not accept socket");
 	return accepted;
 }
 
-void kl::socket::connect() {
-	kl::console::error(::connect(m_Socket, (sockaddr*) &m_Address, sizeof(m_Address)), "Could not connect to socket");
+void kl::Socket::connect() {
+	Assert(::connect(m_Socket, (sockaddr*) &m_Address, sizeof(m_Address)), "Could not connect to socket");
 }
 
-int kl::socket::send(const void* data, uint byteSize) const {
+int kl::Socket::send(const void* data, uint byteSize) const {
 	return ::send(m_Socket, (const char*) data, byteSize, NULL);
 }
 
-int kl::socket::receive(void* buff, uint byteSize) const {
+int kl::Socket::receive(void* buff, uint byteSize) const {
 	return recv(m_Socket, (char*) buff, byteSize, NULL);
 }

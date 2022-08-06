@@ -2,17 +2,17 @@
 
 
 int main() {
-	kl::encrypter encrypter;
+	kl::Encrypter encrypter;
 
-	kl::mat4 data = kl::mat4::scaling({ 1.0f, 2.0f, 3.0f });
-	kl::print(kl::colors::sky, data);
+	kl::Mat4 data = kl::Mat4::Scaling({ 1.0f, 2.0f, 3.0f });
+	kl::Print(kl::Colors::Sky, data);
 
 	encrypter.encrypt(data);
-	kl::print(kl::colors::orange, data);
+	kl::Print(kl::Colors::Orange, data);
 
 	encrypter.decrypt(data);
-	kl::print(kl::colors::cyan, data);
+	kl::Print(kl::Colors::Cyan, data);
 
 
-	std::cin.get();
+	kl::Get();
 }

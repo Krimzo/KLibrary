@@ -2,31 +2,33 @@
 
 
 void Server() {
-	kl::socket server(kl::socket::self, 1709);
+	kl::Socket server(kl::Socket::Self, 1709);
 
 	server.listen(1);
 
-	kl::socket client = server.accept();
-	client.send<kl::float3>({ 1.0f, 2.0f, 3.0f });
+	kl::Socket client = server.accept();
+	client.send<kl::Float3>({ 1.0f, 2.0f, 3.0f });
 }
 
 void Client() {
-	kl::socket client(kl::socket::self, 1709);
+	kl::Socket client(kl::Socket::Self, 1709);
 
 	client.connect();
 
-	kl::float3 res;
+	kl::Float3 res;
 	client.receive(res);
-	kl::print("Result: ", res);
+	kl::Print("Result: ", res);
 }
 
 int main() {
-	kl::socket::init();
+	kl::Socket::Init();
 
-	std::thread(Server).detach();
-	kl::time::wait(0.25f);
-	std::thread(Client).detach();
+	kl::Thread(Server).detach();
 
+	kl::Time::Wait(0.25f);
+	kl::Thread(Client).detach();
 
-	std::cin.get();
+	kl::Get();
+
+	kl::Socket::Uninit();
 }

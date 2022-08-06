@@ -9,16 +9,18 @@
 
 
 namespace kl {
-	class encrypter {
+	class Encrypter {
 	public:
-		using key = std::vector<byte>;
-		kl::encrypter::key keys[5] = {};
+		using Key = Vector<byte>;
 
-		encrypter();
-		encrypter(const kl::encrypter&) = delete;
-		void operator=(const kl::encrypter&) = delete;
+		Key keys[5] = {};
 
-		void genKeys();
+		Encrypter();
+		Encrypter(const Encrypter&) = delete;
+		void operator=(const Encrypter&) = delete;
+
+		void generateNewKeys();
+
 		void encrypt(void* data, uint64 dataSize) const;
 		void decrypt(void* data, uint64 dataSize) const;
 
@@ -34,5 +36,5 @@ namespace kl {
 	};
 
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::encrypter& encrypter);
+	std::ostream& operator<<(std::ostream& os, const Encrypter& encrypter);
 }

@@ -3,84 +3,92 @@
 #include "utility/console.h"
 
 
-kl::dx::texture kl::gpu::newTextureBB() {
-	kl::dx::texture buffAddrs = nullptr;
-	m_Chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &buffAddrs);
-	kl::console::error(!buffAddrs, "Failed to create backbuffer texture");
+kl::dx::Texture kl::GPU::getBackBuffer() {
+	dx::Texture buffer = nullptr;
 
-	m_Children.insert(buffAddrs);
-	return buffAddrs;
+	m_Chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
+	Assert(!buffer, "Failed to get backbuffer texture");
+
+	m_Children.insert(buffer);
+
+	return buffer;
 }
 
-kl::dx::texture kl::gpu::newTexture(kl::dx::desc::texture* desc, kl::dx::desc::subres* subData) {
-	kl::dx::texture tex = nullptr;
-	m_Device->CreateTexture2D(desc, subData, &tex);
-	kl::console::error(!tex, "Failed to create texture");
+kl::dx::Texture kl::GPU::newTexture(dx::TextureDesc* descriptor, dx::SubresDesc* subresourceData) {
+	dx::Texture texture = nullptr;
 
-	m_Children.insert(tex);
-	return tex;
+	m_Device->CreateTexture2D(descriptor, subresourceData, &texture);
+	Assert(!texture, "Failed to create texture");
+
+	m_Children.insert(texture);
+
+	return texture;
 }
 
-kl::dx::texture kl::gpu::newTexture(const kl::image& img, bool enableUnorderedAccess) {
-	const kl::image flipped = img.flipV();
+kl::dx::Texture kl::GPU::newTexture(const Image& image, bool enableUnorderedAccess) {
+	Image flippedImage = image.flip(true);
 
-	kl::dx::desc::texture texDesc = {};
-	texDesc.Width = img.width();
-	texDesc.Height = img.height();
-	texDesc.MipLevels = 1;
-	texDesc.ArraySize = 1;
-	texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	texDesc.SampleDesc.Count = 1;
-	texDesc.Usage = D3D11_USAGE_DEFAULT;
-	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | (enableUnorderedAccess ? D3D11_BIND_UNORDERED_ACCESS : NULL);
+	dx::TextureDesc descriptor = {};
+	descriptor.Width = image.getWidth();
+	descriptor.Height = image.getHeight();
+	descriptor.MipLevels = 1;
+	descriptor.ArraySize = 1;
+	descriptor.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	descriptor.SampleDesc.Count = 1;
+	descriptor.Usage = D3D11_USAGE_DEFAULT;
+	descriptor.BindFlags = D3D11_BIND_SHADER_RESOURCE | (enableUnorderedAccess ? D3D11_BIND_UNORDERED_ACCESS : NULL);
 
-	kl::dx::desc::subres texData = {};
-	texData.pSysMem = flipped.data();
-	texData.SysMemPitch = img.width() * sizeof(uint);
+	dx::SubresDesc data = {};
+	data.pSysMem = flippedImage.data();
+	data.SysMemPitch = image.getWidth() * sizeof(uint);
 
-	return newTexture(&texDesc, &texData);
+	return newTexture(&descriptor, &data);
 }
 
-kl::dx::texture kl::gpu::newTexture(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom) {
-	kl::console::error(!(front.size() == back.size() && front.size() == left.size() && front.size() == right.size() && front.size() == top.size() && front.size() == bottom.size()),
+kl::dx::Texture kl::GPU::newTexture(const Image& front, const Image& back, const Image& left, const Image& right, const Image& top, const Image& bottom) {
+	Assert(!(front.getSize() == back.getSize() &&
+		front.getSize() == left.getSize() &&
+		front.getSize() == right.getSize() &&
+		front.getSize() == top.getSize() &&
+		front.getSize() == bottom.getSize()),
 		"Sizes of the 6 given images do not match");
 
-	kl::dx::desc::texture texDesc = {};
-	texDesc.Width = front.width();
-	texDesc.Height = front.height();
-	texDesc.MipLevels = 1;
-	texDesc.ArraySize = 6;
-	texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	texDesc.SampleDesc.Count = 1;
-	texDesc.Usage = D3D11_USAGE_DEFAULT;
-	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+	dx::TextureDesc descriptor = {};
+	descriptor.Width = front.getWidth();
+	descriptor.Height = front.getHeight();
+	descriptor.MipLevels = 1;
+	descriptor.ArraySize = 6;
+	descriptor.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	descriptor.SampleDesc.Count = 1;
+	descriptor.Usage = D3D11_USAGE_DEFAULT;
+	descriptor.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	descriptor.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-	kl::dx::desc::subres texData[6] = {
-		{ right.data(), front.width() * sizeof(kl::color), 0 },
-		{ left.data(), front.width() * sizeof(kl::color), 0 },
-		{ top.data(), front.width() * sizeof(kl::color), 0 },
-		{ bottom.data(), front.width() * sizeof(kl::color), 0 },
-		{ front.data(), front.width() * sizeof(kl::color), 0 },
-		{ back.data(), front.width() * sizeof(kl::color), 0 }
+	dx::SubresDesc data[6] = {
+		{ right.data(), front.getWidth() * sizeof(Color), 0 },
+		{ left.data(), front.getWidth() * sizeof(Color), 0 },
+		{ top.data(), front.getWidth() * sizeof(Color), 0 },
+		{ bottom.data(), front.getWidth() * sizeof(Color), 0 },
+		{ front.data(), front.getWidth() * sizeof(Color), 0 },
+		{ back.data(), front.getWidth() * sizeof(Color), 0 }
 	};
 
-	return newTexture(&texDesc, texData);
+	return newTexture(&descriptor, data);
 }
 
-kl::dx::texture kl::gpu::newTextureST(kl::dx::texture tex, const kl::uint2& size) {
-	kl::dx::desc::texture oldDesc = {};
-	tex->GetDesc(&oldDesc);
+kl::dx::Texture kl::GPU::newTextureStaging(dx::Texture texture, const UInt2& size) {
+	dx::TextureDesc descriptor = {};
+	texture->GetDesc(&descriptor);
 
-	kl::dx::desc::texture stagTexDes = {};
-	stagTexDes.Width = (size.x > 0) ? size.x : oldDesc.Width;
-	stagTexDes.Height = (size.y > 0) ? size.y : oldDesc.Height;
-	stagTexDes.MipLevels = 1;
-	stagTexDes.ArraySize = 1;
-	stagTexDes.Format = oldDesc.Format;
-	stagTexDes.SampleDesc.Count = 1;
-	stagTexDes.Usage = D3D11_USAGE_STAGING;
-	stagTexDes.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	dx::TextureDesc stagingDescriptor = {};
+	stagingDescriptor.Width = (size.x > 0) ? size.x : descriptor.Width;
+	stagingDescriptor.Height = (size.y > 0) ? size.y : descriptor.Height;
+	stagingDescriptor.MipLevels = 1;
+	stagingDescriptor.ArraySize = 1;
+	stagingDescriptor.Format = descriptor.Format;
+	stagingDescriptor.SampleDesc.Count = 1;
+	stagingDescriptor.Usage = D3D11_USAGE_STAGING;
+	stagingDescriptor.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 
-	return newTexture(&stagTexDes);
+	return newTexture(&stagingDescriptor);
 }

@@ -3,55 +3,58 @@
 #include <string>
 #include <vector>
 
-#include "graphics/color.h"
-#include "math/math.h"
+#include "Utility/Strings.h"
+#include "Math/Math.h"
 
 
 namespace kl {
-	class image {
-	private:
-		kl::uint2 m_Size;
-		std::vector<kl::color> m_Pixels;
+	class Image {
+		UInt2 m_Size;
+		Vector<kl::Color> m_Pixels;
 
 	public:
-		image();
-		image(const kl::uint2& size, const kl::color& color = {});
-		image(const std::string& filePath);
+		Image();
+		Image(const UInt2& size, const Color& color = {});
+		Image(const String& filePath);
 
-		std::vector<kl::color>::iterator begin();
-		std::vector<kl::color>::iterator end();
+		Vector<Color>::iterator begin();
+		Vector<Color>::iterator end();
 
-		uint width() const;
-		void width(uint width);
+		uint getWidth() const;
+		void setWidth(uint width);
 
-		uint height() const;
-		void height(uint height);
+		uint getHeight() const;
+		void setHeight(uint height);
 
-		kl::uint2 size() const;
-		void size(const kl::uint2& size);
+		UInt2 getSize() const;
+		void setSize(const UInt2& size);
 
-		kl::color pixel(const kl::uint2& coords) const;
-		void pixel(const kl::uint2& coords, const kl::color& color);
+		Color getPixel(const UInt2& coords) const;
+		void setPixel(const UInt2& coords, const Color& color);
 
-		kl::color* data();
-		const kl::color* data() const;
+		Color* data();
+		const Color* data() const;
 
-		kl::image rect(kl::uint2 a, kl::uint2 b) const;
+		Image getPart(UInt2 a, UInt2 b) const;
 
-		bool fromFile(const std::string& filePath);
-		bool toFile(const std::string& fileName) const;
+		bool loadFromFile(const String& filePath);
+		bool saveToFile(const String& fileName) const;
 
-		kl::image flipH() const;
-		kl::image flipV() const;
+		kl::Image flip(bool vertical) const;
 
-		void fill(const kl::color& color);
-		void drawLine(const kl::int2& a, const kl::int2& b, const kl::color& col);
-		void drawTriangle(kl::int2 a, kl::int2 b, kl::int2 c, const kl::color& col, bool fill = false);
-		void drawRectangle(kl::int2 a, kl::int2 b, const kl::color& col, bool fill = false);
-		void drawCircle(const kl::int2& p, float r, const kl::color& col, bool fill = false);
-		void drawCircle(const kl::int2& a, const kl::int2& b, const kl::color& col, bool fill = false);
-		void drawImage(const kl::int2& pos, const kl::image& img, bool mixAlpha = true);
+		void fill(const kl::Color& color);
 
-		std::string ascii(const kl::int2& frameSize) const;
+		void drawLine(const kl::Int2& a, const kl::Int2& b, const kl::Color& color);
+
+		void drawTriangle(kl::Int2 a, kl::Int2 b, kl::Int2 c, const kl::Color& color, bool fill = false);
+
+		void drawRectangle(kl::Int2 a, kl::Int2 b, const kl::Color& color, bool fill = false);
+
+		void drawCircle(const kl::Int2& p, float r, const kl::Color& color, bool fill = false);
+		void drawCircle(const kl::Int2& a, const kl::Int2& b, const kl::Color& color, bool fill = false);
+
+		void drawImage(const kl::Int2& position, const kl::Image& image, bool mixAlpha = true);
+
+		String asASCII(const kl::Int2& frameSize) const;
 	};
 }

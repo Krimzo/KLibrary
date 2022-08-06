@@ -5,22 +5,23 @@
 
 
 namespace kl {
-	struct triangle {
-		kl::vertex a, b, c;
+	struct Triangle {
+		Vertex a, b, c;
 
-		triangle();
-		triangle(const kl::vertex& a, const kl::vertex& b, const kl::vertex& c);
+		Triangle();
+		Triangle(const Vertex& a, const Vertex& b, const Vertex& c);
 
-		kl::float4 constants() const;
-		kl::float3 weights(const kl::float4& consts, const kl::float2& pos) const;
-		kl::float3 weights(const kl::float3& point) const;
+		Float4 getConstants() const;
 
-		bool in(const kl::float3& weights) const;
+		Float3 getWeights(const Float4& constants, const Float2& point) const;
+		Float3 getWeights(const Float3& position) const;
 
-		float interpolate(const kl::float3& weights, const kl::float3& values) const;
-		kl::vertex interpolate(const kl::float3& weights) const;
+		bool isInTriangle(const kl::Float3& weights) const;
+
+		float interpolate(const Float3& weights, const Float3& values) const;
+		Vertex interpolate(const Float3& weights) const;
 	};
 
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::triangle& obj);
+	std::ostream& operator<<(std::ostream& os, const kl::Triangle& obj);
 }

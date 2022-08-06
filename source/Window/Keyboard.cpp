@@ -1,9 +1,9 @@
-#include "window/keys.h"
+#include "Window/Keyboard.h"
 
 #include <windows.h>
 
 
-kl::keys::keys() :
+kl::Keyboard::Keyboard() :
 	q('Q'),
 	w('W'),
 	e('E'),
@@ -75,16 +75,16 @@ kl::keys::keys() :
 	f11(VK_F11),
 	f12(VK_F12) {}
 
-kl::keys::~keys() {}
+kl::Keyboard::~Keyboard() {}
 
-void kl::keys::update(int64 type, bool state) {
-	for (auto& key : buffer) {
-		key.update(type, state);
+void kl::Keyboard::updateValue(int64 type, bool state) {
+	for (auto& key : allKeys) {
+		key.updateValue(type, state);
 	}
 }
 
-void kl::keys::update() const {
-	for (auto& key : buffer) {
-		key.update();
+void kl::Keyboard::updateCall() const {
+	for (auto& key : allKeys) {
+		key.updateCall();
 	}
 }

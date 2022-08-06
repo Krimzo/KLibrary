@@ -6,19 +6,19 @@
 #include <windowsx.h>
 
 #include "graphics/image.h"
-#include "window/keys.h"
+#include "window/keyboard.h"
 #include "window/mouse.h"
 #include "math/math.h"
 
 
 namespace kl {
-	namespace screen {
-		inline const kl::uint2 size = { GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
+	namespace Screen {
+		inline const UInt2 Size = { GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
 	}
 
-	class window {
+	class Window {
 		HINSTANCE m_Instance = nullptr;
-		std::string m_Name = {};
+		String m_Name = {};
 		HWND m_Window = nullptr;
 		HDC m_DeviceContext = nullptr;
 
@@ -31,47 +31,47 @@ namespace kl {
 		void HandleMessage(const MSG& message);
 
 	public:
-		kl::keys keys;
-		kl::mouse mouse;
+		Keyboard keyboard;
+		Mouse mouse;
 
-		std::function<void(kl::uint2)> resize = [](kl::uint2) {};
+		Function<void(UInt2)> onResize = [](UInt2) {};
 
-		window(const kl::uint2& size, const std::string& name);
-		window(const kl::window&) = delete;
-		void operator=(const kl::window&) = delete;
-		~window();
+		Window(const UInt2& size, const String& name);
+		Window(const Window&) = delete;
+		void operator=(const Window&) = delete;
+		~Window();
 
 		operator HWND() const;
 		operator bool() const;
 
 		bool process(bool wait = true);
 
-		bool running() const;
+		bool isOpen() const;
 		void close() const;
 
-		bool resizeable() const;
-		void resizeable(bool enabled);
+		bool isResizeable() const;
+		void setResizeable(bool enabled);
 
 		void maximize();
 		void minimize();
 
-		bool fullscreen() const;
-		void fullscreen(bool enable);
+		bool isFullscreened() const;
+		void setFullscreen(bool enable);
 
-		kl::int2 position(bool client = false) const;
-		void position(const kl::int2& position);
+		Int2 getPosition(bool client = false) const;
+		void setPosition(const Int2& position);
 
-		kl::uint2 size(bool client = true) const;
-		void size(const kl::uint2& size, bool client = true);
+		UInt2 getSize(bool client = true) const;
+		void setSize(const UInt2& size, bool client = true);
 
-		float aspect() const;
-		kl::uint2 center() const;
+		float getAspect() const;
+		UInt2 getCenter() const;
 
-		void title(const std::string& data);
-		bool icon(const std::string& filePath);
+		void setTitle(const String& data);
+		bool setIcon(const String& filePath);
 
-		void draw(const kl::color* data, const kl::uint2& size, const kl::int2& position = {});
-		void draw(const kl::image& toDraw, const kl::int2& position = {});
+		void drawData(const Color* data, const UInt2& size, const Int2& position = {});
+		void drawImage(const Image& image, const Int2& position = {});
 
 		void notify() const;
 	};

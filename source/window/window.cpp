@@ -15,7 +15,7 @@
 #pragma comment(lib, "odbccp32.lib")
 
 
-kl::window::window(const kl::uint2& size, const std::string& name) : m_Name(name) {
+kl::Window::Window(const UInt2& size, const String& name) : m_Name(name) {
 	// Instance
 	m_Instance = GetModuleHandleA(nullptr);
 
@@ -24,11 +24,11 @@ kl::window::window(const kl::uint2& size, const std::string& name) : m_Name(name
 	windowClass.cbSize = sizeof(WNDCLASSEXA);
 	windowClass.style = CS_OWNDC;
 	windowClass.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-		return ((kl::window*) GetWindowLongPtrA(hwnd, GWLP_USERDATA))->WndProc(hwnd, msg, wParam, lParam);
+		return ((Window*)GetWindowLongPtrA(hwnd, GWLP_USERDATA))->WndProc(hwnd, msg, wParam, lParam);
 	};
 	windowClass.hInstance = m_Instance;
 	windowClass.lpszClassName = name.c_str();
-	kl::console::error(!RegisterClassExA(&windowClass), "Failed to register window class");
+	Assert(!RegisterClassExA(&windowClass), "Failed to register window class");
 
 	// Creating the window
 	m_WindowStyle = WS_OVERLAPPEDWINDOW;
@@ -36,12 +36,11 @@ kl::window::window(const kl::uint2& size, const std::string& name) : m_Name(name
 	RECT sizeBuffer = { 0, 0, LONG(size.x), LONG(size.y) };
 	AdjustWindowRect(&sizeBuffer, m_WindowStyle, false);
 
-	kl::uint2 newSize = { sizeBuffer.right - sizeBuffer.left, sizeBuffer.bottom - sizeBuffer.top };
-	kl::int2 newPosition = (kl::screen::size / 2) - (newSize / 2);
+	UInt2 newSize = { sizeBuffer.right - sizeBuffer.left, sizeBuffer.bottom - sizeBuffer.top };
+	Int2 newPosition = (Screen::Size / 2) - (newSize / 2);
 
-	m_Window = CreateWindowExA(NULL, name.c_str(), name.c_str(), m_WindowStyle,
-		newPosition.x, newPosition.y, newSize.x, newSize.y, nullptr, nullptr, m_Instance, nullptr);
-	kl::console::error(!m_Window, "Failed to create window");
+	m_Window = CreateWindowExA(NULL, name.c_str(), name.c_str(), m_WindowStyle, newPosition.x, newPosition.y, newSize.x, newSize.y, nullptr, nullptr, m_Instance, nullptr);
+	Assert(!m_Window, "Failed to create window");
 
 	// Getting data
 	m_DeviceContext = GetDC(m_Window);
@@ -51,10 +50,10 @@ kl::window::window(const kl::uint2& size, const std::string& name) : m_Name(name
 	SetWindowLongPtrA(m_Window, GWLP_USERDATA, int64(this));
 	ShowWindow(m_Window, SW_SHOW);
 	SetCursor(LoadCursorA(nullptr, LPCSTR(IDC_ARROW)));
-	mouse.bind(m_Window);
+	mouse.bindToWindow(m_Window);
 }
 
-kl::window::~window() {
+kl::Window::~Window() {
 	// Clearing DC
 	ReleaseDC(m_Window, m_DeviceContext);
 	DeleteDC(m_DeviceContext);
@@ -64,15 +63,15 @@ kl::window::~window() {
 	UnregisterClassA(m_Name.c_str(), m_Instance);
 }
 
-kl::window::operator HWND() const {
+kl::Window::operator HWND() const {
 	return m_Window;
 }
 
-kl::window::operator bool() const {
-	return running();
+kl::Window::operator bool() const {
+	return isOpen();
 }
 
-bool kl::window::process(bool wait) {
+bool kl::Window::process(bool wait) {
 	MSG message;
 	if (wait) {
 		GetMessageA(&message, m_Window, 0, 0);
@@ -83,27 +82,29 @@ bool kl::window::process(bool wait) {
 			HandleMessage(message);
 		}
 	}
-	keys.update();
-	mouse.update();
-	return running();
+
+	keyboard.updateCall();
+	mouse.updateCall();
+
+	return isOpen();
 }
 
-bool kl::window::running() const {
+bool kl::Window::isOpen() const {
 	return IsWindow(m_Window);
 }
 
-void kl::window::close() const {
+void kl::Window::close() const {
 	PostMessageA(m_Window, WM_CLOSE, NULL, NULL);
 }
 
-bool kl::window::resizeable() const {
+bool kl::Window::isResizeable() const {
 	if (!m_Fullscreened) {
 		return m_Resizeable;
 	}
 	return false;
 }
 
-void kl::window::resizeable(bool enabled) {
+void kl::Window::setResizeable(bool enabled) {
 	if (!m_Fullscreened) {
 		if (!m_Resizeable && enabled) {
 			SetWindowLongA(m_Window, GWL_STYLE, GetWindowLongA(m_Window, GWL_STYLE) | WS_SIZEBOX | WS_MAXIMIZEBOX);
@@ -117,23 +118,23 @@ void kl::window::resizeable(bool enabled) {
 	}
 }
 
-void kl::window::maximize() {
+void kl::Window::maximize() {
 	ShowWindow(m_Window, SW_MAXIMIZE);
 }
 
-void kl::window::minimize() {
+void kl::Window::minimize() {
 	ShowWindow(m_Window, SW_MINIMIZE);
 }
 
-bool kl::window::fullscreen() const {
+bool kl::Window::isFullscreened() const {
 	return m_Fullscreened;
 }
 
-void kl::window::fullscreen(bool enable) {
+void kl::Window::setFullscreen(bool enable) {
 	if (!m_Fullscreened && enable) {
 		GetWindowPlacement(m_Window, &m_Placement);
 		SetWindowLongA(m_Window, GWL_STYLE, m_WindowStyle & ~WS_OVERLAPPEDWINDOW);
-		SetWindowPos(m_Window, HWND_TOP, 0, 0, kl::screen::size.x, kl::screen::size.y, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+		SetWindowPos(m_Window, HWND_TOP, 0, 0, Screen::Size.x, Screen::Size.y, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 	}
 	else if (m_Fullscreened && !enable) {
 		SetWindowLongA(m_Window, GWL_STYLE, m_WindowStyle);
@@ -143,7 +144,7 @@ void kl::window::fullscreen(bool enable) {
 	m_Fullscreened = enable;
 }
 
-kl::int2 kl::window::position(bool client) const {
+kl::Int2 kl::Window::getPosition(bool client) const {
 	RECT rect = {};
 	if (client) {
 		GetClientRect(m_Window, &rect);
@@ -154,14 +155,14 @@ kl::int2 kl::window::position(bool client) const {
 	return { rect.left, rect.top };
 }
 
-void kl::window::position(const kl::int2& position) {
+void kl::Window::setPosition(const kl::Int2& position) {
 	if (!m_Fullscreened) {
-		kl::uint2 size = this->size(false);
+		const UInt2 size = getSize(false);
 		MoveWindow(m_Window, position.x, position.y, size.x, size.y, false);
 	}
 }
 
-kl::uint2 kl::window::size(bool client) const {
+kl::UInt2 kl::Window::getSize(bool client) const {
 	RECT rect = {};
 	if (client) {
 		GetClientRect(m_Window, &rect);
@@ -172,10 +173,10 @@ kl::uint2 kl::window::size(bool client) const {
 	return { rect.right - rect.left, rect.bottom - rect.top };
 }
 
-void kl::window::size(const kl::uint2& size, bool client) {
+void kl::Window::setSize(const kl::UInt2& size, bool client) {
 	if (!m_Fullscreened) {
-		kl::int2 position = this->position();
-		kl::uint2 newSize = size;
+		const Int2 position = getPosition();
+		UInt2 newSize = size;
 
 		if (client) {
 			RECT rect = {
@@ -192,30 +193,30 @@ void kl::window::size(const kl::uint2& size, bool client) {
 	}
 }
 
-float kl::window::aspect() const {
-	const kl::uint2 winSize = size();
+float kl::Window::getAspect() const {
+	const UInt2 winSize = getSize();
 	return float(winSize.x) / winSize.y;
 }
 
-kl::uint2 kl::window::center() const {
-	return size() / 2;
+kl::UInt2 kl::Window::getCenter() const {
+	return getSize() / 2;
 }
 
-void kl::window::title(const std::string& data) {
+void kl::Window::setTitle(const String& data) {
 	SetWindowTextA(m_Window, data.c_str());
 }
 
-bool kl::window::icon(const std::string& filePath) {
+bool kl::Window::setIcon(const String& filePath) {
 	HICON loadedIcon = ExtractIconA(nullptr, filePath.c_str(), NULL);
 	if (!loadedIcon) {
 		return false;
 	}
-	SendMessageA(m_Window, WM_SETICON, ICON_BIG, (LPARAM) loadedIcon);
-	SendMessageA(m_Window, WM_SETICON, ICON_SMALL, (LPARAM) loadedIcon);
+	SendMessageA(m_Window, WM_SETICON, ICON_BIG, (LPARAM)loadedIcon);
+	SendMessageA(m_Window, WM_SETICON, ICON_SMALL, (LPARAM)loadedIcon);
 	return true;
 }
 
-void kl::window::draw(const kl::color* data, const kl::uint2& size, const kl::int2& position) {
+void kl::Window::drawData(const Color* data, const UInt2& size, const Int2& position) {
 	BITMAPINFO bmpInfo = {};
 	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
@@ -223,14 +224,15 @@ void kl::window::draw(const kl::color* data, const kl::uint2& size, const kl::in
 	bmpInfo.bmiHeader.biPlanes = 1;
 	bmpInfo.bmiHeader.biWidth = size.x;
 	bmpInfo.bmiHeader.biHeight = -int(size.y);
+
 	StretchDIBits(m_DeviceContext, position.x, position.y, size.x, size.y, 0, 0, size.x, size.y, data, &bmpInfo, DIB_RGB_COLORS, SRCCOPY);
 }
 
-void kl::window::draw(const kl::image& toDraw, const kl::int2& position) {
-	draw(toDraw.data(), toDraw.size(), position);
+void kl::Window::drawImage(const Image& image, const Int2& position) {
+	drawData(image.data(), image.getSize(), position);
 }
 
-void kl::window::notify() const {
+void kl::Window::notify() const {
 	PostMessageA(m_Window, WM_NULL, NULL, NULL);
 	PostMessageA(m_Window, WM_NULL, NULL, NULL);
 }

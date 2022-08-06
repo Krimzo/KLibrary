@@ -1,28 +1,28 @@
 #include "window/key.h"
 
 
-kl::key::key(int64 type) : m_Type(type) {}
+kl::Key::Key(int64 type) : m_Type(type) {}
 
-kl::key::~key() {}
+kl::Key::~Key() {}
 
-kl::key::operator bool() const {
+kl::Key::operator bool() const {
 	return m_State;
 }
 
-void kl::key::update(int64 type, bool newState) {
+void kl::Key::updateValue(int64 type, bool newState) {
 	if (type == m_Type) {
 		if (!m_State && newState) {
-			press();
+			onPress();
 		}
 		else if (m_State && !newState) {
-			release();
+			onRelease();
 		}
 		m_State = newState;
 	}
 }
 
-void kl::key::update() const {
+void kl::Key::updateCall() const {
 	if (m_State) {
-		down();
+		onDown();
 	}
 }

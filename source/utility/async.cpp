@@ -1,12 +1,12 @@
 #include "utility/async.h"
 
 
-void kl::async::loop(int64 startInclusive, int64 endExclusive, const std::function<void(uint t, int64 i)>& loopBody, uint threadCount) {
-	std::vector<std::thread> workers(threadCount);
+void kl::ASync::For(int64 startInclusive, int64 endExclusive, const Function<void(uint t, int64 i)>& loopBody, uint threadCount) {
+	Vector<Thread> workers(threadCount);
 
-	std::atomic<int64> workCounter = startInclusive;
+	Atomic<int64> workCounter = startInclusive;
 	for (uint t = 0; t < threadCount; t++) {
-		workers[t] = std::thread([&, t]() {
+		workers[t] = Thread([&, t]() {
 			int64 workIndex = startInclusive;
 			do {
 				workIndex = workCounter++;

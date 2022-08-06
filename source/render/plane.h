@@ -4,14 +4,14 @@
 
 
 namespace kl {
-	struct plane {
-		kl::float3 normal;
-		kl::float3 point;
+	struct Plane {
+		Float3 normal;
+		Float3 point;
 
-		plane();
-		plane(const kl::float3& normal, const kl::float3& point);
+		Plane();
+		Plane(const Float3& normal, const Float3& point);
 	};
 
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::plane& obj);
+	std::ostream& operator<<(std::ostream& os, const kl::Plane& obj);
 }

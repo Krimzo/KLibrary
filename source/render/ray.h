@@ -8,21 +8,23 @@
 
 
 namespace kl {
-	struct ray {
-		kl::float3 origin;
-		kl::float3 direction;
+	struct Ray {
+		kl::Float3 origin;
+		kl::Float3 direction;
 
-		ray();
-		ray(const kl::float3& origin, const kl::float3& direction);
-		ray(const kl::float3& origin, const kl::mat4& invCamMat, const kl::float2& ndc);
-		ray(const kl::camera& cam, const kl::float2& ndc);
+		Ray();
+		Ray(const kl::Float3& origin, const kl::Float3& direction);
+		Ray(const kl::Float3& origin, const Mat4& inverseMatrix, const Float2& NDC);
+		Ray(const Camera& camera, const Float2& NDC);
 
-		bool intersect(const kl::plane& plane, kl::float3* outInter = nullptr) const;
-		bool intersect(const kl::triangle& triangle, kl::float3* outInter = nullptr) const;
-		bool intersect(const kl::sphere& sphere, kl::float3& outInter, float& outDis) const;
-		bool intersect(const kl::sphere& sphere) const;
+		bool intersectPlane(const kl::Plane& plane, kl::Float3* outIntersection = nullptr) const;
+
+		bool intersectTriangle(const kl::Triangle& triangle, kl::Float3* outIntersection = nullptr) const;
+
+		bool intersectSphere(const Sphere& sphere, Float3* outIntersection = nullptr, float* outDistance = nullptr) const;
+		bool intersectSphere(const Sphere& sphere) const;
 	};
 
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::ray& obj);
+	std::ostream& operator<<(std::ostream& os, const kl::Ray& obj);
 }

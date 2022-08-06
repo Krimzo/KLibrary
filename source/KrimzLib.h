@@ -1,38 +1,40 @@
 #pragma once
 
+// Types
+#include "KLTypes.h"
 
 // Math
-#include "math/math.h"
-
-// Graphics
-#include "graphics/color.h"
-#include "graphics/image.h"
-#include "graphics/video.h"
-
-// Utility
-#include "utility/console.h"
-#include "utility/encrypter.h"
-#include "utility/file.h"
-#include "utility/random.h"
-#include "utility/socket.h"
-#include "utility/strings.h"
-#include "utility/async.h"
-#include "utility/time.h"
-#include "utility/web.h"
-
-// Window
-#include "window/keys.h"
-#include "window/mouse.h"
-#include "window/window.h"
-#include "window/double_buffer.h"
-
-// DirectX
-#include "gpu/gpu.h"
+#include "Math/Math.h"
 
 // Render
-#include "render/camera.h"
-#include "render/plane.h"
-#include "render/sphere.h"
-#include "render/vertex.h"
-#include "render/triangle.h"
-#include "render/ray.h"
+#include "Render/Camera.h"
+#include "Render/Plane.h"
+#include "Render/Sphere.h"
+#include "Render/Vertex.h"
+#include "Render/Triangle.h"
+#include "Render/Ray.h"
+
+// Graphics
+#include "Graphics/Color.h"
+#include "Graphics/Image.h"
+#include "Graphics/Video.h"
+
+// Utility
+#include "Utility/Console.h"
+#include "Utility/Encrypter.h"
+#include "Utility/File.h"
+#include "Utility/Random.h"
+#include "Utility/Socket.h"
+#include "Utility/Strings.h"
+#include "Utility/ASync.h"
+#include "Utility/Time.h"
+#include "Utility/Web.h"
+
+// Window
+#include "Window/Keyboard.h"
+#include "Window/Mouse.h"
+#include "Window/Window.h"
+#include "Window/DoubleBuffer.h"
+
+// DirectX
+#include "GPU/GPU.h"

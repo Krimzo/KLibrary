@@ -2,10 +2,10 @@
 
 
 struct PS_CB {
-	kl::float2 frameSize;
-	kl::float2 zoom;
-	kl::float2 position;
-	kl::float2 startPosition;
+	kl::Float2 frameSize;
+	kl::Float2 zoom;
+	kl::Float2 position;
+	kl::Float2 startPosition;
 };
 
 static constexpr float zoomSpeed = 1.0f;
@@ -13,78 +13,76 @@ static constexpr float minZoom = 0.5f;
 static constexpr float maxZoom = 10000.0f;
 
 static float zoom = 1.0f;
-static kl::float2 position = { -0.5f, 0.0f };
+static kl::Float2 position = { -0.5f, 0.0f };
 
 int main() {
-	kl::window window = { { 1600, 900 }, "Mandelbrot" };
-	kl::timer timer;
+	kl::Window window = { { 1600, 900 }, "Mandelbrot" };
+	kl::Timer timer;
 
-	kl::gpu gpu = kl::gpu(window);
-	kl::dx::mesh screenMesh = nullptr;
-	kl::shaders shaders;
+	kl::GPU gpu = kl::GPU(window);
+	kl::dx::Buffer screenMesh = nullptr;
+	kl::Shaders shaders = {};
 
-	window.resize = [&](kl::uint2 newSize) {
+	window.onResize = [&](kl::UInt2 newSize) {
 		if (newSize.x > 0 && newSize.y > 0) {
-			gpu.regenInternal(newSize);
-			gpu.viewport(newSize);
+			gpu.resizeInternal(newSize);
+			gpu.setViewport(newSize);
 		}
 	};
 	window.maximize();
 
 	// Start
-	gpu.bind(gpu.newRasterState(false, false));
-	shaders = gpu.newShaders(kl::file::readString("examples/shaders/mandelbrot.hlsl"));
+	shaders = gpu.newShaders(kl::Files::ReadString("Examples/Shaders/Mandelbrot.hlsl"));
+
 	screenMesh = gpu.newVertexBuffer({
-		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(-1.0f, 1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f)),
-		kl::vertex(kl::float3(-1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, -1.0f, 0.5f)), kl::vertex(kl::float3(1.0f, 1.0f, 0.5f))
-		});
+		{ { -1.0f, -1.0f, 0.5f } }, { { -1.0f, 1.0f, 0.5f } }, { { 1.0f, 1.0f, 0.5f } },
+		{ { 1.0f, 1.0f, 0.5f } }, { { 1.0f, -1.0f, 0.5f } }, { { -1.0f, -1.0f, 0.5f } } });
 
 	// Update
 	while (window.process(false)) {
-		timer.newInterval();
-		timer.newElapsed();
+		timer.updateInterval();
 
-		const kl::uint2 frameSize = window.size();
+		const kl::UInt2 frameSize = window.getSize();
 
 		// Input
-		if (window.keys.esc) {
+		if (window.keyboard.esc) {
 			window.close();
 		}
-		if (window.keys.r) {
+		if (window.keyboard.r) {
 			position = { -0.5, 0.0f };
 			zoom = 1.0f;
 		}
-		if (window.keys.w) {
-			position.y -= (1.0f / zoom) * timer.interval();
+		if (window.keyboard.w) {
+			position.y -= (1.0f / zoom) * timer.getInterval();
 		}
-		if (window.keys.s) {
-			position.y += (1.0f / zoom) * timer.interval();
+		if (window.keyboard.s) {
+			position.y += (1.0f / zoom) * timer.getInterval();
 		}
-		if (window.keys.d) {
-			position.x += (1.0f / zoom) * timer.interval();
+		if (window.keyboard.d) {
+			position.x += (1.0f / zoom) * timer.getInterval();
 		}
-		if (window.keys.a) {
-			position.x -= (1.0f / zoom) * timer.interval();
+		if (window.keyboard.a) {
+			position.x -= (1.0f / zoom) * timer.getInterval();
 		}
-		if (window.mouse.lmb) {
-			zoom += zoom * zoomSpeed * timer.interval();
+		if (window.mouse.left) {
+			zoom += zoom * zoomSpeed * timer.getInterval();
 
 			if (zoom < maxZoom) {
-				const kl::float2 uv = ((kl::float2(window.mouse.position()) / frameSize) * 2.0f
-					- kl::float2(1.0f, 1.0f)) * (float(frameSize.x) / frameSize.y);
-				position += (uv / zoom) * timer.interval();
+				const kl::Float2 uv = ((kl::Float2(window.mouse.getPosition()) / frameSize) * 2.0f
+					- kl::Float2(1.0f, 1.0f)) * (float(frameSize.x) / frameSize.y);
+				position += (uv / zoom) * timer.getInterval();
 			}
 			else {
 				zoom = maxZoom;
 			}
 		}
-		if (window.mouse.rmb) {
-			zoom -= zoom * zoomSpeed * timer.interval();
+		if (window.mouse.right) {
+			zoom -= zoom * zoomSpeed * timer.getInterval();
 
 			if (zoom > minZoom) {
-				const kl::float2 uv = ((kl::float2(window.mouse.position()) / frameSize) * 2.0f -
-					kl::float2(1.0f, 1.0f)) * (float(frameSize.x) / frameSize.y);
-				position -= (uv / zoom) * timer.interval();
+				const kl::Float2 uv = ((kl::Float2(window.mouse.getPosition()) / frameSize) * 2.0f -
+					kl::Float2(1.0f, 1.0f)) * (float(frameSize.x) / frameSize.y);
+				position -= (uv / zoom) * timer.getInterval();
 			}
 			else {
 				zoom = minZoom;
@@ -92,23 +90,24 @@ int main() {
 		}
 
 		// Render
-		gpu.clear(kl::colors::black);
+		gpu.clearInternal();
 
-		gpu.bind(shaders);
+		gpu.bindShaders(shaders);
 
-		PS_CB pxData = {};
-		pxData.frameSize = frameSize;
-		pxData.zoom = kl::float2(zoom, zoom);
-		pxData.position = position;
-		pxData.startPosition = kl::float2();
-		gpu.autoPixelCBuffer(pxData);
+		PS_CB psData = {};
+		psData.frameSize = frameSize;
+		psData.zoom = { zoom, zoom };
+		psData.position = position;
+		psData.startPosition = {};
 
-		gpu.draw(screenMesh);
+		gpu.autoPixelCBuffer(psData);
 
-		gpu.swap(true);
+		gpu.drawVertexBuffer(screenMesh);
 
-		window.title(kl::format(
-			"Fps: ", int(1.0f / timer.interval()),
+		gpu.swapBuffers(true);
+
+		window.setTitle(kl::Format(
+			"Fps: ", int(1.0f / timer.getInterval()),
 			" Zoom: ", int(zoom),
 			" Position: ", position
 		));

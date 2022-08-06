@@ -9,166 +9,171 @@
 #include <windowsx.h>
 #include <d3d11.h>
 
-#include "gpu/dx_types.h"
-#include "render/vertex.h"
-#include "graphics/image.h"
+#include "GPU/DXTypes.h"
+#include "Render/Vertex.h"
+#include "Graphics/Image.h"
 
-
-inline constexpr nullptr_t null = nullptr;
-inline constexpr uint KL_CBUFFER_PREDEFINED_SIZE = 64;
 
 namespace kl {
-	template<typename T>
-	using ref = std::shared_ptr<T>;
-
-	template<typename T, typename... Args>
-	inline kl::ref<T> make(const Args&... args) {
-		return std::make_shared<T>(args...);
-	}
-}
-
-namespace kl {
-	struct shaders {
-		kl::dx::shader::vertex vertexS = nullptr;
-		kl::dx::shader::pixel pixelS = nullptr;
-		kl::dx::shader::input inLayout = nullptr;
-
-		shaders() {}
-		shaders(kl::dx::shader::vertex vertexS, kl::dx::shader::pixel pixelS, kl::dx::shader::input inLayout)
-			: vertexS(vertexS), pixelS(pixelS), inLayout(inLayout) {}
+	struct Shaders {
+		dx::VertexShader vertexShader = nullptr;
+		dx::PixelShader pixelShader = nullptr;
+		dx::Layout layout = nullptr;
 	};
 }
 
 namespace kl {
-	class gpu {
-	private:
-		kl::dx::device m_Device = nullptr;
-		kl::dx::context m_Context = nullptr;
-		kl::dx::chain m_Chain = nullptr;
+	inline constexpr int CBUFFER_PREDEFINED_SIZE = 64;
 
-		kl::dx::view::target m_FrameBuffer = nullptr;
-		kl::dx::view::depth m_DepthBuffer = nullptr;
+	class GPU {
+		dx::Device m_Device = nullptr;
+		dx::Context m_Context = nullptr;
+		dx::Chain m_Chain = nullptr;
+
+		dx::TargetView m_FrameBuffer = nullptr;
+		dx::DepthView m_DepthBuffer = nullptr;
 
 		std::set<IUnknown*> m_Children;
 
-		bool m_CBuffersPredefined = false;
-		kl::dx::buffer m_VertexCBuffers[KL_CBUFFER_PREDEFINED_SIZE] = {};
-		kl::dx::buffer m_PixelCBuffers[KL_CBUFFER_PREDEFINED_SIZE] = {};
+		dx::Buffer m_VertexCBuffers[CBUFFER_PREDEFINED_SIZE] = {};
+		dx::Buffer m_PixelCBuffers[CBUFFER_PREDEFINED_SIZE] = {};
 
 	public:
-		gpu(HWND hwnd, bool predefineCBuffers = true);
-		gpu(const kl::gpu&) = delete;
-		void operator=(const kl::gpu&) = delete;
-		~gpu();
+		GPU(HWND window);
+		GPU(const GPU&) = delete;
+		void operator=(const GPU&) = delete;
+		~GPU();
 
-		kl::dx::device dev();
-		kl::dx::context con();
+		dx::Device getDevice();
+		const dx::Device getDevice() const;
 
-		void viewport(const kl::uint2& size);
-		void viewport(const kl::int2& pos, const kl::uint2& size);
+		dx::Context getContext();
+		const dx::Context getContext() const;
 
-		void regenInternal(const kl::uint2& size);
-		void bindInternal(const std::vector<kl::dx::view::target> targets = {}, kl::dx::view::depth depthView = nullptr);
-		void bindTargets(const std::vector<kl::dx::view::target> targets, kl::dx::view::depth depthView = nullptr);
+		void setViewport(const UInt2& size);
+		void setViewport(const Int2& position, const UInt2& size);
 
-		void clearColor(const kl::float4& color);
-		void clearDepth();
-		void clear(const kl::float4& color);
+		void unbindAllTargets();
+		void bindInternalTargets();
+		void bindTargets(const Vector<dx::TargetView>& targets, dx::DepthView depthView = nullptr);
+		void bindTargetsWithInternal(const Vector<dx::TargetView>& additionalTargets, dx::DepthView depthView = nullptr);
 
-		void swap(bool vSync);
+		void resizeInternal(const UInt2& size);
+
+		void clearInternalColor(const Float4& color);
+		void clearInternalDepth(float value);
+		void clearInternal();
+
+		void swapBuffers(bool vSync);
 
 		// Raster state
-		kl::dx::state::raster newRasterState(kl::dx::state::desc::raster* desc);
-		kl::dx::state::raster newRasterState(bool wireframe, bool cull, bool cullBack = true);
-		void bind(kl::dx::state::raster state);
+		dx::RasterState newRasterState(dx::RasterStateDesc* descriptor);
+		dx::RasterState newRasterState(bool wireframe, bool cull, bool cullBack = true);
+		void bindRasterState(dx::RasterState state);
 
 		// Depth stenicl state
-		kl::dx::state::depth newDepthState(kl::dx::state::desc::depth* desc);
-		kl::dx::state::depth newDepthState(bool depth, bool stencil, bool mask);
-		void bind(kl::dx::state::depth state);
+		dx::DepthState newDepthState(dx::DepthStateDesc* descriptor);
+		dx::DepthState newDepthState(bool depth, bool stencil, bool mask);
+		void bindDepthState(dx::DepthState state);
 
 		// Shaders
-		kl::dx::shader::vertex newVertexShader(const std::string& source, kl::dx::shader::input* outLayout = nullptr, const std::vector<kl::dx::shader::desc::input>& desc = {});
-		kl::dx::shader::pixel newPixelShader(const std::string& source);
-		kl::dx::shader::geometry newGeometryShader(const std::string& source);
-		kl::dx::shader::compute newComputeShader(const std::string& source);
-		kl::shaders newShaders(const std::string& vertSrc, const std::string& pixlSrc, const std::vector<kl::dx::shader::desc::input>& desc = {});
-		kl::shaders newShaders(const std::string& fullSrc, const std::vector<kl::dx::shader::desc::input>& desc = {});
-		void bind(kl::dx::shader::vertex sha);
-		void bind(kl::dx::shader::pixel sha);
-		void bind(kl::dx::shader::geometry sha);
-		void bind(kl::dx::shader::compute sha);
-		void bind(kl::dx::shader::input layout);
-		void bind(const kl::shaders& shaders, bool bindLayout = true);
-		void dispatch(const kl::uint3& size);
-		void execute(kl::dx::shader::compute sha, const kl::uint3& size);
+		dx::VertexShader newVertexShader(const String& source, dx::Layout* outLayout = nullptr, const Vector<dx::LayoutDesc>& descriptors = {});
+		dx::PixelShader newPixelShader(const String& source);
+		dx::GeometryShader newGeometryShader(const String& source);
+		dx::ComputeShader newComputeShader(const String& source);
+
+		Shaders newShaders(const String& vertexSource, const String& pixelSource, const Vector<dx::LayoutDesc>& descriptors = {});
+		Shaders newShaders(const String& source, const Vector<dx::LayoutDesc>& descriptors = {});
+
+		void bindVertexShader(dx::VertexShader shader);
+		void bindPixelShader(dx::PixelShader shader);
+		void bindGeometryShader(dx::GeometryShader shader);
+		void bindComputeShader(dx::ComputeShader shader);
+
+		void bindLayout(dx::Layout layout);
+
+		void bindShaders(const Shaders& shaders);
+
+		void dispatchComputeShader(const UInt3& size);
+		void executeComputeShader(dx::ComputeShader shader, const UInt3& size);
 
 		// Buffer
-		kl::dx::buffer newBuffer(kl::dx::desc::buffer* desc, kl::dx::desc::subres* subData = nullptr);
+		dx::Buffer newBuffer(dx::BufferDesc* descriptor, dx::SubresDesc* subresourceData = nullptr);
 
 		// Constant buffer
-		kl::dx::buffer newCBuffer(uint byteSize);
-		void setCBufferData(kl::dx::buffer buff, const void* data);
-		void bindVertexCBuffer(kl::dx::buffer buff, uint slot);
-		void bindPixelCBuffer(kl::dx::buffer buff, uint slot);
+		dx::Buffer newCBuffer(uint byteSize);
+
+		void setCBufferData(dx::Buffer cbuffer, const void* data);
+
+		void bindVertexCBuffer(dx::Buffer cbuff, uint slot);
+		void bindPixelCBuffer(dx::Buffer cbuff, uint slot);
 
 		template<typename T>
 		inline bool autoVertexCBuffer(const T& data, uint slot = 0) {
-			if ((!m_CBuffersPredefined) || (sizeof(T) > (KL_CBUFFER_PREDEFINED_SIZE * 16)) || (sizeof(T) % 16)) {
+			if (sizeof(T) > (CBUFFER_PREDEFINED_SIZE * 16) || sizeof(T) % 16) {
 				return false;
 			}
-			kl::dx::buffer chosenBuffer = m_VertexCBuffers[(sizeof(T) / 16) - 1];
-			bindVertexCBuffer(chosenBuffer, slot);
-			setCBufferData(chosenBuffer, &data);
+			dx::Buffer buffer = m_VertexCBuffers[sizeof(T) / 16 - 1];
+			bindVertexCBuffer(buffer, slot);
+			setCBufferData(buffer, &data);
 			return true;
 		}
 
 		template<typename T>
 		inline bool autoPixelCBuffer(const T& data, uint slot = 0) {
-			if ((!m_CBuffersPredefined) || (sizeof(T) > (KL_CBUFFER_PREDEFINED_SIZE * 16)) || (sizeof(T) % 16)) {
+			if (sizeof(T) > (CBUFFER_PREDEFINED_SIZE * 16) || sizeof(T) % 16) {
 				return false;
 			}
-			kl::dx::buffer chosenBuffer = m_PixelCBuffers[(sizeof(T) / 16) - 1];
-			bindPixelCBuffer(chosenBuffer, slot);
-			setCBufferData(chosenBuffer, &data);
+			dx::Buffer buffer = m_PixelCBuffers[sizeof(T) / 16 - 1];
+			bindPixelCBuffer(buffer, slot);
+			setCBufferData(buffer, &data);
 			return true;
 		}
 
 		// Vertex buffer
-		kl::dx::mesh newVertexBuffer(const std::vector<kl::vertex>& vertexData);
-		kl::dx::mesh newVertexBuffer(const std::string& filePath, bool flipZ = true);
-		void draw(kl::dx::mesh mesh);
+		dx::Buffer newVertexBuffer(const Vector<Vertex>& vertexData);
+		dx::Buffer newVertexBuffer(const String& filePath, bool flipZ = true);
+
+		void drawVertexBuffer(dx::Buffer buffer);
 
 		// Sampler
-		kl::dx::state::sampler newSamplerState(kl::dx::state::desc::sampler* desc);
-		kl::dx::state::sampler newSamplerState(bool linear, bool mirror);
-		void bind(kl::dx::state::sampler sampState, uint slot);
+		dx::SamplerState newSamplerState(dx::SamplerStateDesc* desc);
+		dx::SamplerState newSamplerState(bool linear, bool mirror);
+
+		void bindSamplerState(dx::SamplerState state, uint slot);
 
 		// Texture
-		kl::dx::texture newTextureBB();
-		kl::dx::texture newTexture(kl::dx::desc::texture* desc, kl::dx::desc::subres* subData = nullptr);
-		kl::dx::texture newTexture(const kl::image& img, bool enableUnorderedAccess = false);
-		kl::dx::texture newTexture(const kl::image& front, const kl::image& back, const kl::image& left, const kl::image& right, const kl::image& top, const kl::image& bottom);
-		kl::dx::texture newTextureST(kl::dx::texture tex, const kl::uint2& size = {});
+		dx::Texture getBackBuffer();
+
+		dx::Texture newTexture(dx::TextureDesc* descriptor, dx::SubresDesc* subresourceData = nullptr);
+
+		dx::Texture newTexture(const Image& image, bool enableUnorderedAccess = false);
+		dx::Texture newTexture(const Image& front, const Image& back, const Image& left, const Image& right, const Image& top, const Image& bottom);
+
+		dx::Texture newTextureStaging(dx::Texture texture, const UInt2& size = {});
 
 		// Render target view
-		kl::dx::view::target newTargetView(kl::dx::texture tex, kl::dx::view::desc::target* desc = nullptr);
-		void clear(kl::dx::view::target view, const kl::float4& color);
+		dx::TargetView newTargetView(dx::Texture texture, dx::TargetViewDesc* descriptor = nullptr);
+
+		void clearTargetView(dx::TargetView view, const Float4& color);
 
 		// Depth stencil view
-		kl::dx::view::depth newDepthView(kl::dx::texture tex, kl::dx::view::desc::depth* desc = nullptr);
-		void clear(kl::dx::view::depth view, float depth = 1.0f, byte stencil = 0);
+		dx::DepthView newDepthView(dx::Texture texture, dx::DepthViewDesc* desc = nullptr);
+
+		void clearDepthView(dx::DepthView view, float depth = 1.0f, byte stencil = 0);
 
 		// Shader resource view
-		kl::dx::view::shader newShaderView(kl::dx::texture tex, kl::dx::view::desc::shader* desc = nullptr);
-		void bindPixelShaderView(kl::dx::view::shader view, uint slot);
-		void bindComputeShaderView(kl::dx::view::shader view, uint slot);
+		dx::ShaderView newShaderView(dx::Texture texture, dx::ShaderViewDesc* descriptor = nullptr);
+
+		void bindPixelShaderView(dx::ShaderView view, uint slot);
+		void bindComputeShaderView(dx::ShaderView view, uint slot);
 
 		// Shader access view
-		kl::dx::view::access newAccessView(kl::dx::texture tex, kl::dx::view::desc::access* desc = nullptr);
-		void bindComputeAccessView(kl::dx::view::access view, uint slot, uint* initalCounts = nullptr);
+		dx::AccessView newAccessView(dx::Texture texture, dx::AccessViewDesc* descriptor = nullptr);
+
+		void bindComputeAccessView(dx::AccessView view, uint slot, uint* initalCounts = nullptr);
 
 		// Deletes child instance
-		bool destroy(IUnknown* child);
+		void destroy(IUnknown* child);
 	};
 }

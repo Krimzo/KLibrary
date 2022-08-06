@@ -2,54 +2,56 @@
 
 
 struct Stick {
-	uint value = 0;
-	kl::color color;
+	kl::uint value = 0;
+	kl::Color color = {};
 };
 
-static std::vector<Stick> GenerateSticks(uint count, uint minValueIncl, uint maxValueExcl) {
-	uint storedMinValue = maxValueExcl;
-	uint storedMaxValue = minValueIncl;
-	std::vector<Stick> sticks(count);
+static kl::Vector<Stick> GenerateSticks(kl::uint count, kl::uint minValueIncl, kl::uint maxValueExcl) {
+	kl::uint storedMinValue = maxValueExcl;
+	kl::uint storedMaxValue = minValueIncl;
+	kl::Vector<Stick> sticks(count);
 	for (auto& stick : sticks) {
-		stick.value = kl::random::INT(minValueIncl, maxValueExcl);
+		stick.value = kl::Random::INT(minValueIncl, maxValueExcl);
 		storedMinValue = min(storedMinValue, stick.value);
 		storedMaxValue = max(storedMaxValue, stick.value);
 	}
 	for (auto& stick : sticks) {
-		const byte grayValue = byte(kl::math::normalize(stick.value, storedMinValue, storedMaxValue) * 255);
-		stick.color = kl::color(grayValue, grayValue, grayValue);
+		const byte grayValue = byte(kl::Math::Normalize(stick.value, storedMinValue, storedMaxValue) * 255);
+		stick.color = { grayValue, grayValue, grayValue };
 	}
 	return sticks;
 }
 
-static void DrawSticks(kl::image& frame, const std::vector<Stick>& sticks) {
+static void DrawSticks(kl::Image& frame, const kl::Vector<Stick>& sticks) {
 	for (int i = 0; i < sticks.size(); i++) {
-		frame.drawLine({ i, frame.height() - 1 }, { i, frame.height() - 1 - sticks[i].value }, sticks[i].color);
+		frame.drawLine({ i, frame.getHeight() - 1 }, { i, frame.getHeight() - 1 - sticks[i].value }, sticks[i].color);
 	}
 }
 
 int main() {
-	kl::window window = { { 1600, 900 }, "Visual Sort" };
-	kl::image frame(window.size(), kl::colors::gray);
+	kl::Window window = { { 1600, 900 }, "Visual Sort" };
+	kl::Image frame = { window.getSize(), kl::Colors::Gray };
 
-	std::vector<Stick> sticks = GenerateSticks(frame.width(), 1, frame.height());
+	kl::Vector<Stick> sticks = GenerateSticks(frame.getWidth(), 1, frame.getHeight());
 
-	std::thread([&]() {
-		window.title("Sorting...");
+	kl::Thread([&]() {
+		window.setTitle("Sorting...");
 		for (int i = 0; i < sticks.size() - 1; i++) {
 			for (int j = i + 1; j < sticks.size(); j++) {
 				if (sticks[j].value < sticks[i].value) {
 					std::swap(sticks[i], sticks[j]);
 				}
-				kl::time::wait(0.000005f);
+				kl::Time::Wait(0.000005f);
 			}
 		}
-		window.title("Finished!");
+		window.setTitle("Finished!");
 	}).detach();
 
 	while (window.process(false)) {
-		frame.fill(kl::colors::gray);
+		frame.fill(kl::Colors::Gray);
+
 		DrawSticks(frame, sticks);
-		window.draw(frame);
+
+		window.drawImage(frame);
 	}
 }
