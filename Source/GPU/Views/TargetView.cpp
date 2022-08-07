@@ -15,5 +15,5 @@ kl::dx::TargetView kl::GPU::newTargetView(dx::Texture texture, dx::TargetViewDes
 }
 
 void kl::GPU::clearTargetView(dx::TargetView view, const Float4& color) {
-	m_Context->ClearRenderTargetView(view, (float*) &color);
+	m_Context->ClearRenderTargetView(view, color.data);
 }

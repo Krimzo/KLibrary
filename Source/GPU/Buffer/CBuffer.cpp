@@ -32,3 +32,7 @@ void kl::GPU::bindVertexCBuffer(dx::Buffer buffer, uint slot) {
 void kl::GPU::bindPixelCBuffer(dx::Buffer buffer, uint slot) {
 	m_Context->PSSetConstantBuffers(slot, 1, &buffer);
 }
+
+void kl::GPU::bindComputeCBuffer(dx::Buffer buffer, uint slot) {
+	m_Context->CSSetConstantBuffers(slot, 1, &buffer);
+}

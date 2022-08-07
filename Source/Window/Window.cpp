@@ -162,6 +162,22 @@ void kl::Window::setPosition(const kl::Int2& position) {
 	}
 }
 
+kl::uint kl::Window::getWidth() const {
+	return getSize().x;
+}
+
+void kl::Window::setWidth(uint width) {
+	setSize({ width, getHeight() });
+}
+
+kl::uint kl::Window::getHeight() const {
+	return getSize().y;
+}
+
+void kl::Window::setHeight(uint height) {
+	setSize({ getWidth(), height });
+}
+
 kl::UInt2 kl::Window::getSize(bool client) const {
 	RECT rect = {};
 	if (client) {

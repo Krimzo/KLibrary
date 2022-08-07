@@ -50,8 +50,10 @@ kl::GPU::GPU(HWND window) {
 	setViewport({ windowClientArea.right, windowClientArea.bottom });
 
 	for (int i = 0; i < CBUFFER_PREDEFINED_SIZE; i++) {
-		m_VertexCBuffers[i] = newCBuffer((i + 1) * 16);
-		m_PixelCBuffers[i] = newCBuffer((i + 1) * 16);
+		const int bufferSize = (i + 1) * 16;
+		m_VertexCBuffers[i] = newCBuffer(bufferSize);
+		m_PixelCBuffers[i] = newCBuffer(bufferSize);
+		m_ComputeCBuffers[i] = newCBuffer(bufferSize);
 	}
 }
 

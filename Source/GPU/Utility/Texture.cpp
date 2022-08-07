@@ -25,7 +25,7 @@ kl::dx::Texture kl::GPU::newTexture(dx::TextureDesc* descriptor, dx::SubresDesc*
 	return texture;
 }
 
-kl::dx::Texture kl::GPU::newTexture(const Image& image, bool enableUnorderedAccess) {
+kl::dx::Texture kl::GPU::newTexture(const Image& image, bool hasUnorderedAccess, bool isTarget) {
 	Image flippedImage = image.flip(true);
 
 	dx::TextureDesc descriptor = {};
@@ -36,11 +36,13 @@ kl::dx::Texture kl::GPU::newTexture(const Image& image, bool enableUnorderedAcce
 	descriptor.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	descriptor.SampleDesc.Count = 1;
 	descriptor.Usage = D3D11_USAGE_DEFAULT;
-	descriptor.BindFlags = D3D11_BIND_SHADER_RESOURCE | (enableUnorderedAccess ? D3D11_BIND_UNORDERED_ACCESS : NULL);
+	descriptor.BindFlags = D3D11_BIND_SHADER_RESOURCE |
+		(hasUnorderedAccess ? D3D11_BIND_UNORDERED_ACCESS : NULL) |
+		(isTarget ? D3D11_BIND_RENDER_TARGET : NULL);
 
 	dx::SubresDesc data = {};
 	data.pSysMem = flippedImage.data();
-	data.SysMemPitch = image.getWidth() * sizeof(uint);
+	data.SysMemPitch = image.getWidth() * sizeof(Color);
 
 	return newTexture(&descriptor, &data);
 }

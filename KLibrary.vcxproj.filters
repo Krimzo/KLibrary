@@ -131,10 +131,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\GPU\GPU.h">
+    <ClInclude Include="Source\GPU\DXTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GPU\DXTypes.h">
+    <ClInclude Include="Source\GPU\GPU.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Color.h">
@@ -230,10 +230,10 @@
     <ClInclude Include="Source\Window\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\KrimzLib.h">
+    <ClInclude Include="Source\KLTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\KLTypes.h">
+    <ClInclude Include="Source\KrimzLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

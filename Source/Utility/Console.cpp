@@ -89,7 +89,7 @@ kl::uint kl::Console::GetWidth() {
 }
 
 void kl::Console::SetWidth(uint width) {
-	SetSize({ width, GetSize().y });
+	SetSize({ width, GetHeight() });
 }
 
 kl::uint kl::Console::GetHeight() {
@@ -97,7 +97,7 @@ kl::uint kl::Console::GetHeight() {
 }
 
 void kl::Console::SetHeight(uint height) {
-	SetSize({ GetSize().x, height });
+	SetSize({ GetWidth(), height });
 }
 
 void kl::Console::SetTitle(const String& text) {

@@ -27,7 +27,7 @@ int main() {
 	kl::dx::Buffer screenMesh = {};
 	kl::Shaders shaders = {};
 
-	PS_CB psData = {};
+	PS_CB& psData = *new PS_CB; // Stack warnings, ignore this :)
 
 	window.onResize = [&](kl::UInt2 newSize) {
 		if (newSize.x > 0 && newSize.y > 0) {

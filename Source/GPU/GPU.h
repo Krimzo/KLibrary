@@ -37,6 +37,7 @@ namespace kl {
 
 		dx::Buffer m_VertexCBuffers[CBUFFER_PREDEFINED_SIZE] = {};
 		dx::Buffer m_PixelCBuffers[CBUFFER_PREDEFINED_SIZE] = {};
+		dx::Buffer m_ComputeCBuffers[CBUFFER_PREDEFINED_SIZE] = {};
 
 	public:
 		GPU(HWND window);
@@ -107,6 +108,7 @@ namespace kl {
 
 		void bindVertexCBuffer(dx::Buffer cbuff, uint slot);
 		void bindPixelCBuffer(dx::Buffer cbuff, uint slot);
+		void bindComputeCBuffer(dx::Buffer cbuff, uint slot);
 
 		template<typename T>
 		inline bool autoVertexCBuffer(const T& data, uint slot = 0) {
@@ -130,6 +132,17 @@ namespace kl {
 			return true;
 		}
 
+		template<typename T>
+		inline bool autoComputeCBuffer(const T& data, uint slot = 0) {
+			if (sizeof(T) > (CBUFFER_PREDEFINED_SIZE * 16) || sizeof(T) % 16) {
+				return false;
+			}
+			dx::Buffer buffer = m_ComputeCBuffers[sizeof(T) / 16 - 1];
+			bindComputeCBuffer(buffer, slot);
+			setCBufferData(buffer, &data);
+			return true;
+		}
+
 		// Vertex buffer
 		dx::Buffer newVertexBuffer(const Vector<Vertex>& vertexData);
 		dx::Buffer newVertexBuffer(const String& filePath, bool flipZ = true);
@@ -147,7 +160,7 @@ namespace kl {
 
 		dx::Texture newTexture(dx::TextureDesc* descriptor, dx::SubresDesc* subresourceData = nullptr);
 
-		dx::Texture newTexture(const Image& image, bool enableUnorderedAccess = false);
+		dx::Texture newTexture(const Image& image, bool hasUnorderedAccess = false, bool isTarget = false);
 		dx::Texture newTexture(const Image& front, const Image& back, const Image& left, const Image& right, const Image& top, const Image& bottom);
 
 		dx::Texture newTextureStaging(dx::Texture texture, const UInt2& size = {});

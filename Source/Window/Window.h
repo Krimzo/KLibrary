@@ -61,6 +61,12 @@ namespace kl {
 		Int2 getPosition(bool client = false) const;
 		void setPosition(const Int2& position);
 
+		uint getWidth() const;
+		void setWidth(uint width);
+
+		uint getHeight() const;
+		void setHeight(uint height);
+
 		UInt2 getSize(bool client = true) const;
 		void setSize(const UInt2& size, bool client = true);
 
