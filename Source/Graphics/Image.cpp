@@ -105,13 +105,13 @@ kl::Image kl::Image::getPart(UInt2 a, UInt2 b) const {
 }
 
 bool kl::Image::loadFromFile(const String& filePath) {
-	{
-		uint64 gdiplusToken = NULL;
-		Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
-		if (Warning(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "Failed to init GDIPlus")) {
-			return false;
-		}
+	uint64 gdiplusToken = NULL;
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
+	if (Warning(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "Failed to init GDIPlus")) {
+		return false;
+	}
 
+	{
 		Gdiplus::Bitmap loadedBitmap(Strings::ToWString(filePath).c_str());
 		Gdiplus::BitmapData bitmapData;
 		if (Warning(loadedBitmap.GetLastStatus(), "Failed to open image file \"" + filePath + "\"")) {
@@ -121,9 +121,10 @@ bool kl::Image::loadFromFile(const String& filePath) {
 		setSize(Int2(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
 		loadedBitmap.LockBits(nullptr, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
 		memcpy(&m_Pixels[0], bitmapData.Scan0, m_Pixels.size() * sizeof(kl::Color));
-
-		Gdiplus::GdiplusShutdown(gdiplusToken);
 	}
+
+	Gdiplus::GdiplusShutdown(gdiplusToken);
+
 	return true;
 }
 
@@ -161,13 +162,13 @@ bool kl::Image::saveToFile(const String& fileName) const {
 		return false;
 	}
 
-	{
-		uint64 gdiplusToken = NULL;
-		Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
-		if (Warning(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "Failed to init GDIPlus")) {
-			return false;
-		}
+	uint64 gdiplusToken = NULL;
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput = {};
+	if (Warning(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr), "Failed to init GDIPlus")) {
+		return false;
+	}
 
+	{
 		Gdiplus::Bitmap tempBitmap(m_Size.x, m_Size.y, PixelFormat32bppARGB);
 		Gdiplus::BitmapData bitmapData;
 
@@ -176,9 +177,9 @@ bool kl::Image::saveToFile(const String& fileName) const {
 		tempBitmap.UnlockBits(&bitmapData);
 
 		tempBitmap.Save(Strings::ToWString(fileName).c_str(), formatToUse, nullptr);
-
-		Gdiplus::GdiplusShutdown(gdiplusToken);
 	}
+
+	Gdiplus::GdiplusShutdown(gdiplusToken);
 
 	return true;
 }

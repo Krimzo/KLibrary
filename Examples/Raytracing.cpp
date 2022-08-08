@@ -10,10 +10,10 @@ struct Sphere {
 };
 
 struct PS_CB {
-	kl::Float4 frameSize = {};
-	kl::Mat4 inverseCamera = {};
-	kl::Float4 cameraPosition = {};
-	kl::Float4 sunDirection = {};
+	kl::Float4 frameSize;
+	kl::Mat4 inverseCamera;
+	kl::Float4 cameraPosition;
+	kl::Float4 sunDirection;
 	Sphere spheres[SPHERE_COUNT] = {};
 };
 
@@ -24,8 +24,8 @@ int main() {
 	kl::GPU gpu = kl::GPU(window);
 	kl::Camera camera;
 
-	kl::dx::Buffer screenMesh = {};
-	kl::Shaders shaders = {};
+	kl::dx::Buffer screenMesh;
+	kl::Shaders shaders;
 
 	PS_CB& psData = *new PS_CB; // Stack warnings, ignore this :)
 

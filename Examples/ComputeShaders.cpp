@@ -8,11 +8,11 @@ struct CS_CB {
 };
 
 static UInt3 CalculateWindowDispatch(const Window& window) {
-	UInt3 result = {};
-	result.x = (window.getWidth() / 32) + ((window.getWidth() % 32) ? 1 : 0);
-	result.y = (window.getHeight() / 32) + ((window.getHeight() % 32) ? 1 : 0);
-	result.z = 1;
-	return result;
+	return {
+		(window.getWidth() / 32) + ((window.getWidth() % 32) ? 1 : 0),
+		(window.getHeight() / 32) + ((window.getHeight() % 32) ? 1 : 0),
+		1
+	};
 }
 
 int main() {
@@ -33,6 +33,9 @@ int main() {
 	Shaders defaultShaders = gpu.newShaders(shadersSource);
 	dx::ComputeShader computeShader = gpu.newComputeShader(shadersSource);
 
+	gpu.bindShaders(defaultShaders);
+	gpu.bindComputeShader(computeShader);
+
 	dx::Buffer screenMesh = gpu.newVertexBuffer({
 		{ { -1.0f, -1.0f, 0.5f } }, { { -1.0f, 1.0f, 0.5f } }, { { 1.0f, 1.0f, 0.5f } },
 		{ { 1.0f, 1.0f, 0.5f } }, { { 1.0f, -1.0f, 0.5f } }, { { -1.0f, -1.0f, 0.5f } } });
@@ -49,12 +52,10 @@ int main() {
 		csData.miscData.y = (float)window.mouse.getPosition().y;
 		gpu.autoComputeCBuffer(csData);
 
-		gpu.bindComputeShader(computeShader);
 		gpu.bindPixelShaderView(nullptr, 0);
 		gpu.bindComputeAccessView(computeShaderView, 0);
 		gpu.dispatchComputeShader(CalculateWindowDispatch(window));
 
-		gpu.bindShaders(defaultShaders);
 		gpu.bindComputeAccessView(nullptr, 0);
 		gpu.bindPixelShaderView(pixelShaderView, 0);
 		gpu.drawVertexBuffer(screenMesh);
