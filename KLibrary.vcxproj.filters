@@ -126,7 +126,10 @@
     <ClCompile Include="Source\Window\WindowHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Examples\Raytracing.cpp">
+    <ClCompile Include="Examples\GeometryShaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Render\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -234,6 +237,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\KrimzLib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Render\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

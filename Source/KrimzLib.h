@@ -8,6 +8,7 @@
 
 // Render
 #include "Render/Camera.h"
+#include "Render/Entity.h"
 #include "Render/Plane.h"
 #include "Render/Sphere.h"
 #include "Render/Vertex.h"

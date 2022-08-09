@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Examples\Raytracing.cpp" />
+    <ClCompile Include="Examples\GeometryShaders.cpp" />
     <ClCompile Include="Source\GPU\Buffer\Buffer.cpp" />
     <ClCompile Include="Source\GPU\Buffer\CBuffer.cpp" />
     <ClCompile Include="Source\GPU\GPU.cpp" />
@@ -37,6 +37,7 @@
     <ClCompile Include="Source\Graphics\Image.cpp" />
     <ClCompile Include="Source\Graphics\Video.cpp" />
     <ClCompile Include="Source\Render\Camera.cpp" />
+    <ClCompile Include="Source\Render\Entity.cpp" />
     <ClCompile Include="Source\Render\Plane.cpp" />
     <ClCompile Include="Source\Render\Ray.cpp" />
     <ClCompile Include="Source\Render\Sphere.cpp" />
@@ -75,6 +76,7 @@
     <ClInclude Include="Source\Math\Vector3.h" />
     <ClInclude Include="Source\Math\Vector4.h" />
     <ClInclude Include="Source\Render\Camera.h" />
+    <ClInclude Include="Source\Render\Entity.h" />
     <ClInclude Include="Source\Render\Plane.h" />
     <ClInclude Include="Source\Render\Ray.h" />
     <ClInclude Include="Source\Render\Sphere.h" />
