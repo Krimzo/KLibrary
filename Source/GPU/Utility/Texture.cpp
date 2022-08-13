@@ -7,7 +7,9 @@ kl::dx::Texture kl::GPU::getBackBuffer() {
 	dx::Texture buffer = nullptr;
 
 	m_Chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
-	Assert(!buffer, "Failed to get backbuffer texture");
+	if (Warning(!buffer, "Failed to get backbuffer texture")) {
+		return nullptr;
+	}
 
 	m_Children.insert(buffer);
 
@@ -18,7 +20,9 @@ kl::dx::Texture kl::GPU::newTexture(dx::TextureDesc* descriptor, dx::SubresDesc*
 	dx::Texture texture = nullptr;
 
 	m_Device->CreateTexture2D(descriptor, subresourceData, &texture);
-	Assert(!texture, "Failed to create texture");
+	if (Warning(!texture, "Failed to create texture")) {
+		return nullptr;
+	}
 
 	m_Children.insert(texture);
 
@@ -48,12 +52,14 @@ kl::dx::Texture kl::GPU::newTexture(const Image& image, bool hasUnorderedAccess,
 }
 
 kl::dx::Texture kl::GPU::newTexture(const Image& front, const Image& back, const Image& left, const Image& right, const Image& top, const Image& bottom) {
-	Assert(!(front.getSize() == back.getSize() &&
+	if (Warning(!(front.getSize() == back.getSize() &&
 		front.getSize() == left.getSize() &&
 		front.getSize() == right.getSize() &&
 		front.getSize() == top.getSize() &&
 		front.getSize() == bottom.getSize()),
-		"Sizes of the 6 given images do not match");
+		"Sizes of the 6 given images do not match")) {
+		return nullptr;
+	}
 
 	dx::TextureDesc descriptor = {};
 	descriptor.Width = front.getWidth();

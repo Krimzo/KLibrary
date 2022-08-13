@@ -171,7 +171,7 @@ void kl::GPU::swapBuffers(bool vSync) {
 
 void kl::GPU::destroy(IUnknown* child) {
 	if (m_Children.contains(child)) {
-		child->Release();
 		m_Children.erase(child);
+		child->Release();
 	}
 }

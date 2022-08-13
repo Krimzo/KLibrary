@@ -34,9 +34,7 @@ int main() {
 	// Start
 	shaders = gpu.newShaders(kl::Files::ReadString("Examples/Shaders/Mandelbrot.hlsl"));
 
-	screenMesh = gpu.newVertexBuffer({
-		{ { -1.0f, -1.0f, 0.5f } }, { { -1.0f, 1.0f, 0.5f } }, { { 1.0f, 1.0f, 0.5f } },
-		{ { 1.0f, 1.0f, 0.5f } }, { { 1.0f, -1.0f, 0.5f } }, { { -1.0f, -1.0f, 0.5f } } });
+	screenMesh = gpu.generateScreenMesh();
 
 	// Update
 	while (window.process(false)) {

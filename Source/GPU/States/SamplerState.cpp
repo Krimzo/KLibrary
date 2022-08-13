@@ -7,7 +7,9 @@ kl::dx::SamplerState kl::GPU::newSamplerState(dx::SamplerStateDesc* descriptor) 
 	dx::SamplerState state = nullptr;
 
 	m_Device->CreateSamplerState(descriptor, &state);
-	Assert(!state, "Failed to create sampler state");
+	if (Warning(!state, "Failed to create sampler state")) {
+		return nullptr;
+	}
 
 	m_Children.insert(state);
 

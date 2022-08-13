@@ -7,7 +7,9 @@ kl::dx::Buffer kl::GPU::newBuffer(dx::BufferDesc* descriptor, dx::SubresDesc* su
 	dx::Buffer buffer = nullptr;
 
 	m_Device->CreateBuffer(descriptor, subresourceData, &buffer);
-	Assert(!buffer, "Failed to create gpu buffer");
+	if (Warning(!buffer, "Failed to create gpu buffer")) {
+		return nullptr;
+	}
 
 	m_Children.insert(buffer);
 

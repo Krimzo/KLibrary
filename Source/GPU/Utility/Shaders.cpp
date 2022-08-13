@@ -7,21 +7,61 @@
 #pragma comment (lib, "d3dcompiler.lib")
 
 
-kl::dx::VertexShader kl::GPU::newVertexShader(const String& source, dx::Layout* outLayout, const Vector<dx::LayoutDesc>& descriptors) {
-	ID3DBlob* blobData = nullptr;
-	ID3DBlob* blobError = nullptr;
+struct Blobs {
+	ID3DBlob* data = nullptr;
+	ID3DBlob* error = nullptr;
 
-	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "vShader", "vs_5_0", NULL, NULL, &blobData, &blobError);
-	String errorMessage = blobError ? (char*)blobError->GetBufferPointer() : "Unknown";
-	Assert(!blobData, "Failed to compile vertex shader, Message: " + errorMessage);
+	Blobs() {}
+	Blobs(const Blobs&) = delete;
+	void operator=(const Blobs&) = delete;
+	~Blobs() {
+		if (data) data->Release();
+		if (error) error->Release();
+	}
+
+	operator bool() const {
+		return bool(data);
+	}
+
+	void* dataPointer() {
+		if (data) {
+			return data->GetBufferPointer();
+		}
+		return nullptr;
+	}
+
+	kl::uint64 dataSize() {
+		if (data) {
+			return data->GetBufferSize();
+		}
+		return 0;
+	}
+
+	kl::String getError() {
+		if (error) {
+			return (char*)error->GetBufferPointer();
+		}
+		return "Unknown";
+	}
+};
+
+kl::dx::VertexShader kl::GPU::newVertexShader(const String& source, dx::Layout* outLayout, const Vector<dx::LayoutDesc>& descriptors) {
+	Blobs blobs = {};
+
+	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "vShader", "vs_5_0", NULL, NULL, &blobs.data, &blobs.error);
+	if (Warning(!blobs, "Failed to compile vertex shader. Error: " + blobs.getError())) {
+		return nullptr;
+	}
 
 	dx::VertexShader shader = nullptr;
-	m_Device->CreateVertexShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &shader);
-	Assert(!shader, "Failed to create vertex shader");
+	m_Device->CreateVertexShader(blobs.dataPointer(), blobs.dataSize(), NULL, &shader);
+	if (Warning(!shader, "Failed to create vertex shader")) {
+		return nullptr;
+	}
 
 	if (outLayout) {
 		if (descriptors.size() > 0) {
-			m_Device->CreateInputLayout(descriptors.data(), uint(descriptors.size()), blobData->GetBufferPointer(), blobData->GetBufferSize(), outLayout);
+			m_Device->CreateInputLayout(descriptors.data(), uint(descriptors.size()), blobs.dataPointer(), blobs.dataSize(), outLayout);
 		}
 		else {
 			dx::LayoutDesc defaultLayoutDescriptors[3] = {
@@ -30,16 +70,11 @@ kl::dx::VertexShader kl::GPU::newVertexShader(const String& source, dx::Layout* 
 				{ "KL_Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 			};
 
-			m_Device->CreateInputLayout(defaultLayoutDescriptors, 3, blobData->GetBufferPointer(), blobData->GetBufferSize(), outLayout);
+			m_Device->CreateInputLayout(defaultLayoutDescriptors, 3, blobs.dataPointer(), blobs.dataSize(), outLayout);
 		}
-		Assert(!*outLayout, "Failed to create input layout");
-
-		m_Children.insert(*outLayout);
-	}
-
-	blobData->Release();
-	if (blobError) {
-		blobError->Release();
+		if (!Warning(!*outLayout, "Failed to create input layout")) {
+			m_Children.insert(*outLayout);
+		}
 	}
 
 	m_Children.insert(shader);
@@ -48,20 +83,17 @@ kl::dx::VertexShader kl::GPU::newVertexShader(const String& source, dx::Layout* 
 }
 
 kl::dx::PixelShader kl::GPU::newPixelShader(const String& source) {
-	ID3DBlob* blobData = nullptr;
-	ID3DBlob* blobError = nullptr;
+	Blobs blobs = {};
 
-	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "pShader", "ps_5_0", NULL, NULL, &blobData, &blobError);
-	String errorMessage = blobError ? (char*)blobError->GetBufferPointer() : "Unknown";
-	Assert(!blobData, "Failed to compile pixel shader, Message: " + errorMessage);
+	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "pShader", "ps_5_0", NULL, NULL, &blobs.data, &blobs.error);
+	if (Warning(!blobs, "Failed to compile pixel shader. Error: " + blobs.getError())) {
+		return nullptr;
+	}
 
 	dx::PixelShader shader = nullptr;
-	m_Device->CreatePixelShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &shader);
-	Assert(!shader, "Failed to create pixel shader");
-
-	blobData->Release();
-	if (blobError) {
-		blobError->Release();
+	m_Device->CreatePixelShader(blobs.dataPointer(), blobs.dataSize(), NULL, &shader);
+	if (Warning(!shader, "Failed to create pixel shader")) {
+		return nullptr;
 	}
 
 	m_Children.insert(shader);
@@ -70,20 +102,17 @@ kl::dx::PixelShader kl::GPU::newPixelShader(const String& source) {
 }
 
 kl::dx::GeometryShader kl::GPU::newGeometryShader(const String& source) {
-	ID3DBlob* blobData = nullptr;
-	ID3DBlob* blobError = nullptr;
+	Blobs blobs = {};
 
-	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "gShader", "gs_5_0", NULL, NULL, &blobData, &blobError);
-	String errorMessage = blobError ? (char*)blobError->GetBufferPointer() : "Unknown";
-	Assert(!blobData, "Failed to compile geometry shader, Message: " + errorMessage);
+	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "gShader", "gs_5_0", NULL, NULL, &blobs.data, &blobs.error);
+	if (Warning(!blobs, "Failed to compile geometry shader. Error: " + blobs.getError())) {
+		return nullptr;
+	}
 
 	dx::GeometryShader shader = nullptr;
-	m_Device->CreateGeometryShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &shader);
-	Assert(!shader, "Failed to create geometry shader");
-
-	blobData->Release();
-	if (blobError) {
-		blobError->Release();
+	m_Device->CreateGeometryShader(blobs.dataPointer(), blobs.dataSize(), NULL, &shader);
+	if (Warning(!shader, "Failed to create geometry shader")) {
+		return nullptr;
 	}
 
 	m_Children.insert(shader);
@@ -92,20 +121,17 @@ kl::dx::GeometryShader kl::GPU::newGeometryShader(const String& source) {
 }
 
 kl::dx::ComputeShader kl::GPU::newComputeShader(const String& source) {
-	ID3DBlob* blobData = nullptr;
-	ID3DBlob* blobError = nullptr;
+	Blobs blobs = {};
 
-	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "cShader", "cs_5_0", NULL, NULL, &blobData, &blobError);
-	String errorMessage = blobError ? (char*)blobError->GetBufferPointer() : "Unknown";
-	Assert(!blobData, "Failed to compile compute shader, Message: " + errorMessage);
+	D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "cShader", "cs_5_0", NULL, NULL, &blobs.data, &blobs.error);
+	if (Warning(!blobs, "Failed to compile compute shader. Error: " + blobs.getError())) {
+		return nullptr;
+	}
 
 	dx::ComputeShader shader = nullptr;
-	m_Device->CreateComputeShader(blobData->GetBufferPointer(), blobData->GetBufferSize(), NULL, &shader);
-	Assert(!shader, "Failed to create compute shader");
-
-	blobData->Release();
-	if (blobError) {
-		blobError->Release();
+	m_Device->CreateComputeShader(blobs.dataPointer(), blobs.dataSize(), NULL, &shader);
+	if (Warning(!shader, "Failed to create compute shader")) {
+		return nullptr;
 	}
 
 	m_Children.insert(shader);
@@ -156,4 +182,10 @@ void kl::GPU::dispatchComputeShader(const UInt3& size) {
 void kl::GPU::executeComputeShader(dx::ComputeShader shader, const UInt3& size) {
 	bindComputeShader(shader);
 	dispatchComputeShader(size);
+}
+
+void kl::GPU::destroy(const Shaders& shaders) {
+	destroy(shaders.vertexShader);
+	destroy(shaders.pixelShader);
+	destroy(shaders.layout);
 }

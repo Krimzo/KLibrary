@@ -69,9 +69,7 @@ int main() {
 
 	shaders = gpu.newShaders(kl::Files::ReadString("Examples/Shaders/Raytracing.hlsl"));
 
-	screenMesh = gpu.newVertexBuffer({
-		{ { -1.0f, -1.0f, 0.5f } }, { { -1.0f, 1.0f, 0.5f } }, { { 1.0f, 1.0f, 0.5f } },
-		{ { 1.0f, 1.0f, 0.5f } }, { { 1.0f, -1.0f, 0.5f } }, { { -1.0f, -1.0f, 0.5f } } });
+	screenMesh = gpu.generateScreenMesh();
 
 	camera.position.y = 5.0f;
 	psData.sunDirection = { kl::Float3(-1.0f, -1.0f, 0.0f).normalize(), 0.0f };
@@ -90,6 +88,23 @@ int main() {
 		}
 
 		{ /* Input */
+			static bool cameraRotating = false;
+			if (window.mouse.left) {
+				const kl::UInt2 frameCenter = window.getCenter();
+
+				if (cameraRotating) {
+					camera.rotate(window.mouse.getPosition(), frameCenter);
+				}
+				window.mouse.setPosition(frameCenter);
+
+				window.mouse.setHidden(true);
+				cameraRotating = true;
+			}
+			else if (cameraRotating) {
+				window.mouse.setHidden(false);
+				cameraRotating = false;
+			}
+
 			if (window.keyboard.w) {
 				camera.moveForward(timer.getInterval());
 			}
@@ -107,23 +122,6 @@ int main() {
 			}
 			if (window.keyboard.q) {
 				camera.moveDown(timer.getInterval());
-			}
-
-			static bool cameraRotating = false;
-			if (window.mouse.left) {
-				const kl::UInt2 frameCenter = window.getCenter();
-
-				if (cameraRotating) {
-					camera.rotate(window.mouse.getPosition(), frameCenter);
-				}
-				window.mouse.setPosition(frameCenter);
-
-				window.mouse.setHidden(true);
-				cameraRotating = true;
-			}
-			else if (cameraRotating) {
-				window.mouse.setHidden(false);
-				cameraRotating = false;
 			}
 		}
 

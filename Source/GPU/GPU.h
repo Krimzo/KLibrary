@@ -19,6 +19,10 @@ namespace kl {
 		dx::VertexShader vertexShader = nullptr;
 		dx::PixelShader pixelShader = nullptr;
 		dx::Layout layout = nullptr;
+
+		operator bool() const {
+			return vertexShader && pixelShader && layout;
+		}
 	};
 }
 
@@ -98,6 +102,8 @@ namespace kl {
 		void dispatchComputeShader(const UInt3& size);
 		void executeComputeShader(dx::ComputeShader shader, const UInt3& size);
 
+		void destroy(const Shaders& shaders);
+
 		// Buffer
 		dx::Buffer newBuffer(dx::BufferDesc* descriptor, dx::SubresDesc* subresourceData = nullptr);
 
@@ -146,6 +152,9 @@ namespace kl {
 		// Vertex buffer
 		dx::Buffer newVertexBuffer(const Vector<Vertex>& vertexData);
 		dx::Buffer newVertexBuffer(const String& filePath, bool flipZ = true);
+		
+		dx::Buffer generateScreenMesh();
+		dx::Buffer generatePlaneMesh(float size, int sizeInPoints);
 
 		void drawVertexBuffer(dx::Buffer buffer);
 

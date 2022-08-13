@@ -7,7 +7,9 @@ kl::dx::RasterState kl::GPU::newRasterState(dx::RasterStateDesc* desc) {
 	dx::RasterState rasterState = nullptr;
 
 	m_Device->CreateRasterizerState(desc, &rasterState);
-	Assert(!rasterState, "Failed to create rasterizer state");
+	if (Warning(!rasterState, "Failed to create rasterizer state")) {
+		return nullptr;
+	}
 
 	m_Children.insert(rasterState);
 

@@ -7,7 +7,9 @@ kl::dx::AccessView kl::GPU::newAccessView(dx::Texture texture, dx::AccessViewDes
 	kl::dx::AccessView view = nullptr;
 
 	m_Device->CreateUnorderedAccessView(texture, descriptor, &view);
-	Assert(!view, "Failed to create unordered access view");
+	if (Warning(!view, "Failed to create unordered access view")) {
+		return nullptr;
+	}
 
 	m_Children.insert(view);
 

@@ -7,7 +7,9 @@ kl::dx::ShaderView kl::GPU::newShaderView(dx::Texture texture, dx::ShaderViewDes
 	dx::ShaderView view = nullptr;
 
 	m_Device->CreateShaderResourceView(texture, descriptor, &view);
-	Assert(!view, "Failed to create shader view");
+	if (Warning(!view, "Failed to create shader view")) {
+		return nullptr;
+	}
 
 	m_Children.insert(view);
 

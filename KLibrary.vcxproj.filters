@@ -126,10 +126,10 @@
     <ClCompile Include="Source\Window\WindowHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Examples\GeometryShaders.cpp">
+    <ClCompile Include="Source\Render\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\Entity.cpp">
+    <ClCompile Include="Examples\PlanePlayground.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

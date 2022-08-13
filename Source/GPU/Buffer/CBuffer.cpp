@@ -4,7 +4,9 @@
 
 
 kl::dx::Buffer kl::GPU::newCBuffer(uint byteSize) {
-	Assert(byteSize % 16, "Constant buffer size has to be a multiple of 16");
+	if (Warning(byteSize % 16, "Constant buffer size has to be a multiple of 16")) {
+		return nullptr;
+	}
 
 	dx::BufferDesc descriptor = {};
 	descriptor.ByteWidth = byteSize;

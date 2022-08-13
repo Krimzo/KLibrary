@@ -7,7 +7,9 @@ kl::dx::DepthView kl::GPU::newDepthView(dx::Texture texture, dx::DepthViewDesc* 
 	dx::DepthView view = nullptr;
 
 	m_Device->CreateDepthStencilView(texture, descriptor, &view);
-	Assert(!view, "Failed to create depth stencil view");
+	if (Warning(!view, "Failed to create depth stencil view")) {
+		return nullptr;
+	}
 
 	m_Children.insert(view);
 

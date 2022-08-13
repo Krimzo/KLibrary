@@ -36,9 +36,7 @@ int main() {
 	gpu.bindShaders(defaultShaders);
 	gpu.bindComputeShader(computeShader);
 
-	dx::Buffer screenMesh = gpu.newVertexBuffer({
-		{ { -1.0f, -1.0f, 0.5f } }, { { -1.0f, 1.0f, 0.5f } }, { { 1.0f, 1.0f, 0.5f } },
-		{ { 1.0f, 1.0f, 0.5f } }, { { 1.0f, -1.0f, 0.5f } }, { { -1.0f, -1.0f, 0.5f } } });
+	dx::Buffer screenMesh = gpu.generateScreenMesh();
 
 	while (window.process(false)) {
 		timer.updateInterval();

@@ -7,7 +7,9 @@ kl::dx::TargetView kl::GPU::newTargetView(dx::Texture texture, dx::TargetViewDes
 	dx::TargetView view = nullptr;
 
 	m_Device->CreateRenderTargetView(texture, descriptor, &view);
-	Assert(!view, "Failed to create render target view");
+	if (Warning(!view, "Failed to create render target view")) {
+		return nullptr;
+	}
 
 	m_Children.insert(view);
 
