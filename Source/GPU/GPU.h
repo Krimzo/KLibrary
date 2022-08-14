@@ -154,7 +154,7 @@ namespace kl {
 		dx::Buffer newVertexBuffer(const String& filePath, bool flipZ = true);
 		
 		dx::Buffer generateScreenMesh();
-		dx::Buffer generatePlaneMesh(float size, int sizeInPoints);
+		dx::Buffer generatePlaneMesh(float size, int numOfPoints);
 
 		void drawVertexBuffer(dx::Buffer buffer);
 

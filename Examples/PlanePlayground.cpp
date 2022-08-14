@@ -14,8 +14,6 @@ struct PLANE_VS_CB {
 	Mat4 WMatrix;
 	Mat4 VPMatrix;
 	Float4 timeData;
-	Float2 coords;
-	Float2 zoom;
 };
 
 struct PLANE_PS_CB {
@@ -32,9 +30,6 @@ static Shaders planeShaders = {};
 static dx::GeometryShader planeGeometryShader = nullptr;
 
 static Float3 sunDirection = { 1, -1, 0 };
-
-static float zoom = 1.0f;
-static kl::Float2 coords = { -0.5f, 0.0f };
 
 static void SetupInput() {
 	window->onResize = [&](UInt2 newSize) {
@@ -120,27 +115,6 @@ static void CameraMovement() {
 	}
 }
 
-static void MandelbrotMovement() {
-	if (window->keyboard.up) {
-		coords.y -= (1.0f / zoom) * timer.getInterval();
-	}
-	if (window->keyboard.down) {
-		coords.y += (1.0f / zoom) * timer.getInterval();
-	}
-	if (window->keyboard.right) {
-		coords.x -= (1.0f / zoom) * timer.getInterval();
-	}
-	if (window->keyboard.left) {
-		coords.x += (1.0f / zoom) * timer.getInterval();
-	}
-	if (window->keyboard.period) {
-		zoom += zoom * timer.getInterval();
-	}
-	if (window->keyboard.comma) {
-		zoom -= zoom * timer.getInterval();
-	}
-}
-
 int main() {
 	window = Make<Window>(UInt2(1600, 900), "Plane Playground");
 	gpu = Make<GPU>(*window);
@@ -153,7 +127,7 @@ int main() {
 	skyShaders = gpu->newShaders(Files::ReadString("Examples/Shaders/Sky.hlsl"));
 
 	dx::Buffer screenMesh = gpu->generateScreenMesh();
-	dx::Buffer planeMesh = gpu->generatePlaneMesh(10.0f, 1500);
+	dx::Buffer planeMesh = gpu->generatePlaneMesh(10.0f, 1000);
 
 	camera.position = { -3.5f, 1.5f, -2.5f };
 	camera.setForward(camera.position.negate());
@@ -162,7 +136,6 @@ int main() {
 		timer.updateInterval();
 
 		CameraMovement();
-		MandelbrotMovement();
 
 		gpu->clearInternal();
 
@@ -193,8 +166,6 @@ int main() {
 		plane_vscb.VPMatrix = camera.matrix();
 		plane_vscb.timeData.x = timer.getElapsed();
 		plane_vscb.timeData.y = timer.getInterval();
-		plane_vscb.coords = coords;
-		plane_vscb.zoom = { zoom, zoom };
 		gpu->autoVertexCBuffer(plane_vscb);
 
 		PLANE_PS_CB plane_pscb = {};

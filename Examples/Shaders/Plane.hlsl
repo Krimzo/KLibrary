@@ -1,10 +1,10 @@
 // Vertex shader
+static const float PI = 3.14159265359f;
+
 cbuffer VS_CB : register(b0) {
     matrix WMatrix;
     matrix VPMatrix;
     float4 timeData;
-    float2 coords;
-    float2 zoom;
 };
 
 struct VS_OUT {
@@ -14,38 +14,28 @@ struct VS_OUT {
     float3 color : VS_Color;
 };
 
-float2 ComplexSqr(float2 a) {
-    return float2(a.x * a.x - a.y * a.y, 2.0f * a.x * a.y);
+float3 PlaneToSphere(float3 position, float halfPlaneSize) {
+    float2 ndc = position.xz / halfPlaneSize;
+    float2 coords = radians(ndc * float2(180, 90));
+    
+    float R = 1 + position.y;
+    return float3(
+        R * cos(coords.y) * cos(coords.x),
+        R * cos(coords.y) * sin(coords.x),
+        R * sin(coords.y + PI)
+    );
 }
 
 VS_OUT vShader(float3 position : KL_Position) {
     VS_OUT data;
     
-    position.y = 1.0f;
-    data.color = 1.0f;
+    position.y = sin(position.x * 25.0f + timeData.x) * 0.025f;
     
-    float2 uv = position.xz / 5.0f;
-    uv /= zoom.x;
-    uv += coords;
-    
-    float n = 64.0f;
-    float2 num = uv;
-    for (int i = 0; i < n; i++) {
-        if (length(num) > 2.0f) {
-            float iOn = i / n;
-            position.y *= iOn;
-            data.color *= iOn;
-            break;
-        }
-		
-        num = ComplexSqr(num) + uv;
-    }
-    
-    //position.y = sin(position.x + timeData.x) * sin(position.z);
+    position = PlaneToSphere(position, 5.0f);
     
     data.world = mul(float4(position, 1), WMatrix).xyz;
     data.screen = mul(float4(data.world, 1), VPMatrix);
-    //data.color = 1.0f;
+    data.color = 1;
     
     return data;
 }

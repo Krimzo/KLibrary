@@ -26,28 +26,30 @@ kl::dx::Buffer kl::GPU::generateScreenMesh() {
 	});
 }
 
-kl::dx::Buffer kl::GPU::generatePlaneMesh(float size, int sizeInPoints) {
+kl::dx::Buffer kl::GPU::generatePlaneMesh(float size, int numOfPoints) {
+	// Count fix
+	float increment = size / numOfPoints;
+	numOfPoints += 1;
+
 	// Generating points
 	Vector<Float2> points;
-	points.reserve(uint64(sizeInPoints) * sizeInPoints);
-	const float increment = size / sizeInPoints;
-	const float sizeConst = -sizeInPoints * increment * 0.5f + increment * 0.5f;
-	for (int x = 0; x < sizeInPoints; x++) {
-		for (int z = 0; z < sizeInPoints; z++) {
+	points.reserve(uint64(numOfPoints) * numOfPoints);
+	for (int x = 0; x < numOfPoints; x++) {
+		for (int z = 0; z < numOfPoints; z++) {
 			points.push_back({
-				sizeConst + x * increment,
-				sizeConst + z * increment
+				-size * 0.5f + x * increment,
+				-size * 0.5f + z * increment
 			});
 		}
 	}
 
 	// Generating triangles
 	Vector<Vertex> vertices;
-	vertices.reserve(uint64(sizeInPoints - 1) * uint64(sizeInPoints - 1) * 6);
-	for (int x = 0; x < sizeInPoints - 1; x++) {
-		for (int z = 0; z < sizeInPoints - 1; z++) {
-			Float2 xzPoint = points[uint64(z) * sizeInPoints + x];
-			Float2 xzPlusPoint = points[uint64(z + 1) * sizeInPoints + uint64(x + 1)];
+	vertices.reserve(uint64(numOfPoints - 1) * uint64(numOfPoints - 1) * 6);
+	for (int x = 0; x < numOfPoints - 1; x++) {
+		for (int z = 0; z < numOfPoints - 1; z++) {
+			Float2 xzPoint = points[uint64(z) * numOfPoints + x];
+			Float2 xzPlusPoint = points[uint64(z + 1) * numOfPoints + uint64(x + 1)];
 
 			vertices.push_back({ { xzPlusPoint.x, 0, xzPlusPoint.y } });
 			vertices.push_back({ { xzPlusPoint.x, 0, xzPoint.y } });
