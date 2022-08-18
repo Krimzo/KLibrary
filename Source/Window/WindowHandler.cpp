@@ -1,6 +1,6 @@
-#include "window/window.h"
+#include "Window/Window.h"
 
-#include "utility/console.h"
+#include "Utility/Console.h"
 
 #ifdef KL_USING_IMGUI
 #include "imgui.h"

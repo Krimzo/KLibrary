@@ -1,9 +1,9 @@
-#include "render/triangle.h"
+#include "Render/Triangle.h"
 
 
 kl::Triangle::Triangle() {}
 
-kl::Triangle::Triangle(const kl::Vertex& a, const kl::Vertex& b, const kl::Vertex& c) : a(a), b(b), c(c) {}
+kl::Triangle::Triangle(const Vertex& a, const Vertex& b, const Vertex& c) : a(a), b(b), c(c) {}
 
 kl::Float4 kl::Triangle::getConstants() const {
 	const float tempConst = 1.0f / ((b.world.y - c.world.y) * (a.world.x - c.world.x) + (c.world.x - b.world.x) * (a.world.y - c.world.y));
@@ -23,10 +23,10 @@ kl::Float3 kl::Triangle::getWeights(const Float4& constants, const Float2& point
 	return { w1, w2, 1.0f - w1 - w2 };
 }
 
-kl::Float3 kl::Triangle::getWeights(const kl::Float3& position) const {
-	const kl::Float3 v0 = a.world - c.world;
-	const kl::Float3 v1 = b.world - c.world;
-	const kl::Float3 v2 = position - c.world;
+kl::Float3 kl::Triangle::getWeights(const Float3& position) const {
+	const Float3 v0 = a.world - c.world;
+	const Float3 v1 = b.world - c.world;
+	const Float3 v2 = position - c.world;
 	const float d00 = v0.dot(v0);
 	const float d01 = v0.dot(v1);
 	const float d11 = v1.dot(v1);
@@ -46,7 +46,7 @@ float kl::Triangle::interpolate(const Float3& weights, const Float3& values) con
 	return weights.dot(values);
 }
 
-kl::Vertex kl::Triangle::interpolate(const kl::Float3& weights) const {
+kl::Vertex kl::Triangle::interpolate(const Float3& weights) const {
 	return {
 		Float3{
 			interpolate(weights, { a.world.x, b.world.x, c.world.x }),
@@ -66,7 +66,7 @@ kl::Vertex kl::Triangle::interpolate(const kl::Float3& weights) const {
 }
 
 // std::cout
-std::ostream& kl::operator<<(std::ostream& os, const kl::Triangle& obj) {
+std::ostream& kl::operator<<(std::ostream& os, const Triangle& obj) {
 	os << "{" << obj.a << ", " << obj.b << ", " << obj.c << "}";
 	return os;
 }

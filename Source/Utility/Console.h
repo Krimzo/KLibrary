@@ -1,7 +1,7 @@
 #pragma once
 
-#include "graphics/color.h"
-#include "math/math.h"
+#include "Graphics/Color.h"
+#include "Math/Math.h"
 
 
 namespace kl {

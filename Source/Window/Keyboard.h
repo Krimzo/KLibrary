@@ -1,7 +1,7 @@
 #pragma once
 
-#include "window/key.h"
-#include "math/math.h"
+#include "Window/Key.h"
+#include "Math/Math.h"
 
 
 namespace kl {

@@ -1,6 +1,6 @@
-#include "gpu/gpu.h"
+#include "GPU/GPU.h"
 
-#include "utility/console.h"
+#include "Utility/Console.h"
 
 
 kl::dx::DepthView kl::GPU::newDepthView(dx::Texture texture, dx::DepthViewDesc* descriptor) {

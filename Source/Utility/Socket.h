@@ -3,7 +3,7 @@
 #include <iostream>
 #include <windows.h>
 
-#include "math/math.h"
+#include "Math/Math.h"
 
 
 namespace kl {
@@ -32,7 +32,7 @@ namespace kl {
 		void setPort(uint port);
 
 		void listen(uint queueSize);
-		kl::Socket accept();
+		Socket accept();
 		void connect();
 
 		int send(const void* data, uint byteSize) const;

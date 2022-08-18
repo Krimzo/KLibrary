@@ -1,6 +1,7 @@
 #include <ws2tcpip.h>
-#include "utility/socket.h"
-#include "utility/console.h"
+
+#include "Utility/Socket.h"
+#include "Utility/Console.h"
 
 #pragma comment(lib,"Ws2_32.lib")
 
@@ -30,7 +31,7 @@ kl::Socket::Socket() {
 	m_Address.sin_addr.s_addr = INADDR_ANY;
 }
 
-kl::Socket::Socket(const String& address, uint port) : kl::Socket() {
+kl::Socket::Socket(const String& address, uint port) : Socket() {
 	setAddress(address);
 	setPort(port);
 }

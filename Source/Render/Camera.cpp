@@ -1,4 +1,4 @@
-#include "render/camera.h"
+#include "Render/Camera.h"
 
 
 static const kl::Float3 GlobalUP = { 0.0f, 1.0f, 0.0f };

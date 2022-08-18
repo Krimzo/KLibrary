@@ -1,6 +1,6 @@
-#include "utility/console.h"
-#include "utility/strings.h"
-#include "math/math.h"
+#include "Utility/Console.h"
+#include "Utility/Strings.h"
+#include "Math/Math.h"
 
 #include <iostream>
 #include <sstream>
@@ -70,7 +70,7 @@ void kl::Console::Clear() {
 		consoleScreenInfo.dwSize.X * consoleScreenInfo.dwSize.Y, {}, &charsWritten
 	);
 
-	kl::Console::MoveCursor({});
+	MoveCursor({});
 }
 
 void kl::Console::SetCursorEnabled(bool state) {
@@ -107,7 +107,7 @@ void kl::Console::SetTitle(const String& text) {
 kl::UInt2 kl::Console::GetSize() {
 	CONSOLE_SCREEN_BUFFER_INFO csbi = {};
 	GetConsoleScreenBufferInfo(ConsoleHandle, &csbi);
-	return kl::UInt2(csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1);
+	return { csbi.srWindow.Right - csbi.srWindow.Left + 1, csbi.srWindow.Bottom - csbi.srWindow.Top + 1 };
 }
 
 void kl::Console::SetSize(const UInt2& size) {

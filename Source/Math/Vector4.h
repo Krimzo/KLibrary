@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/vector3.h"
+#include "Math/Vector3.h"
 
 
 namespace kl {
@@ -26,10 +26,10 @@ namespace kl {
 		Vector4(const T0& x, const T1& y, const T2& z, const T3& w) : x(T(x)), y(T(y)), z(T(z)), w(T(w)) {}
 
 		template<typename T0>
-		Vector4(const kl::Vector3<T>& v, const T0& w) : x(v.x), y(v.y), z(v.z), w(T(w)) {}
+		Vector4(const Vector3<T>& v, const T0& w) : x(v.x), y(v.y), z(v.z), w(T(w)) {}
 
 		template<typename T0>
-		Vector4(const T0& x, const kl::Vector3<T>& v) : x(T(x)), y(v.x), z(v.y), w(v.z) {}
+		Vector4(const T0& x, const Vector3<T>& v) : x(T(x)), y(v.x), z(v.y), w(v.z) {}
 
 		template<typename T0, typename T1>
 		Vector4(const Vector2<T>& v, const T0& z, const T1& w) : x(v.x), y(v.y), z(T(z)), w(T(w)) {}
@@ -67,7 +67,7 @@ namespace kl {
 			return result;
 		}
 
-		void operator+=(const kl::Vector4<T>& obj) {
+		void operator+=(const Vector4<T>& obj) {
 			*this = *this + obj;
 		}
 
@@ -127,11 +127,11 @@ namespace kl {
 			return result;
 		}
 
-		void operator/=(const kl::Vector4<T>& obj) {
+		void operator/=(const Vector4<T>& obj) {
 			*this = *this / obj;
 		}
 
-		bool operator==(const kl::Vector4<T>& obj) const {
+		bool operator==(const Vector4<T>& obj) const {
 			for (int i = 0; i < 4; i++) {
 				if (data[i] != obj[i]) {
 					return false;
@@ -140,7 +140,7 @@ namespace kl {
 			return true;
 		}
 
-		bool operator!=(const kl::Vector4<T>& obj) const {
+		bool operator!=(const Vector4<T>& obj) const {
 			return !(*this == obj);
 		}
 
@@ -182,7 +182,7 @@ namespace kl {
 	};
 
 	template<typename T>
-	inline std::ostream& operator<<(std::ostream& stream, const kl::Vector4<T>& obj) {
+	inline std::ostream& operator<<(std::ostream& stream, const Vector4<T>& obj) {
 		stream << std::fixed << std::setprecision(2);
 		stream << "(" << obj.x << ", " << obj.y << ", " << obj.z << ", " << obj.w << ")";
 		return stream;

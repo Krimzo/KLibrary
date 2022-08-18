@@ -5,7 +5,7 @@
 #include <ctime>
 #include <windows.h>
 
-#include "math/math.h"
+#include "Math/Math.h"
 
 
 namespace kl {

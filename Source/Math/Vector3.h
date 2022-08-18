@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/vector2.h"
-#include "graphics/color.h"
+#include "Math/Vector2.h"
+#include "Graphics/Color.h"
 
 
 #undef min
@@ -75,7 +75,7 @@ namespace kl {
 			return result;
 		}
 
-		void operator+=(const kl::Vector3<T>& obj) {
+		void operator+=(const Vector3<T>& obj) {
 			*this = *this + obj;
 		}
 
@@ -87,7 +87,7 @@ namespace kl {
 			return result;
 		}
 
-		void operator-=(const kl::Vector3<T>& obj) {
+		void operator-=(const Vector3<T>& obj) {
 			*this = *this - obj;
 		}
 
@@ -111,7 +111,7 @@ namespace kl {
 			return result;
 		}
 
-		void operator*=(const kl::Vector3<T>& obj) {
+		void operator*=(const Vector3<T>& obj) {
 			*this = *this * obj;
 		}
 
@@ -223,7 +223,7 @@ namespace kl {
 	};
 
 	template<typename T>
-	inline std::ostream& operator<<(std::ostream& stream, const kl::Vector3<T>& obj) {
+	inline std::ostream& operator<<(std::ostream& stream, const Vector3<T>& obj) {
 		stream << std::fixed << std::setprecision(2);
 		stream << "(" << obj.x << ", " << obj.y << ", " << obj.z << ")";
 		return stream;

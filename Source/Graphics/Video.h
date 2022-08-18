@@ -10,7 +10,7 @@
 #include <propvarutil.h>
 #include <windows.h>
 
-#include "graphics/image.h"
+#include "Graphics/Image.h"
 
 
 namespace kl {

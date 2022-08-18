@@ -1,8 +1,8 @@
 #include "graphics/video.h"
 
-#include "utility/console.h"
-#include "utility/strings.h"
-#include "utility/Async.h"
+#include "Utility/Console.h"
+#include "Utility/Strings.h"
+#include "Utility/ASync.h"
 
 #pragma comment(lib, "mf.lib")
 #pragma comment(lib, "mfplay.lib")
@@ -60,7 +60,7 @@ kl::Video::Video() {
 	VideoUtilityInit();
 }
 
-kl::Video::Video(const String& filePath) : kl::Video() {
+kl::Video::Video(const String& filePath) : Video() {
 	open(filePath);
 }
 

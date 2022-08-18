@@ -1,30 +1,30 @@
 #pragma once
 
-#include "math/math.h"
-#include "render/plane.h"
-#include "render/sphere.h"
-#include "render/triangle.h"
-#include "render/camera.h"
+#include "Math/math.h"
+#include "Render/Plane.h"
+#include "Render/Sphere.h"
+#include "Render/Triangle.h"
+#include "Render/Camera.h"
 
 
 namespace kl {
 	struct Ray {
-		kl::Float3 origin;
-		kl::Float3 direction;
+		Float3 origin;
+		Float3 direction;
 
 		Ray();
-		Ray(const kl::Float3& origin, const kl::Float3& direction);
-		Ray(const kl::Float3& origin, const Mat4& inverseMatrix, const Float2& NDC);
+		Ray(const Float3& origin, const Float3& direction);
+		Ray(const Float3& origin, const Mat4& inverseMatrix, const Float2& NDC);
 		Ray(const Camera& camera, const Float2& NDC);
 
-		bool intersectPlane(const kl::Plane& plane, kl::Float3* outIntersection = nullptr) const;
+		bool intersectPlane(const Plane& plane, Float3* outIntersection = nullptr) const;
 
-		bool intersectTriangle(const kl::Triangle& triangle, kl::Float3* outIntersection = nullptr) const;
+		bool intersectTriangle(const Triangle& triangle, Float3* outIntersection = nullptr) const;
 
 		bool intersectSphere(const Sphere& sphere, Float3* outIntersection = nullptr, float* outDistance = nullptr) const;
 		bool intersectSphere(const Sphere& sphere) const;
 	};
 
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::Ray& obj);
+	std::ostream& operator<<(std::ostream& os, const Ray& obj);
 }

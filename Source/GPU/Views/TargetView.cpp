@@ -1,6 +1,6 @@
-#include "gpu/gpu.h"
+#include "GPU/GPU.h"
 
-#include "utility/console.h"
+#include "Utility/Console.h"
 
 
 kl::dx::TargetView kl::GPU::newTargetView(dx::Texture texture, dx::TargetViewDesc* descriptor) {

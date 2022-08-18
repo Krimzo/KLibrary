@@ -1,6 +1,6 @@
-#include "utility/file.h"
-#include "utility/console.h"
-#include "utility/strings.h"
+#include "Utility/File.h"
+#include "Utility/Console.h"
+#include "Utility/Strings.h"
 
 
 kl::String kl::Files::GetExtension(const String& filePath) {
@@ -95,13 +95,11 @@ kl::Vector<kl::Vertex> kl::Files::ParseMesh(const String& filePath, bool flipZ) 
 		else if (lineParts[0] == "f") {
 			for (int i = 1; i < 4; i++) {
 				const Vector<String> linePartParts = Strings::Split(lineParts[i], '/');
-				vertexData.push_back(
-					kl::Vertex(
-						xyzBuffer[std::stoull(linePartParts[0]) - 1],
-						uvBuffer[std::stoull(linePartParts[1]) - 1],
-						normBuffer[std::stoull(linePartParts[2]) - 1]
-					)
-				);
+				vertexData.push_back({
+					xyzBuffer[std::stoull(linePartParts[0]) - 1],
+					uvBuffer[std::stoull(linePartParts[1]) - 1],
+					normBuffer[std::stoull(linePartParts[2]) - 1]
+				});
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/math.h"
+#include "Math/Math.h"
 
 
 namespace kl {
@@ -13,5 +13,5 @@ namespace kl {
 	};
 
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::Plane& obj);
+	std::ostream& operator<<(std::ostream& os, const Plane& obj);
 }

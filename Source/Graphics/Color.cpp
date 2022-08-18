@@ -1,5 +1,5 @@
-#include "graphics/color.h"
-#include "math/math.h"
+#include "Graphics/Color.h"
+#include "Math/Math.h"
 
 
 kl::Color::Color() : b(0), g(0), r(0), a(255) {}

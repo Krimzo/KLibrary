@@ -23,11 +23,11 @@ namespace kl {
 
 		union {
 			struct {
-				kl::Key left;
-				kl::Key middle;
-				kl::Key right;
+				Key left;
+				Key middle;
+				Key right;
 			};
-			kl::Key buffer[3];
+			Key buffer[3];
 		};
 
 		Mouse();
@@ -49,7 +49,7 @@ namespace kl {
 
 		Int2 getPosition(bool client = true) const;
 		void updatePosition(HWND check, const Int2& position);
-		void setPosition(const kl::Int2& position);
+		void setPosition(const Int2& position);
 
 		Float2 getNormalizedPosition() const;
 	};

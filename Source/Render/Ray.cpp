@@ -1,11 +1,11 @@
-#include "render/ray.h"
+#include "Render/Ray.h"
 
 
 kl::Ray::Ray() {}
 
-kl::Ray::Ray(const kl::Float3& origin, const kl::Float3& direction) : origin(origin), direction(direction.normalize()) {}
+kl::Ray::Ray(const Float3& origin, const Float3& direction) : origin(origin), direction(direction.normalize()) {}
 
-kl::Ray::Ray(const kl::Float3& origin, const Mat4& inverseMatrix, const Float2& NDC) : origin(origin) {
+kl::Ray::Ray(const Float3& origin, const Mat4& inverseMatrix, const Float2& NDC) : origin(origin) {
 	const Float4 pixelDirection = inverseMatrix * Float4(NDC, 1.0f, 1.0f);
 	direction = (pixelDirection / pixelDirection.w).xyz.normalize();
 }
@@ -81,7 +81,7 @@ bool kl::Ray::intersectSphere(const Sphere& sphere, Float3* outIntersection, flo
 	return true;
 }
 
-bool kl::Ray::intersectSphere(const kl::Sphere& sphere) const {
+bool kl::Ray::intersectSphere(const Sphere& sphere) const {
 	const float rayDis = (sphere.center - origin).dot(direction);
 	const Float3 rayPoint = origin + direction * rayDis;
 	const float sphRayDis = (sphere.center - rayPoint).length();

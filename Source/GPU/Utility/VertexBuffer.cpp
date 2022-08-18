@@ -1,6 +1,6 @@
-#include "gpu/gpu.h"
+#include "GPU/GPU.h"
 
-#include "utility/file.h"
+#include "Utility/File.h"
 
 
 kl::dx::Buffer kl::GPU::newVertexBuffer(const Vector<Vertex>& vertexData) {

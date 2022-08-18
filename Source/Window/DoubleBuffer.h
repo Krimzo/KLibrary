@@ -1,7 +1,7 @@
 #pragma once
 
-#include "window/window.h"
-#include "utility/ASync.h"
+#include "Window/Window.h"
+#include "Utility/ASync.h"
 
 
 namespace kl {

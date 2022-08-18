@@ -5,10 +5,10 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#include "graphics/image.h"
-#include "window/keyboard.h"
-#include "window/mouse.h"
-#include "math/math.h"
+#include "Graphics/Image.h"
+#include "Window/Keyboard.h"
+#include "Window/Mouse.h"
+#include "Math/Math.h"
 
 
 namespace kl {

@@ -1,4 +1,4 @@
-#include "utility/encrypter.h"
+#include "Utility/Encrypter.h"
 
 
 kl::Encrypter::Encrypter() {
@@ -38,7 +38,7 @@ void kl::Encrypter::decrypt(void* data, uint64 dataSize) const {
 	encrypt(data, dataSize);
 }
 
-std::ostream& kl::operator<<(std::ostream& os, const kl::Encrypter& encrypter) {
+std::ostream& kl::operator<<(std::ostream& os, const Encrypter& encrypter) {
 	for (uint i = 0; i < 5; i++) {
 		os << "keys[" << i << "] = { ";
 		for (uint k = 0; k < encrypter.keys[i].size() - 1; k++) {

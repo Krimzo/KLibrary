@@ -5,8 +5,8 @@
 #include <fstream>
 #include <vector>
 
-#include "render/vertex.h"
-#include "utility/console.h"
+#include "Render/Vertex.h"
+#include "Utility/Console.h"
 
 #pragma comment (lib, "d3d11.lib")
 

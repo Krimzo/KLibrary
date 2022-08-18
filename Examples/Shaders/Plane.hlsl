@@ -29,9 +29,9 @@ float3 PlaneToSphere(float3 position, float halfPlaneSize) {
 VS_OUT vShader(float3 position : KL_Position) {
     VS_OUT data;
     
-    position.y = sin(position.x * 25.0f + timeData.x) * 0.025f;
+    position.y = sin(position.x * 25 + timeData.x) * 0.025f;
     
-    position = PlaneToSphere(position, 5.0f);
+    position = PlaneToSphere(position, 5);
     
     data.world = mul(float4(position, 1), WMatrix).xyz;
     data.screen = mul(float4(data.world, 1), VPMatrix);

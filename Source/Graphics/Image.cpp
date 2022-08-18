@@ -5,10 +5,10 @@
 #include <windows.h>
 #include <gdiplus.h>
 
-#include "math/math.h"
-#include "utility/file.h"
-#include "utility/strings.h"
-#include "utility/console.h"
+#include "Math/Math.h"
+#include "Utility/File.h"
+#include "Utility/Strings.h"
+#include "Utility/Console.h"
 
 #undef min
 #undef max
@@ -27,7 +27,7 @@ kl::Image::Image(const UInt2& size, const Color& color) {
 
 kl::Image::Image(const String& filePath) {
 	if (!loadFromFile(filePath)) {
-		this->kl::Image::Image();
+		this->Image::Image();
 	}
 }
 
@@ -44,7 +44,7 @@ kl::uint kl::Image::getWidth() const {
 }
 
 void kl::Image::setWidth(uint width) {
-	setSize(kl::Int2(width, m_Size.y));
+	setSize({ width, m_Size.y });
 }
 
 kl::uint kl::Image::getHeight() const {
@@ -52,28 +52,28 @@ kl::uint kl::Image::getHeight() const {
 }
 
 void kl::Image::setHeight(uint height) {
-	setSize(kl::Int2(m_Size.x, height));
+	setSize({ m_Size.x, height });
 }
 
 kl::UInt2 kl::Image::getSize() const {
 	return m_Size;
 }
 
-void kl::Image::setSize(const kl::UInt2& size) {
+void kl::Image::setSize(const UInt2& size) {
 	if (size != m_Size) {
 		m_Pixels.resize(uint64(size.x) * size.y);
 		m_Size = size;
 	}
 }
 
-kl::Color kl::Image::getPixel(const kl::UInt2& coords) const {
+kl::Color kl::Image::getPixel(const UInt2& coords) const {
 	if (coords.x < m_Size.x && coords.y < m_Size.y) {
 		return m_Pixels[uint64(coords.y) * m_Size.x + coords.x];
 	}
 	return Colors::Black;
 }
 
-void kl::Image::setPixel(const kl::UInt2& coords, const kl::Color& color) {
+void kl::Image::setPixel(const UInt2& coords, const Color& color) {
 	if (coords.x < m_Size.x && coords.y < m_Size.y) {
 		m_Pixels[uint64(coords.y) * m_Size.x + coords.x] = color;
 	}
@@ -120,7 +120,7 @@ bool kl::Image::loadFromFile(const String& filePath) {
 
 		setSize(Int2(loadedBitmap.GetWidth(), loadedBitmap.GetHeight()));
 		loadedBitmap.LockBits(nullptr, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmapData);
-		memcpy(&m_Pixels[0], bitmapData.Scan0, m_Pixels.size() * sizeof(kl::Color));
+		memcpy(&m_Pixels[0], bitmapData.Scan0, m_Pixels.size() * sizeof(Color));
 	}
 
 	Gdiplus::GdiplusShutdown(gdiplusToken);
@@ -173,7 +173,7 @@ bool kl::Image::saveToFile(const String& fileName) const {
 		Gdiplus::BitmapData bitmapData;
 
 		tempBitmap.LockBits(nullptr, Gdiplus::ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
-		memcpy(bitmapData.Scan0, &m_Pixels[0], m_Pixels.size() * sizeof(kl::Color));
+		memcpy(bitmapData.Scan0, &m_Pixels[0], m_Pixels.size() * sizeof(Color));
 		tempBitmap.UnlockBits(&bitmapData);
 
 		tempBitmap.Save(Strings::ToWString(fileName).c_str(), formatToUse, nullptr);
@@ -184,14 +184,14 @@ bool kl::Image::saveToFile(const String& fileName) const {
 	return true;
 }
 
-void kl::Image::fill(const kl::Color& color) {
+void kl::Image::fill(const Color& color) {
 	for (auto& pixel : m_Pixels) {
 		pixel = color;
 	}
 }
 
 kl::Image kl::Image::flip(bool vertical) const {
-	kl::Image temp(getSize());
+	Image temp(getSize());
 	if (vertical) {
 		for (uint x = 0; x < m_Size.x; x++) {
 			for (uint y = 0; y < m_Size.y; y++) {
@@ -209,13 +209,14 @@ kl::Image kl::Image::flip(bool vertical) const {
 	return temp;
 }
 
-void kl::Image::drawLine(const kl::Int2& a, const kl::Int2& b, const kl::Color& color) {
+void kl::Image::drawLine(const Int2& a, const Int2& b, const Color& color) {
 	const int length = std::max(std::abs(b.x - a.x), std::abs(b.y - a.y));
-	const Float2 incr(float(b.x - a.x) / length, float(b.y - a.y) / length);
-	Float2 drawPoint(float(a.x), float(a.y));
+	const Float2 increment = { float(b.x - a.x) / length, float(b.y - a.y) / length };
+
+	Float2 drawPoint = a;
 	for (int i = 0; i <= length; i++) {
-		setPixel(kl::Int2(int(drawPoint.x), int(drawPoint.y)), color);
-		drawPoint += incr;
+		setPixel(drawPoint, color);
+		drawPoint += increment;
 	}
 }
 
@@ -231,7 +232,7 @@ void kl::Image::drawTriangle(Int2 a, Int2 b, Int2 c, const Color& color, bool fi
 			std::swap(b, c);
 		}
 		for (int y = a.y; y < c.y; y++) {
-			drawLine(Int2(Math::GetLineX((y < b.y) ? a : c, b, float(y)), y), Int2(Math::GetLineX(a, c, float(y)), y), color);
+			drawLine({ Math::GetLineX((y < b.y) ? a : c, b, float(y)), y }, { Math::GetLineX(a, c, float(y)), y }, color);
 		}
 	}
 	else {
@@ -247,14 +248,14 @@ void kl::Image::drawRectangle(Int2 a, Int2 b, const Color& color, bool fill) {
 			std::swap(a, b);
 		}
 		for (int y = a.y; y <= b.y; y++) {
-			drawLine(kl::Int2(a.x, y), kl::Int2(b.x, y), color);
+			drawLine({ a.x, y }, { b.x, y }, color);
 		}
 	}
 	else {
-		drawLine(a, kl::Int2(a.x, b.y), color);
-		drawLine(a, kl::Int2(b.x, a.y), color);
-		drawLine(b, kl::Int2(a.x, b.y), color);
-		drawLine(b, kl::Int2(b.x, a.y), color);
+		drawLine(a, { a.x, b.y }, color);
+		drawLine(a, { b.x, a.y }, color);
+		drawLine(b, { a.x, b.y }, color);
+		drawLine(b, { b.x, a.y }, color);
 	}
 }
 
@@ -262,25 +263,25 @@ void kl::Image::drawCircle(const Int2& p, float r, const Color& color, bool fill
 	if (fill) {
 		for (int y = int(p.y - r); y <= int(p.y + r); y++) {
 			const int x = int(p.x + std::sqrt(r * r - (y - p.y) * (y - p.y)));
-			drawLine(Int2(2 * p.x - x, y), Int2(x, y), color);
+			drawLine({ 2 * p.x - x, y }, { x, y }, color);
 		}
 	}
 	else {
 		for (int i = 0; i < 2 * r; i++) {
 			const int x1 = int(p.x - r + i);
 			const int y1 = int(p.y + std::sqrt(r * r - (x1 - p.x) * (x1 - p.x)));
-			setPixel(kl::Int2(x1, y1), color);
-			setPixel(kl::Int2(x1, 2 * p.y - y1), color);
+			setPixel({ x1, y1 }, color);
+			setPixel({ x1, 2 * p.y - y1 }, color);
 
 			const int y2 = int(p.y - r + i);
 			const int x2 = int(p.x + std::sqrt(r * r - (y2 - p.y) * (y2 - p.y)));
-			setPixel(kl::Int2(x2, y2), color);
-			setPixel(kl::Int2(2 * p.x - x2, y2), color);
+			setPixel({ x2, y2 }, color);
+			setPixel({ 2 * p.x - x2, y2 }, color);
 		}
 	}
 }
 
-void kl::Image::drawCircle(const kl::Int2& a, const kl::Int2& b, const kl::Color& color, bool fill) {
+void kl::Image::drawCircle(const Int2& a, const Int2& b, const Color& color, bool fill) {
 	drawCircle(a, Float2(b - a).length(), color, fill);
 }
 
@@ -304,8 +305,8 @@ void kl::Image::drawImage(const Int2& position, const Image& image, bool mixAlph
 kl::String kl::Image::asASCII(const Int2& frameSize) const {
 	StringStream frame;
 
-	const kl::Int2 increment = m_Size / frameSize;
-	for (kl::Int2 position; position.y < frameSize.y; position.y++) {
+	const Int2 increment = m_Size / frameSize;
+	for (Int2 position; position.y < frameSize.y; position.y++) {
 		for (position.x = 0; position.x < frameSize.x; position.x++) {
 			frame << getPixel(position * increment).asASCII();
 		}

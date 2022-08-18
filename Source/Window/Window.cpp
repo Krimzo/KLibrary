@@ -1,5 +1,5 @@
-#include "window/window.h"
-#include "utility/console.h"
+#include "Window/Window.h"
+#include "Utility/Console.h"
 
 #pragma comment(lib, "kernel32.lib")
 #pragma comment(lib, "user32.lib")
@@ -155,7 +155,7 @@ kl::Int2 kl::Window::getPosition(bool client) const {
 	return { rect.left, rect.top };
 }
 
-void kl::Window::setPosition(const kl::Int2& position) {
+void kl::Window::setPosition(const Int2& position) {
 	if (!m_Fullscreened) {
 		const UInt2 size = getSize(false);
 		MoveWindow(m_Window, position.x, position.y, size.x, size.y, false);
@@ -189,7 +189,7 @@ kl::UInt2 kl::Window::getSize(bool client) const {
 	return { rect.right - rect.left, rect.bottom - rect.top };
 }
 
-void kl::Window::setSize(const kl::UInt2& size, bool client) {
+void kl::Window::setSize(const UInt2& size, bool client) {
 	if (!m_Fullscreened) {
 		const Int2 position = getPosition();
 		UInt2 newSize = size;

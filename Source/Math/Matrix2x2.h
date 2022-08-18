@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/Matrix.h"
-#include "math/Vector2.h"
+#include "Math/Matrix.h"
+#include "Math/Vector2.h"
 
 
 namespace kl {

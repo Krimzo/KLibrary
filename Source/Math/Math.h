@@ -1,11 +1,11 @@
 #pragma once
 
-#include "math/vector2.h"
-#include "math/vector3.h"
-#include "math/vector4.h"
-#include "math/matrix2x2.h"
-#include "math/matrix3x3.h"
-#include "math/matrix4x4.h"
+#include "Math/Vector2.h"
+#include "Math/Vector3.h"
+#include "Math/Vector4.h"
+#include "Math/Matrix2x2.h"
+#include "Math/Matrix3x3.h"
+#include "Math/Matrix4x4.h"
 
 
 namespace kl {
@@ -30,7 +30,7 @@ namespace kl {
 	};
 
 	template<typename T>
-	inline kl::Vector4<T> ToQuaternion(const kl::Vector3<T>& eul) {
+	inline Vector4<T> ToQuaternion(const Vector3<T>& eul) {
 		const T cr = T(std::cos(Math::ToRadians(eul.x) * 0.5f));
 		const T sr = T(std::sin(Math::ToRadians(eul.x) * 0.5f));
 		const T cp = T(std::cos(Math::ToRadians(eul.y) * 0.5f));
@@ -46,7 +46,7 @@ namespace kl {
 	}
 
 	template<typename T>
-	inline kl::Vector3<T> ToEuler(const Vector4<T>& quat) {
+	inline Vector3<T> ToEuler(const Vector4<T>& quat) {
 		const T sinp = T(2.0f * (quat.w * quat.y - quat.z * quat.x));
 		const T sinrCosp = T(2.0f * (quat.w * quat.x + quat.y * quat.z));
 		const T cosrCosp = T(1.0f - 2.0f * (quat.x * quat.x + quat.y * quat.y));

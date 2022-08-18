@@ -1,7 +1,7 @@
-#include "utility/web.h"
-#include "utility/console.h"
-#include "utility/strings.h"
-#include "math/math.h"
+#include "Utility/Web.h"
+#include "Utility/Console.h"
+#include "Utility/Strings.h"
+#include "Math/Math.h"
 
 #include <windows.h>
 #include <wininet.h>

@@ -1,10 +1,10 @@
-#include "gpu/gpu.h"
+#include "GPU/GPU.h"
 
-#include "utility/console.h"
+#include "Utility/Console.h"
 
 
 kl::dx::AccessView kl::GPU::newAccessView(dx::Texture texture, dx::AccessViewDesc* descriptor) {
-	kl::dx::AccessView view = nullptr;
+	dx::AccessView view = nullptr;
 
 	m_Device->CreateUnorderedAccessView(texture, descriptor, &view);
 	if (Warning(!view, "Failed to create unordered access view")) {

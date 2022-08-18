@@ -1,4 +1,4 @@
-#include "utility/random.h"
+#include "Utility/Random.h"
 
 
 namespace _ignore {
@@ -20,9 +20,9 @@ byte kl::Random::BYTE() {
 kl::Color kl::Random::COLOR(bool gray) {
 	if (gray) {
 		const byte randGray = BYTE();
-		return kl::Color(randGray, randGray, randGray);
+		return { randGray, randGray, randGray };
 	}
-	return kl::Color(BYTE(), BYTE(), BYTE());
+	return { BYTE(), BYTE(), BYTE() };
 }
 
 int kl::Random::INT(int startInclusive, int endExclusive) {

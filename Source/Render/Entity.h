@@ -2,7 +2,7 @@
 
 #include "KLTypes.h"
 #include "GPU/DXTypes.h"
-#include "Math\Math.h"
+#include "Math/Math.h"
 
 
 namespace kl {

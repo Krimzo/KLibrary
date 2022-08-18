@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "math/math.h"
+#include "Math/Math.h"
 
 
 namespace kl {

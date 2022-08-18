@@ -1,6 +1,6 @@
-#include "gpu/gpu.h"
+#include "GPU/GPU.h"
 
-#include "utility/console.h"
+#include "Utility/Console.h"
 
 
 kl::dx::ShaderView kl::GPU::newShaderView(dx::Texture texture, dx::ShaderViewDesc* descriptor) {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/math.h"
-#include "render/vertex.h"
+#include "Math/Math.h"
+#include "Render/Vertex.h"
 
 
 namespace kl {
@@ -16,12 +16,12 @@ namespace kl {
 		Float3 getWeights(const Float4& constants, const Float2& point) const;
 		Float3 getWeights(const Float3& position) const;
 
-		bool isInTriangle(const kl::Float3& weights) const;
+		bool isInTriangle(const Float3& weights) const;
 
 		float interpolate(const Float3& weights, const Float3& values) const;
 		Vertex interpolate(const Float3& weights) const;
 	};
 
 	// std::cout
-	std::ostream& operator<<(std::ostream& os, const kl::Triangle& obj);
+	std::ostream& operator<<(std::ostream& os, const Triangle& obj);
 }

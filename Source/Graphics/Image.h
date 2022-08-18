@@ -10,7 +10,7 @@
 namespace kl {
 	class Image {
 		UInt2 m_Size;
-		Vector<kl::Color> m_Pixels;
+		Vector<Color> m_Pixels;
 
 	public:
 		Image();
@@ -40,21 +40,21 @@ namespace kl {
 		bool loadFromFile(const String& filePath);
 		bool saveToFile(const String& fileName) const;
 
-		kl::Image flip(bool vertical) const;
+		Image flip(bool vertical) const;
 
-		void fill(const kl::Color& color);
+		void fill(const Color& color);
 
-		void drawLine(const kl::Int2& a, const kl::Int2& b, const kl::Color& color);
+		void drawLine(const Int2& a, const Int2& b, const Color& color);
 
-		void drawTriangle(kl::Int2 a, kl::Int2 b, kl::Int2 c, const kl::Color& color, bool fill = false);
+		void drawTriangle(Int2 a, Int2 b, Int2 c, const Color& color, bool fill = false);
 
-		void drawRectangle(kl::Int2 a, kl::Int2 b, const kl::Color& color, bool fill = false);
+		void drawRectangle(Int2 a, Int2 b, const Color& color, bool fill = false);
 
-		void drawCircle(const kl::Int2& p, float r, const kl::Color& color, bool fill = false);
-		void drawCircle(const kl::Int2& a, const kl::Int2& b, const kl::Color& color, bool fill = false);
+		void drawCircle(const Int2& p, float r, const Color& color, bool fill = false);
+		void drawCircle(const Int2& a, const Int2& b, const Color& color, bool fill = false);
 
-		void drawImage(const kl::Int2& position, const kl::Image& image, bool mixAlpha = true);
+		void drawImage(const Int2& position, const Image& image, bool mixAlpha = true);
 
-		String asASCII(const kl::Int2& frameSize) const;
+		String asASCII(const Int2& frameSize) const;
 	};
 }

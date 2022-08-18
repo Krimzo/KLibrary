@@ -1,4 +1,4 @@
-#include "window/mouse.h"
+#include "Window/Mouse.h"
 
 
 kl::Mouse::Mouse() :
@@ -61,13 +61,13 @@ kl::Int2 kl::Mouse::getPosition(bool client) const {
 	return m_Position;
 }
 
-void kl::Mouse::updatePosition(HWND check, const kl::Int2& position) {
+void kl::Mouse::updatePosition(HWND check, const Int2& position) {
 	if (check == m_Window) {
 		m_Position = position;
 	}
 }
 
-void kl::Mouse::setPosition(const kl::Int2& position) {
+void kl::Mouse::setPosition(const Int2& position) {
 	if (m_Window) {
 		POINT clientPosition = { position.x, position.y };
 		ClientToScreen(m_Window, &clientPosition);
