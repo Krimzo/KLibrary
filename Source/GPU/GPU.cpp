@@ -15,16 +15,16 @@ kl::GPU::GPU(HWND window) {
 	RECT windowClientArea = {};
 	GetClientRect(window, &windowClientArea);
 
-	DXGI_SWAP_CHAIN_DESC chaindes = {};
-	chaindes.BufferCount = 1;
-	chaindes.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	chaindes.BufferDesc.Width = windowClientArea.right;
-	chaindes.BufferDesc.Height = windowClientArea.bottom;
-	chaindes.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	chaindes.OutputWindow = window;
-	chaindes.SampleDesc.Count = 1;
-	chaindes.Windowed = true;
-	chaindes.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	DXGI_SWAP_CHAIN_DESC chainDescriptor = {};
+	chainDescriptor.BufferCount = 1;
+	chainDescriptor.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	chainDescriptor.BufferDesc.Width = windowClientArea.right;
+	chainDescriptor.BufferDesc.Height = windowClientArea.bottom;
+	chainDescriptor.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	chainDescriptor.OutputWindow = window;
+	chainDescriptor.SampleDesc.Count = 1;
+	chainDescriptor.Windowed = true;
+	chainDescriptor.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	D3D11CreateDeviceAndSwapChain(
 		nullptr,
@@ -34,7 +34,7 @@ kl::GPU::GPU(HWND window) {
 		nullptr,
 		NULL,
 		D3D11_SDK_VERSION,
-		&chaindes,
+		&chainDescriptor,
 		&m_Chain,
 		&m_Device,
 		nullptr,
@@ -84,6 +84,14 @@ kl::dx::Context kl::GPU::getContext() {
 
 const kl::dx::Context kl::GPU::getContext() const {
 	return m_Context;
+}
+
+kl::dx::Chain kl::GPU::getChain() {
+	return m_Chain;
+}
+
+const kl::dx::Chain kl::GPU::getChain() const {
+	return m_Chain;
 }
 
 void kl::GPU::setViewport(const UInt2& size) {

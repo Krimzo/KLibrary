@@ -14,6 +14,10 @@ struct VS_OUT {
     float3 color : VS_Color;
 };
 
+float NormalizedTimeValue(float value) {
+    return value * (sin(timeData.x) + 1) * 0.5f;
+}
+
 float3 PlaneToSphere(float3 position, float halfPlaneSize) {
     float2 ndc = position.xz / halfPlaneSize;
     float2 coords = radians(ndc * float2(180, 90));
@@ -29,7 +33,7 @@ float3 PlaneToSphere(float3 position, float halfPlaneSize) {
 VS_OUT vShader(float3 position : KL_Position) {
     VS_OUT data;
     
-    position.y = sin(position.x * 25 + timeData.x) * 0.025f;
+    position.y = sin(position.x * 25 + timeData.x) * NormalizedTimeValue(0.02f);
     
     position = PlaneToSphere(position, 5);
     

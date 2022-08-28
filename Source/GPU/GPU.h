@@ -37,7 +37,7 @@ namespace kl {
 		dx::TargetView m_FrameBuffer = nullptr;
 		dx::DepthView m_DepthBuffer = nullptr;
 
-		std::set<IUnknown*> m_Children;
+		std::set<IUnknown*> m_Children = {};
 
 		dx::Buffer m_VertexCBuffers[CBUFFER_PREDEFINED_SIZE] = {};
 		dx::Buffer m_PixelCBuffers[CBUFFER_PREDEFINED_SIZE] = {};
@@ -54,6 +54,9 @@ namespace kl {
 
 		dx::Context getContext();
 		const dx::Context getContext() const;
+
+		dx::Chain getChain();
+		const dx::Chain getChain() const;
 
 		void setViewport(const UInt2& size);
 		void setViewport(const Int2& position, const UInt2& size);
@@ -177,7 +180,7 @@ namespace kl {
 		// Render target view
 		dx::TargetView newTargetView(dx::Texture texture, dx::TargetViewDesc* descriptor = nullptr);
 
-		void clearTargetView(dx::TargetView view, const Float4& color);
+		void clearTargetView(dx::TargetView view, const Float4& values);
 
 		// Depth stencil view
 		dx::DepthView newDepthView(dx::Texture texture, dx::DepthViewDesc* desc = nullptr);

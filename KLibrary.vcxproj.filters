@@ -129,7 +129,7 @@
     <ClCompile Include="Source\Render\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Examples\PlanePlayground.cpp">
+    <ClCompile Include="Examples\Trajectories.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

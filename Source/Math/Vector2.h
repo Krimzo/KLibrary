@@ -185,6 +185,11 @@ namespace kl {
 			const T cosA = T(std::cos(Math::ToRadians(angle)));
 			return { cosA * x - sinA * y, sinA * x + cosA * y };
 		}
+
+		Vector2<T> reflect(const Vector2<T>& normal) const {
+			Vector2<T> normalized = normal.normalize();
+			return *this - normalized * dot(normalized) * 2.0f;
+		}
 	};
 
 	template<typename T>

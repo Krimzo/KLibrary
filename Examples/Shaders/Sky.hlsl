@@ -1,6 +1,6 @@
 // Vertex shader
 float4 vShader(float3 pos : KL_Position) : SV_Position {
-    return float4(pos, 1.0f);
+    return float4(pos, 1);
 }
 
 // Pixel shader
@@ -12,12 +12,12 @@ cbuffer PS_CB : register(b0) {
 }
 
 float4 pShader(float4 screen : SV_Position) : SV_Target {
-    float3 pixel = { 0, 0, 0 };
+    float3 pixel = 0;
     
     float2 ndc = float2(screen.x, frameSize.y - screen.y) / float2(frameSize.x, frameSize.y);
-    ndc = ndc * 2.0f - 1.0f;
+    ndc = ndc * 2 - 1;
 	
-    float4 ray = mul(float4(ndc, 1.0f, 1.0f), inverseCamera);
+    float4 ray = mul(float4(ndc, 1, 1), inverseCamera);
     ray /= ray.w;
     
     float3 rayDir = normalize(ray.xyz);
@@ -28,12 +28,12 @@ float4 pShader(float4 screen : SV_Position) : SV_Target {
 	
     const float2 sunRadiuses = { 0.75f, 1.55f };
 
-    const float skyMixValue = (dot(-rayDir, float3(0.0f, 1.0f, 0.0f)) + 1.0f) * 0.5f;
+    const float skyMixValue = (dot(-rayDir, float3(0, 1, 0)) + 1) * 0.5f;
     pixel = lerp(skyTopColor, skyBottomColor, skyMixValue);
-    pixel *= dot(-sunDirection.xyz, float3(0.0f, 1.0f, 0.0f));
+    pixel *= dot(-sunDirection.xyz, float3(0, 1, 0));
 		
     const float sunAngle = degrees(acos(dot(rayDir, -sunDirection.xyz)));
     pixel = lerp(sunSkyColor, pixel, smoothstep(sunRadiuses.x, sunRadiuses.y, sunAngle));
     
-    return float4(pixel, 1.0f);
+    return float4(pixel, 1);
 }
