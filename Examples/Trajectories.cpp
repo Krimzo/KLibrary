@@ -102,7 +102,7 @@ int main() {
 	Image frame = { window.getSize() };
 	Timer timer = {};
 
-	Float2 gravity = { 0, 9.81f * 7.5f };
+	Float2 gravity = { 0, 98.1f };
 	Vector<Object> objects = {};
 
 	window.onResize = [&](UInt2 newSize) {
@@ -134,6 +134,15 @@ int main() {
 
 	window.keyboard.r.onPress = [&]() {
 		objects.clear();
+	};
+	window.keyboard.g.onPress = [&]() {
+		for (int i = 0; i < 20; i++) {
+			Object randomObject = {};
+			randomObject.position.x = Random::FLOAT((float)frame.getWidth());
+			randomObject.position.y = Random::FLOAT((float)GetFrameLowerLimit(frame));
+			randomObject.velocity = Random::VECTOR2<float>(-500.0f, 500.0f);
+			objects.push_back(randomObject);
+		}
 	};
 
 	while (window.process(false)) {
