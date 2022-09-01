@@ -21,7 +21,7 @@ namespace kl {
 
 		bool intersectTriangle(const Triangle& triangle, Float3* outIntersection = nullptr) const;
 
-		bool intersectSphere(const Sphere& sphere, Float3* outIntersection = nullptr, float* outDistance = nullptr) const;
+		bool intersectSphere(const Sphere& sphere, Float3& outIntersection, float* outDistance = nullptr) const;
 		bool intersectSphere(const Sphere& sphere) const;
 	};
 

@@ -54,7 +54,7 @@ bool kl::Ray::intersectTriangle(const Triangle& triangle, Float3* outIntersectio
 	return false;
 }
 
-bool kl::Ray::intersectSphere(const Sphere& sphere, Float3* outIntersection, float* outDistance) const {
+bool kl::Ray::intersectSphere(const Sphere& sphere, Float3& outIntersection, float* outDistance) const {
 	const Float3 centerRay = sphere.center - origin;
 	const float cdDot = centerRay.dot(direction);
 	if (cdDot < 0.0f) {
@@ -71,9 +71,8 @@ bool kl::Ray::intersectSphere(const Sphere& sphere, Float3* outIntersection, flo
 	const float dis0 = cdDot - thc;
 	const float dis1 = cdDot + thc;
 
-	if (outIntersection) {
-		*outIntersection = origin + direction * ((dis0 < 0.0f) ? dis1 : dis0);
-	}
+	outIntersection = origin + direction * ((dis0 < 0.0f) ? dis1 : dis0);
+
 	if (outDistance) {
 		*outDistance = (dis0 < 0.0f) ? dis1 : dis0;
 	}
