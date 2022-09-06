@@ -43,7 +43,7 @@ int main() {
 
 		gpu.bindComputeShaderView(nullptr, 0);
 		gpu.bindPixelShaderView(nullptr, 0);
-		gpu.clearTargetView(targetView, kl::Colors::Gray);
+		gpu.clearTargetView(targetView, Colors::Gray);
 
 		CS_CB csData = {};
 		csData.miscData.x = (float)window.mouse.getPosition().x;

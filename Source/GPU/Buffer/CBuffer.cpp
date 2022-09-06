@@ -20,11 +20,7 @@ kl::dx::Buffer kl::GPU::newCBuffer(uint byteSize) {
 void kl::GPU::setCBufferData(dx::Buffer buffer, const void* data) {
 	dx::BufferDesc descriptor = {};
 	buffer->GetDesc(&descriptor);
-
-	D3D11_MAPPED_SUBRESOURCE mapped = {};
-	m_Context->Map(buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mapped);
-	memcpy(mapped.pData, data, descriptor.ByteWidth);
-	m_Context->Unmap(buffer, NULL);
+	writeToResource(buffer, data, descriptor.ByteWidth);
 }
 
 void kl::GPU::bindVertexCBuffer(dx::Buffer buffer, uint slot) {

@@ -6,8 +6,8 @@
 kl::dx::SamplerState kl::GPU::newSamplerState(dx::SamplerStateDesc* descriptor) {
 	dx::SamplerState state = nullptr;
 
-	m_Device->CreateSamplerState(descriptor, &state);
-	if (Warning(!state, "Failed to create sampler state")) {
+	long result = m_Device->CreateSamplerState(descriptor, &state);
+	if (Warning(!state, Format("Failed to create sampler state. Result: 0x", std::hex, result))) {
 		return nullptr;
 	}
 

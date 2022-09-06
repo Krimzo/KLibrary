@@ -11,6 +11,29 @@
 #pragma comment (lib, "d3d11.lib")
 
 
+kl::GPU::GPU() {
+	D3D11CreateDevice(
+		nullptr,
+		D3D_DRIVER_TYPE_HARDWARE,
+		nullptr,
+		NULL,
+		nullptr,
+		NULL,
+		D3D11_SDK_VERSION,
+		&m_Device,
+		nullptr,
+		&m_Context
+	);
+	Assert(!m_Device, "Failed to create device");
+	Assert(!m_Context, "Failed to create device context");
+
+	for (int i = 0; i < CBUFFER_PREDEFINED_SIZE; i++) {
+		m_ComputeCBuffers[i] = newCBuffer((i + 1) * 16);
+	}
+
+	m_CreationType = Compute;
+}
+
 kl::GPU::GPU(HWND window) {
 	RECT windowClientArea = {};
 	GetClientRect(window, &windowClientArea);
@@ -55,19 +78,27 @@ kl::GPU::GPU(HWND window) {
 		m_PixelCBuffers[i] = newCBuffer(bufferSize);
 		m_ComputeCBuffers[i] = newCBuffer(bufferSize);
 	}
+
+	m_CreationType = Render;
 }
 
 kl::GPU::~GPU() {
-	m_Chain->SetFullscreenState(false, nullptr);
-
 	for (auto& ref : m_Children) {
 		ref->Release();
 	}
 	m_Children.clear();
 
-	m_Chain->Release();
+	if (m_CreationType == Render) {
+		m_Chain->SetFullscreenState(false, nullptr);
+		m_Chain->Release();
+	}
+
 	m_Context->Release();
 	m_Device->Release();
+}
+
+kl::GPU::CreationType kl::GPU::getCreationType() const {
+	return m_CreationType;
 }
 
 kl::dx::Device kl::GPU::getDevice() {
@@ -175,6 +206,24 @@ void kl::GPU::clearInternal() {
 
 void kl::GPU::swapBuffers(bool vSync) {
 	m_Chain->Present(vSync, NULL);
+}
+
+void kl::GPU::copyResource(dx::Resource destination, dx::Resource source) {
+	m_Context->CopyResource(destination, source);
+}
+
+void kl::GPU::readFromResource(void* cpuBuffer, dx::Resource cpuReadResource, uint byteSize) {
+	dx::MappedSubresDesc mappedSubresource = {};
+	m_Context->Map(cpuReadResource, 0, D3D11_MAP_READ, NULL, &mappedSubresource);
+	memcpy(cpuBuffer, mappedSubresource.pData, byteSize);
+	m_Context->Unmap(cpuReadResource, NULL);
+}
+
+void kl::GPU::writeToResource(dx::Resource cpuWriteResource, const void* data, uint byteSize, bool discard) {
+	dx::MappedSubresDesc mappedSubresource = {};
+	m_Context->Map(cpuWriteResource, 0, discard ? D3D11_MAP_WRITE_DISCARD : D3D11_MAP_WRITE, NULL, &mappedSubresource);
+	memcpy(mappedSubresource.pData, data, byteSize);
+	m_Context->Unmap(cpuWriteResource, NULL);
 }
 
 void kl::GPU::destroy(IUnknown* child) {

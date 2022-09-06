@@ -3,11 +3,11 @@
 #include "Utility/Console.h"
 
 
-kl::dx::ShaderView kl::GPU::newShaderView(dx::Texture texture, dx::ShaderViewDesc* descriptor) {
+kl::dx::ShaderView kl::GPU::newShaderView(dx::Resource resource, dx::ShaderViewDesc* descriptor) {
 	dx::ShaderView view = nullptr;
 
-	m_Device->CreateShaderResourceView(texture, descriptor, &view);
-	if (Warning(!view, "Failed to create shader view")) {
+	long result = m_Device->CreateShaderResourceView(resource, descriptor, &view);
+	if (Warning(!view, Format("Failed to create shader view. Result: 0x", std::hex, result))) {
 		return nullptr;
 	}
 

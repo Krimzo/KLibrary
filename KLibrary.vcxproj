@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Examples\Trajectories.cpp" />
+    <ClCompile Include="Examples\ComputeShaders2.cpp" />
     <ClCompile Include="Source\GPU\Buffer\Buffer.cpp" />
     <ClCompile Include="Source\GPU\Buffer\CBuffer.cpp" />
     <ClCompile Include="Source\GPU\GPU.cpp" />

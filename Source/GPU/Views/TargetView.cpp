@@ -6,8 +6,8 @@
 kl::dx::TargetView kl::GPU::newTargetView(dx::Texture texture, dx::TargetViewDesc* descriptor) {
 	dx::TargetView view = nullptr;
 
-	m_Device->CreateRenderTargetView(texture, descriptor, &view);
-	if (Warning(!view, "Failed to create render target view")) {
+	long result = m_Device->CreateRenderTargetView(texture, descriptor, &view);
+	if (Warning(!view, Format("Failed to create render target view. Result: 0x", std::hex, result))) {
 		return nullptr;
 	}
 

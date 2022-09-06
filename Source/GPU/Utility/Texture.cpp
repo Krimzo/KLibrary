@@ -6,8 +6,8 @@
 kl::dx::Texture kl::GPU::getBackBuffer() {
 	dx::Texture buffer = nullptr;
 
-	m_Chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
-	if (Warning(!buffer, "Failed to get backbuffer texture")) {
+	long result = m_Chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
+	if (Warning(!buffer, Format("Failed to get backbuffer texture. Result: 0x", std::hex, result))) {
 		return nullptr;
 	}
 
@@ -19,8 +19,8 @@ kl::dx::Texture kl::GPU::getBackBuffer() {
 kl::dx::Texture kl::GPU::newTexture(dx::TextureDesc* descriptor, dx::SubresDesc* subresourceData) {
 	dx::Texture texture = nullptr;
 
-	m_Device->CreateTexture2D(descriptor, subresourceData, &texture);
-	if (Warning(!texture, "Failed to create texture")) {
+	long result = m_Device->CreateTexture2D(descriptor, subresourceData, &texture);
+	if (Warning(!texture, Format("Failed to create texture. Result: 0x", std::hex, result))) {
 		return nullptr;
 	}
 
@@ -84,7 +84,7 @@ kl::dx::Texture kl::GPU::newTexture(const Image& front, const Image& back, const
 	return newTexture(&descriptor, data);
 }
 
-kl::dx::Texture kl::GPU::newTextureStaging(dx::Texture texture, const UInt2& size) {
+kl::dx::Texture kl::GPU::newStagingTexture(dx::Texture texture, const UInt2& size) {
 	dx::TextureDesc descriptor = {};
 	texture->GetDesc(&descriptor);
 

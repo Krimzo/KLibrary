@@ -6,8 +6,8 @@
 kl::dx::DepthView kl::GPU::newDepthView(dx::Texture texture, dx::DepthViewDesc* descriptor) {
 	dx::DepthView view = nullptr;
 
-	m_Device->CreateDepthStencilView(texture, descriptor, &view);
-	if (Warning(!view, "Failed to create depth stencil view")) {
+	long result = m_Device->CreateDepthStencilView(texture, descriptor, &view);
+	if (Warning(!view, Format("Failed to create depth stencil view. Result: 0x", std::hex, result))) {
 		return nullptr;
 	}
 

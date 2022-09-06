@@ -10,9 +10,10 @@ namespace kl::dx {
 	using Context = ID3D11DeviceContext*;
 	using Chain = IDXGISwapChain*;
 
-	// Common
+	// Data
 	using Buffer = ID3D11Buffer*;
 	using Texture = ID3D11Texture2D*;
+	using Resource = ID3D11Resource*;
 
 	// State
 	using RasterState = ID3D11RasterizerState*;
@@ -36,10 +37,11 @@ namespace kl::dx {
 	using Layout = ID3D11InputLayout*;
 
 	/* Descriptors */
-	// Common
+	// Data
 	using BufferDesc = D3D11_BUFFER_DESC;
 	using TextureDesc = D3D11_TEXTURE2D_DESC;
 	using SubresDesc = D3D11_SUBRESOURCE_DATA;
+	using MappedSubresDesc = D3D11_MAPPED_SUBRESOURCE;
 
 	// State
 	using RasterStateDesc = D3D11_RASTERIZER_DESC;
