@@ -44,7 +44,9 @@ kl::Image::Image() {}
 
 kl::Image::Image(const UInt2& size, const Color& color) : m_Size(size) {
 	m_Pixels.resize(uint64(size.x) * size.y);
-	fill(color);
+	if (color != Color()) {
+		fill(color);
+	}
 }
 
 kl::Image::Image(const String& filePath) {
