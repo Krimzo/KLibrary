@@ -142,7 +142,7 @@ kl::dx::ComputeShader kl::GPU::newComputeShader(const String& source) {
 kl::Shaders kl::GPU::newShaders(const String& vertexSource, const String& pixelSource, const Vector<dx::LayoutDesc>& descriptors) {
 	dx::Layout layout = nullptr;
 	dx::VertexShader vertexShader = newVertexShader(vertexSource, &layout, descriptors);
-	return Shaders(vertexShader, newPixelShader(pixelSource), layout);
+	return { vertexShader, newPixelShader(pixelSource), layout };
 }
 
 kl::Shaders kl::GPU::newShaders(const String& source, const Vector<dx::LayoutDesc>& descriptors) {

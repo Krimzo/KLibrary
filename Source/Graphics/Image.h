@@ -13,6 +13,8 @@ namespace kl {
 		Vector<Color> m_Pixels;
 
 	public:
+		static Image GetScreenImage();
+
 		Image();
 		Image(const UInt2& size, const Color& color = {});
 		Image(const String& filePath);
@@ -27,10 +29,13 @@ namespace kl {
 		void setHeight(uint height);
 
 		UInt2 getSize() const;
-		void setSize(const UInt2& size);
+		void setSize(const UInt2& size, bool scale = false);
 
 		Color getPixel(const UInt2& coords) const;
 		void setPixel(const UInt2& coords, const Color& color);
+
+		Color& operator[](const UInt2& coords);
+		const Color& operator[](const UInt2& coords) const;
 
 		Color* data();
 		const Color* data() const;

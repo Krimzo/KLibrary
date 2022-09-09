@@ -16,19 +16,39 @@
 #pragma comment(lib, "gdiplus.lib")
 
 
-kl::Image::Image() {
-	setSize({});
+kl::Image kl::Image::GetScreenImage() {
+	HDC screenDC = GetDC(nullptr);
+	HDC memoryDC = CreateCompatibleDC(screenDC);
+
+	int width = GetDeviceCaps(screenDC, HORZRES);
+	int height = GetDeviceCaps(screenDC, VERTRES);
+
+	HBITMAP bitmap = CreateCompatibleBitmap(screenDC, width, height);
+	HBITMAP oldBitmap = (HBITMAP)SelectObject(memoryDC, bitmap);
+
+	BitBlt(memoryDC, 0, 0, width, height, screenDC, 0, 0, SRCCOPY);
+	bitmap = (HBITMAP)SelectObject(memoryDC, oldBitmap);
+
+	Image result = { { width, height }, Colors::Black };
+	GetBitmapBits(bitmap, width * height * sizeof(Color), result.data());
+
+	DeleteDC(memoryDC);
+	DeleteDC(screenDC);
+	DeleteObject(oldBitmap);
+	DeleteObject(bitmap);
+
+	return result;
 }
 
-kl::Image::Image(const UInt2& size, const Color& color) {
-	setSize(size);
+kl::Image::Image() {}
+
+kl::Image::Image(const UInt2& size, const Color& color) : m_Size(size) {
+	m_Pixels.resize(uint64(size.x) * size.y);
 	fill(color);
 }
 
 kl::Image::Image(const String& filePath) {
-	if (!loadFromFile(filePath)) {
-		this->Image::Image();
-	}
+	loadFromFile(filePath);
 }
 
 kl::Vector<kl::Color>::iterator kl::Image::begin() {
@@ -59,10 +79,25 @@ kl::UInt2 kl::Image::getSize() const {
 	return m_Size;
 }
 
-void kl::Image::setSize(const UInt2& size) {
+void kl::Image::setSize(const UInt2& size, bool scale) {
 	if (size != m_Size) {
-		m_Pixels.resize(uint64(size.x) * size.y);
-		m_Size = size;
+		Image result = { size };
+		if (scale) {
+			Float2 ratio = Float2(m_Size) / size;
+			for (UInt2 pos; pos.y < size.y; pos.y++) {
+				for (pos.x = 0; pos.x < size.x; pos.x++) {
+					result[pos] = getPixel(ratio * pos);
+				}
+			}
+		}
+		else {
+			for (UInt2 pos; pos.y < std::min(size.y, m_Size.y); pos.y++) {
+				for (pos.x = 0; pos.x < std::min(size.x, m_Size.x); pos.x++) {
+					result[pos] = (*this)[pos];
+				}
+			}
+		}
+		*this = result;
 	}
 }
 
@@ -77,6 +112,14 @@ void kl::Image::setPixel(const UInt2& coords, const Color& color) {
 	if (coords.x < m_Size.x && coords.y < m_Size.y) {
 		m_Pixels[uint64(coords.y) * m_Size.x + coords.x] = color;
 	}
+}
+
+kl::Color& kl::Image::operator[](const UInt2& coords) {
+	return m_Pixels[uint64(coords.y) * m_Size.x + coords.x];
+}
+
+const kl::Color& kl::Image::operator[](const UInt2& coords) const {
+	return m_Pixels[uint64(coords.y) * m_Size.x + coords.x];
 }
 
 kl::Color* kl::Image::data() {

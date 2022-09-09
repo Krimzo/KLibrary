@@ -8,16 +8,17 @@ struct ExampleStruct {
 };
 
 int main() {
-	ExampleStruct exampleData[5] = {};
+	constexpr int dataSize = 10;
+	ExampleStruct exampleData[dataSize] = {};
 
 	GPU gpu = {};
 
-	dx::Buffer buffer = gpu.newStructuredBuffer(exampleData, 5, sizeof(ExampleStruct), true, true);
+	dx::Buffer buffer = gpu.newStructuredBuffer(exampleData, dataSize, sizeof(ExampleStruct), true, true);
 	dx::AccessView shaderView = gpu.newAccessView(buffer);
 
 	dx::ComputeShader computeShader = gpu.newComputeShader(Files::ReadString("Examples/Shaders/ComputeTest2.hlsl"));
 	gpu.bindComputeAccessView(shaderView, 0);
-	gpu.executeComputeShader(computeShader, { 1, 1, 1 });
+	gpu.executeComputeShader(computeShader, { dataSize, 1, 1 });
 
 	gpu.readFromResource(exampleData, buffer, sizeof(exampleData));
 
