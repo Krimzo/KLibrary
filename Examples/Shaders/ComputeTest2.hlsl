@@ -1,4 +1,4 @@
-// Compue shader
+// Compute shader
 struct ExampleStruct {
     float3 position;
 };
