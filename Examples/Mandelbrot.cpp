@@ -58,6 +58,7 @@ static void Input(Window& window, float deltaTime) {
 	static int lastScroll = window.mouse.getScroll();
 	int currentScroll = window.mouse.getScroll();
 	iterations += (currentScroll - lastScroll) * (window.keyboard.shift ? 10 : 1);
+	iterations = max(iterations, 0);
 	lastScroll = currentScroll;
 }
 
