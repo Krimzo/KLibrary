@@ -40,6 +40,11 @@ namespace kl {
 		template<typename T0, typename T1>
 		Vector4(const T0& x, const T1& y, const Vector2<T>& v) : x(T(x)), y(T(y)), z(v.x), w(v.y) {}
 
+		template<typename T0>
+		static Vector4<T> Splash(const T0& value) {
+			return { value, value, value, value };
+		}
+
 		Vector4(const Color& color) : x(ToFloatColor(color.r)), y(ToFloatColor(color.g)), z(ToFloatColor(color.b)), w(ToFloatColor(color.a)) {}
 
 		T& operator[](int ind) {

@@ -43,6 +43,11 @@ namespace kl {
 		template<typename T0, typename T1>
 		Vector2(const T0& x, const T1& y) : x(T(x)), y(T(y)) {}
 
+		template<typename T0>
+		static Vector2<T> Splash(const T0& value) {
+			return { value, value };
+		}
+
 		T& operator[](int ind) {
 			return data[ind];
 		}

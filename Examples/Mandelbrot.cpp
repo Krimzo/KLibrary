@@ -90,8 +90,8 @@ static void ConsoleRead() {
 
 int main() {
 	Window window = { { 1600, 900 }, "Mandelbrot" };
-	GPU gpu = GPU(window);
-	Timer timer;
+	GPU gpu = window.getWindow();
+	Timer timer = {};
 
 	window.onResize = [&](Int2 newSize) {
 		if (newSize.x > 0 && newSize.y > 0) {

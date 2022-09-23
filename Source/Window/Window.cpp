@@ -63,12 +63,8 @@ kl::Window::~Window() {
 	UnregisterClassA(m_Name.c_str(), m_Instance);
 }
 
-kl::Window::operator HWND() const {
+HWND kl::Window::getWindow() const {
 	return m_Window;
-}
-
-kl::Window::operator bool() const {
-	return isOpen();
 }
 
 bool kl::Window::process(bool wait) {

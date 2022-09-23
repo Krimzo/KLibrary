@@ -41,8 +41,7 @@ namespace kl {
 		void operator=(const Window&) = delete;
 		~Window();
 
-		operator HWND() const;
-		operator bool() const;
+		HWND getWindow() const;
 
 		bool process(bool wait = true);
 
