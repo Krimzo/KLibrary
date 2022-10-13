@@ -17,7 +17,7 @@ static UInt3 CalculateWindowDispatch(const Window& window) {
 
 int main() {
 	Window window = { { 1600, 900 }, "Testing" };
-	GPU gpu = GPU(window);
+	GPU gpu = { window.getWindow() };
 	Timer timer = {};
 
 	window.setResizeable(false);

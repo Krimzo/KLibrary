@@ -25,7 +25,7 @@ static Vector<Ref<Entity>> entities;
 
 int main() {
 	window = Make<Window>(UInt2(1600, 900), "Geometry Test");
-	gpu = Make<GPU>(*window);
+	gpu = Make<GPU>(window->getWindow());
 
 	window->onResize = [&](UInt2 newSize) {
 		if (newSize.x > 0 && newSize.y > 0) {

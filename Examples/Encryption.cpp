@@ -2,7 +2,7 @@
 
 
 int main() {
-	kl::Encrypter encrypter;
+	kl::Encrypter encrypter = {};
 
 	kl::Mat4 data = kl::Mat4::Scaling({ 1.0f, 2.0f, 3.0f });
 	kl::Print(kl::Colors::Sky, data);

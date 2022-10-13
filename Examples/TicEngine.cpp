@@ -7,7 +7,7 @@ enum ID {
 	Engine = 1
 };
 
-static const kl::Int2 Sizes = { 3, 900 };
+static const kl::Int2 Sizes = { 3, 901 };
 static const kl::Color COLOR_PLAYER = kl::Colors::Orange;
 static const kl::Color COLOR_ENGINE = kl::Colors::Green;
 
@@ -154,6 +154,8 @@ int main() {
 
 	kl::Window window = { { Sizes.y, Sizes.y }, "Tic Engine" };
 	kl::Image frame = { window.getSize(), kl::Colors::Gray };
+
+	window.setResizeable(false);
 
 	while (window.process(false)) {
 		const int eval = Evaluate(board);

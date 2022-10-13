@@ -21,7 +21,7 @@ int main() {
 	kl::Window window = { { 1600, 900 }, "Raytracing" };
 	kl::Timer timer;
 
-	kl::GPU gpu = kl::GPU(window);
+	kl::GPU gpu = { window.getWindow() };
 	kl::Camera camera;
 
 	kl::dx::Buffer screenMesh;

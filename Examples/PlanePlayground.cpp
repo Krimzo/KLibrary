@@ -117,7 +117,7 @@ static void CameraMovement() {
 
 int main() {
 	window = Make<Window>(UInt2(1600, 900), "Plane Playground");
-	gpu = Make<GPU>(*window);
+	gpu = Make<GPU>(window->getWindow());
 
 	SetupInput();
 
