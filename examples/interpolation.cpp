@@ -1,65 +1,71 @@
-#include "KrimzLib.h"
+#include "klib.h"
 
 
-static constexpr float fpsLimit = 165.0f;
+static constexpr float fps_limit = 165.0f;
 
 int main() {
-	kl::Window window = { { 900, 900 }, "Interpolation" };
-	kl::Image frame = { window.getSize() };
-	kl::Timer timer;
+	kl::window window = { { 900, 900 }, "Interpolation" };
+	auto frame = kl::image(window.size());
+	kl::timer timer;
 
-	kl::Float2 A = { 50.0f, (frame.getHeight() - 1.0f) / 3.0f };
-	kl::Float2 B = { (frame.getWidth() - 1.0f) / 3.0f, frame.getHeight() - 51.0f };
-	kl::Float2 C = { frame.getWidth() - 51.0f, (frame.getHeight() - 1.0f) * 0.667f };
-	kl::Float2 D = { (frame.getWidth() - 1.0f) * 0.667f, 50.0f };
+	kl::float2 position_a = { 50.0f, (frame.height() - 1.0f) / 3.0f };
+	kl::float2 position_b = { (frame.width() - 1.0f) / 3.0f, frame.height() - 51.0f };
+	kl::float2 position_c = { frame.width() - 51.0f, (frame.height() - 1.0f) * 0.667f };
+	kl::float2 position_d = { (frame.width() - 1.0f) * 0.667f, 50.0f };
 
-	kl::Color colA = kl::Colors::Red;
-	kl::Color colB = kl::Colors::White;
-	kl::Color colC = kl::Colors::Blue;
-	kl::Color colD = kl::Colors::Green;
+	kl::color color_a = kl::colors::red;
+	kl::color color_b = kl::colors::white;
+	kl::color color_c = kl::colors::blue;
+	kl::color color_d = kl::colors::green;
 
-	kl::Triangle T1 = { { { A, 0.5f } }, { { B, 0.5f } }, { { C, 0.5f } } };
-	kl::Triangle T2 = { { { A, 0.5f } }, { { D, 0.5f } }, { { C, 0.5f } } };
+	kl::triangle triangle_1 = {
+		kl::vertex(kl::float3(position_a, 0.5f)), kl::vertex(kl::float3(position_b, 0.5f)),
+		kl::vertex(kl::float3(position_c, 0.5f))
+	};
+	kl::triangle triangle_2 = {
+		kl::vertex(kl::float3(position_a, 0.5f)), kl::vertex(kl::float3(position_d, 0.5f)),
+		kl::vertex(kl::float3(position_c, 0.5f))
+	};
 
-	const kl::Float4 t1Consts = T1.getConstants();
-	const kl::Float4 t2Consts = T2.getConstants();
+	const kl::float4 t1_constants = triangle_1.get_constants();
+	const kl::float4 t2_constants = triangle_2.get_constants();
 
-	kl::uint frameIndex = 0;
+	uint32_t frame_index = 0;
 	while (window.process(false)) {
 		timer.reset();
 
-		for (kl::uint x = frameIndex - frame.getHeight(), y = 0; y < frame.getHeight(); x++, y++) {
-			const kl::Float3 t1Weights = T1.getWeights(t1Consts, { x, y });
-			const kl::Float3 t2Weights = T2.getWeights(t2Consts, { x, y });
+		for (uint32_t x = frame_index - frame.height(), y = 0; y < frame.height(); x++, y++) {
+			const kl::float3 t1_weights = triangle_1.get_weights(t1_constants, { x, y });
+			const kl::float3 t2_weights = triangle_2.get_weights(t2_constants, { x, y });
 
-			kl::Color pixel;
-			if (T1.isInTriangle(t1Weights)) {
-				pixel.r = byte(T1.interpolate(t1Weights, { colA.r, colB.r, colC.r }));
-				pixel.g = byte(T1.interpolate(t1Weights, { colA.g, colB.g, colC.g }));
-				pixel.b = byte(T1.interpolate(t1Weights, { colA.b, colB.b, colC.b }));
+			kl::color pixel;
+			if (kl::triangle::is_in_triangle(t1_weights)) {
+				pixel.r = static_cast<uint8_t>(kl::triangle::interpolate(t1_weights, {color_a.r, color_b.r, color_c.r}));
+				pixel.g = static_cast<uint8_t>(kl::triangle::interpolate(t1_weights, { color_a.g, color_b.g, color_c.g }));
+				pixel.b = static_cast<uint8_t>(kl::triangle::interpolate(t1_weights, { color_a.b, color_b.b, color_c.b }));
 			}
-			else if (T2.isInTriangle(t2Weights)) {
-				pixel.r = byte(T2.interpolate(t2Weights, { colA.r, colD.r, colC.r }));
-				pixel.g = byte(T2.interpolate(t2Weights, { colA.g, colD.g, colC.g }));
-				pixel.b = byte(T2.interpolate(t2Weights, { colA.b, colD.b, colC.b }));
+			else if (kl::triangle::is_in_triangle(t2_weights)) {
+				pixel.r = static_cast<uint8_t>(kl::triangle::interpolate(t2_weights, { color_a.r, color_d.r, color_c.r }));
+				pixel.g = static_cast<uint8_t>(kl::triangle::interpolate(t2_weights, { color_a.g, color_d.g, color_c.g }));
+				pixel.b = static_cast<uint8_t>(kl::triangle::interpolate(t2_weights, { color_a.b, color_d.b, color_c.b }));
 			}
 			else {
-				pixel = kl::Colors::Gray;
+				pixel = kl::colors::gray;
 			}
 
-			frame.setPixel({ x, y }, pixel);
-			frame.setPixel({ x + 1, y }, kl::Random::COLOR());
-			frame.setPixel({ x + 2, y }, kl::Random::COLOR());
+			frame.set_pixel({ x, y }, pixel);
+			frame.set_pixel({ x + 1, y }, kl::random::get_color());
+			frame.set_pixel({ x + 2, y }, kl::random::get_color());
 		}
 
-		window.drawImage(frame);
+		window.draw_image(frame);
 
-		window.setTitle(kl::Format(int((100.0f * frameIndex) / (frame.getWidth() + frame.getHeight() - 1)), "%"));
+		window.set_title(kl::format(static_cast<int>((100.0f * frame_index) / (frame.width() + frame.height() - 1)), "%"));
 
-		kl::Time::Wait((1.0f / fpsLimit) - timer.getElapsed());
+		kl::time::wait((1.0f / fps_limit) - timer.get_elapsed());
 
-		if (++frameIndex == frame.getWidth() + frame.getHeight()) {
-			window.setTitle("Finished!");
+		if (++frame_index == frame.width() + frame.height()) {
+			window.set_title("Finished!");
 			while (window.process());
 		}
 	}

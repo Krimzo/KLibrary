@@ -1,130 +1,127 @@
-#include "KrimzLib.h"
-
-using namespace kl;
+#include "klib.h"
 
 
-struct VS_CB {
-	Mat4 WMatrix;
-	Mat4 VPMatrix;
-	Float4 miscData;
+struct vs_cb {
+	kl::mat4 WMatrix;
+	kl::mat4 VPMatrix;
+	kl::float4 miscData;
 };
 
-struct PS_CB {
-	Float4 objectColor;
-	Float4 sunDirection;
+struct ps_cb {
+	kl::float4 objectColor;
+	kl::float4 sunDirection;
 };
 
-static Ref<Window> window;
-static Ref<GPU> gpu;
-static Timer timer;
-static Camera camera;
+static kl::ref<kl::window> window;
+static kl::ref<kl::gpu> gpu;
+static kl::timer timer;
+static kl::camera camera;
 
-static Float3 sunDirection = { 1.0f, -1.0f, 0.0f };
+static kl::float3 sun_direction = { 1.0f, -1.0f, 0.0f };
 
-static Vector<Ref<Entity>> entities;
+static std::vector<kl::ref<kl::entity>> entities;
 
 int main() {
-	window = Make<Window>(UInt2(1600, 900), "Geometry Test");
-	gpu = Make<GPU>(window->getWindow());
+	window = kl::make<kl::window>(kl::uint2(1600, 900), "Geometry Test");
+	gpu = kl::make<kl::gpu>(window->get_window());
 
-	window->onResize = [&](UInt2 newSize) {
-		if (newSize.x > 0 && newSize.y > 0) {
-			gpu->resizeInternal(newSize);
-			gpu->setViewport(newSize);
-			camera.updateAspectRatio(newSize);
+	window->on_resize = [&](kl::uint2 new_size) {
+		if (new_size.x > 0 && new_size.y > 0) {
+			gpu->resize_internal(new_size);
+			gpu->set_viewport(new_size);
+			camera.update_aspect_ratio(new_size);
 		}
 	};
 	window->maximize();
 
-	window->keyboard.v.onPress = [&]() {
+	window->keyboard.v.on_press = [&] {
 		static bool wireframeBound = true;
-		static dx::RasterState solidRaster = gpu->newRasterState(false, false);
-		static dx::RasterState wireframeRaster = gpu->newRasterState(true, false);
+		static kl::dx::raster_state solidRaster = gpu->new_raster_state(false, false);
+		static kl::dx::raster_state wireframeRaster = gpu->new_raster_state(true, false);
 		if (wireframeBound) {
-			gpu->bindRasterState(solidRaster);
+			gpu->bind_raster_state(solidRaster);
 		}
 		else {
-			gpu->bindRasterState(wireframeRaster);
+			gpu->bind_raster_state(wireframeRaster);
 		}
 		wireframeBound = !wireframeBound;
 	};
-	window->keyboard.v.onPress();
+	window->keyboard.v.on_press();
 
-	String shadersSource = Files::ReadString("Examples/Shaders/GeometryTest.hlsl");
-	Shaders defaultShaders = gpu->newShaders(shadersSource);
-	dx::GeometryShader geometryShader = gpu->newGeometryShader(shadersSource);
+	std::string shaders_source = kl::files::read_string("examples/shaders/geometry_test.hlsl");
+	kl::shaders default_shaders = gpu->new_shaders(shaders_source);
+	kl::dx::geometry_shader geometry_shader = gpu->new_geometry_shader(shaders_source);
 
-	gpu->bindShaders(defaultShaders);
-	gpu->bindGeometryShader(geometryShader);
+	gpu->bind_shaders(default_shaders);
+	gpu->bind_geometry_shader(geometry_shader);
 
-	dx::Buffer cubeMesh = gpu->newVertexBuffer("Examples/Meshes/Cube.obj");
-	dx::Buffer sphereMesh = gpu->newVertexBuffer("Examples/Meshes/Sphere.obj");
-	dx::Buffer monkeMesh = gpu->newVertexBuffer("Examples/Meshes/Monke.obj");
+	kl::dx::buffer cube_mesh = gpu->new_vertex_buffer("examples/meshes/Cube.obj");
+	kl::dx::buffer sphere_mesh = gpu->new_vertex_buffer("examples/meshes/Sphere.obj");
+	kl::dx::buffer monke_mesh = gpu->new_vertex_buffer("examples/meshes/Monke.obj");
 
-	Ref<Entity> mainEntity = Make<Entity>();
-	mainEntity->angular.y = -36.0f;
-	mainEntity->mesh = monkeMesh;
-	mainEntity->color = Colors::Orange;
-	entities.push_back(mainEntity);
+	kl::ref<kl::entity> main_entity = kl::make<kl::entity>();
+	main_entity->angular.y = -36.0f;
+	main_entity->mesh = monke_mesh;
+	main_entity->color = kl::float4(kl::colors::orange);
+	entities.push_back(main_entity);
 
-	window->keyboard.num1.onPress = [&]() {
-		mainEntity->mesh = cubeMesh;
+	window->keyboard.num1.on_press = [&] {
+		main_entity->mesh = cube_mesh;
 	};
-	window->keyboard.num2.onPress = [&]() {
-		mainEntity->mesh = sphereMesh;
+	window->keyboard.num2.on_press = [&] {
+		main_entity->mesh = sphere_mesh;
 	};
-	window->keyboard.num3.onPress = [&]() {
-		mainEntity->mesh = monkeMesh;
+	window->keyboard.num3.on_press = [&] {
+		main_entity->mesh = monke_mesh;
 	};
 
-	float destroyGoal = 0.0f;
-	float destroyValue = 0.0f;
-	window->keyboard.space.onPress = [&]() {
-		destroyGoal = 1.5f;
+	float destroy_goal = 0.0f;
+	float destroy_value = 0.0f;
+	window->keyboard.space.on_press = [&] {
+		destroy_goal = 1.5f;
 	};
 
 	camera.position = { -2.0f, 2.0f, -2.0f };
-	camera.setForward(camera.position.negate());
+	camera.set_forward(camera.position.negate());
 
 	while (window->process(false)) {
-		timer.updateInterval();
+		timer.update_interval();
 
 		for (auto& entity : entities) {
-			entity->updatePhysics(timer.getInterval());
+			entity->update_physics(timer.get_interval());
 		}
 
-		if (destroyValue < destroyGoal) {
-			destroyValue += timer.getInterval() * 5.0f;
+		if (destroy_value < destroy_goal) {
+			destroy_value += timer.get_interval() * 5.0f;
 		}
 		else {
-			destroyGoal = -INFINITY;
-			destroyValue -= timer.getInterval() * 0.25f;
+			destroy_goal = -INFINITY;
+			destroy_value -= timer.get_interval() * 0.25f;
 		}
 
-		gpu->clearInternal();
+		gpu->clear_internal();
 
-		VS_CB vscb = {};
+		vs_cb vscb = {};
 		vscb.VPMatrix = camera.matrix();
 
-		PS_CB pscb = {};
-		pscb.sunDirection = { sunDirection.normalize(), 0.0f };
+		ps_cb pscb = {};
+		pscb.sunDirection = { sun_direction.normalize(), 0.0f };
 
 		for (auto& entity : entities) {
 			if (entity) {
 				vscb.WMatrix = entity->matrix();
-				vscb.miscData.x = max(destroyValue, 0.0f);
-
-				gpu->autoVertexCBuffer(vscb);
+				vscb.miscData.x = std::max(destroy_value, 0.0f);
+				gpu->set_vertex_const_buffer(vscb);
 
 				pscb.objectColor = entity->color;
-				gpu->autoPixelCBuffer(pscb);
+				gpu->set_pixel_const_buffer(pscb);
 
 				if (entity->mesh) {
-					gpu->drawVertexBuffer(entity->mesh);
+					gpu->draw_vertex_buffer(entity->mesh);
 				}
 			}
 		}
 
-		gpu->swapBuffers(true);
+		gpu->swap_buffers(true);
 	}
 }

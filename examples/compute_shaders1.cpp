@@ -1,65 +1,65 @@
-#include "KrimzLib.h"
+#include "klib.h"
 
 using namespace kl;
 
 
-struct CS_CB {
-	Float4 miscData;
+struct cs_cb {
+	float4 misc_data;
 };
 
-static UInt3 CalculateWindowDispatch(const Window& window) {
+static uint3 calculate_window_dispatch(const window& window) {
 	return {
-		(window.getWidth() / 32) + ((window.getWidth() % 32) ? 1 : 0),
-		(window.getHeight() / 32) + ((window.getHeight() % 32) ? 1 : 0),
+		(window.width() / 32) + ((window.width() % 32) ? 1 : 0),
+		(window.height() / 32) + ((window.height() % 32) ? 1 : 0),
 		1
 	};
 }
 
 int main() {
-	Window window = { { 1600, 900 }, "Testing" };
-	GPU gpu = { window.getWindow() };
-	Timer timer = {};
+	window window = { { 1600, 900 }, "Testing" };
+	auto gpu = kl::gpu(window.get_window());
+	timer timer = {};
 
-	window.setResizeable(false);
+	window.set_resizeable(false);
 
-	gpu.bindDepthState(gpu.newDepthState(false, false, false));
+	gpu.bind_depth_state(gpu.new_depth_state(false, false, false));
 
-	dx::Texture renderTexture = gpu.newTexture(Image({ 1600, 900 }, kl::Colors::Gray), true, true);
-	dx::ShaderView pixelShaderView = gpu.newShaderView(renderTexture);
-	dx::AccessView computeShaderView = gpu.newAccessView(renderTexture);
-	dx::TargetView targetView = gpu.newTargetView(renderTexture);
+	dx::texture render_texture = gpu.new_texture(image(uint2(1600, 900), colors::gray), true, true);
+	dx::shader_view pixel_shader_view = gpu.new_shader_view(render_texture);
+	dx::access_view compute_shader_view = gpu.new_access_view(render_texture);
+	dx::target_view target_view = gpu.new_target_view(render_texture);
 
-	String shadersSource = Files::ReadString("Examples/Shaders/ComputeTest.hlsl");
-	Shaders defaultShaders = gpu.newShaders(shadersSource);
-	dx::ComputeShader computeShader = gpu.newComputeShader(shadersSource);
+	std::string shaders_source = files::read_string("examples/shaders/compute_test1.hlsl");
+	shaders default_shaders = gpu.new_shaders(shaders_source);
+	dx::compute_shader compute_shader = gpu.new_compute_shader(shaders_source);
 
-	gpu.bindShaders(defaultShaders);
-	gpu.bindComputeShader(computeShader);
+	gpu.bind_shaders(default_shaders);
+	gpu.bind_compute_shader(compute_shader);
 
-	dx::Buffer screenMesh = gpu.generateScreenMesh();
+	dx::buffer screen_mesh = gpu.generate_screen_mesh();
 
 	while (window.process(false)) {
-		timer.updateInterval();
+		timer.update_interval();
 
-		gpu.bindComputeShaderView(nullptr, 0);
-		gpu.bindPixelShaderView(nullptr, 0);
-		gpu.clearTargetView(targetView, Colors::Gray);
+		gpu.bind_compute_shader_view(nullptr, 0);
+		gpu.bind_pixel_shader_view(nullptr, 0);
+		gpu.clear_target_view(target_view, float4(colors::gray));
 
-		CS_CB csData = {};
-		csData.miscData.x = (float)window.mouse.getPosition().x;
-		csData.miscData.y = (float)window.mouse.getPosition().y;
-		gpu.autoComputeCBuffer(csData);
+		cs_cb cs_data = {};
+		cs_data.misc_data.x = static_cast<float>(window.mouse.position().x);
+		cs_data.misc_data.y = static_cast<float>(window.mouse.position().y);
+		gpu.set_compute_const_buffer(cs_data);
 
-		gpu.bindPixelShaderView(nullptr, 0);
-		gpu.bindComputeAccessView(computeShaderView, 0);
-		gpu.dispatchComputeShader(CalculateWindowDispatch(window));
+		gpu.bind_pixel_shader_view(nullptr, 0);
+		gpu.bind_compute_access_view(compute_shader_view, 0);
+		gpu.dispatch_compute_shader(calculate_window_dispatch(window));
 
-		gpu.bindComputeAccessView(nullptr, 0);
-		gpu.bindPixelShaderView(pixelShaderView, 0);
-		gpu.drawVertexBuffer(screenMesh);
+		gpu.bind_compute_access_view(nullptr, 0);
+		gpu.bind_pixel_shader_view(pixel_shader_view, 0);
+		gpu.draw_vertex_buffer(screen_mesh);
 
-		gpu.swapBuffers(true);
+		gpu.swap_buffers(true);
 
-		window.setTitle(Format(int(1.0f / timer.getInterval())));
+		window.set_title(format(static_cast<int>(1.0f / timer.get_interval())));
 	}
 }

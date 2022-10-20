@@ -1,110 +1,109 @@
-#include "KrimzLib.h"
+#include "klib.h"
 
 
-static void DrawAxis(kl::Image& frame, const kl::Color& color = { 75, 75, 75 }) {
-	frame.drawLine({ 0, frame.getHeight() / 2 }, { frame.getWidth(), frame.getHeight() / 2 }, color);
-	frame.drawLine({ frame.getWidth() / 2, 0 }, { frame.getWidth() / 2, frame.getHeight() }, color);
+static void draw_axis(kl::image& frame, const kl::color& color = { 75, 75, 75 }) {
+	frame.draw_line(kl::int2(0, frame.height() / 2), { frame.width(), frame.height() / 2 }, color);
+	frame.draw_line(kl::int2(frame.width() / 2, 0), { frame.width() / 2, frame.height() }, color);
 }
 
-static void DrawData(kl::Image& frame, kl::Vector<kl::Int2>& data, const kl::Color& color = kl::Colors::Orange) {
-	const kl::UInt2 halfSize = frame.getSize() / 2;
+static void draw_data(kl::image& frame, std::vector<kl::int2>& data, const kl::color& color = kl::colors::orange) {
+	const kl::uint2 half_size = frame.size() / 2;
 	for (auto& val : data) {
-		frame.setPixel(val * kl::Int2(1, -1) + halfSize, color);
+		frame.set_pixel(kl::uint2(val) * kl::uint2(1, -1) + half_size, color);
 	}
 }
 
-static void DrawLine(kl::Image& frame, const kl::Float2& equat, const kl::Color& color = kl::Colors::Sky) {
-	const kl::Int2 halfSize = frame.getSize() / 2;
-	const kl::Int2 pos1 = kl::Int2(-halfSize.x, int(-halfSize.x * equat.x + equat.y)) * kl::Int2(1, -1) + halfSize;
-	const kl::Int2 pos2 = kl::Int2(halfSize.x, int(halfSize.x * equat.x + equat.y)) * kl::Int2(1, -1) + halfSize;
-	frame.drawLine(pos1, pos2, color);
+static void draw_line(kl::image& frame, const kl::float2& equat, const kl::color& color = kl::colors::sky) {
+	const auto half_size = kl::int2(frame.size() / 2);
+	const kl::int2 pos1 = kl::int2(-half_size.x, static_cast<int>(-half_size.x * equat.x + equat.y)) * kl::int2(1, -1) + half_size;
+	const kl::int2 pos2 = kl::int2(half_size.x, static_cast<int>(half_size.x * equat.x + equat.y)) * kl::int2(1, -1) + half_size;
+	frame.draw_line(pos1, pos2, color);
 }
 
-static float CalculateOffsets(const kl::Vector<kl::Int2>& data, const kl::Float2& lineEquat) {
+static float calculate_offsets(const std::vector<kl::int2>& data, const kl::float2& line_equat) {
 	float sum = 0.0f;
 	for (auto& val : data) {
-		sum += abs(val.y - (val.x * lineEquat.x + lineEquat.y));
+		sum += abs(val.y - (val.x * line_equat.x + line_equat.y));
 	}
 	return sum;
 }
 
-static void DrawOffset(kl::Image& frame, const kl::Vector<kl::Int2>& data, const kl::Float2& lineEquat, const kl::Color& color = kl::Colors::Yellow) {
-	static size_t dataIndex = 0;
-	if (data.size() > 0) {
-		dataIndex = (dataIndex + 1) % data.size();
-		const kl::Int2 halfSize = frame.getSize() / 2;
-		const kl::Int2 pos1 = kl::Int2(data[dataIndex].x, int(data[dataIndex].y)) * kl::Int2(1, -1) + halfSize;
-		const kl::Int2 pos2 = kl::Int2(data[dataIndex].x, int(data[dataIndex].x * lineEquat.x + lineEquat.y)) * kl::Int2(1, -1) + halfSize;
-		frame.drawLine(pos1, pos2, color);
+static void draw_offset(kl::image& frame, const std::vector<kl::int2>& data, const kl::float2& lineEquat, const kl::color& color = kl::colors::yellow) {
+	if (!data.empty()) {
+		static size_t data_index = 0;
+		data_index = (data_index + 1) % data.size();
+		const auto half_size = kl::int2(frame.size() / 2);
+		const kl::int2 pos1 = kl::int2(data[data_index].x, data[data_index].y) * kl::int2(1, -1) + half_size;
+		const kl::int2 pos2 = kl::int2(data[data_index].x, static_cast<int>(data[data_index].x * lineEquat.x + lineEquat.y)) * kl::int2(1, -1) + half_size;
+		frame.draw_line(pos1, pos2, color);
 	}
 }
 
-static void CalculateImprovedLine(const kl::Vector<kl::Int2>& data, kl::Float2& lineEquat) {
-	static kl::uint64 lastDataSize = 0;
-	static kl::Float2 alterX(10.0f, 0.0f);
-	static kl::Float2 alterY(0.0f, 10.0f);
+static void calculate_improved_line(const std::vector<kl::int2>& data, kl::float2& line_equat) {
+	static kl::float2 alter_x(10.0f, 0.0f);
+	static kl::float2 alter_y(0.0f, 10.0f);
 
-	if (data.size() != lastDataSize) {
-		lastDataSize = data.size();
-		alterX = { 10.0f, 0.0f };
-		alterY = { 0.0f, 10.0f };
-		lineEquat = { 1.0f, 0.0f };
+	if (static uint64_t last_data_size = 0; data.size() != last_data_size) {
+		last_data_size = data.size();
+		alter_x = { 10.0f, 0.0f };
+		alter_y = { 0.0f, 10.0f };
+		line_equat = { 1.0f, 0.0f };
 	}
 
-	const float origSum = CalculateOffsets(data, lineEquat);
+	const float orig_sum = calculate_offsets(data, line_equat);
 
-	if (CalculateOffsets(data, lineEquat + alterX) < origSum) {
-		lineEquat += alterX;
+	if (calculate_offsets(data, line_equat + alter_x) < orig_sum) {
+		line_equat += alter_x;
 	}
-	else if (CalculateOffsets(data, lineEquat - alterX) < origSum) {
-		lineEquat -= alterX;
+	else if (calculate_offsets(data, line_equat - alter_x) < orig_sum) {
+		line_equat -= alter_x;
 	}
 	else {
-		alterX *= 0.75f;
+		alter_x *= 0.75f;
 	}
 
-	if (CalculateOffsets(data, lineEquat + alterY) < origSum) {
-		lineEquat += alterY;
+	if (calculate_offsets(data, line_equat + alter_y) < orig_sum) {
+		line_equat += alter_y;
 	}
-	else if (CalculateOffsets(data, lineEquat - alterY) < origSum) {
-		lineEquat -= alterY;
+	else if (calculate_offsets(data, line_equat - alter_y) < orig_sum) {
+		line_equat -= alter_y;
 	}
 	else {
-		alterY *= 0.75f;
+		alter_y *= 0.75f;
 	}
 }
 
 int main() {
-	kl::Window window = { { 1600, 900 }, "Data Line" };
-	kl::Image frame = { window.getSize() };
+	kl::window window = { { 1600, 900 }, "Data Line" };
+	auto frame = kl::image(window.size());
 
-	kl::Vector<kl::Int2> data;
-	kl::Float2 lineEquat(1.0f, 0.0f);
+	std::vector<kl::int2> data;
+	kl::float2 line_equat(1.0f, 0.0f);
 
-	window.mouse.left.onDown = [&]() {
-		static kl::Int2 lastData = {};
-		kl::Int2 newData = window.mouse.getPosition() * kl::Int2(1, -1);
-		newData -= kl::Int2(frame.getSize()) / kl::Int2(2, -2);
-		if (newData != lastData) {
+	window.mouse.left.on_down = [&] {
+		static kl::int2 last_data = {};
+		kl::int2 newData = window.mouse.position() * kl::int2(1, -1);
+		newData -= kl::int2(frame.size()) / kl::int2(2, -2);
+		if (newData != last_data) {
 			data.push_back(newData);
-			lastData = newData;
+			last_data = newData;
 		}
 	};
 
-	window.keyboard.r.onPress = [&]() {
+	window.keyboard.r.on_press = [&] {
 		data.clear();
 	};
 
 	while (window.process(false)) {
-		frame.fill(kl::Colors::Gray);
+		frame.fill(kl::colors::gray);
 
-		DrawAxis(frame);
-		DrawData(frame, data);
-		DrawLine(frame, lineEquat);
-		DrawOffset(frame, data, lineEquat);
+		draw_axis(frame);
+		draw_data(frame, data);
+		draw_line(frame, line_equat);
+		draw_offset(frame, data, line_equat);
 
-		CalculateImprovedLine(data, lineEquat);
+		calculate_improved_line(data, line_equat);
 
-		window.drawImage(frame);
+		window.draw_image(frame);
 	}
 }

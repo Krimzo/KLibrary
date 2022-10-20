@@ -1,31 +1,30 @@
-#include "KrimzLib.h"
+#include "klib.h"
 
 using namespace kl;
 
 
-struct ExampleStruct {
-	Float3 position;
+struct example_struct {
+	float3 position;
 };
 
 int main() {
-	constexpr int dataSize = 10;
-	ExampleStruct exampleData[dataSize] = {};
+	constexpr int data_size = 10;
+	example_struct example_data[data_size] = {};
 
-	GPU gpu = {};
+	gpu gpu = {};
 
-	dx::Buffer buffer = gpu.newStructuredBuffer(exampleData, dataSize, sizeof(ExampleStruct), true, true);
-	dx::AccessView shaderView = gpu.newAccessView(buffer);
+	const dx::buffer buffer = gpu.new_structured_buffer(example_data, data_size, sizeof(example_struct), true, true);
+	const dx::access_view shader_view = gpu.new_access_view(buffer);
 
-	dx::ComputeShader computeShader = gpu.newComputeShader(Files::ReadString("Examples/Shaders/ComputeTest2.hlsl"));
-	gpu.bindComputeAccessView(shaderView, 0);
-	gpu.executeComputeShader(computeShader, { dataSize, 1, 1 });
+	const dx::compute_shader compute_shader = gpu.new_compute_shader(files::read_string("examples/shaders/compute_test2.hlsl"));
+	gpu.bind_compute_access_view(shader_view, 0);
+	gpu.execute_compute_shader(compute_shader, { data_size, 1, 1 });
 
-	gpu.readFromResource(exampleData, buffer, sizeof(exampleData));
+	gpu.read_from_resource(example_data, buffer, sizeof(example_data));
 
-	for (auto& example : exampleData) {
-		Print(example.position);
+	for (auto& [position] : example_data) {
+		print(position);
 	}
 
-
-	Get();
+	kl::get();
 }

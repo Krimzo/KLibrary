@@ -1,18 +1,17 @@
-﻿#include "KrimzLib.h"
+﻿#include "klib.h"
 
 
 int main() {
-	kl::Encrypter encrypter = {};
+	const kl::encryptor encryptor = {};
 
-	kl::Mat4 data = kl::Mat4::Scaling({ 1.0f, 2.0f, 3.0f });
-	kl::Print(kl::Colors::Sky, data);
+	kl::mat4 data = kl::mat4::scaling({ 1.0f, 2.0f, 3.0f });
+	print(kl::colors::sky, data);
 
-	encrypter.encrypt(data);
-	kl::Print(kl::Colors::Orange, data);
+	encryptor.encrypt(data);
+	print(kl::colors::orange, data);
 
-	encrypter.decrypt(data);
-	kl::Print(kl::Colors::Cyan, data);
+	encryptor.decrypt(data);
+	print(kl::colors::cyan, data);
 
-
-	kl::Get();
+	kl::get();
 }
