@@ -43,13 +43,19 @@ namespace kl {
 		{}
 
 		template<typename T0, typename T1, typename T2>
-		vector3(const T0& x, const T1& y, const T2& z) : x(T(x)), y(T(y)), z(T(z)) {}
+		vector3(const T0& x, const T1& y, const T2& z)
+			: x(T(x)), y(T(y)), z(T(z))
+		{}
 
 		template<typename T0>
-		vector3(const vector2<T>& v, const T0& z) : x(v.x), y(v.y), z(T(z)) {}
+		vector3(const vector2<T>& v, const T0& z)
+			: x(v.x), y(v.y), z(T(z))
+		{}
 
 		template<typename T0>
-		vector3(const T0& x, const vector2<T>& v) : x(T(x)), y(v.x), z(v.y) {}
+		vector3(const T0& x, const vector2<T>& v)
+			: x(T(x)), y(v.x), z(v.y)
+		{}
 
 		explicit vector3(const color& color)
 			: x(to_float_color(color.r)), y(to_float_color(color.g)), z(to_float_color(color.b))

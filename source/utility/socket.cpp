@@ -31,7 +31,7 @@ kl::socket::socket()
     address_.sin_addr.s_addr = INADDR_ANY;
 }
 
-kl::socket::socket(const std::string& address, uint32_t port)
+kl::socket::socket(const std::string& address, const uint32_t port)
     : socket()
 {
     set_address(address);

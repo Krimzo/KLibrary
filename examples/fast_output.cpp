@@ -3,7 +3,8 @@
 
 static constexpr int N = 10000;
 
-int main() {
+int main()
+{
 	float times[3] = {};
 
 	kl::console::clear();

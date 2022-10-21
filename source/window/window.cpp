@@ -253,11 +253,11 @@ void kl::window::draw_pixel_data(const color* data, const uint2& size, const int
     bitmap_info.bmiHeader.biCompression = BI_RGB;
     bitmap_info.bmiHeader.biBitCount = 32;
     bitmap_info.bmiHeader.biPlanes = 1;
-    bitmap_info.bmiHeader.biWidth = size.x;
+    bitmap_info.bmiHeader.biWidth = static_cast<LONG>(size.x);
     bitmap_info.bmiHeader.biHeight = -static_cast<int>(size.y);
 
-    StretchDIBits(device_context_, position.x, position.y, size.x, size.y, 0, 0, size.x, size.y, data, &bitmap_info,
-                  DIB_RGB_COLORS, SRCCOPY);
+    StretchDIBits(device_context_, position.x, position.y, static_cast<int>(size.x), static_cast<int>(size.y), 0, 0,
+                  static_cast<int>(size.x), static_cast<int>(size.y), data, &bitmap_info, DIB_RGB_COLORS, SRCCOPY);
 }
 
 void kl::window::draw_image(const image& image, const int2& position) const

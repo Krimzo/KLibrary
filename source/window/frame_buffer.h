@@ -15,7 +15,7 @@ namespace kl {
         explicit frame_buffer(const uint2& size);
         frame_buffer(const frame_buffer&) = delete;
         frame_buffer(const frame_buffer&&) = delete;
-        ~frame_buffer() = default;
+        ~frame_buffer();
 
         void operator=(const frame_buffer&) = delete;
         void operator=(const frame_buffer&&) = delete;
@@ -24,7 +24,7 @@ namespace kl {
 
         image* back_buffer();
 
-        void display(window& window);
+        void display(const window& window);
 
         void swap();
     };

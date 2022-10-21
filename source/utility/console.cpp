@@ -25,7 +25,6 @@ void kl::get()
 bool kl::warning(const bool occured, const std::string& message, const bool wait)
 {
     if (occured) {
-        console::set_enabled(true);
         print(colors::orange, "Warning: ", message);
 
         if (wait) {
@@ -40,7 +39,6 @@ bool kl::warning(const bool occured, const std::string& message, const bool wait
 void kl::assert(const bool occured, const std::string& message, const bool wait)
 {
     if (occured) {
-        console::set_enabled(true);
         print(colors::red, "Error: ", message);
 
         if (wait) {

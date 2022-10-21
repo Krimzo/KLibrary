@@ -1,15 +1,17 @@
 #include "klib.h"
 
 
-struct vs_cb {
-	kl::mat4 WMatrix;
-	kl::mat4 VPMatrix;
-	kl::float4 miscData;
+struct vs_cb
+{
+	kl::mat4 w_matrix;
+	kl::mat4 vp_matrix;
+	kl::float4 misc_data;
 };
 
-struct ps_cb {
-	kl::float4 objectColor;
-	kl::float4 sunDirection;
+struct ps_cb
+{
+	kl::float4 object_color;
+	kl::float4 sun_direction;
 };
 
 static kl::ref<kl::window> window;
@@ -21,7 +23,8 @@ static kl::float3 sun_direction = { 1.0f, -1.0f, 0.0f };
 
 static std::vector<kl::ref<kl::entity>> entities;
 
-int main() {
+int main()
+{
 	window = kl::make<kl::window>(kl::uint2(1600, 900), "Geometry Test");
 	gpu = kl::make<kl::gpu>(window->get_window());
 
@@ -102,18 +105,18 @@ int main() {
 		gpu->clear_internal();
 
 		vs_cb vscb = {};
-		vscb.VPMatrix = camera.matrix();
+		vscb.vp_matrix = camera.matrix();
 
 		ps_cb pscb = {};
-		pscb.sunDirection = { sun_direction.normalize(), 0.0f };
+		pscb.sun_direction = { sun_direction.normalize(), 0.0f };
 
 		for (auto& entity : entities) {
 			if (entity) {
-				vscb.WMatrix = entity->matrix();
-				vscb.miscData.x = std::max(destroy_value, 0.0f);
+				vscb.w_matrix = entity->matrix();
+				vscb.misc_data.x = std::max(destroy_value, 0.0f);
 				gpu->set_vertex_const_buffer(vscb);
 
-				pscb.objectColor = entity->color;
+				pscb.object_color = entity->color;
 				gpu->set_pixel_const_buffer(pscb);
 
 				if (entity->mesh) {

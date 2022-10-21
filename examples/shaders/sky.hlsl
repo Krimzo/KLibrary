@@ -1,39 +1,41 @@
 // Vertex shader
-float4 vShader(float3 pos : KL_Position) : SV_Position {
+float4 v_shader(float3 pos : KL_Position) : SV_Position
+{
     return float4(pos, 1);
 }
 
 // Pixel shader
-cbuffer PS_CB : register(b0) {
-    float4 frameSize;
-    matrix inverseCamera;
-    float4 cameraPosition;
-    float4 sunDirection;
+cbuffer PS_CB : register(b0)
+{
+    float4 frame_size;
+    matrix inverse_camera;
+    float4 camera_position;
+    float4 sun_direction;
 }
 
-float4 pShader(float4 screen : SV_Position) : SV_Target {
+static const float3 sky_top_color = { 0.62f, 0.77f, 0.88f };
+static const float3 sky_bottom_color = { 0.89f, 0.93f, 0.96f };
+static const float3 sun_sky_color = { 0.98f, 0.9f, 0.76f };
+static const float2 sun_size = { 0.75f, 1.55f };
+
+float4 p_shader(float4 screen : SV_Position) : SV_Target
+{
     float3 pixel = 0;
     
-    float2 ndc = float2(screen.x, frameSize.y - screen.y) / float2(frameSize.x, frameSize.y);
+    float2 ndc = float2(screen.x, frame_size.y - screen.y) / float2(frame_size.x, frame_size.y);
     ndc = ndc * 2 - 1;
 	
-    float4 ray = mul(float4(ndc, 1, 1), inverseCamera);
+    float4 ray = mul(float4(ndc, 1, 1), inverse_camera);
     ray /= ray.w;
-    
-    float3 rayDir = normalize(ray.xyz);
-    
-    const float3 skyTopColor = { 0.62f, 0.77f, 0.88f };
-    const float3 skyBottomColor = { 0.89f, 0.93f, 0.96f };
-    const float3 sunSkyColor = { 0.98f, 0.9f, 0.76f };
-	
-    const float2 sunRadiuses = { 0.75f, 1.55f };
 
-    const float skyMixValue = (dot(-rayDir, float3(0, 1, 0)) + 1) * 0.5f;
-    pixel = lerp(skyTopColor, skyBottomColor, skyMixValue);
-    pixel *= dot(-sunDirection.xyz, float3(0, 1, 0));
+    const float3 ray_direction = normalize(ray.xyz);
+
+    const float sky_mix_value = (dot(-ray_direction, float3(0, 1, 0)) + 1) * 0.5f;
+    pixel = lerp(sky_top_color, sky_bottom_color, sky_mix_value);
+    pixel *= dot(-sun_direction.xyz, float3(0, 1, 0));
 		
-    const float sunAngle = degrees(acos(dot(rayDir, -sunDirection.xyz)));
-    pixel = lerp(sunSkyColor, pixel, smoothstep(sunRadiuses.x, sunRadiuses.y, sunAngle));
+    const float sun_angle = degrees(acos(dot(ray_direction, -sun_direction.xyz)));
+    pixel = lerp(sun_sky_color, pixel, smoothstep(sun_size.x, sun_size.y, sun_angle));
     
     return float4(pixel, 1);
 }

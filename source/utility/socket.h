@@ -8,10 +8,10 @@ namespace kl {
     class socket
     {
     public:
+        inline static const std::string self_ip = "127.0.0.1";
         static void init_utility();
         static void free_utility();
-        static constexpr std::string self_ip = "127.0.0.1";
-
+        
     private:
         sockaddr_in address_ = {};
         uint64_t socket_ = {};

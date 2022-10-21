@@ -1,25 +1,29 @@
 // Compute shader
-cbuffer CS_CB {
-    float4 miscData;
+cbuffer CS_CB
+{
+    float4 misc_data;
 };
 
-RWTexture2D<float4> WriteMap : register(u0);
+RWTexture2D<float4> write_map : register(u0);
 
 [numthreads(32, 32, 1)]
-void cShader(uint3 ID : SV_DispatchThreadID) {
-    if (ID.x <= miscData.x && ID.y <= miscData.y) {
-        WriteMap[ID.xy] = float4(0.27f, 0.56f, 0.44f, 1.0f);
+void c_shader(uint3 thread_id : SV_DispatchThreadID)
+{
+    if (thread_id.x <= misc_data.x && thread_id.y <= misc_data.y) {
+        write_map[thread_id.xy] = float4(0.27f, 0.56f, 0.44f, 1.0f);
     }
 }
 
 // Vertex shader
-float4 vShader(float3 position : KL_Position) : SV_Position {
+float4 v_shader(float3 position : KL_Position) : SV_Position
+{
     return float4(position, 1.0f);
 }
 
 // Pixel shader
-Texture2D ReadMap : register(t0);
+Texture2D read_map : register(t0);
 
-float4 pShader(float4 position : SV_Position) : SV_Target {
-    return ReadMap[position.xy];
+float4 p_shader(float4 position : SV_Position) : SV_Target
+{
+    return read_map[position.xy];
 }

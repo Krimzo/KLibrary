@@ -1,48 +1,49 @@
-#include "KrimzLib.h"
+#include "klib.h"
 
 
-int main(int argc, const char** argv) {
-	kl::String filePath;
+int main(const int argc, const char** argv)
+{
+	std::string filepath;
 	if (argc == 2) {
-		filePath = argv[1];
+		filepath = argv[1];
 	}
 	else {
-		kl::Print<false>("Video file path: ");
-		std::getline(std::cin, filePath);
+		kl::print<false>("Video file path: ");
+		std::getline(std::cin, filepath);
 	}
 
-	kl::Video video(filePath);
-	kl::Assert(!video, "Failed to open video file \"" + filePath + "\"");
+	const kl::video video(filepath);
+	kl::assert(!video.is_open(), "Failed to open video file \"" + filepath + "\"");
 
-	kl::Console::Clear();
-	kl::Print<false>("Resize the console and press enter..");
-	kl::Get();
+	kl::console::clear();
+	kl::print<false>("Resize the console and press enter..");
+	kl::get();
 
-	const kl::Int2 consoleSize = kl::Console::GetSize() - kl::Int2(0, 1);
-	kl::Console::SetCursorEnabled(false);
+	const kl::uint2 console_size = kl::console::size() - kl::uint2(0, 1);
+	kl::console::set_cursor_enabled(false);
 
-	const kl::uint64 frameCount = video.frameCount();
-	kl::Vector<kl::String> asciiFrames;
-	asciiFrames.reserve(frameCount);
+	const uint32_t frame_count = video.frame_count();
+	std::vector<std::string> ascii_frames;
+	ascii_frames.reserve(frame_count);
 
-	kl::Image videoFrame;
-	kl::Console::Clear();
-	while (video.getFrame(videoFrame)) {
-		asciiFrames.push_back(videoFrame.asASCII(consoleSize));
-		kl::Console::MoveCursor({});
-		kl::Print<false>("Processed: ", asciiFrames.size(), "/", frameCount);
+	kl::console::clear();
+	kl::image video_frame;
+	while (video.get_next_frame(video_frame)) {
+		ascii_frames.push_back(video_frame.as_ascii(console_size));
+		kl::console::move_cursor({});
+		kl::print<false>("Processed: ", ascii_frames.size(), "/", frame_count);
 	}
 
-	kl::Timer timer;
-	kl::Console::Clear();
-	float toWait = 1.0f / video.fps();
+	kl::timer timer;
+	kl::console::clear();
+	const float to_wait = 1.0f / video.fps();
 
 	while (true) {
-		for (kl::uint64 i = 0; i < asciiFrames.size(); i++) {
+		for (uint64_t i = 0; i < ascii_frames.size(); i++) {
 			timer.reset();
-			kl::Console::DumpData(asciiFrames[i]);
-			kl::Console::SetTitle(kl::Format(i + 1, "/", asciiFrames.size()));
-			while (timer.getElapsed() < toWait);
+			kl::console::dump(ascii_frames[i]);
+			kl::console::set_title(kl::format(i + 1, "/", ascii_frames.size()));
+			while (timer.get_elapsed() < to_wait);
 		}
 	}
 }

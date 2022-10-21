@@ -1,34 +1,37 @@
-#include "KrimzLib.h"
+#include "klib.h"
 
 
-static void Server() {
-	kl::Socket server(kl::Socket::Self, 1709);
+static void server()
+{
+	std::string da = kl::socket::self_ip;
+	kl::socket server(kl::socket::self_ip, 1709);
 
 	server.listen(1);
 
-	kl::Socket client = server.accept();
-	client.send<kl::Float3>({ 1.0f, 2.0f, 3.0f });
+	if (const kl::socket client = server.accept(); client.send<kl::float3>({ 1.0f, 2.0f, 3.0f })) {
+		kl::print("Data sent!");
+	}
 }
 
-static void Client() {
-	kl::Socket client(kl::Socket::Self, 1709);
+static void client()
+{
+	kl::socket client(kl::socket::self_ip, 1709);
 
 	client.connect();
 
-	kl::Float3 res;
-	client.receive(res);
-	kl::Print("Result: ", res);
+	kl::float3 result = {};
+	client.receive(result);
+	print("Received: ", result);
 }
 
-int main() {
-	kl::Socket::Init();
+int main()
+{
+	kl::socket::init_utility();
 
-	kl::Thread(Server).detach();
-	kl::Time::Wait(0.25f);
+	std::thread(server).detach();
+	kl::time::wait(0.25f);
+	std::thread(client).detach();
 
-	kl::Thread(Client).detach();
-
-	kl::Get();
-
-	kl::Socket::Uninit();
+	kl::get();
+	kl::socket::free_utility();
 }

@@ -1,11 +1,13 @@
 // Compute shader
-struct ExampleStruct {
+struct example_struct
+{
     float3 position;
 };
 
-RWStructuredBuffer<ExampleStruct> DataMap : register(u0);
+RWStructuredBuffer<example_struct> data_map : register(u0);
 
 [numthreads(1, 1, 1)]
-void cShader(uint3 ID : SV_DispatchThreadID) {
-    DataMap[ID.x].position = ID.x;
+void c_shader(uint3 thread_id : SV_DispatchThreadID)
+{
+    data_map[thread_id.x].position = thread_id.x;
 }

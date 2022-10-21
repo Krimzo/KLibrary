@@ -1,7 +1,8 @@
 ﻿#include "klib.h"
 
 
-int main() {
+int main()
+{
 	const kl::encryptor encryptor = {};
 
 	kl::mat4 data = kl::mat4::scaling({ 1.0f, 2.0f, 3.0f });

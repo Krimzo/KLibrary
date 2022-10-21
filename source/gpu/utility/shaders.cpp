@@ -58,7 +58,7 @@ kl::dx::vertex_shader kl::gpu::new_vertex_shader(const std::string& source, dx::
 {
     shader_blobs blobs = {};
 
-    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "vShader", "vs_5_0", NULL, NULL, &blobs.data,
+    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "v_shader", "vs_5_0", NULL, NULL, &blobs.data,
                &blobs.error);
     if (warning(!blobs, "Failed to compile vertex shader. Error: " + blobs.get_error())) {
         return nullptr;
@@ -107,7 +107,7 @@ kl::dx::pixel_shader kl::gpu::new_pixel_shader(const std::string& source)
 {
     shader_blobs blobs = {};
 
-    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "pShader", "ps_5_0", NULL, NULL, &blobs.data,
+    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "p_shader", "ps_5_0", NULL, NULL, &blobs.data,
                &blobs.error);
     if (warning(!blobs, "Failed to compile pixel shader. Error: " + blobs.get_error())) {
         return nullptr;
@@ -128,7 +128,7 @@ kl::dx::geometry_shader kl::gpu::new_geometry_shader(const std::string& source)
 {
     shader_blobs blobs = {};
 
-    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "gShader", "gs_5_0", NULL, NULL, &blobs.data,
+    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "g_shader", "gs_5_0", NULL, NULL, &blobs.data,
                &blobs.error);
     if (warning(!blobs, "Failed to compile geometry shader. Error: " + blobs.get_error())) {
         return nullptr;
@@ -149,7 +149,7 @@ kl::dx::compute_shader kl::gpu::new_compute_shader(const std::string& source)
 {
     shader_blobs blobs = {};
 
-    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "cShader", "cs_5_0", NULL, NULL, &blobs.data,
+    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "c_shader", "cs_5_0", NULL, NULL, &blobs.data,
                &blobs.error);
     if (warning(!blobs, "Failed to compile compute shader. Error: " + blobs.get_error())) {
         return nullptr;
