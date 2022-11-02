@@ -28,7 +28,7 @@ int main()
 	window = kl::make<kl::window>(kl::uint2(1600, 900), "Geometry Test");
 	gpu = kl::make<kl::gpu>(window->get_window());
 
-	window->on_resize = [&](kl::uint2 new_size) {
+	window->on_resize = [&](const kl::uint2 new_size) {
 		if (new_size.x > 0 && new_size.y > 0) {
 			gpu->resize_internal(new_size);
 			gpu->set_viewport(new_size);
@@ -38,16 +38,16 @@ int main()
 	window->maximize();
 
 	window->keyboard.v.on_press = [&] {
-		static bool wireframeBound = true;
-		static kl::dx::raster_state solidRaster = gpu->new_raster_state(false, false);
-		static kl::dx::raster_state wireframeRaster = gpu->new_raster_state(true, false);
-		if (wireframeBound) {
-			gpu->bind_raster_state(solidRaster);
+		static bool wireframe_bound = true;
+		static kl::dx::raster_state solid_raster = gpu->new_raster_state(false, false);
+		static kl::dx::raster_state wireframe_raster = gpu->new_raster_state(true, false);
+		if (wireframe_bound) {
+			gpu->bind_raster_state(solid_raster);
 		}
 		else {
-			gpu->bind_raster_state(wireframeRaster);
+			gpu->bind_raster_state(wireframe_raster);
 		}
-		wireframeBound = !wireframeBound;
+		wireframe_bound = !wireframe_bound;
 	};
 	window->keyboard.v.on_press();
 
@@ -104,20 +104,20 @@ int main()
 
 		gpu->clear_internal();
 
-		vs_cb vscb = {};
-		vscb.vp_matrix = camera.matrix();
+		vs_cb vs_data = {};
+		vs_data.vp_matrix = camera.matrix();
 
-		ps_cb pscb = {};
-		pscb.sun_direction = { sun_direction.normalize(), 0.0f };
+		ps_cb ps_data = {};
+		ps_data.sun_direction = { sun_direction.normalize(), 0.0f };
 
 		for (auto& entity : entities) {
 			if (entity) {
-				vscb.w_matrix = entity->matrix();
-				vscb.misc_data.x = std::max(destroy_value, 0.0f);
-				gpu->set_vertex_const_buffer(vscb);
+				vs_data.w_matrix = entity->matrix();
+				vs_data.misc_data.x = std::max(destroy_value, 0.0f);
+				gpu->set_vertex_const_buffer(vs_data);
 
-				pscb.object_color = entity->color;
-				gpu->set_pixel_const_buffer(pscb);
+				ps_data.object_color = entity->color;
+				gpu->set_pixel_const_buffer(ps_data);
 
 				if (entity->mesh) {
 					gpu->draw_vertex_buffer(entity->mesh);
