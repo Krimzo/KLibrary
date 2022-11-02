@@ -2,7 +2,7 @@
 
 
 kl::mouse::mouse()
-    : left(lmb), middle(mmb), right(rmb)
+    : left(0), middle(1), right(2)
 {}
 
 kl::mouse::~mouse()

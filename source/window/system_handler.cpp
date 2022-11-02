@@ -46,27 +46,27 @@ void kl::window::handle_message(const MSG& message)
         break;
 
     case WM_LBUTTONDOWN:
-        mouse.left.update_value(mouse::type::lmb, true);
+        mouse.left.update_value(0, true);
         break;
 
     case WM_LBUTTONUP:
-        mouse.left.update_value(mouse::type::lmb, false);
+        mouse.left.update_value(0, false);
         break;
 
     case WM_MBUTTONDOWN:
-        mouse.middle.update_value(mouse::type::mmb, true);
+        mouse.middle.update_value(1, true);
         break;
 
     case WM_MBUTTONUP:
-        mouse.middle.update_value(mouse::type::mmb, false);
+        mouse.middle.update_value(1, false);
         break;
 
     case WM_RBUTTONDOWN:
-        mouse.right.update_value(mouse::type::rmb, true);
+        mouse.right.update_value(2, true);
         break;
 
     case WM_RBUTTONUP:
-        mouse.right.update_value(mouse::type::rmb, false);
+        mouse.right.update_value(2, false);
         break;
 
     case WM_MOUSEMOVE:

@@ -109,7 +109,7 @@ int main()
     window.maximize();
 
     // Start
-    gpu.bind_shaders(gpu.new_shaders(kl::files::read_string("Examples/Shaders/Mandelbrot.hlsl")));
+    gpu.bind_shaders(gpu.new_shaders(kl::files::read_string("examples/shaders/mandelbrot.hlsl")));
     const kl::dx::buffer screen_mesh = gpu.generate_screen_mesh();
 
     // Console

@@ -8,15 +8,6 @@
 namespace kl {
     class mouse
     {
-    public:
-        enum type
-        {
-            lmb = 0,
-            mmb,
-            rmb
-        };
-        
-    private:
         HWND window_ = nullptr;
         int2 position_ = {};
         bool hidden_ = false;
