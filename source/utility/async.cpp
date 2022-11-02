@@ -8,14 +8,10 @@ void kl::async::loop(const int64_t start_inclusive, const int64_t end_exclusive,
     std::atomic work_counter = start_inclusive;
 
     for (uint32_t t = 0; t < thread_count; t++) {
-        workers[t] = std::thread([&, t]()
-        {
-            int64_t work_index;
-            do {
-                work_index = work_counter++;
+        workers[t] = std::thread([&, t] {
+            for (int64_t work_index = work_counter++; work_index < end_exclusive; work_index = work_counter++) {
                 loop_body(t, work_index);
             }
-            while (work_index < end_exclusive);
         });
     }
 
