@@ -24,7 +24,7 @@ kl::gpu::gpu()
         compute_const_buffers_[i] = new_const_buffer((i + 1) * 16);
     }
 
-    creation_type_ = compute;
+    creation_type_ = gpu_creation_type::compute;
 }
 
 kl::gpu::gpu(const HWND window)
@@ -65,6 +65,7 @@ kl::gpu::gpu(const HWND window)
 
     resize_internal({window_client_area.right, window_client_area.bottom});
     set_viewport({window_client_area.right, window_client_area.bottom});
+    bind_raster_state(new_raster_state(false, false));
 
     for (int i = 0; i < cbuffer_predefined_size; i++) {
         const int buffer_size = (i + 1) * 16;
@@ -73,7 +74,7 @@ kl::gpu::gpu(const HWND window)
         compute_const_buffers_[i] = new_const_buffer(buffer_size);
     }
 
-    creation_type_ = render;
+    creation_type_ = gpu_creation_type::render;
 }
 
 kl::gpu::~gpu()
@@ -83,7 +84,7 @@ kl::gpu::~gpu()
     }
     children_.clear();
 
-    if (creation_type_ == render) {
+    if (creation_type_ == gpu_creation_type::render) {
         chain_->SetFullscreenState(false, nullptr);
         chain_->Release();
     }
@@ -92,7 +93,7 @@ kl::gpu::~gpu()
     device_->Release();
 }
 
-kl::gpu::creation_type kl::gpu::type() const
+kl::gpu_creation_type kl::gpu::type() const
 {
     return creation_type_;
 }

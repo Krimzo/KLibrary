@@ -18,7 +18,8 @@
 #include <d3d11.h>
 
 // Undef windows garbage defines
-#define byte _KL_UNUSED_
+#undef byte
+#undef BYTE
 
 #undef min
 #undef max

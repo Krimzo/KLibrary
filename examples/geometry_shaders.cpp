@@ -58,9 +58,9 @@ int main()
 	gpu->bind_shaders(default_shaders);
 	gpu->bind_geometry_shader(geometry_shader);
 
-	kl::dx::buffer cube_mesh = gpu->new_vertex_buffer("examples/meshes/Cube.obj");
-	kl::dx::buffer sphere_mesh = gpu->new_vertex_buffer("examples/meshes/Sphere.obj");
-	kl::dx::buffer monke_mesh = gpu->new_vertex_buffer("examples/meshes/Monke.obj");
+	kl::dx::buffer cube_mesh = gpu->new_vertex_buffer("examples/meshes/cube.obj", true);
+	kl::dx::buffer sphere_mesh = gpu->new_vertex_buffer("examples/meshes/sphere.obj", true);
+	kl::dx::buffer monke_mesh = gpu->new_vertex_buffer("examples/meshes/monke.obj", true);
 
 	kl::ref<kl::entity> main_entity = kl::make<kl::entity>();
 	main_entity->angular.y = -36.0f;

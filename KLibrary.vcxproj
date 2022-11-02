@@ -58,7 +58,7 @@
         <ClInclude Include="source\window\system_handler.h" />
     </ItemGroup>
     <ItemGroup>
-        <ClCompile Include="examples\mandelbrot.cpp" />
+        <ClCompile Include="examples\geometry_shaders.cpp" />
         <ClCompile Include="source\gpu\buffer\buffer.cpp" />
         <ClCompile Include="source\gpu\buffer\const_buffer.cpp" />
         <ClCompile Include="source\gpu\gpu.cpp" />

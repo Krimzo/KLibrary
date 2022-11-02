@@ -5,12 +5,12 @@
 
 namespace kl {
     template <typename T>
-    struct matrix4_x4 : matrix<T, 4, 4>
+    struct matrix4x4 : matrix<T, 4, 4>
     {
-        matrix4_x4()
+        matrix4x4()
         {}
 
-        matrix4_x4(const vector4<T>& r0, const vector4<T>& r1, const vector4<T>& r2, const vector4<T>& r3)
+        matrix4x4(const vector4<T>& r0, const vector4<T>& r1, const vector4<T>& r2, const vector4<T>& r3)
         {
             (*this)[0] = r0.x;
             (*this)[1] = r0.y;
@@ -30,26 +30,26 @@ namespace kl {
             (*this)[15] = r3.w;
         }
 
-        matrix4_x4(const matrix<T, 4, 4>& mat)
+        matrix4x4(const matrix<T, 4, 4>& mat)
             : matrix<T, 4, 4>(mat)
         {}
 
-        static matrix4_x4<T> translation(const vector3<T>& translation)
+        static matrix4x4<T> translation(const vector3<T>& translation)
         {
-            matrix4_x4<T> result;
+            matrix4x4<T> result;
             result[3] = translation.x;
             result[7] = translation.y;
             result[11] = translation.z;
             return result;
         }
 
-        static matrix4_x4<T> rotation(const vector3<T>& rotation)
+        static matrix4x4<T> rotation(const vector3<T>& rotation)
         {
             const T x_rad = math::to_radians(rotation.x);
             const T x_sin = std::sin(x_rad);
             const T x_cos = std::cos(x_rad);
 
-            matrix4_x4<T> x_rot;
+            matrix4x4<T> x_rot;
             x_rot[5] = x_cos;
             x_rot[6] = -x_sin;
             x_rot[9] = x_sin;
@@ -59,7 +59,7 @@ namespace kl {
             const T y_sin = std::sin(y_rad);
             const T y_cos = std::cos(y_rad);
 
-            matrix4_x4<T> y_rot;
+            matrix4x4<T> y_rot;
             y_rot[0] = y_cos;
             y_rot[2] = y_sin;
             y_rot[8] = -y_sin;
@@ -69,7 +69,7 @@ namespace kl {
             const T z_sin = std::sin(z_rad);
             const T z_cos = std::cos(z_rad);
 
-            matrix4_x4<T> z_rot;
+            matrix4x4<T> z_rot;
             z_rot[0] = z_cos;
             z_rot[1] = -z_sin;
             z_rot[4] = z_sin;
@@ -78,20 +78,20 @@ namespace kl {
             return z_rot * y_rot * x_rot;
         }
 
-        static matrix4_x4<T> scaling(const vector3<T>& scale)
+        static matrix4x4<T> scaling(const vector3<T>& scale)
         {
-            matrix4_x4<T> result;
+            matrix4x4<T> result;
             result[0] = scale.x;
             result[5] = scale.y;
             result[10] = scale.z;
             return result;
         }
 
-        static matrix4_x4<T> perspective(T field_of_view, T aspect_ratio, T near_plane, T far_plane)
+        static matrix4x4<T> perspective(T field_of_view, T aspect_ratio, T near_plane, T far_plane)
         {
             const T tan_half = static_cast<T>(1.0f / std::tan(math::to_radians(field_of_view) * 0.5f));
 
-            matrix4_x4<T> result;
+            matrix4x4<T> result;
             result[0] = tan_half / aspect_ratio;
             result[5] = tan_half;
             result[10] = (-far_plane - near_plane) / (near_plane - far_plane);
@@ -101,9 +101,9 @@ namespace kl {
             return result;
         }
 
-        static matrix4_x4<T> orthographic(T left, T right, T bottom, T top, T near_plane, T far_plane)
+        static matrix4x4<T> orthographic(T left, T right, T bottom, T top, T near_plane, T far_plane)
         {
-            matrix4_x4<T> result;
+            matrix4x4<T> result;
             result[0] = static_cast<T>(2.0f) / (right - left);
             result[5] = static_cast<T>(2.0f) / (top - bottom);
             result[10] = static_cast<T>(-2.0f) / (far_plane - near_plane);
@@ -113,13 +113,13 @@ namespace kl {
             return result;
         }
 
-        static matrix4_x4<T> look_at(const vector3<T>& position, const vector3<T>& target, const vector3<T>& up)
+        static matrix4x4<T> look_at(const vector3<T>& position, const vector3<T>& target, const vector3<T>& up)
         {
             const vector3<T> f = (target - position).normalize();
             const vector3<T> s = up.cross(f).normalize();
             const vector3<T> u = f.cross(s);
 
-            matrix4_x4<T> result;
+            matrix4x4<T> result;
             result[0] = s.x;
             result[1] = s.y;
             result[2] = s.z;
@@ -138,11 +138,11 @@ namespace kl {
 }
 
 namespace kl {
-    using float4x4 = matrix4_x4<float>;
-    using double4x4 = matrix4_x4<double>;
-    using int4x4 = matrix4_x4<int32_t>;
-    using uint4x4 = matrix4_x4<uint32_t>;
-    using bool4x4 = matrix4_x4<bool>;
+    using float4x4 = matrix4x4<float>;
+    using double4x4 = matrix4x4<double>;
+    using int4x4 = matrix4x4<int32_t>;
+    using uint4x4 = matrix4x4<uint32_t>;
+    using bool4x4 = matrix4x4<bool>;
 
     using mat4 = float4x4;
     using d_mat4 = double4x4;

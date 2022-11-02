@@ -18,7 +18,7 @@ namespace kl::files {
 
     bool append_string(const std::string& filepath, const std::string& data, int position = -1);
 
-    std::vector<vertex> parse_mesh(const std::string& filepath, bool flip_z = true);
+    std::vector<vertex> parse_mesh(const std::string& filepath, bool flip_z);
 }
 
 namespace kl {
@@ -28,14 +28,13 @@ namespace kl {
 
     public:
         file();
-
         explicit file(const std::string& filepath, bool clear = true);
-
         file(const file&) = delete;
+        file(const file&&) = delete;
+        ~file();
 
         void operator=(const file&) = delete;
-
-        ~file();
+        void operator=(const file&&) = delete;
 
         explicit operator bool() const;
 
@@ -49,9 +48,9 @@ namespace kl {
 
         bool move(int64_t delta) const;
 
-        bool rewind() const;
+        [[nodiscard]] bool rewind() const;
 
-        bool unwind() const;
+        [[nodiscard]] bool unwind() const;
 
         [[nodiscard]] int64_t tell() const;
 

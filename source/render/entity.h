@@ -8,7 +8,7 @@ namespace kl {
     class entity
     {
     public:
-        float3 scale = {1.0f, 1.0f, 1.0f};
+        float3 scale = float3::splash(1);
         float3 position = {};
         float3 rotation = {};
 

@@ -22,20 +22,20 @@ namespace kl {
 }
 
 namespace kl {
+    enum class gpu_creation_type
+    {
+        none = 0,
+        render,
+        compute
+    };
+}
+
+namespace kl {
     inline constexpr int cbuffer_predefined_size = 64;
 
     class gpu
     {
-    public:
-        enum creation_type
-        {
-            none = 0,
-            render,
-            compute
-        };
-
-    private:
-        creation_type creation_type_ = none;
+        gpu_creation_type creation_type_ = gpu_creation_type::none;
 
         dx::device device_ = nullptr;
         dx::context context_ = nullptr;
@@ -60,7 +60,7 @@ namespace kl {
         void operator=(const gpu&) = delete;
         void operator=(const gpu&&) = delete;
 
-        [[nodiscard]] creation_type type() const;
+        [[nodiscard]] gpu_creation_type type() const;
         [[nodiscard]] dx::device device() const;
         [[nodiscard]] dx::context context() const;
         [[nodiscard]] dx::chain chain() const;
@@ -174,7 +174,7 @@ namespace kl {
 
         // Vertex buffer
         dx::buffer new_vertex_buffer(const std::vector<vertex>& vertex_data);
-        dx::buffer new_vertex_buffer(const std::string& filepath, bool flip_z = true);
+        dx::buffer new_vertex_buffer(const std::string& filepath, bool flip_z);
 
         dx::buffer generate_screen_mesh();
         dx::buffer generate_plane_mesh(float size, int num_of_points);

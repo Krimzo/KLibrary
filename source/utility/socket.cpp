@@ -6,11 +6,18 @@
 
 static std::atomic wsa_initialised = false;
 
+static constexpr WORD make_word(const int a, const int b)
+{
+    const WORD first_part = static_cast<uint8_t>(static_cast<DWORD_PTR>(a) & 0xff);
+    const WORD second_part = static_cast<uint8_t>(static_cast<DWORD_PTR>(b) & 0xff);
+    return static_cast<WORD>(first_part | second_part << 8);
+}
+
 void kl::socket::init_utility()
 {
     if (!wsa_initialised) {
         WSADATA wsa_data = {};
-        assert(WSAStartup(MAKEWORD(2, 2), &wsa_data), "Failed to initialize WSA");
+        assert(WSAStartup(make_word(2, 2), &wsa_data), "Failed to initialize WSA");
         wsa_initialised = true;
     }
 }
