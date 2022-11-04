@@ -1,7 +1,7 @@
 #include "window/key.h"
 
 
-kl::key::key(const int64_t type)
+kl::key::key(const WPARAM type)
     : type_(type)
 {}
 
@@ -13,7 +13,7 @@ bool kl::key::state() const
     return state_;
 }
 
-void kl::key::update_value(const int64_t type, const bool new_state)
+void kl::key::update_value(const WPARAM type, const bool new_state)
 {
     if (type == type_) {
         if (!state_ && new_state) {

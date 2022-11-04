@@ -10,7 +10,7 @@ struct ps_cb
 
 static int iterations = 64;
 static float zoom = 1.0f;
-static kl::float2 position = {-0.5f, 0.0f};
+static kl::float2 position = { -0.5f, 0.0f };
 static kl::color start_color = kl::colors::orange;
 
 static void input(const kl::window& window, const float delta_time)
@@ -42,17 +42,17 @@ static void input(const kl::window& window, const float delta_time)
     }
 
     // Mouse
-    const auto frame_size = kl::int2(window.size());
+    const kl::int2 frame_size = window.size();
     if (window.mouse.left.state()) {
         zoom += zoom * delta_time;
         kl::float2 uv = kl::float2(window.mouse.position()) / kl::float2(frame_size) * 2.0f - kl::float2::splash(1);
-        uv *= static_cast<float>(frame_size.x) / static_cast<float>(frame_size.y);
+        uv *= float(frame_size.x) / frame_size.y;
         position += (uv / zoom) * delta_time;
     }
     if (window.mouse.right.state()) {
         zoom -= zoom * delta_time;
         kl::float2 uv = kl::float2(window.mouse.position()) / kl::float2(frame_size) * 2.0f - kl::float2::splash(1);
-        uv *= static_cast<float>(frame_size.x) / static_cast<float>(frame_size.y);
+        uv *= float(frame_size.x) / frame_size.y;
         position -= (uv / zoom) * delta_time;
     }
 
@@ -69,17 +69,16 @@ static void input(const kl::window& window, const float delta_time)
     while (true) {
         kl::print<false>(kl::colors::console, "Color = ");
 
-        if (std::vector<std::string> parts = kl::strings::split([]
-        {
+        if (std::vector<std::string> parts = kl::strings::split([] {
             std::string line;
             std::getline(std::cin, line);
             return line;
         }(), ' '); parts.size() >= 3) {
             try {
                 kl::color result_color = {};
-                result_color.r = static_cast<uint8_t>(std::stoi(parts[0]));
-                result_color.g = static_cast<uint8_t>(std::stoi(parts[1]));
-                result_color.b = static_cast<uint8_t>(std::stoi(parts[2]));
+                result_color.r = uint8_t(std::stoi(parts[0]));
+                result_color.g = uint8_t(std::stoi(parts[1]));
+                result_color.b = uint8_t(std::stoi(parts[2]));
                 start_color = result_color;
                 print(start_color, "Color updated!");
             }
@@ -95,11 +94,11 @@ static void input(const kl::window& window, const float delta_time)
 
 int main()
 {
-    kl::window window = {kl::uint2{1600, 900}, "Mandelbrot"};
-    auto gpu = kl::gpu(window.get_window());
+    kl::window window = { { 1600, 900 }, "Mandelbrot" };
+    kl::gpu gpu = kl::gpu(window.get_window());
     kl::timer timer = {};
 
-    window.on_resize = [&](const kl::uint2 size)
+    window.on_resize = [&](const kl::int2 size)
     {
         if (size.x > 0 && size.y > 0) {
             gpu.resize_internal(size);
@@ -126,7 +125,7 @@ int main()
         ps_cb ps_data = {};
         ps_data.state_info.xy = position;
         ps_data.state_info.z = zoom;
-        ps_data.state_info.w = static_cast<float>(iterations);
+        ps_data.state_info.w = float(iterations);
         ps_data.frame_size.xy = kl::float2(window.size());
         ps_data.start_color = kl::float4(start_color);
 
@@ -137,7 +136,7 @@ int main()
 
         // Info
         window.set_title(kl::format(
-            "[", std::setw(3), static_cast<int>(1 / timer.get_interval()), "] ",
+            "[", std::setw(3), int(1 / timer.get_interval()), "] ",
             "(Iterations: ", iterations, ") ",
             "(Zoom: ", std::fixed, std::setprecision(2), zoom, ") ",
             "(Position: ", position, ")"

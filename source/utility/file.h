@@ -42,26 +42,26 @@ namespace kl {
 
         bool open(const std::string& filepath, bool clear = true);
 
-        bool close();
+        void close();
 
-        bool seek(int64_t position) const;
+        bool seek(int position) const;
 
-        bool move(int64_t delta) const;
+        bool move(int delta) const;
 
         [[nodiscard]] bool rewind() const;
 
         [[nodiscard]] bool unwind() const;
 
-        [[nodiscard]] int64_t tell() const;
+        [[nodiscard]] int tell() const;
 
         template <typename T>
-        uint64_t read(T& object) const
+        size_t read(T& object) const
         {
             return read(&object, 1);
         }
 
         template <typename T>
-        uint64_t read(T* buffer, const uint64_t count) const
+        size_t read(T* buffer, const size_t count) const
         {
             if (file_) {
                 return fread(buffer, sizeof(T), count, file_);
@@ -70,13 +70,13 @@ namespace kl {
         }
 
         template <typename T>
-        uint64_t write(const T& object)
+        size_t write(const T& object)
         {
             return write(&object, 1);
         }
 
         template <typename T>
-        uint64_t write(const T* buffer, const uint64_t count)
+        size_t write(const T* buffer, const size_t count)
         {
             if (file_) {
                 return fwrite(buffer, sizeof(T), count, file_);

@@ -8,9 +8,9 @@ static std::atomic wsa_initialised = false;
 
 static constexpr WORD make_word(const int a, const int b)
 {
-    const WORD first_part = static_cast<uint8_t>(static_cast<DWORD_PTR>(a) & 0xff);
-    const WORD second_part = static_cast<uint8_t>(static_cast<DWORD_PTR>(b) & 0xff);
-    return static_cast<WORD>(first_part | second_part << 8);
+    const WORD first_part = WORD(DWORD_PTR(a) & 0xff);
+    const WORD second_part = WORD(DWORD_PTR(b) & 0xff);
+    return WORD(first_part | second_part << 8);
 }
 
 void kl::socket::init_utility()
@@ -38,14 +38,14 @@ kl::socket::socket()
     address_.sin_addr.s_addr = INADDR_ANY;
 }
 
-kl::socket::socket(const std::string& address, const uint32_t port)
+kl::socket::socket(const std::string& address, const int port)
     : socket()
 {
     set_address(address);
     set_port(port);
 }
 
-kl::socket::socket(const uint64_t socket)
+kl::socket::socket(const size_t socket)
     : socket_(socket)
 {}
 
@@ -54,7 +54,7 @@ kl::socket::~socket()
     close();
 }
 
-kl::socket::operator uint64_t() const
+size_t kl::socket::get_socket() const
 {
     return socket_;
 }
@@ -76,41 +76,41 @@ void kl::socket::set_address(const std::string& address)
     assert(inet_pton(AF_INET, address.c_str(), &address_.sin_addr) != 1, "Could not convert address");
 }
 
-uint32_t kl::socket::get_port() const
+int kl::socket::get_port() const
 {
     return ntohs(address_.sin_port);
 }
 
-void kl::socket::set_port(const uint32_t port)
+void kl::socket::set_port(const int port)
 {
-    address_.sin_port = htons(static_cast<u_short>(port));
+    address_.sin_port = htons(u_short(port));
 }
 
-void kl::socket::listen(const uint32_t queue_size)
+void kl::socket::listen(const int queue_size)
 {
-    assert(bind(socket_, reinterpret_cast<sockaddr*>(&address_), sizeof(address_)), "Could not bind socket");
-    assert(::listen(socket_, static_cast<int>(queue_size)), "Could not listen on socket");
+    assert(bind(socket_, (sockaddr*) &address_, sizeof(address_)), "Could not bind socket");
+    assert(::listen(socket_, queue_size), "Could not listen on socket");
 }
 
 kl::socket kl::socket::accept()
 {
     int address_length = sizeof(address_);
-    const uint64_t accepted = ::accept(socket_, reinterpret_cast<sockaddr*>(&address_), &address_length);
+    const size_t accepted = ::accept(socket_, (sockaddr*) &address_, &address_length);
     assert(accepted == INVALID_SOCKET, "Could not accept socket");
     return socket(accepted);
 }
 
 void kl::socket::connect()
 {
-    assert(::connect(socket_, reinterpret_cast<sockaddr*>(&address_), sizeof(address_)), "Could not connect to socket");
+    assert(::connect(socket_, (sockaddr*) &address_, sizeof(address_)), "Could not connect to socket");
 }
 
-int kl::socket::send(const void* data, const uint32_t byte_size) const
+int kl::socket::send(const void* data, const int byte_size) const
 {
-    return ::send(socket_, static_cast<const char*>(data), static_cast<int>(byte_size), NULL);
+    return ::send(socket_, (const char*) data, byte_size, NULL);
 }
 
-int kl::socket::receive(void* buff, const uint32_t byte_size) const
+int kl::socket::receive(void* buff, const int byte_size) const
 {
-    return recv(socket_, static_cast<char*>(buff), static_cast<int>(byte_size), NULL);
+    return recv(socket_, (char*) buff, byte_size, NULL);
 }

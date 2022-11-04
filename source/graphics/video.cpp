@@ -72,7 +72,7 @@ kl::video::~video()
 
 bool kl::video::is_open() const
 {
-    return static_cast<bool>(reader_);
+    return bool(reader_);
 }
 
 void kl::video::open(const std::string& filepath)
@@ -99,12 +99,12 @@ void kl::video::close()
     }
 }
 
-uint64_t kl::video::size() const
+size_t kl::video::size() const
 {
     if (reader_) {
         PROPVARIANT var = {};
         if (SUCCEEDED(reader_->GetPresentationAttribute(MF_SOURCE_READER_MEDIASOURCE, MF_PD_TOTAL_FILE_SIZE, &var))) {
-            uint64_t byte_size = 0;
+            size_t byte_size = 0;
             PropVariantToUInt64(var, &byte_size);
             PropVariantClear(&var);
             return byte_size;
@@ -118,10 +118,10 @@ float kl::video::duration() const
     if (reader_) {
         PROPVARIANT var = {};
         if (SUCCEEDED(reader_->GetPresentationAttribute(MF_SOURCE_READER_MEDIASOURCE, MF_PD_DURATION, &var))) {
-            int64_t time = 0;
+            LONGLONG time = 0;
             PropVariantToInt64(var, &time);
             PropVariantClear(&var);
-            return static_cast<float>(time) * 1e-7f;
+            return time * 1e-7f;
         }
     }
     return 0.0f;
@@ -133,28 +133,28 @@ float kl::video::fps() const
         IMFMediaType* current_type = nullptr;
         reader_->GetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, &current_type);
         if (current_type) {
-            uint32_t val1 = 0, val2 = 0;
+            UINT val1 = 0, val2 = 0;
             MFGetAttributeRatio(current_type, MF_MT_FRAME_RATE, &val1, &val2);
             current_type->Release();
-            return static_cast<float>(val1) / static_cast<float>(val2);
+            return float(val1) / val2;
         }
     }
     return 0.0f;
 }
 
-uint32_t kl::video::frame_count() const
+int kl::video::frame_count() const
 {
-    return static_cast<uint32_t>(fps() * duration());
+    return int(fps() * duration());
 }
 
-kl::uint2 kl::video::frame_size() const
+kl::int2 kl::video::frame_size() const
 {
     if (reader_) {
         IMFMediaType* current_type = nullptr;
         reader_->GetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, &current_type);
         if (current_type) {
-            uint2 frame_size = {};
-            MFGetAttributeSize(current_type, MF_MT_FRAME_SIZE, &frame_size.x, &frame_size.y);
+            int2 frame_size = {};
+            MFGetAttributeSize(current_type, MF_MT_FRAME_SIZE, (UINT32*) &frame_size.x, (UINT32*) &frame_size.y);
             current_type->Release();
             return frame_size;
         }
@@ -167,7 +167,7 @@ bool kl::video::get_next_frame(image& out) const
     bool state = false;
     if (reader_) {
         DWORD flags = 0;
-        int64_t time_stamp = 0;
+        LONGLONG time_stamp = 0;
         IMFSample* sample = nullptr;
         reader_->ReadSample(MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, nullptr, &flags, &time_stamp, &sample);
 

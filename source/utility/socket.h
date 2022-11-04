@@ -14,12 +14,12 @@ namespace kl {
         
     private:
         sockaddr_in address_ = {};
-        uint64_t socket_ = {};
+        size_t socket_ = {};
 
     public:
         socket();
-        socket(const std::string& address, uint32_t port);
-        explicit socket(uint64_t socket);
+        socket(const std::string& address, int port);
+        explicit socket(size_t socket);
         socket(const socket&) = delete;
         socket(const socket&&) = delete;
         ~socket();
@@ -27,7 +27,7 @@ namespace kl {
         void operator=(const socket&) = delete;
         void operator=(const socket&&) = delete;
 
-        explicit operator uint64_t() const;
+        size_t get_socket() const;
 
         void close() const;
 
@@ -35,19 +35,19 @@ namespace kl {
 
         void set_address(const std::string& address);
 
-        [[nodiscard]] uint32_t get_port() const;
+        [[nodiscard]] int get_port() const;
 
-        void set_port(uint32_t port);
+        void set_port(int port);
 
-        void listen(uint32_t queue_size);
+        void listen(int queue_size);
 
         [[nodiscard]] socket accept();
 
         void connect();
 
-        int send(const void* data, uint32_t byte_size) const;
+        int send(const void* data, int byte_size) const;
 
-        int receive(void* buff, uint32_t byte_size) const;
+        int receive(void* buff, int byte_size) const;
 
         template <typename T>
         int send(const T& obj) const

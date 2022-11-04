@@ -89,24 +89,24 @@ namespace kl {
 
         static matrix4x4<T> perspective(T field_of_view, T aspect_ratio, T near_plane, T far_plane)
         {
-            const T tan_half = static_cast<T>(1.0f / std::tan(math::to_radians(field_of_view) * 0.5f));
+            const T tan_half = T(1.0f / std::tan(math::to_radians(field_of_view) * 0.5f));
 
             matrix4x4<T> result;
             result[0] = tan_half / aspect_ratio;
             result[5] = tan_half;
             result[10] = (-far_plane - near_plane) / (near_plane - far_plane);
-            result[11] = static_cast<T>(2.0f * near_plane * far_plane) / (near_plane - far_plane);
-            result[14] = static_cast<T>(1.0f);
-            result[15] = static_cast<T>(0.0f);
+            result[11] = T(2.0f * near_plane * far_plane) / (near_plane - far_plane);
+            result[14] = T(1.0f);
+            result[15] = T(0.0f);
             return result;
         }
 
         static matrix4x4<T> orthographic(T left, T right, T bottom, T top, T near_plane, T far_plane)
         {
             matrix4x4<T> result;
-            result[0] = static_cast<T>(2.0f) / (right - left);
-            result[5] = static_cast<T>(2.0f) / (top - bottom);
-            result[10] = static_cast<T>(-2.0f) / (far_plane - near_plane);
+            result[0] = T(2.0f) / (right - left);
+            result[5] = T(2.0f) / (top - bottom);
+            result[10] = T(-2.0f) / (far_plane - near_plane);
             result[3] = -(right + left) / (right - left);
             result[7] = -(top + bottom) / (top - bottom);
             result[11] = -(far_plane + near_plane) / (far_plane - near_plane);
@@ -140,13 +140,7 @@ namespace kl {
 namespace kl {
     using float4x4 = matrix4x4<float>;
     using double4x4 = matrix4x4<double>;
-    using int4x4 = matrix4x4<int32_t>;
-    using uint4x4 = matrix4x4<uint32_t>;
-    using bool4x4 = matrix4x4<bool>;
 
     using mat4 = float4x4;
-    using d_mat4 = double4x4;
-    using i_mat4 = int4x4;
-    using u_mat4 = uint4x4;
-    using b_mat4 = bool4x4;
+    using dmat4 = double4x4;
 }

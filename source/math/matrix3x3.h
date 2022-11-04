@@ -61,13 +61,7 @@ namespace kl {
 namespace kl {
     using float3x3 = matrix3x3<float>;
     using double3x3 = matrix3x3<double>;
-    using int3x3 = matrix3x3<int32_t>;
-    using uint3x3 = matrix3x3<uint32_t>;
-    using bool3x3 = matrix3x3<bool>;
 
     using mat3 = float3x3;
-    using d_mat3 = double3x3;
-    using i_mat3 = int3x3;
-    using u_mat3 = uint3x3;
-    using b_mat3 = bool3x3;
+    using dmat3 = double3x3;
 }

@@ -6,7 +6,7 @@ struct cs_cb
 	kl::float4 misc_data;
 };
 
-static kl::uint3 calculate_window_dispatch(const kl::window& window)
+static kl::int3 calculate_window_dispatch(const kl::window& window)
 {
 	return {
 		(window.width() / 32) + ((window.width() % 32) ? 1 : 0),
@@ -18,7 +18,7 @@ static kl::uint3 calculate_window_dispatch(const kl::window& window)
 int main()
 {
 	kl::window window = { { 1600, 900 }, "Testing" };
-	auto gpu = kl::gpu(window.get_window());
+	kl::gpu gpu = kl::gpu(window.get_window());
 	kl::timer timer = {};
 
 	window.set_resizeable(false);
@@ -47,8 +47,8 @@ int main()
 		gpu.clear_target_view(target_view, kl::float4(kl::colors::gray));
 
 		cs_cb cs_data = {};
-		cs_data.misc_data.x = static_cast<float>(window.mouse.position().x);
-		cs_data.misc_data.y = static_cast<float>(window.mouse.position().y);
+		cs_data.misc_data.x = float(window.mouse.position().x);
+		cs_data.misc_data.y = float(window.mouse.position().y);
 		gpu.set_compute_const_buffer(cs_data);
 
 		gpu.bind_pixel_shader_view(nullptr, 0);
@@ -61,6 +61,6 @@ int main()
 
 		gpu.swap_buffers(true);
 
-		window.set_title(kl::format(static_cast<int>(1.0f / timer.get_interval())));
+		window.set_title(kl::format(int(1.0f / timer.get_interval())));
 	}
 }

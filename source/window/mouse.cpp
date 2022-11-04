@@ -13,7 +13,7 @@ void kl::mouse::bind_to_window(const HWND window)
     window_ = window;
 }
 
-void kl::mouse::update_value(const int64_t type, const bool state)
+void kl::mouse::update_value(const WPARAM type, const bool state)
 {
     for (auto& key : buffer) {
         key.update_value(type, state);
@@ -90,12 +90,9 @@ kl::float2 kl::mouse::get_normalized_position() const
     if (window_) {
         RECT client_area = {};
         GetClientRect(window_, &client_area);
-        const uint2 frame_size = {client_area.right - client_area.left, client_area.bottom - client_area.top};
+        const int2 frame_size = {client_area.right - client_area.left, client_area.bottom - client_area.top};
 
-        float2 result = {
-            static_cast<float>(position_.x) / static_cast<float>(frame_size.x),
-            static_cast<float>(frame_size.y - position_.y) / static_cast<float>(frame_size.y)
-        };
+        float2 result = { float(position_.x) / frame_size.x, float(frame_size.y - position_.y) / frame_size.y };
         result *= 2.0f;
         result -= float2::splash(1);
         

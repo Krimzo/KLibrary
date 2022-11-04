@@ -14,7 +14,8 @@ int main()
 	kl::window window = { { 900, 900 }, "Times Table" };
 	kl::image frame(window.size(), kl::colors::gray);
 
-	window.on_resize = [&](const kl::uint2& size) {
+	window.on_resize = [&](const kl::int2& size)
+	{
 		if (size.x > 0 && size.y > 0) {
 			frame.set_size(size);
 		}
@@ -30,15 +31,15 @@ int main()
 
 		frame.fill(kl::colors::gray);
 
-		const float circle_radius = std::min(static_cast<float>(frame.width()) * 0.5f, static_cast<float>(frame.height()) * 0.5f) - 25.0f;
-		frame.draw_circle(kl::int2(frame.size() / 2), circle_radius, circle_color);
+		const float circle_radius = std::min(frame.width() * 0.5f, frame.height() * 0.5f) - 25.0f;
+		frame.draw_circle(frame.size() / 2, circle_radius, circle_color);
 
 		static constexpr float point_angle = 360.0f / n;
 		std::vector<kl::int2> circle_points(n);
-		for (int i = 0; i < static_cast<int>(circle_points.size()); i++) {
+		for (int i = 0; i < int(circle_points.size()); i++) {
 			circle_points[i] = {
-				static_cast<int>(std::cos(kl::math::to_radians(point_angle * i + 180.0f)) * circle_radius + frame.width() / 2),
-				static_cast<int>(std::sin(kl::math::to_radians(point_angle * i + 180.0f)) * circle_radius + frame.height() / 2)
+				std::cos(kl::math::to_radians(point_angle * i + 180.0f)) * circle_radius + frame.width() / 2,
+				std::sin(kl::math::to_radians(point_angle * i + 180.0f)) * circle_radius + frame.height() / 2
 			};
 		}
 
@@ -46,8 +47,8 @@ int main()
 			frame.draw_circle(point, 3.0f, point_color, true);
 		}
 
-		for (int i = 0; i < static_cast<int>(circle_points.size()); i++) {
-			frame.draw_line(circle_points[i], circle_points[std::abs(static_cast<int64_t>(i * m) % n)], line_color);
+		for (int i = 0; i < int(circle_points.size()); i++) {
+			frame.draw_line(circle_points[i], circle_points[std::abs(int(i * m) % n)], line_color);
 		}
 
 		window.draw_image(frame);

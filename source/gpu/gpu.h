@@ -65,8 +65,8 @@ namespace kl {
         [[nodiscard]] dx::context context() const;
         [[nodiscard]] dx::chain chain() const;
 
-        void set_viewport(const uint2& size) const;
-        void set_viewport(const int2& position, const uint2& size) const;
+        void set_viewport(const int2& size) const;
+        void set_viewport(const int2& position, const int2& size) const;
 
         void unbind_all_targets() const;
         void bind_internal_targets() const;
@@ -74,7 +74,7 @@ namespace kl {
         void bind_targets_with_internal(const std::vector<dx::target_view>& additional_targets,
                                      dx::depth_view depth_view = nullptr) const;
 
-        void resize_internal(const uint2& size);
+        void resize_internal(const int2& size);
 
         void clear_internal_color(const float4& color) const;
         void clear_internal_depth(float value) const;
@@ -83,8 +83,8 @@ namespace kl {
         void swap_buffers(bool v_sync) const;
 
         void copy_resource(dx::resource destination, dx::resource source) const;
-        void read_from_resource(void* cpu_buffer, dx::resource cpu_read_resource, uint32_t byte_size) const;
-        void write_to_resource(dx::resource cpu_write_resource, const void* data, uint32_t byte_size, bool discard = true) const;
+        void read_from_resource(void* cpu_buffer, dx::resource cpu_read_resource, int byte_size) const;
+        void write_to_resource(dx::resource cpu_write_resource, const void* data, int byte_size, bool discard = true) const;
 
         // Raster state
         dx::raster_state new_raster_state(const dx::raster_state_descriptor* descriptor);
@@ -116,28 +116,28 @@ namespace kl {
 
         void bind_shaders(const shaders& shaders) const;
 
-        void dispatch_compute_shader(const uint3& size) const;
-        void execute_compute_shader(dx::compute_shader shader, const uint3& size) const;
+        void dispatch_compute_shader(const int3& size) const;
+        void execute_compute_shader(dx::compute_shader shader, const int3& size) const;
 
         void destroy(const shaders& shaders);
 
         // Buffer
         dx::buffer new_buffer(const dx::buffer_descriptor* descriptor, const dx::subresource_descriptor* subresource_data = nullptr);
-        dx::buffer new_structured_buffer(const void* data, uint32_t element_count, uint32_t element_size,
+        dx::buffer new_structured_buffer(const void* data, int element_count, int element_size,
                                        bool has_unordered_access = false, bool cpu_read = false);
-        dx::buffer new_staging_buffer(dx::buffer buffer, uint32_t byte_size = 0);
+        dx::buffer new_staging_buffer(dx::buffer buffer, int byte_size = 0);
 
         // Constant buffer
-        dx::buffer new_const_buffer(uint32_t byte_size);
+        dx::buffer new_const_buffer(int byte_size);
 
-        void set_const_buffer_data(dx::buffer cbuffer, const void* data);
+        void set_const_buffer_data(dx::buffer cbuffer, const void* data) const;
 
-        void bind_vertex_const_buffer(dx::buffer cbuffer, uint32_t slot) const;
-        void bind_pixel_const_buffer(dx::buffer cbuffer, uint32_t slot) const;
-        void bind_compute_const_buffer(dx::buffer cbuffer, uint32_t slot) const;
+        void bind_vertex_const_buffer(dx::buffer cbuffer, int slot) const;
+        void bind_pixel_const_buffer(dx::buffer cbuffer, int slot) const;
+        void bind_compute_const_buffer(dx::buffer cbuffer, int slot) const;
 
         template <typename T>
-        bool set_vertex_const_buffer(const T& data, const uint32_t slot = 0)
+        bool set_vertex_const_buffer(const T& data, const int slot = 0)
         {
             if (sizeof(T) > (cbuffer_predefined_size * 16) || sizeof(T) % 16) {
                 return false;
@@ -149,7 +149,7 @@ namespace kl {
         }
 
         template <typename T>
-        bool set_pixel_const_buffer(const T& data, const uint32_t slot = 0)
+        bool set_pixel_const_buffer(const T& data, const int slot = 0)
         {
             if (sizeof(T) > (cbuffer_predefined_size * 16) || sizeof(T) % 16) {
                 return false;
@@ -161,7 +161,7 @@ namespace kl {
         }
 
         template <typename T>
-        bool set_compute_const_buffer(const T& data, const uint32_t slot = 0)
+        bool set_compute_const_buffer(const T& data, const int slot = 0)
         {
             if (sizeof(T) > (cbuffer_predefined_size * 16) || sizeof(T) % 16) {
                 return false;
@@ -185,7 +185,7 @@ namespace kl {
         dx::sampler_state new_sampler_state(const dx::sampler_state_descriptor* descriptor);
         dx::sampler_state new_sampler_state(bool linear, bool mirror);
 
-        void bind_sampler_state(dx::sampler_state state, uint32_t slot) const;
+        void bind_sampler_state(dx::sampler_state state, int slot) const;
 
         // Texture
         dx::texture get_back_buffer();
@@ -196,7 +196,7 @@ namespace kl {
         dx::texture new_texture(const image& front, const image& back, const image& left, const image& right,
                                 const image& top, const image& bottom);
 
-        dx::texture new_staging_texture(dx::texture texture, const uint2& size = {});
+        dx::texture new_staging_texture(dx::texture texture, const int2& size = {});
 
         // Render target view
         dx::target_view new_target_view(dx::texture texture, const dx::target_view_descriptor* descriptor = nullptr);
@@ -211,13 +211,13 @@ namespace kl {
         // Shader resource view
         dx::shader_view new_shader_view(dx::resource resource, const dx::shader_view_descriptor* descriptor = nullptr);
 
-        void bind_pixel_shader_view(dx::shader_view view, uint32_t slot) const;
-        void bind_compute_shader_view(dx::shader_view view, uint32_t slot) const;
+        void bind_pixel_shader_view(dx::shader_view view, int slot) const;
+        void bind_compute_shader_view(dx::shader_view view, int slot) const;
 
         // Shader access view
         dx::access_view new_access_view(dx::resource resource, const dx::access_view_descriptor* descriptor = nullptr);
 
-        void bind_compute_access_view(dx::access_view view, uint32_t slot, const uint32_t* initial_counts = nullptr) const;
+        void bind_compute_access_view(dx::access_view view, int slot, const int* initial_counts = nullptr) const;
 
         // Deletes child instance
         void destroy(IUnknown* child);

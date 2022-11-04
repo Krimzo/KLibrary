@@ -87,27 +87,27 @@ void kl::console::set_cursor_enabled(const bool state)
     SetConsoleCursorInfo(console_handle, &cursor_info);
 }
 
-void kl::console::move_cursor(const uint2& position)
+void kl::console::move_cursor(const int2& position)
 {
-    SetConsoleCursorPosition(console_handle, {static_cast<short>(position.x), static_cast<short>(position.y)});
+    SetConsoleCursorPosition(console_handle, { SHORT(position.x), SHORT(position.y) });
 }
 
-uint32_t kl::console::width()
+int kl::console::width()
 {
     return size().x;
 }
 
-void kl::console::set_width(uint32_t width)
+void kl::console::set_width(int width)
 {
     set_size({width, height()});
 }
 
-uint32_t kl::console::height()
+int kl::console::height()
 {
     return size().y;
 }
 
-void kl::console::set_height(uint32_t height)
+void kl::console::set_height(int height)
 {
     set_size({width(), height});
 }
@@ -117,25 +117,25 @@ void kl::console::set_title(const std::string& text)
     SetConsoleTitleA(text.c_str());
 }
 
-kl::uint2 kl::console::size()
+kl::int2 kl::console::size()
 {
     CONSOLE_SCREEN_BUFFER_INFO info = {};
     GetConsoleScreenBufferInfo(console_handle, &info);
     return {info.srWindow.Right - info.srWindow.Left + 1, info.srWindow.Bottom - info.srWindow.Top + 1};
 }
 
-void kl::console::set_size(const uint2& size)
+void kl::console::set_size(const int2& size)
 {
-    const SMALL_RECT rect = {0, 0, static_cast<short>(size.x - 1), static_cast<short>(size.y - 1)};
+    const SMALL_RECT rect = {0, 0, SHORT(size.x - 1), SHORT(size.y - 1)};
     SetConsoleWindowInfo(console_handle, true, &rect);
 }
 
-void kl::console::set_font(const uint2& size, const std::string& font_name)
+void kl::console::set_font(const int2& size, const std::string& font_name)
 {
     CONSOLE_FONT_INFOEX cfi = {};
-    cfi.cbSize = sizeof(cfi);
-    cfi.dwFontSize.X = static_cast<short>(size.x);
-    cfi.dwFontSize.Y = static_cast<short>(size.y);
+    cfi.cbSize = sizeof(CONSOLE_FONT_INFOEX);
+    cfi.dwFontSize.X = SHORT(size.x);
+    cfi.dwFontSize.Y = SHORT(size.y);
     cfi.FontFamily = FF_DONTCARE;
     cfi.FontWeight = FW_NORMAL;
     wcscpy_s(cfi.FaceName, strings::to_w_string(font_name).c_str());
@@ -146,7 +146,7 @@ char kl::console::get_input()
 {
     char input = 0;
     while (_kbhit()) {
-        input = static_cast<char>(_getch());
+        input = char(_getch());
     }
     return input;
 }
@@ -158,13 +158,12 @@ void kl::console::wait(const char to_wait_for, const bool echo)
             print("Press '", to_wait_for, "' to continue...");
         }
         else {
-            print("Press '", static_cast<int>(to_wait_for), "' to continue...");
+            print("Press '", int(to_wait_for), "' to continue...");
         }
     }
 
-    char c;
-    while ((c = static_cast<char>(_getch())) != to_wait_for) {
-        print(static_cast<int>(c));
+    for (char c = 0; (c = char(_getch())) != to_wait_for;) {
+        print(int(c));
     }
 }
 
@@ -173,22 +172,21 @@ char kl::console::wait_for_any(const bool echo)
     if (echo) {
         print("Press any key to continue...");
     }
-    return static_cast<char>(_getch());
+    return char(_getch());
 }
 
-void kl::console::dump(const std::string& data, const uint2& location)
+void kl::console::dump(const std::string& data, const int2& location)
 {
     static DWORD ignored = 0;
-    WriteConsoleOutputCharacterA(console_handle, data.c_str(), static_cast<DWORD>(data.length()),
-                                 {static_cast<short>(location.x), static_cast<short>(location.y)}, &ignored);
+    WriteConsoleOutputCharacterA(console_handle, data.c_str(), DWORD(data.length()), { SHORT(location.x), SHORT(location.y) }, &ignored);
 }
 
-void kl::console::progress_bar(const std::string& message, uint32_t output_y, float percentage)
+void kl::console::progress_bar(const std::string& message, int output_y, float percentage)
 {
     percentage = math::minmax(percentage, 0, 1);
 
-    const int bar_length = static_cast<int>(width()) - static_cast<int>(message.length()) - 12;
-    const int finish_length = static_cast<int>(static_cast<float>(bar_length) * percentage);
+    const int bar_length = int(width() - message.length() - 12);
+    const int finish_length = int(bar_length * percentage);
     const int empty_length = bar_length - finish_length;
 
     std::stringstream stream = {};
@@ -201,5 +199,5 @@ void kl::console::progress_bar(const std::string& message, uint32_t output_y, fl
     }
     move_cursor({0, output_y});
 
-    printf("%s] %3d%% ", stream.str().c_str(), static_cast<int>(percentage * 100.0f));
+    printf("%s] %3d%% ", stream.str().c_str(), int(percentage * 100.0f));
 }

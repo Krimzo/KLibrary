@@ -9,17 +9,17 @@ static void draw_axis(kl::image& frame, const kl::color& color = { 75, 75, 75 })
 
 static void draw_data(kl::image& frame, const std::vector<kl::int2>& data, const kl::color& color = kl::colors::orange)
 {
-	const kl::uint2 half_size = frame.size() / 2;
+	const kl::int2 half_size = frame.size() / 2;
 	for (auto& val : data) {
-		frame.set_pixel(kl::uint2(val) * kl::uint2(1, -1) + half_size, color);
+		frame.set_pixel(val * kl::int2(1, -1) + half_size, color);
 	}
 }
 
 static void draw_line(kl::image& frame, const kl::float2& equat, const kl::color& color = kl::colors::sky)
 {
-	const auto half_size = kl::int2(frame.size() / 2);
-	const kl::int2 pos1 = kl::int2(-half_size.x, static_cast<int>(-half_size.x * equat.x + equat.y)) * kl::int2(1, -1) + half_size;
-	const kl::int2 pos2 = kl::int2(half_size.x, static_cast<int>(half_size.x * equat.x + equat.y)) * kl::int2(1, -1) + half_size;
+	const kl::int2 half_size = frame.size() / 2;
+	const kl::int2 pos1 = kl::int2(-half_size.x, -half_size.x * equat.x + equat.y) * kl::int2(1, -1) + half_size;
+	const kl::int2 pos2 = kl::int2(half_size.x, half_size.x * equat.x + equat.y) * kl::int2(1, -1) + half_size;
 	frame.draw_line(pos1, pos2, color);
 }
 
@@ -37,9 +37,9 @@ static void draw_offset(kl::image& frame, const std::vector<kl::int2>& data, con
 	if (!data.empty()) {
 		static size_t data_index = 0;
 		data_index = (data_index + 1) % data.size();
-		const auto half_size = kl::int2(frame.size() / 2);
+		const kl::int2 half_size = frame.size() / 2;
 		const kl::int2 pos1 = kl::int2(data[data_index].x, data[data_index].y) * kl::int2(1, -1) + half_size;
-		const kl::int2 pos2 = kl::int2(data[data_index].x, static_cast<int>(data[data_index].x * lineEquat.x + lineEquat.y)) * kl::int2(1, -1) + half_size;
+		const kl::int2 pos2 = kl::int2(data[data_index].x, data[data_index].x * lineEquat.x + lineEquat.y) * kl::int2(1, -1) + half_size;
 		frame.draw_line(pos1, pos2, color);
 	}
 }
@@ -82,15 +82,15 @@ static void calculate_improved_line(const std::vector<kl::int2>& data, kl::float
 int main()
 {
 	kl::window window = { { 1600, 900 }, "Data Line" };
-	auto frame = kl::image(window.size());
+	kl::image frame = kl::image(window.size());
 
-	std::vector<kl::int2> data;
+	std::vector<kl::int2> data = {};
 	kl::float2 line_equat(1.0f, 0.0f);
 
 	window.mouse.left.on_down = [&] {
 		static kl::int2 last_data = {};
 		kl::int2 new_data = window.mouse.position() * kl::int2(1, -1);
-		new_data -= kl::int2(frame.size()) / kl::int2(2, -2);
+		new_data -= frame.size() / kl::int2(2, -2);
 		if (new_data != last_data) {
 			data.push_back(new_data);
 			last_data = new_data;

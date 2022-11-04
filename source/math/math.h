@@ -28,7 +28,7 @@ namespace kl::math {
     template <typename T, typename T0, typename T1>
     T minmax(const T& val, const T0& min_value, const T1& max_value)
     {
-        return std::min(std::max(val, static_cast<T>(min_value)), static_cast<T>(max_value));
+        return std::min(std::max(val, T(min_value)), T(max_value));
     }
 
     template <typename T>

@@ -16,7 +16,7 @@ struct vs_out
     float3 color : VS_Color;
 };
 
-float normalized_time_value(const float value)
+float normalized_time_sin(const float value)
 {
     return value * (sin(time_data.x) + 1) * 0.5f;
 }
@@ -34,13 +34,19 @@ float3 plane_to_sphere(float3 position, const float half_plane_size)
     );
 }
 
+float3 alter_position(float3 position)
+{
+    position.y = sin(1.5f * position.x + time_data.x);
+    //position.y *= normalized_time_sin(1);
+    //position = plane_to_sphere(position, 5);
+    return position;
+}
+
 vs_out v_shader(float3 position : KL_Position)
 {
     vs_out data;
     
-    position.y = sin(position.x * 25 + time_data.x) * normalized_time_value(0.02f);
-    
-    position = plane_to_sphere(position, 5);
+    position = alter_position(position);
     
     data.world = mul(float4(position, 1), w_matrix).xyz;
     data.screen = mul(float4(data.world, 1), vp_matrix);

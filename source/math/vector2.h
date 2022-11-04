@@ -10,14 +10,14 @@ namespace kl::math {
     T to_radians(const T& degrees)
     {
         static constexpr float conversion = pi / 180.0f;
-        return static_cast<T>(degrees * conversion);
+        return T(degrees * conversion);
     }
 
     template <typename T>
     T to_degrees(const T& radians)
     {
         static constexpr float conversion = 180.0f / pi;
-        return static_cast<T>(radians * conversion);
+        return T(radians * conversion);
     }
 }
 
@@ -244,14 +244,8 @@ namespace kl {
 
 namespace kl {
     using float2 = vector2<float>;
-    using double2 = vector2<double>;
-    using int2 = vector2<int32_t>;
-    using uint2 = vector2<uint32_t>;
-    using bool2 = vector2<bool>;
+    using int2 = vector2<int>;
 
     using vec2 = float2;
-    using d_vec2 = double2;
-    using i_vec2 = int2;
-    using u_vec2 = uint2;
-    using b_vec2 = bool2;
+    using ivec2 = int2;
 }

@@ -18,37 +18,10 @@
     <ClCompile Include="Source\GPU\Buffer\Buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GPU\Buffer\CBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GPU\States\DepthState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GPU\States\RasterState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GPU\States\SamplerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GPU\Utility\Shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\GPU\Utility\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GPU\Utility\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GPU\Views\AccessView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GPU\Views\DepthView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GPU\Views\ShaderView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GPU\Views\TargetView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\GPU\GPU.cpp">
@@ -87,9 +60,6 @@
     <ClCompile Include="Source\Utility\Console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\Encrypter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Utility\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -108,9 +78,6 @@
     <ClCompile Include="Source\Utility\Web.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Window\DoubleBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Window\Key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -123,20 +90,50 @@
     <ClCompile Include="Source\Window\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Window\WindowHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Render\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Examples\Mandelbrot.cpp">
+    <ClCompile Include="source\gpu\buffer\const_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\states\depth_state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\states\raster_state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\states\sampler_state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\utility\vertex_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\views\access_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\views\depth_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\views\shader_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gpu\views\target_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\encryptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window\frame_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window\system_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\visual_sort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\GPU\DXTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GPU\GPU.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -197,9 +194,6 @@
     <ClInclude Include="Source\Utility\Console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\Encrypter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Utility\File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -218,9 +212,6 @@
     <ClInclude Include="Source\Utility\Web.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Window\DoubleBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Window\Key.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -233,13 +224,25 @@
     <ClInclude Include="Source\Window\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\KLTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\KrimzLib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Render\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gpu\dx_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\klib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\types\reference.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\encryptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\window\frame_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\window\system_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

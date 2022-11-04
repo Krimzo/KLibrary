@@ -19,15 +19,15 @@ int main(const int argc, const char** argv)
 	kl::print<false>("Resize the console and press enter..");
 	kl::get();
 
-	const kl::uint2 console_size = kl::console::size() - kl::uint2(0, 1);
+	const kl::int2 console_size = kl::console::size() - kl::int2(0, 1);
 	kl::console::set_cursor_enabled(false);
 
-	const uint32_t frame_count = video.frame_count();
+	const int frame_count = video.frame_count();
 	std::vector<std::string> ascii_frames;
 	ascii_frames.reserve(frame_count);
 
 	kl::console::clear();
-	kl::image video_frame;
+	kl::image video_frame = {};
 	while (video.get_next_frame(video_frame)) {
 		ascii_frames.push_back(video_frame.as_ascii(console_size));
 		kl::console::move_cursor({});
@@ -39,7 +39,7 @@ int main(const int argc, const char** argv)
 	const float to_wait = 1.0f / video.fps();
 
 	while (true) {
-		for (uint64_t i = 0; i < ascii_frames.size(); i++) {
+		for (size_t i = 0; i < ascii_frames.size(); i++) {
 			timer.reset();
 			kl::console::dump(ascii_frames[i]);
 			kl::console::set_title(kl::format(i + 1, "/", ascii_frames.size()));

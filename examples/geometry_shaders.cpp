@@ -21,14 +21,15 @@ static kl::camera camera;
 
 static kl::float3 sun_direction = { 1.0f, -1.0f, 0.0f };
 
-static std::vector<kl::ref<kl::entity>> entities;
+static std::vector<kl::ref<kl::entity>> entities = {};
 
 int main()
 {
-	window = kl::make<kl::window>(kl::uint2(1600, 900), "Geometry Test");
+	window = kl::make<kl::window>(kl::int2(1600, 900), "Geometry Test");
 	gpu = kl::make<kl::gpu>(window->get_window());
 
-	window->on_resize = [&](const kl::uint2 new_size) {
+	window->on_resize = [&](const kl::int2 new_size)
+	{
 		if (new_size.x > 0 && new_size.y > 0) {
 			gpu->resize_internal(new_size);
 			gpu->set_viewport(new_size);
@@ -37,16 +38,12 @@ int main()
 	};
 	window->maximize();
 
-	window->keyboard.v.on_press = [&] {
+	window->keyboard.v.on_press = [&]
+	{
 		static bool wireframe_bound = true;
 		static kl::dx::raster_state solid_raster = gpu->new_raster_state(false, false);
 		static kl::dx::raster_state wireframe_raster = gpu->new_raster_state(true, false);
-		if (wireframe_bound) {
-			gpu->bind_raster_state(solid_raster);
-		}
-		else {
-			gpu->bind_raster_state(wireframe_raster);
-		}
+		gpu->bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
 		wireframe_bound = !wireframe_bound;
 	};
 	window->keyboard.v.on_press();

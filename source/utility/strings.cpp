@@ -9,7 +9,7 @@ std::string kl::strings::to_string(const std::wstring& data)
     temp.reserve(data.size());
     for (const wchar_t c : data) {
         if (c < 256) {
-            temp.push_back(static_cast<char>(c));
+            temp.push_back(char(c));
         }
     }
     return temp;
@@ -19,7 +19,7 @@ std::wstring kl::strings::to_w_string(const std::string& data)
 {
     std::wstring temp;
     temp.resize(data.size());
-    for (uint64_t i = 0; i < data.size(); i++) {
+    for (size_t i = 0; i < data.size(); i++) {
         temp[i] = data[i];
     }
     return temp;

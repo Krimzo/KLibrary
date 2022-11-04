@@ -93,7 +93,7 @@ namespace kl {
         void operator=(const keyboard&) = delete;
         void operator=(const keyboard&&) = delete;
 
-        void update_value(int64_t type, bool state);
+        void update_value(WPARAM type, bool state);
 
         void process() const;
     };

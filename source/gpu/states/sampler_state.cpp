@@ -30,7 +30,7 @@ kl::dx::sampler_state kl::gpu::new_sampler_state(const bool linear, const bool m
     return new_sampler_state(&descriptor);
 }
 
-void kl::gpu::bind_sampler_state(const dx::sampler_state state, const uint32_t slot) const
+void kl::gpu::bind_sampler_state(const dx::sampler_state state, const int slot) const
 {
     context_->PSSetSamplers(slot, 1, &state);
 }

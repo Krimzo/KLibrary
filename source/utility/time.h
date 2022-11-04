@@ -4,9 +4,9 @@
 
 
 namespace kl::time {
-    int64_t now();
-    int64_t cpu_frequency();
-    float calculate(int64_t start, int64_t end);
+    time_t now();
+    size_t cpu_frequency();
+    float calculate(time_t start, time_t end);
 
     float get_interval();
     void wait(float seconds);
@@ -20,7 +20,7 @@ namespace kl {
 
         date()
         {
-            const int64_t time = std::time(nullptr);
+            const time_t time = std::time(nullptr);
             std::tm now = {};
             localtime_s(&now, &time);
 
@@ -39,9 +39,9 @@ namespace kl {
 namespace kl {
     class timer
     {
-        int64_t interval_start_;
-        int64_t interval_end_;
-        int64_t elapsed_start_;
+        time_t interval_start_;
+        time_t interval_end_;
+        time_t elapsed_start_;
 
     public:
         timer();

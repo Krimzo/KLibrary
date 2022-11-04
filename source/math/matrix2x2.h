@@ -27,13 +27,7 @@ namespace kl {
 namespace kl {
     using float2x2 = matrix2x2<float>;
     using double2x2 = matrix2x2<double>;
-    using int2x2 = matrix2x2<int32_t>;
-    using uint2x2 = matrix2x2<uint32_t>;
-    using bool2x2 = matrix2x2<bool>;
 
     using mat2 = float2x2;
-    using d_mat2 = double2x2;
-    using i_mat2 = int2x2;
-    using u_mat2 = uint2x2;
-    using b_mat2 = bool2x2;
+    using dmat2 = double2x2;
 }

@@ -10,12 +10,12 @@ namespace kl {
 	inline float to_float_color(const uint8_t value)
 	{
 		static constexpr float conversion = 1.0f / 255.0f;
-		return static_cast<float>(value) * conversion;
+		return value * conversion;
 	}
 
 	inline uint8_t to_byte_color(const float value)
 	{
-		return static_cast<uint8_t>(std::min(std::max(static_cast<int>(value * 255), 0), 255));
+		return uint8_t(std::min(std::max(int(value * 255), 0), 255));
 	}
 }
 
@@ -250,14 +250,8 @@ namespace kl {
 
 namespace kl {
 	using float3 = vector3<float>;
-	using double3 = vector3<double>;
-	using int3 = vector3<int32_t>;
-	using uint3 = vector3<uint32_t>;
-	using bool3 = vector3<bool>;
+	using int3 = vector3<int>;
 
 	using vec3 = float3;
-	using d_vec3 = double3;
-	using i_vec3 = int3;
-	using u_vec3 = uint3;
-	using b_vec3 = bool3;
+	using ivec3 = int3;
 }

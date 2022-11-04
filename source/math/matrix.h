@@ -9,7 +9,7 @@
 
 namespace kl {
     template <typename T, int W, int H>
-    struct matrix : std::array<T, static_cast<uint64_t>(W * H)>
+    struct matrix : std::array<T, W * H>
     {
         matrix()
             : std::array<T, W * H>()
@@ -274,17 +274,17 @@ namespace kl {
         for (int x = 0; x < W; x++) {
             for (int y = 0; y < H; y++) {
                 output_data[y * W + x] = std::format("{:.2f}", object[y * W + x]);
-                max_lengths[x] = std::max(max_lengths[x], static_cast<int>(output_data[y * W + x].size()));
+                max_lengths[x] = std::max(max_lengths[x], int(output_data[y * W + x].size()));
             }
         }
 
         for (int y = 0; y < H; y++) {
-            stream << ((y == 0) ? static_cast<char>(218) : (y == (H - 1) ? static_cast<char>(192) : static_cast<char>(179)));
+            stream << ((y == 0) ? char(218) : (y == (H - 1) ? char(192) : char(179)));
             for (int x = 0; x < (W - 1); x++) {
                 stream << std::setw(max_lengths[x]) << output_data[y * W + x] << " ";
             }
             stream << std::setw(max_lengths[W - 1]) << output_data[y * W + (W - 1)]
-                << ((y == 0) ? static_cast<char>(191) : (y == (H - 1) ? static_cast<char>(217) : static_cast<char>(179)))
+                << ((y == 0) ? char(191) : (y == (H - 1) ? char(217) : char(179)))
                 << (y == (H - 1) ? "" : "\n");
         }
 

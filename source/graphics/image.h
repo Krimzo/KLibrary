@@ -8,43 +8,43 @@
 namespace kl {
     class image
     {
-        uint2 size_;
         std::vector<color> pixels_;
+        int2 size_ = {};
 
     public:
         static image get_screenshot();
 
-        image();
-        explicit image(const uint2& size, const color& color = {});
+        image() = default;
+        explicit image(const int2& size, const color& color = {});
         explicit image(const std::string& filepath);
 
         std::vector<color>::iterator begin();
         std::vector<color>::iterator end();
 
-        [[nodiscard]] uint32_t width() const;
+        [[nodiscard]] int width() const;
 
-        void set_width(uint32_t width);
+        void set_width(int width);
 
-        [[nodiscard]] uint32_t height() const;
+        [[nodiscard]] int height() const;
 
-        void set_height(uint32_t height);
+        void set_height(int height);
 
-        [[nodiscard]] uint2 size() const;
+        [[nodiscard]] int2 size() const;
 
-        void set_size(const uint2& size, bool scale = false);
+        void set_size(const int2& size, bool scale = false);
 
-        [[nodiscard]] color get_pixel(const uint2& coords) const;
+        [[nodiscard]] color get_pixel(const int2& coords) const;
 
-        void set_pixel(const uint2& coords, const color& color);
+        void set_pixel(const int2& coords, const color& color);
 
-        color& operator[](const uint2& coords);
-        const color& operator[](const uint2& coords) const;
+        color& operator[](const int2& coords);
+        const color& operator[](const int2& coords) const;
 
         color* data();
 
         [[nodiscard]] const color* data() const;
 
-        [[nodiscard]] image get_square(uint2 top_left, uint2 bottom_right) const;
+        [[nodiscard]] image get_square(int2 top_left, int2 bottom_right) const;
 
         bool load_from_file(const std::string& filepath);
 
@@ -66,6 +66,6 @@ namespace kl {
 
         void draw_image(const int2& position, const image& image, bool mix_alpha = true);
 
-        [[nodiscard]] std::string as_ascii(const uint2& frame_size) const;
+        [[nodiscard]] std::string as_ascii(const int2& frame_size) const;
     };
 }

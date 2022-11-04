@@ -3,7 +3,7 @@
 #include "utility/console.h"
 
 
-kl::dx::buffer kl::gpu::new_const_buffer(const uint32_t byte_size)
+kl::dx::buffer kl::gpu::new_const_buffer(const int byte_size)
 {
     if (warning(byte_size % 16, "Constant buffer size has to be a multiple of 16")) {
         return nullptr;
@@ -18,24 +18,24 @@ kl::dx::buffer kl::gpu::new_const_buffer(const uint32_t byte_size)
     return new_buffer(&descriptor);
 }
 
-void kl::gpu::set_const_buffer_data(const dx::buffer cbuffer, const void* data)
+void kl::gpu::set_const_buffer_data(const dx::buffer cbuffer, const void* data) const
 {
     dx::buffer_descriptor descriptor = {};
     cbuffer->GetDesc(&descriptor);
     write_to_resource(cbuffer, data, descriptor.ByteWidth);
 }
 
-void kl::gpu::bind_vertex_const_buffer(const dx::buffer cbuffer, const uint32_t slot) const
+void kl::gpu::bind_vertex_const_buffer(const dx::buffer cbuffer, const int slot) const
 {
     context_->VSSetConstantBuffers(slot, 1, &cbuffer);
 }
 
-void kl::gpu::bind_pixel_const_buffer(const dx::buffer cbuffer, const uint32_t slot) const
+void kl::gpu::bind_pixel_const_buffer(const dx::buffer cbuffer, const int slot) const
 {
     context_->PSSetConstantBuffers(slot, 1, &cbuffer);
 }
 
-void kl::gpu::bind_compute_const_buffer(const dx::buffer cbuffer, const uint32_t slot) const
+void kl::gpu::bind_compute_const_buffer(const dx::buffer cbuffer, const int slot) const
 {
     context_->CSSetConstantBuffers(slot, 1, &cbuffer);
 }

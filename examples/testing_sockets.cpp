@@ -3,7 +3,6 @@
 
 static void server()
 {
-	std::string da = kl::socket::self_ip;
 	kl::socket server(kl::socket::self_ip, 1709);
 
 	server.listen(1);

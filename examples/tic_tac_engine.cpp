@@ -8,15 +8,15 @@ enum id
 	engine = 1
 };
 
-static const kl::int2 sizes = { 3, 901 };
-static const kl::color player_color = kl::colors::orange;
-static const kl::color engine_color = kl::colors::green;
-
 struct board_info
 {
 	int eval = 0;
 	int move = -1;
 };
+
+static const kl::int2 sizes = { 3, 901 };
+static const kl::color player_color = kl::colors::orange;
+static const kl::color engine_color = kl::colors::green;
 
 static bool has_empty(const std::vector<int>& board)
 {
@@ -97,7 +97,7 @@ static board_info find_best(const std::vector<int>& board, const bool playersTur
 
 	if (!playersTurn) {
 		board_info max_info(-1, -1);
-		for (int i = 0; i < static_cast<int>(board.size()); i++) {
+		for (int i = 0; i < int(board.size()); i++) {
 			if (board[i] == id::empty) {
 				if (max_info.move == -1) {
 					max_info.move = i;
@@ -122,7 +122,7 @@ static board_info find_best(const std::vector<int>& board, const bool playersTur
 	}
 	
 	board_info min_info(1, -1);
-	for (int i = 0; i < static_cast<int>(board.size()); i++) {
+	for (int i = 0; i < int(board.size()); i++) {
 		if (board[i] == id::empty) {
 			if (min_info.move == -1) {
 				min_info.move = i;
@@ -148,7 +148,7 @@ static board_info find_best(const std::vector<int>& board, const bool playersTur
 
 int main()
 {
-	std::vector<int> board(static_cast<uint64_t>(sizes.x) * sizes.x);
+	std::vector<int> board(sizes.x * sizes.x);
 	bool players_turn = kl::random::get_bool();
 	const bool player_was_first = players_turn;
 
@@ -157,7 +157,7 @@ int main()
 	const int circle_offset = square_size / 2;
 
 	kl::window window = { { sizes.y, sizes.y }, "Tic Engine" };
-	auto frame = kl::image(window.size(), kl::colors::gray);
+	kl::image frame = kl::image(window.size(), kl::colors::gray);
 
 	window.set_resizeable(false);
 
@@ -199,7 +199,7 @@ int main()
 
 		for (kl::int2 pos; pos.y < sizes.y; pos.y += square_size) {
 			for (pos.x = 0; pos.x < sizes.y; pos.x += square_size) {
-				frame.draw_rectangle(pos, pos + kl::int2(square_size, square_size), kl::colors::white);
+				frame.draw_rectangle(pos, pos + kl::int2::splash(square_size), kl::colors::white);
 			}
 		}
 
@@ -209,25 +209,25 @@ int main()
 				
 				if (player_was_first) {
 					if (pos_id == id::player) {
-						frame.draw_line(pos * square_size + kl::int2(line_offset, line_offset),
-							(pos + kl::int2(1, 1)) * square_size - kl::int2(line_offset, line_offset), player_color);
+						frame.draw_line(pos * square_size + kl::int2::splash(line_offset),
+							(pos + kl::int2(1, 1)) * square_size - kl::int2::splash(line_offset), player_color);
 						frame.draw_line((pos + kl::int2(0, 1)) * square_size + kl::int2(line_offset, -line_offset),
 							(pos + kl::int2(1, 0)) * square_size + kl::int2(-line_offset, line_offset), player_color);
 					}
 					else if (pos_id == id::engine) {
-						frame.draw_circle(pos * square_size + kl::int2(circle_offset, circle_offset),
+						frame.draw_circle(pos * square_size + kl::int2::splash(circle_offset),
 							pos * square_size + kl::int2(circle_offset, line_offset), engine_color);
 					}
 				}
 				else {
 					if (pos_id == id::engine) {
-						frame.draw_line(pos * square_size + kl::int2(line_offset, line_offset),
-							(pos + kl::int2(1, 1)) * square_size - kl::int2(line_offset, line_offset), engine_color);
+						frame.draw_line(pos * square_size + kl::int2::splash(line_offset),
+							(pos + kl::int2(1, 1)) * square_size - kl::int2::splash(line_offset), engine_color);
 						frame.draw_line((pos + kl::int2(0, 1)) * square_size + kl::int2(line_offset, -line_offset),
 							(pos + kl::int2(1, 0)) * square_size + kl::int2(-line_offset, line_offset), engine_color);
 					}
 					else if (pos_id == id::player) {
-						frame.draw_circle(pos * square_size + kl::int2(circle_offset, circle_offset),
+						frame.draw_circle(pos * square_size + kl::int2::splash(circle_offset),
 							pos * square_size + kl::int2(circle_offset, line_offset), player_color);
 					}
 				}

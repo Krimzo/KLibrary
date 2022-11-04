@@ -79,7 +79,7 @@ kl::keyboard::keyboard() :
 kl::keyboard::~keyboard()
 {}
 
-void kl::keyboard::update_value(const int64_t type, const bool state)
+void kl::keyboard::update_value(const WPARAM type, const bool state)
 {
     for (auto& key : buffer) {
         key.update_value(type, state);

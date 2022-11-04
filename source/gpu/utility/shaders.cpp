@@ -8,8 +8,7 @@ struct shader_blobs
     ID3DBlob* data = nullptr;
     ID3DBlob* error = nullptr;
 
-    shader_blobs()
-    {}
+    shader_blobs() = default;
 
     shader_blobs(const shader_blobs&) = delete;
     shader_blobs(const shader_blobs&&) = delete;
@@ -23,9 +22,9 @@ struct shader_blobs
         if (error) error->Release();
     }
 
-    explicit operator bool() const
+    [[nodiscard]] bool has_data() const
     {
-        return static_cast<bool>(data);
+        return data;
     }
 
     [[nodiscard]] void* data_pointer() const
@@ -36,7 +35,7 @@ struct shader_blobs
         return nullptr;
     }
 
-    [[nodiscard]] uint64_t data_size() const
+    [[nodiscard]] SIZE_T data_size() const
     {
         if (data) {
             return data->GetBufferSize();
@@ -47,7 +46,7 @@ struct shader_blobs
     [[nodiscard]] std::string get_error() const
     {
         if (error) {
-            return static_cast<char*>(error->GetBufferPointer());
+            return (char*)error->GetBufferPointer();
         }
         return "Unknown";
     }
@@ -58,9 +57,8 @@ kl::dx::vertex_shader kl::gpu::new_vertex_shader(const std::string& source, dx::
 {
     shader_blobs blobs = {};
 
-    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "v_shader", "vs_5_0", NULL, NULL, &blobs.data,
-               &blobs.error);
-    if (warning(!blobs, "Failed to compile vertex shader. Error: " + blobs.get_error())) {
+    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "v_shader", "vs_5_0", NULL, NULL, &blobs.data, &blobs.error);
+    if (warning(!blobs.has_data(), "Failed to compile vertex shader. Error: " + blobs.get_error())) {
         return nullptr;
     }
 
@@ -72,8 +70,7 @@ kl::dx::vertex_shader kl::gpu::new_vertex_shader(const std::string& source, dx::
 
     if (out_layout) {
         if (!descriptors.empty()) {
-            device_->CreateInputLayout(descriptors.data(), static_cast<uint32_t>(descriptors.size()),
-                                        blobs.data_pointer(), blobs.data_size(), out_layout);
+            device_->CreateInputLayout(descriptors.data(), UINT(descriptors.size()), blobs.data_pointer(), blobs.data_size(), out_layout);
         }
         else {
             constexpr dx::layout_descriptor default_layout_descriptors[3] = {
@@ -109,7 +106,7 @@ kl::dx::pixel_shader kl::gpu::new_pixel_shader(const std::string& source)
 
     D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "p_shader", "ps_5_0", NULL, NULL, &blobs.data,
                &blobs.error);
-    if (warning(!blobs, "Failed to compile pixel shader. Error: " + blobs.get_error())) {
+    if (warning(!blobs.has_data(), "Failed to compile pixel shader. Error: " + blobs.get_error())) {
         return nullptr;
     }
 
@@ -130,7 +127,7 @@ kl::dx::geometry_shader kl::gpu::new_geometry_shader(const std::string& source)
 
     D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "g_shader", "gs_5_0", NULL, NULL, &blobs.data,
                &blobs.error);
-    if (warning(!blobs, "Failed to compile geometry shader. Error: " + blobs.get_error())) {
+    if (warning(!blobs.has_data(), "Failed to compile geometry shader. Error: " + blobs.get_error())) {
         return nullptr;
     }
 
@@ -151,7 +148,7 @@ kl::dx::compute_shader kl::gpu::new_compute_shader(const std::string& source)
 
     D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "c_shader", "cs_5_0", NULL, NULL, &blobs.data,
                &blobs.error);
-    if (warning(!blobs, "Failed to compile compute shader. Error: " + blobs.get_error())) {
+    if (warning(!blobs.has_data(), "Failed to compile compute shader. Error: " + blobs.get_error())) {
         return nullptr;
     }
 
@@ -211,12 +208,12 @@ void kl::gpu::bind_shaders(const shaders& shaders) const
     bind_layout(shaders.layout);
 }
 
-void kl::gpu::dispatch_compute_shader(const uint3& size) const
+void kl::gpu::dispatch_compute_shader(const int3& size) const
 {
     context_->Dispatch(size.x, size.y, size.z);
 }
 
-void kl::gpu::execute_compute_shader(const dx::compute_shader shader, const uint3& size) const
+void kl::gpu::execute_compute_shader(const dx::compute_shader shader, const int3& size) const
 {
     bind_compute_shader(shader);
     dispatch_compute_shader(size);

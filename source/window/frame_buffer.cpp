@@ -1,7 +1,7 @@
 #include "window/frame_buffer.h"
 
 
-kl::frame_buffer::frame_buffer(const uint2& size)
+kl::frame_buffer::frame_buffer(const int2& size)
     : buffer1_(size), buffer2_(size)
 {
     front_ = &buffer1_;
@@ -10,7 +10,7 @@ kl::frame_buffer::frame_buffer(const uint2& size)
 kl::frame_buffer::~frame_buffer()
 {}
 
-kl::uint2 kl::frame_buffer::size() const
+kl::int2 kl::frame_buffer::size() const
 {
     return buffer1_.size();
 }

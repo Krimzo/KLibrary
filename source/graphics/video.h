@@ -25,15 +25,15 @@ namespace kl {
         
         void close();
 
-        [[nodiscard]] uint64_t size() const;
+        [[nodiscard]] size_t size() const;
 
         [[nodiscard]] float duration() const;
 
         [[nodiscard]] float fps() const;
 
-        [[nodiscard]] uint32_t frame_count() const;
+        [[nodiscard]] int frame_count() const;
 
-        [[nodiscard]] uint2 frame_size() const;
+        [[nodiscard]] int2 frame_size() const;
 
         [[nodiscard]] bool get_next_frame(image& out) const;
     };

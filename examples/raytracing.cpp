@@ -3,13 +3,15 @@
 
 static constexpr int sphere_count = 10;
 
-struct colored_sphere {
-	kl::float3 center;
+struct colored_sphere
+{
+	kl::float3 center = {};
 	float radius = 0.0f;
-	kl::float4 color;
+	kl::float4 color = {};
 };
 
-struct ps_cb {
+struct ps_cb
+{
 	kl::float4 frame_size = {};
 	kl::mat4 inverse_camera = {};
 	kl::float4 camera_position = {};
@@ -18,16 +20,17 @@ struct ps_cb {
 };
 
 int main() {
-	kl::window window = { kl::uint2(1600, 900), "Raytracing" };
+	kl::window window = { { 1600, 900 }, "Raytracing" };
 	kl::timer timer = {};
 
-	auto gpu = kl::gpu(window.get_window());
-	kl::camera camera;
+	kl::gpu gpu = kl::gpu(window.get_window());
+	kl::camera camera = {};
 
 	// Heap alloc because of stack size warnings
 	ps_cb& ps_data = *new ps_cb; // You saw nothing :)
 
-	window.on_resize = [&](const kl::uint2 new_size) {
+	window.on_resize = [&](const kl::int2 new_size)
+	{
 		if (new_size.x > 0 && new_size.y > 0) {
 			gpu.resize_internal(new_size);
 			gpu.set_viewport(new_size);
@@ -35,7 +38,8 @@ int main() {
 		}
 	};
 
-	window.keyboard.r.on_press = [&] {
+	window.keyboard.r.on_press = [&]
+	{
 		if (window.keyboard.shift.state()) {
 			for (auto& [center, radius, color] : ps_data.spheres) {
 				color = kl::float4(kl::random::get_color());
@@ -57,7 +61,8 @@ int main() {
 		}
 	};
 
-	window.mouse.right.on_down = [&] {
+	window.mouse.right.on_down = [&]
+	{
 		const kl::ray ray = { camera, window.mouse.get_normalized_position() };
 		ps_data.sun_direction = { ray.direction.negate(), 0.0f };
 	};
@@ -87,7 +92,7 @@ int main() {
 		{ /* Input */
 			static bool camera_rotating = false;
 			if (window.mouse.left.state()) {
-				const auto frame_center = kl::int2(window.get_frame_center());
+				const kl::int2 frame_center = window.get_frame_center();
 
 				if (camera_rotating) {
 					camera.rotate(kl::float2(window.mouse.position()), kl::float2(frame_center));
@@ -126,7 +131,7 @@ int main() {
 
 		gpu.bind_shaders(shaders);
 
-		ps_data.frame_size = { kl::float2(window.size()), 0.0f, 0.0f };
+		ps_data.frame_size = { kl::float2(window.size()), kl::float2() };
 		ps_data.inverse_camera = camera.matrix().inverse();
 		ps_data.camera_position = { camera.position, 0.0f };
 		gpu.set_pixel_const_buffer(ps_data);
@@ -135,6 +140,6 @@ int main() {
 
 		gpu.swap_buffers(true);
 
-		window.set_title(kl::format(static_cast<int>(1.0f / timer.get_interval())));
+		window.set_title(kl::format(int(1.0f / timer.get_interval())));
 	}
 }

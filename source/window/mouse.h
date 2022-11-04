@@ -37,7 +37,7 @@ namespace kl {
 
         void bind_to_window(HWND window);
 
-        void update_value(int64_t type, bool state);
+        void update_value(WPARAM type, bool state);
 
         void process() const;
 

@@ -18,12 +18,12 @@ kl::dx::shader_view kl::gpu::new_shader_view(const dx::resource resource, const 
     return view;
 }
 
-void kl::gpu::bind_pixel_shader_view(const dx::shader_view view, const uint32_t slot) const
+void kl::gpu::bind_pixel_shader_view(const dx::shader_view view, const int slot) const
 {
     context_->PSSetShaderResources(slot, 1, &view);
 }
 
-void kl::gpu::bind_compute_shader_view(const dx::shader_view view, const uint32_t slot) const
+void kl::gpu::bind_compute_shader_view(const dx::shader_view view, const int slot) const
 {
     context_->CSSetShaderResources(slot, 1, &view);
 }

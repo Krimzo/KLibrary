@@ -23,33 +23,29 @@ bool kl::color::operator!=(const color& obj) const
 
 kl::color kl::color::gray() const
 {
-    const auto gray_value = static_cast<uint8_t>(static_cast<float>(r) * 0.3f + static_cast<float>(g) * 0.585f +
-        static_cast<float>(b) * 0.115f);
-    return {gray_value, gray_value, gray_value, a};
+    const uint8_t gray_value = uint8_t(r * 0.3f + g * 0.585f + b * 0.115f);
+    return { gray_value, gray_value, gray_value, a };
 }
 
 kl::color kl::color::inverted() const
 {
-    return {static_cast<uint8_t>(255 - r), static_cast<uint8_t>(255 - g), static_cast<uint8_t>(255 - b), a};
+    return { uint8_t(255 - r), uint8_t(255 - g), uint8_t(255 - b), a };
 }
 
 char kl::color::as_ascii() const
 {
     static constexpr char ascii_table[10] = {'@', '%', '#', 'x', '+', '=', ':', '-', '.', ' '};
     static constexpr float conversion = 9.0f / 255.0f;
-    return ascii_table[static_cast<int>(static_cast<float>(gray().r) * conversion)];
+    return ascii_table[size_t(gray().r * conversion)];
 }
 
 kl::color kl::color::mix(const color& color, float ratio) const
 {
     ratio = math::minmax(ratio, 0, 1);
     return {
-        static_cast<uint8_t>(static_cast<uint8_t>(static_cast<float>(r) * (1.0f - ratio)) + static_cast<uint8_t>(
-            static_cast<float>(color.r) * ratio)),
-        static_cast<uint8_t>(static_cast<uint8_t>(static_cast<float>(g) * (1.0f - ratio)) + static_cast<uint8_t>(
-            static_cast<float>(color.g) * ratio)),
-        static_cast<uint8_t>(static_cast<uint8_t>(static_cast<float>(b) * (1.0f - ratio)) + static_cast<uint8_t>(
-            static_cast<float>(color.b) * ratio))
+        uint8_t((r * (1.0f - ratio)) + (color.r * ratio)),
+        uint8_t((g * (1.0f - ratio)) + (color.g * ratio)),
+        uint8_t((b * (1.0f - ratio)) + (color.b * ratio))
     };
 }
 
@@ -60,7 +56,7 @@ kl::color kl::color::mix(const color& color) const
 
 std::ostream& kl::operator<<(std::ostream& stream, const color& object)
 {
-    stream << "\033[38;2;" << static_cast<int>(object.r) << ";" << static_cast<int>(object.g) << ";" << static_cast<int>(object.b) <<
+    stream << "\033[38;2;" << int(object.r) << ";" << int(object.g) << ";" << int(object.b) <<
         "m";
     return stream;
 }

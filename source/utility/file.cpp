@@ -137,41 +137,38 @@ kl::file::operator bool() const
 
 bool kl::file::is_open() const
 {
-    return static_cast<bool>(file_);
+    return bool(file_);
 }
 
 bool kl::file::open(const std::string& filepath, bool clear)
 {
     close();
-    return !warning(fopen_s(&file_, filepath.c_str(), clear ? "wb+" : "ab+"),
-                    "Failed to open file \"" + filepath + "\"");
+    return !warning(fopen_s(&file_, filepath.c_str(), clear ? "wb+" : "ab+"), "Failed to open file \"" + filepath + "\"");
 }
 
-bool kl::file::close()
+void kl::file::close()
 {
     if (file_) {
-        const int state = fclose(file_);
+        fclose(file_);
         file_ = nullptr;
-        return static_cast<bool>(state);
     }
-    return false;
 }
 
-bool kl::file::seek(const int64_t position) const
+bool kl::file::seek(const int position) const
 {
     if (file_) {
         if (position >= 0) {
-            return !fseek(file_, static_cast<long>(position), SEEK_SET);
+            return !fseek(file_, position, SEEK_SET);
         }
-        return !fseek(file_, static_cast<long>(position + 1), SEEK_END);
+        return !fseek(file_, position + 1, SEEK_END);
     }
     return false;
 }
 
-bool kl::file::move(const int64_t delta) const
+bool kl::file::move(const int delta) const
 {
     if (file_) {
-        return !fseek(file_, static_cast<long>(delta), SEEK_CUR);
+        return !fseek(file_, delta, SEEK_CUR);
     }
     return false;
 }
@@ -192,10 +189,10 @@ bool kl::file::unwind() const
     return false;
 }
 
-int64_t kl::file::tell() const
+int kl::file::tell() const
 {
     if (file_) {
-        return ftell(file_);
+        return int(ftell(file_));
     }
     return -1;
 }

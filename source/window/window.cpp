@@ -3,7 +3,7 @@
 #include "utility/console.h"
 
 
-kl::window::window(const uint2& size, const std::string& name)
+kl::window::window(const int2& size, const std::string& name)
     : name_(name)
 {
     // Instance
@@ -15,8 +15,7 @@ kl::window::window(const uint2& size, const std::string& name)
     window_class.style = CS_OWNDC;
     window_class.lpfnWndProc = [](const HWND window_handle, const UINT message, const WPARAM w_param, const LPARAM l_param)
     {
-        return reinterpret_cast<window*>(GetWindowLongPtrA(window_handle, GWLP_USERDATA))->window_procedure(
-            window_handle, message, w_param, l_param);
+        return ((window*) GetWindowLongPtrA(window_handle, GWLP_USERDATA))->window_procedure(window_handle, message, w_param, l_param);
     };
     window_class.hInstance = instance_;
     window_class.lpszClassName = name.c_str();
@@ -25,14 +24,13 @@ kl::window::window(const uint2& size, const std::string& name)
     // Creating the window
     window_style_ = WS_OVERLAPPEDWINDOW;
 
-    RECT size_buffer = {0, 0, static_cast<LONG>(size.x), static_cast<LONG>(size.y)};
+    RECT size_buffer = { 0, 0, LONG(size.x), LONG(size.y) };
     AdjustWindowRect(&size_buffer, window_style_, false);
 
-    const uint2 new_size = {size_buffer.right - size_buffer.left, size_buffer.bottom - size_buffer.top};
-    const auto new_position = int2(screen::size / 2 - new_size / 2);
+    const int2 new_size = {size_buffer.right - size_buffer.left, size_buffer.bottom - size_buffer.top};
+    const int2 new_position = int2(screen::size / 2 - new_size / 2);
 
-    window_ = CreateWindowExA(NULL, name.c_str(), name.c_str(), window_style_, new_position.x, new_position.y,
-        static_cast<int>(new_size.x), static_cast<int>(new_size.y), nullptr, nullptr, instance_, nullptr);
+    window_ = CreateWindowExA(NULL, name.c_str(), name.c_str(), window_style_, new_position.x, new_position.y, new_size.x, new_size.y, nullptr, nullptr, instance_, nullptr);
     assert(!window_, "Failed to create window");
 
     // Getting data
@@ -40,9 +38,9 @@ kl::window::window(const uint2& size, const std::string& name)
     window_style_ = GetWindowLongA(window_, GWL_STYLE);
 
     // Setting data
-    SetWindowLongPtrA(window_, GWLP_USERDATA, reinterpret_cast<int64_t>(this));
+    SetWindowLongPtrA(window_, GWLP_USERDATA, LONG_PTR(this));
     ShowWindow(window_, SW_SHOW);
-    SetCursor(LoadCursorA(nullptr, reinterpret_cast<LPCSTR>(IDC_ARROW)));
+    SetCursor(LoadCursorA(nullptr, LPCSTR(IDC_ARROW)));
     mouse.bind_to_window(window_);
 }
 
@@ -133,15 +131,13 @@ void kl::window::set_fullscreen(const bool enable)
 {
     if (!in_fullscreen_ && enable) {
         GetWindowPlacement(window_, &placement_);
-        SetWindowLongA(window_, GWL_STYLE, static_cast<int>(window_style_) & ~WS_OVERLAPPEDWINDOW);
-        SetWindowPos(window_, HWND_TOP, 0, 0, static_cast<int>(screen::size.x), static_cast<int>(screen::size.y),
-                     SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+        SetWindowLongA(window_, GWL_STYLE, LONG(window_style_) & ~WS_OVERLAPPEDWINDOW);
+        SetWindowPos(window_, HWND_TOP, 0, 0, screen::size.x, screen::size.y, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
     }
     else if (in_fullscreen_ && !enable) {
-        SetWindowLongA(window_, GWL_STYLE, static_cast<LONG>(window_style_));
+        SetWindowLongA(window_, GWL_STYLE, LONG(window_style_));
         SetWindowPlacement(window_, &placement_);
-        SetWindowPos(window_, nullptr, 0, 0, 0, 0,
-                     SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+        SetWindowPos(window_, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
     }
     in_fullscreen_ = enable;
 }
@@ -161,32 +157,32 @@ kl::int2 kl::window::position(const bool client) const
 void kl::window::set_position(const int2& position) const
 {
     if (!in_fullscreen_) {
-        const uint2 size = this->size(false);
-        MoveWindow(window_, position.x, position.y, static_cast<int>(size.x), static_cast<int>(size.y), false);
+        const int2 size = this->size(false);
+        MoveWindow(window_, position.x, position.y, int(size.x), int(size.y), false);
     }
 }
 
-uint32_t kl::window::width() const
+int kl::window::width() const
 {
     return size().x;
 }
 
-void kl::window::set_width(uint32_t width) const
+void kl::window::set_width(int width) const
 {
-    set_size({width, height()});
+    set_size({ width, height() });
 }
 
-uint32_t kl::window::height() const
+int kl::window::height() const
 {
     return size().y;
 }
 
-void kl::window::set_height(uint32_t height) const
+void kl::window::set_height(int height) const
 {
-    set_size({width(), height});
+    set_size({ width(), height });
 }
 
-kl::uint2 kl::window::size(const bool client) const
+kl::int2 kl::window::size(const bool client) const
 {
     RECT rect = {};
     if (client) {
@@ -198,34 +194,29 @@ kl::uint2 kl::window::size(const bool client) const
     return {rect.right - rect.left, rect.bottom - rect.top};
 }
 
-void kl::window::set_size(const uint2& size, const bool client) const
+void kl::window::set_size(const int2& size, const bool client) const
 {
     if (!in_fullscreen_) {
         const int2 position = this->position();
-        uint2 new_size = size;
+        int2 new_size = size;
 
         if (client) {
-            RECT rect = {
-                static_cast<LONG>(position.x),
-                static_cast<LONG>(position.y),
-                static_cast<LONG>(position.x + size.x),
-                static_cast<LONG>(position.y + size.y)
-            };
+            RECT rect = { LONG(position.x), LONG(position.y), LONG(position.x + size.x), LONG(position.y + size.y) };
             AdjustWindowRect(&rect, window_style_, false);
             new_size = {rect.right - rect.left, rect.bottom - rect.top};
         }
 
-        MoveWindow(window_, position.x, position.y, static_cast<int>(new_size.x), static_cast<int>(new_size.y), false);
+        MoveWindow(window_, position.x, position.y, new_size.x, new_size.y, false);
     }
 }
 
 float kl::window::get_aspect_ratio() const
 {
-    const uint2 win_size = size();
-    return static_cast<float>(win_size.x) / static_cast<float>(win_size.y);
+    const int2 win_size = size();
+    return float(win_size.x) / win_size.y;
 }
 
-kl::uint2 kl::window::get_frame_center() const
+kl::int2 kl::window::get_frame_center() const
 {
     return size() / 2;
 }
@@ -241,23 +232,22 @@ bool kl::window::set_icon(const std::string& filepath) const
     if (!loaded_icon) {
         return false;
     }
-    SendMessageA(window_, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(loaded_icon));
-    SendMessageA(window_, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(loaded_icon));
+    SendMessageA(window_, WM_SETICON, ICON_BIG, LPARAM(loaded_icon));
+    SendMessageA(window_, WM_SETICON, ICON_SMALL, LPARAM(loaded_icon));
     return true;
 }
 
-void kl::window::draw_pixel_data(const color* data, const uint2& size, const int2& position) const
+void kl::window::draw_pixel_data(const color* data, const int2& size, const int2& position) const
 {
     BITMAPINFO bitmap_info = {};
     bitmap_info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bitmap_info.bmiHeader.biCompression = BI_RGB;
     bitmap_info.bmiHeader.biBitCount = 32;
     bitmap_info.bmiHeader.biPlanes = 1;
-    bitmap_info.bmiHeader.biWidth = static_cast<LONG>(size.x);
-    bitmap_info.bmiHeader.biHeight = -static_cast<int>(size.y);
+    bitmap_info.bmiHeader.biWidth = LONG(size.x);
+    bitmap_info.bmiHeader.biHeight = -int(size.y);
 
-    StretchDIBits(device_context_, position.x, position.y, static_cast<int>(size.x), static_cast<int>(size.y), 0, 0,
-                  static_cast<int>(size.x), static_cast<int>(size.y), data, &bitmap_info, DIB_RGB_COLORS, SRCCOPY);
+    StretchDIBits(device_context_, position.x, position.y, size.x, size.y, 0, 0, size.x, size.y, data, &bitmap_info, DIB_RGB_COLORS, SRCCOPY);
 }
 
 void kl::window::draw_image(const image& image, const int2& position) const

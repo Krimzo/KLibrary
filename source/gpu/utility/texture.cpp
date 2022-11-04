@@ -8,7 +8,7 @@ kl::dx::texture kl::gpu::get_back_buffer()
 {
     dx::texture buffer = nullptr;
 
-    if (const long result = chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&buffer));
+    if (const long result = chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &buffer);
         warning(!buffer, format("Failed to get backbuffer texture. Result: 0x", std::hex, result))) {
         return nullptr;
     }
@@ -32,7 +32,7 @@ kl::dx::texture kl::gpu::new_texture(const dx::texture_descriptor* descriptor, c
 
 kl::dx::texture kl::gpu::new_texture(const image& image, const bool has_unordered_access, const bool is_target)
 {
-    auto flipped_image = image.flip(true);
+    const kl::image flipped_image = image.flip(true);
 
     dx::texture_descriptor descriptor = {};
     descriptor.Width = image.width();
@@ -76,7 +76,7 @@ kl::dx::texture kl::gpu::new_texture(const image& front, const image& back, cons
     descriptor.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     descriptor.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-    const auto mem_pitch = static_cast<uint32_t>(front.width() * sizeof(color));
+    const UINT mem_pitch = UINT(front.width() * sizeof(color));
     const dx::subresource_descriptor data[6] = {
         {right.data(), mem_pitch, 0},
         {left.data(), mem_pitch, 0},
@@ -89,7 +89,7 @@ kl::dx::texture kl::gpu::new_texture(const image& front, const image& back, cons
     return new_texture(&descriptor, data);
 }
 
-kl::dx::texture kl::gpu::new_staging_texture(const dx::texture texture, const uint2& size)
+kl::dx::texture kl::gpu::new_staging_texture(const dx::texture texture, const int2& size)
 {
     dx::texture_descriptor descriptor = {};
     texture->GetDesc(&descriptor);

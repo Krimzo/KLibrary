@@ -6,7 +6,7 @@
 kl::dx::buffer kl::gpu::new_vertex_buffer(const std::vector<vertex>& vertex_data)
 {
     dx::buffer_descriptor descriptor = {};
-    descriptor.ByteWidth = static_cast<uint32_t>(vertex_data.size() * sizeof(vertex));
+    descriptor.ByteWidth = UINT(vertex_data.size() * sizeof(vertex));
     descriptor.Usage = D3D11_USAGE_DEFAULT;
     descriptor.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -32,24 +32,24 @@ kl::dx::buffer kl::gpu::generate_screen_mesh()
 kl::dx::buffer kl::gpu::generate_plane_mesh(const float size, int num_of_points)
 {
     // Count fix
-    const float increment = size / static_cast<float>(num_of_points);
+    const float increment = size / num_of_points;
     num_of_points += 1;
 
     // Generating points
     std::vector<float2> points = {};
-    points.reserve(static_cast<uint64_t>(num_of_points) * num_of_points);
+    points.reserve(num_of_points * num_of_points);
     for (int x = 0; x < num_of_points; x++) {
         for (int z = 0; z < num_of_points; z++) {
             points.emplace_back(
-                -size * 0.5f + increment * static_cast<float>(x),
-                -size * 0.5f + increment * static_cast<float>(z)
+                -size * 0.5f + increment * x,
+                -size * 0.5f + increment * z
             );
         }
     }
 
     // Generating triangles
     std::vector<vertex> vertices = {};
-    vertices.reserve(static_cast<uint64_t>(num_of_points - 1) * (num_of_points - 1) * 6);
+    vertices.reserve((num_of_points - 1) * (num_of_points - 1) * 6);
     for (int x = 0; x < num_of_points - 1; x++) {
         for (int z = 0; z < num_of_points - 1; z++) {
             const float2& xz_point = points[z * num_of_points + x];
@@ -69,12 +69,12 @@ kl::dx::buffer kl::gpu::generate_plane_mesh(const float size, int num_of_points)
 
 void kl::gpu::draw_vertex_buffer(const dx::buffer buffer) const
 {
-    constexpr uint32_t offset = 0;
-    constexpr uint32_t stride = sizeof(vertex);
-    context_->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
-
+    static constexpr UINT offset = 0;
+    static constexpr UINT stride = sizeof(vertex);
+    
     dx::buffer_descriptor descriptor = {};
     buffer->GetDesc(&descriptor);
-
+    
+    context_->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
     context_->Draw(descriptor.ByteWidth / stride, 0);
 }

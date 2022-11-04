@@ -21,7 +21,7 @@ namespace kl {
         template <typename T>
         void update_aspect_ratio(const vector2<T>& size)
         {
-            aspect_ratio = static_cast<float>(size.x) / static_cast<float>(size.y);
+            aspect_ratio = float(size.x) / size.y;
         }
 
         void set_forward(const float3& dir);

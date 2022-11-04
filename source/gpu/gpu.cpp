@@ -113,18 +113,18 @@ kl::dx::chain kl::gpu::chain() const
     return chain_;
 }
 
-void kl::gpu::set_viewport(const uint2& size) const
+void kl::gpu::set_viewport(const int2& size) const
 {
     set_viewport({}, size);
 }
 
-void kl::gpu::set_viewport(const int2& position, const uint2& size) const
+void kl::gpu::set_viewport(const int2& position, const int2& size) const
 {
     D3D11_VIEWPORT viewport = {};
-    viewport.TopLeftX = static_cast<float>(position.x);
-    viewport.TopLeftY = static_cast<float>(position.y);
-    viewport.Width = static_cast<float>(size.x);
-    viewport.Height = static_cast<float>(size.y);
+    viewport.TopLeftX = float(position.x);
+    viewport.TopLeftY = float(position.y);
+    viewport.Width = float(size.x);
+    viewport.Height = float(size.y);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     context_->RSSetViewports(1, &viewport);
@@ -142,19 +142,17 @@ void kl::gpu::bind_internal_targets() const
 
 void kl::gpu::bind_targets(const std::vector<dx::target_view>& targets, const dx::depth_view depth_view) const
 {
-    context_->OMSetRenderTargets(static_cast<uint32_t>(targets.size()), targets.data(),
-                                  depth_view ? depth_view : depth_buffer_);
+    context_->OMSetRenderTargets(UINT(targets.size()), targets.data(), depth_view ? depth_view : depth_buffer_);
 }
 
 void kl::gpu::bind_targets_with_internal(const std::vector<dx::target_view>& additional_targets, const dx::depth_view depth_view) const
 {
     std::vector combined_targets = {frame_buffer_};
     combined_targets.insert(combined_targets.end(), additional_targets.begin(), additional_targets.end());
-    context_->OMSetRenderTargets(static_cast<uint32_t>(combined_targets.size()), combined_targets.data(),
-                                  depth_view ? depth_view : depth_buffer_);
+    context_->OMSetRenderTargets(UINT(combined_targets.size()), combined_targets.data(), depth_view ? depth_view : depth_buffer_);
 }
 
-void kl::gpu::resize_internal(const uint2& size)
+void kl::gpu::resize_internal(const int2& size)
 {
     unbind_all_targets();
 
@@ -214,7 +212,7 @@ void kl::gpu::copy_resource(const dx::resource destination, const dx::resource s
     context_->CopyResource(destination, source);
 }
 
-void kl::gpu::read_from_resource(void* cpu_buffer, const dx::resource cpu_read_resource, const uint32_t byte_size) const
+void kl::gpu::read_from_resource(void* cpu_buffer, const dx::resource cpu_read_resource, const int byte_size) const
 {
     dx::mapped_subresource_descriptor mapped_subresource = {};
     context_->Map(cpu_read_resource, 0, D3D11_MAP_READ, NULL, &mapped_subresource);
@@ -222,7 +220,7 @@ void kl::gpu::read_from_resource(void* cpu_buffer, const dx::resource cpu_read_r
     context_->Unmap(cpu_read_resource, NULL);
 }
 
-void kl::gpu::write_to_resource(const dx::resource cpu_write_resource, const void* data, const uint32_t byte_size, const bool discard) const
+void kl::gpu::write_to_resource(const dx::resource cpu_write_resource, const void* data, const int byte_size, const bool discard) const
 {
     dx::mapped_subresource_descriptor mapped_subresource = {};
     context_->Map(cpu_write_resource, 0, discard ? D3D11_MAP_WRITE_DISCARD : D3D11_MAP_WRITE, NULL, &mapped_subresource);

@@ -19,7 +19,7 @@ namespace kl::random {
     float get_float();
 
     char get_char(bool upper = false);
-    std::string get_string(uint32_t length);
+    std::string get_string(int length);
 
     template <typename T>
     vector2<T> get_vector2(T start_inclusive, T end_inclusive)

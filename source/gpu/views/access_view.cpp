@@ -18,7 +18,7 @@ kl::dx::access_view kl::gpu::new_access_view(const dx::resource resource, const 
     return view;
 }
 
-void kl::gpu::bind_compute_access_view(const dx::access_view view, const uint32_t slot, const uint32_t* initial_counts) const
+void kl::gpu::bind_compute_access_view(const dx::access_view view, const int slot, const int* initial_counts) const
 {
-    context_->CSSetUnorderedAccessViews(slot, 1, &view, initial_counts);
+    context_->CSSetUnorderedAccessViews(slot, 1, &view, (const UINT*) initial_counts);
 }

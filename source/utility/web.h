@@ -4,5 +4,5 @@
 
 
 namespace kl::web {
-    std::string download_website(const std::string& url, uint32_t buffer_size = 65536);
+    std::string download_website(const std::string& url, int buffer_size = 65536);
 }

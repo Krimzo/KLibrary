@@ -31,18 +31,18 @@ void kl::window::handle_message(const MSG& message)
     switch (message.message) {
 #ifdef KL_USING_IMGUI
 		case WM_CHAR:
-			if (*reinterpret_cast<short*>(&message.lParam) > 1) {
-				ImGui::GetIO().AddInputCharacterstatic_cast<uint32_t>(message.wParam));
+			if (*((short*) &message.lParam) > 1) {
+				ImGui::GetIO().AddInputCharacter(int(message.wParam));
 			}
 			break;
 #endif
 
     case WM_KEYDOWN:
-        keyboard.update_value(static_cast<int64_t>(message.wParam), true);
+        keyboard.update_value(message.wParam, true);
         break;
 
     case WM_KEYUP:
-        keyboard.update_value(static_cast<int64_t>(message.wParam), false);
+        keyboard.update_value(message.wParam, false);
         break;
 
     case WM_LBUTTONDOWN:
@@ -70,7 +70,7 @@ void kl::window::handle_message(const MSG& message)
         break;
 
     case WM_MOUSEMOVE:
-        mouse.update_position(window_, {GET_X_LPARAM(message.lParam), GET_Y_LPARAM(message.lParam)});
+        mouse.update_position(window_, { GET_X_LPARAM(message.lParam), GET_Y_LPARAM(message.lParam) });
         break;
 
     case WM_MOUSEWHEEL:

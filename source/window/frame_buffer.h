@@ -12,7 +12,7 @@ namespace kl {
         image* front_ = {};
 
     public:
-        explicit frame_buffer(const uint2& size);
+        explicit frame_buffer(const int2& size);
         frame_buffer(const frame_buffer&) = delete;
         frame_buffer(const frame_buffer&&) = delete;
         ~frame_buffer();
@@ -20,7 +20,7 @@ namespace kl {
         void operator=(const frame_buffer&) = delete;
         void operator=(const frame_buffer&&) = delete;
         
-        [[nodiscard]] uint2 size() const;
+        [[nodiscard]] int2 size() const;
 
         image* back_buffer();
 

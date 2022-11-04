@@ -59,6 +59,10 @@ namespace kl {
             : x(T(x)), y(T(y)), z(v.x), w(v.y)
         {}
 
+        vector4(const vector2<T>& v1, const vector2<T>& v2)
+            : x(v1.x), y(v1.y), z(v2.x), w(v2.y)
+        {}
+
         explicit vector4(const color& color)
             : x(to_float_color(color.r)), y(to_float_color(color.g)), z(to_float_color(color.b)), w(to_float_color(color.a))
         {}
@@ -243,14 +247,8 @@ namespace kl {
 
 namespace kl {
     using float4 = vector4<float>;
-    using double4 = vector4<double>;
-    using int4 = vector4<int32_t>;
-    using uint4 = vector4<uint32_t>;
-    using bool4 = vector4<bool>;
+    using int4 = vector4<int>;
 
     using vec4 = float4;
-    using d_vec4 = double4;
-    using i_vec4 = int4;
-    using u_vec4 = uint4;
-    using b_vec4 = bool4;
+    using ivec4 = int4;
 }

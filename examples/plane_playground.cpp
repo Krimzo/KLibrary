@@ -11,14 +11,14 @@ struct sky_ps_cb
 
 struct plane_vs_cb
 {
-	kl::mat4 w_matrix;
-	kl::mat4 vp_matrix;
-	kl::float4 time_data;
+	kl::mat4 w_matrix = {};
+	kl::mat4 vp_matrix = {};
+	kl::float4 time_data = {};
 };
 
 struct plane_ps_cb
 {
-	kl::float4 sun_direction;
+	kl::float4 sun_direction = {};
 };
 
 static kl::ref<kl::window> window;
@@ -34,7 +34,8 @@ static kl::float3 sun_direction = {1, -1, 0};
 
 static void setup_input()
 {
-	window->on_resize = [&](const kl::uint2 new_size) {
+	window->on_resize = [&](const kl::int2 new_size)
+	{
 		if (new_size.x > 0 && new_size.y > 0) {
 			gpu->resize_internal(new_size);
 			gpu->set_viewport(new_size);
@@ -60,7 +61,7 @@ static void setup_input()
 	window->keyboard.r.on_press = [&] {
 		kl::console::clear();
 
-		const std::string shader_source = kl::files::read_string("examples/shaders/plane.hlsl");
+		const std::string shader_source = kl::files::read_string("examples/shaders/playground.hlsl");
 		const kl::shaders temp_default_shaders = gpu->new_shaders(shader_source);
 
 		if (const kl::dx::geometry_shader temp_geometry_shader = gpu->new_geometry_shader(shader_source);
@@ -83,12 +84,12 @@ static void camera_movement()
 {
 	static bool camera_rotating = false;
 	if (window->mouse.left.state()) {
-		const kl::uint2 frame_center = window->get_frame_center();
+		const kl::int2 frame_center = window->get_frame_center();
 
 		if (camera_rotating) {
 			camera.rotate(kl::float2(window->mouse.position()), kl::float2(frame_center));
 		}
-		window->mouse.set_position(kl::int2(frame_center));
+		window->mouse.set_position(frame_center);
 
 		window->mouse.set_hidden(true);
 		camera_rotating = true;
@@ -120,7 +121,7 @@ static void camera_movement()
 
 int main()
 {
-	window = kl::make<kl::window>(kl::uint2(1600, 900), "Plane Playground");
+	window = kl::make<kl::window>(kl::int2(1600, 900), "Plane Playground");
 	gpu = kl::make<kl::gpu>(window->get_window());
 
 	setup_input();
@@ -150,7 +151,7 @@ int main()
 		gpu->bind_geometry_shader(nullptr);
 
 		sky_ps_cb sky_pscb = {};
-		sky_pscb.frame_size = kl::float4(kl::float2(window->size()), 0, 0);
+		sky_pscb.frame_size = kl::float4(kl::float2(window->size()), kl::float2());
 		sky_pscb.camera_position = kl::float4(camera.position, 0);
 		sky_pscb.inverse_camera = camera.matrix().inverse();
 		sky_pscb.sun_direction = { sun_direction.normalize(), 0 };

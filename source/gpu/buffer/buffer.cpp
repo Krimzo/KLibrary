@@ -18,8 +18,7 @@ kl::dx::buffer kl::gpu::new_buffer(const dx::buffer_descriptor* descriptor, cons
     return buffer;
 }
 
-kl::dx::buffer kl::gpu::new_structured_buffer(const void* data, const uint32_t element_count, const uint32_t element_size,
-                                              const bool has_unordered_access, const bool cpu_read)
+kl::dx::buffer kl::gpu::new_structured_buffer(const void* data, const int element_count, const int element_size, const bool has_unordered_access, const bool cpu_read)
 {
     dx::buffer_descriptor descriptor;
     descriptor.Usage = D3D11_USAGE_DEFAULT;
@@ -35,7 +34,7 @@ kl::dx::buffer kl::gpu::new_structured_buffer(const void* data, const uint32_t e
     return new_buffer(&descriptor, &subresource);
 }
 
-kl::dx::buffer kl::gpu::new_staging_buffer(const dx::buffer buffer, const uint32_t byte_size)
+kl::dx::buffer kl::gpu::new_staging_buffer(const dx::buffer buffer, const int byte_size)
 {
     dx::buffer_descriptor descriptor = {};
     buffer->GetDesc(&descriptor);
