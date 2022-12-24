@@ -8,7 +8,8 @@
 
 
 namespace kl {
-	class dll {
+	class dll
+	{
 	public:
 		template<typename Return, typename... Args>
 		using function = Return(__stdcall*)(Args...);

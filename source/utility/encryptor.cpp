@@ -16,8 +16,8 @@ void kl::encryptor::regenerate_keys()
         }
         while ([&]
         {
-            for (auto& k : keys) {
-                if (k.size() == key_size) {
+            for (auto& key : keys) {
+                if (key.size() == key_size) {
                     return true;
                 }
             }
@@ -25,8 +25,8 @@ void kl::encryptor::regenerate_keys()
         }());
 
         key.resize(key_size);
-        for (auto& k : key) {
-            k = uint8_t(rand() % 256);
+        for (auto& value : key) {
+            value = (uint8_t) (rand() % 256);
         }
     }
 }

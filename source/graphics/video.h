@@ -12,9 +12,10 @@ namespace kl {
     public:
         video();
         explicit video(const std::string& filepath);
+        ~video();
+
         video(const video&) = delete;
         video(const video&&) = delete;
-        ~video();
         
         void operator=(const video&) = delete;
         void operator=(const video&&) = delete;

@@ -29,9 +29,10 @@ namespace kl {
     public:
         file();
         explicit file(const std::string& filepath, bool clear = true);
+        ~file();
+
         file(const file&) = delete;
         file(const file&&) = delete;
-        ~file();
 
         void operator=(const file&) = delete;
         void operator=(const file&&) = delete;

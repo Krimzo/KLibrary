@@ -10,6 +10,8 @@ namespace kl {
     {
     public:
         using key = std::vector<uint8_t>;
+
+    public:
         key keys[5] = {};
 
         encryptor();

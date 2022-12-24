@@ -6,7 +6,7 @@
 namespace kl_ignore {
     [[maybe_unused]] static const int dont_care = []
     {
-        srand(int(time(nullptr)));
+        srand((uint32_t) time(nullptr));
         return 0;
     }();
 }
@@ -18,7 +18,7 @@ bool kl::random::get_bool()
 
 uint8_t kl::random::get_byte()
 {
-    return uint8_t(rand() % 256);
+    return (uint8_t) (rand() % 256);
 }
 
 kl::color kl::random::get_color(const bool gray)
@@ -27,7 +27,7 @@ kl::color kl::random::get_color(const bool gray)
         const uint8_t rand_gray = get_byte();
         return {rand_gray, rand_gray, rand_gray};
     }
-    return {get_byte(), get_byte(), get_byte()};
+    return { get_byte(), get_byte(), get_byte() };
 }
 
 int kl::random::get_int(const int start_inclusive, const int end_exclusive)
@@ -52,12 +52,12 @@ float kl::random::get_float(const float end_inclusive)
 
 float kl::random::get_float()
 {
-    return float(rand()) / RAND_MAX;
+    return (float) (rand() / RAND_MAX);
 }
 
 char kl::random::get_char(const bool upper)
 {
-    return upper ? char(get_int(65, 91)) : char(get_int(97, 123));
+    return upper ? char(get_int('A', 'Z' + 1)) : char(get_int('a', 'z' + 1));
 }
 
 std::string kl::random::get_string(const int length)

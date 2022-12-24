@@ -53,9 +53,10 @@ namespace kl {
     public:
         gpu();
         explicit gpu(HWND window);
+        ~gpu();
+
         gpu(const gpu&) = delete;
         gpu(const gpu&&) = delete;
-        ~gpu();
         
         void operator=(const gpu&) = delete;
         void operator=(const gpu&&) = delete;
