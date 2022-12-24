@@ -44,18 +44,18 @@ public:
         return temp;
     }
 
-    friend bool operator==(const custom_iterator& a, const custom_iterator& b)
+    friend bool operator==(const custom_iterator& first, const custom_iterator& second)
     {
-        return a.value == b.value;
+        return first.value == second.value;
     }
 
-    friend bool operator!=(const custom_iterator& a, const custom_iterator& b)
+    friend bool operator!=(const custom_iterator& first, const custom_iterator& second)
     {
-        return a.value != b.value;
+        return first.value != second.value;
     }
 };
 
-void kl::async::loop(const int64_t start_inclusive, const int64_t end_exclusive, const std::function<void(int64_t i)>& loop_body)
+void kl::async::loop(const int64_t start_inclusive, const int64_t end_exclusive, const std::function<void(int64_t)>& loop_body)
 {
     std::for_each(std::execution::par, custom_iterator(start_inclusive), custom_iterator(end_exclusive), loop_body);
 }
