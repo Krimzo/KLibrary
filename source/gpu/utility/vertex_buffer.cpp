@@ -1,6 +1,6 @@
 #include "gpu/gpu.h"
 
-#include "utility/file.h"
+#include "memory/file.h"
 
 
 kl::dx::buffer kl::gpu::new_vertex_buffer(const std::vector<vertex>& vertex_data)

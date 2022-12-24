@@ -86,9 +86,10 @@ namespace kl {
         };
 
         keyboard();
+        ~keyboard();
+
         keyboard(const keyboard&) = delete;
         keyboard(const keyboard&&) = delete;
-        ~keyboard();
 
         void operator=(const keyboard&) = delete;
         void operator=(const keyboard&&) = delete;

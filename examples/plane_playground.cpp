@@ -131,8 +131,8 @@ int main()
 
 	sky_shaders = gpu->new_shaders(kl::files::read_string("examples/shaders/sky.hlsl"));
 
-	kl::dx::buffer screenMesh = gpu->generate_screen_mesh();
-	kl::dx::buffer planeMesh = gpu->generate_plane_mesh(10.0f, 1000);
+	kl::dx::buffer screen_mesh = gpu->generate_screen_mesh();
+	kl::dx::buffer plane_mesh = gpu->generate_plane_mesh(10.0f, 1000);
 
 	camera.position = { -3.5f, 1.5f, -2.5f };
 	camera.set_forward(camera.position.negate());
@@ -157,7 +157,7 @@ int main()
 		sky_pscb.sun_direction = { sun_direction.normalize(), 0 };
 		gpu->set_pixel_const_buffer(sky_pscb);
 		
-		gpu->draw_vertex_buffer(screenMesh);
+		gpu->draw_vertex_buffer(screen_mesh);
 		/* SKY-END */
 
 		/* PLANE */
@@ -177,7 +177,7 @@ int main()
 		plane_pscb.sun_direction = { sun_direction.normalize(), 0 };
 		gpu->set_pixel_const_buffer(plane_pscb);
 
-		gpu->draw_vertex_buffer(planeMesh);
+		gpu->draw_vertex_buffer(plane_mesh);
 		/* PLANE-END */
 
 		gpu->swap_buffers(true);

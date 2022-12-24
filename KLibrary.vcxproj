@@ -33,6 +33,7 @@
     <ClInclude Include="source\math\vector2.h" />
     <ClInclude Include="source\math\vector3.h" />
     <ClInclude Include="source\math\vector4.h" />
+    <ClInclude Include="source\memory\dll.h" />
     <ClInclude Include="source\render\camera.h" />
     <ClInclude Include="source\render\entity.h" />
     <ClInclude Include="source\render\plane.h" />
@@ -40,16 +41,18 @@
     <ClInclude Include="source\render\sphere.h" />
     <ClInclude Include="source\render\triangle.h" />
     <ClInclude Include="source\render\vertex.h" />
-    <ClInclude Include="source\types\reference.h" />
+    <ClInclude Include="source\memory\reference.h" />
+    <ClInclude Include="source\time\date.h" />
+    <ClInclude Include="source\time\timer.h" />
     <ClInclude Include="source\utility\async.h" />
     <ClInclude Include="source\utility\console.h" />
     <ClInclude Include="source\utility\encryptor.h" />
-    <ClInclude Include="source\utility\file.h" />
+    <ClInclude Include="source\memory\file.h" />
     <ClInclude Include="source\utility\random.h" />
-    <ClInclude Include="source\utility\socket.h" />
+    <ClInclude Include="source\web\socket.h" />
     <ClInclude Include="source\utility\strings.h" />
-    <ClInclude Include="source\utility\time.h" />
-    <ClInclude Include="source\utility\web.h" />
+    <ClInclude Include="source\time\time.h" />
+    <ClInclude Include="source\web\web.h" />
     <ClInclude Include="source\window\frame_buffer.h" />
     <ClInclude Include="source\window\key.h" />
     <ClInclude Include="source\window\keyboard.h" />
@@ -58,7 +61,7 @@
     <ClInclude Include="source\window\system_handler.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\visual_sort.cpp" />
+    <ClCompile Include="examples\dynamic_linking.cpp" />
     <ClCompile Include="source\gpu\buffer\buffer.cpp" />
     <ClCompile Include="source\gpu\buffer\const_buffer.cpp" />
     <ClCompile Include="source\gpu\gpu.cpp" />
@@ -75,6 +78,8 @@
     <ClCompile Include="source\graphics\color.cpp" />
     <ClCompile Include="source\graphics\image.cpp" />
     <ClCompile Include="source\graphics\video.cpp" />
+    <ClCompile Include="source\memory\dll.cpp" />
+    <ClCompile Include="source\memory\reference.cpp" />
     <ClCompile Include="source\render\camera.cpp" />
     <ClCompile Include="source\render\entity.cpp" />
     <ClCompile Include="source\render\plane.cpp" />
@@ -82,15 +87,17 @@
     <ClCompile Include="source\render\sphere.cpp" />
     <ClCompile Include="source\render\triangle.cpp" />
     <ClCompile Include="source\render\vertex.cpp" />
+    <ClCompile Include="source\time\date.cpp" />
+    <ClCompile Include="source\time\timer.cpp" />
     <ClCompile Include="source\utility\async.cpp" />
     <ClCompile Include="source\utility\console.cpp" />
     <ClCompile Include="source\utility\encryptor.cpp" />
-    <ClCompile Include="source\utility\file.cpp" />
+    <ClCompile Include="source\memory\file.cpp" />
     <ClCompile Include="source\utility\random.cpp" />
-    <ClCompile Include="source\utility\socket.cpp" />
+    <ClCompile Include="source\web\socket.cpp" />
     <ClCompile Include="source\utility\strings.cpp" />
-    <ClCompile Include="source\utility\time.cpp" />
-    <ClCompile Include="source\utility\web.cpp" />
+    <ClCompile Include="source\time\time.cpp" />
+    <ClCompile Include="source\web\web.cpp" />
     <ClCompile Include="source\window\frame_buffer.cpp" />
     <ClCompile Include="source\window\key.cpp" />
     <ClCompile Include="source\window\keyboard.cpp" />

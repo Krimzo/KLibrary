@@ -18,9 +18,10 @@ namespace kl {
         std::function<void()> on_release = [] {};
 
         explicit key(WPARAM type);
+        ~key();
+
         key(const key&) = delete;
         key(const key&&) = delete;
-        ~key();
 
         void operator=(const key&) = delete;
         void operator=(const key&&) = delete;

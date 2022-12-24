@@ -28,9 +28,10 @@ namespace kl {
         };
 
         mouse();
+        ~mouse();
+
         mouse(const mouse&) = delete;
         mouse(const mouse&&) = delete;
-        ~mouse();
 
         void operator=(const mouse&) = delete;
         void operator=(const mouse&&) = delete;

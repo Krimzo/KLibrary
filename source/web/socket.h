@@ -20,9 +20,10 @@ namespace kl {
         socket();
         socket(const std::string& address, int port);
         explicit socket(size_t socket);
+        ~socket();
+
         socket(const socket&) = delete;
         socket(const socket&&) = delete;
-        ~socket();
 
         void operator=(const socket&) = delete;
         void operator=(const socket&&) = delete;

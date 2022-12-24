@@ -35,9 +35,10 @@ namespace kl {
         std::function<void(int2)> on_resize = [](int2) {};
 
         window(const int2& size, const std::string& name);
+        ~window();
+
         window(const window&) = delete;
         window(const window&&) = delete;
-        ~window();
         
         void operator=(const window&) = delete;
         void operator=(const window&&) = delete;

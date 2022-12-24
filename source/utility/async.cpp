@@ -1,20 +1,61 @@
 #include "utility/async.h"
 
+#include <execution>
 
-void kl::async::loop(const int64_t start_inclusive, const int64_t end_exclusive, const std::function<void(int t, int64_t i)>& loop_body, const int thread_count)
+
+class custom_iterator
 {
-    std::vector<std::thread> workers(thread_count);
-    std::atomic work_counter = start_inclusive;
+public:
+    using value_type = int64_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
-    for (int t = 0; t < thread_count; t++) {
-        workers[t] = std::thread([&work_counter, end_exclusive, &loop_body, t] {
-            for (int64_t work_index = work_counter++; work_index < end_exclusive; work_index = work_counter++) {
-                loop_body(t, work_index);
-            }
-        });
+    using iterator_category = std::forward_iterator_tag;
+    using difference_type = std::ptrdiff_t;
+
+private:
+    value_type value = 0;
+
+public:
+    custom_iterator() {}
+
+    custom_iterator(value_type value) : value(value) {}
+
+    reference operator*()
+    {
+        return value;
     }
 
-    for (auto& worker : workers) {
-        worker.join();
+    pointer operator->()
+    {
+        return &value;
     }
+
+    custom_iterator& operator++()
+    {
+        value += 1;
+        return *this;
+    }
+
+    custom_iterator operator++(int)
+    {
+        custom_iterator temp = *this;
+        ++(*this);
+        return temp;
+    }
+
+    friend bool operator==(const custom_iterator& a, const custom_iterator& b)
+    {
+        return a.value == b.value;
+    }
+
+    friend bool operator!=(const custom_iterator& a, const custom_iterator& b)
+    {
+        return a.value != b.value;
+    }
+};
+
+void kl::async::loop(const int64_t start_inclusive, const int64_t end_exclusive, const std::function<void(int64_t i)>& loop_body)
+{
+    std::for_each(std::execution::par, custom_iterator(start_inclusive), custom_iterator(end_exclusive), loop_body);
 }

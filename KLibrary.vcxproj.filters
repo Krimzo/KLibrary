@@ -60,22 +60,22 @@
     <ClCompile Include="Source\Utility\Console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\File.cpp">
+    <ClCompile Include="source\memory\file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utility\Random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\Socket.cpp">
+    <ClCompile Include="source\web\socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utility\Strings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\Time.cpp">
+    <ClCompile Include="source\time\time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\Web.cpp">
+    <ClCompile Include="source\web\web.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Window\Key.cpp">
@@ -129,7 +129,19 @@
     <ClCompile Include="source\window\system_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\visual_sort.cpp">
+    <ClCompile Include="source\memory\reference.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\memory\dll.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\dynamic_linking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\time\date.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\time\timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,22 +206,22 @@
     <ClInclude Include="Source\Utility\Console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\File.h">
+    <ClInclude Include="source\memory\file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\Socket.h">
+    <ClInclude Include="source\web\socket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\Strings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\Time.h">
+    <ClInclude Include="source\time\time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\Web.h">
+    <ClInclude Include="source\web\web.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Window\Key.h">
@@ -233,7 +245,7 @@
     <ClInclude Include="source\klib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\types\reference.h">
+    <ClInclude Include="source\memory\reference.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\utility\encryptor.h">
@@ -243,6 +255,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\window\system_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\memory\dll.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\time\timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\time\date.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

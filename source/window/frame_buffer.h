@@ -13,9 +13,10 @@ namespace kl {
 
     public:
         explicit frame_buffer(const int2& size);
+        ~frame_buffer();
+
         frame_buffer(const frame_buffer&) = delete;
         frame_buffer(const frame_buffer&&) = delete;
-        ~frame_buffer();
 
         void operator=(const frame_buffer&) = delete;
         void operator=(const frame_buffer&&) = delete;

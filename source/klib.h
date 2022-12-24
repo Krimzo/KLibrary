@@ -1,7 +1,5 @@
 #pragma once
 
-// Types
-#include "types/reference.h"
 
 // Math
 #include "math/math.h"
@@ -20,16 +18,26 @@
 #include "graphics/image.h"
 #include "graphics/video.h"
 
+// Memory
+#include "memory/reference.h"
+#include "memory/file.h"
+#include "memory/dll.h"
+
+// Time
+#include "time/time.h"
+#include "time/timer.h"
+#include "time/date.h"
+
 // Utility
+#include "utility/strings.h"
+#include "utility/random.h"
 #include "utility/console.h"
 #include "utility/encryptor.h"
-#include "utility/file.h"
-#include "utility/random.h"
-#include "utility/socket.h"
-#include "utility/strings.h"
 #include "utility/async.h"
-#include "utility/time.h"
-#include "utility/web.h"
+
+// Web
+#include "web/socket.h"
+#include "web/web.h"
 
 // Window
 #include "window/keyboard.h"

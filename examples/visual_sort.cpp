@@ -44,8 +44,8 @@ int main()
 	std::thread([&] {
 		window.set_title("Sorting...");
 		
-		for (int i = 0; i < int(sticks.size()) - 1; i++) {
-			for (int j = i + 1; j < int(sticks.size()); j++) {
+		for (size_t i = 0; i < sticks.size() - 1; i++) {
+			for (size_t j = i + 1; j < sticks.size(); j++) {
 				if (sticks[j].value < sticks[i].value) {
 					std::swap(sticks[i], sticks[j]);
 				}

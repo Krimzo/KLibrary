@@ -53,13 +53,7 @@ void kl::assert(const bool occured, const std::string& message, const bool wait)
 void kl::console::set_enabled(const bool state)
 {
     static HWND console_window = GetConsoleWindow();
-    if (state) {
-        ShowWindow(console_window, SW_SHOW);
-
-    }
-    else {
-        ShowWindow(console_window, SW_HIDE);
-    }
+    ShowWindow(console_window, state ? SW_SHOW : SW_HIDE);
 }
 
 void kl::console::clear()
@@ -68,8 +62,7 @@ void kl::console::clear()
     GetConsoleScreenBufferInfo(console_handle, &console_screen_info);
 
     DWORD chars_written = {};
-    FillConsoleOutputCharacterA(console_handle, ' ', console_screen_info.dwSize.X * console_screen_info.dwSize.Y, {},
-                                &chars_written);
+    FillConsoleOutputCharacterA(console_handle, ' ', console_screen_info.dwSize.X * console_screen_info.dwSize.Y, {}, &chars_written);
 
     FillConsoleOutputAttribute(
         console_handle, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
