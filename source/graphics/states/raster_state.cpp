@@ -1,4 +1,4 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 #include "utility/strings.h"
@@ -8,8 +8,7 @@ kl::dx::raster_state kl::gpu::new_raster_state(const dx::raster_state_descriptor
 {
     dx::raster_state raster_state = nullptr;
 
-    if (const long result = device_->CreateRasterizerState(descriptor, &raster_state); warning(
-        !raster_state, format("Failed to create rasterizer state. Result: 0x", std::hex, result))) {
+    if (const long result = device_->CreateRasterizerState(descriptor, &raster_state); warning_check(!raster_state, format("Failed to create rasterizer state. Result: 0x", std::hex, result))) {
         return nullptr;
     }
 

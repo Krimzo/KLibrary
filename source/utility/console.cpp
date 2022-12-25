@@ -17,12 +17,12 @@ static const HANDLE console_handle = []
     return temp_handle;
 }();
 
-void kl::get()
+int kl::get()
 {
-    std::cin.get();
+    return std::cin.get();
 }
 
-bool kl::warning(const bool occured, const std::string& message, const bool wait)
+bool kl::warning_check(const bool occured, const std::string& message, const bool wait)
 {
     if (occured) {
         print(colors::orange, "Warning: ", message);
@@ -36,7 +36,7 @@ bool kl::warning(const bool occured, const std::string& message, const bool wait
     return occured;
 }
 
-void kl::assert(const bool occured, const std::string& message, const bool wait)
+void kl::error_check(const bool occured, const std::string& message, const bool wait)
 {
     if (occured) {
         print(colors::red, "Error: ", message);

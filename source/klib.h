@@ -13,10 +13,11 @@
 #include "render/triangle.h"
 #include "render/ray.h"
 
-// Graphics
-#include "graphics/color.h"
-#include "graphics/image.h"
-#include "graphics/video.h"
+// Media
+#include "media/color.h"
+#include "media/image.h"
+#include "media/audio.h"
+#include "media/video.h"
 
 // Memory
 #include "memory/reference.h"
@@ -46,4 +47,4 @@
 #include "window/frame_buffer.h"
 
 // DirectX
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"

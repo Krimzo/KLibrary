@@ -1,8 +1,8 @@
 #pragma once
 
-#include "gpu/dx_types.h"
+#include "graphics/dx_types.h"
 #include "render/vertex.h"
-#include "graphics/image.h"
+#include "media/image.h"
 
 #include <set>
 

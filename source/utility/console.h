@@ -4,10 +4,10 @@
 
 
 namespace kl {
-    void get();
+    int get();
 
-    bool warning(bool occured, const std::string& message, bool wait = false);
-    void assert(bool occured, const std::string& message, bool wait = true);
+    bool warning_check(bool occured, const std::string& message, bool wait = false);
+    void error_check(bool occured, const std::string& message, bool wait = true);
 }
 
 namespace kl::console {

@@ -3,7 +3,7 @@
 #include "window/system_handler.h"
 #include "window/keyboard.h"
 #include "window/mouse.h"
-#include "graphics/image.h"
+#include "media/image.h"
 
 #include <string>
 

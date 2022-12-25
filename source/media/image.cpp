@@ -1,4 +1,4 @@
-#include "graphics/image.h"
+#include "media/image.h"
 
 #include "window/system_handler.h"
 #include "utility/console.h"
@@ -165,14 +165,14 @@ bool kl::image::load_from_file(const std::string& filepath)
 {
     ULONG_PTR token = NULL;
     const Gdiplus::GdiplusStartupInput startup_input = {};
-    if (warning(GdiplusStartup(&token, &startup_input, nullptr), "Failed to init GDIPlus")) {
+    if (warning_check(GdiplusStartup(&token, &startup_input, nullptr), "Failed to init GDIPlus")) {
         return false;
     }
 
     {
         Gdiplus::BitmapData bitmap_data = {};
         Gdiplus::Bitmap loaded_bitmap(strings::to_w_string(filepath).c_str());
-        if (warning(loaded_bitmap.GetLastStatus(), "Failed to open image file \"" + filepath + "\"")) {
+        if (warning_check(loaded_bitmap.GetLastStatus(), "Failed to open image file \"" + filepath + "\"")) {
             return false;
         }
 
@@ -230,7 +230,7 @@ bool kl::image::save_to_file(const std::string& filepath) const
 
     ULONG_PTR token = NULL;
     const Gdiplus::GdiplusStartupInput startup_input = {};
-    if (warning(GdiplusStartup(&token, &startup_input, nullptr), "Failed to init GDIPlus")) {
+    if (warning_check(GdiplusStartup(&token, &startup_input, nullptr), "Failed to init GDIPlus")) {
         return false;
     }
 

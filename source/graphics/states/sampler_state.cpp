@@ -1,4 +1,4 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 #include "utility/strings.h"
@@ -8,8 +8,7 @@ kl::dx::sampler_state kl::gpu::new_sampler_state(const dx::sampler_state_descrip
 {
     dx::sampler_state state = nullptr;
 
-    if (const long result = device_->CreateSamplerState(descriptor, &state); warning(
-        !state, format("Failed to create sampler state. Result: 0x", std::hex, result))) {
+    if (const long result = device_->CreateSamplerState(descriptor, &state); warning_check(!state, format("Failed to create sampler state. Result: 0x", std::hex, result))) {
         return nullptr;
     }
 

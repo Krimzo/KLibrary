@@ -17,7 +17,7 @@ void kl::socket::init_utility()
 {
     if (!wsa_initialised) {
         WSADATA wsa_data = {};
-        assert(WSAStartup(make_word(2, 2), &wsa_data), "Failed to initialize WSA");
+        error_check(WSAStartup(make_word(2, 2), &wsa_data), "Failed to initialize WSA");
         wsa_initialised = true;
     }
 }
@@ -33,7 +33,7 @@ void kl::socket::free_utility()
 kl::socket::socket()
 {
     socket_ = ::socket(AF_INET, SOCK_STREAM, NULL);
-    assert(socket_ == INVALID_SOCKET, "Failed to create socket");
+    error_check(socket_ == INVALID_SOCKET, "Failed to create socket");
     address_.sin_family = AF_INET;
     address_.sin_addr.s_addr = INADDR_ANY;
 }
@@ -73,7 +73,7 @@ std::string kl::socket::get_address() const
 
 void kl::socket::set_address(const std::string& address)
 {
-    assert(inet_pton(AF_INET, address.c_str(), &address_.sin_addr) != 1, "Could not convert address");
+    error_check(inet_pton(AF_INET, address.c_str(), &address_.sin_addr) != 1, "Could not convert address");
 }
 
 int kl::socket::get_port() const
@@ -88,21 +88,21 @@ void kl::socket::set_port(const int port)
 
 void kl::socket::listen(const int queue_size)
 {
-    assert(bind(socket_, (sockaddr*) &address_, sizeof(address_)), "Could not bind socket");
-    assert(::listen(socket_, queue_size), "Could not listen on socket");
+    error_check(bind(socket_, (sockaddr*) &address_, sizeof(address_)), "Could not bind socket");
+    error_check(::listen(socket_, queue_size), "Could not listen on socket");
 }
 
 kl::socket kl::socket::accept()
 {
     int address_length = sizeof(address_);
     const size_t accepted = ::accept(socket_, (sockaddr*) &address_, &address_length);
-    assert(accepted == INVALID_SOCKET, "Could not accept socket");
+    error_check(accepted == INVALID_SOCKET, "Could not accept socket");
     return socket(accepted);
 }
 
 void kl::socket::connect()
 {
-    assert(::connect(socket_, (sockaddr*) &address_, sizeof(address_)), "Could not connect to socket");
+    error_check(::connect(socket_, (sockaddr*) &address_, sizeof(address_)), "Could not connect to socket");
 }
 
 int kl::socket::send(const void* data, const int byte_size) const

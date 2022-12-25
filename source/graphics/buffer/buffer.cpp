@@ -1,4 +1,4 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 #include "utility/strings.h"
@@ -8,8 +8,7 @@ kl::dx::buffer kl::gpu::new_buffer(const dx::buffer_descriptor* descriptor, cons
 {
     dx::buffer buffer = nullptr;
 
-    if (const long result = device_->CreateBuffer(descriptor, subresource_data, &buffer); warning(
-        !buffer, format("Failed to create gpu buffer. Result: 0x", std::hex, result))) {
+    if (const long result = device_->CreateBuffer(descriptor, subresource_data, &buffer); warning_check(!buffer, format("Failed to create gpu buffer. Result: 0x", std::hex, result))) {
         return nullptr;
     }
 

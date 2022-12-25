@@ -1,4 +1,4 @@
-#include "graphics/video.h"
+#include "media/video.h"
 
 #include "utility/console.h"
 #include "utility/strings.h"
@@ -14,8 +14,7 @@ namespace kl {
         thread_lock.lock();
         video_instance_count++;
         if (!utility_initialised) {
-            assert(FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_SPEED_OVER_MEMORY)) ||
-                    FAILED(MFStartup(MF_VERSION)), "Failed to initialize video utility");
+            error_check(FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_SPEED_OVER_MEMORY)) || FAILED(MFStartup(MF_VERSION)), "Failed to initialize video utility");
             utility_initialised = true;
         }
         thread_lock.unlock();
@@ -36,18 +35,16 @@ namespace kl {
     static void configure_decoder(IMFSourceReader* reader)
     {
         IMFMediaType* type = nullptr;
-        assert(FAILED(reader->GetNativeMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &type)),
-            "Failed to get default video type");
+        error_check(FAILED(reader->GetNativeMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &type)), "Failed to get default video type");
 
         GUID major_type = {};
-        assert(FAILED(type->GetGUID(MF_MT_MAJOR_TYPE, &major_type)), "Failed to get major video type");
+        error_check(FAILED(type->GetGUID(MF_MT_MAJOR_TYPE, &major_type)), "Failed to get major video type");
 
         IMFMediaType* new_type = nullptr;
-        assert(FAILED(MFCreateMediaType(&new_type)), "Failed to create new video type");
-        assert(FAILED(new_type->SetGUID(MF_MT_MAJOR_TYPE, major_type)), "Failed to set major video type");
-        assert(FAILED(new_type->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32)), "Failed to set sub video type");
-        assert(FAILED(reader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, new_type)),
-            "Failed to set video type");
+        error_check(FAILED(MFCreateMediaType(&new_type)), "Failed to create new video type");
+        error_check(FAILED(new_type->SetGUID(MF_MT_MAJOR_TYPE, major_type)), "Failed to set major video type");
+        error_check(FAILED(new_type->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32)), "Failed to set sub video type");
+        error_check(FAILED(reader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, new_type)), "Failed to set video type");
 
         type->Release();
         new_type->Release();

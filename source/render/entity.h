@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gpu/dx_types.h"
+#include "graphics/dx_types.h"
 #include "math/math.h"
 
 

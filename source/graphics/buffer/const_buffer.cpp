@@ -1,11 +1,11 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 
 
 kl::dx::buffer kl::gpu::new_const_buffer(const int byte_size)
 {
-    if (warning(byte_size % 16, "Constant buffer size has to be a multiple of 16")) {
+    if (warning_check(byte_size % 16, "Constant buffer size has to be a multiple of 16")) {
         return nullptr;
     }
 

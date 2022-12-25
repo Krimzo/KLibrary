@@ -44,7 +44,7 @@ static void for_each_test()
 
 static void async_test()
 {
-	kl::async::loop(0, data.size(), [&](int64_t i) {
+	kl::async::loop(0, data.size(), [&](size_t i) {
 		data[i] = compute_function(i);
 	});
 }
@@ -66,5 +66,5 @@ int main()
 	kl::print("kl::async::loop time: ", time_it(async_test));
 	kl::print("kl::async::loop data[", randomIndex, "] = ", data[randomIndex], "\n");
 
-	std::cin.get();
+	kl::get();
 }

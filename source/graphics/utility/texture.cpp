@@ -1,4 +1,4 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 #include "utility/strings.h"
@@ -8,8 +8,7 @@ kl::dx::texture kl::gpu::get_back_buffer()
 {
     dx::texture buffer = nullptr;
 
-    if (const long result = chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &buffer);
-        warning(!buffer, format("Failed to get backbuffer texture. Result: 0x", std::hex, result))) {
+    if (const long result = chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &buffer); warning_check(!buffer, format("Failed to get backbuffer texture. Result: 0x", std::hex, result))) {
         return nullptr;
     }
 
@@ -21,8 +20,7 @@ kl::dx::texture kl::gpu::new_texture(const dx::texture_descriptor* descriptor, c
 {
     dx::texture texture = nullptr;
 
-    if (const long result = device_->CreateTexture2D(descriptor, subresource_data, &texture); warning(
-        !texture, format("Failed to create texture. Result: 0x", std::hex, result))) {
+    if (const long result = device_->CreateTexture2D(descriptor, subresource_data, &texture); warning_check(!texture, format("Failed to create texture. Result: 0x", std::hex, result))) {
         return nullptr;
     }
 
@@ -53,15 +51,13 @@ kl::dx::texture kl::gpu::new_texture(const image& image, const bool has_unordere
     return new_texture(&descriptor, &data);
 }
 
-kl::dx::texture kl::gpu::new_texture(const image& front, const image& back, const image& left, const image& right,
-                                     const image& top, const image& bottom)
+kl::dx::texture kl::gpu::new_texture(const image& front, const image& back, const image& left, const image& right, const image& top, const image& bottom)
 {
-    if (warning(!(front.size() == back.size() &&
+    if (warning_check(!(front.size() == back.size() &&
                     front.size() == left.size() &&
                     front.size() == right.size() &&
                     front.size() == top.size() &&
-                    front.size() == bottom.size()),
-                "Sizes of the 6 given images do not match")) {
+                    front.size() == bottom.size()), "Sizes of the 6 given images do not match")) {
         return nullptr;
     }
 

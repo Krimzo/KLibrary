@@ -1,4 +1,4 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 
@@ -52,19 +52,18 @@ struct shader_blobs
     }
 };
 
-kl::dx::vertex_shader kl::gpu::new_vertex_shader(const std::string& source, dx::layout* out_layout,
-                                              const std::vector<dx::layout_descriptor>& descriptors)
+kl::dx::vertex_shader kl::gpu::new_vertex_shader(const std::string& source, dx::layout* out_layout, const std::vector<dx::layout_descriptor>& descriptors)
 {
     shader_blobs blobs = {};
 
     D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "v_shader", "vs_5_0", NULL, NULL, &blobs.data, &blobs.error);
-    if (warning(!blobs.has_data(), "Failed to compile vertex shader. Error: " + blobs.get_error())) {
+    if (warning_check(!blobs.has_data(), "Failed to compile vertex shader. Error: " + blobs.get_error())) {
         return nullptr;
     }
 
     dx::vertex_shader shader = nullptr;
     device_->CreateVertexShader(blobs.data_pointer(), blobs.data_size(), nullptr, &shader);
-    if (warning(!shader, "Failed to create vertex shader")) {
+    if (warning_check(!shader, "Failed to create vertex shader")) {
         return nullptr;
     }
 
@@ -90,7 +89,7 @@ kl::dx::vertex_shader kl::gpu::new_vertex_shader(const std::string& source, dx::
 
             device_->CreateInputLayout(default_layout_descriptors, 3, blobs.data_pointer(), blobs.data_size(), out_layout);
         }
-        if (!warning(!*out_layout, "Failed to create input layout")) {
+        if (!warning_check(!*out_layout, "Failed to create input layout")) {
             children_.insert(*out_layout);
         }
     }
@@ -104,15 +103,14 @@ kl::dx::pixel_shader kl::gpu::new_pixel_shader(const std::string& source)
 {
     shader_blobs blobs = {};
 
-    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "p_shader", "ps_5_0", NULL, NULL, &blobs.data,
-               &blobs.error);
-    if (warning(!blobs.has_data(), "Failed to compile pixel shader. Error: " + blobs.get_error())) {
+    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "p_shader", "ps_5_0", NULL, NULL, &blobs.data, &blobs.error);
+    if (warning_check(!blobs.has_data(), "Failed to compile pixel shader. Error: " + blobs.get_error())) {
         return nullptr;
     }
 
     dx::pixel_shader shader = nullptr;
     device_->CreatePixelShader(blobs.data_pointer(), blobs.data_size(), nullptr, &shader);
-    if (warning(!shader, "Failed to create pixel shader")) {
+    if (warning_check(!shader, "Failed to create pixel shader")) {
         return nullptr;
     }
 
@@ -125,15 +123,14 @@ kl::dx::geometry_shader kl::gpu::new_geometry_shader(const std::string& source)
 {
     shader_blobs blobs = {};
 
-    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "g_shader", "gs_5_0", NULL, NULL, &blobs.data,
-               &blobs.error);
-    if (warning(!blobs.has_data(), "Failed to compile geometry shader. Error: " + blobs.get_error())) {
+    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "g_shader", "gs_5_0", NULL, NULL, &blobs.data, &blobs.error);
+    if (warning_check(!blobs.has_data(), "Failed to compile geometry shader. Error: " + blobs.get_error())) {
         return nullptr;
     }
 
     dx::geometry_shader shader = nullptr;
     device_->CreateGeometryShader(blobs.data_pointer(), blobs.data_size(), nullptr, &shader);
-    if (warning(!shader, "Failed to create geometry shader")) {
+    if (warning_check(!shader, "Failed to create geometry shader")) {
         return nullptr;
     }
 
@@ -146,15 +143,14 @@ kl::dx::compute_shader kl::gpu::new_compute_shader(const std::string& source)
 {
     shader_blobs blobs = {};
 
-    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "c_shader", "cs_5_0", NULL, NULL, &blobs.data,
-               &blobs.error);
-    if (warning(!blobs.has_data(), "Failed to compile compute shader. Error: " + blobs.get_error())) {
+    D3DCompile(source.c_str(), source.size(), nullptr, nullptr, nullptr, "c_shader", "cs_5_0", NULL, NULL, &blobs.data, &blobs.error);
+    if (warning_check(!blobs.has_data(), "Failed to compile compute shader. Error: " + blobs.get_error())) {
         return nullptr;
     }
 
     dx::compute_shader shader = nullptr;
     device_->CreateComputeShader(blobs.data_pointer(), blobs.data_size(), nullptr, &shader);
-    if (warning(!shader, "Failed to create compute shader")) {
+    if (warning_check(!shader, "Failed to create compute shader")) {
         return nullptr;
     }
 
@@ -163,8 +159,7 @@ kl::dx::compute_shader kl::gpu::new_compute_shader(const std::string& source)
     return shader;
 }
 
-kl::shaders kl::gpu::new_shaders(const std::string& vertex_source, const std::string& pixel_source,
-                                const std::vector<dx::layout_descriptor>& descriptors)
+kl::shaders kl::gpu::new_shaders(const std::string& vertex_source, const std::string& pixel_source, const std::vector<dx::layout_descriptor>& descriptors)
 {
     dx::layout layout = nullptr;
     const dx::vertex_shader vertex_shader = new_vertex_shader(vertex_source, &layout, descriptors);

@@ -35,7 +35,7 @@ std::string kl::files::read_string(const std::string& filepath)
     std::ifstream stream(filepath);
 
     std::stringstream buffer;
-    if (warning(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
+    if (warning_check(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
         return {};
     }
 
@@ -47,7 +47,7 @@ std::string kl::files::read_string(const std::string& filepath)
 bool kl::files::write_string(const std::string& filepath, const std::string& data)
 {
     std::ofstream stream(filepath);
-    if (warning(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
+    if (warning_check(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
         return false;
     }
 
@@ -59,7 +59,7 @@ bool kl::files::write_string(const std::string& filepath, const std::string& dat
 bool kl::files::append_string(const std::string& filepath, const std::string& data, int position)
 {
     std::fstream stream(filepath, std::ios::in | std::ios::out);
-    if (warning(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
+    if (warning_check(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
         return false;
     }
 
@@ -80,7 +80,7 @@ std::vector<kl::vertex> kl::files::parse_mesh(const std::string& filepath, const
     std::fstream stream = {};
 
     stream.open(filepath, std::ios::in);
-    if (warning(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
+    if (warning_check(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
         return {};
     }
 
@@ -143,7 +143,7 @@ bool kl::file::is_open() const
 bool kl::file::open(const std::string& filepath, bool clear)
 {
     close();
-    return !warning(fopen_s(&file_, filepath.c_str(), clear ? "wb+" : "ab+"), "Failed to open file \"" + filepath + "\"");
+    return !warning_check(fopen_s(&file_, filepath.c_str(), clear ? "wb+" : "ab+"), "Failed to open file \"" + filepath + "\"");
 }
 
 void kl::file::close()

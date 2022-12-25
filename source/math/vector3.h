@@ -1,7 +1,7 @@
 #pragma once
 
 #include "math/vector2.h"
-#include "graphics/color.h"
+#include "media/color.h"
 
 #include <algorithm>
 

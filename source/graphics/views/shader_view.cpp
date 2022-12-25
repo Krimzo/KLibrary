@@ -1,4 +1,4 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 #include "utility/strings.h"
@@ -8,8 +8,7 @@ kl::dx::shader_view kl::gpu::new_shader_view(const dx::resource resource, const 
 {
     dx::shader_view view = nullptr;
 
-    if (const long result = device_->CreateShaderResourceView(resource, descriptor, &view); warning(
-        !view, format("Failed to create shader view. Result: 0x", std::hex, result))) {
+    if (const long result = device_->CreateShaderResourceView(resource, descriptor, &view); warning_check(!view, format("Failed to create shader view. Result: 0x", std::hex, result))) {
         return nullptr;
     }
 

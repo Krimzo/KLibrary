@@ -1,4 +1,4 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 #include "utility/strings.h"
@@ -8,8 +8,7 @@ kl::dx::target_view kl::gpu::new_target_view(const dx::texture texture, const dx
 {
     dx::target_view view = nullptr;
 
-    if (const long result = device_->CreateRenderTargetView(texture, descriptor, &view); warning(
-        !view, format("Failed to create render target view. Result: 0x", std::hex, result))) {
+    if (const long result = device_->CreateRenderTargetView(texture, descriptor, &view); warning_check(!view, format("Failed to create render target view. Result: 0x", std::hex, result))) {
         return nullptr;
     }
 

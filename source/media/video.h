@@ -1,7 +1,7 @@
 #pragma once
 
 #include "window/system_handler.h"
-#include "graphics/image.h"
+#include "media/image.h"
 
 
 namespace kl {

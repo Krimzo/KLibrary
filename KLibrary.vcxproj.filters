@@ -15,255 +15,261 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\GPU\Buffer\Buffer.cpp">
+    <ClCompile Include="source\graphics\buffer\buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GPU\Utility\Shaders.cpp">
+    <ClCompile Include="source\graphics\buffer\const_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GPU\Utility\Texture.cpp">
+    <ClCompile Include="source\graphics\states\depth_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GPU\GPU.cpp">
+    <ClCompile Include="source\graphics\states\raster_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Color.cpp">
+    <ClCompile Include="source\graphics\states\sampler_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Image.cpp">
+    <ClCompile Include="source\graphics\utility\shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Video.cpp">
+    <ClCompile Include="source\graphics\utility\texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\Camera.cpp">
+    <ClCompile Include="source\graphics\utility\vertex_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\Plane.cpp">
+    <ClCompile Include="source\graphics\views\access_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\Ray.cpp">
+    <ClCompile Include="source\graphics\views\depth_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\Sphere.cpp">
+    <ClCompile Include="source\graphics\views\shader_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\Triangle.cpp">
+    <ClCompile Include="source\graphics\views\target_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\Vertex.cpp">
+    <ClCompile Include="source\graphics\gpu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\ASync.cpp">
+    <ClCompile Include="source\media\audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\Console.cpp">
+    <ClCompile Include="source\media\color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\memory\file.cpp">
+    <ClCompile Include="source\media\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\Random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\web\socket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utility\Strings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\time\time.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\web\web.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Window\Key.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Window\Keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Window\Mouse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Window\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Render\Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\buffer\const_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\states\depth_state.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\states\raster_state.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\states\sampler_state.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\utility\vertex_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\views\access_view.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\views\depth_view.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\views\shader_view.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gpu\views\target_view.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\utility\encryptor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\window\frame_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\window\system_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\memory\reference.cpp">
+    <ClCompile Include="source\media\video.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\memory\dll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\dynamic_linking.cpp">
+    <ClCompile Include="source\memory\file.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\memory\reference.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\ray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\time\date.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\time\time.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\time\timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\async.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\console.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\encryptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\strings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\web\socket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\web\web.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window\frame_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window\key.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window\keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window\mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window\system_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window\window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\dynamic_linking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\GPU\GPU.h">
+    <ClInclude Include="source\graphics\dx_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Color.h">
+    <ClInclude Include="source\graphics\gpu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Image.h">
+    <ClInclude Include="source\math\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Video.h">
+    <ClInclude Include="source\math\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Math.h">
+    <ClInclude Include="source\math\matrix2x2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Matrix.h">
+    <ClInclude Include="source\math\matrix3x3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Matrix2x2.h">
+    <ClInclude Include="source\math\matrix4x4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Matrix3x3.h">
+    <ClInclude Include="source\math\vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Matrix4x4.h">
+    <ClInclude Include="source\math\vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Vector2.h">
+    <ClInclude Include="source\math\vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Vector3.h">
+    <ClInclude Include="source\media\audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Vector4.h">
+    <ClInclude Include="source\media\color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Render\Camera.h">
+    <ClInclude Include="source\media\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Render\Plane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Render\Ray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Render\Sphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Render\Triangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Render\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility\ASync.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility\Console.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\memory\file.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility\Random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\web\socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility\Strings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\time\time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\web\web.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Window\Key.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Window\Keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Window\Mouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Window\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Render\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gpu\dx_types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\klib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\memory\reference.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\utility\encryptor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\window\frame_buffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\window\system_handler.h">
+    <ClInclude Include="source\media\video.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\memory\dll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\time\timer.h">
+    <ClInclude Include="source\memory\file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\memory\reference.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\time\date.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\time\time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\time\timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\async.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\encryptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\strings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\web\socket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\web\web.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\window\frame_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\window\key.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\window\keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\window\mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\window\system_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\window\window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\klib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

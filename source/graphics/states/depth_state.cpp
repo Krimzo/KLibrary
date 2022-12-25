@@ -1,4 +1,4 @@
-#include "gpu/gpu.h"
+#include "graphics/gpu.h"
 
 #include "utility/console.h"
 #include "utility/strings.h"
@@ -8,8 +8,7 @@ kl::dx::depth_state kl::gpu::new_depth_state(const dx::depth_state_descriptor* d
 {
     dx::depth_state state = nullptr;
 
-    if (const long result = device_->CreateDepthStencilState(descriptor, &state); warning(
-        !state, format("Failed to create depth stencil state. Result: 0x", std::hex, result))) {
+    if (const long result = device_->CreateDepthStencilState(descriptor, &state); warning_check(!state, format("Failed to create depth stencil state. Result: 0x", std::hex, result))) {
         return nullptr;
     }
 
