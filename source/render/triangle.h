@@ -6,7 +6,17 @@
 namespace kl {
     struct triangle
     {
-        vertex a, b, c;
+        union
+        {
+            struct
+            {
+                vertex a;
+                vertex b;
+                vertex c;
+            };
+
+            vertex data[3] = {};
+        };
 
         triangle();
         triangle(const vertex& a, const vertex& b, const vertex& c);

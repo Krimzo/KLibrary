@@ -6,8 +6,8 @@
 namespace kl {
     struct sphere
     {
-        float3 center;
-        float radius = 0;
+        float3 center = {};
+        float radius = 0.0f;
 
         sphere();
         sphere(const float3& center, float radius);

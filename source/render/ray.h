@@ -9,8 +9,8 @@
 namespace kl {
     struct ray
     {
-        float3 origin;
-        float3 direction;
+        float3 origin = {};
+        float3 direction = {};
 
         ray();
         ray(const float3& origin, const float3& direction);

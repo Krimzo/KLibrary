@@ -6,8 +6,8 @@
 namespace kl {
     class camera
     {
-        float3 forward_ = {0.0f, 0.0f, 1.0f};
-        float3 up_ = {0.0f, 1.0f, 0.0f};
+        float3 forward_ = { 0.0f, 0.0f, 1.0f };
+        float3 up_ = { 0.0f, 1.0f, 0.0f };
 
     public:
         float3 position = {};

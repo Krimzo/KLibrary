@@ -6,9 +6,9 @@
 namespace kl {
     struct vertex
     {
-        float3 world;
-        float2 texture;
-        float3 normal;
+        float3 world = {};
+        float2 texture = {};
+        float3 normal = {};
 
         vertex();
         explicit vertex(const float3& world);
