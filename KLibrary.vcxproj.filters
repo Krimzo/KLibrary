@@ -144,7 +144,7 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\dynamic_linking.cpp">
+    <ClCompile Include="examples\interpolation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

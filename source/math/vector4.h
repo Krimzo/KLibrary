@@ -20,9 +20,11 @@ namespace kl {
             };
 
             vector2<T> xy;
-            vector3<T> xyz;
             vector2<T> rg;
+
+            vector3<T> xyz;
             vector3<T> rgb;
+
             T data[4] = {};
         };
 

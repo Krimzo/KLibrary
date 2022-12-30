@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/vector4.h"
+#include "utility/strings.h"
 
 #include <array>
 #include <format>
@@ -273,7 +274,12 @@ namespace kl {
 
         for (int x = 0; x < W; x++) {
             for (int y = 0; y < H; y++) {
-                output_data[y * W + x] = std::format("{:.2f}", object[y * W + x]);
+                if constexpr (std::is_same<T, float>::value || std::is_same<T, double>::value) {
+                    output_data[y * W + x] = std::format("{:.2f}", object[y * W + x]);
+                }
+                else {
+                    output_data[y * W + x] = kl::format(object[y * W + x]);
+                }
                 max_lengths[x] = std::max(max_lengths[x], int(output_data[y * W + x].size()));
             }
         }

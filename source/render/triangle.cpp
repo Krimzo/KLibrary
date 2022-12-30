@@ -9,13 +9,13 @@ kl::triangle::triangle(const vertex& a, const vertex& b, const vertex& c) : a(a)
 
 kl::float4 kl::triangle::get_constants() const
 {
-    const float constants = 1.0f / ((b.world.y - c.world.y) * (a.world.x - c.world.x) + (c.world.x - b.world.x) * (a.
-        world.y - c.world.y));
+    const float calc_const = (b.world.y - c.world.y) * (a.world.x - c.world.x) + (c.world.x - b.world.x) * (a.world.y - c.world.y);
+    const float rec_constant = 1.0f / calc_const;
     return {
-        (b.world.y - c.world.y) * constants,
-        (c.world.x - b.world.x) * constants,
-        (c.world.y - a.world.y) * constants,
-        (a.world.x - c.world.x) * constants
+        (b.world.y - c.world.y) * rec_constant,
+        (c.world.x - b.world.x) * rec_constant,
+        (c.world.y - a.world.y) * rec_constant,
+        (a.world.x - c.world.x) * rec_constant
     };
 }
 
@@ -25,7 +25,7 @@ kl::float3 kl::triangle::get_weights(const float4& constants, const float2& poin
     const float dy = point.y - c.world.y;
     const float w1 = dx * constants.x + dy * constants.y;
     const float w2 = dx * constants.z + dy * constants.w;
-    return {w1, w2, 1.0f - w1 - w2};
+    return { w1, w2, (1.0f - w1 - w2) };
 }
 
 kl::float3 kl::triangle::get_weights(const float3& position) const
@@ -44,7 +44,7 @@ kl::float3 kl::triangle::get_weights(const float3& position) const
     const float w1 = (d11 * d20 - d01 * d21) * inverse_denom;
     const float w2 = (d00 * d21 - d01 * d20) * inverse_denom;
     
-    return {w1, w2, 1.0f - w1 - w2};
+    return { w1, w2, (1.0f - w1 - w2) };
 }
 
 bool kl::triangle::is_in_triangle(const float3& weights)

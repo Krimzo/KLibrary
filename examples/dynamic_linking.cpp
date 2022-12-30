@@ -33,5 +33,5 @@ int main()
 		}
 	}
 
-	std::cin.get();
+	kl::get();
 }

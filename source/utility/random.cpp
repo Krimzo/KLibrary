@@ -25,7 +25,7 @@ kl::color kl::random::get_color(const bool gray)
 {
     if (gray) {
         const uint8_t rand_gray = get_byte();
-        return {rand_gray, rand_gray, rand_gray};
+        return { rand_gray, rand_gray, rand_gray };
     }
     return { get_byte(), get_byte(), get_byte() };
 }

@@ -23,19 +23,27 @@ namespace kl {
 	template<typename T>
 	struct vector3
 	{
-		union {
-			struct {
+		union
+		{
+			struct
+			{
 				T x, y, z;
 			};
-			struct {
+
+			struct
+			{
 				T r, g, b;
 			};
-			struct {
+
+			struct
+			{
 				T width, height, depth;
 			};
+
 			vector2<T> xy;
 			vector2<T> rg;
 			vector2<T> wh;
+
 			T data[3] = {};
 		};
 
@@ -62,28 +70,34 @@ namespace kl {
 		{}
 
 		template<typename T0>
-		static vector3<T> splash(const T0& value) {
+		static vector3<T> splash(const T0& value)
+		{
 			return { value, value, value };
 		}
 
-		T& operator[](int ind) {
+		T& operator[](int ind)
+		{
 			return data[ind];
 		}
 
-		const T& operator[](int ind) const {
+		const T& operator[](int ind) const
+		{
 			return data[ind];
 		}
 
 		template<typename T0>
-		explicit operator vector3<T0>() const {
+		explicit operator vector3<T0>() const
+		{
 			return { T0(x), T0(y), T0(z) };
 		}
 
-		explicit operator color() const {
+		explicit operator color() const
+		{
 			return { to_byte_color(x), to_byte_color(y), to_byte_color(z) };
 		}
 
-		vector3<T> operator+(const vector3<T>& obj) const {
+		vector3<T> operator+(const vector3<T>& obj) const
+		{
 			vector3<T> result;
 			for (int i = 0; i < 3; i++) {
 				result[i] = data[i] + obj[i];
@@ -91,11 +105,13 @@ namespace kl {
 			return result;
 		}
 
-		void operator+=(const vector3<T>& obj) {
+		void operator+=(const vector3<T>& obj)
+		{
 			*this = *this + obj;
 		}
 
-		vector3<T> operator-(const vector3<T>& obj) const {
+		vector3<T> operator-(const vector3<T>& obj) const
+		{
 			vector3<T> result;
 			for (int i = 0; i < 3; i++) {
 				result[i] = data[i] - obj[i];
@@ -103,11 +119,13 @@ namespace kl {
 			return result;
 		}
 
-		void operator-=(const vector3<T>& obj) {
+		void operator-=(const vector3<T>& obj)
+		{
 			*this = *this - obj;
 		}
 
-		vector3<T> operator*(const T& val) const {
+		vector3<T> operator*(const T& val) const
+		{
 			vector3<T> result;
 			for (int i = 0; i < 3; i++) {
 				result[i] = data[i] * val;
@@ -115,11 +133,13 @@ namespace kl {
 			return result;
 		}
 
-		void operator*=(const T& val) {
+		void operator*=(const T& val)
+		{
 			*this = *this * val;
 		}
 
-		vector3<T> operator*(const vector3<T>& obj) const {
+		vector3<T> operator*(const vector3<T>& obj) const
+		{
 			vector3<T> result;
 			for (int i = 0; i < 3; i++) {
 				result[i] = data[i] * obj[i];
@@ -127,11 +147,13 @@ namespace kl {
 			return result;
 		}
 
-		void operator*=(const vector3<T>& obj) {
+		void operator*=(const vector3<T>& obj)
+		{
 			*this = *this * obj;
 		}
 
-		vector3<T> operator/(const T& val) const {
+		vector3<T> operator/(const T& val) const
+		{
 			vector3<T> result;
 			for (int i = 0; i < 3; i++) {
 				result[i] = data[i] / val;
@@ -139,11 +161,13 @@ namespace kl {
 			return result;
 		}
 
-		void operator/=(const T& val) {
+		void operator/=(const T& val)
+		{
 			*this = *this / val;
 		}
 
-		vector3<T> operator/(const vector3<T>& obj) const {
+		vector3<T> operator/(const vector3<T>& obj) const
+		{
 			vector3<T> result;
 			for (int i = 0; i < 3; i++) {
 				result[i] = data[i] / obj[i];
@@ -151,11 +175,13 @@ namespace kl {
 			return result;
 		}
 
-		void operator/=(const vector3<T>& obj) {
+		void operator/=(const vector3<T>& obj)
+		{
 			*this = *this / obj;
 		}
 
-		bool operator==(const vector3<T>& obj) const {
+		bool operator==(const vector3<T>& obj) const
+		{
 			for (int i = 0; i < 3; i++) {
 				if (data[i] != obj[i]) {
 					return false;
@@ -164,11 +190,13 @@ namespace kl {
 			return true;
 		}
 
-		bool operator!=(const vector3<T>& obj) const {
+		bool operator!=(const vector3<T>& obj) const
+		{
 			return !(*this == obj);
 		}
 
-		[[nodiscard]] vector3<T> absolute() const {
+		[[nodiscard]] vector3<T> absolute() const
+		{
 			vector3<T> result;
 			for (int i = 0; i < 3; i++) {
 				result[i] = std::abs(data[i]);
@@ -176,11 +204,13 @@ namespace kl {
 			return result;
 		}
 
-		[[nodiscard]] vector3<T> negate() const {
+		[[nodiscard]] vector3<T> negate() const
+		{
 			return *this * -1.0f;
 		}
 
-		[[nodiscard]] T length() const {
+		[[nodiscard]] T length() const
+		{
 			T sum = {};
 			for (auto& i : data) {
 				sum += i * i;
@@ -188,11 +218,13 @@ namespace kl {
 			return std::sqrt(sum);
 		}
 
-		[[nodiscard]] vector3<T> normalize() const {
+		[[nodiscard]] vector3<T> normalize() const
+		{
 			return *this / length();
 		}
 
-		[[nodiscard]] T dot(const vector3<T>& vec) const {
+		[[nodiscard]] T dot(const vector3<T>& vec) const
+		{
 			T sum = {};
 			for (int i = 0; i < 3; i++) {
 				sum += data[i] * vec[i];
@@ -200,15 +232,18 @@ namespace kl {
 			return sum;
 		}
 
-		[[nodiscard]] vector3<T> cross(const vector3<T>& a) const {
+		[[nodiscard]] vector3<T> cross(const vector3<T>& a) const
+		{
 			return { y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x };
 		}
 
-		[[nodiscard]] T angle(const vector3<T>& vec) const {
+		[[nodiscard]] T angle(const vector3<T>& vec) const
+		{
 			return math::to_degrees(std::acos(normalize().dot(vec.normalize())));
 		}
 
-		[[nodiscard]] vector3<T> rotate(const T& angle, const vector3<T>& axis) const {
+		[[nodiscard]] vector3<T> rotate(const T& angle, const vector3<T>& axis) const
+		{
 			const T angle_sin = T(std::sin(math::to_radians(angle) * 0.5f));
 			const T angle_cos = T(std::cos(math::to_radians(angle) * 0.5f));
 			const T qx = axis.x * angle_sin;

@@ -46,7 +46,7 @@ void kl::error_check(const bool occured, const std::string& message, const bool 
         }
 
         print<false>(colors::console);
-        static_assert(true);
+        exit(1);
     }
 }
 
