@@ -10,10 +10,10 @@ int main()
 	kl::timer timer = {};
 
 	kl::float2 positions[4] = {
-		{ 50.0f, (frame.height() - 1.0f) / 3.0f },
-		{ (frame.width() - 1.0f) / 3.0f, frame.height() - 51.0f },
-		{ frame.width() - 51.0f, (frame.height() - 1.0f) * 0.667f },
-		{ (frame.width() - 1.0f) * 0.667f, 50.0f },
+		{                           50.0f,   (frame.height() - 1.0f) / 3.0f },
+		{   (frame.width() - 1.0f) / 3.0f,           frame.height() - 51.0f },
+		{           frame.width() - 51.0f, (frame.height() - 1.0f) * 0.667f },
+		{ (frame.width() - 1.0f) * 0.667f,                            50.0f },
 	};
 
 	kl::color colors[4] = {

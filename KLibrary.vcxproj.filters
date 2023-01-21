@@ -144,7 +144,7 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\interpolation.cpp">
+    <ClCompile Include="examples\raytracing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

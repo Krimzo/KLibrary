@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\interpolation.cpp" />
+    <ClCompile Include="examples\raytracing.cpp" />
     <ClCompile Include="source\graphics\buffer\buffer.cpp" />
     <ClCompile Include="source\graphics\buffer\const_buffer.cpp" />
     <ClCompile Include="source\graphics\gpu.cpp" />

@@ -149,7 +149,7 @@ int main()
 			scene_object random_object = {};
 			random_object.position.x = kl::random::get_float(float(frame.width()));
 			random_object.position.y = kl::random::get_float(get_frame_lower_limit(frame));
-			random_object.velocity = kl::random::get_vector2<float>(-500.0f, 500.0f);
+			random_object.velocity = kl::random::get_float2(-500.0f, 500.0f);
 			objects.push_back(random_object);
 		}
 	};

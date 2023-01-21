@@ -53,7 +53,7 @@ int main() {
 		else {
 			for (auto& sphere : ps_data.spheres) {
 				sphere = colored_sphere {
-					kl::random::get_vector3<float>(40.0f) - kl::float3(20.0f, 20.0f, 20.0f),
+					kl::random::get_float3(40.0f) - kl::float3(20.0f, 20.0f, 20.0f),
 					kl::random::get_float(2.75f) + 0.25f,
 					kl::float4(kl::random::get_color())
 				};
