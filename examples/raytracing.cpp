@@ -19,7 +19,8 @@ struct ps_cb
 	colored_sphere spheres[sphere_count] = {};
 };
 
-int main() {
+int main()
+{
 	kl::window window = { { 1600, 900 }, "Raytracing" };
 	kl::timer timer = {};
 
