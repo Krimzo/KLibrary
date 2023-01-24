@@ -81,19 +81,13 @@
     <ClCompile Include="source\render\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\plane.cpp">
+    <ClCompile Include="source\render\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\ray.cpp">
+    <ClCompile Include="source\render\mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\sphere.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\render\triangle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\render\vertex.cpp">
+    <ClCompile Include="source\render\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\time\date.cpp">
@@ -144,7 +138,7 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\raytracing.cpp">
+    <ClCompile Include="examples\visual_sort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,28 +149,43 @@
     <ClInclude Include="source\graphics\gpu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\math\matrix\matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\matrix\matrix2x2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\matrix\matrix3x3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\matrix\matrix4x4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\ray_casting\plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\ray_casting\ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\ray_casting\sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\ray_casting\triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\ray_casting\vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\vector\vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\vector\vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\vector\vector4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="source\math\math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\math\matrix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\math\matrix2x2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\math\matrix3x3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\math\matrix4x4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\math\vector2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\math\vector3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\math\vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\media\audio.h">
@@ -206,19 +215,13 @@
     <ClInclude Include="source\render\entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\render\plane.h">
+    <ClInclude Include="source\render\material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\render\ray.h">
+    <ClInclude Include="source\render\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\render\sphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\render\triangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\render\vertex.h">
+    <ClInclude Include="source\render\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\time\date.h">

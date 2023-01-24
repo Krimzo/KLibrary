@@ -14,7 +14,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 LRESULT CALLBACK kl::window::window_procedure(const HWND window_handle, const UINT message, const WPARAM w_param, const LPARAM l_param) const
 {
     if (message == WM_SIZE) {
-        on_resize({LOWORD(l_param), HIWORD(l_param)});
+        on_resize({ LOWORD(l_param), HIWORD(l_param) });
     }
     return DefWindowProcA(window_handle, message, w_param, l_param);
 }
