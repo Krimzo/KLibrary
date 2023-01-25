@@ -63,7 +63,7 @@
     <ClCompile Include="source\media\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\video.cpp">
+    <ClCompile Include="source\media\video_reader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\memory\dll.cpp">
@@ -138,7 +138,13 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\visual_sort.cpp">
+    <ClCompile Include="source\media\video_writer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\media\media_utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\video_writing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,7 +203,7 @@
     <ClInclude Include="source\media\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\video.h">
+    <ClInclude Include="source\media\video_reader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\memory\dll.h">
@@ -273,6 +279,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\klib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\media\video_writer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\media\media_utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

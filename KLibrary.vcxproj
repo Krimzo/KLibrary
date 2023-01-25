@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\visual_sort.cpp" />
+    <ClCompile Include="examples\video_writing.cpp" />
     <ClCompile Include="source\graphics\buffer\buffer.cpp" />
     <ClCompile Include="source\graphics\buffer\const_buffer.cpp" />
     <ClCompile Include="source\graphics\gpu.cpp" />
@@ -36,7 +36,9 @@
     <ClCompile Include="source\media\audio.cpp" />
     <ClCompile Include="source\media\color.cpp" />
     <ClCompile Include="source\media\image.cpp" />
-    <ClCompile Include="source\media\video.cpp" />
+    <ClCompile Include="source\media\media_utility.cpp" />
+    <ClCompile Include="source\media\video_reader.cpp" />
+    <ClCompile Include="source\media\video_writer.cpp" />
     <ClCompile Include="source\memory\dll.cpp" />
     <ClCompile Include="source\memory\file.cpp" />
     <ClCompile Include="source\memory\reference.cpp" />
@@ -82,7 +84,9 @@
     <ClInclude Include="source\media\audio.h" />
     <ClInclude Include="source\media\color.h" />
     <ClInclude Include="source\media\image.h" />
-    <ClInclude Include="source\media\video.h" />
+    <ClInclude Include="source\media\media_utility.h" />
+    <ClInclude Include="source\media\video_reader.h" />
+    <ClInclude Include="source\media\video_writer.h" />
     <ClInclude Include="source\memory\dll.h" />
     <ClInclude Include="source\memory\file.h" />
     <ClInclude Include="source\memory\reference.h" />

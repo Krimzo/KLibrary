@@ -13,7 +13,9 @@
 #include "media/color.h"
 #include "media/image.h"
 #include "media/audio.h"
-#include "media/video.h"
+#include "media/video_reader.h"
+#include "media/video_writer.h"
+#include "media/media_utility.h"
 
 // Memory
 #include "memory/reference.h"
