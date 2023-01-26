@@ -54,16 +54,16 @@
     <ClCompile Include="source\graphics\gpu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\audio.cpp">
+    <ClCompile Include="source\media\audio\audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\color.cpp">
+    <ClCompile Include="source\media\image\color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\image.cpp">
+    <ClCompile Include="source\media\image\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\video_reader.cpp">
+    <ClCompile Include="source\media\video\video_reader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\memory\dll.cpp">
@@ -72,7 +72,7 @@
     <ClCompile Include="source\memory\file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\memory\reference.cpp">
+    <ClCompile Include="source\memory\ref.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\render\camera.cpp">
@@ -138,13 +138,13 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\video_writer.cpp">
+    <ClCompile Include="source\media\video\video_writer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\media\media_utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\video_writing.cpp">
+    <ClCompile Include="examples\source\2d_drawing\times_table.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,16 +194,16 @@
     <ClInclude Include="source\math\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\audio.h">
+    <ClInclude Include="source\media\audio\audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\color.h">
+    <ClInclude Include="source\media\image\color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\image.h">
+    <ClInclude Include="source\media\image\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\video_reader.h">
+    <ClInclude Include="source\media\video\video_reader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\memory\dll.h">
@@ -212,7 +212,7 @@
     <ClInclude Include="source\memory\file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\memory\reference.h">
+    <ClInclude Include="source\memory\ref.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\render\camera.h">
@@ -281,10 +281,13 @@
     <ClInclude Include="source\klib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\video_writer.h">
+    <ClInclude Include="source\media\video\video_writer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\media\media_utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\media\video\video.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

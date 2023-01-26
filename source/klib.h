@@ -10,15 +10,14 @@
 #include "render/scene.h"
 
 // Media
-#include "media/color.h"
-#include "media/image.h"
-#include "media/audio.h"
-#include "media/video_reader.h"
-#include "media/video_writer.h"
 #include "media/media_utility.h"
+#include "media/image/color.h"
+#include "media/image/image.h"
+#include "media/audio/audio.h"
+#include "media/video/video.h"
 
 // Memory
-#include "memory/reference.h"
+#include "memory/ref.h"
 #include "memory/file.h"
 #include "memory/dll.h"
 

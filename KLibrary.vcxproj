@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\video_writing.cpp" />
+    <ClCompile Include="examples\source\2d_drawing\times_table.cpp" />
     <ClCompile Include="source\graphics\buffer\buffer.cpp" />
     <ClCompile Include="source\graphics\buffer\const_buffer.cpp" />
     <ClCompile Include="source\graphics\gpu.cpp" />
@@ -33,15 +33,15 @@
     <ClCompile Include="source\graphics\views\depth_view.cpp" />
     <ClCompile Include="source\graphics\views\shader_view.cpp" />
     <ClCompile Include="source\graphics\views\target_view.cpp" />
-    <ClCompile Include="source\media\audio.cpp" />
-    <ClCompile Include="source\media\color.cpp" />
-    <ClCompile Include="source\media\image.cpp" />
+    <ClCompile Include="source\media\audio\audio.cpp" />
+    <ClCompile Include="source\media\image\color.cpp" />
+    <ClCompile Include="source\media\image\image.cpp" />
     <ClCompile Include="source\media\media_utility.cpp" />
-    <ClCompile Include="source\media\video_reader.cpp" />
-    <ClCompile Include="source\media\video_writer.cpp" />
+    <ClCompile Include="source\media\video\video_reader.cpp" />
+    <ClCompile Include="source\media\video\video_writer.cpp" />
     <ClCompile Include="source\memory\dll.cpp" />
     <ClCompile Include="source\memory\file.cpp" />
-    <ClCompile Include="source\memory\reference.cpp" />
+    <ClCompile Include="source\memory\ref.cpp" />
     <ClCompile Include="source\render\camera.cpp" />
     <ClCompile Include="source\render\entity.cpp" />
     <ClCompile Include="source\render\material.cpp" />
@@ -81,15 +81,16 @@
     <ClInclude Include="source\math\vector\vector2.h" />
     <ClInclude Include="source\math\vector\vector3.h" />
     <ClInclude Include="source\math\vector\vector4.h" />
-    <ClInclude Include="source\media\audio.h" />
-    <ClInclude Include="source\media\color.h" />
-    <ClInclude Include="source\media\image.h" />
+    <ClInclude Include="source\media\audio\audio.h" />
+    <ClInclude Include="source\media\image\color.h" />
+    <ClInclude Include="source\media\image\image.h" />
     <ClInclude Include="source\media\media_utility.h" />
-    <ClInclude Include="source\media\video_reader.h" />
-    <ClInclude Include="source\media\video_writer.h" />
+    <ClInclude Include="source\media\video\video.h" />
+    <ClInclude Include="source\media\video\video_reader.h" />
+    <ClInclude Include="source\media\video\video_writer.h" />
     <ClInclude Include="source\memory\dll.h" />
     <ClInclude Include="source\memory\file.h" />
-    <ClInclude Include="source\memory\reference.h" />
+    <ClInclude Include="source\memory\ref.h" />
     <ClInclude Include="source\render\camera.h" />
     <ClInclude Include="source\render\entity.h" />
     <ClInclude Include="source\render\material.h" />
