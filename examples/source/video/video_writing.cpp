@@ -8,7 +8,7 @@ struct stick
 	kl::color color = {};
 };
 
-static std::vector<stick> generate_sticks(const int count, int min_value_incl, int max_value_excl)
+static std::vector<stick> generate_sticks(const int count, const int min_value_incl, const int max_value_excl)
 {
 	int stored_min_value = max_value_excl;
 	int stored_max_value = min_value_incl;

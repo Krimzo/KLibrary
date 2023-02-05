@@ -21,7 +21,8 @@ int main()
 		}
 	};
 
-	window.keyboard.r.on_press = [&] {
+	window.keyboard.r.on_press = [&]
+	{
 		point_color = kl::random::get_color();
 		line_color = kl::random::get_color();
 	};
