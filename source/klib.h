@@ -5,8 +5,8 @@
 #include "math/math.h"
 
 // Render
+#include "render/entity/entity.h"
 #include "render/camera.h"
-#include "render/entity.h"
 #include "render/scene.h"
 
 // Media
