@@ -1,6 +1,6 @@
 #include "render/entity/entity.h"
 
-#include "utility/console.h"
+#include "utility/utility.h"
 
 
 #ifdef KL_USING_PHYSX
@@ -38,27 +38,27 @@ void kl::entity::set_rotation(const float3& rotation)
     const float4 quat = math::to_quaternion(rotation);
 
     PxTransform transform = physics_actor_->getGlobalPose();
-    transform.q = *(PxQuat*)&quat;
+    transform.q = *(PxQuat*) &quat;
     physics_actor_->setGlobalPose(transform);
 }
 
 kl::float3 kl::entity::get_rotation() const
 {
     const PxTransform transform = physics_actor_->getGlobalPose();
-    return math::to_euler(*(float4*)&transform.q);
+    return math::to_euler(*(float4*) &transform.q);
 }
 
 void kl::entity::set_position(const float3& position)
 {
     PxTransform transform = physics_actor_->getGlobalPose();
-    transform.p = *(PxVec3*)&position;
+    transform.p = *(PxVec3*) &position;
     physics_actor_->setGlobalPose(transform);
 }
 
 kl::float3 kl::entity::get_position() const
 {
     const PxTransform transform = physics_actor_->getGlobalPose();
-    return *(float3*)&transform.p;
+    return *(float3*) &transform.p;
 }
 
 // Physics
@@ -83,7 +83,7 @@ void kl::entity::set_velocity(const float3& velocity)
 {
     if (is_dynamic_) {
         PxRigidDynamic* actor = (PxRigidDynamic*) physics_actor_;
-        actor->setLinearVelocity(*(PxVec3*)&velocity);
+        actor->setLinearVelocity(*(PxVec3*) &velocity);
     }
 }
 
@@ -92,7 +92,7 @@ kl::float3 kl::entity::get_velocity() const
     if (is_dynamic_) {
         const PxRigidDynamic* actor = (PxRigidDynamic*) physics_actor_;
         const PxVec3 velocity = actor->getLinearVelocity();
-        return *(float3*)&velocity;
+        return *(float3*) &velocity;
     }
     return {};
 }
@@ -101,7 +101,7 @@ void kl::entity::set_angular(const float3& angular)
 {
     if (is_dynamic_) {
         PxRigidDynamic* actor = (PxRigidDynamic*) physics_actor_;
-        actor->setAngularVelocity(*(PxVec3*)&angular);
+        actor->setAngularVelocity(*(PxVec3*) &angular);
     }
 }
 
@@ -110,7 +110,7 @@ kl::float3 kl::entity::get_angular() const
     if (is_dynamic_) {
         const PxRigidDynamic* actor = (PxRigidDynamic*) physics_actor_;
         const PxVec3 angular = actor->getAngularVelocity();
-        return *(float3*)&angular;
+        return *(float3*) &angular;
     }
     return {};
 }
@@ -154,14 +154,23 @@ kl::mat4 kl::entity::matrix() const
 #else
 
 kl::entity::entity()
-{}
+{
+    material = make<kl::material>();
+}
 
 kl::entity::~entity()
 {}
 
-kl::mat4 kl::entity::matrix() const
+void kl::entity::update_physics(float delta_t)
 {
-    return mat4::translation(position) * mat4::rotation(rotation) * mat4::scaling(scale);
+    velocity += acceleration * delta_t;
+    position += velocity * delta_t;
+    rotation += angular * delta_t;
+}
+
+kl::float4x4 kl::entity::matrix() const
+{
+    return float4x4::translation(position) * float4x4::rotation(rotation) * float4x4::scaling(scale);
 }
 
 #endif

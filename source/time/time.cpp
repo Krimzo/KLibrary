@@ -1,7 +1,5 @@
 #include "time/time.h"
 
-#include "window/system_handler.h"
-
 
 time_t kl::time::now()
 {
@@ -26,10 +24,10 @@ float kl::time::calculate(const time_t start, const time_t end)
 float kl::time::get_interval()
 {
     static time_t start_time = now();
-    
+
     const time_t end_time = now();
     const float elapsed_time = calculate(start_time, end_time);
-    
+
     start_time = end_time;
     return elapsed_time;
 }

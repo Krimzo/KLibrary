@@ -1,12 +1,7 @@
 #include "media/image/image.h"
 
-#include "window/system_handler.h"
-#include "utility/console.h"
-#include "utility/strings.h"
-#include "memory/file.h"
-
-#include <sstream>
-#include <fstream>
+#include "utility/utility.h"
+#include "memory/memory.h"
 
 
 kl::image kl::image::get_screenshot()
@@ -65,7 +60,7 @@ int kl::image::width() const
 
 void kl::image::set_width(int width)
 {
-    set_size({width, size_.y});
+    set_size({ width, size_.y });
 }
 
 int kl::image::height() const
@@ -75,7 +70,7 @@ int kl::image::height() const
 
 void kl::image::set_height(int height)
 {
-    set_size({size_.x, height});
+    set_size({ size_.x, height });
 }
 
 kl::int2 kl::image::size() const
@@ -85,20 +80,21 @@ kl::int2 kl::image::size() const
 
 void kl::image::set_size(const int2& size, const bool scale)
 {
-    if (size != size_) {
+    if (size.x != size_.x && size.y != size_.y) {
         image result = image(size);
 
         if (scale) {
-            const float2 ratio = float2(size_) / float2(size);
+            const float2 ratio = { (float) size_.x / size.x, (float) size_.y / size.y };
             for (int2 pos; pos.y < size.y; pos.y++) {
                 for (pos.x = 0; pos.x < size.x; pos.x++) {
-                    result[pos] = get_pixel(int2(float2(pos) * ratio));
+                    const float2 flt_pos = float2(pos.x * ratio.x, pos.y * ratio.y);
+                    result[pos] = get_pixel({ (int) flt_pos.x, (int) flt_pos.y });
                 }
             }
         }
         else {
-            for (int2 pos; pos.y < std::min(size.y, size_.y); pos.y++) {
-                for (pos.x = 0; pos.x < std::min(size.x, size_.x); pos.x++) {
+            for (int2 pos; pos.y < min(size.y, size_.y); pos.y++) {
+                for (pos.x = 0; pos.x < min(size.x, size_.x); pos.x++) {
                     result[pos] = (*this)[pos];
                 }
             }
@@ -152,10 +148,10 @@ kl::image kl::image::get_rectangle(int2 top_left, int2 bottom_right) const
         std::swap(top_left.y, bottom_right.y);
     }
 
-    image temp(bottom_right - top_left);
+    image temp(int2(bottom_right.x - top_left.x, bottom_right.y - top_left.y));
     for (int2 position; position.y < temp.height(); position.y++) {
         for (position.x = 0; position.x < temp.width(); position.x++) {
-            temp.set_pixel(position, get_pixel(position + top_left));
+            temp.set_pixel(position, get_pixel({ position.x + top_left.x, position.y + top_left.y }));
         }
     }
     return temp;
@@ -175,7 +171,7 @@ bool kl::image::load_from_file(const std::string& filepath)
             return false;
         }
 
-        set_size({ loaded_bitmap.GetWidth(), loaded_bitmap.GetHeight() });
+        set_size({ (int) loaded_bitmap.GetWidth(), (int) loaded_bitmap.GetHeight() });
 
         Gdiplus::BitmapData bitmap_data = {};
         loaded_bitmap.LockBits(nullptr, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &bitmap_data);
@@ -289,12 +285,12 @@ kl::image kl::image::flip(const bool vertical) const
 
 void kl::image::draw_line(const int2& from, const int2& to, const color& color)
 {
-    const int length = std::max(std::abs(to.x - from.x), std::abs(to.y - from.y));
+    const int length = max(std::abs(to.x - from.x), std::abs(to.y - from.y));
     const float2 increment = { float(to.x - from.x) / length, float(to.y - from.y) / length };
 
-    float2 draw_point = float2(from);
+    float2 draw_point = { (float) from.x, (float) from.y };
     for (int i = 0; i <= length; i++) {
-        set_pixel(int2(draw_point), color);
+        set_pixel({ (int) draw_point.x, (int) draw_point.y }, color);
         draw_point += increment;
     }
 }
@@ -312,9 +308,13 @@ void kl::image::draw_triangle(int2 position_a, int2 position_b, int2 position_c,
             std::swap(position_b, position_c);
         }
         for (int y = position_a.y; y < position_c.y; y++) {
+            const float2 flt_pos_a = { (float) position_a.x, (float) position_a.y };
+            const float2 flt_pos_b = { (float) position_b.x, (float) position_b.y };
+            const float2 flt_pos_c = { (float) position_b.x, (float) position_c.y };
+
             draw_line(
-                { math::line_x(float2((y < position_b.y) ? position_a : position_c), float2(position_b), float(y)), float(y) },
-                { math::line_x(float2(position_a), float2(position_c), float(y)), float(y) },
+                { (int) math::line_x((y < position_b.y) ? flt_pos_a : flt_pos_c, flt_pos_b, (float) y), y },
+                { (int) math::line_x(flt_pos_a, flt_pos_c, (float) y), y },
                 color
             );
         }
@@ -333,45 +333,44 @@ void kl::image::draw_rectangle(int2 top_left, int2 bottom_right, const color& co
             std::swap(top_left, bottom_right);
         }
         for (int y = top_left.y; y <= bottom_right.y; y++) {
-            draw_line({top_left.x, y}, {bottom_right.x, y}, color);
+            draw_line({ top_left.x, y }, { bottom_right.x, y }, color);
         }
     }
     else {
-        draw_line(top_left, {top_left.x, bottom_right.y}, color);
-        draw_line(top_left, {bottom_right.x, top_left.y}, color);
-        draw_line(bottom_right, {top_left.x, bottom_right.y}, color);
-        draw_line(bottom_right, {bottom_right.x, top_left.y}, color);
+        draw_line(top_left, { top_left.x, bottom_right.y }, color);
+        draw_line(top_left, { bottom_right.x, top_left.y }, color);
+        draw_line(bottom_right, { top_left.x, bottom_right.y }, color);
+        draw_line(bottom_right, { bottom_right.x, top_left.y }, color);
     }
 }
 
 void kl::image::draw_circle(const int2& center, const float radius, const color& color, const bool fill)
 {
-    const float2 f_center = float2(center);
+    const float2 f_center = { (float) center.x, (float) center.y };
     if (fill) {
         for (int y = int(f_center.y - radius); y <= int(f_center.y + radius); y++) {
-            const int x = int(f_center.x + std::sqrt(
-                radius * radius - (y - f_center.y) * (y - f_center.y)));
-            draw_line({2 * center.x - x, y}, {x, y}, color);
+            const int x = int(f_center.x + std::sqrt(radius * radius - (y - f_center.y) * (y - f_center.y)));
+            draw_line({ 2 * center.x - x, y }, { x, y }, color);
         }
     }
     else {
         for (int i = 0; i < int(2 * radius); i++) {
             const int x1 = int(f_center.x - radius + i);
             const int y1 = int(f_center.y + std::sqrt(radius * radius - (x1 - f_center.x) * (x1 - f_center.x)));
-            set_pixel({x1, y1}, color);
-            set_pixel({x1, 2 * center.y - y1}, color);
+            set_pixel({ x1, y1 }, color);
+            set_pixel({ x1, 2 * center.y - y1 }, color);
 
             const int y2 = int(f_center.y - radius + i);
             const int x2 = int(f_center.x + std::sqrt(radius * radius - (y2 - f_center.y) * (y2 - f_center.y)));
-            set_pixel({x2, y2}, color);
-            set_pixel({2 * center.x - x2, y2}, color);
+            set_pixel({ x2, y2 }, color);
+            set_pixel({ 2 * center.x - x2, y2 }, color);
         }
     }
 }
 
 void kl::image::draw_circle(const int2& center, const int2& outer_position, const color& color, const bool fill)
 {
-    draw_circle(center, float2(outer_position - center).length(), color, fill);
+    draw_circle(center, float2((float) outer_position.x - center.x, (float) outer_position.y - center.y).length(), color, fill);
 }
 
 void kl::image::draw_image(const int2& position, const image& image, const bool mix_alpha)
@@ -379,14 +378,15 @@ void kl::image::draw_image(const int2& position, const image& image, const bool 
     if (mix_alpha) {
         for (int2 coords; coords.y < image.height(); coords.y++) {
             for (coords.x = 0; coords.x < image.width(); coords.x++) {
-                set_pixel(position + coords, get_pixel(position + coords).mix(image.get_pixel(coords)));
+                const int2 pos_coords = { position.x + coords.x, position.y + coords.y };
+                set_pixel(pos_coords, get_pixel(pos_coords).mix(image.get_pixel(coords)));
             }
         }
     }
     else {
         for (int2 coords; coords.y < image.height(); coords.y++) {
             for (coords.x = 0; coords.x < image.width(); coords.x++) {
-                set_pixel(position + coords, image.get_pixel(coords));
+                set_pixel({ position.x + coords.x, position.y + coords.y }, image.get_pixel(coords));
             }
         }
     }
@@ -395,10 +395,11 @@ void kl::image::draw_image(const int2& position, const image& image, const bool 
 std::string kl::image::as_ascii(const int2& frame_size) const
 {
     std::stringstream frame = {};
-    const int2 increment = size_ / frame_size;
+    const int2 increment = { size_.x / frame_size.x, size_.y / frame_size.y };
     for (int2 position = {}; position.y < frame_size.y; position.y++) {
         for (position.x = 0; position.x < frame_size.x; position.x++) {
-            frame << get_pixel(position * increment).as_ascii();
+            const int2 new_position = { position.x * increment.x, position.y * increment.y };
+            frame << get_pixel(new_position).as_ascii();
         }
     }
     return frame.str();

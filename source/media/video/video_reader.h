@@ -1,6 +1,5 @@
 #pragma once
 
-#include "window/system_handler.h"
 #include "media/image/image.h"
 
 
@@ -24,22 +23,22 @@ namespace kl {
 
         video_reader(const video_reader&) = delete;
         video_reader(const video_reader&&) = delete;
-        
+
         void operator=(const video_reader&) = delete;
         void operator=(const video_reader&&) = delete;
 
-        [[nodiscard]] uint64_t byte_size() const;
+        uint64_t byte_size() const;
 
-        [[nodiscard]] int64_t duration_100ns() const;
+        int64_t duration_100ns() const;
 
-        [[nodiscard]] float duration_seconds() const;
-        
-        [[nodiscard]] int2 frame_size() const;
+        float duration_seconds() const;
 
-        [[nodiscard]] int frame_count() const;
+        int2 frame_size() const;
 
-        [[nodiscard]] float fps() const;
+        int frame_count() const;
 
-        [[nodiscard]] bool get_next_frame(image& out) const;
+        float fps() const;
+
+        bool get_next_frame(image& out) const;
     };
 }

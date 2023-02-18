@@ -1,15 +1,15 @@
 #include "media/video/video_writer.h"
 
-#include "media/media_utility.h"
-#include "utility/strings.h"
+#include "media/media.h"
+#include "utility/utility.h"
 
 using namespace kl::media_utility;
 
 
 kl::video_writer::video_writer(const std::string& filepath, const kl::int2& frame_size, int fps, int bit_rate, const GUID& encoding_format)
     : width_(frame_size.x), height_(frame_size.y), fps_(fps), bit_rate_(bit_rate), encoding_format_(encoding_format),
-    pixel_count_(width_ * height_), frame_duration_(10'000'000 / fps_),
-    frame_byte_width_(4 * width_), frame_byte_size_(frame_byte_width_ * height_)
+    pixel_count_(width_* height_), frame_duration_(10'000'000 / fps_),
+    frame_byte_width_(4 * width_), frame_byte_size_(frame_byte_width_* height_)
 {
     // Sink-Writer
     const std::wstring converted_path = strings::to_w_string(filepath);
@@ -49,7 +49,7 @@ kl::video_writer::video_writer(const std::string& filepath, const kl::int2& fram
     fail_check_(MFCreateSample(&media_sample_), "Failed to create media sample");
     fail_check_(media_sample_->AddBuffer(media_buffer_), "Failed to add media buffer to media sample");
     fail_check_(media_sample_->SetSampleDuration(frame_duration_), "Failed to set sample frame duration");
-    
+
     // Start accepting data
     fail_check_(sink_writer_->BeginWriting(), "Failed to start accepting frames");
 
@@ -66,7 +66,7 @@ kl::video_writer::~video_writer()
 
 kl::int2 kl::video_writer::frame_size() const
 {
-    return { width_, height_ };
+    return { (int) width_, (int) height_ };
 }
 
 int kl::video_writer::fps() const
@@ -84,11 +84,10 @@ GUID kl::video_writer::format() const
     return encoding_format_;
 }
 
-#include "time/timer.h"
-
 bool kl::video_writer::add_frame(const image& frame)
 {
-    if (frame.size() != frame_size()) {
+    const int2 frame_size = this->frame_size();
+    if (frame.width() != frame_size.x || frame.height() != frame_size.y) {
         return false;
     }
 

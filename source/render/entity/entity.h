@@ -1,10 +1,7 @@
 #pragma once
 
-#include "render/entity/mesh.h"
 #include "render/entity/material.h"
 #include "render/entity/collider.h"
-
-#include "memory/ref.h"
 
 
 namespace kl {
@@ -60,14 +57,14 @@ namespace kl {
         ref<collider> get_collider() const;
 
         // Graphics
-        mat4 matrix() const;
+        float4x4 matrix() const;
     };
 #else
 
     class entity
     {
     public:
-        float3 scale = float3::splash(1.0f);
+        float3 scale = float3(1.0f);
         float3 rotation = {};
         float3 position = {};
 
@@ -75,13 +72,15 @@ namespace kl {
         float3 velocity = {};
         float3 angular = {};
 
-        mesh mesh = {};
-        material material = {};
+        ref<gpu_mesh> mesh = nullptr;
+        ref<material> material = nullptr;
 
         entity();
         ~entity();
 
-        mat4 matrix() const;
+        void update_physics(float delta_t);
+
+        float4x4 matrix() const;
     };
 
 #endif

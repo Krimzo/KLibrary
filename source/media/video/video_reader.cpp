@@ -1,8 +1,7 @@
 #include "media/video/video_reader.h"
 
-#include "media/media_utility.h"
-#include "utility/console.h"
-#include "utility/strings.h"
+#include "media/media.h"
+#include "utility/utility.h"
 
 using namespace kl::media_utility;
 
@@ -165,7 +164,7 @@ bool kl::video_reader::get_next_frame(image& out) const
     fail_check_(media_buffer->Lock(&frame_data, nullptr, &frame_byte_size), "Failed to lock the bytes [video_reader]");
 
     out.set_size(frame_size_);
-    memcpy(out.data(), frame_data, std::min<DWORD>(frame_byte_size_, frame_byte_size));
+    memcpy(out.data(), frame_data, min(frame_byte_size_, (int) frame_byte_size));
 
     fail_check_(media_buffer->Unlock(), "Failed to unlock bytes [video_reader]");
 

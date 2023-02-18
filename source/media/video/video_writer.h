@@ -1,11 +1,10 @@
 #pragma once
 
-#include "window/system_handler.h"
 #include "media/image/image.h"
 
 
 namespace kl {
-	class video_writer
+    class video_writer
     {
         const uint32_t width_;
         const uint32_t height_;
@@ -28,7 +27,7 @@ namespace kl {
 
         int frame_counter_ = 0;
 
-	public:
+    public:
         video_writer(const std::string& filepath, const kl::int2& frame_size, int fps, int bit_rate, const GUID& encoding_format);
         ~video_writer();
 
@@ -38,22 +37,22 @@ namespace kl {
         void operator=(const video_writer&) = delete;
         void operator=(const video_writer&&) = delete;
 
-        [[nodiscard]] int2 frame_size() const;
+        int2 frame_size() const;
 
-        [[nodiscard]] int fps() const;
+        int fps() const;
 
-        [[nodiscard]] int bit_rate() const;
+        int bit_rate() const;
 
-        [[nodiscard]] GUID format() const;
+        GUID format() const;
 
         bool add_frame(const image& frame);
 
-        [[nodiscard]] int frame_count() const;
+        int frame_count() const;
 
-        [[nodiscard]] uint64_t duration_100ns() const;
+        uint64_t duration_100ns() const;
 
-        [[nodiscard]] float duration_seconds() const;
+        float duration_seconds() const;
 
         bool finalize();
-	};
+    };
 }

@@ -2,8 +2,6 @@
 
 #include "math/math.h"
 
-#include <vector>
-
 
 namespace kl {
     class image
@@ -21,19 +19,19 @@ namespace kl {
         std::vector<color>::iterator begin();
         std::vector<color>::iterator end();
 
-        [[nodiscard]] int width() const;
+        int width() const;
 
         void set_width(int width);
 
-        [[nodiscard]] int height() const;
+        int height() const;
 
         void set_height(int height);
 
-        [[nodiscard]] int2 size() const;
+        int2 size() const;
 
         void set_size(const int2& size, bool scale = false);
 
-        [[nodiscard]] color get_pixel(const int2& coords) const;
+        color get_pixel(const int2& coords) const;
 
         void set_pixel(const int2& coords, const color& color);
 
@@ -42,15 +40,15 @@ namespace kl {
 
         color* data();
 
-        [[nodiscard]] const color* data() const;
+        const color* data() const;
 
-        [[nodiscard]] image get_rectangle(int2 top_left, int2 bottom_right) const;
+        image get_rectangle(int2 top_left, int2 bottom_right) const;
 
         bool load_from_file(const std::string& filepath);
 
-        [[nodiscard]] bool save_to_file(const std::string& filepath) const;
+        bool save_to_file(const std::string& filepath) const;
 
-        [[nodiscard]] image flip(bool vertical) const;
+        image flip(bool vertical) const;
 
         void fill(const color& color);
 
@@ -66,6 +64,6 @@ namespace kl {
 
         void draw_image(const int2& position, const image& image, bool mix_alpha = true);
 
-        [[nodiscard]] std::string as_ascii(const int2& frame_size) const;
+        std::string as_ascii(const int2& frame_size) const;
     };
 }
