@@ -3,10 +3,11 @@
 #include "utility/utility.h"
 
 
-// Class
+// Construct
 kl::float3x3::float3x3()
 {}
 
+// Get
 float& kl::float3x3::operator[](int index)
 {
     return data[index];
@@ -27,6 +28,23 @@ const float& kl::float3x3::operator()(int x, int y) const
     return data[y * 3 + x];
 }
 
+// Compare
+bool kl::float3x3::operator==(const float3x3& other) const
+{
+    for (int i = 0; i < 9; i++) {
+        if (data[i] != other[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool kl::float3x3::operator!=(const float3x3& other) const
+{
+    return !(*this == other);
+}
+
+// Math
 kl::float3x3 kl::float3x3::operator+(const float3x3& other) const
 {
     float3x3 result = *this;
@@ -106,21 +124,6 @@ kl::float3 kl::float3x3::operator*(const float3& vec) const
     return result;
 }
 
-bool kl::float3x3::operator==(const float3x3& other) const
-{
-    for (int i = 0; i < 9; i++) {
-        if (data[i] != other[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool kl::float3x3::operator!=(const float3x3& other) const
-{
-    return !(*this == other);
-}
-
 float kl::float3x3::determinant() const
 {
     const float result =
@@ -141,8 +144,8 @@ kl::float3x3 kl::float3x3::translation(const float2& val)
 
 kl::float3x3 kl::float3x3::rotation(float rotation)
 {
-    const float z_sin = std::sin(rotation * math::to_radians);
-    const float z_cos = std::cos(rotation * math::to_radians);
+    const float z_sin = sin(rotation * math::to_radians);
+    const float z_cos = cos(rotation * math::to_radians);
 
     float3x3 result = {};
     result[0] = z_cos;

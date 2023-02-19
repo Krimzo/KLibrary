@@ -3,10 +3,11 @@
 #include "utility/utility.h"
 
 
-// Class
+// Construct
 kl::float4x4::float4x4()
 {}
 
+// Get
 float& kl::float4x4::operator[](int index)
 {
     return data[index];
@@ -27,6 +28,23 @@ const float& kl::float4x4::operator()(int x, int y) const
     return data[y * 4 + x];
 }
 
+// Compare
+bool kl::float4x4::operator==(const float4x4& other) const
+{
+    for (int i = 0; i < 16; i++) {
+        if (data[i] != other[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool kl::float4x4::operator!=(const float4x4& other) const
+{
+    return !(*this == other);
+}
+
+// Math
 kl::float4x4 kl::float4x4::operator+(const float4x4& other) const
 {
     float4x4 result = *this;
@@ -106,21 +124,6 @@ kl::float4 kl::float4x4::operator*(const float4& vec) const
     return result;
 }
 
-bool kl::float4x4::operator==(const float4x4& other) const
-{
-    for (int i = 0; i < 16; i++) {
-        if (data[i] != other[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool kl::float4x4::operator!=(const float4x4& other) const
-{
-    return !(*this == other);
-}
-
 float kl::float4x4::determinant() const
 {
     const float A2323 = (*this)(2, 2) * (*this)(3, 3) - (*this)(3, 2) * (*this)(2, 3);
@@ -151,8 +154,8 @@ kl::float4x4 kl::float4x4::translation(const float3& translation)
 kl::float4x4 kl::float4x4::rotation(const float3& rotation)
 {
     const float x_rad = rotation.x * math::to_radians;
-    const float x_sin = std::sin(x_rad);
-    const float x_cos = std::cos(x_rad);
+    const float x_sin = sin(x_rad);
+    const float x_cos = cos(x_rad);
 
     float4x4 x_rot = {};
     x_rot[5] = x_cos;
@@ -161,8 +164,8 @@ kl::float4x4 kl::float4x4::rotation(const float3& rotation)
     x_rot[10] = x_cos;
 
     const float y_rad = rotation.y * math::to_radians;
-    const float y_sin = std::sin(y_rad);
-    const float y_cos = std::cos(y_rad);
+    const float y_sin = sin(y_rad);
+    const float y_cos = cos(y_rad);
 
     float4x4 y_rot = {};
     y_rot[0] = y_cos;
@@ -171,8 +174,8 @@ kl::float4x4 kl::float4x4::rotation(const float3& rotation)
     y_rot[10] = y_cos;
 
     const float z_rad = rotation.z * math::to_radians;
-    const float z_sin = std::sin(z_rad);
-    const float z_cos = std::cos(z_rad);
+    const float z_sin = sin(z_rad);
+    const float z_cos = cos(z_rad);
 
     float4x4 z_rot = {};
     z_rot[0] = z_cos;
@@ -194,7 +197,7 @@ kl::float4x4 kl::float4x4::scaling(const float3& scale)
 
 kl::float4x4 kl::float4x4::perspective(float field_of_view, float aspect_ratio, float near_plane, float far_plane)
 {
-    const float tan_half = 1.0f / std::tan(field_of_view * 0.5f * math::to_radians);
+    const float tan_half = 1.0f / tan(field_of_view * 0.5f * math::to_radians);
 
     float4x4 result = {};
     result[0] = tan_half / aspect_ratio;

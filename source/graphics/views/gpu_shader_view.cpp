@@ -26,12 +26,14 @@ void kl::gpu_shader_view::bind_for_compute_shader(const UINT slot) const
     BOUND_GPU->context()->CSSetShaderResources(slot, 1, &child_object_);
 }
 
-void kl::gpu_shader_view::unbind_for_pixel_shader() const
+void kl::gpu_shader_view::unbind_for_pixel_shader(const UINT slot)
 {
-    BOUND_GPU->context()->PSSetShaderResources(0, 0, nullptr);
+    const dx::shader_view view = nullptr;
+    BOUND_GPU->context()->PSSetShaderResources(slot, 1, &view);
 }
 
-void kl::gpu_shader_view::unbind_for_compute_shader() const
+void kl::gpu_shader_view::unbind_for_compute_shader(const UINT slot)
 {
-    BOUND_GPU->context()->CSSetShaderResources(0, 0, nullptr);
+    const dx::shader_view view = nullptr;
+    BOUND_GPU->context()->CSSetShaderResources(slot, 1, &view);
 }

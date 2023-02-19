@@ -3,32 +3,17 @@
 #include "utility/utility.h"
 
 
-static std::atomic wsa_initialised = false;
-
-static constexpr WORD make_word(const int a, const int b)
-{
-    const WORD first_part = WORD(DWORD_PTR(a) & 0xff);
-    const WORD second_part = WORD(DWORD_PTR(b) & 0xff);
-    return WORD(first_part | second_part << 8);
-}
-
-void kl::socket::init_utility()
-{
-    if (!wsa_initialised) {
+// Init
+namespace kl_ignored {
+    static const int dont_care = []()
+    {
         WSADATA wsa_data = {};
-        error_check(WSAStartup(make_word(2, 2), &wsa_data), "Failed to initialize WSA");
-        wsa_initialised = true;
-    }
+        kl::error_check(WSAStartup(MAKEWORD(2, 2), &wsa_data), "Failed to initialize WSA");
+        return 0;
+    }();
 }
 
-void kl::socket::free_utility()
-{
-    if (wsa_initialised) {
-        WSACleanup();
-        wsa_initialised = false;
-    }
-}
-
+// Construct
 kl::socket::socket()
 {
     socket_ = ::socket(AF_INET, SOCK_STREAM, NULL);
@@ -53,7 +38,8 @@ kl::socket::~socket()
     close();
 }
 
-size_t kl::socket::get_socket() const
+// Methods
+size_t kl::socket::get_id() const
 {
     return socket_;
 }
@@ -113,3 +99,6 @@ int kl::socket::receive(void* buff, const int byte_size) const
 {
     return recv(socket_, (char*) buff, byte_size, NULL);
 }
+
+// Static
+const std::string kl::socket::self_ip = "127.0.0.1";

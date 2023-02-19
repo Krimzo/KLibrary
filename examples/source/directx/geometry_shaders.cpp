@@ -21,13 +21,6 @@ static kl::camera camera = {};
 
 static kl::float3 sun_direction = { 1.0f, -1.0f, 0.0f };
 
-/* IMPORTANT
-*
-CURRENTLY ONLY WORKING EXAMPLE..
-..will fix them all tomorrow.
-
---------- */
-
 int main()
 {
     /* ----- SETUP ----- */

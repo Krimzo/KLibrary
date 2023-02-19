@@ -16,6 +16,6 @@ namespace kl {
         void bind() const;
         void bind(UINT stencil_ref) const;
 
-        void unbind() const;
+        static void unbind();
     };
 }

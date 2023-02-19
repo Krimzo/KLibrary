@@ -26,12 +26,12 @@ float kl::math::interpolate(const float value, const float lower, const float up
 // Rotation
 kl::float4 kl::math::to_quaternion(const float3& euluer)
 {
-    const float cr = std::cos(euluer.x * 0.5f * to_radians);
-    const float sr = std::sin(euluer.x * 0.5f * to_radians);
-    const float cp = std::cos(euluer.y * 0.5f * to_radians);
-    const float sp = std::sin(euluer.y * 0.5f * to_radians);
-    const float cy = std::cos(euluer.z * 0.5f * to_radians);
-    const float sy = std::sin(euluer.z * 0.5f * to_radians);
+    const float cr = cos(euluer.x * 0.5f * to_radians);
+    const float sr = sin(euluer.x * 0.5f * to_radians);
+    const float cp = cos(euluer.y * 0.5f * to_radians);
+    const float sp = sin(euluer.y * 0.5f * to_radians);
+    const float cy = cos(euluer.z * 0.5f * to_radians);
+    const float sy = sin(euluer.z * 0.5f * to_radians);
 
     return {
         sr * cp * cy - cr * sp * sy,
@@ -50,16 +50,22 @@ kl::float3 kl::math::to_euler(const float4& quaternion)
     const float cos_y_cos_p = -2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z) + 1.0f;
 
     return {
-        std::atan2(sin_r_cos_p, cos_r_cos_p) * to_degrees,
-        ((std::abs(sin_p) >= 1.0f) ? std::copysign(pi * 0.5f, sin_p) : std::asin(sin_p)) * to_degrees,
-        std::atan2(sin_y_cos_p, cos_y_cos_p) * to_degrees,
+        atan2(sin_r_cos_p, cos_r_cos_p) * to_degrees,
+        ((::abs(sin_p) >= 1.0f) ? copysign(pi * 0.5f, sin_p) : asin(sin_p)) * to_degrees,
+        atan2(sin_y_cos_p, cos_y_cos_p) * to_degrees,
     };
 }
 
-// Vector2
+// Int2
+kl::int2 kl::math::abs(const int2& vec)
+{
+    return { ::abs(vec.x), ::abs(vec.y) };
+}
+
+// Float2
 kl::float2 kl::math::abs(const float2& vec)
 {
-    return { std::abs(vec.x), std::abs(vec.y) };
+    return { ::abs(vec.x), ::abs(vec.y) };
 }
 
 kl::float2 kl::math::normalize(const float2& vec)
@@ -81,8 +87,8 @@ float kl::math::angle(const float2& first, const float2& second, const bool full
 
 kl::float2 kl::math::rotate(const float2& vec, const float angle)
 {
-    const float sin_a = std::sin(angle * to_radians);
-    const float cos_a = std::cos(angle * to_radians);
+    const float sin_a = sin(angle * to_radians);
+    const float cos_a = cos(angle * to_radians);
     return { cos_a * vec.x - sin_a * vec.y, sin_a * vec.x + cos_a * vec.y };
 }
 
@@ -92,10 +98,10 @@ kl::float2 kl::math::reflect(const float2& vec, const float2& point)
     return vec - (normalized * (vec * normalized) * 2.0f);
 }
 
-// Vector3
+// Float3
 kl::float3 kl::math::abs(const float3& vec)
 {
-    return { std::abs(vec.x), std::abs(vec.y), std::abs(vec.z) };
+    return { ::abs(vec.x), ::abs(vec.y), ::abs(vec.z) };
 }
 
 kl::float3 kl::math::normalize(const float3& vec)
@@ -105,13 +111,13 @@ kl::float3 kl::math::normalize(const float3& vec)
 
 float kl::math::angle(const float3& first, const float3& second)
 {
-    return std::acos(normalize(first) * normalize(second)) * math::to_degrees;
+    return acos(normalize(first) * normalize(second)) * math::to_degrees;
 }
 
 kl::float3 kl::math::rotate(const float3& vec, const float3& axis, const float angle)
 {
-    const float angle_sin = std::sin(angle * 0.5f * to_radians);
-    const float angle_cos = std::cos(angle * 0.5f * to_radians);
+    const float angle_sin = sin(angle * 0.5f * to_radians);
+    const float angle_cos = cos(angle * 0.5f * to_radians);
     const float qx = axis.x * angle_sin;
     const float qy = axis.y * angle_sin;
     const float qz = axis.z * angle_sin;
@@ -148,10 +154,10 @@ kl::float3 kl::math::cross(const float3& first, const float3& second)
     };
 }
 
-// Vector4
+// Float4
 kl::float4 kl::math::abs(const float4& vec)
 {
-    return { std::abs(vec.x), std::abs(vec.y), std::abs(vec.z), std::abs(vec.w) };
+    return { ::abs(vec.x), ::abs(vec.y), ::abs(vec.z), ::abs(vec.w) };
 }
 
 kl::float4 kl::math::normalize(const float4& vec)
@@ -169,7 +175,7 @@ kl::float2x2 kl::math::abs(const float2x2& mat)
 {
     float2x2 result = {};
     for (int i = 0; i < 4; i++) {
-        result[i] = std::abs(mat[i]);
+        result[i] = ::abs(mat[i]);
     }
     return result;
 }
@@ -191,7 +197,7 @@ kl::float3x3 kl::math::abs(const float3x3& mat)
 {
     float3x3 result = {};
     for (int i = 0; i < 9; i++) {
-        result[i] = std::abs(mat[i]);
+        result[i] = ::abs(mat[i]);
     }
     return result;
 }
@@ -218,13 +224,15 @@ kl::float4x4 kl::math::abs(const float4x4& mat)
 {
     float4x4 result = {};
     for (int i = 0; i < 16; i++) {
-        result[i] = std::abs(mat[i]);
+        result[i] = ::abs(mat[i]);
     }
     return result;
 }
 
 kl::float4x4 kl::math::inverse(const float4x4& mat)
 {
+    const float determinant = mat.determinant();
+
     const float A2323 = mat(2, 2) * mat(3, 3) - mat(3, 2) * mat(2, 3);
     const float A1323 = mat(1, 2) * mat(3, 3) - mat(3, 2) * mat(1, 3);
     const float A1223 = mat(1, 2) * mat(2, 3) - mat(2, 2) * mat(1, 3);
@@ -243,8 +251,6 @@ kl::float4x4 kl::math::inverse(const float4x4& mat)
     const float A0212 = mat(0, 1) * mat(2, 2) - mat(2, 1) * mat(0, 2);
     const float A0113 = mat(0, 1) * mat(1, 3) - mat(1, 1) * mat(0, 3);
     const float A0112 = mat(0, 1) * mat(1, 2) - mat(1, 1) * mat(0, 2);
-
-    const float determinant = mat.determinant();
 
     float4x4 result = {};
     result(0, 0) = +(mat(1, 1) * A2323 - mat(2, 1) * A1323 + mat(3, 1) * A1223) * determinant;

@@ -1,6 +1,7 @@
 #include "math/triangle/triangle.h"
 
 
+// Construct
 kl::triangle::triangle()
 {}
 
@@ -8,6 +9,7 @@ kl::triangle::triangle(const vertex& a, const vertex& b, const vertex& c)
     : a(a), b(b), c(c)
 {}
 
+// Math
 kl::float4 kl::triangle::get_constants() const
 {
     const float calc_const = (b.world.y - c.world.y) * (a.world.x - c.world.x) + (c.world.x - b.world.x) * (a.world.y - c.world.y);
@@ -50,17 +52,7 @@ kl::float3 kl::triangle::get_weights(const float3& position) const
     return { w1, w2, (1.0f - w1 - w2) };
 }
 
-bool kl::triangle::is_in_triangle(const float3& weights)
-{
-    return !(weights.x < 0.0f || weights.y < 0.0f || weights.z < 0.0f);
-}
-
-float kl::triangle::interpolate(const float3& weights, const float3& values) const
-{
-    return weights * values;
-}
-
-kl::vertex kl::triangle::interpolate(const float3& weights) const
+kl::vertex kl::triangle::interpolate_self(const float3& weights) const
 {
     return {
         {
@@ -80,6 +72,18 @@ kl::vertex kl::triangle::interpolate(const float3& weights) const
     };
 }
 
+// Static
+bool kl::triangle::is_in_triangle(const float3& weights)
+{
+    return !(weights.x < 0.0f || weights.y < 0.0f || weights.z < 0.0f);
+}
+
+float kl::triangle::interpolate(const float3& weights, const float3& values)
+{
+    return weights * values;
+}
+
+// Format
 std::ostream& kl::operator<<(std::ostream& os, const kl::triangle& obj)
 {
     os << "{" << obj.a << ", " << obj.b << ", " << obj.c << "}";

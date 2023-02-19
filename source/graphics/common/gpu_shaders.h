@@ -18,6 +18,6 @@ namespace kl {
         operator bool() const;
 
         void bind() const;
-        void unbind() const;
+        static void unbind();
     };
 }

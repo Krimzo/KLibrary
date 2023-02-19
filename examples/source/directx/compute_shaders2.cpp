@@ -3,28 +3,30 @@
 
 struct example_struct
 {
-	kl::float3 position;
+    kl::float3 position;
 };
 
 int main()
 {
-	constexpr int data_size = 10;
-	example_struct example_data[data_size] = {};
+    static constexpr int data_size = 10;
+    example_struct example_data[data_size] = {};
 
-	kl::gpu gpu = {};
+    kl::BOUND_GPU = kl::gpu::make();
+    auto& gpu = *kl::BOUND_GPU;
 
-	const kl::dx::buffer buffer = gpu.new_structured_buffer(example_data, data_size, sizeof(example_struct), true, true);
-	const kl::dx::access_view shader_view = gpu.new_access_view(buffer);
+    auto buffer = kl::gpu_buffer::make(example_data, data_size, sizeof(example_struct), true, true);
+    auto access_view = kl::gpu_access_view::make(*buffer, nullptr);
+    access_view->bind(0);
 
-	const kl::dx::compute_shader compute_shader = gpu.new_compute_shader(kl::files::read_string("examples/shaders/compute_test2.hlsl"));
-	gpu.bind_compute_access_view(shader_view, 0);
-	gpu.execute_compute_shader(compute_shader, { data_size, 1, 1 });
+    auto compute_shader = kl::gpu_compute_shader::make(kl::files::read_string("examples/shaders/compute_test2.hlsl"));
+    compute_shader->execute(data_size, 1, 1);
 
-	gpu.read_from_resource(example_data, buffer, sizeof(example_data));
+    gpu.read_from_resource(example_data, *buffer, sizeof(example_data));
 
-	for (auto& [position] : example_data) {
-		print(position);
-	}
+    for (auto& [position] : example_data) {
+        print(position);
+    }
 
-	kl::get();
+
+    kl::get();
 }

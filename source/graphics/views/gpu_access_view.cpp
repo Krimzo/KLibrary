@@ -21,7 +21,8 @@ void kl::gpu_access_view::bind(const UINT slot, const UINT* initial_counts) cons
     BOUND_GPU->context()->CSSetUnorderedAccessViews(slot, 1, &child_object_, initial_counts);
 }
 
-void kl::gpu_access_view::unbind() const
+void kl::gpu_access_view::unbind(UINT slot)
 {
-    BOUND_GPU->context()->CSSetUnorderedAccessViews(0, 0, nullptr, nullptr);
+    const dx::access_view view = nullptr;
+    BOUND_GPU->context()->CSSetUnorderedAccessViews(slot, 1, &view, nullptr);
 }

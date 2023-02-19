@@ -147,9 +147,6 @@
     <ClCompile Include="source\render\scene\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\source\directx\geometry_shaders.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\graphics\buffers\gpu_shader_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -168,16 +165,16 @@
     <ClCompile Include="source\graphics\gpu\gpu_child.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\math\vector\vector3.cpp">
+    <ClCompile Include="source\math\vector\float3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\math\math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\math\vector\vector2.cpp">
+    <ClCompile Include="source\math\vector\float2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\math\vector\vector4.cpp">
+    <ClCompile Include="source\math\vector\float4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\math\matrix\float2x2.cpp">
@@ -228,6 +225,15 @@
     <ClCompile Include="source\apis\apis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\math\vector\int2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\math\helper\constants.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\source\directx\mandelbrot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\apis\windows\kl_directx.h">
@@ -260,13 +266,13 @@
     <ClInclude Include="source\math\triangle\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\vector\vector2.h">
+    <ClInclude Include="source\math\vector\float2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\vector\vector3.h">
+    <ClInclude Include="source\math\vector\float3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\vector\vector4.h">
+    <ClInclude Include="source\math\vector\float4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\math\math.h">
@@ -441,6 +447,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\apis\apis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\vector\int2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\helper\constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

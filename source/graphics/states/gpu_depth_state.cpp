@@ -72,7 +72,7 @@ void kl::gpu_depth_state::bind(const UINT stencil_ref) const
     BOUND_GPU->context()->OMSetDepthStencilState(child_object_, stencil_ref);
 }
 
-void kl::gpu_depth_state::unbind() const
+void kl::gpu_depth_state::unbind()
 {
     BOUND_GPU->context()->OMSetDepthStencilState(nullptr, NULL);
 }

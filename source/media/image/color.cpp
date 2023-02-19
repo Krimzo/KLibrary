@@ -3,6 +3,7 @@
 #include "math/math.h"
 
 
+// Construct
 kl::color::color()
 {}
 
@@ -10,20 +11,42 @@ kl::color::color(const byte r, const byte g, const byte b, const byte a)
     : b(b), g(g), r(r), a(a)
 {}
 
-bool kl::color::operator==(const color& obj) const
+// Get
+kl::color::operator kl::float3() const
 {
-    return (r == obj.r && g == obj.g && b == obj.b && a == obj.a);
+    return {
+        r * math::to_float_color,
+        g * math::to_float_color,
+        b * math::to_float_color,
+    };
 }
 
-bool kl::color::operator!=(const color& obj) const
+kl::color::operator kl::float4() const
 {
-    return !(*this == obj);
+    return {
+        r * math::to_float_color,
+        g * math::to_float_color,
+        b * math::to_float_color,
+        a * math::to_float_color,
+    };
 }
 
+// Comapre
+bool kl::color::operator==(const color& other) const
+{
+    return (r == other.r && g == other.g && b == other.b && a == other.a);
+}
+
+bool kl::color::operator!=(const color& other) const
+{
+    return !(*this == other);
+}
+
+// Methods
 kl::color kl::color::gray() const
 {
     const float float_value = (r * 0.3f + g * 0.585f + b * 0.115f);
-    const byte gray_value = min(max((int) (float_value * to_byte_color), 0), 255);
+    const byte gray_value = min(max((int) float_value, 0), 255);
     return { gray_value, gray_value, gray_value, a };
 }
 
@@ -51,7 +74,7 @@ kl::color kl::color::mix(const color& color, float ratio) const
 
 kl::color kl::color::mix(const color& color) const
 {
-    return mix(color, color.a * to_float_color);
+    return mix(color, color.a * math::to_float_color);
 }
 
 // Format

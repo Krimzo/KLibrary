@@ -271,7 +271,7 @@ void kl::window::draw_pixel_data(const color* data, const int2& size, const int2
 
 void kl::window::draw_image(const image& image, const int2& position) const
 {
-    draw_pixel_data(image.data(), image.size(), position);
+    draw_pixel_data(image, image.size(), position);
 }
 
 void kl::window::notify() const

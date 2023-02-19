@@ -12,9 +12,9 @@ namespace kl {
         static ref<gpu_compute_shader> make(const std::string& source);
 
         void bind() const;
-        void unbind() const;
+        static void unbind();
 
-        void dispatch(const int3& size) const;
-        void execute(const int3& size) const;
+        void dispatch(UINT x, UINT y, UINT z) const;
+        void execute(UINT x, UINT y, UINT z) const;
     };
 }

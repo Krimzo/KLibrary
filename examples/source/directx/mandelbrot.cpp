@@ -16,60 +16,69 @@ static kl::color start_color = kl::colors::orange;
 static void input(const kl::window& window, const float delta_time)
 {
     // Keyboard
-    if (window.keyboard.esc.state()) {
+    if (window.keyboard.esc) {
         window.close();
     }
-    if (window.keyboard.r.state()) {
-        if (window.keyboard.shift.state()) {
+    if (window.keyboard.r) {
+        if (window.keyboard.shift) {
             iterations = 64;
         }
         else {
-            position = {-0.5, 0.0f};
+            position = { -0.5, 0.0f };
             zoom = 1.0f;
         }
     }
-    if (window.keyboard.w.state()) {
+    if (window.keyboard.w) {
         position.y -= (1.0f / zoom) * delta_time;
     }
-    if (window.keyboard.s.state()) {
+    if (window.keyboard.s) {
         position.y += (1.0f / zoom) * delta_time;
     }
-    if (window.keyboard.d.state()) {
+    if (window.keyboard.d) {
         position.x += (1.0f / zoom) * delta_time;
     }
-    if (window.keyboard.a.state()) {
+    if (window.keyboard.a) {
         position.x -= (1.0f / zoom) * delta_time;
     }
 
     // Mouse
     const kl::int2 frame_size = window.size();
-    if (window.mouse.left.state()) {
+    if (window.mouse.left) {
         zoom += zoom * delta_time;
-        kl::float2 uv = kl::float2(window.mouse.position()) / kl::float2(frame_size) * 2.0f - kl::float2::splash(1);
+        kl::float2 uv = {
+            window.mouse.position().x / (float) frame_size.x * 2.0f - 1.0f,
+            window.mouse.position().y / (float) frame_size.y * 2.0f - 1.0f,
+        };
+
         uv *= float(frame_size.x) / frame_size.y;
-        position += (uv / zoom) * delta_time;
+        position += (uv * (1.0f / zoom)) * delta_time;
     }
-    if (window.mouse.right.state()) {
+    if (window.mouse.right) {
         zoom -= zoom * delta_time;
-        kl::float2 uv = kl::float2(window.mouse.position()) / kl::float2(frame_size) * 2.0f - kl::float2::splash(1);
+        kl::float2 uv = {
+            window.mouse.position().x / (float) frame_size.x * 2.0f - 1.0f,
+            window.mouse.position().y / (float) frame_size.y * 2.0f - 1.0f,
+        };
+
         uv *= float(frame_size.x) / frame_size.y;
-        position -= (uv / zoom) * delta_time;
+        position -= (uv * (1.0f / zoom)) * delta_time;
     }
 
     // Scroll
     static int last_scroll = window.mouse.scroll();
     const int current_scroll = window.mouse.scroll();
-    iterations += (current_scroll - last_scroll) * (window.keyboard.shift.state() ? 10 : 1);
-    iterations = std::max(iterations, 0);
+    iterations += (current_scroll - last_scroll) * (window.keyboard.shift ? 10 : 1);
+    iterations = max(iterations, 0);
     last_scroll = current_scroll;
 }
 
-[[noreturn]] static void console_read()
+static void console_read()
 {
     while (true) {
         kl::print<false>(kl::colors::console, "Color = ");
 
-        if (std::vector<std::string> parts = kl::strings::split([] {
+        if (std::vector<std::string> parts = kl::strings::split([]
+        {
             std::string line;
             std::getline(std::cin, line);
             return line;
@@ -94,22 +103,34 @@ static void input(const kl::window& window, const float delta_time)
 
 int main()
 {
-    kl::window window = { { 1600, 900 }, "Mandelbrot" };
-    kl::gpu gpu = kl::gpu(window.get_window());
+    kl::BOUND_WINDOW = kl::window::make({ 1600, 900 }, "Mandelbrot");
+    kl::BOUND_GPU = kl::gpu::make(*kl::BOUND_WINDOW);
     kl::timer timer = {};
 
-    window.on_resize = [&](const kl::int2 size)
+    auto& window = *kl::BOUND_WINDOW;
+    auto& gpu = *kl::BOUND_GPU;
+
+    window.on_resize.push_back([&](const kl::int2 size)
     {
         if (size.x > 0 && size.y > 0) {
             gpu.resize_internal(size);
             gpu.set_viewport(size);
         }
-    };
+    });
+
     window.maximize();
 
     // Start
-    gpu.bind_shaders(gpu.new_shaders(kl::files::read_string("examples/shaders/mandelbrot.hlsl")));
-    const kl::dx::buffer screen_mesh = gpu.generate_screen_mesh();
+    auto raster_state = kl::gpu_raster_state::make(false, false, true);
+    raster_state->bind();
+
+    auto shaders = kl::gpu_shaders::make(kl::files::read_string("examples/shaders/mandelbrot.hlsl"));
+    shaders->bind();
+
+    auto const_buffer = kl::gpu_const_buffer::make(sizeof(ps_cb));
+    const_buffer->bind_for_pixel_shader(0);
+
+    auto screen_mesh = kl::gpu_mesh::make_screen();
 
     // Console
     std::thread(console_read).detach();
@@ -122,16 +143,16 @@ int main()
         input(window, timer.get_interval());
 
         // Render
-        ps_cb ps_data = {};
-        ps_data.state_info.xy = position;
-        ps_data.state_info.z = zoom;
-        ps_data.state_info.w = float(iterations);
-        ps_data.frame_size.xy = kl::float2(window.size());
-        ps_data.start_color = kl::float4(start_color);
-
         gpu.clear_internal();
-        gpu.set_pixel_const_buffer(ps_data);
-        gpu.draw_vertex_buffer(screen_mesh);
+
+        ps_cb ps_data = {};
+        ps_data.state_info = { position, zoom, (float) iterations };
+        ps_data.frame_size = { window.size(), 0.0f, 0.0f };
+        ps_data.start_color = start_color;
+        const_buffer->set_data(ps_data);
+
+        screen_mesh->draw();
+
         gpu.swap_buffers(true);
 
         // Info

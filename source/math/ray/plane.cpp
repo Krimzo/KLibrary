@@ -3,15 +3,17 @@
 #include "math/math.h"
 
 
+// Class
 kl::plane::plane()
 {}
 
-kl::plane::plane(const float3& normal, const float3& point)
-    : normal(math::normalize(normal)), point(point)
+kl::plane::plane(const float3& origin, const float3& normal)
+    : origin(origin), normal(math::normalize(normal))
 {}
 
+// Format
 std::ostream& kl::operator<<(std::ostream& os, const kl::plane& obj)
 {
-    os << "{" << obj.normal << ", " << obj.point << "}";
+    os << "{" << obj.origin << ", " << obj.normal << "}";
     return os;
 }

@@ -43,12 +43,14 @@ void kl::gpu_sampler_state::bind_for_compute_shader(const UINT slot) const
     BOUND_GPU->context()->CSSetSamplers(slot, 1, &child_object_);
 }
 
-void kl::gpu_sampler_state::unbind_for_pixel_shader() const
+void kl::gpu_sampler_state::unbind_for_pixel_shader(const UINT slot)
 {
-    BOUND_GPU->context()->PSSetSamplers(0, 0, nullptr);
+    const dx::sampler_state state = nullptr;
+    BOUND_GPU->context()->PSSetSamplers(slot, 1, &state);
 }
 
-void kl::gpu_sampler_state::unbind_for_compute_shader() const
+void kl::gpu_sampler_state::unbind_for_compute_shader(const UINT slot)
 {
-    BOUND_GPU->context()->CSSetSamplers(0, 0, nullptr);
+    const dx::sampler_state state = nullptr;
+    BOUND_GPU->context()->CSSetSamplers(slot, 1, &state);
 }

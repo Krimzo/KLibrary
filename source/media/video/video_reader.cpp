@@ -145,6 +145,7 @@ float kl::video_reader::fps() const
 
 bool kl::video_reader::get_next_frame(image& out) const
 {
+    // Read sample
     DWORD flags = NULL;
     LONGLONG time_stamp = 0;
     IMFSample* sample = nullptr;
@@ -153,22 +154,33 @@ bool kl::video_reader::get_next_frame(image& out) const
         return false;
     }
 
+    // Convert to array
     IMFMediaBuffer* media_buffer = nullptr;
     if (!succeeded_(sample->ConvertToContiguousBuffer(&media_buffer)) || !media_buffer) {
         safe_release_(sample);
         return false;
     }
 
+    // Copy data
     BYTE* frame_data = nullptr;
     DWORD frame_byte_size = 0;
     fail_check_(media_buffer->Lock(&frame_data, nullptr, &frame_byte_size), "Failed to lock the bytes [video_reader]");
 
-    out.set_size(frame_size_);
-    memcpy(out.data(), frame_data, min(frame_byte_size_, (int) frame_byte_size));
+    out.resize(frame_size_);
+    const size_t pixel_count = (size_t) out.width() * out.height();
+    const color* frame_source = (color*) frame_data;
+    color* frame_target = out;
 
+    for (size_t i = 0; i < pixel_count; i++) {
+        frame_target[i].r = frame_source[i].r;
+        frame_target[i].g = frame_source[i].g;
+        frame_target[i].b = frame_source[i].b;
+    }
+
+    // Cleanup
     fail_check_(media_buffer->Unlock(), "Failed to unlock bytes [video_reader]");
-
     safe_release_(media_buffer);
     safe_release_(sample);
+
     return true;
 }

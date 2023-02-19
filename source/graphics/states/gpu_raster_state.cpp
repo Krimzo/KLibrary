@@ -38,7 +38,7 @@ void kl::gpu_raster_state::bind() const
     BOUND_GPU->context()->RSSetState(child_object_);
 }
 
-void kl::gpu_raster_state::unbind() const
+void kl::gpu_raster_state::unbind()
 {
     BOUND_GPU->context()->RSSetState(nullptr);
 }

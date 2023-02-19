@@ -3,10 +3,11 @@
 #include "utility/utility.h"
 
 
-// Class
+// Construct
 kl::float2x2::float2x2()
 {}
 
+// Get
 float& kl::float2x2::operator[](const int index)
 {
     return data[index];
@@ -27,6 +28,23 @@ const float& kl::float2x2::operator()(const int x, const int y) const
     return data[y * 2 + x];
 }
 
+// Compare
+bool kl::float2x2::operator==(const float2x2& other) const
+{
+    for (int i = 0; i < 4; i++) {
+        if (data[i] != other[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool kl::float2x2::operator!=(const float2x2& other) const
+{
+    return !(*this == other);
+}
+
+// Math
 kl::float2x2 kl::float2x2::operator+(const float2x2& other) const
 {
     float2x2 result = *this;
@@ -104,21 +122,6 @@ kl::float2 kl::float2x2::operator*(const float2& vec) const
         }
     }
     return result;
-}
-
-bool kl::float2x2::operator==(const float2x2& other) const
-{
-    for (int i = 0; i < 4; i++) {
-        if (data[i] != other[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool kl::float2x2::operator!=(const float2x2& other) const
-{
-    return !(*this == other);
 }
 
 float kl::float2x2::determinant() const

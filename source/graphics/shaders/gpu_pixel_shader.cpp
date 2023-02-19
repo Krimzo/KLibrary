@@ -23,7 +23,7 @@ void kl::gpu_pixel_shader::bind() const
     BOUND_GPU->context()->PSSetShader(child_object_, nullptr, 0);
 }
 
-void kl::gpu_pixel_shader::unbind() const
+void kl::gpu_pixel_shader::unbind()
 {
     BOUND_GPU->context()->PSSetShader(nullptr, nullptr, 0);
 }

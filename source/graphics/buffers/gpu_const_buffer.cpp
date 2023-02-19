@@ -53,24 +53,28 @@ void kl::gpu_const_buffer::bind_for_compute_shader(UINT slot) const
     BOUND_GPU->context()->CSSetConstantBuffers(slot, 1, *buffer_);
 }
 
-void kl::gpu_const_buffer::unbind_for_vertex_shader() const
+void kl::gpu_const_buffer::unbind_for_vertex_shader(const UINT slot)
 {
-    BOUND_GPU->context()->VSSetConstantBuffers(0, 0, nullptr);
+    const dx::buffer buffer = nullptr;
+    BOUND_GPU->context()->VSSetConstantBuffers(slot, 1, &buffer);
 }
 
-void kl::gpu_const_buffer::unbind_for_geometry_shader() const
+void kl::gpu_const_buffer::unbind_for_geometry_shader(const UINT slot)
 {
-    BOUND_GPU->context()->GSSetConstantBuffers(0, 0, nullptr);
+    const dx::buffer buffer = nullptr;
+    BOUND_GPU->context()->GSSetConstantBuffers(slot, 1, &buffer);
 }
 
-void kl::gpu_const_buffer::unbind_for_pixel_shader() const
+void kl::gpu_const_buffer::unbind_for_pixel_shader(const UINT slot)
 {
-    BOUND_GPU->context()->PSSetConstantBuffers(0, 0, nullptr);
+    const dx::buffer buffer = nullptr;
+    BOUND_GPU->context()->PSSetConstantBuffers(slot, 1, &buffer);
 }
 
-void kl::gpu_const_buffer::unbind_for_compute_shader() const
+void kl::gpu_const_buffer::unbind_for_compute_shader(const UINT slot)
 {
-    BOUND_GPU->context()->CSSetConstantBuffers(0, 0, nullptr);
+    const dx::buffer buffer = nullptr;
+    BOUND_GPU->context()->CSSetConstantBuffers(slot, 1, &buffer);
 }
 
 void kl::gpu_const_buffer::set_data(const void* data, UINT byte_size) const

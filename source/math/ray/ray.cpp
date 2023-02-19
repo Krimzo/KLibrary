@@ -3,6 +3,7 @@
 #include "math/math.h"
 
 
+// Construct
 kl::ray::ray()
 {}
 
@@ -18,11 +19,12 @@ kl::ray::ray(const float3& origin, const float4x4& inverse_matrix, const float2&
     direction = math::normalize(float3(pixel_direction.x, pixel_direction.y, pixel_direction.z));
 }
 
+// Math
 bool kl::ray::intersect_plane(const plane& plane, float3* out_intersection) const
 {
     const float denom = math::normalize(plane.normal) * math::normalize(direction);
-    if (std::abs(denom) > 0.0001f) {
-        const float t = ((plane.point - origin) * plane.normal) / denom;
+    if (abs(denom) > 0.0001f) {
+        const float t = ((plane.origin - origin) * plane.normal) / denom;
         if (t >= 0.0f) {
             if (out_intersection) {
                 *out_intersection = origin + direction * t;
@@ -64,7 +66,7 @@ bool kl::ray::intersect_triangle(const triangle& triangle, float3* out_intersect
 
 bool kl::ray::intersect_sphere(const sphere& sphere, float3& out_intersection, float* out_distance) const
 {
-    const float3 center_ray = sphere.center - origin;
+    const float3 center_ray = sphere.origin - origin;
     const float cd_dot = center_ray * direction;
     if (cd_dot < 0.0f) {
         return false;
@@ -91,12 +93,13 @@ bool kl::ray::intersect_sphere(const sphere& sphere, float3& out_intersection, f
 
 bool kl::ray::intersect_sphere(const sphere& sphere) const
 {
-    const float ray_distance = (sphere.center - origin) * direction;
+    const float ray_distance = (sphere.origin - origin) * direction;
     const float3 ray_point = origin + direction * ray_distance;
-    const float sphere_ray_distance = (sphere.center - ray_point).length();
+    const float sphere_ray_distance = (sphere.origin - ray_point).length();
     return !(sphere_ray_distance > sphere.radius);
 }
 
+// Format
 std::ostream& kl::operator<<(std::ostream& os, const kl::ray& obj)
 {
     os << "{" << obj.origin << ", " << obj.direction << "}";

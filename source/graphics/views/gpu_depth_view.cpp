@@ -22,7 +22,7 @@ void kl::gpu_depth_view::bind(dx::target_view target_view) const
     BOUND_GPU->context()->OMSetRenderTargets(1, target_views, child_object_);
 }
 
-void kl::gpu_depth_view::unbind_all() const
+void kl::gpu_depth_view::unbind_all()
 {
     BOUND_GPU->context()->OMSetRenderTargets(0, nullptr, nullptr);
 }

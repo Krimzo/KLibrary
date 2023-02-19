@@ -22,7 +22,7 @@ void kl::gpu_target_view::bind(dx::depth_view depth_view) const
     BOUND_GPU->context()->OMSetRenderTargets(1, target_views, depth_view);
 }
 
-void kl::gpu_target_view::unbind_all() const
+void kl::gpu_target_view::unbind_all()
 {
     BOUND_GPU->context()->OMSetRenderTargets(0, nullptr, nullptr);
 }
@@ -30,5 +30,5 @@ void kl::gpu_target_view::unbind_all() const
 void kl::gpu_target_view::clear(const float4& color) const
 {
     if (!child_object_) { return; }
-    BOUND_GPU->context()->ClearRenderTargetView(child_object_, (const float*) &color);
+    BOUND_GPU->context()->ClearRenderTargetView(child_object_, color);
 }

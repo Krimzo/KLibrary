@@ -12,6 +12,6 @@ namespace kl {
         static ref<gpu_geometry_shader> make(const std::string& source);
 
         void bind() const;
-        void unbind() const;
+        static void unbind();
     };
 }

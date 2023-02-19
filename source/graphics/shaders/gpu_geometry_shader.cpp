@@ -23,7 +23,7 @@ void kl::gpu_geometry_shader::bind() const
     BOUND_GPU->context()->GSSetShader(child_object_, nullptr, 0);
 }
 
-void kl::gpu_geometry_shader::unbind() const
+void kl::gpu_geometry_shader::unbind()
 {
     BOUND_GPU->context()->GSSetShader(nullptr, nullptr, 0);
 }

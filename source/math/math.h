@@ -1,9 +1,13 @@
 #pragma once
 
+// Helper
+#include "math/helper/constants.h"
+
 // Vector
-#include "math/vector/vector2.h"
-#include "math/vector/vector3.h"
-#include "math/vector/vector4.h"
+#include "math/vector/int2.h"
+#include "math/vector/float2.h"
+#include "math/vector/float3.h"
+#include "math/vector/float4.h"
 
 // Matrix
 #include "math/matrix/float2x2.h"
@@ -33,14 +37,17 @@ namespace kl::math {
     float4 to_quaternion(const float3& euluer);
     float3 to_euler(const float4& quaternion);
 
-    // Vector2 operations
+    // Int2 operations
+    int2 abs(const int2& vec);
+
+    // Float2 operations
     float2 abs(const float2& vec);
     float2 normalize(const float2& vec);
     float angle(const float2& first, const float2& second, bool full);
     float2 rotate(const float2& vec, float angle);
     float2 reflect(const float2& vec, const float2& point);
 
-    // Vector3 operations
+    // Float3 operations
     float3 abs(const float3& vec);
     float3 normalize(const float3& vec);
     float angle(const float3& first, const float3& second);
@@ -48,7 +55,7 @@ namespace kl::math {
     float3 reflect(const float3& first, float3 normal);
     float3 cross(const float3& first, const float3& second);
 
-    // Vector4 operations
+    // Float4 operations
     float4 abs(const float4& vec);
     float4 normalize(const float4& vec);
     float angle(const float4& first, const float4& second);

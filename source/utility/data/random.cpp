@@ -1,6 +1,7 @@
 #include "utility/data/random.h"
 
 
+// Init
 namespace kl_ignore {
     static const int dont_care = []
     {
@@ -9,7 +10,7 @@ namespace kl_ignore {
     }();
 }
 
-// Byte-s
+// Byte
 bool kl::random::get_bool()
 {
     return rand() % 2;
@@ -29,7 +30,7 @@ kl::color kl::random::get_color(const bool gray)
     return { get_byte(), get_byte(), get_byte() };
 }
 
-// Int-s
+// Int
 int kl::random::get_int(const int start_inclusive, const int end_exclusive)
 {
     return rand() % (end_exclusive - start_inclusive) + start_inclusive;
@@ -50,27 +51,7 @@ kl::int2 kl::random::get_int2(const int end_exclusive)
     return { get_int(end_exclusive), get_int(end_exclusive) };
 }
 
-kl::int3 kl::random::get_int3(const int start_inclusive, const int end_exclusive)
-{
-    return { get_int(start_inclusive, end_exclusive), get_int(start_inclusive, end_exclusive), get_int(start_inclusive, end_exclusive) };
-}
-
-kl::int3 kl::random::get_int3(const int end_exclusive)
-{
-    return { get_int(end_exclusive), get_int(end_exclusive), get_int(end_exclusive) };
-}
-
-kl::int4 kl::random::get_int4(const int start_inclusive, const int end_exclusive)
-{
-    return { get_int(start_inclusive, end_exclusive), get_int(start_inclusive, end_exclusive), get_int(start_inclusive, end_exclusive), get_int(start_inclusive, end_exclusive) };
-}
-
-kl::int4 kl::random::get_int4(const int end_exclusive)
-{
-    return { get_int(end_exclusive), get_int(end_exclusive), get_int(end_exclusive), get_int(end_exclusive) };
-}
-
-// Float-s
+// Float
 float kl::random::get_float(const float start_inclusive, const float end_inclusive)
 {
     return get_float(end_inclusive - start_inclusive) + start_inclusive;
@@ -131,10 +112,9 @@ kl::float4 kl::random::get_float4()
     return { get_float(), get_float(), get_float(), get_float() };
 }
 
-// Mat-s
 kl::float3x3 kl::random::get_float3x3(const float start_inclusive, const float end_inclusive)
 {
-    kl::float3x3 result = {};
+    float3x3 result = {};
     for (auto& value : result.data) {
         value = get_float(start_inclusive, end_inclusive);
     }
@@ -143,7 +123,7 @@ kl::float3x3 kl::random::get_float3x3(const float start_inclusive, const float e
 
 kl::float3x3 kl::random::get_float3x3(const float end_inclusive)
 {
-    kl::float3x3 result = {};
+    float3x3 result = {};
     for (auto& value : result.data) {
         value = get_float(end_inclusive);
     }
@@ -152,7 +132,7 @@ kl::float3x3 kl::random::get_float3x3(const float end_inclusive)
 
 kl::float3x3 kl::random::get_float3x3()
 {
-    kl::float3x3 result = {};
+    float3x3 result = {};
     for (auto& value : result.data) {
         value = get_float();
     }
@@ -161,7 +141,7 @@ kl::float3x3 kl::random::get_float3x3()
 
 kl::float4x4 kl::random::get_float4x4(const float start_inclusive, const float end_inclusive)
 {
-    kl::float4x4 result = {};
+    float4x4 result = {};
     for (auto& value : result.data) {
         value = get_float(start_inclusive, end_inclusive);
     }
@@ -170,7 +150,7 @@ kl::float4x4 kl::random::get_float4x4(const float start_inclusive, const float e
 
 kl::float4x4 kl::random::get_float4x4(const float end_inclusive)
 {
-    kl::float4x4 result = {};
+    float4x4 result = {};
     for (auto& value : result.data) {
         value = get_float(end_inclusive);
     }
@@ -179,14 +159,14 @@ kl::float4x4 kl::random::get_float4x4(const float end_inclusive)
 
 kl::float4x4 kl::random::get_float4x4()
 {
-    kl::float4x4 result = {};
+    float4x4 result = {};
     for (auto& value : result.data) {
         value = get_float();
     }
     return result;
 }
 
-// Char-s
+// Char
 char kl::random::get_char(const bool upper)
 {
     return upper ? char(get_int('A', 'Z' + 1)) : char(get_int('a', 'z' + 1));

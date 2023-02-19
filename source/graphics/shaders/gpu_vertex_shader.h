@@ -16,6 +16,6 @@ namespace kl {
         virtual ~gpu_vertex_shader();
 
         void bind() const;
-        void unbind() const;
+        static void unbind();
     };
 }

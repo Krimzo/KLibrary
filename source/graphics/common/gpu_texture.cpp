@@ -25,6 +25,9 @@ kl::ref<kl::gpu_texture> kl::gpu_texture::make(const dx::texture texture, const 
 }
 
 // Class
+kl::gpu_texture::gpu_texture()
+{}
+
 kl::gpu_texture::gpu_texture(const dx::texture_descriptor* descriptor, const dx::subresource_descriptor* subresource_data)
     : creation_type(gpu_texture_creation_type::normal)
 {
@@ -35,7 +38,7 @@ kl::gpu_texture::gpu_texture(const dx::texture_descriptor* descriptor, const dx:
 kl::gpu_texture::gpu_texture(const image& image, const bool has_unordered_access, const bool is_target)
     : creation_type(gpu_texture_creation_type::normal)
 {
-    const kl::image flipped_image = image.flip(true);
+    const kl::image flipped_image = image.flip_vertical();
 
     dx::texture_descriptor descriptor = {};
     descriptor.Width = image.width();
@@ -50,7 +53,7 @@ kl::gpu_texture::gpu_texture(const image& image, const bool has_unordered_access
         (is_target ? D3D11_BIND_RENDER_TARGET : NULL);
 
     dx::subresource_descriptor data = {};
-    data.pSysMem = flipped_image.data();
+    data.pSysMem = flipped_image;
     data.SysMemPitch = image.width() * sizeof(color);
 
     this->gpu_texture::gpu_texture(&descriptor, &data);
@@ -81,12 +84,12 @@ kl::gpu_texture::gpu_texture(const image& front, const image& back, const image&
 
     const UINT mem_pitch = UINT(front.width() * sizeof(color));
     const dx::subresource_descriptor data[6] = {
-        { right.data(),  mem_pitch, 0 },
-        { left.data(),   mem_pitch, 0 },
-        { top.data(),    mem_pitch, 0 },
-        { bottom.data(), mem_pitch, 0 },
-        { front.data(),  mem_pitch, 0 },
-        { back.data(),   mem_pitch, 0 },
+        { right,  mem_pitch, 0 },
+        { left,   mem_pitch, 0 },
+        { top,    mem_pitch, 0 },
+        { bottom, mem_pitch, 0 },
+        { front,  mem_pitch, 0 },
+        { back,   mem_pitch, 0 },
     };
 
     this->gpu_texture::gpu_texture(&descriptor, data);
@@ -112,10 +115,13 @@ kl::gpu_texture::gpu_texture(const dx::texture texture, const int2& size)
 }
 
 // Static
-kl::dx::texture kl::gpu_texture::get_back_buffer(dx::chain chain)
+kl::ref<kl::gpu_texture> kl::gpu_texture::get_back_buffer(dx::chain chain)
 {
     dx::texture buffer = nullptr;
     const long result = chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &buffer);
     warning_check(!buffer, format("Failed to get backbuffer texture. Result: 0x", std::hex, result));
-    return buffer;
+
+    auto texture = ref<gpu_texture>(new gpu_texture());
+    texture->child_object_ = buffer;
+    return texture;
 }

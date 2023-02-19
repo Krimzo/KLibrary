@@ -12,7 +12,7 @@ namespace kl {
         static ref<gpu_depth_view> make(const dx::resource resource, const dx::depth_view_descriptor* descriptor);
 
         void bind(dx::target_view target_view) const;
-        void unbind_all() const;
+        static void unbind_all();
 
         void clear(float depth, UINT8 stencil) const;
     };

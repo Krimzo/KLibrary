@@ -32,12 +32,8 @@ void kl::gpu_shaders::bind() const
     }
 }
 
-void kl::gpu_shaders::unbind() const
+void kl::gpu_shaders::unbind()
 {
-    if (vertex_shader_) {
-        vertex_shader_->unbind();
-    }
-    if (pixel_shader_) {
-        pixel_shader_->unbind();
-    }
+    gpu_vertex_shader::unbind();
+    gpu_pixel_shader::unbind();
 }

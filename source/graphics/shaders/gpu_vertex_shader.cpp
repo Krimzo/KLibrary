@@ -23,9 +23,7 @@ kl::gpu_vertex_shader::gpu_vertex_shader(const std::string& source, const std::v
     BOUND_GPU->device()->CreateVertexShader(shader_data->get_data(), shader_data->data_size(), nullptr, &child_object_);
     warning_check(!child_object_, "Failed to create vertex shader");
 
-    BOUND_GPU->device()->CreateInputLayout(!descriptors.empty() ? descriptors.data() : default_layout_descriptors,
-        !descriptors.empty() ? (UINT) descriptors.size() : 3,
-        shader_data->get_data(), shader_data->data_size(), &layout_);
+    BOUND_GPU->device()->CreateInputLayout(!descriptors.empty() ? descriptors.data() : default_layout_descriptors, !descriptors.empty() ? (UINT) descriptors.size() : 3, shader_data->get_data(), shader_data->data_size(), &layout_);
     warning_check(!layout_, "Failed to create input layout");
 }
 
@@ -40,7 +38,7 @@ void kl::gpu_vertex_shader::bind() const
     BOUND_GPU->context()->IASetInputLayout(layout_);
 }
 
-void kl::gpu_vertex_shader::unbind() const
+void kl::gpu_vertex_shader::unbind()
 {
     BOUND_GPU->context()->VSSetShader(nullptr, nullptr, 0);
     BOUND_GPU->context()->IASetInputLayout(nullptr);

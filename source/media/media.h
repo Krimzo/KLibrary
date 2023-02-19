@@ -23,7 +23,4 @@ namespace kl::media_utility {
         data->Release();
         data = nullptr;
     }
-
-    void init();
-    void uninit();
 }

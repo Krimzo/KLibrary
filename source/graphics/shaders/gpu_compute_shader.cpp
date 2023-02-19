@@ -23,18 +23,18 @@ void kl::gpu_compute_shader::bind() const
     BOUND_GPU->context()->CSSetShader(child_object_, nullptr, 0);
 }
 
-void kl::gpu_compute_shader::unbind() const
+void kl::gpu_compute_shader::unbind()
 {
     BOUND_GPU->context()->CSSetShader(nullptr, nullptr, 0);
 }
 
-void kl::gpu_compute_shader::dispatch(const int3& size) const
+void kl::gpu_compute_shader::dispatch(const UINT x, const UINT y, const UINT z) const
 {
-    BOUND_GPU->context()->Dispatch(size.x, size.y, size.z);
+    BOUND_GPU->context()->Dispatch(x, y, z);
 }
 
-void kl::gpu_compute_shader::execute(const int3& size) const
+void kl::gpu_compute_shader::execute(const UINT x, const UINT y, const UINT z) const
 {
     bind();
-    dispatch(size);
+    dispatch(x, y, z);
 }

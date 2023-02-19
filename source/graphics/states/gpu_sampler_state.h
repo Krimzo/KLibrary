@@ -16,7 +16,7 @@ namespace kl {
         void bind_for_pixel_shader(UINT slot) const;
         void bind_for_compute_shader(UINT slot) const;
 
-        void unbind_for_pixel_shader() const;
-        void unbind_for_compute_shader() const;
+        static void unbind_for_pixel_shader(UINT slot);
+        static void unbind_for_compute_shader(UINT slot);
     };
 }

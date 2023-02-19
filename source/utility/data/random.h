@@ -4,23 +4,19 @@
 
 
 namespace kl::random {
+    // Byte
     bool get_bool();
-
     uint8_t get_byte();
     color get_color(bool gray = false);
 
+    // Int
     int get_int(int start_inclusive, int end_exclusive);
     int get_int(int end_exclusive);
 
     int2 get_int2(int start_inclusive, int end_exclusive);
     int2 get_int2(int end_exclusive);
 
-    int3 get_int3(int start_inclusive, int end_exclusive);
-    int3 get_int3(int end_exclusive);
-
-    int4 get_int4(int start_inclusive, int end_exclusive);
-    int4 get_int4(int end_exclusive);
-
+    // Float
     float get_float(float start_inclusive, float end_inclusive);
     float get_float(float end_inclusive);
     float get_float();
@@ -45,6 +41,7 @@ namespace kl::random {
     float4x4 get_float4x4(float end_inclusive);
     float4x4 get_float4x4();
 
+    // Char
     char get_char(bool upper = false);
     std::string get_string(int length);
 }

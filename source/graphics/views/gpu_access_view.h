@@ -11,7 +11,7 @@ namespace kl {
     public:
         static ref<gpu_access_view> make(const dx::resource resource, const dx::access_view_descriptor* descriptor);
 
-        void bind(UINT slot, const UINT* initial_counts) const;
-        void unbind() const;
+        void bind(UINT slot, const UINT* initial_counts = nullptr) const;
+        static void unbind(UINT slot);
     };
 }

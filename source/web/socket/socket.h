@@ -6,16 +6,12 @@
 namespace kl {
     class socket
     {
-    public:
-        inline static const std::string self_ip = "127.0.0.1";
-        static void init_utility();
-        static void free_utility();
-
-    private:
         sockaddr_in address_ = {};
         size_t socket_ = {};
 
     public:
+        static const std::string self_ip;
+
         socket();
         socket(const std::string& address, int port);
         explicit socket(size_t socket);
@@ -27,7 +23,7 @@ namespace kl {
         void operator=(const socket&) = delete;
         void operator=(const socket&&) = delete;
 
-        size_t get_socket() const;
+        size_t get_id() const;
 
         void close() const;
 

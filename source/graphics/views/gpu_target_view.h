@@ -12,7 +12,7 @@ namespace kl {
         static ref<gpu_target_view> make(const dx::resource resource, const dx::target_view_descriptor* descriptor);
 
         void bind(dx::depth_view depth_view) const;
-        void unbind_all() const;
+        static void unbind_all();
 
         void clear(const float4& color) const;
     };

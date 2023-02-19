@@ -14,6 +14,6 @@ namespace kl {
         static ref<gpu_raster_state> make(bool wireframe, bool cull, bool cull_back);
 
         void bind() const;
-        void unbind() const;
+        static void unbind();
     };
 }

@@ -86,7 +86,7 @@ kl::float2 kl::mouse::get_normalized_position() const
     GetClientRect(window_, &client_area);
     const int2 frame_size = { client_area.right - client_area.left, client_area.bottom - client_area.top };
 
-    float2 result = { float(position_.x) / frame_size.x, float(frame_size.y - position_.y) / frame_size.y };
+    float2 result = { position_.x / (float) frame_size.x, (frame_size.y - position_.y) / (float) frame_size.y };
     result *= 2.0f;
     result -= float2(1.0f);
     return result;

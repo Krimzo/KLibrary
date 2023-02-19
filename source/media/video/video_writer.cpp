@@ -91,7 +91,7 @@ bool kl::video_writer::add_frame(const image& frame)
         return false;
     }
 
-    const kl::color* in_buffer = frame.data();
+    const kl::color* in_buffer = frame;
     kl::color* out_buffer = nullptr;
 
     fail_check_(media_buffer_->Lock((BYTE**) &out_buffer, nullptr, nullptr), "Failed to lock the bytes [video_writer]");
