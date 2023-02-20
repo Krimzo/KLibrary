@@ -1,7 +1,6 @@
 #include "klib.h"
 
 
-/* Too tired to care, I'll update in future
 static constexpr int sphere_count = 10;
 
 struct colored_sphere
@@ -22,32 +21,38 @@ struct ps_cb
 
 int main()
 {
-    kl::window window = { { 1600, 900 }, "Raytracing" };
     kl::timer timer = {};
-
-    kl::gpu gpu = kl::gpu(window.get_window());
     kl::camera camera = {};
+
+    kl::BOUND_WINDOW = kl::window::make({ 1600, 900 }, "Raytracing");
+    kl::BOUND_GPU = kl::gpu::make(*kl::BOUND_WINDOW);
+
+    auto& window = *kl::BOUND_WINDOW;
+    auto& gpu = *kl::BOUND_GPU;
+
+    auto raster_state = kl::gpu_raster_state::make(false, false, true);
+    raster_state->bind();
 
     // Heap alloc because of stack size warnings
     ps_cb& ps_data = *new ps_cb; // You saw nothing :)
 
-    window.on_resize = [&](const kl::int2 new_size)
+    window.on_resize.push_back([&](const kl::int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
             gpu.set_viewport(new_size);
             camera.update_aspect_ratio(new_size);
         }
-    };
+    });
 
-    window.keyboard.r.on_press = [&]
+    window.keyboard.r.on_press.push_back([&]
     {
-        if (window.keyboard.shift.state()) {
+        if (window.keyboard.shift) {
             for (auto& [center, radius, color] : ps_data.spheres) {
                 color = kl::float4(kl::random::get_color());
             }
         }
-        else if (window.keyboard.ctrl.state()) {
+        else if (window.keyboard.ctrl) {
             for (auto& [center, radius, color] : ps_data.spheres) {
                 color = kl::float4(kl::color(color).gray());
             }
@@ -61,24 +66,27 @@ int main()
                 };
             }
         }
-    };
+    });
 
-    window.mouse.right.on_down = [&]
+    window.mouse.right.on_down.push_back([&]
     {
-        const kl::ray ray = { camera, window.mouse.get_normalized_position() };
-        ps_data.sun_direction = { ray.direction.negate(), 0.0f };
-    };
+        const kl::ray ray = { camera.position, kl::math::inverse(camera.matrix()), window.mouse.get_normalized_position()};
+        ps_data.sun_direction = { ray.direction * -1.0f, 0.0f };
+    });
 
     // Start
     window.maximize();
 
-    const kl::shaders shaders = gpu.new_shaders(kl::files::read_string("examples/shaders/raytracing.hlsl"));
-    const kl::dx::buffer screen_mesh = gpu.generate_screen_mesh();
+    const auto shaders = kl::gpu_shaders::make(kl::files::read_string("examples/shaders/raytracing.hlsl"));
+    const auto screen_mesh = kl::gpu_mesh::make_screen();
+
+    auto pixel_const_buffer = kl::gpu_const_buffer::make(sizeof(ps_cb));
+    pixel_const_buffer->bind_for_pixel_shader(0);
 
     camera.position.y = 5.0f;
-    ps_data.sun_direction = { kl::float3(-1.0f, -1.0f, 0.0f).normalize(), 0.0f };
+    ps_data.sun_direction = { kl::math::normalize(kl::float3(-1.0f, -1.0f, 0.0f)), 0.0f };
 
-    window.keyboard.r.on_press();
+    window.keyboard.r.on_press.back()();
 
     // Update
     while (window.process(false)) {
@@ -93,7 +101,7 @@ int main()
 
         { // Input
             static bool camera_rotating = false;
-            if (window.mouse.left.state()) {
+            if (window.mouse.left) {
                 const kl::int2 frame_center = window.get_frame_center();
 
                 if (camera_rotating) {
@@ -109,22 +117,22 @@ int main()
                 camera_rotating = false;
             }
 
-            if (window.keyboard.w.state()) {
+            if (window.keyboard.w) {
                 camera.move_forward(timer.get_interval());
             }
-            if (window.keyboard.s.state()) {
+            if (window.keyboard.s) {
                 camera.move_back(timer.get_interval());
             }
-            if (window.keyboard.d.state()) {
+            if (window.keyboard.d) {
                 camera.move_right(timer.get_interval());
             }
-            if (window.keyboard.a.state()) {
+            if (window.keyboard.a) {
                 camera.move_left(timer.get_interval());
             }
-            if (window.keyboard.e.state()) {
+            if (window.keyboard.e) {
                 camera.move_up(timer.get_interval());
             }
-            if (window.keyboard.q.state()) {
+            if (window.keyboard.q) {
                 camera.move_down(timer.get_interval());
             }
         }
@@ -132,18 +140,17 @@ int main()
         // Render
         gpu.clear_internal();
 
-        gpu.bind_shaders(shaders);
+        shaders->bind();
 
-        ps_data.frame_size = { kl::float2(window.size()), kl::float2() };
-        ps_data.inverse_camera = camera.matrix().inverse();
+        ps_data.frame_size = { kl::float2(window.size()), {} };
+        ps_data.inverse_camera = kl::math::inverse(camera.matrix());
         ps_data.camera_position = { camera.position, 0.0f };
-        gpu.set_pixel_const_buffer(ps_data);
+        pixel_const_buffer->set_data(ps_data);
 
-        gpu.draw_vertex_buffer(screen_mesh);
+        screen_mesh->draw();
 
         gpu.swap_buffers(true);
 
         window.set_title(kl::format(int(1.0f / timer.get_interval())));
     }
 }
-*/

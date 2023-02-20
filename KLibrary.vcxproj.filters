@@ -231,7 +231,7 @@
     <ClCompile Include="source\math\helper\constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\source\directx\mandelbrot.cpp">
+    <ClCompile Include="examples\source\directx\hello_world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

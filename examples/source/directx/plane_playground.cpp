@@ -1,7 +1,6 @@
 #include "klib.h"
 
 
-/* Too tired to care, I'll update in future
 struct sky_ps_cb
 {
     kl::float4 frame_size = {};
@@ -22,18 +21,98 @@ struct plane_ps_cb
     kl::float4 sun_direction = {};
 };
 
-static kl::ref<kl::window> window;
-static kl::ref<kl::gpu> gpu;
-static kl::timer timer;
-static kl::camera camera;
-
-static kl::shaders sky_shaders = {};
-static kl::shaders plane_shaders = {};
-static kl::dx::geometry_shader plane_geometry_shader = nullptr;
+static kl::timer timer = {};
+static kl::camera camera = {};
 
 static kl::float3 sun_direction = { 1, -1, 0 };
 
-static void setup_input()
+static kl::ref<kl::gpu_shaders> plane_shaders = nullptr;
+static kl::ref<kl::gpu_geometry_shader> plane_geometry_shader = nullptr;
+
+void setup_input(kl::ref<kl::window> window, kl::ref<kl::gpu> gpu);
+void camera_movement(kl::ref<kl::window> window);
+
+int main()
+{
+    kl::BOUND_WINDOW = kl::window::make({ 1600, 900 }, "Plane Playground");
+    kl::BOUND_GPU = kl::gpu::make(*kl::BOUND_WINDOW);
+
+    auto& window = kl::BOUND_WINDOW;
+    auto& gpu = kl::BOUND_GPU;
+
+    auto raster_state = kl::gpu_raster_state::make(false, false, true);
+    raster_state->bind();
+
+    setup_input(window, gpu);
+
+    auto default_depth_state = kl::gpu_depth_state::make(true, false, false);
+    auto disabled_depth_state = kl::gpu_depth_state::make(false, false, false);
+
+    auto sky_shaders = kl::gpu_shaders::make(kl::files::read_string("examples/shaders/sky.hlsl"));
+
+    auto screen_mesh = kl::gpu_mesh::make_screen();
+    auto plane_mesh = kl::gpu_mesh::make_plane(10.0f, 1000);
+
+    auto sky_ps_const_buffer = kl::gpu_const_buffer::make(sizeof(sky_ps_cb));
+    auto plane_vs_const_buffer = kl::gpu_const_buffer::make(sizeof(plane_vs_cb));
+    auto plane_ps_const_buffer = kl::gpu_const_buffer::make(sizeof(plane_ps_cb));
+
+    camera.position = { -3.5f, 1.5f, -2.5f };
+    camera.set_forward(camera.position * -1.0f);
+
+    while (window->process(false)) {
+        timer.update_interval();
+
+        camera_movement(window);
+
+        gpu->clear_internal();
+
+        // Sky
+        disabled_depth_state->bind();
+
+        sky_shaders->bind();
+        kl::gpu_geometry_shader::unbind();
+
+        sky_ps_cb sky_pscb = {};
+        sky_pscb.frame_size = { kl::float2(window->size()), {} };
+        sky_pscb.camera_position = { camera.position, 0.0f };
+        sky_pscb.inverse_camera = kl::math::inverse(camera.matrix());
+        sky_pscb.sun_direction = { kl::math::normalize(sun_direction), 0.0f };
+
+        sky_ps_const_buffer->bind_for_pixel_shader(0);
+        sky_ps_const_buffer->set_data(sky_pscb);
+
+        screen_mesh->draw();
+
+        // Plane
+        default_depth_state->bind();
+
+        plane_shaders->bind();
+        plane_geometry_shader->bind();
+
+        plane_vs_cb plane_vscb = {};
+        plane_vscb.w_matrix = {};
+        plane_vscb.vp_matrix = camera.matrix();
+        plane_vscb.time_data.x = timer.get_elapsed();
+        plane_vscb.time_data.y = timer.get_interval();
+        
+        plane_vs_const_buffer->bind_for_vertex_shader(0);
+        plane_vs_const_buffer->set_data(plane_vscb);
+
+        plane_ps_cb plane_pscb = {};
+        plane_pscb.sun_direction = { kl::math::normalize(sun_direction), 0 };
+        
+        plane_ps_const_buffer->bind_for_pixel_shader(0);
+        plane_ps_const_buffer->set_data(plane_pscb);
+
+        plane_mesh->draw();
+
+
+        gpu->swap_buffers(true);
+    }
+}
+
+void setup_input(kl::ref<kl::window> window, kl::ref<kl::gpu> gpu)
 {
     window->on_resize.push_back([&](const kl::int2 new_size)
     {
@@ -48,13 +127,14 @@ static void setup_input()
     window->keyboard.v.on_press.push_back([&]
     {
         static bool wireframe_bound = true;
-        static kl::dx::raster_state solid_raster = gpu->new_raster_state(false, false);
-        static kl::dx::raster_state wireframe_raster = gpu->new_raster_state(true, false);
+        static auto solid_raster = kl::gpu_raster_state::make(false, false, true);
+        static auto wireframe_raster = kl::gpu_raster_state::make(true, false, true);
+
         if (wireframe_bound) {
-            gpu->bind_raster_state(solid_raster);
+            solid_raster->bind();
         }
         else {
-            gpu->bind_raster_state(wireframe_raster);
+            wireframe_raster->bind();
         }
         wireframe_bound = !wireframe_bound;
     });
@@ -65,29 +145,28 @@ static void setup_input()
         kl::console::clear();
 
         const std::string shader_source = kl::files::read_string("examples/shaders/playground.hlsl");
-        const kl::shaders temp_default_shaders = gpu->new_shaders(shader_source);
+        const auto temp_default_shaders = kl::gpu_shaders::make(shader_source);
+        const auto temp_geometry_shader = kl::gpu_geometry_shader::make(shader_source);
 
-        if (const kl::dx::geometry_shader temp_geometry_shader = gpu->new_geometry_shader(shader_source);
-            temp_default_shaders && temp_geometry_shader) {
-            gpu->destroy(plane_shaders);
-            gpu->destroy(plane_geometry_shader);
+        if (temp_default_shaders && temp_geometry_shader) {
             plane_shaders = temp_default_shaders;
             plane_geometry_shader = temp_geometry_shader;
         }
-    });
-    window->keyboard.r.on_press();
+     });
+    window->keyboard.r.on_press.back()();
 
     window->mouse.right.on_down.push_back([&]
     {
-        const kl::ray ray = { camera, window->mouse.get_normalized_position() };
-        sun_direction = ray.direction.negate();
+        const kl::ray ray = { camera.position, kl::math::inverse(camera.matrix()), window->mouse.get_normalized_position()};
+        sun_direction = ray.direction * -1.0f;
     });
 }
 
-static void camera_movement()
+void camera_movement(kl::ref<kl::window> window)
 {
     static bool camera_rotating = false;
-    if (window->mouse.left.state()) {
+
+    if (window->mouse.left) {
         const kl::int2 frame_center = window->get_frame_center();
 
         if (camera_rotating) {
@@ -103,87 +182,22 @@ static void camera_movement()
         camera_rotating = false;
     }
 
-    if (window->keyboard.w.state()) {
+    if (window->keyboard.w) {
         camera.move_forward(timer.get_interval());
     }
-    if (window->keyboard.s.state()) {
+    if (window->keyboard.s) {
         camera.move_back(timer.get_interval());
     }
-    if (window->keyboard.d.state()) {
+    if (window->keyboard.d) {
         camera.move_right(timer.get_interval());
     }
-    if (window->keyboard.a.state()) {
+    if (window->keyboard.a) {
         camera.move_left(timer.get_interval());
     }
-    if (window->keyboard.e.state()) {
+    if (window->keyboard.e) {
         camera.move_up(timer.get_interval());
     }
-    if (window->keyboard.q.state()) {
+    if (window->keyboard.q) {
         camera.move_down(timer.get_interval());
     }
 }
-
-int main()
-{
-    window = kl::make<kl::window>(kl::int2(1600, 900), "Plane Playground");
-    gpu = kl::make<kl::gpu>(window->get_window());
-
-    setup_input();
-
-    kl::dx::depth_state default_depth_state = gpu->new_depth_state(true, false, false);
-    kl::dx::depth_state disabled_depth_state = gpu->new_depth_state(false, false, false);
-
-    sky_shaders = gpu->new_shaders(kl::files::read_string("examples/shaders/sky.hlsl"));
-
-    kl::dx::buffer screen_mesh = gpu->generate_screen_mesh();
-    kl::dx::buffer plane_mesh = gpu->generate_plane_mesh(10.0f, 1000);
-
-    camera.position = { -3.5f, 1.5f, -2.5f };
-    camera.set_forward(camera.position.negate());
-
-    while (window->process(false)) {
-        timer.update_interval();
-
-        camera_movement();
-
-        gpu->clear_internal();
-
-        // Sky
-        gpu->bind_depth_state(disabled_depth_state);
-
-        gpu->bind_shaders(sky_shaders);
-        gpu->bind_geometry_shader(nullptr);
-
-        sky_ps_cb sky_pscb = {};
-        sky_pscb.frame_size = kl::float4(kl::float2(window->size()), kl::float2());
-        sky_pscb.camera_position = kl::float4(camera.position, 0);
-        sky_pscb.inverse_camera = camera.matrix().inverse();
-        sky_pscb.sun_direction = { sun_direction.normalize(), 0 };
-        gpu->set_pixel_const_buffer(sky_pscb);
-
-        gpu->draw_vertex_buffer(screen_mesh);
-
-        // Plane
-        gpu->bind_depth_state(default_depth_state);
-
-        gpu->bind_shaders(plane_shaders);
-        gpu->bind_geometry_shader(plane_geometry_shader);
-
-        plane_vs_cb plane_vscb = {};
-        plane_vscb.w_matrix = kl::mat4();
-        plane_vscb.vp_matrix = camera.matrix();
-        plane_vscb.time_data.x = timer.get_elapsed();
-        plane_vscb.time_data.y = timer.get_interval();
-        gpu->set_vertex_const_buffer(plane_vscb);
-
-        plane_ps_cb plane_pscb = {};
-        plane_pscb.sun_direction = { sun_direction.normalize(), 0 };
-        gpu->set_pixel_const_buffer(plane_pscb);
-
-        gpu->draw_vertex_buffer(plane_mesh);
-
-
-        gpu->swap_buffers(true);
-    }
-}
-*/

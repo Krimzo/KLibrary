@@ -19,6 +19,7 @@ namespace kl {
         float4(const float2& vec, float z, float w);
         float4(float x, const float2& vec, float w);
         float4(float x, float y, const float2& vec);
+        float4(const float2& vec1, const float2& vec2);
 
         float4(const float3& vec, float w);
         float4(float x, const float3& vec);

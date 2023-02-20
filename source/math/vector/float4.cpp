@@ -25,6 +25,10 @@ kl::float4::float4(const float x, const float y, const float2& vec)
     : x(x), y(y), z(vec.x), w(vec.y)
 {}
 
+kl::float4::float4(const float2& vec1, const float2& vec2)
+    : x(vec1.x), y(vec1.y), z(vec2.x), w(vec2.y)
+{}
+
 kl::float4::float4(const float3& vec, float w)
     : x(vec.x), y(vec.y), z(vec.z), w(w)
 {}
