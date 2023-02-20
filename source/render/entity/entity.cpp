@@ -153,14 +153,14 @@ kl::mat4 kl::entity::matrix() const
 
 #else
 
+// Creation
 kl::entity::entity()
-{
-    material = make<kl::material>();
-}
+{}
 
 kl::entity::~entity()
 {}
 
+// Methods
 void kl::entity::update_physics(float delta_t)
 {
     velocity += acceleration * delta_t;

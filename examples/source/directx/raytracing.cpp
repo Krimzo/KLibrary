@@ -24,14 +24,8 @@ int main()
     kl::timer timer = {};
     kl::camera camera = {};
 
-    kl::BOUND_WINDOW = kl::window::make({ 1600, 900 }, "Raytracing");
-    kl::BOUND_GPU = kl::gpu::make(*kl::BOUND_WINDOW);
-
-    auto& window = *kl::BOUND_WINDOW;
-    auto& gpu = *kl::BOUND_GPU;
-
-    auto raster_state = kl::gpu_raster_state::make(false, false, true);
-    raster_state->bind();
+    kl::window window = { { 1600, 900 }, "Raytracing" };
+    kl::gpu gpu = { (HWND) window };
 
     // Heap alloc because of stack size warnings
     ps_cb& ps_data = *new ps_cb; // You saw nothing :)
@@ -40,7 +34,7 @@ int main()
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
-            gpu.set_viewport(new_size);
+            gpu.set_viewport_size(new_size);
             camera.update_aspect_ratio(new_size);
         }
     });
@@ -77,11 +71,14 @@ int main()
     // Start
     window.maximize();
 
-    const auto shaders = kl::gpu_shaders::make(kl::files::read_string("examples/shaders/raytracing.hlsl"));
-    const auto screen_mesh = kl::gpu_mesh::make_screen();
+    const std::string shader_sources = kl::files::read_string("examples/shaders/raytracing.hlsl");
+    const auto shaders = gpu.create_render_shaders(shader_sources);
+    gpu.bind_render_shaders(shaders);
 
-    auto pixel_const_buffer = kl::gpu_const_buffer::make(sizeof(ps_cb));
-    pixel_const_buffer->bind_for_pixel_shader(0);
+    const auto screen_mesh = gpu.create_screen_mesh();
+
+    auto pixel_const_buffer = gpu.create_const_buffer(sizeof(ps_cb));
+    gpu.bind_cb_for_pixel_shader(pixel_const_buffer, 0);
 
     camera.position.y = 5.0f;
     ps_data.sun_direction = { kl::math::normalize(kl::float3(-1.0f, -1.0f, 0.0f)), 0.0f };
@@ -140,14 +137,12 @@ int main()
         // Render
         gpu.clear_internal();
 
-        shaders->bind();
-
         ps_data.frame_size = { kl::float2(window.size()), {} };
         ps_data.inverse_camera = kl::math::inverse(camera.matrix());
         ps_data.camera_position = { camera.position, 0.0f };
-        pixel_const_buffer->set_data(ps_data);
+        gpu.set_cb_data(pixel_const_buffer, ps_data);
 
-        screen_mesh->draw();
+        gpu.draw_mesh(screen_mesh);
 
         gpu.swap_buffers(true);
 

@@ -11,50 +11,41 @@ float4 v_shader(const float3 position : KL_Position) : SV_Position
 // Pixel shader
 float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
 {
-    return 1;
+    return float4(1, 0.75, 0.35, 1);
 }
 )";
 
 int main()
 {
     // Window setup
-    kl::BOUND_WINDOW = kl::window::make({ 1600, 900 }, "Hello World");
-    auto window = kl::BOUND_WINDOW;
-
-    // GPU setup
-    kl::BOUND_GPU = kl::gpu::make(*kl::BOUND_WINDOW);
-    auto gpu = kl::BOUND_GPU;
+    kl::window window = { { 1600, 900 }, "Hello World" };
+    kl::gpu gpu = { (HWND) window };
 
     // Window resize setup
-    window->on_resize.push_back([&](const kl::int2& new_size)
+    window.on_resize.push_back([&](const kl::int2& new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
-            gpu->resize_internal(new_size);
-            gpu->set_viewport(new_size);
+            gpu.resize_internal(new_size);
+            gpu.set_viewport_size(new_size);
         }
     });
-    window->maximize();
-
-    // Needed raster setup
-    auto raster_state = kl::gpu_raster_state::make(false, false, true);
-    raster_state->bind();
+    window.maximize();
 
     // Mesh setup
-    auto triangle = kl::gpu_mesh::make({
+    auto triangle = gpu.create_mesh({
         { {  0.0f,  0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
     });
 
     // Shader setup
-    auto shaders = kl::gpu_shaders::make(shader_source);
-    shaders->bind();
+    auto shaders = gpu.create_render_shaders(shader_source);
+    gpu.bind_render_shaders(shaders);
 
-    // Loop
-    while (window->process(false)) {
-        // CDS (Clear-Draw-Swap)
-        gpu->clear_internal();
-        triangle->draw();
-        gpu->swap_buffers(true);
+    // CDS (Clear-Draw-Swap)
+    while (window.process(false)) {
+        gpu.clear_internal(kl::colors::gray);
+        gpu.draw_mesh(triangle);
+        gpu.swap_buffers(true);
     }
 }

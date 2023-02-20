@@ -1,14 +1,8 @@
 #include "render/light/directional_light.h"
 
 
-// Makers
-kl::ref<kl::directional_light> kl::directional_light::make(UINT map_resolution)
-{
-    return ref<directional_light>(new directional_light(map_resolution));
-}
-
-// Class
-kl::directional_light::directional_light(const UINT map_resolution)
+// Creation
+kl::directional_light::directional_light(gpu& gpu, const UINT map_resolution)
     : map_resolution_(map_resolution)
 {
     dx::texture_descriptor shadow_map_descriptor = {};
@@ -31,9 +25,9 @@ kl::directional_light::directional_light(const UINT map_resolution)
     shadow_shader_view_descriptor.Texture2D.MipLevels = 1;
 
     for (UINT i = 0; i < MAP_COUNT; i++) {
-        auto shadow_texture = gpu_texture::make(&shadow_map_descriptor, nullptr);
-        shadow_depth_views_[i] = gpu_depth_view::make(*shadow_texture, &shadow_depth_view_descriptor);
-        shadow_shader_views_[i] = gpu_shader_view::make(*shadow_texture, &shadow_shader_view_descriptor);
+        auto shadow_texture = gpu.create_texture(&shadow_map_descriptor, nullptr);
+        shadow_depth_views_[i] = gpu.create_depth_view(shadow_texture, &shadow_depth_view_descriptor);
+        shadow_shader_views_[i] = gpu.create_shader_view(shadow_texture, &shadow_shader_view_descriptor);
     }
 }
 
@@ -57,12 +51,12 @@ UINT kl::directional_light::get_map_resolution() const
 
 kl::dx::depth_view kl::directional_light::get_depth_view(const UINT cascade_index) const
 {
-    return *shadow_depth_views_[cascade_index];
+    return shadow_depth_views_[cascade_index];
 }
 
 kl::dx::shader_view kl::directional_light::get_shader_view(const UINT cascade_index) const
 {
-    return *shadow_shader_views_[cascade_index];
+    return shadow_shader_views_[cascade_index];
 }
 
 kl::float4x4 kl::directional_light::get_matrix(camera camera, const UINT cascade_index) const

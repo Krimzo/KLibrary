@@ -103,34 +103,29 @@ static void console_read()
 
 int main()
 {
-    kl::BOUND_WINDOW = kl::window::make({ 1600, 900 }, "Mandelbrot");
-    kl::BOUND_GPU = kl::gpu::make(*kl::BOUND_WINDOW);
+    kl::window window = { { 1600, 900 }, "Mandelbrot" };
+    kl::gpu gpu = { (HWND) window };
     kl::timer timer = {};
-
-    auto& window = *kl::BOUND_WINDOW;
-    auto& gpu = *kl::BOUND_GPU;
 
     window.on_resize.push_back([&](const kl::int2 size)
     {
         if (size.x > 0 && size.y > 0) {
             gpu.resize_internal(size);
-            gpu.set_viewport(size);
+            gpu.set_viewport_size(size);
         }
     });
 
     window.maximize();
 
     // Start
-    auto raster_state = kl::gpu_raster_state::make(false, false, true);
-    raster_state->bind();
+    const std::string shader_sources = kl::files::read_string("examples/shaders/mandelbrot.hlsl");
+    auto shaders = gpu.create_render_shaders(shader_sources);
+    gpu.bind_render_shaders(shaders);
 
-    auto shaders = kl::gpu_shaders::make(kl::files::read_string("examples/shaders/mandelbrot.hlsl"));
-    shaders->bind();
+    auto const_buffer = gpu.create_const_buffer(sizeof(ps_cb));
+    gpu.bind_cb_for_pixel_shader(const_buffer, 0);
 
-    auto const_buffer = kl::gpu_const_buffer::make(sizeof(ps_cb));
-    const_buffer->bind_for_pixel_shader(0);
-
-    auto screen_mesh = kl::gpu_mesh::make_screen();
+    auto screen_mesh = gpu.create_screen_mesh();
 
     // Console
     std::thread(console_read).detach();
@@ -149,9 +144,9 @@ int main()
         ps_data.state_info = { position, zoom, (float) iterations };
         ps_data.frame_size = { window.size(), 0.0f, 0.0f };
         ps_data.start_color = start_color;
-        const_buffer->set_data(ps_data);
+        gpu.set_cb_data(const_buffer, ps_data);
 
-        screen_mesh->draw();
+        gpu.draw_mesh(screen_mesh);
 
         gpu.swap_buffers(true);
 

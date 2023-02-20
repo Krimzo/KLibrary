@@ -72,8 +72,8 @@ namespace kl {
         float3 velocity = {};
         float3 angular = {};
 
-        ref<gpu_mesh> mesh = nullptr;
-        ref<material> material = nullptr;
+        dx::buffer mesh = nullptr;
+        material material = {};
 
         entity();
         ~entity();

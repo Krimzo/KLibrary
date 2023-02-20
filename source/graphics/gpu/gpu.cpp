@@ -1,24 +1,11 @@
 #include "graphics/gpu/gpu.h"
 
-#include "graphics/common/gpu_texture.h"
-#include "graphics/views/gpu_target_view.h"
-#include "graphics/views/gpu_depth_view.h"
 #include "utility/utility.h"
 
 
-// Makers
-kl::ref<kl::gpu> kl::gpu::make()
-{
-    return ref<gpu>(new gpu());
-}
-
-kl::ref<kl::gpu> kl::gpu::make(HWND window)
-{
-    return ref<gpu>(new gpu(window));
-}
-
-// Class
+// Creation
 kl::gpu::gpu()
+    : creation_type(gpu_creation_type::compute)
 {
     D3D11CreateDevice(
         nullptr,
@@ -34,11 +21,10 @@ kl::gpu::gpu()
     );
     error_check(!device_, "Failed to create device");
     error_check(!context_, "Failed to create device context");
-
-    creation_type_ = gpu_creation_type::compute;
 }
 
 kl::gpu::gpu(const HWND window)
+    : creation_type(gpu_creation_type::render)
 {
     RECT window_client_area = {};
     GetClientRect(window, &window_client_area);
@@ -72,7 +58,9 @@ kl::gpu::gpu(const HWND window)
     error_check(!context_, "Failed to create device context");
     error_check(!chain_, "Failed to create swapchain");
 
-    creation_type_ = gpu_creation_type::render;
+    bind_raster_state(create_raster_state(false, false));
+    set_viewport_min_max({ 0.0f, 1.0f });
+    resize_to_window(window);
 }
 
 kl::gpu::~gpu()
@@ -80,15 +68,9 @@ kl::gpu::~gpu()
     if (chain_) {
         chain_->SetFullscreenState(false, nullptr);
     }
-
-    render_buffer_ = nullptr;
-    depth_buffer_ = nullptr;
-
-    safe_release(chain_);
-    safe_release(context_);
-    safe_release(device_);
 }
 
+// Get
 kl::dx::device kl::gpu::device() const
 {
     return device_;
@@ -104,77 +86,49 @@ kl::dx::chain kl::gpu::chain() const
     return chain_;
 }
 
-kl::gpu_creation_type kl::gpu::get_type() const
+// Chain
+kl::dx::texture kl::gpu::get_back_buffer() const
 {
-    return creation_type_;
+    dx::texture buffer = nullptr;
+    const long result = chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), &buffer);
+    warning_check(!buffer, format("Failed to get backbuffer texture. Result: 0x", std::hex, result));
+    return buffer;
 }
 
-void kl::gpu::set_viewport(const int2& size) const
+void kl::gpu::swap_buffers(const bool v_sync) const
 {
-    set_viewport({}, size);
+    chain_->Present(v_sync, NULL);
 }
 
-void kl::gpu::set_viewport(const int2& position, const int2& size) const
+// Internal buffers
+void kl::gpu::clear_internal_color(const float4& color) const
 {
-    D3D11_VIEWPORT viewport = {};
-    viewport.TopLeftX = (float) position.x;
-    viewport.TopLeftY = (float) position.y;
-    viewport.Width = (float) size.x;
-    viewport.Height = (float) size.y;
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    context_->RSSetViewports(1, &viewport);
+    context_->ClearRenderTargetView(target_view_.Get(), color);
 }
 
-kl::int2 kl::gpu::get_viewport_size() const
+void kl::gpu::clear_internal_depth(const float depth, const UINT8 stencil) const
 {
-    UINT number_of_vps = 1;
-    D3D11_VIEWPORT viewport = {};
-    context_->RSGetViewports(&number_of_vps, &viewport);
-    return { (int) viewport.Width, (int) viewport.Height };
+    static const UINT clear_type = (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
+    context_->ClearDepthStencilView(depth_view_.Get(), clear_type, depth, stencil);
 }
 
-kl::int2 kl::gpu::get_viewport_position() const
+void kl::gpu::clear_internal(const float4& color) const
 {
-    UINT number_of_vps = 1;
-    D3D11_VIEWPORT viewport = {};
-    context_->RSGetViewports(&number_of_vps, &viewport);
-    return { (int) viewport.TopLeftX, (int) viewport.TopLeftY };
-}
-
-void kl::gpu::unbind_all_targets() const
-{
-    context_->OMSetRenderTargets(0, nullptr, nullptr);
-}
-
-void kl::gpu::bind_internal_targets() const
-{
-    context_->OMSetRenderTargets(1, *render_buffer_, *depth_buffer_);
-}
-
-void kl::gpu::bind_targets(const std::vector<dx::target_view>& targets, const dx::depth_view depth_view) const
-{
-    context_->OMSetRenderTargets((UINT) targets.size(), targets.data(), depth_view ? depth_view : *depth_buffer_);
-}
-
-void kl::gpu::bind_targets_with_internal(const std::vector<dx::target_view>& additional_targets, const dx::depth_view depth_view) const
-{
-    std::vector<dx::target_view> combined_targets = { *render_buffer_ };
-    combined_targets.insert(combined_targets.end(), additional_targets.begin(), additional_targets.end());
-    context_->OMSetRenderTargets((UINT) combined_targets.size(), combined_targets.data(), depth_view ? depth_view : *depth_buffer_);
+    clear_internal_color(color);
+    clear_internal_depth();
 }
 
 void kl::gpu::resize_internal(const int2& size)
 {
     // Cleanup
-    unbind_all_targets();
-    render_buffer_ = nullptr;
-    depth_buffer_ = nullptr;
+    unbind_target_depth_views();
+    target_view_ = nullptr;
+    depth_view_ = nullptr;
     chain_->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, NULL);
 
     // Render buffer
-    auto render_texture = gpu_texture::get_back_buffer(chain_);
-    render_buffer_ = gpu_target_view::make(*render_texture, nullptr);
+    auto render_texture = get_back_buffer();
+    target_view_ = create_target_view(render_texture, nullptr);
 
     // Depth buffer
     dx::texture_descriptor descriptor = {};
@@ -187,11 +141,11 @@ void kl::gpu::resize_internal(const int2& size)
     descriptor.Usage = D3D11_USAGE_DEFAULT;
     descriptor.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-    auto depth_texture = gpu_texture::make(&descriptor, nullptr);
-    depth_buffer_ = gpu_depth_view::make(*depth_texture, nullptr);
+    auto depth_texture = create_texture(&descriptor, nullptr);
+    depth_view_ = create_depth_view(depth_texture, nullptr);
 
-    // Bind
-    bind_internal_targets();
+    // Rebind
+    bind_internal_target_depth_views();
 }
 
 void kl::gpu::resize_to_window(HWND window)
@@ -199,49 +153,54 @@ void kl::gpu::resize_to_window(HWND window)
     RECT window_client_area = {};
     GetClientRect(window, &window_client_area);
     resize_internal({ window_client_area.right, window_client_area.bottom });
-    set_viewport({ window_client_area.right, window_client_area.bottom });
+    set_viewport_size({ window_client_area.right, window_client_area.bottom });
 }
 
-void kl::gpu::clear_internal_color(const float4& color) const
+void kl::gpu::bind_internal_target_depth_views() const
 {
-    if (!render_buffer_) { return; }
-    context_->ClearRenderTargetView(*render_buffer_, (const float*) &color);
+    context_->OMSetRenderTargets(1, target_view_.GetAddressOf(), depth_view_.Get());
 }
 
-void kl::gpu::clear_internal_depth(const float depth, const UINT8 stencil) const
+void kl::gpu::bind_target_depth_views_with_internal(const std::vector<dx::target_view>& additional_targets, dx::depth_view depth_view) const
 {
-    if (!depth_buffer_) { return; }
-    context_->ClearDepthStencilView(*depth_buffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, stencil);
+    std::vector<dx::target_view> combined_targets = { target_view_ };
+    combined_targets.insert(combined_targets.end(), additional_targets.begin(), additional_targets.end());
+    bind_target_depth_views(combined_targets, depth_view ? depth_view : depth_view_);
 }
 
-void kl::gpu::clear_internal() const
+// Shader helper
+kl::dx::vertex_shader kl::gpu::create_vertex_shader(const std::string& shader_source)
 {
-    clear_internal_color(float4());
-    clear_internal_depth(1.0f, 0xFF);
+    const compiled_shader compiled_shader = compile_vertex_shader(shader_source);
+    return device_holder::create_vertex_shader(compiled_shader);
 }
 
-void kl::gpu::swap_buffers(const bool v_sync) const
+kl::dx::geometry_shader kl::gpu::create_geometry_shader(const std::string& shader_source)
 {
-    chain_->Present(v_sync, NULL);
+    const compiled_shader compiled_shader = compile_geometry_shader(shader_source);
+    return device_holder::create_geometry_shader(compiled_shader);
 }
 
-void kl::gpu::copy_resource(const dx::resource destination, const dx::resource source) const
+kl::dx::pixel_shader kl::gpu::create_pixel_shader(const std::string& shader_source)
 {
-    context_->CopyResource(destination, source);
+    const compiled_shader compiled_shader = compile_pixel_shader(shader_source);
+    return device_holder::create_pixel_shader(compiled_shader);
 }
 
-void kl::gpu::read_from_resource(void* cpu_buffer, const dx::resource gpu_buffer, const int byte_size) const
+kl::dx::compute_shader kl::gpu::create_compute_shader(const std::string& shader_source)
 {
-    dx::mapped_subresource_descriptor mapped_subresource = {};
-    context_->Map(gpu_buffer, 0, D3D11_MAP_READ, NULL, &mapped_subresource);
-    memcpy(cpu_buffer, mapped_subresource.pData, byte_size);
-    context_->Unmap(gpu_buffer, NULL);
+    const compiled_shader compiled_shader = compile_compute_shader(shader_source);
+    return device_holder::create_compute_shader(compiled_shader);
 }
 
-void kl::gpu::write_to_resource(const dx::resource gpu_buffer, const void* cpu_buffer, const int byte_size, const bool discard) const
+kl::render_shaders kl::gpu::create_render_shaders(const std::string& shader_sources)
 {
-    dx::mapped_subresource_descriptor mapped_subresource = {};
-    context_->Map(gpu_buffer, 0, discard ? D3D11_MAP_WRITE_DISCARD : D3D11_MAP_WRITE, NULL, &mapped_subresource);
-    memcpy(mapped_subresource.pData, cpu_buffer, byte_size);
-    context_->Unmap(gpu_buffer, NULL);
+    const compiled_shader compiled_vertex_shader = compile_vertex_shader(shader_sources);
+    const compiled_shader compiled_pixel_shader = compile_pixel_shader(shader_sources);
+
+    render_shaders shaders = {};
+    shaders.input_layout = create_input_layout(compiled_vertex_shader);
+    shaders.vertex_shader = device_holder::create_vertex_shader(compiled_vertex_shader);
+    shaders.pixel_shader = device_holder::create_pixel_shader(compiled_pixel_shader);
+    return shaders;
 }

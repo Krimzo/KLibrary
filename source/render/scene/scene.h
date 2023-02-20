@@ -6,6 +6,8 @@
 #include "render/light/ambient_light.h"
 #include "render/light/directional_light.h"
 
+#include "memory/memory.h"
+
 
 namespace kl {
 #ifdef KL_USING_PHYSX
@@ -26,7 +28,7 @@ namespace kl {
     public:
         camera camera = {};
 
-        ref<ambient_light>         ambient_light = {};
+        ref<ambient_light> ambient_light = {};
         ref<directional_light> directional_light = {};
 
         dx::buffer ocean_mesh = nullptr;

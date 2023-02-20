@@ -7,12 +7,6 @@
 #endif
 
 
-// Makers
-kl::ref<kl::window> kl::window::make(const int2& size, const std::string& name)
-{
-    return ref<window>(new window(size, name));
-}
-
 // Class
 kl::window::window(const int2& size, const std::string& name)
     : name_(name)
@@ -79,7 +73,7 @@ kl::window::operator HWND() const
 
 bool kl::window::process(const bool wait)
 {
-    MSG message;
+    MSG message = {};
     if (wait) {
         GetMessageA(&message, window_, 0, 0);
         handle_message(message);

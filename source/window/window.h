@@ -31,8 +31,6 @@ namespace kl {
         DWORD window_style_ = NULL;
         WINDOWPLACEMENT placement_ = {};
 
-        window(const int2& size, const std::string& name);
-
         // System
         LRESULT CALLBACK window_procedure(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param) const;
         void handle_message(const MSG& message);
@@ -42,8 +40,8 @@ namespace kl {
         keyboard keyboard = {};
         mouse mouse = {};
 
-        static ref<window> make(const int2& size, const std::string& name);
-
+        // Creation
+        window(const int2& size, const std::string& name);
         virtual ~window();
 
         window(const window&) = delete;
@@ -52,6 +50,7 @@ namespace kl {
         void operator=(const window&) = delete;
         void operator=(const window&&) = delete;
 
+        // Methods
         operator HWND() const;
 
         bool process(bool wait = true);
@@ -91,6 +90,4 @@ namespace kl {
 
         void notify() const;
     };
-
-    inline ref<window> BOUND_WINDOW = nullptr;
 }

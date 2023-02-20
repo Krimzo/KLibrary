@@ -1,13 +1,11 @@
 #pragma once
 
-#include "graphics/gpu/gpu_child.h"
-#include "math/math.h"
+#include "graphics/device_holder/device_holder.h"
+#include "graphics/context_holder/context_holder.h"
+#include "graphics/shaders/shader_compiler.h"
 
 
 namespace kl {
-    class gpu_target_view;
-    class gpu_depth_view;
-
     enum class gpu_creation_type
     {
         none = 0,
@@ -15,24 +13,19 @@ namespace kl {
         compute = 2,
     };
 
-    class gpu
+    class gpu : public device_holder, public context_holder, public shader_compiler
     {
-        gpu_creation_type creation_type_ = gpu_creation_type::none;
-
-        dx::device device_ = nullptr;
-        dx::context context_ = nullptr;
         dx::chain chain_ = nullptr;
 
-        ref<gpu_target_view> render_buffer_ = nullptr;
-        ref<gpu_depth_view> depth_buffer_ = nullptr;
-
-        gpu();
-        gpu(HWND window);
+        dx::target_view target_view_ = nullptr;
+        dx::depth_view depth_view_ = nullptr;
 
     public:
-        static ref<gpu> make();
-        static ref<gpu> make(HWND window);
+        const gpu_creation_type creation_type = gpu_creation_type::none;
 
+        // Creation
+        gpu();
+        gpu(HWND window);
         virtual ~gpu();
 
         gpu(const gpu&) = delete;
@@ -41,36 +34,32 @@ namespace kl {
         void operator=(const gpu&) = delete;
         void operator=(const gpu&&) = delete;
 
+        // Get
         dx::device device() const;
         dx::context context() const;
         dx::chain chain() const;
 
-        gpu_creation_type get_type() const;
+        // Chain
+        dx::texture get_back_buffer() const;
+        void swap_buffers(bool v_sync) const;
 
-        void set_viewport(const int2& size) const;
-        void set_viewport(const int2& position, const int2& size) const;
-
-        int2 get_viewport_size() const;
-        int2 get_viewport_position() const;
-
-        void unbind_all_targets() const;
-        void bind_internal_targets() const;
-        void bind_targets(const std::vector<dx::target_view>& targets, dx::depth_view depth_view = nullptr) const;
-        void bind_targets_with_internal(const std::vector<dx::target_view>& additional_targets, dx::depth_view depth_view = nullptr) const;
+        // Internal buffers
+        void clear_internal_color(const float4& color = {}) const;
+        void clear_internal_depth(float depth = 1.0f, UINT8 stencil = 0xFF) const;
+        void clear_internal(const float4& color = {}) const;
 
         void resize_internal(const int2& size);
         void resize_to_window(HWND window);
 
-        void clear_internal_color(const float4& color) const;
-        void clear_internal_depth(float depth, UINT8 stencil) const;
-        void clear_internal() const;
+        void bind_internal_target_depth_views() const;
+        void bind_target_depth_views_with_internal(const std::vector<dx::target_view>& additional_targets, dx::depth_view depth_view = nullptr) const;
 
-        void swap_buffers(bool v_sync) const;
+        // Shader helper
+        dx::vertex_shader create_vertex_shader(const std::string& shader_source);
+        dx::geometry_shader create_geometry_shader(const std::string& shader_source);
+        dx::pixel_shader create_pixel_shader(const std::string& shader_source);
+        dx::compute_shader create_compute_shader(const std::string& shader_source);
 
-        void copy_resource(dx::resource destination, dx::resource source) const;
-        void read_from_resource(void* cpu_buffer, dx::resource gpu_buffer, int byte_size) const;
-        void write_to_resource(dx::resource gpu_buffer, const void* cpu_buffer, int byte_size, bool discard = true) const;
+        render_shaders create_render_shaders(const std::string& shader_sources);
     };
-
-    inline ref<gpu> BOUND_GPU = nullptr;
 }

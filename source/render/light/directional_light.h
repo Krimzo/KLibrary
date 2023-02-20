@@ -15,16 +15,13 @@ namespace kl {
         float3 direction_ = { 0, 0, 1 };
         UINT map_resolution_ = 0;
 
-        ref<gpu_depth_view>   shadow_depth_views_[MAP_COUNT] = {};
-        ref<gpu_shader_view> shadow_shader_views_[MAP_COUNT] = {};
-
-        directional_light(UINT map_resolution);
+        dx::depth_view shadow_depth_views_[MAP_COUNT] = {};
+        dx::shader_view shadow_shader_views_[MAP_COUNT] = {};
 
     public:
         float point_size = 1.0f;
 
-        static ref<directional_light> make(UINT map_resolution);
-
+        directional_light(gpu& gpu, UINT map_resolution);
         virtual ~directional_light();
 
         directional_light(const directional_light&) = delete;
