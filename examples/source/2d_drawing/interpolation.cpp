@@ -5,8 +5,8 @@ static constexpr float fps_limit = 165.0f;
 
 int main()
 {
-    auto window = kl::window::make({ 900, 900 }, "Interpolation");
-    kl::image frame = kl::image(window->size());
+    auto window = kl::window({ 900, 900 }, "Interpolation");
+    kl::image frame = kl::image(window.size());
     kl::timer timer = {};
 
     kl::float2 positions[4] = {
@@ -42,7 +42,7 @@ int main()
     };
 
     int frame_index = 0;
-    while (window->process(false)) {
+    while (window.process(false)) {
         timer.reset();
 
         for (int x = frame_index - frame.height(), y = 0; y < frame.height(); x++, y++) {
@@ -77,13 +77,13 @@ int main()
             }
         }
 
-        window->draw_image(frame);
-        window->set_title(kl::format((int) ((100.0f * frame_index) / (frame.width() + frame.height() - 1)), "%"));
+        window.draw_image(frame);
+        window.set_title(kl::format((int) ((100.0f * frame_index) / (frame.width() + frame.height() - 1)), "%"));
         kl::time::wait((1.0f / fps_limit) - timer.get_elapsed());
 
         if (++frame_index == frame.width() + frame.height()) {
-            window->set_title("Finished!");
-            while (window->process());
+            window.set_title("Finished!");
+            while (window.process());
         }
     }
 }

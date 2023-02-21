@@ -192,6 +192,9 @@
     <ClCompile Include="source\graphics\shaders\render_shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\render\entity\mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="examples\source\directx\hello_world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -375,6 +378,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\graphics\shaders\render_shaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\entity\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

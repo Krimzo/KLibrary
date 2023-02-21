@@ -39,6 +39,9 @@ namespace kl {
         dx::context context() const;
         dx::chain chain() const;
 
+        dx::target_view get_internal_target() const;
+        dx::depth_view get_internal_depth() const;
+
         // Chain
         dx::texture get_back_buffer() const;
         void swap_buffers(bool v_sync) const;
@@ -51,8 +54,7 @@ namespace kl {
         void resize_internal(const int2& size);
         void resize_to_window(HWND window);
 
-        void bind_internal_target_depth_views() const;
-        void bind_target_depth_views_with_internal(const std::vector<dx::target_view>& additional_targets, dx::depth_view depth_view = nullptr) const;
+        void bind_internal_views() const;
 
         // Shader helper
         dx::vertex_shader create_vertex_shader(const std::string& shader_source);

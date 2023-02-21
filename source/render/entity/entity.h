@@ -1,7 +1,9 @@
 #pragma once
 
+#include "render/entity/mesh.h"
 #include "render/entity/material.h"
 #include "render/entity/collider.h"
+#include "memory/memory.h"
 
 
 namespace kl {
@@ -14,15 +16,15 @@ namespace kl {
         ref<collider> collider_ = nullptr;
 
     public:
-        float3 render_scale = float3::splash(1.0f);
+        const int unique_index;
+        float3 render_scale = float3(1.0f);
 
-        mesh mesh = {};
-        material material = {};
+        ref<mesh> mesh = nullptr;
+        ref<material> material = nullptr;
 
+        // Creation
         entity(PxPhysics* physics, bool dynamic);
-        entity();
-
-        ~entity();
+        virtual ~entity();
 
         entity(const entity&) = delete;
         entity(const entity&&) = delete;
@@ -30,6 +32,7 @@ namespace kl {
         void operator=(const entity&) = delete;
         void operator=(const entity&&) = delete;
 
+        // Get
         PxRigidActor* get_actor() const;
 
         // Geometry
@@ -72,8 +75,8 @@ namespace kl {
         float3 velocity = {};
         float3 angular = {};
 
-        dx::buffer mesh = nullptr;
-        material material = {};
+        mesh mesh = nullptr;
+        ref<material> material = make<kl::material>();
 
         entity();
         ~entity();

@@ -156,29 +156,29 @@ int main()
     const int line_offset = square_size / 10;
     const int circle_offset = square_size / 2;
 
-    auto window = kl::window::make({ sizes.y, sizes.y }, "Tic Engine");
-    kl::image frame = { window->size() };
+    auto window = kl::window({ sizes.y, sizes.y }, "Tic Engine");
+    kl::image frame = { window.size() };
 
-    window->set_resizeable(false);
+    window.set_resizeable(false);
 
-    while (window->process(false)) {
+    while (window.process(false)) {
         if (const int eval = evaluate(board)) {
-            window->set_title((eval == id::player) ? "Player wins!" : "Engine wins!");
-            while (window->process());
+            window.set_title((eval == id::player) ? "Player wins!" : "Engine wins!");
+            while (window.process());
             break;
         }
 
         if (!has_empty(board)) {
-            window->set_title("Draw!");
-            while (window->process());
+            window.set_title("Draw!");
+            while (window.process());
             break;
         }
 
         if (players_turn) {
             static bool was_down = false;
-            if (window->mouse.left) {
+            if (window.mouse.left) {
                 if (!was_down) {
-                    const kl::int2 pos = window->mouse.position() / square_size;
+                    const kl::int2 pos = window.mouse.position() / square_size;
                     if (const int index = pos.y * sizes.x + pos.x; board[index] == id::empty) {
                         board[index] = id::player;
                         players_turn = false;
@@ -234,6 +234,6 @@ int main()
             }
         }
 
-        window->draw_image(frame);
+        window.draw_image(frame);
     }
 }

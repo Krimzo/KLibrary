@@ -36,14 +36,14 @@ static void draw_sticks(kl::image& frame, const std::vector<stick>& sticks)
 
 int main()
 {
-    auto window = kl::window::make({ 1600, 900 }, "Visual Sort");
-    kl::image frame = { window->size() };
+    auto window = kl::window({ 1600, 900 }, "Visual Sort");
+    kl::image frame = { window.size() };
 
     std::vector<stick> sticks = generate_sticks(frame.width(), 1, frame.height());
 
     std::thread([&]
     {
-        window->set_title("Sorting...");
+        window.set_title("Sorting...");
 
         for (size_t i = 0; i < sticks.size() - 1; i++) {
             for (size_t j = i + 1; j < sticks.size(); j++) {
@@ -54,12 +54,12 @@ int main()
             }
         }
 
-        window->set_title("Finished!");
+        window.set_title("Finished!");
     }).detach();
 
-    while (window->process(false)) {
+    while (window.process(false)) {
         frame.fill(kl::colors::gray);
         draw_sticks(frame, sticks);
-        window->draw_image(frame);
+        window.draw_image(frame);
     }
 }

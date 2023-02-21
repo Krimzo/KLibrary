@@ -84,7 +84,7 @@ namespace kl {
         void draw_mesh(dx::buffer mesh, D3D_PRIMITIVE_TOPOLOGY draw_type, UINT vertex_count, UINT start_index) const;
 
         // Views
-        void clear_tartget_view(dx::target_view view, const float4& color = {}) const;
+        void clear_target_view(dx::target_view view, const float4& color = {}) const;
         void clear_depth_view(dx::depth_view view, float depth = 1.0f, UINT8 stencil = 0xFF) const;
 
         void bind_target_depth_views(const std::vector<dx::target_view>& target_views, dx::depth_view depth_view) const;

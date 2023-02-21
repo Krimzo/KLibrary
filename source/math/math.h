@@ -63,12 +63,15 @@ namespace kl::math {
     // Float2x2
     float2x2 abs(const float2x2& mat);
     float2x2 inverse(const float2x2& mat);
+    float2x2 transpose(const float2x2& mat);
 
     // Float3x3
     float3x3 abs(const float3x3& mat);
     float3x3 inverse(const float3x3& mat);
+    float3x3 transpose(const float3x3& mat);
 
     // Float4x4
     float4x4 abs(const float4x4& mat);
     float4x4 inverse(const float4x4& mat);
+    float4x4 transpose(const float4x4& mat);
 }

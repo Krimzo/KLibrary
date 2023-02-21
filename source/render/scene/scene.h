@@ -14,9 +14,9 @@ namespace kl {
 
     class scene
     {
-        std::set<ref<entity>> entities_;
+        std::unordered_map<std::string, ref<entity>> entities_ = {};
 
-        static PxDefaultAllocator          allocator_;
+        static PxDefaultAllocator allocator_;
         static PxDefaultErrorCallback error_callback_;
         static PxFoundation* foundation_;
 
@@ -26,13 +26,13 @@ namespace kl {
         PxScene* scene_ = nullptr;
 
     public:
-        camera camera = {};
+        ref<camera> camera = nullptr;
+        ref<entity> selected_entity = nullptr;
 
-        ref<ambient_light> ambient_light = {};
-        ref<directional_light> directional_light = {};
+        ref<ambient_light> ambient_light = nullptr;
+        ref<directional_light> directional_light = nullptr;
 
-        dx::buffer ocean_mesh = nullptr;
-
+        // Creation
         scene();
         ~scene();
 
@@ -42,18 +42,25 @@ namespace kl {
         void operator=(const scene&) = delete;
         void operator=(const scene&&) = delete;
 
-        // Scene properties
+        // Iterate
+        std::unordered_map<std::string, ref<entity>>::iterator begin();
+        std::unordered_map<std::string, ref<entity>>::iterator end();
+
+        // Get
+        PxPhysics* get_physics() const;
+        PxCooking* get_cooking() const;
+
+        size_t entity_count() const;
+
+        // Set/Get
         void set_gravity(const float3& gravity);
         float3 get_gravity() const;
 
-        std::set<ref<entity>>::iterator begin();
-        std::set<ref<entity>>::iterator end();
+        void add(const std::string& name, ref<entity> entity);
+        void remove(const std::string& name);
 
-        void add(ref<entity> entity);
-        void remove(ref<entity> entity);
-
-        int entity_count() const;
-
+        // Update
+        ref<entity> update_selected_entity(uint32_t index);
         void update_physics(float delta_t);
 
         // Entity
@@ -66,17 +73,18 @@ namespace kl {
 
         // Static colliders
         ref<collider> make_plane_collider();
-        ref<collider> make_mesh_collider(const mesh_data& mesh_data, const float3& scale);
+        ref<collider> make_mesh_collider(const mesh& mesh, const float3& scale);
     };
 
 #else
 
-    class scene : public std::set<ref<entity>>
+    class scene : public std::unordered_set<ref<entity>>
     {
     public:
-        camera camera = {};
+        ref<camera> camera = make<kl::camera>();
+        ref<entity> selected_entity = nullptr;
 
-        ref<ambient_light> ambient_light = nullptr;
+        ref<ambient_light> ambient_light = make<kl::ambient_light>();
         ref<directional_light> directional_light = nullptr;
 
         float3 gravity = { 0.0f, -9.81f, 0.0f };

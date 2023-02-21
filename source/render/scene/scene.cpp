@@ -5,12 +5,14 @@
 
 #ifdef KL_USING_PHYSX
 
+// Static
 PxDefaultAllocator kl::scene::allocator_ = {};
 
 PxDefaultErrorCallback kl::scene::error_callback_ = {};
 
 PxFoundation* kl::scene::foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, allocator_, error_callback_);
 
+// Creation
 kl::scene::scene()
 {
     physics_ = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation_, PxTolerancesScale());
@@ -33,8 +35,9 @@ kl::scene::scene()
 
 kl::scene::~scene()
 {
+    selected_entity = nullptr;
     while (!entities_.empty()) {
-        this->remove(*entities_.begin());
+        this->remove(entities_.begin()->first);
     }
 
     scene_->release();
@@ -43,7 +46,34 @@ kl::scene::~scene()
     physics_->release();
 }
 
-// Scene properties
+// Iterate
+std::unordered_map<std::string, kl::ref<kl::entity>>::iterator kl::scene::begin()
+{
+    return entities_.begin();
+}
+
+std::unordered_map<std::string, kl::ref<kl::entity>>::iterator kl::scene::end()
+{
+    return entities_.end();
+}
+
+// Get
+PxPhysics* kl::scene::get_physics() const
+{
+    return physics_;
+}
+
+PxCooking* kl::scene::get_cooking() const
+{
+    return cooking_;
+}
+
+size_t kl::scene::entity_count() const
+{
+    return entities_.size();
+}
+
+// Set/Get
 void kl::scene::set_gravity(const float3& gravity)
 {
     scene_->setGravity({ gravity.x, gravity.y, gravity.z });
@@ -55,31 +85,31 @@ kl::float3 kl::scene::get_gravity() const
     return { gravity.x, gravity.y, gravity.z };
 }
 
-std::set<kl::ref<kl::entity>>::iterator kl::scene::begin()
+void kl::scene::add(const std::string& name, ref<entity> entity)
 {
-    return entities_.begin();
-}
-
-std::set<kl::ref<kl::entity>>::iterator kl::scene::end()
-{
-    return entities_.end();
-}
-
-void kl::scene::add(ref<entity> entity)
-{
-    entities_.insert(entity);
+    entities_[name] = entity;
     scene_->addActor(*entity->get_actor());
 }
 
-void kl::scene::remove(ref<entity> entity)
+void kl::scene::remove(const std::string& name)
 {
-    scene_->removeActor(*entity->get_actor());
-    entities_.erase(entity);
+    if (entities_.contains(name)) {
+        scene_->removeActor(*entities_[name]->get_actor());
+        entities_.erase(name);
+    }
 }
 
-int kl::scene::entity_count() const
+// Scene properties
+kl::ref<kl::entity> kl::scene::update_selected_entity(uint32_t index)
 {
-    return (int) entities_.size();
+    if (index != 0) {
+        for (auto& [name, entity] : *this) {
+            if (entity->unique_index == index) {
+                return selected_entity = entity;
+            }
+        }
+    }
+    return selected_entity = nullptr;
 }
 
 void kl::scene::update_physics(float delta_t)
@@ -116,9 +146,9 @@ kl::ref<kl::collider> kl::scene::make_plane_collider()
     return make<collider>(physics_, PxPlaneGeometry());
 }
 
-kl::ref<kl::collider> kl::scene::make_mesh_collider(const mesh_data& mesh_data, const float3& scale)
+kl::ref<kl::collider> kl::scene::make_mesh_collider(const mesh& mesh, const float3& scale)
 {
-    return nullptr;
+    return make<collider>(physics_, PxTriangleMeshGeometry(mesh.physics_buffer, *(PxVec3*)&scale));
 }
 
 #else

@@ -40,9 +40,7 @@ namespace kl {
         void rotate(const float2& mouse_pos, const float2& frame_center, float vertical_angle_limit = 85.0f);
 
         float4x4 view_matrix() const;
-
         float4x4 projection_matrix() const;
-
         float4x4 matrix() const;
     };
 }

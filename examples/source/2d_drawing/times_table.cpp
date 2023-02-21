@@ -11,23 +11,23 @@ int main()
     kl::color point_color = kl::random::get_color();
     kl::color line_color = kl::random::get_color();
 
-    auto window = kl::window::make({ 900, 900 }, "Times Table");
-    kl::image frame = { window->size() };
+    auto window = kl::window({ 900, 900 }, "Times Table");
+    kl::image frame = { window.size() };
 
-    window->on_resize.push_back([&](const kl::int2& size)
+    window.on_resize.push_back([&](const kl::int2& size)
     {
         if (size.x > 0 && size.y > 0) {
             frame.resize(size);
         }
     });
 
-    window->keyboard.r.on_press.push_back([&]
+    window.keyboard.r.on_press.push_back([&]
     {
         point_color = kl::random::get_color();
         line_color = kl::random::get_color();
     });
 
-    while (window->process(false)) {
+    while (window.process(false)) {
         m += increment * kl::time::get_interval();
 
         frame.fill(kl::colors::gray);
@@ -52,8 +52,8 @@ int main()
             frame.draw_line(circle_points[i], circle_points[std::abs(int(i * m) % n)], line_color);
         }
 
-        window->draw_image(frame);
+        window.draw_image(frame);
 
-        window->set_title(kl::format("n: ", n, " m: ", m));
+        window.set_title(kl::format("n: ", n, " m: ", m));
     }
 }

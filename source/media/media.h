@@ -15,12 +15,4 @@
 namespace kl::media_utility {
     void fail_check_(HRESULT hr, const std::string& error_message);
     bool succeeded_(HRESULT hr);
-
-    template<class T>
-    void safe_release_(T*& data)
-    {
-        if (!data) { return; }
-        data->Release();
-        data = nullptr;
-    }
 }

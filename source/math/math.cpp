@@ -192,6 +192,17 @@ kl::float2x2 kl::math::inverse(const float2x2& mat)
     return result * determinant;
 }
 
+kl::float2x2 kl::math::transpose(const float2x2& mat)
+{
+    kl::float2x2 result = {};
+    for (int y = 0; y < 2; y++) {
+        for (int x = 0; x < 2; x++) {
+            result(x, y) = mat(y, x);
+        }
+    }
+    return result;
+}
+
 // Float3x3
 kl::float3x3 kl::math::abs(const float3x3& mat)
 {
@@ -216,6 +227,17 @@ kl::float3x3 kl::math::inverse(const float3x3& mat)
     result(2, 0) = (mat(1, 0) * mat(2, 1) - mat(2, 0) * mat(1, 1)) * determinant;
     result(2, 1) = (mat(2, 0) * mat(0, 1) - mat(0, 0) * mat(2, 1)) * determinant;
     result(2, 2) = (mat(0, 0) * mat(1, 1) - mat(1, 0) * mat(0, 1)) * determinant;
+    return result;
+}
+
+kl::float3x3 kl::math::transpose(const float3x3& mat)
+{
+    kl::float3x3 result = {};
+    for (int y = 0; y < 3; y++) {
+        for (int x = 0; x < 3; x++) {
+            result(x, y) = mat(y, x);
+        }
+    }
     return result;
 }
 
@@ -269,5 +291,16 @@ kl::float4x4 kl::math::inverse(const float4x4& mat)
     result(1, 3) = +(mat(0, 0) * A1223 - mat(1, 0) * A0223 + mat(2, 0) * A0123) * determinant;
     result(2, 3) = -(mat(0, 0) * A1213 - mat(1, 0) * A0213 + mat(2, 0) * A0113) * determinant;
     result(3, 3) = +(mat(0, 0) * A1212 - mat(1, 0) * A0212 + mat(2, 0) * A0112) * determinant;
+    return result;
+}
+
+kl::float4x4 kl::math::transpose(const float4x4& mat)
+{
+    kl::float4x4 result = {};
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            result(x, y) = mat(y, x);
+        }
+    }
     return result;
 }

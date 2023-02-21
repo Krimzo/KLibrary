@@ -102,14 +102,14 @@ static void process_objects(std::vector<scene_object>& objects, const kl::timer&
 
 int main()
 {
-    auto window = kl::window::make({ 1600, 900 }, "Trajectories");
-    kl::image frame = kl::image(window->size());
+    auto window = kl::window({ 1600, 900 }, "Trajectories");
+    kl::image frame = kl::image(window.size());
     kl::timer timer = {};
 
     const kl::float2 gravity = { 0, 98.1f };
     std::vector<scene_object> objects = {};
 
-    window->on_resize.push_back([&](const kl::int2 new_size)
+    window.on_resize.push_back([&](const kl::int2 new_size)
     {
         frame.resize(new_size);
     });
@@ -117,19 +117,19 @@ int main()
     bool object_being_added = false;
     kl::float2 object_add_position = {};
     kl::float2 object_second_position = {};
-    window->mouse.left.on_press.push_back([&]()
+    window.mouse.left.on_press.push_back([&]()
     {
-        const kl::int2 position = window->mouse.position();
-        if (position.x >= 0 && position.x < (int) window->width() && position.y > 0 && position.y < get_frame_lower_limit(frame)) {
+        const kl::int2 position = window.mouse.position();
+        if (position.x >= 0 && position.x < (int) window.width() && position.y > 0 && position.y < get_frame_lower_limit(frame)) {
             object_add_position = kl::float2(position);
             object_being_added = true;
         }
     });
-    window->mouse.left.on_down.push_back([&]
+    window.mouse.left.on_down.push_back([&]
     {
-        object_second_position = window->mouse.position();
+        object_second_position = window.mouse.position();
     });
-    window->mouse.left.on_release.push_back([&]
+    window.mouse.left.on_release.push_back([&]
     {
         if (object_being_added) {
             scene_object new_object = {};
@@ -140,11 +140,11 @@ int main()
         }
     });
 
-    window->keyboard.r.on_press.push_back([&]
+    window.keyboard.r.on_press.push_back([&]
     {
         objects.clear();
     });
-    window->keyboard.g.on_press.push_back([&]
+    window.keyboard.g.on_press.push_back([&]
     {
         for (int i = 0; i < 20; i++) {
             scene_object random_object = {};
@@ -155,7 +155,7 @@ int main()
         }
     });
 
-    while (window->process(false)) {
+    while (window.process(false)) {
         timer.update_interval();
 
         process_objects(objects, timer, frame, gravity);
@@ -164,6 +164,6 @@ int main()
         draw_objects(frame, objects);
         draw_interface(frame, object_being_added, object_add_position, object_second_position);
 
-        window->draw_image(frame);
+        window.draw_image(frame);
     }
 }

@@ -86,6 +86,16 @@ kl::dx::chain kl::gpu::chain() const
     return chain_;
 }
 
+kl::dx::target_view kl::gpu::get_internal_target() const
+{
+    return target_view_;
+}
+
+kl::dx::depth_view kl::gpu::get_internal_depth() const
+{
+    return depth_view_;
+}
+
 // Chain
 kl::dx::texture kl::gpu::get_back_buffer() const
 {
@@ -145,7 +155,7 @@ void kl::gpu::resize_internal(const int2& size)
     depth_view_ = create_depth_view(depth_texture, nullptr);
 
     // Rebind
-    bind_internal_target_depth_views();
+    bind_internal_views();
 }
 
 void kl::gpu::resize_to_window(HWND window)
@@ -156,16 +166,9 @@ void kl::gpu::resize_to_window(HWND window)
     set_viewport_size({ window_client_area.right, window_client_area.bottom });
 }
 
-void kl::gpu::bind_internal_target_depth_views() const
+void kl::gpu::bind_internal_views() const
 {
-    context_->OMSetRenderTargets(1, target_view_.GetAddressOf(), depth_view_.Get());
-}
-
-void kl::gpu::bind_target_depth_views_with_internal(const std::vector<dx::target_view>& additional_targets, dx::depth_view depth_view) const
-{
-    std::vector<dx::target_view> combined_targets = { target_view_ };
-    combined_targets.insert(combined_targets.end(), additional_targets.begin(), additional_targets.end());
-    bind_target_depth_views(combined_targets, depth_view ? depth_view : depth_view_);
+    bind_target_depth_views({ target_view_ }, depth_view_);
 }
 
 // Shader helper

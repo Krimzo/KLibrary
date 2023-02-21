@@ -5,8 +5,10 @@
 
 #ifdef KL_USING_PHYSX
 
+static int unique_index_counter = 0;
+
 kl::entity::entity(PxPhysics* physics, bool dynamic)
-    : is_dynamic_(dynamic)
+    : unique_index(++unique_index_counter), is_dynamic_(dynamic)
 {
     PxTransform transform = {};
     transform.q = PxQuat(PxIdentity);
@@ -27,6 +29,7 @@ kl::entity::~entity()
     physics_actor_->release();
 }
 
+// Get
 PxRigidActor* kl::entity::get_actor() const
 {
     return physics_actor_;
@@ -146,9 +149,9 @@ kl::ref<kl::collider> kl::entity::get_collider() const
 }
 
 // Graphics
-kl::mat4 kl::entity::matrix() const
+kl::float4x4 kl::entity::matrix() const
 {
-    return mat4::translation(get_position()) * mat4::rotation(get_rotation()) * mat4::scaling(render_scale);
+    return float4x4::translation(get_position()) * float4x4::rotation(get_rotation()) * float4x4::scaling(render_scale);
 }
 
 #else

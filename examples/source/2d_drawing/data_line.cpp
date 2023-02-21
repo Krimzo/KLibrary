@@ -85,16 +85,16 @@ static void calculate_improved_line(const std::vector<kl::int2>& data, kl::float
 
 int main()
 {
-    auto window = kl::window::make({ 1600, 900 }, "Data Line");
-    kl::image frame = kl::image(window->size());
+    auto window = kl::window({ 1600, 900 }, "Data Line");
+    kl::image frame = kl::image(window.size());
 
     std::vector<kl::int2> data = {};
     kl::float2 line_equat(1.0f, 0.0f);
 
-    window->mouse.left.on_down.push_back([&]
+    window.mouse.left.on_down.push_back([&]
     {
         static kl::int2 last_data = {};
-        kl::int2 new_data = window->mouse.position() * kl::int2(1, -1);
+        kl::int2 new_data = window.mouse.position() * kl::int2(1, -1);
         new_data -= frame.size() / kl::int2(2, -2);
         if (new_data != last_data) {
             data.push_back(new_data);
@@ -102,12 +102,12 @@ int main()
         }
     });
 
-    window->keyboard.r.on_press.push_back([&]
+    window.keyboard.r.on_press.push_back([&]
     {
         data.clear();
     });
 
-    while (window->process(false)) {
+    while (window.process(false)) {
         frame.fill(kl::colors::gray);
 
         draw_axis(frame);
@@ -117,6 +117,6 @@ int main()
 
         calculate_improved_line(data, line_equat);
 
-        window->draw_image(frame);
+        window.draw_image(frame);
     }
 }

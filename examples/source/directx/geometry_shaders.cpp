@@ -65,7 +65,7 @@ int main()
     kl::ref<kl::entity> main_entity = kl::make<kl::entity>();
     main_entity->angular.y = -36.0f;
     main_entity->mesh = monke_mesh;
-    main_entity->material.color = kl::colors::orange;
+    main_entity->material->color = kl::colors::orange;
 
     window.keyboard.num1.on_press.push_back([&]
     {
@@ -116,7 +116,7 @@ int main()
 
         ps_cb ps_data = {};
         ps_data.sun_direction = { sun_direction.x, sun_direction.y, sun_direction.z, 0.0f };
-        ps_data.object_color = main_entity->material.color;
+        ps_data.object_color = main_entity->material->color;
         gpu.set_cb_data(ps_cbuffer, ps_data);
 
         if (main_entity->mesh) {

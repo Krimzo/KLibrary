@@ -223,7 +223,7 @@ void kl::context_holder::draw_mesh(const dx::buffer mesh, const D3D_PRIMITIVE_TO
 }
 
 // Views
-void kl::context_holder::clear_tartget_view(dx::target_view view, const float4& color) const
+void kl::context_holder::clear_target_view(dx::target_view view, const float4& color) const
 {
     context_->ClearRenderTargetView(view.Get(), color);
 }

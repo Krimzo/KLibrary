@@ -39,7 +39,7 @@ int main()
 
         gpu.unbind_shader_view_for_compute_shader(0);
         gpu.unbind_shader_view_for_pixel_shader(0);
-        gpu.clear_tartget_view(target_view, kl::colors::gray);
+        gpu.clear_target_view(target_view, kl::colors::gray);
 
         cs_cb cs_data = {};
         cs_data.misc_data.x = (float) window.mouse.position().x;
