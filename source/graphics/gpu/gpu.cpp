@@ -110,6 +110,19 @@ void kl::gpu::swap_buffers(const bool v_sync) const
     chain_->Present(v_sync, NULL);
 }
 
+bool kl::gpu::in_fullscreen() const
+{
+    BOOL result = false;
+    IDXGIOutput* ignored = nullptr;
+    chain_->GetFullscreenState(&result, &ignored);
+    return (bool) result;
+}
+
+void kl::gpu::set_fullscreen(const bool enabled) const
+{
+    chain_->SetFullscreenState(enabled, nullptr);
+}
+
 // Internal buffers
 void kl::gpu::clear_internal_color(const float4& color) const
 {

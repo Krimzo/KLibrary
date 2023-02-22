@@ -46,6 +46,9 @@ namespace kl {
         dx::texture get_back_buffer() const;
         void swap_buffers(bool v_sync) const;
 
+        bool in_fullscreen() const;
+        void set_fullscreen(bool enabled) const;
+
         // Internal buffers
         void clear_internal_color(const float4& color = {}) const;
         void clear_internal_depth(float depth = 1.0f, UINT8 stencil = 0xFF) const;
