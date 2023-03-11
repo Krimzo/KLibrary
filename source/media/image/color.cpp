@@ -45,7 +45,7 @@ bool kl::color::operator!=(const color& other) const
 // Methods
 kl::color kl::color::gray() const
 {
-    const float float_value = (r * 0.3f + g * 0.585f + b * 0.115f);
+    const float float_value = (r * 0.299f + g * 0.587f + b * 0.114f);
     const byte gray_value = min(max((int) float_value, 0), 255);
     return { gray_value, gray_value, gray_value, a };
 }
