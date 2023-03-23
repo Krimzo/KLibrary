@@ -32,7 +32,7 @@ int main()
     window.maximize();
 
     // Fullscreen setup
-    window.keyboard.f11.on_press.push_back([&]()
+    window.keyboard.f11.on_press.push_back([&]
     {
         const bool new_state = !window.in_fullscreen();
         window.set_fullscreen(new_state);
