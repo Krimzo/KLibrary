@@ -1,5 +1,3 @@
-# Krimz Library
-
 ## About
 General purpose library focused on 3D graphics  
 Goal is to smiplify use of C++, Win32 and DirectX  
