@@ -56,6 +56,18 @@ bool kl::image::in_bounds(const int2& coords) const
     return (coords.x >= 0 && coords.y >= 0 && coords.x < size_.x && coords.y < size_.y);
 }
 
+kl::color kl::image::sample(const float2& uv) const
+{
+    const int2 coords = {
+        (int) (uv.x * size_.x),
+        (int) (uv.y * size_.y),
+    };
+    if (in_bounds(coords)) {
+        return (*this)[coords];
+    }
+    return {};
+}
+
 // Iterate
 kl::pixel_storage::iterator kl::image::begin()
 {

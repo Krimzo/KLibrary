@@ -87,8 +87,8 @@ int main()
         destroy_goal = 1.5f;
     });
 
-    camera.position = { -2.0f, 2.0f, -2.0f };
-    camera.set_forward(camera.position * -1.0f);
+    camera.origin = { -2.0f, 2.0f, -2.0f };
+    camera.set_forward(camera.origin * -1.0f);
 
     /* ----- UPDATE ----- */
     while (window.process(false)) {

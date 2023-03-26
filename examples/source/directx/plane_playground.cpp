@@ -52,8 +52,8 @@ int main()
     auto plane_vs_const_buffer = gpu.create_const_buffer(sizeof(plane_vs_cb));
     auto plane_ps_const_buffer = gpu.create_const_buffer(sizeof(plane_ps_cb));
 
-    camera.position = { -3.5f, 1.5f, -2.5f };
-    camera.set_forward(camera.position * -1.0f);
+    camera.origin = { -3.5f, 1.5f, -2.5f };
+    camera.set_forward(camera.origin * -1.0f);
 
     while (window.process(false)) {
         timer.update_interval();
@@ -70,7 +70,7 @@ int main()
 
         sky_ps_cb sky_pscb = {};
         sky_pscb.frame_size = { kl::float2(window.size()), {} };
-        sky_pscb.camera_position = { camera.position, 0.0f };
+        sky_pscb.camera_position = { camera.origin, 0.0f };
         sky_pscb.inverse_camera = kl::math::inverse(camera.matrix());
         sky_pscb.sun_direction = { kl::math::normalize(sun_direction), 0.0f };
 
@@ -146,7 +146,7 @@ void setup_input(kl::window& window, kl::gpu& gpu)
 
     window.mouse.right.on_down.push_back([&]
     {
-        const kl::ray ray = { camera.position, kl::math::inverse(camera.matrix()), window.mouse.get_normalized_position()};
+        const kl::ray ray = { camera.origin, kl::math::inverse(camera.matrix()), window.mouse.get_normalized_position()};
         sun_direction = ray.direction * -1.0f;
     });
 }

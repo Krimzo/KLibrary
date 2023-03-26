@@ -14,25 +14,28 @@ kl::ray::ray(const float3& origin, const float3& direction)
 kl::ray::ray(const float3& origin, const float4x4& inverse_matrix, const float2& ndc)
     : origin(origin)
 {
-    float4 pixel_direction = inverse_matrix * float4(ndc.x, ndc.y, 1.0f, 1.0f);
+    float4 pixel_direction = inverse_matrix * float4(ndc, 1.0f, 1.0f);
     pixel_direction *= 1.0f / pixel_direction.w;
-    direction = math::normalize(float3(pixel_direction.x, pixel_direction.y, pixel_direction.z));
+    direction = math::normalize(pixel_direction.xyz());
 }
 
 // Math
 bool kl::ray::intersect_plane(const plane& plane, float3* out_intersection) const
 {
     const float denom = math::normalize(plane.normal) * math::normalize(direction);
-    if (abs(denom) > 0.0001f) {
-        const float t = ((plane.origin - origin) * plane.normal) / denom;
-        if (t >= 0.0f) {
-            if (out_intersection) {
-                *out_intersection = origin + direction * t;
-            }
-            return true;
-        }
+    if (abs(denom) <= 0.0001f) {
+        return false;
     }
-    return false;
+
+    const float t = ((plane.origin - origin) * plane.normal) / denom;
+    if (t < 0.0f) {
+        return false;
+    }
+
+    if (out_intersection) {
+        *out_intersection = origin + direction * t;
+    }
+    return true;
 }
 
 bool kl::ray::intersect_triangle(const triangle& triangle, float3* out_intersection) const

@@ -33,32 +33,32 @@ kl::float3 kl::camera::get_up() const
 
 void kl::camera::move_forward(const float delta_time)
 {
-    position = position + forward_ * (speed * delta_time);
+    origin = origin + forward_ * (speed * delta_time);
 }
 
 void kl::camera::move_back(const float delta_time)
 {
-    position = position - forward_ * (speed * delta_time);
+    origin = origin - forward_ * (speed * delta_time);
 }
 
 void kl::camera::move_right(const float delta_time)
 {
-    position = position + get_right() * (speed * delta_time);
+    origin = origin + get_right() * (speed * delta_time);
 }
 
 void kl::camera::move_left(const float delta_time)
 {
-    position = position - get_right() * (speed * delta_time);
+    origin = origin - get_right() * (speed * delta_time);
 }
 
 void kl::camera::move_up(const float delta_time)
 {
-    position = position + up_ * (speed * delta_time);
+    origin = origin + up_ * (speed * delta_time);
 }
 
 void kl::camera::move_down(const float delta_time)
 {
-    position = position - up_ * (speed * delta_time);
+    origin = origin - up_ * (speed * delta_time);
 }
 
 void kl::camera::rotate(const float2& mouse_pos, const float2& frame_center, const float vertical_angle_limit)
@@ -75,7 +75,7 @@ void kl::camera::rotate(const float2& mouse_pos, const float2& frame_center, con
 
 kl::float4x4 kl::camera::view_matrix() const
 {
-    return float4x4::look_at(position, position + forward_, up_);
+    return float4x4::look_at(origin, origin + forward_, up_);
 }
 
 kl::float4x4 kl::camera::projection_matrix() const

@@ -11,6 +11,8 @@ namespace kl {
 
         plane();
         plane(const float3& origin, const float3& normal);
+
+        bool is_in_front(const float3& point) const;
     };
 }
 

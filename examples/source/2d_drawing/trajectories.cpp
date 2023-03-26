@@ -61,7 +61,7 @@ static void process_objects(std::vector<scene_object>& objects, const kl::timer&
         kl::float2 velocity_sum, position_sum;
         for (int j = 0; j < int(objects.size()); j++) {
             if (i != j) {
-                kl::float2 positions_vector = objects[i].position - objects[j].position;
+                kl::float2 positions_vector = objects[i] - objects[j].position;
                 if (float radius_sum = objects[i].radius + objects[j].radius; positions_vector.length() < radius_sum) {
                     position_sum += objects[j].position + kl::math::normalize(positions_vector) * radius_sum;
                     velocity_sum += kl::math::reflect(objects[i].velocity, objects[j].position - objects[i].position);

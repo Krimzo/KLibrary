@@ -64,7 +64,7 @@ int main()
 
     window.mouse.right.on_down.push_back([&]
     {
-        const kl::ray ray = { camera.position, kl::math::inverse(camera.matrix()), window.mouse.get_normalized_position()};
+        const kl::ray ray = { camera.origin, kl::math::inverse(camera.matrix()), window.mouse.get_normalized_position()};
         ps_data.sun_direction = { ray.direction * -1.0f, 0.0f };
     });
 
@@ -80,7 +80,7 @@ int main()
     auto pixel_const_buffer = gpu.create_const_buffer(sizeof(ps_cb));
     gpu.bind_cb_for_pixel_shader(pixel_const_buffer, 0);
 
-    camera.position.y = 5.0f;
+    camera.origin.y = 5.0f;
     ps_data.sun_direction = { kl::math::normalize(kl::float3(-1.0f, -1.0f, 0.0f)), 0.0f };
 
     window.keyboard.r.on_press.back()();
@@ -102,7 +102,7 @@ int main()
                 const kl::int2 frame_center = window.get_frame_center();
 
                 if (camera_rotating) {
-                    camera.rotate(kl::float2(window.mouse.position()), kl::float2(frame_center));
+                    camera.rotate(kl::float2(window.mouse.origin()), kl::float2(frame_center));
                 }
                 window.mouse.set_position(frame_center);
 
@@ -139,7 +139,7 @@ int main()
 
         ps_data.frame_size = { kl::float2(window.size()), {} };
         ps_data.inverse_camera = kl::math::inverse(camera.matrix());
-        ps_data.camera_position = { camera.position, 0.0f };
+        ps_data.camera_position = { camera.origin, 0.0f };
         gpu.set_cb_data(pixel_const_buffer, ps_data);
 
         gpu.draw_mesh(screen_mesh);
