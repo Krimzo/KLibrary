@@ -1,6 +1,6 @@
 ## About
 General purpose library focused on 3D graphics  
-Goal is to smiplify use of C++, Win32 and DirectX  
+Goal is to simplify use of C++, Win32 and DirectX  
 
 ## D3D11 Triangle Hello World
 ```cpp
