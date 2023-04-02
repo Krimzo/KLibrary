@@ -1,21 +1,18 @@
 #pragma once
 
 #include "render/scene/camera.h"
-#include "render/entity/entity.h"
+#include "render/scene/entity.h"
 
 #include "render/light/ambient_light.h"
 #include "render/light/directional_light.h"
+#include "render/light/point_light.h"
 
-#include "memory/memory.h"
 
-
-namespace kl {
 #ifdef KL_USING_PHYSX
 
+namespace kl {
     class scene
     {
-        std::unordered_map<std::string, ref<entity>> entities_ = {};
-
         static PxDefaultAllocator allocator_;
         static PxDefaultErrorCallback error_callback_;
         static PxFoundation* foundation_;
@@ -25,7 +22,13 @@ namespace kl {
         PxDefaultCpuDispatcher* dispatcher_ = nullptr;
         PxScene* scene_ = nullptr;
 
+        std::map<std::string, ref<entity>> entities_ = {};
+
     public:
+        std::map<std::string, ref<mesh>> meshes = {};
+        std::map<std::string, ref<texture>> textures = {};
+        std::map<std::string, ref<material>> materials = {};
+
         ref<camera> camera = nullptr;
         ref<entity> selected_entity = nullptr;
 
@@ -43,12 +46,15 @@ namespace kl {
         void operator=(const scene&&) = delete;
 
         // Iterate
-        std::unordered_map<std::string, ref<entity>>::iterator begin();
-        std::unordered_map<std::string, ref<entity>>::iterator end();
+        std::map<std::string, ref<entity>>::iterator begin();
+        std::map<std::string, ref<entity>>::iterator end();
 
         // Get
         PxPhysics* get_physics() const;
         PxCooking* get_cooking() const;
+
+        ref<entity> get_entity(const std::string& name) const;
+        std::string get_name(ref<entity> entity) const;
 
         size_t entity_count() const;
 
@@ -74,10 +80,15 @@ namespace kl {
         // Static colliders
         ref<collider> make_plane_collider();
         ref<collider> make_mesh_collider(const mesh& mesh, const float3& scale);
+
+        // Default collider
+        ref<collider> make_default_collider(PxGeometryType::Enum type, const mesh* optional_mesh);
     };
+}
 
 #else
 
+namespace kl {
     class scene : public std::unordered_set<ref<entity>>
     {
     public:
@@ -94,6 +105,6 @@ namespace kl {
 
         void update_physics(float delta_t);
     };
+}
 
 #endif
-}

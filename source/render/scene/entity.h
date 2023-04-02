@@ -1,22 +1,23 @@
 #pragma once
 
-#include "render/entity/mesh.h"
-#include "render/entity/material.h"
-#include "render/entity/collider.h"
-#include "memory/memory.h"
+#include "render/components/mesh.h"
+#include "render/components/material.h"
+#include "render/components/collider.h"
 
 
-namespace kl {
 #ifdef KL_USING_PHYSX
 
+namespace kl {
     class entity
     {
-        const bool is_dynamic_;
         PxRigidActor* physics_actor_ = nullptr;
         ref<collider> collider_ = nullptr;
 
+        void regenerate_actor(PxPhysics* physics, const PxTransform& transform, bool dynamic);
+        void wake_up() const;
+
     public:
-        const int unique_index;
+        const uint64_t unique_index;
         float3 render_scale = float3(1.0f);
 
         ref<mesh> mesh = nullptr;
@@ -34,6 +35,8 @@ namespace kl {
 
         // Get
         PxRigidActor* get_actor() const;
+        float4x4 matrix() const;
+        float4x4 collider_matrix() const;
 
         // Geometry
         void set_rotation(const float3& rotation);
@@ -43,6 +46,12 @@ namespace kl {
         float3 get_position() const;
 
         // Physics
+        void set_dynamic(PxPhysics* physics, bool enabled);
+        bool is_dynamic() const;
+
+        void set_gravity(bool enabled);
+        bool has_gravity() const;
+
         void set_mass(float mass);
         float get_mass() const;
 
@@ -52,18 +61,15 @@ namespace kl {
         void set_angular(const float3& angular);
         float3 get_angular() const;
 
-        void set_gravity(bool enabled);
-        bool get_gravity() const;
-
         // Collision
         void set_collider(ref<collider> collider);
         ref<collider> get_collider() const;
-
-        // Graphics
-        float4x4 matrix() const;
     };
+}
+
 #else
 
+namespace kl {
     class entity
     {
     public:
@@ -75,8 +81,8 @@ namespace kl {
         float3 velocity = {};
         float3 angular = {};
 
-        mesh mesh = nullptr;
-        ref<material> material = make<kl::material>();
+        ref<mesh> mesh = nullptr;
+        ref<material> material = nullptr;
 
         entity();
         ~entity();
@@ -85,6 +91,6 @@ namespace kl {
 
         float4x4 matrix() const;
     };
+}
 
 #endif
-}

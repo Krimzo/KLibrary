@@ -1,17 +1,18 @@
 #pragma once
 
-#include "graphics/graphics.h"
+#include "render/components/texture.h"
+#include "memory/memory.h"
 
 
 namespace kl {
     class material
     {
     public:
-        float4 color = {};
+        float4 color = colors::white;
 
-        dx::shader_view color_map = nullptr;
-        dx::shader_view normal_map = nullptr;
-        dx::shader_view roughness_map = nullptr;
+        ref<texture> color_map = nullptr;
+        ref<texture> normal_map = nullptr;
+        ref<texture> roughness_map = nullptr;
 
         float texture_blend = 0.0f;
         float reflection_factor = 0.0f;

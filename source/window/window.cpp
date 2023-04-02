@@ -2,10 +2,6 @@
 
 #include "utility/utility.h"
 
-#ifdef KL_USING_IMGUI
-#include <imgui.h>
-#endif
-
 
 // Class
 kl::window::window(const int2& size, const std::string& name)
@@ -311,7 +307,7 @@ void kl::window::handle_message(const MSG& message)
 #ifdef KL_USING_IMGUI
     case WM_CHAR:
         if (*((short*) &message.lParam) > 1) {
-            ImGui::GetIO().AddInputCharacter(int(message.wParam));
+            ImGui::GetIO().AddInputCharacter((int) message.wParam);
         }
         break;
 #endif
