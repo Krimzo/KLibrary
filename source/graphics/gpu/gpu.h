@@ -26,7 +26,7 @@ namespace kl {
         // Creation
         gpu();
         gpu(HWND window);
-        virtual ~gpu();
+        ~gpu();
 
         gpu(const gpu&) = delete;
         gpu(const gpu&&) = delete;

@@ -81,10 +81,10 @@ std::vector<kl::vertex> kl::files::parse_mesh(const std::string& filepath, const
         return {};
     }
 
-    std::vector<vertex> vertex_data;
-    std::vector<float3> xyz_data;
-    std::vector<float2> uv_data;
-    std::vector<float3> normal_data;
+    std::vector<vertex> vertex_data = {};
+    std::vector<float3>    xyz_data = {};
+    std::vector<float2>     uv_data = {};
+    std::vector<float3> normal_data = {};
 
     const float z_flip = (flip_z ? -1.0f : 1.0f);
 
@@ -130,12 +130,7 @@ kl::file::~file()
 
 kl::file::operator bool() const
 {
-    return is_open();
-}
-
-bool kl::file::is_open() const
-{
-    return bool(file_);
+    return (bool) file_;
 }
 
 bool kl::file::open(const std::string& filepath, bool clear)
@@ -155,7 +150,7 @@ void kl::file::close()
 
 bool kl::file::seek(const int position) const
 {
-    if (!is_open()) {
+    if (!file_) {
         return false;
     }
     if (position < 0) {
@@ -166,32 +161,22 @@ bool kl::file::seek(const int position) const
 
 bool kl::file::move(const int delta) const
 {
-    if (!is_open()) {
-        return false;
-    }
+    if (!file_) { return false; }
     return !fseek(file_, delta, SEEK_CUR);
 }
 
 bool kl::file::rewind() const
 {
-    if (!is_open()) {
-        return false;
-    }
     return seek(0);
 }
 
 bool kl::file::unwind() const
 {
-    if (!is_open()) {
-        return false;
-    }
     return seek(-1);
 }
 
 int kl::file::tell() const
 {
-    if (!is_open()) {
-        return -1;
-    }
+    if (!file_) { return -1; }
     return (int) ftell(file_);
 }

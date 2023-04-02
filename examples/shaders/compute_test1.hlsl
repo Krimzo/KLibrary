@@ -7,9 +7,9 @@ cbuffer CS_CB
 RWTexture2D<float4> write_map : register(u0);
 
 [numthreads(32, 32, 1)]
-void c_shader(uint3 thread_id : SV_DispatchThreadID)
+void c_shader(const uint3 thread_id : SV_DispatchThreadID)
 {
-    if (thread_id.x <= misc_data.x && thread_id.y <= misc_data.y) {
+    if (thread_id.x <= (uint) misc_data.x && thread_id.y <= (uint) misc_data.y) {
         write_map[thread_id.xy] = float4(0.27f, 0.56f, 0.44f, 1.0f);
     }
 }

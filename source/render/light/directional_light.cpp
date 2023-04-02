@@ -36,7 +36,7 @@ kl::directional_light::~directional_light()
 
 void kl::directional_light::set_direction(const float3& direction)
 {
-    direction_ = math::normalize(direction);
+    direction_ = normalize(direction);
 }
 
 kl::float3 kl::directional_light::get_direction() const
@@ -62,21 +62,21 @@ kl::dx::shader_view kl::directional_light::get_shader_view(const UINT cascade_in
 kl::float4x4 kl::directional_light::get_matrix(camera camera, const UINT cascade_index) const
 {
     const float2 old_camera_planes = { camera.near_plane, camera.far_plane };
-    camera.near_plane = math::interpolate(CASCADE_SPLITS[cascade_index + 0], old_camera_planes.x, old_camera_planes.y);
-    camera.far_plane = math::interpolate(CASCADE_SPLITS[cascade_index + 1], old_camera_planes.x, old_camera_planes.y);
-    const float4x4 inverse_camera_matrix = math::inverse(camera.matrix());
+    camera.near_plane = interpolate(CASCADE_SPLITS[cascade_index + 0], old_camera_planes.x, old_camera_planes.y);
+    camera.far_plane = interpolate(CASCADE_SPLITS[cascade_index + 1], old_camera_planes.x, old_camera_planes.y);
+    const float4x4 inverse_camera_matrix = inverse(camera.matrix());
 
     // Calculate 8 corners in world-space
     float4 frustum_corners[8] = {
         inverse_camera_matrix * float4(-1, -1, -1, 1),
-        inverse_camera_matrix * float4(1, -1, -1, 1),
+        inverse_camera_matrix * float4( 1, -1, -1, 1),
         inverse_camera_matrix * float4(-1,  1, -1, 1),
-        inverse_camera_matrix * float4(1,  1, -1, 1),
+        inverse_camera_matrix * float4( 1,  1, -1, 1),
 
         inverse_camera_matrix * float4(-1, -1,  1, 1),
-        inverse_camera_matrix * float4(1, -1,  1, 1),
+        inverse_camera_matrix * float4( 1, -1,  1, 1),
         inverse_camera_matrix * float4(-1,  1,  1, 1),
-        inverse_camera_matrix * float4(1,  1,  1, 1),
+        inverse_camera_matrix * float4( 1,  1,  1, 1),
     };
 
     for (auto& corner : frustum_corners) {
@@ -111,7 +111,7 @@ kl::float4x4 kl::directional_light::get_matrix(camera camera, const UINT cascade
     };
 
     // Convert temp light-space to world-space
-    const float4x4 temp_ligth_view_matrix_inverse = math::inverse(temp_ligth_view_matrix);
+    const float4x4 temp_ligth_view_matrix_inverse = inverse(temp_ligth_view_matrix);
     const float4 new_light_pos = temp_ligth_view_matrix_inverse * float4(light_position.x, light_position.y, light_position.z, 1.0f);
     light_position = { new_light_pos.x, new_light_pos.y, new_light_pos.z };
     for (auto& corner : frustum_corners) {

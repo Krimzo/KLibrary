@@ -19,9 +19,12 @@ DLL_EXPORT(void) script_update(int index) {
 int main()
 {
 	kl::dll loaded_dll = kl::dll("examples/dlls/dll_test_1.dll");
+	if (kl::warning_check(!loaded_dll, "Failed to load dll")) {
+		return 1;
+	}
 
-	kl::dll::function<void> script_start = loaded_dll.load_function<void>("script_start");
-	kl::dll::function<void, int> script_update = loaded_dll.load_function<void, int>("script_update");
+	kl::dll::function<void> script_start = loaded_dll.get_function<void>("script_start");
+	kl::dll::function<void, int> script_update = loaded_dll.get_function<void, int>("script_update");
 
 	if (script_start) {
 		script_start();

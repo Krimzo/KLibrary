@@ -3,6 +3,8 @@
 
 static constexpr int N = 10000;
 
+/* NOTE: Use Release mode to see the real results. */
+
 int main()
 {
     float times[3] = {};

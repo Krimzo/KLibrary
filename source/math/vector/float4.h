@@ -48,8 +48,17 @@ namespace kl {
         float4 operator*(float value) const;
         void operator*=(float value);
 
-        float operator*(const float4& other) const;
+        float4 operator*(const float4& other) const;
+        void operator*=(const float4& other);
 
+        float4 operator/(float value) const;
+        void operator/=(float value);
+
+        float4 operator/(const float4& other) const;
+        void operator/=(const float4& other);
+
+        // Other
+        float4 operator-() const;
         float length() const;
     };
 }

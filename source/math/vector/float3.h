@@ -41,8 +41,17 @@ namespace kl {
         float3 operator*(float value) const;
         void operator*=(float value);
 
-        float operator*(const float3& other) const;
+        float3 operator*(const float3& other) const;
+        void operator*=(const float3& other);
 
+        float3 operator/(float value) const;
+        void operator/=(float value);
+
+        float3 operator/(const float3& other) const;
+        void operator/=(const float3& other);
+
+        // Other
+        float3 operator-() const;
         float length() const;
     };
 }

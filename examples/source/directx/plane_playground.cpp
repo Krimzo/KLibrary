@@ -71,8 +71,8 @@ int main()
         sky_ps_cb sky_pscb = {};
         sky_pscb.frame_size = { kl::float2(window.size()), {} };
         sky_pscb.camera_position = { camera.origin, 0.0f };
-        sky_pscb.inverse_camera = kl::math::inverse(camera.matrix());
-        sky_pscb.sun_direction = { kl::math::normalize(sun_direction), 0.0f };
+        sky_pscb.inverse_camera = kl::inverse(camera.matrix());
+        sky_pscb.sun_direction = { kl::normalize(sun_direction), 0.0f };
 
         gpu.bind_cb_for_pixel_shader(sky_ps_const_buffer, 0);
         gpu.set_cb_data(sky_ps_const_buffer, sky_pscb);
@@ -95,7 +95,7 @@ int main()
         gpu.set_cb_data(plane_vs_const_buffer, plane_vscb);
 
         plane_ps_cb plane_pscb = {};
-        plane_pscb.sun_direction = { kl::math::normalize(sun_direction), 0 };
+        plane_pscb.sun_direction = { kl::normalize(sun_direction), 0 };
         
         gpu.bind_cb_for_pixel_shader(plane_ps_const_buffer, 0);
         gpu.set_cb_data(plane_ps_const_buffer, plane_pscb);
@@ -144,10 +144,10 @@ void setup_input(kl::window& window, kl::gpu& gpu)
     });
     window.keyboard.r.on_press.back()();
 
-    window.mouse.right.on_down.push_back([&]
+    window.mouse.left.on_down.push_back([&]
     {
-        const kl::ray ray = { camera.origin, kl::math::inverse(camera.matrix()), window.mouse.get_normalized_position()};
-        sun_direction = ray.direction * -1.0f;
+        const kl::ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.get_normalized_position() };
+        sun_direction = -ray.get_direction();
     });
 }
 
@@ -155,7 +155,7 @@ void camera_movement(kl::window& window)
 {
     static bool camera_rotating = false;
 
-    if (window.mouse.left) {
+    if (window.mouse.right) {
         const kl::int2 frame_center = window.get_frame_center();
 
         if (camera_rotating) {

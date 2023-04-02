@@ -22,7 +22,7 @@ int main(const int argc, const char** argv)
     kl::console::set_cursor_enabled(false);
 
     const int frame_count = video_reader.frame_count();
-    std::vector<std::string> ascii_frames;
+    std::vector<std::string> ascii_frames = {};
     ascii_frames.reserve(frame_count);
 
     kl::console::clear();

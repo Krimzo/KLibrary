@@ -266,7 +266,7 @@ kl::dx::texture kl::device_holder::create_cube_texture(const image& front, const
     descriptor.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     descriptor.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-    const UINT mem_pitch = UINT(front.width() * sizeof(color));
+    const UINT mem_pitch = (UINT) (front.width() * sizeof(color));
     const dx::subresource_descriptor data[6] = {
         { right,  mem_pitch, 0 },
         { left,   mem_pitch, 0 },

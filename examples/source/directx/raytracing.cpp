@@ -62,10 +62,10 @@ int main()
         }
     });
 
-    window.mouse.right.on_down.push_back([&]
+    window.mouse.left.on_down.push_back([&]
     {
-        const kl::ray ray = { camera.origin, kl::math::inverse(camera.matrix()), window.mouse.get_normalized_position()};
-        ps_data.sun_direction = { ray.direction * -1.0f, 0.0f };
+        const kl::ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.get_normalized_position() };
+        ps_data.sun_direction = { ray.get_direction() * -1.0f, 0.0f };
     });
 
     // Start
@@ -81,7 +81,7 @@ int main()
     gpu.bind_cb_for_pixel_shader(pixel_const_buffer, 0);
 
     camera.origin.y = 5.0f;
-    ps_data.sun_direction = { kl::math::normalize(kl::float3(-1.0f, -1.0f, 0.0f)), 0.0f };
+    ps_data.sun_direction = { kl::normalize(kl::float3(-1.0f, -1.0f, 0.0f)), 0.0f };
 
     window.keyboard.r.on_press.back()();
 
@@ -98,11 +98,11 @@ int main()
 
         { // Input
             static bool camera_rotating = false;
-            if (window.mouse.left) {
+            if (window.mouse.right) {
                 const kl::int2 frame_center = window.get_frame_center();
 
                 if (camera_rotating) {
-                    camera.rotate(kl::float2(window.mouse.origin()), kl::float2(frame_center));
+                    camera.rotate(window.mouse.position(), frame_center);
                 }
                 window.mouse.set_position(frame_center);
 
@@ -112,6 +112,13 @@ int main()
             else if (camera_rotating) {
                 window.mouse.set_hidden(false);
                 camera_rotating = false;
+            }
+
+            if (window.keyboard.shift) {
+                camera.speed = 5.0f;
+            }
+            else {
+                camera.speed = 2.0f;
             }
 
             if (window.keyboard.w) {
@@ -137,8 +144,8 @@ int main()
         // Render
         gpu.clear_internal();
 
-        ps_data.frame_size = { kl::float2(window.size()), {} };
-        ps_data.inverse_camera = kl::math::inverse(camera.matrix());
+        ps_data.frame_size = { window.size(), {} };
+        ps_data.inverse_camera = kl::inverse(camera.matrix());
         ps_data.camera_position = { camera.origin, 0.0f };
         gpu.set_cb_data(pixel_const_buffer, ps_data);
 

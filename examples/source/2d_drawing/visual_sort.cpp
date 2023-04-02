@@ -20,7 +20,7 @@ static std::vector<stick> generate_sticks(const int count, const int min_value_i
     }
 
     for (auto& [value, color] : sticks) {
-        const byte gray_value = (byte) (kl::math::normalize((float) value, (float) stored_min_value, (float) stored_max_value) * 255.0f);
+        const byte gray_value = (byte) (kl::normalize((float) value, (float) stored_min_value, (float) stored_max_value) * 255.0f);
         color = { gray_value, gray_value, gray_value };
     }
 

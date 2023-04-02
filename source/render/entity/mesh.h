@@ -27,7 +27,7 @@ namespace kl {
         mesh(dx::buffer graphics_buffer);
         mesh(gpu& gpu, const mesh_data& vertices);
         mesh(gpu& gpu, scene& scene, const mesh_data& vertices);
-        virtual ~mesh();
+        ~mesh();
     };
 
 #else

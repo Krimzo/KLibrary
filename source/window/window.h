@@ -43,7 +43,7 @@ namespace kl {
 
         // Creation
         window(const int2& size, const std::string& name);
-        virtual ~window();
+        ~window();
 
         window(const window&) = delete;
         window(const window&&) = delete;

@@ -39,8 +39,8 @@ int main()
         std::vector<kl::int2> circle_points(n);
         for (int i = 0; i < int(circle_points.size()); i++) {
             circle_points[i] = {
-                (int) (cos((point_angle * i + 180.0f) * kl::math::to_radians) * circle_radius + frame.width() * 0.5f),
-                (int) (sin((point_angle * i + 180.0f) * kl::math::to_radians) * circle_radius + frame.height() * 0.5f),
+                (int) (kl::cos_deg(point_angle * i + 180.0f) * circle_radius + frame.width() * 0.5f),
+                (int) (kl::sin_deg(point_angle * i + 180.0f) * circle_radius + frame.height() * 0.5f),
             };
         }
 

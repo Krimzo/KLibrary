@@ -8,12 +8,12 @@ void kl::camera::update_aspect_ratio(const int2& size)
 
 void kl::camera::set_forward(const float3& dir)
 {
-    forward_ = math::normalize(dir);
+    forward_ = normalize(dir);
 }
 
 void kl::camera::set_up(const float3& dir)
 {
-    up_ = math::normalize(dir);
+    up_ = normalize(dir);
 }
 
 kl::float3 kl::camera::get_forward() const
@@ -23,7 +23,7 @@ kl::float3 kl::camera::get_forward() const
 
 kl::float3 kl::camera::get_right() const
 {
-    return math::cross(up_, forward_);
+    return cross(up_, forward_);
 }
 
 kl::float3 kl::camera::get_up() const
@@ -64,13 +64,13 @@ void kl::camera::move_down(const float delta_time)
 void kl::camera::rotate(const float2& mouse_pos, const float2& frame_center, const float vertical_angle_limit)
 {
     const float2 rotation = (mouse_pos - frame_center) * sensitivity;
-    const float3 forward_vert = math::rotate(forward_, get_right(), rotation.y);
+    const float3 forward_vert = kl::rotate(forward_, get_right(), rotation.y);
 
-    if (abs(math::angle(forward_vert, up_) - 90.0f) <= vertical_angle_limit) {
+    if (::abs(angle(forward_vert, up_) - 90.0f) <= vertical_angle_limit) {
         set_forward(forward_vert);
     }
 
-    set_forward(math::rotate(forward_, up_, rotation.x));
+    set_forward(kl::rotate(forward_, up_, rotation.x));
 }
 
 kl::float4x4 kl::camera::view_matrix() const

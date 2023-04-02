@@ -1,7 +1,5 @@
 #include "klib.h"
 
-#include <execution>
-
 
 static std::vector<float> data(100'000'000);
 
@@ -48,6 +46,8 @@ static void async_test()
 		data[i] = compute_function(i);
 	});
 }
+
+/* NOTE: Use Release mode to see the real results. */
 
 int main()
 {

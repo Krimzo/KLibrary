@@ -104,7 +104,7 @@ int main()
             destroy_value -= timer.get_interval() * 0.25f;
         }
 
-        sun_direction = kl::math::normalize(sun_direction);
+        sun_direction = kl::normalize(sun_direction);
 
         gpu.clear_internal(kl::colors::gray);
 

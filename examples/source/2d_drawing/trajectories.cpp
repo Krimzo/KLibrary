@@ -30,7 +30,7 @@ static void draw_objects(kl::image& frame, std::vector<scene_object>& objects)
         int start_position_index = int(position_history.size() * 0.75f);
         for (int i = start_position_index; i < int(position_history.size()) - 1; i++) {
             frame.draw_line(kl::int2(position_history[i]), kl::int2(position_history[i + 1]),
-                kl::color(60, 60, 60).mix(color, kl::math::normalize(i, start_position_index, position_history.size())));
+                kl::color(60, 60, 60).mix(color, kl::normalize(i, start_position_index, position_history.size())));
         }
         frame.draw_circle(kl::int2(position), radius, color, true);
         frame.draw_circle(kl::int2(position), radius, { 30, 30, 30 });
@@ -56,15 +56,15 @@ static void process_objects(std::vector<scene_object>& objects, const kl::timer&
         position += velocity * timer.get_interval();
     }
 
-    for (int i = 0; i < int(objects.size()); i++) {
+    for (int i = 0; i < (int) objects.size(); i++) {
         int intersect_count = 0;
         kl::float2 velocity_sum, position_sum;
         for (int j = 0; j < int(objects.size()); j++) {
             if (i != j) {
-                kl::float2 positions_vector = objects[i] - objects[j].position;
+                kl::float2 positions_vector = objects[i].position - objects[j].position;
                 if (float radius_sum = objects[i].radius + objects[j].radius; positions_vector.length() < radius_sum) {
-                    position_sum += objects[j].position + kl::math::normalize(positions_vector) * radius_sum;
-                    velocity_sum += kl::math::reflect(objects[i].velocity, objects[j].position - objects[i].position);
+                    position_sum += objects[j].position + kl::normalize(positions_vector) * radius_sum;
+                    velocity_sum += kl::reflect(objects[i].velocity, objects[j].position - objects[i].position);
                     intersect_count += 1;
                 }
             }

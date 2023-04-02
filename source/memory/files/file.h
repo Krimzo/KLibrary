@@ -32,20 +32,15 @@ namespace kl {
         void operator=(const file&) = delete;
         void operator=(const file&&) = delete;
 
-        explicit operator bool() const;
-
-        bool is_open() const;
+        operator bool() const;
 
         bool open(const std::string& filepath, bool clear = true);
-
         void close();
 
         bool seek(int position) const;
-
         bool move(int delta) const;
 
         bool rewind() const;
-
         bool unwind() const;
 
         int tell() const;

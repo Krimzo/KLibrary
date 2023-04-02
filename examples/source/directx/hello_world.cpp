@@ -22,7 +22,7 @@ int main()
     kl::gpu gpu = { (HWND) window };
 
     // Window resize setup
-    window.on_resize.push_back([&](const kl::int2& new_size)
+    window.on_resize.push_back([&](kl::int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
