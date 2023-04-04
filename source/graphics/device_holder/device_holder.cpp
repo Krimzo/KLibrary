@@ -379,12 +379,3 @@ kl::dx::compute_shader kl::device_holder::create_compute_shader(const compiled_s
     warning_check(!shader, "Failed to create compute shader");
     return shader;
 }
-
-kl::render_shaders kl::device_holder::create_render_shaders(const compiled_shader& compiled_vertex_shader, const compiled_shader& compiled_pixel_shader) const
-{
-    render_shaders shaders = {};
-    shaders.input_layout = create_input_layout(compiled_vertex_shader);
-    shaders.vertex_shader = create_vertex_shader(compiled_vertex_shader);
-    shaders.pixel_shader = create_pixel_shader(compiled_pixel_shader);
-    return shaders;
-}

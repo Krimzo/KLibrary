@@ -1,7 +1,6 @@
 #pragma once
 
 #include "graphics/shaders/compiled_shader.h"
-#include "graphics/shaders/render_shaders.h"
 #include "media/media.h"
 
 
@@ -67,7 +66,5 @@ namespace kl {
         dx::geometry_shader create_geometry_shader(const compiled_shader& compiled_shader) const;
         dx::pixel_shader create_pixel_shader(const compiled_shader& compiled_shader) const;
         dx::compute_shader create_compute_shader(const compiled_shader& compiled_shader) const;
-
-        render_shaders create_render_shaders(const compiled_shader& compiled_vertex_shader, const compiled_shader& compiled_pixel_shader) const;
     };
 }
