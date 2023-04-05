@@ -325,8 +325,8 @@ void kl::context_holder::unbind_compute_shader() const
 void kl::context_holder::bind_render_shaders(const render_shaders& shaders) const
 {
     bind_input_layout(shaders.input_layout);
-    bind_vertex_shader(shaders.vertex_shader.shader);
-    bind_pixel_shader(shaders.pixel_shader.shader);
+    bind_vertex_shader(shaders.vertex_shader);
+    bind_pixel_shader(shaders.pixel_shader);
 }
 
 void kl::context_holder::unbind_render_shaders() const

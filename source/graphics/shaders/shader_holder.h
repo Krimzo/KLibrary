@@ -8,29 +8,25 @@ namespace kl {
 }
 
 namespace kl {
-    template<typename T>
+    template<typename S>
     struct shader_holder
     {
         gpu* gpu = nullptr;
-        T shader = nullptr;
+        S shader = nullptr;
         dx::buffer cbuffer = nullptr;
 
         // Construct
         shader_holder(kl::gpu* gpu);
-        shader_holder(kl::gpu* gpu, const T& shader);
+        shader_holder(kl::gpu* gpu, const S& shader);
         ~shader_holder();
 
         // Get
-        operator T() const;
+        operator S() const;
         operator bool() const;
 
-        // Update
-        template<typename O>
-        void update_cbuffer(const O& object)
-        {
-            update_cbuffer(&object, sizeof(O));
-        }
-     
+        // CBuffer
+        template<typename T>
+        void update_cbuffer(const T& object) { update_cbuffer(&object, sizeof(T)); }
         void update_cbuffer(const void* data, UINT byte_size);
     };
 }

@@ -135,7 +135,6 @@ kl::dx::buffer kl::device_holder::create_staging_buffer(dx::buffer buffer, const
     return create_buffer(&descriptor, nullptr);
 }
 
-// Const buffers
 kl::dx::buffer kl::device_holder::create_const_buffer(const UINT byte_size) const
 {
     if (warning_check(byte_size % 16, "Constant buffer size has to be a multiple of 16")) {

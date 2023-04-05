@@ -37,8 +37,6 @@ namespace kl {
         dx::buffer create_buffer(const dx::buffer_descriptor* descriptor, const dx::subresource_descriptor* subresource_data) const;
         dx::buffer create_structured_buffer(const void* data, UINT element_count, UINT element_size, bool has_unordered_access = false, bool cpu_read = false) const;
         dx::buffer create_staging_buffer(dx::buffer buffer, UINT byte_size) const;
-
-        // Const buffers
         dx::buffer create_const_buffer(UINT byte_size) const;
 
         // Meshes
