@@ -33,6 +33,9 @@ namespace kl {
         dx::sampler_state create_sampler_state(const dx::sampler_state_descriptor* descriptor) const;
         dx::sampler_state create_sampler_state(bool linear, bool mirror) const;
 
+        dx::blend_state create_blend_state(const dx::blend_state_descriptor* descriptor) const;
+        dx::blend_state create_blend_state(bool transparency) const;
+
         // Buffers
         dx::buffer create_buffer(const dx::buffer_descriptor* descriptor, const dx::subresource_descriptor* subresource_data) const;
         dx::buffer create_structured_buffer(const void* data, UINT element_count, UINT element_size, bool has_unordered_access = false, bool cpu_read = false) const;

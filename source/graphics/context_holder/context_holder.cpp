@@ -107,6 +107,16 @@ void kl::context_holder::unbind_sampler_state_for_compute_shader(const UINT slot
     bind_sampler_state_for_compute_shader(nullptr, slot);
 }
 
+void kl::context_holder::bind_blend_state(const dx::blend_state state, const float* factor, const UINT mask) const
+{
+    context_->OMSetBlendState(state.Get(), factor, mask);
+}
+
+void kl::context_holder::unbind_blend_state() const
+{
+    bind_blend_state(nullptr);
+}
+
 // Resources
 void kl::context_holder::copy_resource(dx::resource destination, const dx::resource source) const
 {

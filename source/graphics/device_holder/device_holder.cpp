@@ -20,7 +20,7 @@ kl::dx::raster_state kl::device_holder::create_raster_state(const dx::raster_sta
     return state;
 }
 
-kl::dx::raster_state kl::device_holder::create_raster_state(bool wireframe, bool cull, bool cull_back) const
+kl::dx::raster_state kl::device_holder::create_raster_state(const bool wireframe, const bool cull, const bool cull_back) const
 {
     dx::raster_state_descriptor descriptor = {};
     descriptor.FillMode = wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
@@ -39,7 +39,7 @@ kl::dx::depth_state kl::device_holder::create_depth_state(const dx::depth_state_
     return state;
 }
 
-kl::dx::depth_state kl::device_holder::create_depth_state(bool depth, bool stencil, bool mask) const
+kl::dx::depth_state kl::device_holder::create_depth_state(const bool depth, const bool stencil, const bool mask) const
 {
     dx::depth_state_descriptor descriptor = {};
     if (depth) {
@@ -85,7 +85,7 @@ kl::dx::sampler_state kl::device_holder::create_sampler_state(const dx::sampler_
     return state;
 }
 
-kl::dx::sampler_state kl::device_holder::create_sampler_state(bool linear, bool mirror) const
+kl::dx::sampler_state kl::device_holder::create_sampler_state(const bool linear, const bool mirror) const
 {
     dx::sampler_state_descriptor descriptor = {};
     descriptor.Filter = linear ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -93,6 +93,28 @@ kl::dx::sampler_state kl::device_holder::create_sampler_state(bool linear, bool 
     descriptor.AddressV = descriptor.AddressU;
     descriptor.AddressW = descriptor.AddressU;
     return create_sampler_state(&descriptor);
+}
+
+kl::dx::blend_state kl::device_holder::create_blend_state(const dx::blend_state_descriptor* descriptor) const
+{
+    dx::blend_state state = nullptr;
+    const long result = device_->CreateBlendState(descriptor, &state);
+    warning_check(!state, format("Failed to create blend state. Result: 0x", std::hex, result));
+    return state;
+}
+
+kl::dx::blend_state kl::device_holder::create_blend_state(const bool transparency) const
+{
+    dx::blend_state_descriptor descriptor = {};
+    descriptor.RenderTarget[0].BlendEnable = transparency;
+    descriptor.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    descriptor.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    descriptor.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    descriptor.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+    descriptor.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+    descriptor.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    descriptor.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    return create_blend_state(&descriptor);
 }
 
 // Buffers
@@ -120,7 +142,7 @@ kl::dx::buffer kl::device_holder::create_structured_buffer(const void* data, con
     return create_buffer(&descriptor, &subresource);
 }
 
-kl::dx::buffer kl::device_holder::create_staging_buffer(dx::buffer buffer, const UINT byte_size) const
+kl::dx::buffer kl::device_holder::create_staging_buffer(const dx::buffer buffer, const UINT byte_size) const
 {
     dx::buffer_descriptor descriptor = {};
     buffer->GetDesc(&descriptor);

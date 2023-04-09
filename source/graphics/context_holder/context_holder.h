@@ -44,6 +44,9 @@ namespace kl {
         void bind_sampler_state_for_compute_shader(dx::sampler_state state, UINT slot) const;
         void unbind_sampler_state_for_compute_shader(UINT slot) const;
 
+        void bind_blend_state(dx::blend_state state, const float* factor = nullptr, UINT mask = 0xFFFFFFFF) const;
+        void unbind_blend_state() const;
+
         // Resources
         void copy_resource(dx::resource destination, const dx::resource source) const;
         void read_from_resource(void* cpu_buffer, const dx::resource gpu_buffer, SIZE_T byte_size) const;
