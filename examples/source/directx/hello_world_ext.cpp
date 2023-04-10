@@ -85,7 +85,7 @@ int main()
         shaders.pixel_shader.update_cbuffer(ps_data);
         
         gpu.clear_internal(kl::colors::gray);
-        gpu.draw_mesh(triangle);
+        gpu.draw_vertex_buffer(triangle);
         gpu.swap_buffers(true);
     }
 }

@@ -74,16 +74,17 @@ namespace kl {
             write_to_resource(buffer, &object, sizeof(T));
         }
 
-        // Meshes
-        UINT get_mesh_vertex_count(dx::buffer mesh, UINT stride) const;
+        // Vertex buffers
+        UINT get_vertex_buffer_size(dx::buffer buffer, UINT stride) const;
 
-        void bind_mesh(dx::buffer mesh, UINT slot, UINT offset, UINT stride) const;
-        void unbind_mesh(UINT slot) const;
+        void bind_vertex_buffer(dx::buffer buffer, UINT slot, UINT offset, UINT stride) const;
+        void unbind_vertex_buffer(UINT slot) const;
 
+        // Draw
         void set_draw_type(D3D_PRIMITIVE_TOPOLOGY draw_type) const;
         void draw(UINT vertex_count, UINT start_index) const;
 
-        void draw_mesh(dx::buffer mesh, D3D_PRIMITIVE_TOPOLOGY draw_type = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, UINT stride = sizeof(vertex)) const;
+        void draw_vertex_buffer(dx::buffer buffer, D3D_PRIMITIVE_TOPOLOGY draw_type = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, UINT stride = sizeof(vertex)) const;
 
         // Views
         void clear_target_view(dx::target_view view, const float4& color = {}) const;

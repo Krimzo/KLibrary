@@ -49,7 +49,7 @@ int main()
 
         gpu.unbind_access_view_for_compute_shader(0);
         gpu.bind_shader_view_for_pixel_shader(shader_view, 0);
-        gpu.draw_mesh(screen_mesh);
+        gpu.draw_vertex_buffer(screen_mesh);
 
         gpu.swap_buffers(true);
     }

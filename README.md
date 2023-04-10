@@ -28,7 +28,7 @@ int main()
     kl::gpu gpu = { (HWND) window };
 
     // Window resize setup
-    window.on_resize.push_back([&](const kl::int2& new_size)
+    window.on_resize.push_back([&](kl::int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
@@ -46,7 +46,7 @@ int main()
     });
 
     // Mesh setup
-    auto triangle = gpu.create_mesh({
+    auto triangle = gpu.create_vertex_buffer({
         { {  0.0f,  0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
@@ -59,11 +59,10 @@ int main()
     // CDS (Clear-Draw-Swap)
     while (window.process(false)) {
         gpu.clear_internal(kl::colors::gray);
-        gpu.draw_mesh(triangle);
+        gpu.draw_vertex_buffer(triangle);
         gpu.swap_buffers(true);
     }
 }
-
 ```
 
 ## Win32 Examples

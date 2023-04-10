@@ -126,7 +126,7 @@ int main()
         default_shaders.pixel_shader.update_cbuffer(ps_data);
 
         if (main_entity->mesh) {
-            gpu.draw_mesh(main_entity->mesh->graphics_buffer);
+            gpu.draw_vertex_buffer(main_entity->mesh->graphics_buffer);
         }
 
         gpu.swap_buffers(true);

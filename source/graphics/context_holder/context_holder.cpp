@@ -196,22 +196,23 @@ void kl::context_holder::unbind_cb_for_compute_shader(const UINT slot) const
     bind_cb_for_compute_shader(nullptr, slot);
 }
 
-// Meshes
-UINT kl::context_holder::get_mesh_vertex_count(dx::buffer mesh, const UINT stride) const
+// Vertex buffers
+UINT kl::context_holder::get_vertex_buffer_size(dx::buffer buffer, const UINT stride) const
 {
-    return (get_buffer_size(mesh) / stride);
+    return (get_buffer_size(buffer) / stride);
 }
 
-void kl::context_holder::bind_mesh(const dx::buffer mesh, const UINT slot, const UINT offset, const UINT stride) const
+void kl::context_holder::bind_vertex_buffer(const dx::buffer buffer, const UINT slot, const UINT offset, const UINT stride) const
 {
-    context_->IASetVertexBuffers(slot, 1, mesh.GetAddressOf(), &stride, &offset);
+    context_->IASetVertexBuffers(slot, 1, buffer.GetAddressOf(), &stride, &offset);
 }
 
-void kl::context_holder::unbind_mesh(const UINT slot) const
+void kl::context_holder::unbind_vertex_buffer(const UINT slot) const
 {
-    bind_mesh(nullptr, slot, 0, 0);
+    bind_vertex_buffer(nullptr, slot, 0, 0);
 }
 
+// Draw
 void kl::context_holder::set_draw_type(const D3D_PRIMITIVE_TOPOLOGY draw_type) const
 {
     context_->IASetPrimitiveTopology(draw_type);
@@ -222,11 +223,11 @@ void kl::context_holder::draw(const UINT vertex_count, const UINT start_index) c
     context_->Draw(vertex_count, start_index);
 }
 
-void kl::context_holder::draw_mesh(const dx::buffer mesh, const D3D_PRIMITIVE_TOPOLOGY draw_type, const UINT stride) const
+void kl::context_holder::draw_vertex_buffer(const dx::buffer buffer, const D3D_PRIMITIVE_TOPOLOGY draw_type, const UINT stride) const
 {
     set_draw_type(draw_type);
-    bind_mesh(mesh, 0, 0, stride);
-    draw(get_mesh_vertex_count(mesh, stride), 0);
+    bind_vertex_buffer(buffer, 0, 0, stride);
+    draw(get_vertex_buffer_size(buffer, stride), 0);
 }
 
 // Views

@@ -71,7 +71,7 @@ int main()
         sky_pscb.sun_direction = { kl::normalize(sun_direction), 0.0f };
         sky_shaders.pixel_shader.update_cbuffer(sky_pscb);
 
-        gpu.draw_mesh(screen_mesh);
+        gpu.draw_vertex_buffer(screen_mesh);
 
         // Plane
         gpu.bind_depth_state(default_depth_state);
@@ -90,7 +90,7 @@ int main()
         plane_pscb.sun_direction = { kl::normalize(sun_direction), 0 };
         plane_shaders.pixel_shader.update_cbuffer(plane_pscb);
 
-        gpu.draw_mesh(plane_mesh);
+        gpu.draw_vertex_buffer(plane_mesh);
 
         gpu.swap_buffers(true);
     }

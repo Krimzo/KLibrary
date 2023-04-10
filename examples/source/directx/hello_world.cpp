@@ -53,7 +53,7 @@ int main()
     // CDS (Clear-Draw-Swap)
     while (window.process(false)) {
         gpu.clear_internal(kl::colors::gray);
-        gpu.draw_mesh(triangle);
+        gpu.draw_vertex_buffer(triangle);
         gpu.swap_buffers(true);
     }
 }
