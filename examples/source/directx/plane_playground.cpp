@@ -48,10 +48,6 @@ int main()
     auto screen_mesh = gpu.create_screen_mesh();
     auto plane_mesh = gpu.create_plane_mesh(10.0f, 1000);
 
-    auto sky_ps_const_buffer = gpu.create_const_buffer(sizeof(sky_ps_cb));
-    auto plane_vs_const_buffer = gpu.create_const_buffer(sizeof(plane_vs_cb));
-    auto plane_ps_const_buffer = gpu.create_const_buffer(sizeof(plane_ps_cb));
-
     camera.origin = { -3.5f, 1.5f, -2.5f };
     camera.set_forward(camera.origin * -1.0f);
 
@@ -73,9 +69,7 @@ int main()
         sky_pscb.camera_position = { camera.origin, 0.0f };
         sky_pscb.inverse_camera = kl::inverse(camera.matrix());
         sky_pscb.sun_direction = { kl::normalize(sun_direction), 0.0f };
-
-        gpu.bind_cb_for_pixel_shader(sky_ps_const_buffer, 0);
-        gpu.set_cb_data(sky_ps_const_buffer, sky_pscb);
+        sky_shaders.pixel_shader.update_cbuffer(sky_pscb);
 
         gpu.draw_mesh(screen_mesh);
 
@@ -90,15 +84,11 @@ int main()
         plane_vscb.vp_matrix = camera.matrix();
         plane_vscb.time_data.x = timer.get_elapsed();
         plane_vscb.time_data.y = timer.get_interval();
-        
-        gpu.bind_cb_for_vertex_shader(plane_vs_const_buffer, 0);
-        gpu.set_cb_data(plane_vs_const_buffer, plane_vscb);
+        plane_shaders.vertex_shader.update_cbuffer(plane_vscb);
 
         plane_ps_cb plane_pscb = {};
         plane_pscb.sun_direction = { kl::normalize(sun_direction), 0 };
-        
-        gpu.bind_cb_for_pixel_shader(plane_ps_const_buffer, 0);
-        gpu.set_cb_data(plane_ps_const_buffer, plane_pscb);
+        plane_shaders.pixel_shader.update_cbuffer(plane_pscb);
 
         gpu.draw_mesh(plane_mesh);
 

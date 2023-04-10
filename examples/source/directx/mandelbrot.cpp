@@ -122,9 +122,6 @@ int main()
     auto shaders = gpu.create_render_shaders(shader_sources);
     gpu.bind_render_shaders(shaders);
 
-    auto const_buffer = gpu.create_const_buffer(sizeof(ps_cb));
-    gpu.bind_cb_for_pixel_shader(const_buffer, 0);
-
     auto screen_mesh = gpu.create_screen_mesh();
 
     // Console
@@ -144,7 +141,7 @@ int main()
         ps_data.state_info = { position, zoom, (float) iterations };
         ps_data.frame_size = { window.size(), 0.0f, 0.0f };
         ps_data.start_color = start_color;
-        gpu.set_cb_data(const_buffer, ps_data);
+        shaders.pixel_shader.update_cbuffer(ps_data);
 
         gpu.draw_mesh(screen_mesh);
 

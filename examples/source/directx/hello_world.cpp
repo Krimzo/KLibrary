@@ -40,7 +40,7 @@ int main()
     });
 
     // Mesh setup
-    auto triangle = gpu.create_mesh({
+    auto triangle = gpu.create_vertex_buffer({
         { {  0.0f,  0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },

@@ -31,9 +31,6 @@ int main()
 
     auto screen_mesh = gpu.create_screen_mesh();
 
-    auto cs_const_buffer = gpu.create_const_buffer(sizeof(cs_cb));
-    gpu.bind_cb_for_compute_shader(cs_const_buffer, 0);
-
     while (window.process(false)) {
         timer.update_interval();
 
@@ -44,15 +41,11 @@ int main()
         cs_cb cs_data = {};
         cs_data.misc_data.x = (float) window.mouse.position().x;
         cs_data.misc_data.y = (float) window.mouse.position().y;
-        gpu.set_cb_data(cs_const_buffer, cs_data);
+        compute_shader.update_cbuffer(cs_data);
 
         gpu.unbind_shader_view_for_pixel_shader(0);
         gpu.bind_access_view_for_compute_shader(access_view, 0);
-        gpu.dispatch_compute_shader(
-            (window.width() / 32) + ((window.width() % 32) ? 1 : 0),
-            (window.height() / 32) + ((window.height() % 32) ? 1 : 0),
-            1
-        );
+        gpu.dispatch_compute_shader((window.width() / 32) + 1, (window.height() / 32) + 1, 1);
 
         gpu.unbind_access_view_for_compute_shader(0);
         gpu.bind_shader_view_for_pixel_shader(shader_view, 0);

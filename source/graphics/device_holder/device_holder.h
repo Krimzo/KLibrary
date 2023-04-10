@@ -5,8 +5,6 @@
 
 
 namespace kl {
-    using mesh_data = std::vector<vertex>;
-
     class device_holder
     {
     protected:
@@ -38,13 +36,16 @@ namespace kl {
 
         // Buffers
         dx::buffer create_buffer(const dx::buffer_descriptor* descriptor, const dx::subresource_descriptor* subresource_data) const;
+        
+        dx::buffer create_vertex_buffer(const void* data, UINT byte_size) const;
+        dx::buffer create_vertex_buffer(const std::vector<vertex>& vertices) const;
+        dx::buffer create_vertex_buffer(const std::string& filepath) const;
+
+        dx::buffer create_const_buffer(UINT byte_size) const;
         dx::buffer create_structured_buffer(const void* data, UINT element_count, UINT element_size, bool has_unordered_access = false, bool cpu_read = false) const;
         dx::buffer create_staging_buffer(dx::buffer buffer, UINT byte_size) const;
-        dx::buffer create_const_buffer(UINT byte_size) const;
 
         // Meshes
-        dx::buffer create_mesh(const mesh_data& vertices) const;
-        dx::buffer create_mesh(const std::string& filepath, bool flip_z) const;
         dx::buffer create_plane_mesh(float size, size_t num_of_points) const;
         dx::buffer create_screen_mesh() const;
 

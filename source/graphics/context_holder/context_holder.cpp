@@ -127,7 +127,9 @@ void kl::context_holder::read_from_resource(void* cpu_buffer, const dx::resource
 {
     dx::mapped_subresource_descriptor mapped_subresource = {};
     context_->Map(gpu_buffer.Get(), 0, D3D11_MAP_READ, NULL, &mapped_subresource);
-    memcpy(cpu_buffer, mapped_subresource.pData, byte_size);
+    if (cpu_buffer && mapped_subresource.pData) {
+        memcpy(cpu_buffer, mapped_subresource.pData, byte_size);
+    }
     context_->Unmap(gpu_buffer.Get(), NULL);
 }
 
@@ -135,7 +137,9 @@ void kl::context_holder::write_to_resource(dx::resource gpu_buffer, const void* 
 {
     dx::mapped_subresource_descriptor mapped_subresource = {};
     context_->Map(gpu_buffer.Get(), 0, discard ? D3D11_MAP_WRITE_DISCARD : D3D11_MAP_WRITE, NULL, &mapped_subresource);
-    memcpy(mapped_subresource.pData, cpu_buffer, byte_size);
+    if (mapped_subresource.pData && cpu_buffer) {
+        memcpy(mapped_subresource.pData, cpu_buffer, byte_size);
+    }
     context_->Unmap(gpu_buffer.Get(), NULL);
 }
 

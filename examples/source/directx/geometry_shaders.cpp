@@ -25,6 +25,7 @@ int main()
 
     kl::float3 sun_direction = { 1.0f, -1.0f, 0.0f };
 
+    // Window
     window.on_resize.push_back([&](const kl::int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
@@ -46,27 +47,32 @@ int main()
     });
     window.keyboard.v.on_press.back()();
 
+    // Shaders
     std::string shader_sources = kl::files::read_string("examples/shaders/geometry_test.hlsl");
     auto default_shaders = gpu.create_render_shaders(shader_sources);
     auto geometry_shader = gpu.create_geometry_shader(shader_sources);
     gpu.bind_render_shaders(default_shaders);
     gpu.bind_geometry_shader(geometry_shader);
 
-    auto vs_cbuffer = gpu.create_const_buffer(sizeof(vs_cb));
-    auto ps_cbuffer = gpu.create_const_buffer(sizeof(ps_cb));
+    // Mesh
+    auto cube_mesh = kl::make<kl::mesh>(&gpu);
+    auto sphere_mesh = kl::make<kl::mesh>(&gpu);
+    auto monke_mesh = kl::make<kl::mesh>(&gpu);
+    cube_mesh->graphics_buffer = gpu.create_vertex_buffer("examples/meshes/cube.obj");
+    sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("examples/meshes/sphere.obj");
+    monke_mesh->graphics_buffer =gpu.create_vertex_buffer("examples/meshes/monke.obj");
 
-    gpu.bind_cb_for_vertex_shader(vs_cbuffer, 0);
-    gpu.bind_cb_for_pixel_shader(ps_cbuffer, 0);
+    // Material
+    auto default_material = kl::make<kl::material>();
+    default_material->color = kl::colors::orange;
 
-    auto cube_mesh = gpu.create_mesh("examples/meshes/cube.obj", true);
-    auto sphere_mesh = gpu.create_mesh("examples/meshes/sphere.obj", true);
-    auto monke_mesh = gpu.create_mesh("examples/meshes/monke.obj", true);
-
+    // Entity
     kl::ref<kl::entity> main_entity = kl::make<kl::entity>();
     main_entity->angular.y = -36.0f;
     main_entity->mesh = monke_mesh;
-    main_entity->material->color = kl::colors::orange;
+    main_entity->material = default_material;
 
+    // Input
     window.keyboard.num1.on_press.push_back([&]
     {
         main_entity->mesh = cube_mesh;
@@ -112,15 +118,15 @@ int main()
         vs_data.vp_matrix = camera.matrix();
         vs_data.w_matrix = main_entity->matrix();
         vs_data.misc_data.x = max(destroy_value, 0.0f);
-        gpu.set_cb_data(vs_cbuffer, vs_data);
+        default_shaders.vertex_shader.update_cbuffer(vs_data);
 
         ps_cb ps_data = {};
         ps_data.sun_direction = { sun_direction.x, sun_direction.y, sun_direction.z, 0.0f };
         ps_data.object_color = main_entity->material->color;
-        gpu.set_cb_data(ps_cbuffer, ps_data);
+        default_shaders.pixel_shader.update_cbuffer(ps_data);
 
         if (main_entity->mesh) {
-            gpu.draw_mesh(main_entity->mesh);
+            gpu.draw_mesh(main_entity->mesh->graphics_buffer);
         }
 
         gpu.swap_buffers(true);

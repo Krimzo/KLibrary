@@ -72,13 +72,10 @@ int main()
     window.maximize();
 
     const std::string shader_sources = kl::files::read_string("examples/shaders/raytracing.hlsl");
-    const auto shaders = gpu.create_render_shaders(shader_sources);
+    auto shaders = gpu.create_render_shaders(shader_sources);
     gpu.bind_render_shaders(shaders);
 
     const auto screen_mesh = gpu.create_screen_mesh();
-
-    auto pixel_const_buffer = gpu.create_const_buffer(sizeof(ps_cb));
-    gpu.bind_cb_for_pixel_shader(pixel_const_buffer, 0);
 
     camera.origin.y = 5.0f;
     ps_data.sun_direction = { kl::normalize(kl::float3(-1.0f, -1.0f, 0.0f)), 0.0f };
@@ -147,12 +144,10 @@ int main()
         ps_data.frame_size = { window.size(), {} };
         ps_data.inverse_camera = kl::inverse(camera.matrix());
         ps_data.camera_position = { camera.origin, 0.0f };
-        gpu.set_cb_data(pixel_const_buffer, ps_data);
+        shaders.pixel_shader.update_cbuffer(ps_data);
 
         gpu.draw_mesh(screen_mesh);
 
         gpu.swap_buffers(true);
-
-        window.set_title(kl::format(int(1.0f / timer.get_interval())));
     }
 }

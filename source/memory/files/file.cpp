@@ -89,7 +89,8 @@ std::vector<kl::vertex> kl::files::parse_mesh(const std::string& filepath, const
     const float z_flip = (flip_z ? -1.0f : 1.0f);
 
     for (std::string line; std::getline(stream, line);) {
-        if (const std::vector<std::string> parts = strings::split(line, ' '); parts[0] == "v") {
+        const std::vector<std::string> parts = strings::split(line, ' ');
+        if (parts[0] == "v") {
             xyz_data.emplace_back(std::stof(parts[1]), std::stof(parts[2]), std::stof(parts[3]) * z_flip);
         }
         else if (parts[0] == "vt") {

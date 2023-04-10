@@ -126,6 +126,44 @@ kl::dx::buffer kl::device_holder::create_buffer(const dx::buffer_descriptor* des
     return buffer;
 }
 
+kl::dx::buffer kl::device_holder::create_vertex_buffer(const void* data, const UINT byte_size) const
+{
+    dx::buffer_descriptor descriptor = {};
+    descriptor.ByteWidth = byte_size;
+    descriptor.Usage = D3D11_USAGE_IMMUTABLE;
+    descriptor.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+    dx::subresource_descriptor subresource_data = {};
+    subresource_data.pSysMem = data;
+
+    return create_buffer(&descriptor, &subresource_data);
+}
+
+kl::dx::buffer kl::device_holder::create_vertex_buffer(const std::vector<vertex>& vertices) const
+{
+    return create_vertex_buffer(vertices.data(), (UINT) (vertices.size() * sizeof(vertex)));
+}
+
+kl::dx::buffer kl::device_holder::create_vertex_buffer(const std::string& filepath) const
+{
+    return create_vertex_buffer(files::parse_mesh(filepath, true));
+}
+
+kl::dx::buffer kl::device_holder::create_const_buffer(const UINT byte_size) const
+{
+    if (warning_check(byte_size % 16, "Constant buffer size has to be a multiple of 16")) {
+        return nullptr;
+    }
+
+    dx::buffer_descriptor descriptor = {};
+    descriptor.ByteWidth = byte_size;
+    descriptor.Usage = D3D11_USAGE_DYNAMIC;
+    descriptor.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    descriptor.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+    return create_buffer(&descriptor, nullptr);
+}
+
 kl::dx::buffer kl::device_holder::create_structured_buffer(const void* data, const UINT element_count, const UINT element_size, const bool has_unordered_access, const bool cpu_read) const
 {
     dx::buffer_descriptor descriptor = {};
@@ -147,50 +185,14 @@ kl::dx::buffer kl::device_holder::create_staging_buffer(const dx::buffer buffer,
     dx::buffer_descriptor descriptor = {};
     buffer->GetDesc(&descriptor);
 
-    dx::buffer_descriptor staging_descriptor = {};
-    staging_descriptor.Usage = D3D11_USAGE_STAGING;
-    staging_descriptor.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-    staging_descriptor.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-    staging_descriptor.StructureByteStride = descriptor.StructureByteStride;
-    staging_descriptor.ByteWidth = byte_size ? byte_size : descriptor.ByteWidth;
-
-    return create_buffer(&descriptor, nullptr);
-}
-
-kl::dx::buffer kl::device_holder::create_const_buffer(const UINT byte_size) const
-{
-    if (warning_check(byte_size % 16, "Constant buffer size has to be a multiple of 16")) {
-        return nullptr;
-    }
-
-    dx::buffer_descriptor descriptor = {};
-    descriptor.ByteWidth = byte_size;
-    descriptor.Usage = D3D11_USAGE_DYNAMIC;
-    descriptor.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    descriptor.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    descriptor.Usage = D3D11_USAGE_STAGING;
+    descriptor.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    descriptor.ByteWidth = byte_size ? byte_size : descriptor.ByteWidth;
 
     return create_buffer(&descriptor, nullptr);
 }
 
 // Meshes
-kl::dx::buffer kl::device_holder::create_mesh(const mesh_data& vertices) const
-{
-    dx::buffer_descriptor descriptor = {};
-    descriptor.ByteWidth = (UINT) (vertices.size() * sizeof(vertex));
-    descriptor.Usage = D3D11_USAGE_DEFAULT;
-    descriptor.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-    dx::subresource_descriptor subresource_data = {};
-    subresource_data.pSysMem = vertices.data();
-
-    return create_buffer(&descriptor, &subresource_data);
-}
-
-kl::dx::buffer kl::device_holder::create_mesh(const std::string& filepath, bool flip_z) const
-{
-    return create_mesh(files::parse_mesh(filepath, flip_z));
-}
-
 kl::dx::buffer kl::device_holder::create_plane_mesh(float size, size_t num_of_points) const
 {
     // Count fix
@@ -227,14 +229,14 @@ kl::dx::buffer kl::device_holder::create_plane_mesh(float size, size_t num_of_po
         }
     }
 
-    return create_mesh(vertices);
+    return create_vertex_buffer(vertices);
 }
 
 kl::dx::buffer kl::device_holder::create_screen_mesh() const
 {
-    return create_mesh({
-        vertex({ -1.0f, -1.0f, 0.5f }), vertex({ -1.0f,  1.0f, 0.5f }), vertex({  1.0f,  1.0f, 0.5f }),
-        vertex({  1.0f,  1.0f, 0.5f }), vertex({  1.0f, -1.0f, 0.5f }), vertex({ -1.0f, -1.0f, 0.5f }),
+    return create_vertex_buffer({
+        vertex({ -1.0f, -1.0f, 0.5f }, { 0.0f, 0.0f }), vertex({ -1.0f,  1.0f, 0.5f }, { 0.0f, 1.0f }), vertex({  1.0f,  1.0f, 0.5f }, { 1.0f, 1.0f }),
+        vertex({  1.0f,  1.0f, 0.5f }, { 1.0f, 1.0f }), vertex({  1.0f, -1.0f, 0.5f }, { 1.0f, 0.0f }), vertex({ -1.0f, -1.0f, 0.5f }, { 0.0f, 0.0f }),
     });
 }
 
