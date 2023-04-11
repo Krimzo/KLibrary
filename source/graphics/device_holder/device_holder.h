@@ -41,6 +41,9 @@ namespace kl {
         dx::buffer create_vertex_buffer(const std::vector<vertex>& vertices) const;
         dx::buffer create_vertex_buffer(const std::string& filepath) const;
 
+        dx::buffer create_index_buffer(const uint32_t* data, UINT element_count) const;
+        dx::buffer create_index_buffer(const std::vector<uint32_t>& indices) const;
+
         dx::buffer create_const_buffer(UINT byte_size) const;
         dx::buffer create_structured_buffer(const void* data, UINT element_count, UINT element_size, bool has_unordered_access = false, bool cpu_read = false) const;
         dx::buffer create_staging_buffer(dx::buffer buffer, UINT byte_size) const;

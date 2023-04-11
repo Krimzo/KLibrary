@@ -197,7 +197,7 @@ void kl::context_holder::unbind_cb_for_compute_shader(const UINT slot) const
 }
 
 // Vertex buffers
-UINT kl::context_holder::get_vertex_buffer_size(dx::buffer buffer, const UINT stride) const
+UINT kl::context_holder::get_vertex_buffer_size(const dx::buffer buffer, const UINT stride) const
 {
     return (get_buffer_size(buffer) / stride);
 }
@@ -212,6 +212,22 @@ void kl::context_holder::unbind_vertex_buffer(const UINT slot) const
     bind_vertex_buffer(nullptr, slot, 0, 0);
 }
 
+// Index buffers
+UINT kl::context_holder::get_index_buffer_size(const dx::buffer buffer) const
+{
+    return (get_buffer_size(buffer) / sizeof(uint32_t));
+}
+
+void kl::context_holder::bind_index_buffer(const dx::buffer buffer, const UINT offset) const
+{
+    context_->IASetIndexBuffer(buffer.Get(), DXGI_FORMAT_R32_UINT, offset);
+}
+
+void kl::context_holder::unbind_index_buffer(UINT slot) const
+{
+    bind_index_buffer(nullptr, 0);
+}
+
 // Draw
 void kl::context_holder::set_draw_type(const D3D_PRIMITIVE_TOPOLOGY draw_type) const
 {
@@ -223,11 +239,28 @@ void kl::context_holder::draw(const UINT vertex_count, const UINT start_index) c
     context_->Draw(vertex_count, start_index);
 }
 
-void kl::context_holder::draw_vertex_buffer(const dx::buffer buffer, const D3D_PRIMITIVE_TOPOLOGY draw_type, const UINT stride) const
+void kl::context_holder::draw(const dx::buffer vertex_buffer, const D3D_PRIMITIVE_TOPOLOGY draw_type, const UINT stride) const
 {
     set_draw_type(draw_type);
-    bind_vertex_buffer(buffer, 0, 0, stride);
-    draw(get_vertex_buffer_size(buffer, stride), 0);
+    bind_vertex_buffer(vertex_buffer, 0, 0, stride);
+
+    const UINT vertex_count = get_vertex_buffer_size(vertex_buffer, stride);
+    draw(vertex_count, 0);
+}
+
+void kl::context_holder::draw_indexed(const UINT index_count, const UINT start_index, const INT base_vertex) const
+{
+    context_->DrawIndexed(index_count, start_index, base_vertex);
+}
+
+void kl::context_holder::draw_indexed(const dx::buffer vertex_buffer, const dx::buffer index_buffer, const D3D_PRIMITIVE_TOPOLOGY draw_type, const UINT stride) const
+{
+    set_draw_type(draw_type);
+    bind_vertex_buffer(vertex_buffer, 0, 0, stride);
+    bind_index_buffer(index_buffer, 0);
+
+    const UINT index_count = get_index_buffer_size(index_buffer);
+    draw_indexed(index_count, 0, 0);
 }
 
 // Views

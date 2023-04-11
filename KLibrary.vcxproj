@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\source\directx\hello_world_ext.cpp" />
+    <ClCompile Include="examples\source\directx\hello_world.cpp" />
     <ClCompile Include="source\apis\apis.cpp" />
     <ClCompile Include="source\apis\cpp\kl_cpp.cpp" />
     <ClCompile Include="source\apis\external\kl_imgui.cpp" />

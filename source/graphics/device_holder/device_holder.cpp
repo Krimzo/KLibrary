@@ -146,7 +146,26 @@ kl::dx::buffer kl::device_holder::create_vertex_buffer(const std::vector<vertex>
 
 kl::dx::buffer kl::device_holder::create_vertex_buffer(const std::string& filepath) const
 {
-    return create_vertex_buffer(parse_file_vertices(filepath, true));
+    const auto data = parse_obj_file(filepath, true);
+    return create_vertex_buffer(data);
+}
+
+kl::dx::buffer kl::device_holder::create_index_buffer(const uint32_t* data, const UINT element_count) const
+{
+    dx::buffer_descriptor descriptor = {};
+    descriptor.ByteWidth = element_count * sizeof(uint32_t);
+    descriptor.Usage = D3D11_USAGE_IMMUTABLE;
+    descriptor.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+    dx::subresource_descriptor subresource_data = {};
+    subresource_data.pSysMem = data;
+
+    return create_buffer(&descriptor, &subresource_data);
+}
+
+kl::dx::buffer kl::device_holder::create_index_buffer(const std::vector<uint32_t>& indices) const
+{
+    return create_index_buffer(indices.data(), (UINT) indices.size());
 }
 
 kl::dx::buffer kl::device_holder::create_const_buffer(const UINT byte_size) const

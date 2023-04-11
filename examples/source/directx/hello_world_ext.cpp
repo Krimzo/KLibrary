@@ -9,7 +9,6 @@ float4 v_shader(const float3 position : KL_Position) : SV_Position
 }
 
 // Pixel shader
-
 /*
 NOTE:
 Direct3D cbuffers use special type of data packing.
@@ -66,11 +65,19 @@ int main()
     });
 
     // Mesh setup
-    auto triangle = gpu.create_vertex_buffer({
-        { {  0.0f,  0.5f, 0.5f } },
+    const std::vector<kl::vertex> vertices = {
         { { -0.5f, -0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
-    });
+        { { -0.5f,  0.5f, 0.5f } },
+        { {  0.5f,  0.5f, 0.5f } },
+    };
+    const std::vector<uint32_t> indices = {
+        0, 3, 1,
+        0, 3, 2,
+    };
+
+    auto vertex_buffer = gpu.create_vertex_buffer(vertices);
+    auto index_buffer = gpu.create_index_buffer(indices);
 
     // Shader setup
     auto shaders = gpu.create_render_shaders(shader_source);
@@ -85,7 +92,7 @@ int main()
         shaders.pixel_shader.update_cbuffer(ps_data);
         
         gpu.clear_internal(kl::colors::gray);
-        gpu.draw_vertex_buffer(triangle);
+        gpu.draw_indexed(vertex_buffer, index_buffer);
         gpu.swap_buffers(true);
     }
 }

@@ -143,7 +143,7 @@ int main()
         ps_data.start_color = start_color;
         shaders.pixel_shader.update_cbuffer(ps_data);
 
-        gpu.draw_vertex_buffer(screen_mesh);
+        gpu.draw(screen_mesh);
 
         gpu.swap_buffers(true);
 
