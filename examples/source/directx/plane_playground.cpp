@@ -42,7 +42,7 @@ int main()
     auto default_depth_state = gpu.create_depth_state(true, false, false);
     auto disabled_depth_state = gpu.create_depth_state(false, false, false);
     
-    const std::string sky_shaders_source = kl::files::read_string("examples/shaders/sky.hlsl");
+    const std::string sky_shaders_source = kl::read_file_string("examples/shaders/sky.hlsl");
     auto sky_shaders = gpu.create_render_shaders(sky_shaders_source);
 
     auto screen_mesh = gpu.create_screen_mesh();
@@ -123,7 +123,7 @@ void setup_input(kl::window& window, kl::gpu& gpu)
     {
         kl::console::clear();
 
-        const std::string shader_sources = kl::files::read_string("examples/shaders/playground.hlsl");
+        const std::string shader_sources = kl::read_file_string("examples/shaders/playground.hlsl");
         const auto temp_default_shaders = gpu.create_render_shaders(shader_sources);
         const auto temp_geometry_shader = gpu.create_geometry_shader(shader_sources);
 

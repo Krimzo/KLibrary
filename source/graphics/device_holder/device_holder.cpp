@@ -146,7 +146,7 @@ kl::dx::buffer kl::device_holder::create_vertex_buffer(const std::vector<vertex>
 
 kl::dx::buffer kl::device_holder::create_vertex_buffer(const std::string& filepath) const
 {
-    return create_vertex_buffer(files::parse_mesh(filepath, true));
+    return create_vertex_buffer(parse_file_vertices(filepath, true));
 }
 
 kl::dx::buffer kl::device_holder::create_const_buffer(const UINT byte_size) const

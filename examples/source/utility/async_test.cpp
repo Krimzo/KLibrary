@@ -42,7 +42,7 @@ static void for_each_test()
 
 static void async_test()
 {
-	kl::async::loop(0, data.size(), [&](size_t i) {
+	kl::async_for(0, data.size(), [&](size_t i) {
 		data[i] = compute_function(i);
 	});
 }

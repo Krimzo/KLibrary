@@ -23,7 +23,7 @@ int main()
     auto access_view = gpu.create_access_view(render_texture, nullptr);
     auto shader_view = gpu.create_shader_view(render_texture, nullptr);
 
-    const std::string shader_sources = kl::files::read_string("examples/shaders/compute_test1.hlsl");
+    const std::string shader_sources = kl::read_file_string("examples/shaders/compute_test1.hlsl");
     auto default_shaders = gpu.create_render_shaders(shader_sources);
     auto compute_shader = gpu.create_compute_shader(shader_sources);
     gpu.bind_render_shaders(default_shaders);

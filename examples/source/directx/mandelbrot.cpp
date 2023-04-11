@@ -77,7 +77,7 @@ static void console_read()
     while (true) {
         kl::print<false>(kl::colors::console, "Color = ");
 
-        if (std::vector<std::string> parts = kl::strings::split([]
+        if (std::vector<std::string> parts = kl::split_string([]
         {
             std::string line;
             std::getline(std::cin, line);
@@ -118,7 +118,7 @@ int main()
     window.maximize();
 
     // Start
-    const std::string shader_sources = kl::files::read_string("examples/shaders/mandelbrot.hlsl");
+    const std::string shader_sources = kl::read_file_string("examples/shaders/mandelbrot.hlsl");
     auto shaders = gpu.create_render_shaders(shader_sources);
     gpu.bind_render_shaders(shaders);
 

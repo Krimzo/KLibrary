@@ -20,7 +20,7 @@ int main()
     gpu.bind_access_view_for_compute_shader(access_view, 0);
 
     // Compiled shader
-    const std::string shader_source = kl::files::read_string("examples/shaders/compute_test2.hlsl");
+    const std::string shader_source = kl::read_file_string("examples/shaders/compute_test2.hlsl");
     auto compute_shader = gpu.create_compute_shader(shader_source);
 
     // Run shader

@@ -4,12 +4,12 @@
 
 
 // Helper
-std::string kl::files::get_extension(const std::string& filepath)
+std::string kl::get_file_extension(const std::string& filepath)
 {
     return std::filesystem::path(filepath).extension().string();
 }
 
-std::vector<std::string> kl::files::get_files(const std::string& path, const bool recursive)
+std::vector<std::string> kl::get_files(const std::string& path, const bool recursive)
 {
     std::vector<std::string> files = {};
     if (!recursive) {
@@ -29,7 +29,7 @@ std::vector<std::string> kl::files::get_files(const std::string& path, const boo
     return files;
 }
 
-std::string kl::files::read_string(const std::string& filepath)
+std::string kl::read_file_string(const std::string& filepath)
 {
     std::ifstream stream(filepath);
     if (warning_check(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
@@ -42,7 +42,7 @@ std::string kl::files::read_string(const std::string& filepath)
     return buffer.str();
 }
 
-bool kl::files::write_string(const std::string& filepath, const std::string& data)
+bool kl::write_file_string(const std::string& filepath, const std::string& data)
 {
     std::ofstream stream(filepath);
     if (warning_check(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
@@ -54,7 +54,7 @@ bool kl::files::write_string(const std::string& filepath, const std::string& dat
     return true;
 }
 
-bool kl::files::append_string(const std::string& filepath, const std::string& data, const int position)
+bool kl::append_file_string(const std::string& filepath, const std::string& data, const int position)
 {
     std::fstream stream(filepath, std::ios::in | std::ios::out);
     if (warning_check(!stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
@@ -73,7 +73,7 @@ bool kl::files::append_string(const std::string& filepath, const std::string& da
     return true;
 }
 
-std::vector<kl::vertex> kl::files::parse_mesh(const std::string& filepath, const bool flip_z)
+std::vector<kl::vertex> kl::parse_file_vertices(const std::string& filepath, const bool flip_z)
 {
     std::fstream stream = {};
     stream.open(filepath, std::ios::in);
@@ -89,7 +89,7 @@ std::vector<kl::vertex> kl::files::parse_mesh(const std::string& filepath, const
     const float z_flip = (flip_z ? -1.0f : 1.0f);
 
     for (std::string line; std::getline(stream, line);) {
-        const std::vector<std::string> parts = strings::split(line, ' ');
+        const std::vector<std::string> parts = split_string(line, ' ');
         if (parts[0] == "v") {
             xyz_data.emplace_back(std::stof(parts[1]), std::stof(parts[2]), std::stof(parts[3]) * z_flip);
         }
@@ -101,10 +101,10 @@ std::vector<kl::vertex> kl::files::parse_mesh(const std::string& filepath, const
         }
         else if (parts[0] == "f") {
             for (int i = 1; i < 4; i++) {
-                const std::vector<std::string> line_part_parts = strings::split(parts[i], '/');
+                const std::vector<std::string> line_part_parts = split_string(parts[i], '/');
                 vertex_data.emplace_back(
-                    xyz_data[std::stoull(line_part_parts[0]) - 1],
-                    uv_data[std::stoull(line_part_parts[1]) - 1],
+                    xyz_data   [std::stoull(line_part_parts[0]) - 1],
+                    uv_data    [std::stoull(line_part_parts[1]) - 1],
                     normal_data[std::stoull(line_part_parts[2]) - 1]
                 );
             }
