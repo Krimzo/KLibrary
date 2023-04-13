@@ -1,5 +1,5 @@
 // Vertex shader
-static const float pi = 3.14159265359f;
+static const float PI = 3.14159265359f;
 
 cbuffer VS_CB : register(b0)
 {
@@ -30,7 +30,7 @@ float3 plane_to_sphere(float3 position, const float half_plane_size)
     return float3(
         r * cos(coords.y) * cos(coords.x),
         r * cos(coords.y) * sin(coords.x),
-        r * sin(coords.y + pi)
+        r * sin(coords.y + PI)
     );
 }
 
