@@ -22,7 +22,7 @@ int main()
     kl::gpu gpu = { (HWND) window };
 
     // Window resize setup
-    window.on_resize.push_back([&](kl::int2 new_size)
+    window.on_resize.emplace_back([&](const kl::int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
@@ -32,7 +32,7 @@ int main()
     window.maximize();
 
     // Fullscreen setup
-    window.keyboard.f11.on_press.push_back([&]
+    window.keyboard.f11.on_press.emplace_back([&]
     {
         const bool new_state = !window.in_fullscreen();
         window.set_fullscreen(new_state);
@@ -40,14 +40,14 @@ int main()
     });
 
     // Mesh setup
-    auto triangle = gpu.create_vertex_buffer({
+    const auto triangle = gpu.create_vertex_buffer({
         { {  0.0f,  0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
     });
 
     // Shader setup
-    auto shaders = gpu.create_render_shaders(shader_source);
+    const auto shaders = gpu.create_render_shaders(shader_source);
     gpu.bind_render_shaders(shaders);
 
     // CDS (Clear-Draw-Swap)

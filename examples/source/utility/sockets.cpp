@@ -7,7 +7,8 @@ static void server()
 
     server.listen(1);
 
-    if (const kl::socket client = server.accept(); client.send<kl::float3>({ 1.0f, 2.0f, 3.0f })) {
+    const kl::socket client = server.accept();
+    if (client.send<kl::float3>({ 1.0f, 2.0f, 3.0f })) {
         kl::print("Data sent!");
     }
 }

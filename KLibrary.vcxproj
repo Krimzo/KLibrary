@@ -51,7 +51,9 @@
     <ClCompile Include="source\memory\files\file.cpp" />
     <ClCompile Include="source\memory\linking\dll.cpp" />
     <ClCompile Include="source\memory\memory.cpp" />
-    <ClCompile Include="source\memory\reference\ref.cpp" />
+    <ClCompile Include="source\memory\safety\array.cpp" />
+    <ClCompile Include="source\memory\safety\object.cpp" />
+    <ClCompile Include="source\memory\safety\reference.cpp" />
     <ClCompile Include="source\render\components\collider.cpp" />
     <ClCompile Include="source\render\components\material.cpp" />
     <ClCompile Include="source\render\components\mesh.cpp" />
@@ -124,7 +126,9 @@
     <ClInclude Include="source\memory\files\file.h" />
     <ClInclude Include="source\memory\linking\dll.h" />
     <ClInclude Include="source\memory\memory.h" />
-    <ClInclude Include="source\memory\reference\ref.h" />
+    <ClInclude Include="source\memory\safety\array.h" />
+    <ClInclude Include="source\memory\safety\object.h" />
+    <ClInclude Include="source\memory\safety\reference.h" />
     <ClInclude Include="source\render\components\collider.h" />
     <ClInclude Include="source\render\components\material.h" />
     <ClInclude Include="source\render\components\mesh.h" />
