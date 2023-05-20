@@ -3,11 +3,10 @@
 
 static void server()
 {
-    kl::socket server(kl::socket::self_ip, 1709);
-
+    kl::socket server(1709);
     server.listen(1);
 
-    const kl::socket client = server.accept();
+    kl::socket client = server.accept();
     if (client.send<kl::float3>({ 1.0f, 2.0f, 3.0f })) {
         kl::print("Data sent!");
     }
@@ -15,8 +14,9 @@ static void server()
 
 static void client()
 {
-    kl::socket client(kl::socket::self_ip, 1709);
+    kl::time::wait(0.25f);
 
+    kl::socket client(1709);
     client.connect();
 
     kl::float3 result = {};
@@ -26,10 +26,8 @@ static void client()
 
 int main()
 {
-    std::thread(server).detach();
-    kl::time::wait(0.25f);
-    std::thread(client).detach();
-
-
-    kl::get();
+    auto server_thread = std::thread(server);
+    auto client_thread = std::thread(client);
+    server_thread.join();
+    client_thread.join();
 }
