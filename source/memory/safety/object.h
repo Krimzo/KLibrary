@@ -10,6 +10,9 @@ namespace kl {
         T* m_instance = nullptr;
         uint64_t* m_count = nullptr;
 
+        template<typename>
+        friend class object;
+
     public:
         // Create
         object()
@@ -46,22 +49,25 @@ namespace kl {
         }
 
         // Create copy
-        object(const object<T>& other)
+        template<typename O> requires std::is_base_of<T, O>::value
+        object(const object<O>& other)
         {
             m_instance = other.m_instance;
             m_count = other.m_count;
             if (m_count) *m_count += 1;
         }
 
-        object(const object<T>&& other)
-            : object(other)
+        template<typename O> requires std::is_base_of<T, O>::value
+        object(const object<O>&& other) noexcept
+            : object<T>(other)
         {}
 
         // Copy
-        object& operator=(const object<T>& other)
+        template<typename O> requires std::is_base_of<T, O>::value
+        object<T>& operator=(const object<O>& other)
         {
             // Address check
-            if (&other == m_instance) {
+            if (other.m_instance == m_instance) {
                 return *this;
             }
 
@@ -73,7 +79,8 @@ namespace kl {
             return *this;
         }
 
-        object& operator=(const object<T>&& other)
+        template<typename O> requires std::is_base_of<T, O>::value
+        object<T>& operator=(const object<O>&& other) noexcept
         {
             return (*this = other);
         }
@@ -87,6 +94,21 @@ namespace kl {
         uint64_t count() const
         {
             return m_count ? *m_count : 0;
+        }
+
+        // Compare
+        template<typename O>
+        bool operator==(const object<O>& other) const
+        {
+            const void* first = m_instance;
+            const void* second = other.m_instance;
+            return first == second;
+        }
+
+        template<typename O>
+        bool operator!=(const object<O>& other) const
+        {
+            return !(*this == other);
         }
 
         // Address

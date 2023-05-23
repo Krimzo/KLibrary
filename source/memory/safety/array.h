@@ -55,12 +55,12 @@ namespace kl {
             if (m_count) *m_count += 1;
         }
 
-        array(const array<T>&& other)
-            : array(other)
+        array(const array<T>&& other) noexcept
+            : array<T>(other)
         {}
 
         // Copy
-        array& operator=(const array<T>& other)
+        array<T>& operator=(const array<T>& other)
         {
             // Address check
             if (other.m_data == m_data) {
@@ -76,7 +76,7 @@ namespace kl {
             return *this;
         }
 
-        array& operator=(const array<T>&& other)
+        array<T>& operator=(const array<T>&& other) noexcept
         {
             return (*this = other);
         }
@@ -97,9 +97,25 @@ namespace kl {
             return m_size;
         }
 
+        uint64_t byte_size() const
+        {
+            return m_size * sizeof(T);
+        }
+
         bool empty() const
         {
-            return size() == 0;
+            return m_size == 0;
+        }
+
+        // Compare
+        bool operator==(const array<T>& other) const
+        {
+            return m_data == other.m_data;
+        }
+
+        bool operator!=(const array<T>& other) const
+        {
+            return !(*this == other);
         }
 
         // Address
