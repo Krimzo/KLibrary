@@ -11,6 +11,39 @@ namespace kl {
         uint64_t* m_count = nullptr;
         uint64_t m_size = 0;
 
+        uint64_t increase_count()
+        {
+            if (m_count) return *m_count += 1;
+            return 0;
+        }
+
+        uint64_t decrease_count()
+        {
+            if (m_count) return *m_count -= 1;
+            return 0;
+        }
+
+        void allocate()
+        {
+            // Data
+            m_data = new T[m_size]();
+            if (!m_data) throw std::runtime_error("Could not allocate memory for array data.");
+
+            // Counter
+            m_count = new uint64_t;
+            if (!m_count) throw std::runtime_error("Could not allocate memory for reference counter.");
+            *m_count = 1;
+        }
+
+        void deallocate()
+        {
+            if (m_data) delete[] m_data;
+            if (m_count) delete m_count;
+            m_data = nullptr;
+            m_count = nullptr;
+            m_size = 0;
+        }
+
     public:
         // Create
         array()
@@ -19,40 +52,27 @@ namespace kl {
         array(const uint64_t size)
             : m_size(size)
         {
-            // Allocate array data
-            m_data = new T[size]();
-            if (!m_data) throw std::runtime_error("Could not allocate memory for array data.");
-
-            // Allocate counter
-            m_count = new uint64_t;
-            if (!m_count) throw std::runtime_error("Could not allocate memory for reference counter.");
-            *m_count = 1;
+            allocate();
         }
 
         // Destroy
-        virtual ~array()
+        ~array()
         {
             this->free();
         }
 
         void free()
         {
-            if (m_count && !(--(*m_count))) {
-                delete[] m_data;
-                delete m_count;
+            if (decrease_count() == 0) {
+                deallocate();
             }
-            m_data = nullptr;
-            m_count = nullptr;
-            m_size = 0;
         }
 
         // Create copy
         array(const array<T>& other)
+            : m_data(other.m_data), m_count(other.m_count), m_size(other.m_size)
         {
-            m_data = other.m_data;
-            m_count = other.m_count;
-            m_size = other.m_size;
-            if (m_count) *m_count += 1;
+            increase_count();
         }
 
         array(const array<T>&& other) noexcept
@@ -62,17 +82,13 @@ namespace kl {
         // Copy
         array<T>& operator=(const array<T>& other)
         {
-            // Address check
-            if (other.m_data == m_data) {
-                return *this;
+            if (other.m_data != m_data) {
+                this->free();
+                m_data = other.m_data;
+                m_count = other.m_count;
+                m_size = other.m_size;
+                increase_count();
             }
-
-            // Do copy
-            this->free();
-            m_data = other.m_data;
-            m_count = other.m_count;
-            m_size = other.m_size;
-            if (m_count) *m_count += 1;
             return *this;
         }
 
@@ -104,13 +120,13 @@ namespace kl {
 
         bool empty() const
         {
-            return m_size == 0;
+            return (m_size == 0);
         }
 
         // Compare
         bool operator==(const array<T>& other) const
         {
-            return m_data == other.m_data;
+            return (m_data == other.m_data);
         }
 
         bool operator!=(const array<T>& other) const

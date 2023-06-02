@@ -7,11 +7,38 @@ namespace kl {
     template<typename T>
     class object
     {
+        template<typename>
+        friend class object;
+
         T* m_instance = nullptr;
         uint64_t* m_count = nullptr;
 
-        template<typename>
-        friend class object;
+        uint64_t increase_count()
+        {
+            if (m_count) return *m_count += 1;
+            return 0;
+        }
+
+        uint64_t decrease_count()
+        {
+            if (m_count) return *m_count -= 1;
+            return 0;
+        }
+
+        void allocate()
+        {
+            m_count = new uint64_t;
+            if (!m_count) throw std::runtime_error("Could not allocate memory for reference counter.");
+            *m_count = 1;
+        }
+
+        void deallocate()
+        {
+            if (m_instance) delete m_instance;
+            if (m_count) delete m_count;
+            m_instance = nullptr;
+            m_count = nullptr;
+        }
 
     public:
         // Create
@@ -21,68 +48,61 @@ namespace kl {
         object(T* instance)
             : m_instance(instance)
         {
-            // Instance check
-            if (!m_instance) {
-                return;
+            if (m_instance) {
+                allocate();
             }
-
-            // Allocate counter
-            m_count = new uint64_t;
-            if (!m_count) throw std::runtime_error("Could not allocate memory for reference counter.");
-            *m_count = 1;
         }
 
         // Destroy
-        virtual ~object()
+        ~object()
         {
             this->free();
         }
 
         void free()
         {
-            if (m_count && !(--(*m_count))) {
-                delete m_instance;
-                delete m_count;
+            if (decrease_count() == 0) {
+                deallocate();
             }
-            m_instance = nullptr;
-            m_count = nullptr;
         }
 
         // Create copy
-        template<typename O> requires std::is_base_of<T, O>::value
-        object(const object<O>& other)
+        object(const object& other)
+            : m_instance(other.m_instance), m_count(other.m_count)
         {
-            m_instance = other.m_instance;
-            m_count = other.m_count;
-            if (m_count) *m_count += 1;
+            increase_count();
         }
 
-        template<typename O> requires std::is_base_of<T, O>::value
-        object(const object<O>&& other) noexcept
-            : object<T>(other)
+        object(const object&& other) noexcept
+            : object(other)
         {}
 
         // Copy
-        template<typename O> requires std::is_base_of<T, O>::value
-        object<T>& operator=(const object<O>& other)
+        object& operator=(const object& other)
         {
-            // Address check
-            if (other.m_instance == m_instance) {
-                return *this;
+            if (other.m_instance != m_instance) {
+                this->free();
+                m_instance = other.m_instance;
+                m_count = other.m_count;
+                increase_count();
             }
-
-            // Do copy
-            this->free();
-            m_instance = other.m_instance;
-            m_count = other.m_count;
-            if (m_count) *m_count += 1;
             return *this;
         }
 
-        template<typename O> requires std::is_base_of<T, O>::value
-        object<T>& operator=(const object<O>&& other) noexcept
+        object& operator=(const object&& other)
         {
             return (*this = other);
+        }
+
+        // Derived cast
+        template<typename B> requires std::is_base_of_v<B, T>
+        explicit operator object<B> () const
+        {
+            object<B> result = {};
+            result.m_instance = m_instance;
+            result.m_count = m_count;
+            increase_count();
+            return result;
         }
 
         // Info
@@ -102,7 +122,7 @@ namespace kl {
         {
             const void* first = m_instance;
             const void* second = other.m_instance;
-            return first == second;
+            return (first == second);
         }
 
         template<typename O>
