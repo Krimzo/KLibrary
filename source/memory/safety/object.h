@@ -15,14 +15,12 @@ namespace kl {
 
         uint64_t increase_count()
         {
-            if (m_count) return *m_count += 1;
-            return 0;
+            return m_count ? (*m_count += 1) : 0;
         }
 
         uint64_t decrease_count()
         {
-            if (m_count) return *m_count -= 1;
-            return 0;
+            return m_count ? (*m_count -= 1) : 0;
         }
 
         void allocate()
@@ -89,7 +87,7 @@ namespace kl {
             return *this;
         }
 
-        object& operator=(const object&& other)
+        object& operator=(const object&& other) noexcept
         {
             return (*this = other);
         }
@@ -169,12 +167,18 @@ namespace kl {
     template<typename T>
     std::ostream& operator<<(std::ostream& stream, const object<T>& object)
     {
-        stream << "(" << object.count() << " | 0x" << std::hex << &object << std::dec << " | ";
+        // Address
+        stream << "(0x" << std::hex << &object << std::dec;
+
+        // Ref count
+        stream << "{" << object.count() << "}: ";
+    
+        // Object
         if (object) {
             stream << *object;
         }
         else {
-            stream << "()";
+            stream << "/";
         }
         stream << ")";
         return stream;

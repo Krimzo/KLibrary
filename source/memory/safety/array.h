@@ -13,14 +13,12 @@ namespace kl {
 
         uint64_t increase_count()
         {
-            if (m_count) return *m_count += 1;
-            return 0;
+            return m_count ? (*m_count += 1) : 0;
         }
 
         uint64_t decrease_count()
         {
-            if (m_count) return *m_count -= 1;
-            return 0;
+            return m_count ? (*m_count -= 1) : 0;
         }
 
         void allocate()
@@ -182,7 +180,13 @@ namespace kl {
     template<typename T>
     std::ostream& operator<<(std::ostream& stream, const array<T>& array)
     {
-        stream << "(" << array.count() << " | 0x" << std::hex << &array << std::dec << " | ";
+        // Address
+        stream << "(0x" << std::hex << &array << std::dec;
+
+        // Ref count
+        stream << "{" << array.count() << "}: ";
+
+        // Data
         if (array.empty()) {
             stream << "[]";
         }

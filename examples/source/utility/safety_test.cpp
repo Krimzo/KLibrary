@@ -54,8 +54,8 @@ void object_test()
     if (first_object) first_object->talk();
     if (second_object) second_object->talk();
 
-    print(first_object);  // (0x000002AC6CFB17D0: Person(First))
-    print(second_object); // (0x000002AC6CFB17D0: Person(First))
+    print(first_object);  // (0x000002AC6CFB17D0{2}: Person(First))
+    print(second_object); // (0x000002AC6CFB17D0{2}: Person(First))
 }
 
 void array_test()
@@ -70,6 +70,6 @@ void array_test()
         second_array[i] = (float) (i * i);
     }
 
-    print(first_array);  // (0x0000020EFEA41A50: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18])
-    print(second_array); // (0x0000020EFEA416D0: [0, 1, 4, 9, 16, 25, 36, 49, 64, 81])
+    print(first_array);  // (0x0000020EFEA41A50{1}: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18])
+    print(second_array); // (0x0000020EFEA416D0{1}: [0, 1, 4, 9, 16, 25, 36, 49, 64, 81])
 }
