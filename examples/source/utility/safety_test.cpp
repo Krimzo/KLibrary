@@ -9,7 +9,7 @@ struct person
     const std::string name;
 
     person()
-        : person("unknown")
+        : name("Unknown")
     {}
 
     person(const std::string& name)
