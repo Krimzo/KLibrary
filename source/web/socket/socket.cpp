@@ -123,7 +123,7 @@ int kl::socket::exhaust(std::vector<byte>& output, const int buffer_size) const
 {
     int received = 0;
     std::vector<byte> receiver_buffer(buffer_size);
-    while ((received = receive(receiver_buffer.data(), receiver_buffer.size())) > 0) {
+    while ((received = receive(receiver_buffer.data(), (int) receiver_buffer.size())) > 0) {
         output.insert(output.end(), receiver_buffer.begin(), receiver_buffer.begin() + received);
     }
     return received;

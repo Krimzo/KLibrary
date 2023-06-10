@@ -1,7 +1,8 @@
 #include "klib.h"
 
 
-static const std::string shader_source = R"(
+static const std::string shader_source =
+R"(
 // Vertex shader
 float4 v_shader(const float3 position : KL_Position) : SV_Position
 {
