@@ -1,40 +1,56 @@
 #include "klib.h"
 
 
-struct example_struct
+struct cs_cb
 {
-    kl::float3 position;
+    kl::float4 misc_data;
 };
 
 int main()
 {
-    kl::gpu gpu = {};
+    kl::window window = { { 1600, 900 }, "Compute shaders 2" };
+    kl::gpu gpu = { (HWND) window };
+    kl::timer timer = {};
 
-    // CPU buffer
-    static constexpr int data_count = 10;
-    example_struct example_data[data_count] = {};
+    window.set_resizeable(false);
+    gpu.resize_to_window(window);
 
-    // GPU buffer
-    auto buffer = gpu.create_structured_buffer(example_data, data_count, sizeof(example_struct), true, true);
-    auto access_view = gpu.create_access_view(buffer, nullptr);
-    gpu.bind_access_view_for_compute_shader(access_view, 0);
+    kl::dx::depth_state depth_state = gpu.create_depth_state(false, false, false);
+    gpu.bind_depth_state(depth_state);
 
-    // Compiled shader
-    const std::string shader_source = kl::read_file_string("examples/shaders/compute_test2.hlsl");
-    auto compute_shader = gpu.create_compute_shader(shader_source);
+    kl::dx::texture render_texture = gpu.create_texture(kl::image{ kl::int2{ 1600, 900 } }, true, true);
+    kl::dx::target_view target_view = gpu.create_target_view(render_texture, nullptr);
+    kl::dx::access_view access_view = gpu.create_access_view(render_texture, nullptr);
+    kl::dx::shader_view shader_view = gpu.create_shader_view(render_texture, nullptr);
 
-    // Run shader
+    const std::string shader_sources = kl::read_file_string("examples/shaders/compute_test2.hlsl");
+    kl::render_shaders render_shaders = gpu.create_render_shaders(shader_sources);
+    kl::shader_holder compute_shader = gpu.create_compute_shader(shader_sources);
+    gpu.bind_render_shaders(render_shaders);
     gpu.bind_compute_shader(compute_shader);
-    gpu.dispatch_compute_shader(data_count, 1, 1);
 
-    // Copy from GPU to CPU
-    gpu.read_from_resource(example_data, buffer, (data_count * sizeof(example_struct)));
+    kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
 
-    // Print values
-    for (auto& [position] : example_data) {
-        print(position);
+    while (window.process(false)) {
+        timer.update_interval();
+
+        gpu.unbind_shader_view_for_compute_shader(0);
+        gpu.unbind_shader_view_for_pixel_shader(0);
+        gpu.clear_target_view(target_view, kl::colors::gray);
+
+        cs_cb cs_data = {};
+        cs_data.misc_data.x = (float) window.mouse.position().x;
+        cs_data.misc_data.y = (float) window.mouse.position().y;
+        compute_shader.update_cbuffer(cs_data);
+
+        gpu.unbind_shader_view_for_pixel_shader(0);
+        gpu.bind_access_view_for_compute_shader(access_view, 0);
+        gpu.dispatch_compute_shader((window.width() / 32) + 1, (window.height() / 32) + 1, 1);
+
+        gpu.unbind_access_view_for_compute_shader(0);
+        gpu.bind_shader_view_for_pixel_shader(shader_view, 0);
+        gpu.draw(screen_mesh);
+
+        gpu.swap_buffers(true);
     }
-
-
-    kl::get();
 }

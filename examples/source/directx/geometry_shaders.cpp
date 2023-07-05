@@ -39,8 +39,8 @@ int main()
     window.keyboard.v.on_press.push_back([&]
     {
         static bool wireframe_bound = true;
-        static auto solid_raster = gpu.create_raster_state(false, false);
-        static auto wireframe_raster = gpu.create_raster_state(true, false);
+        static kl::dx::raster_state solid_raster = gpu.create_raster_state(false, false);
+        static kl::dx::raster_state wireframe_raster = gpu.create_raster_state(true, false);
 
         gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
         wireframe_bound = !wireframe_bound;
@@ -49,25 +49,25 @@ int main()
 
     // Shaders
     std::string shader_sources = kl::read_file_string("examples/shaders/geometry_test.hlsl");
-    auto default_shaders = gpu.create_render_shaders(shader_sources);
-    auto geometry_shader = gpu.create_geometry_shader(shader_sources);
+    kl::render_shaders default_shaders = gpu.create_render_shaders(shader_sources);
+    kl::shader_holder geometry_shader = gpu.create_geometry_shader(shader_sources);
     gpu.bind_render_shaders(default_shaders);
     gpu.bind_geometry_shader(geometry_shader);
 
     // Mesh
-    auto cube_mesh = kl::make<kl::mesh>(&gpu);
-    auto sphere_mesh = kl::make<kl::mesh>(&gpu);
-    auto monke_mesh = kl::make<kl::mesh>(&gpu);
+    kl::object<kl::mesh> cube_mesh = new kl::mesh(&gpu);
+    kl::object<kl::mesh> sphere_mesh = new kl::mesh(&gpu);
+    kl::object<kl::mesh> monke_mesh = new kl::mesh(&gpu);
     cube_mesh->graphics_buffer = gpu.create_vertex_buffer("examples/meshes/cube.obj");
     sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("examples/meshes/sphere.obj");
     monke_mesh->graphics_buffer =gpu.create_vertex_buffer("examples/meshes/monke.obj");
 
     // Material
-    auto default_material = kl::make<kl::material>();
+    kl::object<kl::material> default_material = new kl::material();
     default_material->color = kl::colors::orange;
 
     // Entity
-    kl::ref<kl::entity> main_entity = kl::make<kl::entity>();
+    kl::object<kl::entity> main_entity = new kl::entity();
     main_entity->angular.y = -36.0f;
     main_entity->mesh = monke_mesh;
     main_entity->material = default_material;

@@ -39,14 +39,14 @@ int main()
 
     setup_input(window, gpu);
 
-    auto default_depth_state = gpu.create_depth_state(true, false, false);
-    auto disabled_depth_state = gpu.create_depth_state(false, false, false);
+    kl::dx::depth_state default_depth_state = gpu.create_depth_state(true, false, false);
+    kl::dx::depth_state disabled_depth_state = gpu.create_depth_state(false, false, false);
     
     const std::string sky_shaders_source = kl::read_file_string("examples/shaders/sky.hlsl");
-    auto sky_shaders = gpu.create_render_shaders(sky_shaders_source);
+    kl::render_shaders sky_shaders = gpu.create_render_shaders(sky_shaders_source);
 
-    auto screen_mesh = gpu.create_screen_mesh();
-    auto plane_mesh = gpu.create_plane_mesh(10.0f, 1000);
+    kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
+    kl::dx::buffer plane_mesh = gpu.create_plane_mesh(10.0f, 1000);
 
     camera.origin = { -3.5f, 1.5f, -2.5f };
     camera.set_forward(camera.origin * -1.0f);
@@ -111,8 +111,8 @@ void setup_input(kl::window& window, kl::gpu& gpu)
     window.keyboard.v.on_press.push_back([&]
     {
         static bool wireframe_bound = true;
-        static auto solid_raster = gpu.create_raster_state(false, false, true);
-        static auto wireframe_raster = gpu.create_raster_state(true, false, true);
+        static kl::dx::raster_state solid_raster = gpu.create_raster_state(false, false, true);
+        static kl::dx::raster_state wireframe_raster = gpu.create_raster_state(true, false, true);
 
         gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
         wireframe_bound = !wireframe_bound;
@@ -124,8 +124,8 @@ void setup_input(kl::window& window, kl::gpu& gpu)
         kl::console::clear();
 
         const std::string shader_sources = kl::read_file_string("examples/shaders/playground.hlsl");
-        const auto temp_default_shaders = gpu.create_render_shaders(shader_sources);
-        const auto temp_geometry_shader = gpu.create_geometry_shader(shader_sources);
+        const kl::render_shaders temp_default_shaders = gpu.create_render_shaders(shader_sources);
+        const kl::shader_holder temp_geometry_shader = gpu.create_geometry_shader(shader_sources);
 
         if (temp_default_shaders && temp_geometry_shader) {
             plane_shaders = temp_default_shaders;

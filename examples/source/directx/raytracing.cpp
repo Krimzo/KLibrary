@@ -72,10 +72,10 @@ int main()
     window.maximize();
 
     const std::string shader_sources = kl::read_file_string("examples/shaders/raytracing.hlsl");
-    auto shaders = gpu.create_render_shaders(shader_sources);
+    kl::render_shaders shaders = gpu.create_render_shaders(shader_sources);
     gpu.bind_render_shaders(shaders);
 
-    const auto screen_mesh = gpu.create_screen_mesh();
+    const kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
 
     camera.origin.y = 5.0f;
     ps_data.sun_direction = { kl::normalize(kl::float3(-1.0f, -1.0f, 0.0f)), 0.0f };

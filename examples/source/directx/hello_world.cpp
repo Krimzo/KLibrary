@@ -41,14 +41,14 @@ int main()
     });
 
     // Mesh setup
-    const auto triangle = gpu.create_vertex_buffer({
+    const kl::dx::buffer triangle = gpu.create_vertex_buffer({
         { {  0.0f,  0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
     });
 
     // Shader setup
-    const auto shaders = gpu.create_render_shaders(shader_source);
+    const kl::render_shaders shaders = gpu.create_render_shaders(shader_source);
     gpu.bind_render_shaders(shaders);
 
     // CDS (Clear-Draw-Swap)

@@ -3,10 +3,19 @@
 
 static const std::string shader_source =
 R"(
-// Vertex shader
-float4 v_shader(const float3 position : KL_Position) : SV_Position
+struct VS_OUT
 {
-    return float4(position, 1);
+    float4 position : SV_Position;
+    float3 color : VS_Color;
+};
+
+// Vertex shader
+VS_OUT v_shader(const float3 position : KL_Position, const float3 normal : KL_Normal)
+{
+    VS_OUT data;
+    data.position = float4(position, 1.0f);
+    data.color = normal;
+    return data;
 }
 
 // Pixel shader
@@ -21,13 +30,13 @@ Refer to: https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphi
 cbuffer ps_cb : register(b0)
 {
     float4 mouse_position;
-    float4 object_color;
     float4 highlight_color;
 };
 
-float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
+float4 p_shader(const VS_OUT data) : SV_Target
 {
-    if (length(mouse_position.xy - screen_position.xy) < 50) {
+    const float4 object_color = float4(data.color, 1.0f);
+    if (length(mouse_position.xy - data.position.xy) < 50) {
         return highlight_color;
     }
     return object_color;
@@ -37,7 +46,6 @@ float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
 struct ps_cb
 {
     kl::float4 mouse_position;
-    kl::float4 object_color;
     kl::float4 highlight_color;
 };
 
@@ -48,7 +56,7 @@ int main()
     kl::gpu gpu = { (HWND) window };
 
     // Window resize setup
-    window.on_resize.push_back([&](kl::int2 new_size)
+    window.on_resize.emplace_back([&](kl::int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
@@ -58,7 +66,7 @@ int main()
     window.maximize();
 
     // Fullscreen setup
-    window.keyboard.f11.on_press.push_back([&]
+    window.keyboard.f11.on_press.emplace_back([&]
     {
         const bool new_state = !window.in_fullscreen();
         window.set_fullscreen(new_state);
@@ -67,29 +75,28 @@ int main()
 
     // Mesh setup
     const std::vector<kl::vertex> vertices = {
-        { { -0.5f, -0.5f, 0.5f } },
-        { {  0.5f, -0.5f, 0.5f } },
-        { { -0.5f,  0.5f, 0.5f } },
-        { {  0.5f,  0.5f, 0.5f } },
+        { { -0.5f, -0.5f, 0.5f }, {}, kl::colors::red },
+        { { -0.5f,  0.5f, 0.5f }, {}, kl::colors::green },
+        { {  0.5f, -0.5f, 0.5f }, {}, kl::colors::blue },
+        { {  0.5f,  0.5f, 0.5f }, {}, kl::colors::white },
     };
     const std::vector<uint32_t> indices = {
-        0, 3, 1,
-        0, 3, 2,
+        0, 1, 3,
+        0, 2, 3,
     };
 
-    auto vertex_buffer = gpu.create_vertex_buffer(vertices);
-    auto index_buffer = gpu.create_index_buffer(indices);
+    kl::dx::buffer vertex_buffer = gpu.create_vertex_buffer(vertices);
+    kl::dx::buffer index_buffer = gpu.create_index_buffer(indices);
 
     // Shader setup
-    auto shaders = gpu.create_render_shaders(shader_source);
+    kl::render_shaders shaders = gpu.create_render_shaders(shader_source);
     gpu.bind_render_shaders(shaders);
 
     // CDS (Clear-Draw-Swap)
     while (window.process(false)) {
         ps_cb ps_data = {};
         ps_data.mouse_position = { window.mouse.position(), 0, 0 };
-        ps_data.object_color = { 1, 0.75f, 0.35f, 1 };
-        ps_data.highlight_color = { 0.35f, 0.75f, 1, 1 };
+        ps_data.highlight_color = (kl::float4) kl::colors::gray;
         shaders.pixel_shader.update_cbuffer(ps_data);
         
         gpu.clear_internal(kl::colors::gray);

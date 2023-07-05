@@ -119,10 +119,10 @@ int main()
 
     // Start
     const std::string shader_sources = kl::read_file_string("examples/shaders/mandelbrot.hlsl");
-    auto shaders = gpu.create_render_shaders(shader_sources);
+    kl::render_shaders shaders = gpu.create_render_shaders(shader_sources);
     gpu.bind_render_shaders(shaders);
 
-    auto screen_mesh = gpu.create_screen_mesh();
+    kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
 
     // Console
     std::thread(console_read).detach();
@@ -144,12 +144,10 @@ int main()
         shaders.pixel_shader.update_cbuffer(ps_data);
 
         gpu.draw(screen_mesh);
-
         gpu.swap_buffers(true);
 
         // Info
         window.set_title(kl::format(
-            "[", std::setw(3), int(1 / timer.get_interval()), "] ",
             "(Iterations: ", iterations, ") ",
             "(Zoom: ", std::fixed, std::setprecision(2), zoom, ") ",
             "(Position: ", position, ")"

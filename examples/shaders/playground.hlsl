@@ -50,6 +50,7 @@ vs_out v_shader(float3 position : KL_Position)
     
     data.world = mul(float4(position, 1), w_matrix).xyz;
     data.screen = mul(float4(data.world, 1), vp_matrix);
+    data.normal = 0;
     data.color = 1;
     
     return data;

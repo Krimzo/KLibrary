@@ -41,10 +41,10 @@ cbuffer PS_CB : register(b0)
 
 float4 p_shader(const vs_out vs_data) : SV_Target
 {
-    float3 pixel = object_color;
+    float4 pixel = object_color;
 
     const float light_intensity = dot(-sun_direction.xyz, vs_data.normal);
     pixel *= light_intensity;
  
-    return float4(pixel, 1.0f);
+    return pixel;
 }
