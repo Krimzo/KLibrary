@@ -13,7 +13,7 @@ namespace kl {
         PxRigidActor* physics_actor_ = nullptr;
         object<collider> collider_ = nullptr;
 
-        void regenerate_actor(PxPhysics* physics, const PxTransform& transform, bool dynamic);
+        void generate_actor(PxPhysics* physics, const PxTransform& transform, bool dynamic);
         void wake_up() const;
 
     public:

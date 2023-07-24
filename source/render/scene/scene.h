@@ -54,7 +54,7 @@ namespace kl {
         PxCooking* cooking() const;
 
         object<entity> entity(const std::string& name) const;
-        std::string name(object<entity> entity) const;
+        std::string name(object<kl::entity> entity) const;
 
         size_t entity_count() const;
 
@@ -62,15 +62,15 @@ namespace kl {
         void set_gravity(const float3& gravity);
         float3 gravity() const;
 
-        void add(const std::string& name, object<entity> entity);
+        void add(const std::string& name, object<kl::entity> entity);
         void remove(const std::string& name);
 
         // Update
-        object<entity> update_selected_entity(uint32_t index);
+        object<kl::entity> update_selected_entity(uint32_t index);
         void update_physics(float delta_t);
 
         // Entity
-        object<entity> make_entity(bool dynamic);
+        object<kl::entity> make_entity(bool dynamic);
 
         // Dynamic colliders
         object<collider> make_box_collider(const float3& scale);

@@ -78,7 +78,7 @@ kl::object<kl::entity> kl::scene::entity(const std::string& name) const
     return nullptr;
 }
 
-std::string kl::scene::name(object<entity> entity) const
+std::string kl::scene::name(object<kl::entity> entity) const
 {
     for (auto& [name, ent] : entities_) {
         if (ent == entity) {
@@ -105,7 +105,7 @@ kl::float3 kl::scene::gravity() const
     return (const float3&) gravity;
 }
 
-void kl::scene::add(const std::string& name, object<entity> entity)
+void kl::scene::add(const std::string& name, object<kl::entity> entity)
 {
     entities_[name] = entity;
     scene_->addActor(*entity->actor());
@@ -141,7 +141,7 @@ void kl::scene::update_physics(const float delta_t)
 // Entity
 kl::object<kl::entity> kl::scene::make_entity(const bool dynamic)
 {
-    return new entity(physics_, dynamic);
+    return new kl::entity(physics_, dynamic);
 }
 
 // Dynamic colliders
