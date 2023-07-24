@@ -11,7 +11,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="examples\source\2d_drawing\data_line.cpp" />
+    <ClCompile Include="examples\source\2d_drawing\interpolation.cpp" />
+    <ClCompile Include="examples\source\2d_drawing\tic_tac_engine.cpp" />
+    <ClCompile Include="examples\source\2d_drawing\times_table.cpp" />
+    <ClCompile Include="examples\source\2d_drawing\trajectories.cpp" />
+    <ClCompile Include="examples\source\2d_drawing\visual_sort.cpp" />
+    <ClCompile Include="examples\source\directx\compute_shaders1.cpp" />
+    <ClCompile Include="examples\source\directx\compute_shaders2.cpp" />
+    <ClCompile Include="examples\source\directx\geometry_shaders.cpp" />
     <ClCompile Include="examples\source\directx\hello_world.cpp" />
+    <ClCompile Include="examples\source\directx\hello_world_ext.cpp" />
+    <ClCompile Include="examples\source\directx\mandelbrot.cpp" />
+    <ClCompile Include="examples\source\directx\plane_playground.cpp" />
+    <ClCompile Include="examples\source\directx\raytracing.cpp" />
+    <ClCompile Include="examples\source\examples.cpp" />
+    <ClCompile Include="examples\source\math\imaginary_numbers.cpp" />
+    <ClCompile Include="examples\source\utility\async_test.cpp" />
+    <ClCompile Include="examples\source\utility\dynamic_linking.cpp" />
+    <ClCompile Include="examples\source\utility\encryption.cpp" />
+    <ClCompile Include="examples\source\utility\fast_output.cpp" />
+    <ClCompile Include="examples\source\utility\hashing.cpp" />
+    <ClCompile Include="examples\source\utility\safety_test.cpp" />
+    <ClCompile Include="examples\source\utility\sockets.cpp" />
+    <ClCompile Include="examples\source\video\video_reading.cpp" />
+    <ClCompile Include="examples\source\video\video_writing.cpp" />
     <ClCompile Include="source\apis\apis.cpp" />
     <ClCompile Include="source\apis\cpp\kl_cpp.cpp" />
     <ClCompile Include="source\apis\external\kl_imgui.cpp" />
@@ -85,6 +109,7 @@
     <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="examples\source\examples.h" />
     <ClInclude Include="source\apis\apis.h" />
     <ClInclude Include="source\apis\cpp\kl_cpp.h" />
     <ClInclude Include="source\apis\external\kl_imgui.h" />
@@ -208,7 +233,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\;$(SolutionDir)examples\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -225,7 +250,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\;$(SolutionDir)examples\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ShowIncludes>false</ShowIncludes>

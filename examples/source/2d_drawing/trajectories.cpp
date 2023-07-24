@@ -1,23 +1,23 @@
-#include "klib.h"
+#include "examples.h"
 
 
 struct scene_object
 {
-    float radius = kl::random::get_float(10.0f, 20.0f);
+    float radius = kl::random::gen_float(10.0f, 20.0f);
     kl::float2 position = {};
     kl::float2 velocity = {};
-    kl::color color = kl::random::get_color();
+    kl::color color = kl::random::gen_color();
     std::vector<kl::float2> position_history = {};
 };
 
-static float get_frame_lower_limit(const kl::image& frame)
+static float frame_lower_limit(const kl::image& frame)
 {
     return frame.height() * 0.9f;
 }
 
 static void draw_background(kl::image& frame)
 {
-    float lower_limit = get_frame_lower_limit(frame);
+    float lower_limit = frame_lower_limit(frame);
     frame.fill({ 60, 60, 60 });
     frame.draw_rectangle({ 0, (int) lower_limit }, frame.size(), kl::colors::gray, true);
     frame.draw_line({ 0, (int) lower_limit }, { frame.width(), (int) lower_limit }, { 30, 30, 30 });
@@ -52,8 +52,8 @@ static void process_objects(std::vector<scene_object>& objects, const kl::timer&
     static constexpr float energy_retain = 0.8f;
 
     for (auto& [radius, position, velocity, color, position_history] : objects) {
-        velocity += gravity * timer.get_interval();
-        position += velocity * timer.get_interval();
+        velocity += gravity * timer.delta();
+        position += velocity * timer.delta();
     }
 
     for (int i = 0; i < (int) objects.size(); i++) {
@@ -92,15 +92,15 @@ static void process_objects(std::vector<scene_object>& objects, const kl::timer&
             velocity.y *= -1.0f;
             velocity *= energy_retain;
         }
-        if (position.y + radius > get_frame_lower_limit(frame)) {
-            position.y = get_frame_lower_limit(frame) - radius;
+        if (position.y + radius > frame_lower_limit(frame)) {
+            position.y = frame_lower_limit(frame) - radius;
             velocity.y *= -1.0f;
             velocity *= energy_retain;
         }
     }
 }
 
-int main()
+int examples::trajectories_main()
 {
     auto window = kl::window({ 1600, 900 }, "Trajectories");
     kl::image frame = kl::image(window.size());
@@ -120,7 +120,7 @@ int main()
     window.mouse.left.on_press.push_back([&]()
     {
         const kl::int2 position = window.mouse.position();
-        if (position.x >= 0 && position.x < (int) window.width() && position.y > 0 && position.y < get_frame_lower_limit(frame)) {
+        if (position.x >= 0 && position.x < (int) window.width() && position.y > 0 && position.y < frame_lower_limit(frame)) {
             object_add_position = kl::float2(position);
             object_being_added = true;
         }
@@ -148,15 +148,15 @@ int main()
     {
         for (int i = 0; i < 20; i++) {
             scene_object random_object = {};
-            random_object.position.x = kl::random::get_float(float(frame.width()));
-            random_object.position.y = kl::random::get_float(get_frame_lower_limit(frame));
-            random_object.velocity = kl::random::get_float2(-500.0f, 500.0f);
+            random_object.position.x = kl::random::gen_float(float(frame.width()));
+            random_object.position.y = kl::random::gen_float(frame_lower_limit(frame));
+            random_object.velocity = kl::random::gen_float2(-500.0f, 500.0f);
             objects.push_back(random_object);
         }
     });
 
     while (window.process(false)) {
-        timer.update_interval();
+        timer.update_delta();
 
         process_objects(objects, timer, frame, gravity);
 
@@ -166,4 +166,5 @@ int main()
 
         window.draw_image(frame);
     }
+    return 0;
 }

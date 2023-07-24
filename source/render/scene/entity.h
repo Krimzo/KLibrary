@@ -34,16 +34,16 @@ namespace kl {
         void operator=(const entity&&) = delete;
 
         // Get
-        PxRigidActor* get_actor() const;
+        PxRigidActor* actor() const;
         float4x4 matrix() const;
         float4x4 collider_matrix() const;
 
         // Geometry
         void set_rotation(const float3& rotation);
-        float3 get_rotation() const;
+        float3 rotation() const;
 
         void set_position(const float3& position);
-        float3 get_position() const;
+        float3 position() const;
 
         // Physics
         void set_dynamic(PxPhysics* physics, bool enabled);
@@ -53,17 +53,17 @@ namespace kl {
         bool has_gravity() const;
 
         void set_mass(float mass);
-        float get_mass() const;
+        float mass() const;
 
         void set_velocity(const float3& velocity);
-        float3 get_velocity() const;
+        float3 velocity() const;
 
         void set_angular(const float3& angular);
-        float3 get_angular() const;
+        float3 angular() const;
 
         // Collision
         void set_collider(object<collider> collider);
-        object<collider> get_collider() const;
+        object<collider> collider() const;
     };
 }
 

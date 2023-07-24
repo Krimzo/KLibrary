@@ -1,7 +1,7 @@
-#include "klib.h"
+#include "examples.h"
 
 
-int main()
+int examples::hashing_main()
 {
     std::string some_text = "This is a test!";
     kl::float3 some_data = { 1.0f, 2.0f, 3.0f };
@@ -13,4 +13,5 @@ int main()
     kl::print(second_hash);
 
     kl::get();
+    return 0;
 }

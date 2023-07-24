@@ -1,9 +1,9 @@
-#include "klib.h"
+#include "examples.h"
 
 
 static constexpr float fps_limit = 165.0f;
 
-int main()
+int examples::interpolation_main()
 {
     auto window = kl::window({ 900, 900 }, "Interpolation");
     kl::image frame = kl::image(window.size());
@@ -37,8 +37,8 @@ int main()
     };
 
     kl::float4 constants[2] = {
-        triangles[0].get_constants(),
-        triangles[1].get_constants(),
+        triangles[0].constants(),
+        triangles[1].constants(),
     };
 
     int frame_index = 0;
@@ -47,8 +47,8 @@ int main()
 
         for (int x = frame_index - frame.height(), y = 0; y < frame.height(); x++, y++) {
             kl::float3 weights[2] = {
-                triangles[0].get_weights(constants[0], { (float) x, (float) y }),
-                triangles[1].get_weights(constants[1], { (float) x, (float) y }),
+                triangles[0].weights(constants[0], { (float) x, (float) y }),
+                triangles[1].weights(constants[1], { (float) x, (float) y }),
             };
 
             kl::color pixel = {};
@@ -70,20 +70,21 @@ int main()
                 frame[write_position] = pixel;
             }
             if (kl::int2 write_position = { x + 1, y }; frame.in_bounds(write_position)) {
-                frame[write_position] = kl::random::get_color();
+                frame[write_position] = kl::random::gen_color();
             }
             if (kl::int2 write_position = { x + 2, y }; frame.in_bounds(write_position)) {
-                frame[write_position] = kl::random::get_color();
+                frame[write_position] = kl::random::gen_color();
             }
         }
 
         window.draw_image(frame);
         window.set_title(kl::format((int) ((100.0f * frame_index) / (frame.width() + frame.height() - 1)), "%"));
-        kl::time::wait((1.0f / fps_limit) - timer.get_elapsed());
+        kl::time::wait((1.0f / fps_limit) - timer.elapsed());
 
         if (++frame_index == frame.width() + frame.height()) {
             window.set_title("Finished!");
             while (window.process());
         }
     }
+    return 0;
 }

@@ -1,15 +1,15 @@
-#include "klib.h"
+#include "examples.h"
 
 
 static constexpr int n = 200;
 static constexpr float increment = 0.15f;
 static float m = 0.0f;
 
-int main()
+int examples::times_table_main()
 {
     const kl::color circle_color = kl::colors::console;
-    kl::color point_color = kl::random::get_color();
-    kl::color line_color = kl::random::get_color();
+    kl::color point_color = kl::random::gen_color();
+    kl::color line_color = kl::random::gen_color();
 
     auto window = kl::window({ 900, 900 }, "Times Table");
     kl::image frame = { window.size() };
@@ -23,12 +23,12 @@ int main()
 
     window.keyboard.r.on_press.push_back([&]
     {
-        point_color = kl::random::get_color();
-        line_color = kl::random::get_color();
+        point_color = kl::random::gen_color();
+        line_color = kl::random::gen_color();
     });
 
     while (window.process(false)) {
-        m += increment * kl::time::get_interval();
+        m += increment * kl::time::delta();
 
         frame.fill(kl::colors::gray);
 
@@ -56,4 +56,5 @@ int main()
 
         window.set_title(kl::format("n: ", n, " m: ", m));
     }
+    return 0;
 }

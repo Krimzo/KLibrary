@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 static constexpr int sphere_count = 10;
@@ -19,7 +19,7 @@ struct ps_cb
     colored_sphere spheres[sphere_count] = {};
 };
 
-int main()
+int examples::raytracing_main()
 {
     kl::timer timer = {};
     kl::camera camera = {};
@@ -43,7 +43,7 @@ int main()
     {
         if (window.keyboard.shift) {
             for (auto& [center, radius, color] : ps_data.spheres) {
-                color = kl::float4(kl::random::get_color());
+                color = kl::float4(kl::random::gen_color());
             }
         }
         else if (window.keyboard.ctrl) {
@@ -54,9 +54,9 @@ int main()
         else {
             for (auto& sphere : ps_data.spheres) {
                 sphere = colored_sphere{
-                    kl::random::get_float3(40.0f) - kl::float3(20.0f, 20.0f, 20.0f),
-                    kl::random::get_float(2.75f) + 0.25f,
-                    kl::float4(kl::random::get_color())
+                    kl::random::gen_float3(40.0f) - kl::float3(20.0f, 20.0f, 20.0f),
+                    kl::random::gen_float(2.75f) + 0.25f,
+                    kl::float4(kl::random::gen_color())
                 };
             }
         }
@@ -64,8 +64,8 @@ int main()
 
     window.mouse.left.on_down.push_back([&]
     {
-        const kl::ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.get_normalized_position() };
-        ps_data.sun_direction = { ray.get_direction() * -1.0f, 0.0f };
+        const kl::ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.normalized_position() };
+        ps_data.sun_direction = { ray.direction() * -1.0f, 0.0f };
     });
 
     // Start
@@ -84,11 +84,11 @@ int main()
 
     // Update
     while (window.process(false)) {
-        timer.update_interval();
+        timer.update_delta();
 
         { // Physics
             for (int i = 0; i < sphere_count; i++) {
-                const float oscillation = (std::sin(timer.get_elapsed() + i) + 1.0f) * 0.5f;
+                const float oscillation = (std::sin(timer.elapsed() + i) + 1.0f) * 0.5f;
                 ps_data.spheres[i].center.y = (oscillation * (i + 1.0f)) + ps_data.spheres[i].radius;
             }
         }
@@ -96,7 +96,7 @@ int main()
         { // Input
             static bool camera_rotating = false;
             if (window.mouse.right) {
-                const kl::int2 frame_center = window.get_frame_center();
+                const kl::int2 frame_center = window.frame_center();
 
                 if (camera_rotating) {
                     camera.rotate(window.mouse.position(), frame_center);
@@ -119,22 +119,22 @@ int main()
             }
 
             if (window.keyboard.w) {
-                camera.move_forward(timer.get_interval());
+                camera.move_forward(timer.delta());
             }
             if (window.keyboard.s) {
-                camera.move_back(timer.get_interval());
+                camera.move_back(timer.delta());
             }
             if (window.keyboard.d) {
-                camera.move_right(timer.get_interval());
+                camera.move_right(timer.delta());
             }
             if (window.keyboard.a) {
-                camera.move_left(timer.get_interval());
+                camera.move_left(timer.delta());
             }
             if (window.keyboard.e) {
-                camera.move_up(timer.get_interval());
+                camera.move_up(timer.delta());
             }
             if (window.keyboard.q) {
-                camera.move_down(timer.get_interval());
+                camera.move_down(timer.delta());
             }
         }
 
@@ -150,4 +150,5 @@ int main()
 
         gpu.swap_buffers(true);
     }
+    return 0;
 }

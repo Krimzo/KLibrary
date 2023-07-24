@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 struct ps_cb
@@ -101,7 +101,7 @@ static void console_read()
     }
 }
 
-int main()
+int examples::mandelbrot_main()
 {
     kl::window window = { { 1600, 900 }, "Mandelbrot" };
     kl::gpu gpu = { (HWND) window };
@@ -129,10 +129,10 @@ int main()
 
     // Update
     while (window.process(false)) {
-        timer.update_interval();
+        timer.update_delta();
 
         // Input
-        input(window, timer.get_interval());
+        input(window, timer.delta());
 
         // Render
         gpu.clear_internal();
@@ -153,4 +153,5 @@ int main()
             "(Position: ", position, ")"
         ));
     }
+    return 0;
 }

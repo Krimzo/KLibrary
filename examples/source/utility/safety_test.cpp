@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 using namespace kl;
 
@@ -38,10 +38,11 @@ std::ostream& operator<<(std::ostream& stream, const person& person)
 void object_test();
 void array_test();
 
-int main()
+int examples::safety_test_main()
 {
     object_test();
     array_test();
+    return 0;
 }
 
 void object_test()

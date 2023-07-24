@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 struct cs_cb
@@ -6,7 +6,7 @@ struct cs_cb
     kl::float4 misc_data;
 };
 
-int main()
+int examples::compute_shaders2_main()
 {
     kl::window window = { { 1600, 900 }, "Compute shaders 2" };
     kl::gpu gpu = { (HWND) window };
@@ -32,7 +32,7 @@ int main()
     kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
 
     while (window.process(false)) {
-        timer.update_interval();
+        timer.update_delta();
 
         gpu.unbind_shader_view_for_compute_shader(0);
         gpu.unbind_shader_view_for_pixel_shader(0);
@@ -53,4 +53,5 @@ int main()
 
         gpu.swap_buffers(true);
     }
+    return 0;
 }

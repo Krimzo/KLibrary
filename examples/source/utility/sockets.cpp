@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 static void server()
@@ -24,10 +24,11 @@ static void client()
     print("Received: ", result);
 }
 
-int main()
+int examples::sockets_main()
 {
     auto server_thread = std::thread(server);
     auto client_thread = std::thread(client);
     server_thread.join();
     client_thread.join();
+    return 0;
 }

@@ -50,17 +50,17 @@ namespace kl {
         std::map<std::string, object<entity>>::iterator end();
 
         // Get
-        PxPhysics* get_physics() const;
-        PxCooking* get_cooking() const;
+        PxPhysics* physics() const;
+        PxCooking* cooking() const;
 
-        object<entity> get_entity(const std::string& name) const;
-        std::string get_name(object<entity> entity) const;
+        object<entity> entity(const std::string& name) const;
+        std::string name(object<entity> entity) const;
 
         size_t entity_count() const;
 
         // Set/Get
         void set_gravity(const float3& gravity);
-        float3 get_gravity() const;
+        float3 gravity() const;
 
         void add(const std::string& name, object<entity> entity);
         void remove(const std::string& name);

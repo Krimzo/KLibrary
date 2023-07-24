@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 /* VISUAL SORT */
@@ -15,7 +15,7 @@ static std::vector<stick> generate_sticks(const int count, const int min_value_i
 
     std::vector<stick> sticks(count);
     for (auto& [value, color] : sticks) {
-        value = kl::random::get_int(min_value_incl, max_value_excl);
+        value = kl::random::gen_int(min_value_incl, max_value_excl);
         stored_min_value = min(stored_min_value, value);
         stored_max_value = max(stored_max_value, value);
     }
@@ -38,7 +38,7 @@ static void draw_sticks(kl::image& frame, const std::vector<stick>& sticks)
 
 static const std::string output_video_path = "examples/videos/generated_video.mp4";
 
-int main()
+int examples::video_writing_main()
 {
     auto video_writer = kl::video_writer(output_video_path, { 1920, 1080 }, 60, 80'000'000, MFVideoFormat_H264);
 
@@ -60,4 +60,5 @@ int main()
     }
 
     video_writer.finalize();
+    return 0;
 }

@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 struct stick
@@ -14,7 +14,7 @@ static std::vector<stick> generate_sticks(const int count, const int min_value_i
 
     std::vector<stick> sticks(count);
     for (auto& [value, color] : sticks) {
-        value = kl::random::get_int(min_value_incl, max_value_excl);
+        value = kl::random::gen_int(min_value_incl, max_value_excl);
         stored_min_value = min(stored_min_value, value);
         stored_max_value = max(stored_max_value, value);
     }
@@ -34,7 +34,7 @@ static void draw_sticks(kl::image& frame, const std::vector<stick>& sticks)
     }
 }
 
-int main()
+int examples::visual_sort_main()
 {
     auto window = kl::window({ 1600, 900 }, "Visual Sort");
     kl::image frame = { window.size() };
@@ -62,4 +62,5 @@ int main()
         draw_sticks(frame, sticks);
         window.draw_image(frame);
     }
+    return 0;
 }

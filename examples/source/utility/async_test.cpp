@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 static std::vector<float> data(100'000'000);
@@ -14,7 +14,7 @@ static float time_it(const std::function<void()>& func)
 {
 	kl::timer timer = {};
 	func();
-	return timer.get_elapsed();
+	return timer.elapsed();
 }
 
 static float compute_function(size_t value)
@@ -47,9 +47,9 @@ static void async_test()
 	});
 }
 
-/* NOTE: Use Release mode to see the real results. */
+/* NOTE: Use Release mode for proper results. */
 
-int main()
+int examples::async_test_main()
 {
 	static const size_t randomIndex = rand() % data.size();
 	kl::print("Random index: ", randomIndex, "\n");
@@ -67,4 +67,5 @@ int main()
 	kl::print("kl::async::loop data[", randomIndex, "] = ", data[randomIndex], "\n");
 
 	kl::get();
+	return 0;
 }

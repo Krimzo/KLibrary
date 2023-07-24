@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 struct example_struct
@@ -6,7 +6,7 @@ struct example_struct
     kl::float3 position;
 };
 
-int main()
+int examples::compute_shaders1_main()
 {
     kl::gpu gpu = {};
 
@@ -34,4 +34,6 @@ int main()
     for (auto& [position] : example_data) {
         print(position);
     }
+    kl::get();
+    return 0;
 }

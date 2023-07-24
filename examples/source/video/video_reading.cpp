@@ -1,7 +1,7 @@
-#include "klib.h"
+#include "examples.h"
 
 
-int main(const int argc, const char** argv)
+int examples::video_reading_main(const int argc, const char** argv)
 {
     std::string filepath = {};
     if (argc == 2) {
@@ -27,7 +27,7 @@ int main(const int argc, const char** argv)
 
     kl::console::clear();
     kl::image video_frame = {};
-    while (video_reader.get_next_frame(video_frame)) {
+    while (video_reader.next_frame(video_frame)) {
         ascii_frames.push_back(video_frame.as_ascii(console_size));
         kl::console::move_cursor({});
         kl::print<false>("Processed: ", ascii_frames.size(), "/", frame_count);
@@ -42,7 +42,8 @@ int main(const int argc, const char** argv)
             timer.reset();
             kl::console::dump(ascii_frames[i]);
             kl::console::set_title(kl::format(i + 1, "/", ascii_frames.size()));
-            while (timer.get_elapsed() < to_wait);
+            while (timer.elapsed() < to_wait);
         }
     }
+    return 0;
 }

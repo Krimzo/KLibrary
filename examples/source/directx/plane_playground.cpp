@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 struct sky_ps_cb
@@ -32,7 +32,7 @@ static kl::dx::geometry_shader plane_geometry_shader = nullptr;
 void setup_input(kl::window& window, kl::gpu& gpu);
 void camera_movement(kl::window& window);
 
-int main()
+int examples::plane_playground_main()
 {
     kl::window window = { { 1600, 900 }, "Plane Playground" };
     kl::gpu gpu = { (HWND) window };
@@ -52,7 +52,7 @@ int main()
     camera.set_forward(camera.origin * -1.0f);
 
     while (window.process(false)) {
-        timer.update_interval();
+        timer.update_delta();
 
         camera_movement(window);
 
@@ -82,8 +82,8 @@ int main()
         plane_vs_cb plane_vscb = {};
         plane_vscb.w_matrix = {};
         plane_vscb.vp_matrix = camera.matrix();
-        plane_vscb.time_data.x = timer.get_elapsed();
-        plane_vscb.time_data.y = timer.get_interval();
+        plane_vscb.time_data.x = timer.elapsed();
+        plane_vscb.time_data.y = timer.delta();
         plane_shaders.vertex_shader.update_cbuffer(plane_vscb);
 
         plane_ps_cb plane_pscb = {};
@@ -91,9 +91,9 @@ int main()
         plane_shaders.pixel_shader.update_cbuffer(plane_pscb);
 
         gpu.draw(plane_mesh);
-
         gpu.swap_buffers(true);
     }
+    return 0;
 }
 
 void setup_input(kl::window& window, kl::gpu& gpu)
@@ -136,8 +136,8 @@ void setup_input(kl::window& window, kl::gpu& gpu)
 
     window.mouse.left.on_down.push_back([&]
     {
-        const kl::ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.get_normalized_position() };
-        sun_direction = -ray.get_direction();
+        const kl::ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.normalized_position() };
+        sun_direction = -ray.direction();
     });
 }
 
@@ -146,7 +146,7 @@ void camera_movement(kl::window& window)
     static bool camera_rotating = false;
 
     if (window.mouse.right) {
-        const kl::int2 frame_center = window.get_frame_center();
+        const kl::int2 frame_center = window.frame_center();
 
         if (camera_rotating) {
             camera.rotate(kl::float2(window.mouse.position()), kl::float2(frame_center));
@@ -162,21 +162,21 @@ void camera_movement(kl::window& window)
     }
 
     if (window.keyboard.w) {
-        camera.move_forward(timer.get_interval());
+        camera.move_forward(timer.delta());
     }
     if (window.keyboard.s) {
-        camera.move_back(timer.get_interval());
+        camera.move_back(timer.delta());
     }
     if (window.keyboard.d) {
-        camera.move_right(timer.get_interval());
+        camera.move_right(timer.delta());
     }
     if (window.keyboard.a) {
-        camera.move_left(timer.get_interval());
+        camera.move_left(timer.delta());
     }
     if (window.keyboard.e) {
-        camera.move_up(timer.get_interval());
+        camera.move_up(timer.delta());
     }
     if (window.keyboard.q) {
-        camera.move_down(timer.get_interval());
+        camera.move_down(timer.delta());
     }
 }

@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 struct vs_cb
@@ -14,7 +14,7 @@ struct ps_cb
     kl::float4 sun_direction;
 };
 
-int main()
+int examples::geometry_shaders_main()
 {
     /* ----- SETUP ----- */
     kl::window window = { { 1600, 900 }, "Geometry Test" };
@@ -98,16 +98,16 @@ int main()
 
     /* ----- UPDATE ----- */
     while (window.process(false)) {
-        timer.update_interval();
+        timer.update_delta();
 
-        main_entity->update_physics(timer.get_interval());
+        main_entity->update_physics(timer.delta());
 
         if (destroy_value < destroy_goal) {
-            destroy_value += timer.get_interval() * 5.0f;
+            destroy_value += timer.delta() * 5.0f;
         }
         else {
             destroy_goal = -INFINITY;
-            destroy_value -= timer.get_interval() * 0.25f;
+            destroy_value -= timer.delta() * 0.25f;
         }
 
         sun_direction = kl::normalize(sun_direction);
@@ -131,4 +131,5 @@ int main()
 
         gpu.swap_buffers(true);
     }
+    return 0;
 }

@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 static void draw_axis(kl::image& frame, const kl::color& color = { 75, 75, 75 })
@@ -83,7 +83,7 @@ static void calculate_improved_line(const std::vector<kl::int2>& data, kl::float
     }
 }
 
-int main()
+int examples::data_line_main()
 {
     auto window = kl::window({ 1600, 900 }, "Data Line");
     kl::image frame = kl::image(window.size());
@@ -119,4 +119,5 @@ int main()
 
         window.draw_image(frame);
     }
+    return 0;
 }

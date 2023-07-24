@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 enum id
@@ -146,10 +146,10 @@ static board_info find_best(const std::vector<int>& board, const bool playersTur
     return min_info;
 }
 
-int main()
+int examples::tic_tac_main()
 {
     std::vector<int> board(sizes.x * sizes.x);
-    bool players_turn = kl::random::get_bool();
+    bool players_turn = kl::random::gen_bool();
     const bool player_was_first = players_turn;
 
     const int square_size = sizes.y / sizes.x;
@@ -236,4 +236,5 @@ int main()
 
         window.draw_image(frame);
     }
+    return 0;
 }

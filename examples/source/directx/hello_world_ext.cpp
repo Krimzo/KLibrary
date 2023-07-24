@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 static const std::string shader_source =
@@ -49,10 +49,10 @@ struct ps_cb
     kl::float4 highlight_color;
 };
 
-int main()
+int examples::hello_world_ext_main()
 {
     // Window setup
-    kl::window window = { { 1600, 900 }, "Hello World" };
+    kl::window window = { { 1600, 900 }, "Hello World! (Extended)" };
     kl::gpu gpu = { (HWND) window };
 
     // Window resize setup
@@ -103,4 +103,5 @@ int main()
         gpu.draw_indexed(vertex_buffer, index_buffer);
         gpu.swap_buffers(true);
     }
+    return 0;
 }

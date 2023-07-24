@@ -1,7 +1,7 @@
-﻿#include "klib.h"
+﻿#include "examples.h"
 
 
-int main()
+int examples::encryption_main()
 {
     const kl::encryptor encryptor = {};
 
@@ -14,6 +14,6 @@ int main()
     encryptor.decrypt(data);
     print(kl::colors::cyan, data);
 
-
     kl::get();
+    return 0;
 }

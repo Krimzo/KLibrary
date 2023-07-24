@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "examples.h"
 
 
 static const std::string shader_source =
@@ -16,10 +16,10 @@ float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
 }
 )";
 
-int main()
+int examples::hello_world_main()
 {
     // Window setup
-    kl::window window = { { 1600, 900 }, "Hello World" };
+    kl::window window = { { 1600, 900 }, "Hello World!" };
     kl::gpu gpu = { (HWND) window };
 
     // Window resize setup
@@ -57,4 +57,5 @@ int main()
         gpu.draw(triangle);
         gpu.swap_buffers(true);
     }
+    return 0;
 }
