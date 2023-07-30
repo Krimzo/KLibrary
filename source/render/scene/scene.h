@@ -29,10 +29,10 @@ namespace kl {
         std::map<std::string, object<texture>> textures = {};
         std::map<std::string, object<material>> materials = {};
 
-        object<camera> camera = nullptr;
+        object<camera> camera = new kl::camera();
         object<entity> selected_entity = nullptr;
 
-        object<ambient_light> ambient_light = nullptr;
+        object<ambient_light> ambient_light = new kl::ambient_light();
         object<directional_light> directional_light = nullptr;
 
         // Creation
@@ -48,13 +48,15 @@ namespace kl {
         // Iterate
         std::map<std::string, object<entity>>::iterator begin();
         std::map<std::string, object<entity>>::iterator end();
+        std::map<std::string, object<entity>>::const_iterator begin() const;
+        std::map<std::string, object<entity>>::const_iterator end() const;
 
         // Get
         PxPhysics* physics() const;
         PxCooking* cooking() const;
 
-        object<entity> entity(const std::string& name) const;
-        std::string name(object<kl::entity> entity) const;
+        object<entity> find_entity(const std::string& name) const;
+        std::string find_name(object<kl::entity> entity) const;
 
         size_t entity_count() const;
 

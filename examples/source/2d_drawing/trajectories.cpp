@@ -30,7 +30,7 @@ static void draw_objects(kl::image& frame, std::vector<scene_object>& objects)
         int start_position_index = int(position_history.size() * 0.75f);
         for (int i = start_position_index; i < int(position_history.size()) - 1; i++) {
             frame.draw_line(kl::int2(position_history[i]), kl::int2(position_history[i + 1]),
-                kl::color(60, 60, 60).mix(color, kl::normalize((float) i, (float) start_position_index, (float) position_history.size())));
+                kl::color(60, 60, 60).mix(color, kl::wrap((float) i, (float) start_position_index, (float) position_history.size())));
         }
         frame.draw_circle(kl::int2(position), radius, color, true);
         frame.draw_circle(kl::int2(position), radius, { 30, 30, 30 });
