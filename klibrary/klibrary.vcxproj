@@ -10,38 +10,76 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="examples\source\2d_drawing\data_line.cpp" />
-    <ClCompile Include="examples\source\2d_drawing\interpolation.cpp" />
-    <ClCompile Include="examples\source\2d_drawing\tic_tac_engine.cpp" />
-    <ClCompile Include="examples\source\2d_drawing\times_table.cpp" />
-    <ClCompile Include="examples\source\2d_drawing\trajectories.cpp" />
-    <ClCompile Include="examples\source\2d_drawing\visual_sort.cpp" />
-    <ClCompile Include="examples\source\directx\compute_shaders1.cpp" />
-    <ClCompile Include="examples\source\directx\compute_shaders2.cpp" />
-    <ClCompile Include="examples\source\directx\geometry_shaders.cpp" />
-    <ClCompile Include="examples\source\directx\hello_world.cpp" />
-    <ClCompile Include="examples\source\directx\hello_world_ext.cpp" />
-    <ClCompile Include="examples\source\directx\mandelbrot.cpp" />
-    <ClCompile Include="examples\source\directx\plane_playground.cpp" />
-    <ClCompile Include="examples\source\directx\raytracing.cpp" />
-    <ClCompile Include="examples\source\examples.cpp" />
-    <ClCompile Include="examples\source\math\imaginary_numbers.cpp" />
-    <ClCompile Include="examples\source\utility\async_test.cpp" />
-    <ClCompile Include="examples\source\utility\dynamic_linking.cpp" />
-    <ClCompile Include="examples\source\utility\encryption.cpp" />
-    <ClCompile Include="examples\source\utility\fast_output.cpp" />
-    <ClCompile Include="examples\source\utility\hashing.cpp" />
-    <ClCompile Include="examples\source\utility\safety_test.cpp" />
-    <ClCompile Include="examples\source\utility\sockets.cpp" />
-    <ClCompile Include="examples\source\video\video_reading.cpp" />
-    <ClCompile Include="examples\source\video\video_writing.cpp" />
-    <ClCompile Include="source\apis\apis.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">apis/apis.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">apis/apis.h</PrecompiledHeaderFile>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{d769f88c-efd4-4152-a7f5-2146868e1bc6}</ProjectGuid>
+    <RootNamespace>klibrary</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>klibrary</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)source\</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)source\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="source\apis\apis.cpp" />
     <ClCompile Include="source\apis\cpp\kl_cpp.cpp" />
     <ClCompile Include="source\apis\external\kl_imgui.cpp" />
     <ClCompile Include="source\apis\external\kl_physx.cpp" />
@@ -101,10 +139,10 @@
     <ClCompile Include="source\utility\async\async_iterator.cpp" />
     <ClCompile Include="source\utility\data\encryptor.cpp" />
     <ClCompile Include="source\utility\data\random.cpp" />
-    <ClCompile Include="source\utility\hash\hash_t.cpp" />
-    <ClCompile Include="source\utility\hash\sha256.cpp" />
     <ClCompile Include="source\utility\format\console.cpp" />
     <ClCompile Include="source\utility\format\strings.cpp" />
+    <ClCompile Include="source\utility\hash\hash_t.cpp" />
+    <ClCompile Include="source\utility\hash\sha256.cpp" />
     <ClCompile Include="source\utility\utility.cpp" />
     <ClCompile Include="source\web\socket\socket.cpp" />
     <ClCompile Include="source\web\web.cpp" />
@@ -115,7 +153,6 @@
     <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="examples\source\examples.h" />
     <ClInclude Include="source\apis\apis.h" />
     <ClInclude Include="source\apis\cpp\kl_cpp.h" />
     <ClInclude Include="source\apis\external\kl_imgui.h" />
@@ -176,10 +213,10 @@
     <ClInclude Include="source\utility\async\async_iterator.h" />
     <ClInclude Include="source\utility\data\encryptor.h" />
     <ClInclude Include="source\utility\data\random.h" />
-    <ClInclude Include="source\utility\hash\hash_t.h" />
-    <ClInclude Include="source\utility\hash\sha256.h" />
     <ClInclude Include="source\utility\format\console.h" />
     <ClInclude Include="source\utility\format\strings.h" />
+    <ClInclude Include="source\utility\hash\hash_t.h" />
+    <ClInclude Include="source\utility\hash\sha256.h" />
     <ClInclude Include="source\utility\utility.h" />
     <ClInclude Include="source\web\socket\socket.h" />
     <ClInclude Include="source\web\web.h" />
@@ -189,91 +226,6 @@
     <ClInclude Include="source\window\input\mouse.h" />
     <ClInclude Include="source\window\window.h" />
   </ItemGroup>
-  <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
-    <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{50bbfb74-f60c-4e84-9a43-5b07bdcbc296}</ProjectGuid>
-    <RootNamespace>KLibrary</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\;$(SolutionDir)examples\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <ForcedIncludeFiles>apis/apis.h</ForcedIncludeFiles>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>apis/apis.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\;$(SolutionDir)examples\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <ShowIncludes>false</ShowIncludes>
-      <ForcedIncludeFiles>apis/apis.h</ForcedIncludeFiles>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>apis/apis.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
