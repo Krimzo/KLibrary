@@ -36,7 +36,12 @@
     <ClCompile Include="examples\source\utility\sockets.cpp" />
     <ClCompile Include="examples\source\video\video_reading.cpp" />
     <ClCompile Include="examples\source\video\video_writing.cpp" />
-    <ClCompile Include="source\apis\apis.cpp" />
+    <ClCompile Include="source\apis\apis.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">apis/apis.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">apis/apis.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="source\apis\cpp\kl_cpp.cpp" />
     <ClCompile Include="source\apis\external\kl_imgui.cpp" />
     <ClCompile Include="source\apis\external\kl_physx.cpp" />
@@ -50,6 +55,7 @@
     <ClCompile Include="source\graphics\shaders\render_shaders.cpp" />
     <ClCompile Include="source\graphics\shaders\shader_compiler.cpp" />
     <ClCompile Include="source\graphics\shaders\shader_holder.cpp" />
+    <ClCompile Include="source\klib.cpp" />
     <ClCompile Include="source\math\helper\constants.cpp" />
     <ClCompile Include="source\math\imaginary\complex.cpp" />
     <ClCompile Include="source\math\imaginary\quaternion.cpp" />
@@ -236,6 +242,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)source\;$(SolutionDir)examples\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ForcedIncludeFiles>apis/apis.h</ForcedIncludeFiles>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>apis/apis.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -254,6 +263,9 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ShowIncludes>false</ShowIncludes>
+      <ForcedIncludeFiles>apis/apis.h</ForcedIncludeFiles>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>apis/apis.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
