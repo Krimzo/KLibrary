@@ -3,20 +3,20 @@
 
 static constexpr int sphere_count = 10;
 
-struct colored_sphere
+struct raytracing_colored_sphere
 {
     kl::float3 center = {};
     float radius = 0.0f;
     kl::float4 color = {};
 };
 
-struct ps_cb
+struct raytracing_ps_cb
 {
     kl::float4 frame_size = {};
     kl::float4x4 inverse_camera = {};
     kl::float4 camera_position = {};
     kl::float4 sun_direction = {};
-    colored_sphere spheres[sphere_count] = {};
+    raytracing_colored_sphere spheres[sphere_count] = {};
 };
 
 int examples::raytracing_main()
@@ -28,7 +28,7 @@ int examples::raytracing_main()
     kl::gpu gpu = { (HWND) window };
 
     // Heap alloc because of stack size warnings
-    ps_cb& ps_data = *new ps_cb; // You saw nothing :)
+    raytracing_ps_cb& ps_data = *new raytracing_ps_cb; // You saw nothing :)
 
     window.on_resize.push_back([&](const kl::int2 new_size)
     {
@@ -43,20 +43,20 @@ int examples::raytracing_main()
     {
         if (window.keyboard.shift) {
             for (auto& [center, radius, color] : ps_data.spheres) {
-                color = kl::float4(kl::random::gen_color());
+                color = (kl::float4) kl::random::gen_color();
             }
         }
         else if (window.keyboard.ctrl) {
             for (auto& [center, radius, color] : ps_data.spheres) {
-                color = kl::float4(kl::color(color).gray());
+                color = (kl::float4) kl::color(color).gray();
             }
         }
         else {
             for (auto& sphere : ps_data.spheres) {
-                sphere = colored_sphere{
+                sphere = raytracing_colored_sphere {
                     kl::random::gen_float3(40.0f) - kl::float3(20.0f, 20.0f, 20.0f),
                     kl::random::gen_float(2.75f) + 0.25f,
-                    kl::float4(kl::random::gen_color())
+                    (kl::float4) kl::random::gen_color(),
                 };
             }
         }
@@ -71,7 +71,7 @@ int examples::raytracing_main()
     // Start
     window.maximize();
 
-    const std::string shader_sources = kl::read_file_string("examples/shaders/raytracing.hlsl");
+    const std::string shader_sources = kl::read_file_string("shaders/raytracing.hlsl");
     kl::render_shaders shaders = gpu.create_render_shaders(shader_sources);
     gpu.bind_render_shaders(shaders);
 
@@ -143,7 +143,7 @@ int examples::raytracing_main()
 
         ps_data.frame_size = { window.size(), {} };
         ps_data.inverse_camera = kl::inverse(camera.matrix());
-        ps_data.camera_position = { camera.origin, 0.0f };
+        ps_data.camera_position = { camera.origin, {} };
         shaders.pixel_shader.update_cbuffer(ps_data);
 
         gpu.draw(screen_mesh);

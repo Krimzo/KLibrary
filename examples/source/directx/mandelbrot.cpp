@@ -1,13 +1,6 @@
 #include "examples.h"
 
 
-struct ps_cb
-{
-    kl::float4 state_info;
-    kl::float4 frame_size;
-    kl::float4 start_color;
-};
-
 static int iterations = 64;
 static float zoom = 1.0f;
 static kl::float2 position = { -0.5f, 0.0f };
@@ -85,9 +78,9 @@ static void console_read()
         }(), ' '); parts.size() >= 3) {
             try {
                 kl::color result_color = {};
-                result_color.r = uint8_t(std::stoi(parts[0]));
-                result_color.g = uint8_t(std::stoi(parts[1]));
-                result_color.b = uint8_t(std::stoi(parts[2]));
+                result_color.r = (uint8_t) std::stoi(parts[0]);
+                result_color.g = (uint8_t) std::stoi(parts[1]);
+                result_color.b = (uint8_t) std::stoi(parts[2]);
                 start_color = result_color;
                 print(start_color, "Color updated!");
             }
@@ -114,13 +107,11 @@ int examples::mandelbrot_main()
             gpu.set_viewport_size(size);
         }
     });
-
     window.maximize();
 
     // Start
-    const std::string shader_sources = kl::read_file_string("examples/shaders/mandelbrot.hlsl");
+    const std::string shader_sources = kl::read_file_string("shaders/mandelbrot.hlsl");
     kl::render_shaders shaders = gpu.create_render_shaders(shader_sources);
-    gpu.bind_render_shaders(shaders);
 
     kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
 
@@ -137,11 +128,19 @@ int examples::mandelbrot_main()
         // Render
         gpu.clear_internal();
 
-        ps_cb ps_data = {};
+        struct mandelbrot_ps_cb
+        {
+            kl::float4 state_info;
+            kl::float4 frame_size;
+            kl::float4 start_color;
+        };
+
+        mandelbrot_ps_cb ps_data = {};
         ps_data.state_info = { position, zoom, (float) iterations };
-        ps_data.frame_size = { window.size(), 0.0f, 0.0f };
+        ps_data.frame_size = { window.size(), {} };
         ps_data.start_color = start_color;
         shaders.pixel_shader.update_cbuffer(ps_data);
+        gpu.bind_render_shaders(shaders);
 
         gpu.draw(screen_mesh);
         gpu.swap_buffers(true);

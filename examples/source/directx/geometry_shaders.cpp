@@ -1,14 +1,14 @@
 #include "examples.h"
 
 
-struct vs_cb
+struct geometry_vs_cb
 {
     kl::float4x4 w_matrix;
     kl::float4x4 vp_matrix;
     kl::float4 misc_data;
 };
 
-struct ps_cb
+struct geometry_ps_cb
 {
     kl::float4 object_color;
     kl::float4 sun_direction;
@@ -48,7 +48,7 @@ int examples::geometry_shaders_main()
     window.keyboard.v.on_press.back()();
 
     // Shaders
-    std::string shader_sources = kl::read_file_string("examples/shaders/geometry_test.hlsl");
+    std::string shader_sources = kl::read_file_string("shaders/geometry_test.hlsl");
     kl::render_shaders default_shaders = gpu.create_render_shaders(shader_sources);
     kl::shader_holder geometry_shader = gpu.create_geometry_shader(shader_sources);
     gpu.bind_render_shaders(default_shaders);
@@ -58,9 +58,9 @@ int examples::geometry_shaders_main()
     kl::object<kl::mesh> cube_mesh = new kl::mesh(&gpu);
     kl::object<kl::mesh> sphere_mesh = new kl::mesh(&gpu);
     kl::object<kl::mesh> monke_mesh = new kl::mesh(&gpu);
-    cube_mesh->graphics_buffer = gpu.create_vertex_buffer("examples/meshes/cube.obj");
-    sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("examples/meshes/sphere.obj");
-    monke_mesh->graphics_buffer =gpu.create_vertex_buffer("examples/meshes/monke.obj");
+    cube_mesh->graphics_buffer = gpu.create_vertex_buffer("meshes/cube.obj");
+    sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/sphere.obj");
+    monke_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/monke.obj");
 
     // Material
     kl::object<kl::material> default_material = new kl::material();
@@ -114,13 +114,13 @@ int examples::geometry_shaders_main()
 
         gpu.clear_internal(kl::colors::gray);
 
-        vs_cb vs_data = {};
+        geometry_vs_cb vs_data = {};
         vs_data.vp_matrix = camera.matrix();
         vs_data.w_matrix = main_entity->matrix();
         vs_data.misc_data.x = max(destroy_value, 0.0f);
         default_shaders.vertex_shader.update_cbuffer(vs_data);
 
-        ps_cb ps_data = {};
+        geometry_ps_cb ps_data = {};
         ps_data.sun_direction = { sun_direction.x, sun_direction.y, sun_direction.z, 0.0f };
         ps_data.object_color = main_entity->material->color;
         default_shaders.pixel_shader.update_cbuffer(ps_data);

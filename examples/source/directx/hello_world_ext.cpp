@@ -43,7 +43,7 @@ float4 p_shader(const VS_OUT data) : SV_Target
 }
 )";
 
-struct ps_cb
+struct hello_world_ext_ps_cb
 {
     kl::float4 mouse_position;
     kl::float4 highlight_color;
@@ -94,7 +94,7 @@ int examples::hello_world_ext_main()
 
     // CDS (Clear-Draw-Swap)
     while (window.process(false)) {
-        ps_cb ps_data = {};
+        hello_world_ext_ps_cb ps_data = {};
         ps_data.mouse_position = { window.mouse.position(), 0, 0 };
         ps_data.highlight_color = (kl::float4) kl::colors::gray;
         shaders.pixel_shader.update_cbuffer(ps_data);

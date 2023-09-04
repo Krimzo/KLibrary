@@ -36,7 +36,7 @@ static void draw_sticks(kl::image& frame, const std::vector<stick>& sticks)
 }
 /* ----------- */
 
-static const std::string output_video_path = "examples/videos/generated_video.mp4";
+static const std::string output_video_path = "./videos/generated_video.mp4";
 
 int examples::video_writing_main()
 {

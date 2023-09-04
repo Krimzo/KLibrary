@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-struct cs_cb
+struct compute2_cs_cb
 {
     kl::float4 misc_data;
 };
@@ -23,7 +23,7 @@ int examples::compute_shaders2_main()
     kl::dx::access_view access_view = gpu.create_access_view(render_texture, nullptr);
     kl::dx::shader_view shader_view = gpu.create_shader_view(render_texture, nullptr);
 
-    const std::string shader_sources = kl::read_file_string("examples/shaders/compute_test2.hlsl");
+    const std::string shader_sources = kl::read_file_string("shaders/compute_test2.hlsl");
     kl::render_shaders render_shaders = gpu.create_render_shaders(shader_sources);
     kl::shader_holder compute_shader = gpu.create_compute_shader(shader_sources);
     gpu.bind_render_shaders(render_shaders);
@@ -38,7 +38,7 @@ int examples::compute_shaders2_main()
         gpu.unbind_shader_view_for_pixel_shader(0);
         gpu.clear_target_view(target_view, kl::colors::gray);
 
-        cs_cb cs_data = {};
+        compute2_cs_cb cs_data = {};
         cs_data.misc_data.x = (float) window.mouse.position().x;
         cs_data.misc_data.y = (float) window.mouse.position().y;
         compute_shader.update_cbuffer(cs_data);

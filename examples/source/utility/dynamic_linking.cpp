@@ -7,18 +7,20 @@
 
 #define DLL_EXPORT(return_type) extern "C" return_type __declspec(dllexport) __stdcall
 
-DLL_EXPORT(void) script_start() {
+DLL_EXPORT(void) script_start()
+{
 	printf("It started!\n");
 }
 
-DLL_EXPORT(void) script_update(int index) {
+DLL_EXPORT(void) script_update(int index)
+{
 	printf("Index is: %d\n", index);
 }
 */
 
 int examples::dynamic_linking_main()
 {
-	kl::dll loaded_dll = kl::dll("examples/dlls/dll_test_1.dll");
+	kl::dll loaded_dll = kl::dll("dlls/dll_test_1.dll");
 	if (kl::warning_check(!loaded_dll, "Failed to load dll")) {
 		return 1;
 	}

@@ -101,6 +101,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="source\math\imaginary_numbers.cpp" />
+    <ClCompile Include="source\utility\async_test.cpp" />
     <ClCompile Include="source\utility\dynamic_linking.cpp" />
     <ClCompile Include="source\utility\encryption.cpp" />
     <ClCompile Include="source\utility\fast_output.cpp" />
