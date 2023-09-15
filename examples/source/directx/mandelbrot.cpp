@@ -42,7 +42,6 @@ static void input(const kl::window& window, const float delta_time)
             window.mouse.position().x / (float) frame_size.x * 2.0f - 1.0f,
             window.mouse.position().y / (float) frame_size.y * 2.0f - 1.0f,
         };
-
         uv *= float(frame_size.x) / frame_size.y;
         position += (uv * (1.0f / zoom)) * delta_time;
     }
@@ -52,7 +51,6 @@ static void input(const kl::window& window, const float delta_time)
             window.mouse.position().x / (float) frame_size.x * 2.0f - 1.0f,
             window.mouse.position().y / (float) frame_size.y * 2.0f - 1.0f,
         };
-
         uv *= float(frame_size.x) / frame_size.y;
         position -= (uv * (1.0f / zoom)) * delta_time;
     }
@@ -69,7 +67,6 @@ static void console_read()
 {
     while (true) {
         kl::print<false>(kl::colors::console, "Color = ");
-
         if (std::vector<std::string> parts = kl::split_string([]
         {
             std::string line;
@@ -100,7 +97,7 @@ int examples::mandelbrot_main()
     kl::gpu gpu = { (HWND) window };
     kl::timer timer = {};
 
-    window.on_resize.push_back([&](const kl::int2 size)
+    window.on_resize.emplace_back([&](const kl::int2 size)
     {
         if (size.x > 0 && size.y > 0) {
             gpu.resize_internal(size);
@@ -112,8 +109,7 @@ int examples::mandelbrot_main()
     // Start
     const std::string shader_sources = kl::read_file_string("shaders/mandelbrot.hlsl");
     kl::render_shaders shaders = gpu.create_render_shaders(shader_sources);
-
-    kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
+    const kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
 
     // Console
     std::thread(console_read).detach();
