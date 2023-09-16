@@ -7,7 +7,8 @@ Goal is to *simplify* use of C++, Win32 and DirectX.
 #include "klib.h"
 
 
-static const std::string shader_source = R"(
+static const std::string shader_source =
+R"(
 // Vertex shader
 float4 v_shader(const float3 position : KL_Position) : SV_Position
 {
@@ -24,11 +25,11 @@ float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
 int main()
 {
     // Window setup
-    kl::window window = { { 1600, 900 }, "Hello World" };
+    kl::window window = { "Hello World!", { 1600, 900 } };
     kl::gpu gpu = { (HWND) window };
 
     // Window resize setup
-    window.on_resize.push_back([&](kl::int2 new_size)
+    window.on_resize.emplace_back([&](const kl::int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
@@ -38,7 +39,7 @@ int main()
     window.maximize();
 
     // Fullscreen setup
-    window.keyboard.f11.on_press.push_back([&]
+    window.keyboard.f11.on_press.emplace_back([&]
     {
         const bool new_state = !window.in_fullscreen();
         window.set_fullscreen(new_state);
@@ -46,14 +47,14 @@ int main()
     });
 
     // Mesh setup
-    auto triangle = gpu.create_vertex_buffer({
+    const kl::dx::buffer triangle = gpu.create_vertex_buffer({
         { {  0.0f,  0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
     });
 
     // Shader setup
-    auto shaders = gpu.create_render_shaders(shader_source);
+    const kl::render_shaders shaders = gpu.create_render_shaders(shader_source);
     gpu.bind_render_shaders(shaders);
 
     // CDS (Clear-Draw-Swap)
@@ -62,6 +63,7 @@ int main()
         gpu.draw(triangle);
         gpu.swap_buffers(true);
     }
+    return 0;
 }
 ```
 
