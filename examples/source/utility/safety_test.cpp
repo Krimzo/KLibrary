@@ -18,7 +18,7 @@ struct person
         print(colors::cyan, "Person ", name, " created.", colors::console);
     }
 
-    ~person()
+    virtual ~person()
     {
         print(colors::orange, "Person ", name, " destroyed.", colors::console);
     }

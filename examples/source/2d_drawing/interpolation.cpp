@@ -5,7 +5,7 @@ static constexpr float fps_limit = 165.0f;
 
 int examples::interpolation_main()
 {
-    auto window = kl::window({ 900, 900 }, "Interpolation");
+    auto window = kl::window("Interpolation", { 900, 900 });
     kl::image frame = kl::image(window.size());
     kl::timer timer = {};
 

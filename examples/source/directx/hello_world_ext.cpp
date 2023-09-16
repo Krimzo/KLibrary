@@ -52,7 +52,7 @@ struct hello_world_ext_ps_cb
 int examples::hello_world_ext_main()
 {
     // Window setup
-    kl::window window = { { 1600, 900 }, "Hello World! (Extended)" };
+    kl::window window = { "Hello World! (Extended)", { 1600, 900 } };
     kl::gpu gpu = { (HWND) window };
 
     // Window resize setup

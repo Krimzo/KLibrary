@@ -34,7 +34,7 @@ void camera_movement(kl::window& window);
 
 int examples::plane_playground_main()
 {
-    kl::window window = { { 1600, 900 }, "Plane Playground" };
+    kl::window window = { "Plane Playground", { 1600, 900 } };
     kl::gpu gpu = { (HWND) window };
 
     setup_input(window, gpu);

@@ -93,7 +93,7 @@ static void console_read()
 
 int examples::mandelbrot_main()
 {
-    kl::window window = { { 1600, 900 }, "Mandelbrot" };
+    kl::window window = { "Mandelbrot", { 1600, 900 } };
     kl::gpu gpu = { (HWND) window };
     kl::timer timer = {};
 

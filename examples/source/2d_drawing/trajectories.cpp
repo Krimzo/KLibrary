@@ -102,7 +102,7 @@ static void process_objects(std::vector<scene_object>& objects, const kl::timer&
 
 int examples::trajectories_main()
 {
-    auto window = kl::window({ 1600, 900 }, "Trajectories");
+    kl::window window = { "Trajectories", { 1600, 900 } };
     kl::image frame = kl::image(window.size());
     kl::timer timer = {};
 

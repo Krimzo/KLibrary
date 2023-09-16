@@ -156,7 +156,7 @@ int examples::tic_tac_main()
     const int line_offset = square_size / 10;
     const int circle_offset = square_size / 2;
 
-    auto window = kl::window({ sizes.y, sizes.y }, "Tic Engine");
+    kl::window window = { "Tic Engine", { sizes.y, sizes.y } };
     kl::image frame = { window.size() };
 
     window.set_resizeable(false);

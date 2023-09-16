@@ -24,7 +24,7 @@ int examples::raytracing_main()
     kl::timer timer = {};
     kl::camera camera = {};
 
-    kl::window window = { { 1600, 900 }, "Raytracing" };
+    kl::window window = { "Raytracing", { 1600, 900 } };
     kl::gpu gpu = { (HWND) window };
 
     // Heap alloc because of stack size warnings

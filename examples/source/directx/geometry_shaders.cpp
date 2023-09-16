@@ -17,7 +17,7 @@ struct geometry_ps_cb
 int examples::geometry_shaders_main()
 {
     /* ----- SETUP ----- */
-    kl::window window = { { 1600, 900 }, "Geometry Test" };
+    kl::window window = { "Geometry Test", { 1600, 900 } };
     kl::gpu gpu = { (HWND) window };
 
     kl::timer timer = {};

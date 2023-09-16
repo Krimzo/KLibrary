@@ -85,7 +85,7 @@ static void calculate_improved_line(const std::vector<kl::int2>& data, kl::float
 
 int examples::data_line_main()
 {
-    auto window = kl::window({ 1600, 900 }, "Data Line");
+    kl::window window = { "Data Line", { 1600, 900 } };
     kl::image frame = kl::image(window.size());
 
     std::vector<kl::int2> data = {};

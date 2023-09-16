@@ -36,7 +36,7 @@ static void draw_sticks(kl::image& frame, const std::vector<stick>& sticks)
 
 int examples::visual_sort_main()
 {
-    auto window = kl::window({ 1600, 900 }, "Visual Sort");
+    kl::window window = { "Visual Sort", { 1600, 900 } };
     kl::image frame = { window.size() };
 
     std::vector<stick> sticks = generate_sticks(frame.width(), 1, frame.height());
@@ -44,7 +44,6 @@ int examples::visual_sort_main()
     std::thread([&]
     {
         window.set_title("Sorting...");
-
         for (size_t i = 0; i < sticks.size() - 1; i++) {
             for (size_t j = i + 1; j < sticks.size(); j++) {
                 if (sticks[j].value < sticks[i].value) {
@@ -53,7 +52,6 @@ int examples::visual_sort_main()
                 kl::time::wait(0.000005f);
             }
         }
-
         window.set_title("Finished!");
     }).detach();
 

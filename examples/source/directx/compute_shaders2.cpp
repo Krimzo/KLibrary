@@ -8,7 +8,7 @@ struct compute2_cs_cb
 
 int examples::compute_shaders2_main()
 {
-    kl::window window = { { 1600, 900 }, "Compute shaders 2" };
+    kl::window window = { "Compute shaders 2", { 1600, 900 } };
     kl::gpu gpu = { (HWND) window };
     kl::timer timer = {};
 
