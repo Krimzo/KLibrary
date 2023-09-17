@@ -4,23 +4,24 @@ using namespace kl;
 
 
 // Test class
-struct person
+class Person
 {
+public:
     const std::string name;
 
-    person()
+    Person()
         : name("Unknown")
     {}
 
-    person(const std::string& name)
+    Person(const std::string& name)
         : name(name)
     {
-        print(colors::cyan, "Person ", name, " created.", colors::console);
+        print(colors::CYAN, "Person ", name, " created.", colors::CONSOLE);
     }
 
-    virtual ~person()
+    virtual ~Person()
     {
-        print(colors::orange, "Person ", name, " destroyed.", colors::console);
+        print(colors::ORANGE, "Person ", name, " destroyed.", colors::CONSOLE);
     }
 
     void talk() const
@@ -29,7 +30,7 @@ struct person
     }
 };
 
-std::ostream& operator<<(std::ostream& stream, const person& person)
+std::ostream& operator<<(std::ostream& stream, const Person& person)
 {
     stream << "Person(" << person.name << ")";
     return stream;
@@ -47,8 +48,8 @@ int examples::safety_test_main()
 
 void object_test()
 {
-    object<person> first_object = new person("First");
-    object<person> second_object = new person("Second");
+    Object<Person> first_object = new Person("First");
+    Object<Person> second_object = new Person("Second");
 
     second_object = first_object;
 
@@ -61,12 +62,12 @@ void object_test()
 
 void array_test()
 {
-    array<int> first_array = { 10 };
+    Array<int> first_array = { 10 };
     for (uint64_t i = 0; i < first_array.size(); i++) {
         first_array[i] = (int) (i * 2);
     }
 
-    array<float> second_array = { first_array.size() };
+    Array<float> second_array = { first_array.size() };
     for (uint64_t i = 0; i < second_array.size(); i++) {
         second_array[i] = (float) (i * i);
     }

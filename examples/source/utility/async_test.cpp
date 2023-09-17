@@ -12,7 +12,7 @@ static void clear_data()
 
 static float time_it(const std::function<void()>& func)
 {
-	kl::timer timer = {};
+	kl::Timer timer = {};
 	func();
 	return timer.elapsed();
 }

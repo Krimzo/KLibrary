@@ -7,14 +7,14 @@ static float m = 0.0f;
 
 int examples::times_table_main()
 {
-    const kl::color circle_color = kl::colors::console;
-    kl::color point_color = kl::random::gen_color();
-    kl::color line_color = kl::random::gen_color();
+    const kl::Color circle_color = kl::colors::CONSOLE;
+    kl::Color point_color = kl::random::gen_color();
+    kl::Color line_color = kl::random::gen_color();
 
-    auto window = kl::window("Times Table", { 900, 900 });
-    kl::image frame = { window.size() };
+    auto window = kl::Window("Times Table", { 900, 900 });
+    kl::Image frame = { window.size() };
 
-    window.on_resize.push_back([&](const kl::int2& size)
+    window.on_resize.push_back([&](const kl::Int2& size)
     {
         if (size.x > 0 && size.y > 0) {
             frame.resize(size);
@@ -30,13 +30,13 @@ int examples::times_table_main()
     while (window.process(false)) {
         m += increment * kl::time::delta();
 
-        frame.fill(kl::colors::gray);
+        frame.fill(kl::colors::GRAY);
 
         const float circle_radius = min(frame.width() * 0.5f, frame.height() * 0.5f) - 25.0f;
         frame.draw_circle(frame.size() / 2, circle_radius, circle_color);
 
         static constexpr float point_angle = 360.0f / n;
-        std::vector<kl::int2> circle_points(n);
+        std::vector<kl::Int2> circle_points(n);
         for (int i = 0; i < int(circle_points.size()); i++) {
             circle_points[i] = {
                 (int) (kl::cos_deg(point_angle * i + 180.0f) * circle_radius + frame.width() * 0.5f),

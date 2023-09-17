@@ -30,9 +30,9 @@ int examples::fast_output_main()
     }
     times[2] = kl::time::delta();
 
-    print(kl::colors::yellow, "printf time: ", times[0]);
-    print(kl::colors::cyan, "std::cout time: ", times[1]);
-    print(kl::colors::orange, "kl::print time: ", times[2]);
+    print(kl::colors::YELLOW, "printf time: ", times[0]);
+    print(kl::colors::CYAN, "std::cout time: ", times[1]);
+    print(kl::colors::ORANGE, "kl::print time: ", times[2]);
 
     std::cin.get();
     return 0;

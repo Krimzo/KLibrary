@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-static const std::string shader_source =
+static const std::string SHADER_SOURCE =
 R"(
 struct VS_OUT
 {
@@ -43,20 +43,21 @@ float4 p_shader(const VS_OUT data) : SV_Target
 }
 )";
 
-struct hello_world_ext_ps_cb
+class HelloWorldExtPsCb
 {
-    kl::float4 mouse_position;
-    kl::float4 highlight_color;
+public:
+    kl::Float4 mouse_position;
+    kl::Float4 highlight_color;
 };
 
 int examples::hello_world_ext_main()
 {
     // Window setup
-    kl::window window = { "Hello World! (Extended)", { 1600, 900 } };
-    kl::gpu gpu = { (HWND) window };
+    kl::Window window = { "Hello World! (Extended)", { 1600, 900 } };
+    kl::GPU gpu = { (HWND) window };
 
     // Window resize setup
-    window.on_resize.emplace_back([&](kl::int2 new_size)
+    window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
@@ -74,32 +75,32 @@ int examples::hello_world_ext_main()
     });
 
     // Mesh setup
-    const std::vector<kl::vertex> vertices = {
-        { { -0.5f, -0.5f, 0.5f }, {}, kl::colors::red },
-        { { -0.5f,  0.5f, 0.5f }, {}, kl::colors::green },
-        { {  0.5f, -0.5f, 0.5f }, {}, kl::colors::blue },
-        { {  0.5f,  0.5f, 0.5f }, {}, kl::colors::white },
+    const std::vector<kl::Vertex> vertices = {
+        { { -0.5f, -0.5f, 0.5f }, {}, kl::colors::RED },
+        { { -0.5f,  0.5f, 0.5f }, {}, kl::colors::GREEN },
+        { {  0.5f, -0.5f, 0.5f }, {}, kl::colors::BLUE },
+        { {  0.5f,  0.5f, 0.5f }, {}, kl::colors::WHITE },
     };
     const std::vector<uint32_t> indices = {
         0, 1, 3,
         0, 2, 3,
     };
 
-    kl::dx::buffer vertex_buffer = gpu.create_vertex_buffer(vertices);
-    kl::dx::buffer index_buffer = gpu.create_index_buffer(indices);
+    const kl::dx::Buffer vertex_buffer = gpu.create_vertex_buffer(vertices);
+    const kl::dx::Buffer index_buffer = gpu.create_index_buffer(indices);
 
     // Shader setup
-    kl::render_shaders shaders = gpu.create_render_shaders(shader_source);
+    kl::RenderShaders shaders = gpu.create_render_shaders(SHADER_SOURCE);
     gpu.bind_render_shaders(shaders);
 
     // CDS (Clear-Draw-Swap)
     while (window.process(false)) {
-        hello_world_ext_ps_cb ps_data = {};
+        HelloWorldExtPsCb ps_data = {};
         ps_data.mouse_position = { window.mouse.position(), 0, 0 };
-        ps_data.highlight_color = (kl::float4) kl::colors::gray;
+        ps_data.highlight_color = (kl::Float4) kl::colors::GRAY;
         shaders.pixel_shader.update_cbuffer(ps_data);
         
-        gpu.clear_internal(kl::colors::gray);
+        gpu.clear_internal(kl::colors::GRAY);
         gpu.draw_indexed(vertex_buffer, index_buffer);
         gpu.swap_buffers(true);
     }

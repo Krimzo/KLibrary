@@ -5,38 +5,38 @@ static constexpr float fps_limit = 165.0f;
 
 int examples::interpolation_main()
 {
-    auto window = kl::window("Interpolation", { 900, 900 });
-    kl::image frame = kl::image(window.size());
-    kl::timer timer = {};
+    auto window = kl::Window("Interpolation", { 900, 900 });
+    kl::Image frame = kl::Image(window.size());
+    kl::Timer timer = {};
 
-    kl::float2 positions[4] = {
+    kl::Float2 positions[4] = {
         {                           50.0f,   (frame.height() - 1.0f) / 3.0f },
         {   (frame.width() - 1.0f) / 3.0f,           frame.height() - 51.0f },
         {           frame.width() - 51.0f, (frame.height() - 1.0f) * 0.667f },
         { (frame.width() - 1.0f) * 0.667f,                            50.0f },
     };
 
-    kl::color colors[4] = {
-        kl::colors::red,
-        kl::colors::white,
-        kl::colors::blue,
-        kl::colors::green,
+    kl::Color colors[4] = {
+        kl::colors::RED,
+        kl::colors::WHITE,
+        kl::colors::BLUE,
+        kl::colors::GREEN,
     };
 
-    kl::triangle triangles[2] = {
-        kl::triangle {
-            kl::vertex(kl::float3(positions[0], 0.5f)),
-            kl::vertex(kl::float3(positions[1], 0.5f)),
-            kl::vertex(kl::float3(positions[2], 0.5f)),
+    kl::Triangle triangles[2] = {
+        kl::Triangle {
+            kl::Vertex(kl::Float3(positions[0], 0.5f)),
+            kl::Vertex(kl::Float3(positions[1], 0.5f)),
+            kl::Vertex(kl::Float3(positions[2], 0.5f)),
         },
-        kl::triangle {
-            kl::vertex(kl::float3(positions[0], 0.5f)),
-            kl::vertex(kl::float3(positions[3], 0.5f)),
-            kl::vertex(kl::float3(positions[2], 0.5f)),
+        kl::Triangle {
+            kl::Vertex(kl::Float3(positions[0], 0.5f)),
+            kl::Vertex(kl::Float3(positions[3], 0.5f)),
+            kl::Vertex(kl::Float3(positions[2], 0.5f)),
         },
     };
 
-    kl::float4 constants[2] = {
+    kl::Float4 constants[2] = {
         triangles[0].constants(),
         triangles[1].constants(),
     };
@@ -46,33 +46,33 @@ int examples::interpolation_main()
         timer.reset();
 
         for (int x = frame_index - frame.height(), y = 0; y < frame.height(); x++, y++) {
-            kl::float3 weights[2] = {
+            kl::Float3 weights[2] = {
                 triangles[0].weights(constants[0], { (float) x, (float) y }),
                 triangles[1].weights(constants[1], { (float) x, (float) y }),
             };
 
-            kl::color pixel = {};
-            if (kl::triangle::is_in_triangle(weights[0])) {
-                pixel.r = (byte) kl::triangle::interpolate(weights[0], { (float) colors[0].r, (float) colors[1].r, (float) colors[2].r });
-                pixel.g = (byte) kl::triangle::interpolate(weights[0], { (float) colors[0].g, (float) colors[1].g, (float) colors[2].g });
-                pixel.b = (byte) kl::triangle::interpolate(weights[0], { (float) colors[0].b, (float) colors[1].b, (float) colors[2].b });
+            kl::Color pixel = {};
+            if (kl::Triangle::is_in_triangle(weights[0])) {
+                pixel.r = (byte) kl::Triangle::interpolate(weights[0], { (float) colors[0].r, (float) colors[1].r, (float) colors[2].r });
+                pixel.g = (byte) kl::Triangle::interpolate(weights[0], { (float) colors[0].g, (float) colors[1].g, (float) colors[2].g });
+                pixel.b = (byte) kl::Triangle::interpolate(weights[0], { (float) colors[0].b, (float) colors[1].b, (float) colors[2].b });
             }
-            else if (kl::triangle::is_in_triangle(weights[1])) {
-                pixel.r = (byte) kl::triangle::interpolate(weights[1], { (float) colors[0].r, (float) colors[3].r, (float) colors[2].r });
-                pixel.g = (byte) kl::triangle::interpolate(weights[1], { (float) colors[0].g, (float) colors[3].g, (float) colors[2].g });
-                pixel.b = (byte) kl::triangle::interpolate(weights[1], { (float) colors[0].b, (float) colors[3].b, (float) colors[2].b });
+            else if (kl::Triangle::is_in_triangle(weights[1])) {
+                pixel.r = (byte) kl::Triangle::interpolate(weights[1], { (float) colors[0].r, (float) colors[3].r, (float) colors[2].r });
+                pixel.g = (byte) kl::Triangle::interpolate(weights[1], { (float) colors[0].g, (float) colors[3].g, (float) colors[2].g });
+                pixel.b = (byte) kl::Triangle::interpolate(weights[1], { (float) colors[0].b, (float) colors[3].b, (float) colors[2].b });
             }
             else {
-                pixel = kl::colors::gray;
+                pixel = kl::colors::GRAY;
             }
 
-            if (kl::int2 write_position = { x + 0, y }; frame.in_bounds(write_position)) {
+            if (kl::Int2 write_position = { x + 0, y }; frame.in_bounds(write_position)) {
                 frame[write_position] = pixel;
             }
-            if (kl::int2 write_position = { x + 1, y }; frame.in_bounds(write_position)) {
+            if (kl::Int2 write_position = { x + 1, y }; frame.in_bounds(write_position)) {
                 frame[write_position] = kl::random::gen_color();
             }
-            if (kl::int2 write_position = { x + 2, y }; frame.in_bounds(write_position)) {
+            if (kl::Int2 write_position = { x + 2, y }; frame.in_bounds(write_position)) {
                 frame[write_position] = kl::random::gen_color();
             }
         }

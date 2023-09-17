@@ -3,11 +3,11 @@
 
 static void server()
 {
-    kl::socket server(1709);
+    kl::Socket server(1709);
     server.listen(1);
 
-    kl::socket client = server.accept();
-    if (client.send<kl::float3>({ 1.0f, 2.0f, 3.0f })) {
+    kl::Socket client = server.accept();
+    if (client.send<kl::Float3>({ 1.0f, 2.0f, 3.0f })) {
         kl::print("Data sent!");
     }
 }
@@ -16,10 +16,10 @@ static void client()
 {
     kl::time::wait(0.25f);
 
-    kl::socket client(1709);
+    kl::Socket client(1709);
     client.connect();
 
-    kl::float3 result = {};
+    kl::Float3 result = {};
     client.receive(result);
     print("Received: ", result);
 }

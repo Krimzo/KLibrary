@@ -1,32 +1,34 @@
 #include "examples.h"
 
 
-struct geometry_vs_cb
+class GeometryVsCb
 {
-    kl::float4x4 w_matrix;
-    kl::float4x4 vp_matrix;
-    kl::float4 misc_data;
+public:
+    kl::Float4x4 w_matrix;
+    kl::Float4x4 vp_matrix;
+    kl::Float4 misc_data;
 };
 
-struct geometry_ps_cb
+class GeometryPsCb
 {
-    kl::float4 object_color;
-    kl::float4 sun_direction;
+public:
+    kl::Float4 object_color;
+    kl::Float4 sun_direction;
 };
 
 int examples::geometry_shaders_main()
 {
     /* ----- SETUP ----- */
-    kl::window window = { "Geometry Test", { 1600, 900 } };
-    kl::gpu gpu = { (HWND) window };
+    kl::Window window = { "Geometry Test", { 1600, 900 } };
+    kl::GPU gpu = { (HWND) window };
 
-    kl::timer timer = {};
-    kl::camera camera = {};
+    kl::Timer timer = {};
+    kl::Camera camera = {};
 
-    kl::float3 sun_direction = { 1.0f, -1.0f, 0.0f };
+    kl::Float3 sun_direction = { 1.0f, -1.0f, 0.0f };
 
     // Window
-    window.on_resize.push_back([&](const kl::int2 new_size)
+    window.on_resize.push_back([&](const kl::Int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
@@ -39,8 +41,8 @@ int examples::geometry_shaders_main()
     window.keyboard.v.on_press.push_back([&]
     {
         static bool wireframe_bound = true;
-        static kl::dx::raster_state solid_raster = gpu.create_raster_state(false, false);
-        static kl::dx::raster_state wireframe_raster = gpu.create_raster_state(true, false);
+        static kl::dx::RasterState solid_raster = gpu.create_raster_state(false, false);
+        static kl::dx::RasterState wireframe_raster = gpu.create_raster_state(true, false);
 
         gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
         wireframe_bound = !wireframe_bound;
@@ -49,25 +51,25 @@ int examples::geometry_shaders_main()
 
     // Shaders
     std::string shader_sources = kl::read_file_string("shaders/geometry_test.hlsl");
-    kl::render_shaders default_shaders = gpu.create_render_shaders(shader_sources);
-    kl::shader_holder geometry_shader = gpu.create_geometry_shader(shader_sources);
+    kl::RenderShaders default_shaders = gpu.create_render_shaders(shader_sources);
+    kl::ShaderHolder geometry_shader = gpu.create_geometry_shader(shader_sources);
     gpu.bind_render_shaders(default_shaders);
     gpu.bind_geometry_shader(geometry_shader);
 
     // Mesh
-    kl::object<kl::mesh> cube_mesh = new kl::mesh(&gpu);
-    kl::object<kl::mesh> sphere_mesh = new kl::mesh(&gpu);
-    kl::object<kl::mesh> monke_mesh = new kl::mesh(&gpu);
+    kl::Object<kl::Mesh> cube_mesh = new kl::Mesh(&gpu);
+    kl::Object<kl::Mesh> sphere_mesh = new kl::Mesh(&gpu);
+    kl::Object<kl::Mesh> monke_mesh = new kl::Mesh(&gpu);
     cube_mesh->graphics_buffer = gpu.create_vertex_buffer("meshes/cube.obj");
     sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/sphere.obj");
     monke_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/monke.obj");
 
     // Material
-    kl::object<kl::material> default_material = new kl::material();
-    default_material->color = kl::colors::orange;
+    kl::Object<kl::Material> default_material = new kl::Material();
+    default_material->color = kl::colors::ORANGE;
 
     // Entity
-    kl::object<kl::entity> main_entity = new kl::entity();
+    kl::Object<kl::Entity> main_entity = new kl::Entity();
     main_entity->angular.y = -36.0f;
     main_entity->mesh = monke_mesh;
     main_entity->material = default_material;
@@ -112,15 +114,15 @@ int examples::geometry_shaders_main()
 
         sun_direction = kl::normalize(sun_direction);
 
-        gpu.clear_internal(kl::colors::gray);
+        gpu.clear_internal(kl::colors::GRAY);
 
-        geometry_vs_cb vs_data = {};
+        GeometryVsCb vs_data = {};
         vs_data.vp_matrix = camera.matrix();
         vs_data.w_matrix = main_entity->matrix();
         vs_data.misc_data.x = max(destroy_value, 0.0f);
         default_shaders.vertex_shader.update_cbuffer(vs_data);
 
-        geometry_ps_cb ps_data = {};
+        GeometryPsCb ps_data = {};
         ps_data.sun_direction = { sun_direction.x, sun_direction.y, sun_direction.z, 0.0f };
         ps_data.object_color = main_entity->material->color;
         default_shaders.pixel_shader.update_cbuffer(ps_data);

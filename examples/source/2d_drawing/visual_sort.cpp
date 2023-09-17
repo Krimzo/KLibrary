@@ -1,18 +1,19 @@
 #include "examples.h"
 
 
-struct stick
+class Stick
 {
+public:
     int value = 0;
-    kl::color color = {};
+    kl::Color color = {};
 };
 
-static std::vector<stick> generate_sticks(const int count, const int min_value_incl, const int max_value_excl)
+static std::vector<Stick> generate_sticks(const int count, const int min_value_incl, const int max_value_excl)
 {
     int stored_min_value = max_value_excl;
     int stored_max_value = min_value_incl;
 
-    std::vector<stick> sticks(count);
+    std::vector<Stick> sticks(count);
     for (auto& [value, color] : sticks) {
         value = kl::random::gen_int(min_value_incl, max_value_excl);
         stored_min_value = min(stored_min_value, value);
@@ -27,19 +28,19 @@ static std::vector<stick> generate_sticks(const int count, const int min_value_i
     return sticks;
 }
 
-static void draw_sticks(kl::image& frame, const std::vector<stick>& sticks)
+static void draw_sticks(kl::Image& frame, const std::vector<Stick>& sticks)
 {
-    for (int i = 0; i < int(sticks.size()); i++) {
+    for (int i = 0; i < (int) sticks.size(); i++) {
         frame.draw_line({ i, frame.height() - 1 }, { i, frame.height() - 1 - sticks[i].value }, sticks[i].color);
     }
 }
 
 int examples::visual_sort_main()
 {
-    kl::window window = { "Visual Sort", { 1600, 900 } };
-    kl::image frame = { window.size() };
+    kl::Window window = { "Visual Sort", { 1600, 900 } };
+    kl::Image frame = { window.size() };
 
-    std::vector<stick> sticks = generate_sticks(frame.width(), 1, frame.height());
+    std::vector<Stick> sticks = generate_sticks(frame.width(), 1, frame.height());
 
     std::thread([&]
     {
@@ -56,7 +57,7 @@ int examples::visual_sort_main()
     }).detach();
 
     while (window.process(false)) {
-        frame.fill(kl::colors::gray);
+        frame.fill(kl::colors::GRAY);
         draw_sticks(frame, sticks);
         window.draw_image(frame);
     }

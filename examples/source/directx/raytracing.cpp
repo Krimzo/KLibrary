@@ -1,36 +1,38 @@
 #include "examples.h"
 
 
-static constexpr int sphere_count = 10;
+static constexpr int SPHERE_COUNT = 10;
 
-struct raytracing_colored_sphere
+class RaytracingColoredSphere
 {
-    kl::float3 center = {};
+public:
+    kl::Float3 center = {};
     float radius = 0.0f;
-    kl::float4 color = {};
+    kl::Float4 color = {};
 };
 
-struct raytracing_ps_cb
+class RaytracingPsCb
 {
-    kl::float4 frame_size = {};
-    kl::float4x4 inverse_camera = {};
-    kl::float4 camera_position = {};
-    kl::float4 sun_direction = {};
-    raytracing_colored_sphere spheres[sphere_count] = {};
+public:
+    kl::Float4 frame_size = {};
+    kl::Float4x4 inverse_camera = {};
+    kl::Float4 camera_position = {};
+    kl::Float4 sun_direction = {};
+    RaytracingColoredSphere spheres[SPHERE_COUNT] = {};
 };
 
 int examples::raytracing_main()
 {
-    kl::timer timer = {};
-    kl::camera camera = {};
+    kl::Timer timer = {};
+    kl::Camera camera = {};
 
-    kl::window window = { "Raytracing", { 1600, 900 } };
-    kl::gpu gpu = { (HWND) window };
+    kl::Window window = { "Raytracing", { 1600, 900 } };
+    kl::GPU gpu = { (HWND) window };
 
     // Heap alloc because of stack size warnings
-    raytracing_ps_cb& ps_data = *new raytracing_ps_cb; // You saw nothing :)
+    RaytracingPsCb& ps_data = *new RaytracingPsCb; // You saw nothing :)
 
-    window.on_resize.push_back([&](const kl::int2 new_size)
+    window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
@@ -39,32 +41,32 @@ int examples::raytracing_main()
         }
     });
 
-    window.keyboard.r.on_press.push_back([&]
+    window.keyboard.r.on_press.emplace_back([&]
     {
         if (window.keyboard.shift) {
             for (auto& [center, radius, color] : ps_data.spheres) {
-                color = (kl::float4) kl::random::gen_color();
+                color = (kl::Float4) kl::random::gen_color();
             }
         }
         else if (window.keyboard.ctrl) {
             for (auto& [center, radius, color] : ps_data.spheres) {
-                color = (kl::float4) kl::color(color).gray();
+                color = (kl::Float4) kl::Color(color).gray();
             }
         }
         else {
             for (auto& sphere : ps_data.spheres) {
-                sphere = raytracing_colored_sphere {
-                    kl::random::gen_float3(40.0f) - kl::float3(20.0f, 20.0f, 20.0f),
+                sphere = RaytracingColoredSphere {
+                    kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
                     kl::random::gen_float(2.75f) + 0.25f,
-                    (kl::float4) kl::random::gen_color(),
+                    (kl::Float4) kl::random::gen_color(),
                 };
             }
         }
     });
 
-    window.mouse.left.on_down.push_back([&]
+    window.mouse.left.on_down.emplace_back([&]
     {
-        const kl::ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.normalized_position() };
+        const kl::Ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.normalized_position() };
         ps_data.sun_direction = { ray.direction() * -1.0f, 0.0f };
     });
 
@@ -72,13 +74,13 @@ int examples::raytracing_main()
     window.maximize();
 
     const std::string shader_sources = kl::read_file_string("shaders/raytracing.hlsl");
-    kl::render_shaders shaders = gpu.create_render_shaders(shader_sources);
+    kl::RenderShaders shaders = gpu.create_render_shaders(shader_sources);
     gpu.bind_render_shaders(shaders);
 
-    const kl::dx::buffer screen_mesh = gpu.create_screen_mesh();
+    const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
 
     camera.origin.y = 5.0f;
-    ps_data.sun_direction = { kl::normalize(kl::float3(-1.0f, -1.0f, 0.0f)), 0.0f };
+    ps_data.sun_direction = { kl::normalize(kl::Float3(-1.0f, -1.0f, 0.0f)), 0.0f };
 
     window.keyboard.r.on_press.back()();
 
@@ -87,7 +89,7 @@ int examples::raytracing_main()
         timer.update_delta();
 
         { // Physics
-            for (int i = 0; i < sphere_count; i++) {
+            for (int i = 0; i < SPHERE_COUNT; i++) {
                 const float oscillation = (std::sin(timer.elapsed() + i) + 1.0f) * 0.5f;
                 ps_data.spheres[i].center.y = (oscillation * (i + 1.0f)) + ps_data.spheres[i].radius;
             }
@@ -96,7 +98,7 @@ int examples::raytracing_main()
         { // Input
             static bool camera_rotating = false;
             if (window.mouse.right) {
-                const kl::int2 frame_center = window.frame_center();
+                const kl::Int2 frame_center = window.frame_center();
 
                 if (camera_rotating) {
                     camera.rotate(window.mouse.position(), frame_center);
