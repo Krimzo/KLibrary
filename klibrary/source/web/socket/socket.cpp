@@ -74,7 +74,7 @@ void kl::Socket::set_port(const int port)
 int kl::Socket::listen(const int queue_size)
 {
     const int bind_result = bind(m_socket, (sockaddr*) &m_address, sizeof(m_address));
-    if (verify(bind_result == 0, "Could not bind socket")) {
+    if (!verify(bind_result == 0, "Could not bind socket")) {
         return bind_result;
     }
 

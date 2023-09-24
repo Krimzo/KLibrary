@@ -163,7 +163,7 @@ kl::dx::Buffer kl::DeviceHolder::create_index_buffer(const std::vector<uint32_t>
 
 kl::dx::Buffer kl::DeviceHolder::create_const_buffer(const UINT byte_size) const
 {
-    if (verify(byte_size % 16 == 0, "Constant buffer size has to be a multiple of 16")) {
+    if (!verify(byte_size % 16 == 0, "Constant buffer size has to be a multiple of 16")) {
         return nullptr;
     }
 
@@ -286,7 +286,7 @@ kl::dx::Texture kl::DeviceHolder::create_texture(const Image& image, const bool 
 
 kl::dx::Texture kl::DeviceHolder::create_cube_texture(const Image& front, const Image& back, const Image& left, const Image& right, const Image& top, const Image& bottom) const
 {
-    if (verify(front.size() == back.size()
+    if (!verify(front.size() == back.size()
         && front.size() == left.size()
         && front.size() == right.size()
         && front.size() == top.size()

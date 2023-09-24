@@ -30,7 +30,7 @@ std::vector<std::string> kl::list_files(const std::string& path, const bool recu
 std::string kl::read_file_string(const std::string& filepath)
 {
     std::ifstream stream(filepath);
-    if (verify(stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
+    if (!verify(stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
         return {};
     }
 
@@ -43,7 +43,7 @@ std::string kl::read_file_string(const std::string& filepath)
 bool kl::write_file_string(const std::string& filepath, const std::string& data)
 {
     std::ofstream stream(filepath);
-    if (verify(stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
+    if (!verify(stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
         return false;
     }
 
@@ -55,7 +55,7 @@ bool kl::write_file_string(const std::string& filepath, const std::string& data)
 bool kl::append_file_string(const std::string& filepath, const std::string& data, const int position)
 {
     std::fstream stream(filepath, std::ios::in | std::ios::out);
-    if (verify(stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
+    if (!verify(stream.is_open(), "Failed to open file \"" + filepath + "\"")) {
         return false;
     }
 
@@ -75,7 +75,7 @@ std::vector<kl::Vertex> kl::parse_obj_file(const std::string& filepath, const bo
 {
     std::fstream file = {};
     file.open(filepath, std::ios::in);
-    if (verify(file.is_open(), "Failed to open file \"" + filepath + "\"")) {
+    if (!verify(file.is_open(), "Failed to open file \"" + filepath + "\"")) {
         return {};
     }
 

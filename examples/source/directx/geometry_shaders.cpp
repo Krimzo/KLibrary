@@ -28,7 +28,7 @@ int examples::geometry_shaders_main()
     kl::Float3 sun_direction = { 1.0f, -1.0f, 0.0f };
 
     // Window
-    window.on_resize.push_back([&](const kl::Int2 new_size)
+    window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
             gpu.resize_internal(new_size);
@@ -38,7 +38,7 @@ int examples::geometry_shaders_main()
     });
     window.maximize();
 
-    window.keyboard.v.on_press.push_back([&]
+    window.keyboard.v.on_press.emplace_back([&]
     {
         static bool wireframe_bound = true;
         static kl::dx::RasterState solid_raster = gpu.create_raster_state(false, false);
@@ -57,40 +57,40 @@ int examples::geometry_shaders_main()
     gpu.bind_geometry_shader(geometry_shader);
 
     // Mesh
-    kl::Object<kl::Mesh> cube_mesh = new kl::Mesh(&gpu);
-    kl::Object<kl::Mesh> sphere_mesh = new kl::Mesh(&gpu);
-    kl::Object<kl::Mesh> monke_mesh = new kl::Mesh(&gpu);
+    kl::Object cube_mesh = new kl::Mesh(&gpu);
+    kl::Object sphere_mesh = new kl::Mesh(&gpu);
+    kl::Object monke_mesh = new kl::Mesh(&gpu);
     cube_mesh->graphics_buffer = gpu.create_vertex_buffer("meshes/cube.obj");
     sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/sphere.obj");
     monke_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/monke.obj");
 
     // Material
-    kl::Object<kl::Material> default_material = new kl::Material();
+    kl::Object default_material = new kl::Material();
     default_material->color = kl::colors::ORANGE;
 
     // Entity
-    kl::Object<kl::Entity> main_entity = new kl::Entity();
+    kl::Object main_entity = new kl::Entity();
     main_entity->angular.y = -36.0f;
     main_entity->mesh = monke_mesh;
     main_entity->material = default_material;
 
     // Input
-    window.keyboard.num1.on_press.push_back([&]
+    window.keyboard.num1.on_press.emplace_back([&]
     {
         main_entity->mesh = cube_mesh;
     });
-    window.keyboard.num2.on_press.push_back([&]
+    window.keyboard.num2.on_press.emplace_back([&]
     {
         main_entity->mesh = sphere_mesh;
     });
-    window.keyboard.num3.on_press.push_back([&]
+    window.keyboard.num3.on_press.emplace_back([&]
     {
         main_entity->mesh = monke_mesh;
     });
 
     float destroy_goal = 0.0f;
     float destroy_value = 0.0f;
-    window.keyboard.space.on_press.push_back([&]
+    window.keyboard.space.on_press.emplace_back([&]
     {
         destroy_goal = 1.5f;
     });
