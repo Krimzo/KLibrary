@@ -1,12 +1,6 @@
 #include "examples.h"
 
 
-class Compute2CsCb
-{
-public:
-    kl::Float4 misc_data;
-};
-
 int examples::compute_shaders2_main()
 {
     kl::Window window = { "Compute shaders 2", { 1600, 900 } };
@@ -39,6 +33,12 @@ int examples::compute_shaders2_main()
         gpu.unbind_shader_view_for_pixel_shader(0);
         gpu.clear_target_view(target_view, kl::colors::GRAY);
 
+        class Compute2CsCb
+        {
+        public:
+            kl::Float4 misc_data;
+        };
+        
         Compute2CsCb cs_data = {};
         cs_data.misc_data.x = (float) window.mouse.position().x;
         cs_data.misc_data.y = (float) window.mouse.position().y;
