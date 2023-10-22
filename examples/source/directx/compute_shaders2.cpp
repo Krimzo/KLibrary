@@ -4,7 +4,7 @@
 int examples::compute_shaders2_main()
 {
     kl::Window window = { "Compute shaders 2", { 1600, 900 } };
-    kl::GPU gpu = { (HWND) window };
+    kl::GPU gpu = { static_cast<HWND>(window) };
     kl::Timer timer = {};
 
     window.set_resizeable(false);
@@ -33,13 +33,11 @@ int examples::compute_shaders2_main()
         gpu.unbind_shader_view_for_pixel_shader(0);
         gpu.clear_target_view(target_view, kl::colors::GRAY);
 
-        class Compute2CsCb
+        struct CSData
         {
-        public:
             kl::Float4 misc_data;
-        };
-        
-        Compute2CsCb cs_data = {};
+        } cs_data = {};
+
         cs_data.misc_data.x = (float) window.mouse.position().x;
         cs_data.misc_data.y = (float) window.mouse.position().y;
         compute_shader.update_cbuffer(cs_data);

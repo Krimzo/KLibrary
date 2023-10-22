@@ -1,22 +1,21 @@
 #include "examples.h"
 
 
-class ExampleClass
-{
-public:
-    kl::Float3 position;
-};
-
 int examples::compute_shaders1_main()
 {
+    struct TestStruct
+    {
+        kl::Float3 position;
+    };
+
     kl::GPU gpu = {};
 
     // CPU buffer
     static constexpr int data_count = 10;
-    ExampleClass example_data[data_count] = {};
+    TestStruct example_data[data_count] = {};
 
     // GPU buffer
-    const kl::dx::Buffer buffer = gpu.create_structured_buffer(example_data, data_count, sizeof(ExampleClass), true, true);
+    const kl::dx::Buffer buffer = gpu.create_structured_buffer(example_data, data_count, sizeof(TestStruct), true, true);
     const kl::dx::AccessView access_view = gpu.create_access_view(buffer, nullptr);
     gpu.bind_access_view_for_compute_shader(access_view, 0);
 
@@ -29,7 +28,7 @@ int examples::compute_shaders1_main()
     gpu.dispatch_compute_shader(data_count, 1, 1);
 
     // Copy from GPU to CPU
-    gpu.read_from_resource(example_data, buffer, (data_count * sizeof(ExampleClass)));
+    gpu.read_from_resource(example_data, buffer, (data_count * sizeof(TestStruct)));
 
     // Print values
     for (auto& [position] : example_data) {

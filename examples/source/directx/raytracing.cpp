@@ -3,34 +3,32 @@
 
 static constexpr int SPHERE_COUNT = 10;
 
-class RaytracingColoredSphere
-{
-public:
-    kl::Float3 center = {};
-    float radius = 0.0f;
-    kl::Float4 color = {};
-};
-
-class RaytracingPsCb
-{
-public:
-    kl::Float4 frame_size = {};
-    kl::Float4x4 inverse_camera = {};
-    kl::Float4 camera_position = {};
-    kl::Float4 sun_direction = {};
-    RaytracingColoredSphere spheres[SPHERE_COUNT] = {};
-};
-
 int examples::raytracing_main()
 {
+    struct ColoredSphere
+    {
+        kl::Float3 center = {};
+        float radius = 0.0f;
+        kl::Float4 color = {};
+    };
+
+    struct PSData
+    {
+        kl::Float4 frame_size = {};
+        kl::Float4x4 inverse_camera = {};
+        kl::Float4 camera_position = {};
+        kl::Float4 sun_direction = {};
+        ColoredSphere spheres[SPHERE_COUNT] = {};
+    };
+
     kl::Timer timer = {};
     kl::Camera camera = {};
 
     kl::Window window = { "Raytracing", { 1600, 900 } };
-    kl::GPU gpu = { (HWND) window };
+    kl::GPU gpu = { static_cast<HWND>(window) };
 
     // Heap alloc because of stack size warnings
-    RaytracingPsCb& ps_data = *new RaytracingPsCb; // You saw nothing :)
+    PSData& ps_data = *new PSData; // You saw nothing :)
 
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
@@ -55,7 +53,7 @@ int examples::raytracing_main()
         }
         else {
             for (auto& sphere : ps_data.spheres) {
-                sphere = RaytracingColoredSphere {
+                sphere = ColoredSphere {
                     kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
                     kl::random::gen_float(2.75f) + 0.25f,
                     (kl::Float4) kl::random::gen_color(),

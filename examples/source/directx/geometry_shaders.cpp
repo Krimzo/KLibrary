@@ -1,26 +1,11 @@
 #include "examples.h"
 
 
-class GeometryVsCb
-{
-public:
-    kl::Float4x4 w_matrix;
-    kl::Float4x4 vp_matrix;
-    kl::Float4 misc_data;
-};
-
-class GeometryPsCb
-{
-public:
-    kl::Float4 object_color;
-    kl::Float4 sun_direction;
-};
-
 int examples::geometry_shaders_main()
 {
     /* ----- SETUP ----- */
     kl::Window window = { "Geometry Test", { 1600, 900 } };
-    kl::GPU gpu = { (HWND) window };
+    kl::GPU gpu = { static_cast<HWND>(window) };
 
     kl::Timer timer = {};
     kl::Camera camera = {};
@@ -116,13 +101,24 @@ int examples::geometry_shaders_main()
 
         gpu.clear_internal(kl::colors::GRAY);
 
-        GeometryVsCb vs_data = {};
+        struct VSData
+        {
+            kl::Float4x4 w_matrix;
+            kl::Float4x4 vp_matrix;
+            kl::Float4 misc_data;
+        } vs_data = {};
+
         vs_data.vp_matrix = camera.matrix();
         vs_data.w_matrix = main_entity->matrix();
         vs_data.misc_data.x = max(destroy_value, 0.0f);
         default_shaders.vertex_shader.update_cbuffer(vs_data);
 
-        GeometryPsCb ps_data = {};
+        struct PSData
+        {
+            kl::Float4 object_color;
+            kl::Float4 sun_direction;
+        } ps_data = {};
+
         ps_data.sun_direction = { sun_direction.x, sun_direction.y, sun_direction.z, 0.0f };
         ps_data.object_color = main_entity->material->color;
         default_shaders.pixel_shader.update_cbuffer(ps_data);

@@ -94,7 +94,7 @@ static void console_read()
 int examples::mandelbrot_main()
 {
     kl::Window window = { "Mandelbrot", { 1600, 900 } };
-    kl::GPU gpu = { (HWND) window };
+    kl::GPU gpu = { static_cast<HWND>(window) };
     kl::Timer timer = {};
 
     window.on_resize.emplace_back([&](const kl::Int2 size)
@@ -124,15 +124,13 @@ int examples::mandelbrot_main()
         // Render
         gpu.clear_internal();
 
-        class MandelbrotPsCb
+        struct PSData
         {
-        public:
             kl::Float4 state_info;
             kl::Float4 frame_size;
             kl::Float4 start_color;
-        };
+        } ps_data = {};
 
-        MandelbrotPsCb ps_data = {};
         ps_data.state_info = { POSITION, ZOOM, (float) ITERATIONS };
         ps_data.frame_size = { window.size(), {} };
         ps_data.start_color = START_COLOR;

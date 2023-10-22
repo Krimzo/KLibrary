@@ -43,18 +43,11 @@ float4 p_shader(const VS_OUT data) : SV_Target
 }
 )";
 
-class HelloWorldExtPsCb
-{
-public:
-    kl::Float4 mouse_position;
-    kl::Float4 highlight_color;
-};
-
 int examples::hello_world_ext_main()
 {
     // Window setup
     kl::Window window = { "Hello World! (Extended)", { 1600, 900 } };
-    kl::GPU gpu = { (HWND) window };
+    kl::GPU gpu = { static_cast<HWND>(window) };
 
     // Window resize setup
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
@@ -95,7 +88,12 @@ int examples::hello_world_ext_main()
 
     // CDS (Clear-Draw-Swap)
     while (window.process(false)) {
-        HelloWorldExtPsCb ps_data = {};
+        struct PSData
+        {
+            kl::Float4 mouse_position;
+            kl::Float4 highlight_color;
+        } ps_data = {};
+
         ps_data.mouse_position = { window.mouse.position(), 0, 0 };
         ps_data.highlight_color = (kl::Float4) kl::colors::GRAY;
         shaders.pixel_shader.update_cbuffer(ps_data);
