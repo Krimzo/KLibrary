@@ -15,7 +15,9 @@ namespace kl {
 
         inline void increase_count() const
         {
-            if (m_count) { *m_count += 1; }
+            if (m_count) {
+                *m_count += 1;
+            }
         }
 
         inline uint64_t decrease_count() const
