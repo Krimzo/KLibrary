@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "klibrary.h"
 
 
 kl::CompiledShader::operator bool() const

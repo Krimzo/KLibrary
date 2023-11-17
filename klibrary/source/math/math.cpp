@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "klibrary.h"
 
 
 // Deg trig
@@ -64,20 +64,20 @@ float kl::line_y(const Float2& a, const Float2& b, const float x)
 float kl::wrap(float value, const float lower, const float upper)
 {
     value = (value - lower) / (upper - lower);
-    value = min(max(value, 0.0f), 1.0f);
+    value = std::clamp(value, 0.0f, 1.0f);
     return value;
 }
 
 float kl::unwrap(float value, const float lower, const float upper)
 {
     value = (upper - lower) * value + lower;
-    value = min(max(value, lower), upper);
+    value = std::clamp(value, lower, upper);
     return value;
 }
 
 float kl::clamp(const float value, const float lower, const float upper)
 {
-    return min(max(value, lower), upper);
+    return std::clamp(value, lower, upper);
 }
 
 // Rotation

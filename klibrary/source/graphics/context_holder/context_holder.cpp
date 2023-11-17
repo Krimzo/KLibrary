@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "klibrary.h"
 
 kl::ContextHolder::ContextHolder()
 {}
@@ -67,7 +67,7 @@ void kl::ContextHolder::bind_raster_state(const dx::RasterState& state) const
     m_context->RSSetState(state.Get());
 }
 
-void kl::ContextHolder::unbind_rater_state() const
+void kl::ContextHolder::unbind_raster_state() const
 {
     bind_raster_state(nullptr);
 }

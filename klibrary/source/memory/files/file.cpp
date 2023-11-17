@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "klibrary.h"
 
 
 // Helper
@@ -25,6 +25,32 @@ std::vector<std::string> kl::list_files(const std::string& path, const bool recu
         }
     }
     return files;
+}
+
+std::vector<byte> kl::read_file(const std::string_view& filepath)
+{
+    kl::File file = { filepath, false };
+    if (!file) {
+        return {};
+    }
+
+    file.unwind();
+    const int file_size = file.tell();
+    file.rewind();
+
+    std::vector<byte> result(file_size);
+    file.read(result.data(), file_size);
+    return result;
+}
+
+bool kl::write_file(const std::string_view& filepath, const std::vector<byte>& data)
+{
+    kl::File file = { filepath, true };
+    if (!file) {
+        return false;
+    }
+    file.write<byte>(data.data(), data.size());
+    return true;
 }
 
 std::string kl::read_file_string(const std::string& filepath)
@@ -167,7 +193,7 @@ std::optional<std::string> kl::choose_file(const bool save, const std::vector<st
 kl::File::File()
 {}
 
-kl::File::File(const std::string& filepath, const bool clear)
+kl::File::File(const std::string_view& filepath, const bool clear)
 {
     open(filepath, clear);
 }
@@ -182,7 +208,7 @@ kl::File::operator bool() const
     return (bool) m_file;
 }
 
-void kl::File::open(const std::string& filepath, bool clear)
+void kl::File::open(const std::string_view& filepath, bool clear)
 {
     close();
     errno_t error = fopen_s(&m_file, filepath.data(), clear ? "wb+" : "ab+");

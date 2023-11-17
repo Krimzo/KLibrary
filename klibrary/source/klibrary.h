@@ -29,3 +29,10 @@
 
 // Graphics
 #include "graphics/graphics.h"
+
+/* Undefs */
+#undef min
+#undef max
+#undef assert
+#undef VOID
+#undef INFINITY

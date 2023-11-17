@@ -113,7 +113,7 @@ static BoardInfo find_best(const std::vector<int>& board, const bool playersTurn
                     max_info.move = i;
                 }
 
-                alpha = max(alpha, future_eval);
+                alpha = std::max(alpha, future_eval);
                 if (beta <= alpha) {
                     break;
                 }
@@ -138,7 +138,7 @@ static BoardInfo find_best(const std::vector<int>& board, const bool playersTurn
                 min_info.move = i;
             }
 
-            beta = min(beta, future_eval);
+            beta = std::min(beta, future_eval);
             if (beta <= alpha) {
                 break;
             }

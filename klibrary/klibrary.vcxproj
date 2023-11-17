@@ -54,7 +54,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir)source\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>klib.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>klibrary.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -73,7 +73,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir)source\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>klib.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>klibrary.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -97,7 +97,7 @@
     <ClCompile Include="source\graphics\shaders\render_shaders.cpp" />
     <ClCompile Include="source\graphics\shaders\shader_compiler.cpp" />
     <ClCompile Include="source\graphics\shaders\shader_holder.cpp" />
-    <ClCompile Include="source\klib.cpp">
+    <ClCompile Include="source\klibrary.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -174,7 +174,7 @@
     <ClInclude Include="source\graphics\shaders\render_shaders.h" />
     <ClInclude Include="source\graphics\shaders\shader_compiler.h" />
     <ClInclude Include="source\graphics\shaders\shader_holder.h" />
-    <ClInclude Include="source\klib.h" />
+    <ClInclude Include="source\klibrary.h" />
     <ClInclude Include="source\math\helper\constants.h" />
     <ClInclude Include="source\math\imaginary\complex.h" />
     <ClInclude Include="source\math\imaginary\quaternion.h" />

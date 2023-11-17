@@ -4,9 +4,9 @@ Goal is to *simplify* use of C++, Win32 and DirectX.
 
 ## D3D11 Triangle Hello World
 ```cpp
-#include "klib.h"
+#include "klibrary.h"
 
-static const std::string SHADER_SOURCE =
+static const char* SHADER_SOURCE =
 R"(
 // Vertex shader
 float4 v_shader(const float3 position : KL_Position) : SV_Position

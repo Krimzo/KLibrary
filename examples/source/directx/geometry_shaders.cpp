@@ -93,7 +93,7 @@ int examples::geometry_shaders_main()
             destroy_value += timer.delta() * 5.0f;
         }
         else {
-            destroy_goal = -INFINITY;
+            destroy_goal = -std::numeric_limits<float>::infinity();
             destroy_value -= timer.delta() * 0.25f;
         }
 
@@ -110,7 +110,7 @@ int examples::geometry_shaders_main()
 
         vs_data.vp_matrix = camera.matrix();
         vs_data.w_matrix = main_entity->matrix();
-        vs_data.misc_data.x = max(destroy_value, 0.0f);
+        vs_data.misc_data.x = std::max(destroy_value, 0.0f);
         default_shaders.vertex_shader.update_cbuffer(vs_data);
 
         struct PSData

@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "klibrary.h"
 
 
 // Window private
@@ -44,6 +44,11 @@ void kl::Key::call_on_release() const
 
 // User access
 kl::Key::operator bool() const
+{
+    return m_state;
+}
+
+bool kl::Key::is_down() const
 {
     return m_state;
 }

@@ -59,7 +59,7 @@ static void input(const kl::Window& window, const float delta_time)
     static int last_scroll = window.mouse.scroll();
     const int current_scroll = window.mouse.scroll();
     ITERATIONS += (current_scroll - last_scroll) * (window.keyboard.shift ? 10 : 1);
-    ITERATIONS = max(ITERATIONS, 0);
+    ITERATIONS = std::max(ITERATIONS, 0);
     last_scroll = current_scroll;
 }
 

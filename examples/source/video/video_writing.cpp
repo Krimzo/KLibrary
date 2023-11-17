@@ -17,8 +17,8 @@ static std::vector<Stick> generate_sticks(const int count, const int min_value_i
     std::vector<Stick> sticks(count);
     for (auto& [value, color] : sticks) {
         value = kl::random::gen_int(min_value_incl, max_value_excl);
-        stored_min_value = min(stored_min_value, value);
-        stored_max_value = max(stored_max_value, value);
+        stored_min_value = std::min(stored_min_value, value);
+        stored_max_value = std::max(stored_max_value, value);
     }
 
     for (auto& [value, color] : sticks) {

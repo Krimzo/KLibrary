@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "klibrary.h"
 
 
 // Construct
@@ -51,10 +51,10 @@ kl::Float4::operator const float* () const
 kl::Float4::operator kl::Color() const
 {
     return {
-        (byte) min(max(x * TO_BYTE_COLOR, 0.0f), 255.0f),
-        (byte) min(max(y * TO_BYTE_COLOR, 0.0f), 255.0f),
-        (byte) min(max(z * TO_BYTE_COLOR, 0.0f), 255.0f),
-        (byte) min(max(w * TO_BYTE_COLOR, 0.0f), 255.0f),
+        (byte) std::clamp(x * TO_BYTE_COLOR, 0.0f, 255.0f),
+        (byte) std::clamp(y * TO_BYTE_COLOR, 0.0f, 255.0f),
+        (byte) std::clamp(z * TO_BYTE_COLOR, 0.0f, 255.0f),
+        (byte) std::clamp(w * TO_BYTE_COLOR, 0.0f, 255.0f),
     };
 }
 

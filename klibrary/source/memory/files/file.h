@@ -8,6 +8,9 @@ namespace kl {
     std::string file_extension(const std::string& filepath);
     std::vector<std::string> list_files(const std::string& path, bool recursive = false);
 
+    std::vector<byte> read_file(const std::string_view& filepath);
+    bool write_file(const std::string_view& filepath, const std::vector<byte>& data);
+
     std::string read_file_string(const std::string& filepath);
     bool write_file_string(const std::string& filepath, const std::string& data);
     bool append_file_string(const std::string& filepath, const std::string& data, int position = -1);
@@ -24,7 +27,7 @@ namespace kl {
 
     public:
         File();
-        File(const std::string& filepath, bool clear);
+        File(const std::string_view& filepath, bool clear);
         virtual ~File();
 
         File(const File&) = delete;
@@ -35,7 +38,7 @@ namespace kl {
 
         operator bool() const;
 
-        void open(const std::string& filepath, bool clear);
+        void open(const std::string_view& filepath, bool clear);
         void close();
 
         bool seek(int position) const;

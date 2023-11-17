@@ -32,7 +32,7 @@ int examples::times_table_main()
 
         frame.fill(kl::colors::GRAY);
 
-        const float circle_radius = min(frame.width() * 0.5f, frame.height() * 0.5f) - 25.0f;
+        const float circle_radius = std::min(frame.width() * 0.5f, frame.height() * 0.5f) - 25.0f;
         frame.draw_circle(frame.size() / 2, circle_radius, circle_color);
 
         static constexpr float point_angle = 360.0f / n;

@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-static const std::string SHADER_SOURCE =
+static const char* SHADER_SOURCE =
 R"(
 // Vertex shader
 float4 v_shader(const float3 position : KL_Position) : SV_Position

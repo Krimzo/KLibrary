@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "klibrary.h"
 
 
 static const HANDLE CONSOLE_HANDLE = []
@@ -18,6 +18,7 @@ int kl::get()
 bool kl::verify(const bool value, const std::string_view& message, const bool wait)
 {
     if (!value) {
+        console::set_enabled(true);
         print(colors::ORANGE, "Failed to verify: ", message, colors::CONSOLE);
         if (wait) kl::get();
     }
@@ -27,6 +28,7 @@ bool kl::verify(const bool value, const std::string_view& message, const bool wa
 void kl::assert(const bool value, const std::string_view& message, const bool wait)
 {
     if (!value) {
+        console::set_enabled(true);
         print(colors::RED, "Assertion failed: ", message, colors::CONSOLE);
         if (wait) kl::get();
         std::terminate();
@@ -158,7 +160,7 @@ void kl::console::dump(const std::string& data, const Int2& location)
 
 void kl::console::progress_bar(const std::string& message, int output_y, float percentage)
 {
-    percentage = min(max(percentage, 0.0f), 1.0f);
+    percentage = std::clamp(percentage, 0.0f, 1.0f);
 
     const int bar_length = (int)(width() - message.length() - 12);
     const int finish_length = (int) ((float) bar_length * percentage);

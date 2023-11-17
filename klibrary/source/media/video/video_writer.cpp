@@ -1,4 +1,4 @@
-#include "klib.h"
+#include "klibrary.h"
 
 
 kl::VideoWriter::VideoWriter(const std::string& filepath, const kl::Int2& frame_size, const int fps, const int bit_rate, const GUID& encoding_format)
