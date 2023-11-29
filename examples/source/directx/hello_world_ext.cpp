@@ -36,7 +36,7 @@ cbuffer ps_cb : register(b0)
 float4 p_shader(const VS_OUT data) : SV_Target
 {
     const float4 object_color = float4(data.color, 1.0f);
-    if (length(mouse_position.xy - data.position.xy) < 50) {
+    if (length(mouse_position.xy - data.position.xy) < 50.0f) {
         return highlight_color;
     }
     return object_color;

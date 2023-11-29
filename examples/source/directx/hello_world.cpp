@@ -6,13 +6,13 @@ R"(
 // Vertex shader
 float4 v_shader(const float3 position : KL_Position) : SV_Position
 {
-    return float4(position, 1);
+    return float4(position, 1.0f);
 }
 
 // Pixel shader
 float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
 {
-    return float4(1, 0.75, 0.35, 1);
+    return float4(1.0f, 0.75f, 0.35f, 1.0f);
 }
 )";
 
