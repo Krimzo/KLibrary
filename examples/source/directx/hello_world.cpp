@@ -43,8 +43,8 @@ int examples::hello_world_main()
     // Mesh setup
     const kl::dx::Buffer triangle = gpu.create_vertex_buffer({
         { {  0.0f,  0.5f, 0.5f } },
-        { { -0.5f, -0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
+        { { -0.5f, -0.5f, 0.5f } },
     });
     
     // Shader setup
@@ -53,7 +53,7 @@ int examples::hello_world_main()
 
     // CDS (Clear-Draw-Swap)
     while (window.process(false)) {
-        gpu.clear_internal(kl::colors::GRAY);
+        gpu.clear_internal(kl::Color(30, 30, 30));
         gpu.draw(triangle);
         gpu.swap_buffers(true);
     }
