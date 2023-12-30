@@ -27,19 +27,18 @@ It is preferred to use float4 or float4x4 since each already have a size that is
 Refer to: https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules
 */
 
-cbuffer ps_cb : register(b0)
+cbuffer PS_CB : register(b0)
 {
-    float4 mouse_position;
-    float4 highlight_color;
+    float2 MOUSE_POSITION;
+    float3 HIGHLIGHT_COLOR;
 };
 
 float4 p_shader(const VS_OUT data) : SV_Target
 {
-    const float4 object_color = float4(data.color, 1.0f);
-    if (length(mouse_position.xy - data.position.xy) < 50.0f) {
-        return highlight_color;
+    if (length(MOUSE_POSITION - data.position.xy) < 50.0f) {
+        return float4(HIGHLIGHT_COLOR, 1.0f);
     }
-    return object_color;
+    return float4(data.color, 1.0f);
 }
 )";
 
@@ -88,15 +87,16 @@ int examples::hello_world_ext_main()
 
     // CDS (Clear-Draw-Swap)
     while (window.process(false)) {
-        struct PSData
+        struct PS_CB
         {
-            kl::Float4 mouse_position;
-            kl::Float4 highlight_color;
-        } ps_data = {};
-
-        ps_data.mouse_position = { window.mouse.position(), 0, 0 };
-        ps_data.highlight_color = (kl::Float4) kl::colors::GRAY;
-        shaders.pixel_shader.update_cbuffer(ps_data);
+            kl::Float2 MOUSE_POSITION;
+            alignas(16) kl::Float3 HIGHLIGHT_COLOR;
+        };
+		const PS_CB ps_cb{
+            .MOUSE_POSITION = window.mouse.position(),
+			.HIGHLIGHT_COLOR = (kl::Float3) kl::colors::GRAY,
+        };
+        shaders.pixel_shader.update_cbuffer(ps_cb);
         
         gpu.clear_internal(kl::colors::GRAY);
         gpu.draw_indexed(vertex_buffer, index_buffer);
