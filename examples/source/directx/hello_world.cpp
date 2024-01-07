@@ -19,7 +19,7 @@ float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
 int examples::hello_world_main()
 {
     // Window setup
-    kl::Window window = { "Hello World!", { 1600, 900 } };
+    kl::Window window = { "Hello World! (D3D11)", { 1600, 900 } };
     kl::GPU gpu = { static_cast<HWND>(window) };
 
     // Window resize setup

@@ -25,11 +25,11 @@ float4 p_shader(const VS_OUT data) : SV_Target
 }
 )";
 
-/* NOTE: KL-DX12 is in early dev stage, don't expect many features */
+/* NOTE: KL_DX12 is in an early dev stage, don't expect many features */
 
 int examples::hello_world_12_main()
 {
-	kl::Window window{ "DXFun", { 1600, 900 } };
+	kl::Window window{ "Hello World! (D3D12)", { 1600, 900 } };
 	window.set_resizeable(false);
 
 	kl::GPU12 gpu{ static_cast<HWND>(window), kl::IS_DEBUG };
