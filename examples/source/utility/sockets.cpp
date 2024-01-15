@@ -6,7 +6,9 @@ static void server()
     kl::Socket server(1709);
     server.listen(1);
 
-    kl::Socket client = server.accept();
+    kl::Socket client{};
+    server.accept(&client);
+
     if (client.send<kl::Float3>({ 1.0f, 2.0f, 3.0f })) {
         kl::print("Data sent!");
     }
