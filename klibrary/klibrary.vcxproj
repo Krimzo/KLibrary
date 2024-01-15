@@ -121,15 +121,11 @@
     <ClCompile Include="source\media\video\video_writer.cpp" />
     <ClCompile Include="source\memory\files\file.cpp" />
     <ClCompile Include="source\memory\linking\dll.cpp" />
-    <ClCompile Include="source\memory\safety\array.cpp" />
-    <ClCompile Include="source\memory\safety\object.cpp" />
     <ClCompile Include="source\render\components\collider.cpp" />
     <ClCompile Include="source\render\components\material.cpp" />
     <ClCompile Include="source\render\components\mesh.cpp" />
     <ClCompile Include="source\render\components\texture.cpp" />
-    <ClCompile Include="source\render\light\ambient_light.cpp" />
     <ClCompile Include="source\render\light\directional_light.cpp" />
-    <ClCompile Include="source\render\light\point_light.cpp" />
     <ClCompile Include="source\render\scene\camera.cpp" />
     <ClCompile Include="source\render\scene\entity.cpp" />
     <ClCompile Include="source\render\scene\scene.cpp" />

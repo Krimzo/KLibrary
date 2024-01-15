@@ -19,6 +19,7 @@ namespace examples {
     int hello_world_main();
     int hello_world_ext_main();
     int hello_world_12_main();
+    int hello_world_ext_12_main();
     int mandelbrot_main();
     int plane_playground_main();
     int raytracing_main();

@@ -93,6 +93,7 @@
     <ClCompile Include="source\directx\geometry_shaders.cpp" />
     <ClCompile Include="source\directx\hello_world.cpp" />
     <ClCompile Include="source\directx\hello_world_12.cpp" />
+    <ClCompile Include="source\directx\hello_world_ext_12.cpp" />
     <ClCompile Include="source\directx\hello_world_ext.cpp" />
     <ClCompile Include="source\directx\mandelbrot.cpp" />
     <ClCompile Include="source\directx\plane_playground.cpp" />
