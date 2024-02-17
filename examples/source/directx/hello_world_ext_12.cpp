@@ -53,9 +53,9 @@ int examples::hello_world_ext_12_main()
     const std::vector cube_mesh_data = kl::parse_obj_file("meshes/cube.obj");
     const std::vector monke_mesh_data = kl::parse_obj_file("meshes/monke.obj");
 
-    const kl::dx12::Resource quad_vb = gpu.create_upload_buffer(quad_mesh_data.data(), quad_mesh_data.size() * sizeof(kl::Vertex));
-    const kl::dx12::Resource cube_vb = gpu.create_upload_buffer(cube_mesh_data.data(), cube_mesh_data.size() * sizeof(kl::Vertex));
-    const kl::dx12::Resource monke_vb = gpu.create_upload_buffer(monke_mesh_data.data(), monke_mesh_data.size() * sizeof(kl::Vertex));
+    const kl::dx12::Resource quad_vb = gpu.create_upload_buffer(quad_mesh_data.data(), (UINT) quad_mesh_data.size() * sizeof(kl::Vertex));
+    const kl::dx12::Resource cube_vb = gpu.create_upload_buffer(cube_mesh_data.data(), (UINT) cube_mesh_data.size() * sizeof(kl::Vertex));
+    const kl::dx12::Resource monke_vb = gpu.create_upload_buffer(monke_mesh_data.data(), (UINT) monke_mesh_data.size() * sizeof(kl::Vertex));
 
     const kl::dx12::Resource quad_blas = gpu.create_triangle_blas(quad_vb);
     const kl::dx12::Resource cube_blas = gpu.create_triangle_blas(cube_vb);
