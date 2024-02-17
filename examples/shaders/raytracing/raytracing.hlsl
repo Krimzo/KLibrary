@@ -1,7 +1,6 @@
 struct Payload
 {
     float3 color;
-    bool allow_reflection;
     bool missed;
 };
 
@@ -23,8 +22,8 @@ void ray_generation_shader()
     const uint2 index = DispatchRaysIndex().xy;
     const float2 size = DispatchRaysDimensions().xy;
 
-    float2 uv = index / size;
-    float3 target = float3((uv.x * 2.0f - 1.0f) * 1.8f * (size.x / size.y), (1.0f - uv.y) * 4.0f - 2.0f + CAMERA.y, 0.0f);
+    const float2 uv = index / size;
+    const float3 target = float3((uv.x * 2.0f - 1.0f) * 1.8f * (size.x / size.y), (1.0f - uv.y) * 4.0f - 2.0f + CAMERA.y, 0.0f);
 
     RayDesc ray;
     ray.Origin = CAMERA;
@@ -33,7 +32,6 @@ void ray_generation_shader()
     ray.TMax = 1000.0f;
 
     Payload payload;
-    payload.allow_reflection = true;
     payload.missed = false;
 
     TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, ray, payload);
@@ -43,8 +41,8 @@ void ray_generation_shader()
 [shader("miss")]
 void miss_shader(inout Payload payload)
 {
-    float slope = normalize(WorldRayDirection()).y;
-    float t = saturate(slope * 5.0f + 0.5f);
+    const float slope = normalize(WorldRayDirection()).y;
+    const float t = saturate(slope * 5.0f + 0.5f);
     payload.color = lerp(SKY_BOTTOM, SKY_TOP, t);
     payload.missed = true;
 }
@@ -87,22 +85,17 @@ void hit_cube(inout Payload payload, float2 uv)
 
 void hit_mirror(inout Payload payload, float2 uv)
 {
-    if (!payload.allow_reflection) {
-        return;
-    }
-
     const float3 position = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
     const float3 normal = normalize(mul(float3(0.0f, 1.0f, 0.0f), (float3x3) ObjectToWorld4x3()));
     const float3 reflected = reflect(normalize(WorldRayDirection()), normal);
 
-    RayDesc mirrorRay;
-    mirrorRay.Origin = position;
-    mirrorRay.Direction = reflected;
-    mirrorRay.TMin = 0.001f;
-    mirrorRay.TMax = 1000.0f;
+    RayDesc mirror_ray;
+    mirror_ray.Origin = position;
+    mirror_ray.Direction = reflected;
+    mirror_ray.TMin = 0.001f;
+    mirror_ray.TMax = 1000.0f;
 
-    payload.allow_reflection=false;
-    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, mirrorRay, payload);
+    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, mirror_ray, payload);
 }
 
 void hit_floor(inout Payload payload, float2 uv)
@@ -118,12 +111,11 @@ void hit_floor(inout Payload payload, float2 uv)
     shadow_ray.TMin = 0.001f;
     shadow_ray.TMax = 1.0f;
     
-    Payload shadow;
-    shadow.allow_reflection = false;
-    shadow.missed = false;
-    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, shadow_ray, shadow);
+    Payload shadow_payload;
+    shadow_payload.missed = false;
+    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, shadow_ray, shadow_payload);
 
-    if (!shadow.missed) {
+    if (!shadow_payload.missed) {
         payload.color *= 0.5f;
     }
 }

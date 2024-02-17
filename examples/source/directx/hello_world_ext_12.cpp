@@ -49,25 +49,17 @@ int examples::hello_world_ext_12_main()
     window.maximize();
 
     // Mesh setup
-    static constexpr float quad_vertices[18] = {
-        -1.0f, 0.0f, -1.0f, -1.0f, 0.0f,  1.0f, 1.0f, 0.0f, 1.0f,
-        -1.0f, 0.0f, -1.0f,  1.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f,
-    };
-    static constexpr float cube_vertices[24] = {
-        -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f, 1.0f, -1.0f,  1.0f, -1.0f, 1.0f,  1.0f, 1.0f, 1.0f,  1.0f,
-    };
-    static constexpr uint16_t cube_indices[36] = {
-        4, 6, 0, 2, 0, 6, 0, 1, 4, 5, 4, 1,
-        0, 2, 1, 3, 1, 2, 1, 3, 5, 7, 5, 3,
-        2, 6, 3, 7, 3, 6, 4, 5, 6, 7, 6, 5,
-    };
+    const std::vector quad_mesh_data = kl::parse_obj_file("meshes/quad.obj");
+    const std::vector cube_mesh_data = kl::parse_obj_file("meshes/cube.obj");
+    const std::vector monke_mesh_data = kl::parse_obj_file("meshes/monke.obj");
 
-    const kl::dx12::Resource quad_vb = gpu.create_upload_buffer(quad_vertices, sizeof(quad_vertices));
-    const kl::dx12::Resource cube_vb = gpu.create_upload_buffer(cube_vertices, sizeof(cube_vertices));
-    const kl::dx12::Resource cube_ib = gpu.create_upload_buffer(cube_indices, sizeof(cube_indices));
+    const kl::dx12::Resource quad_vb = gpu.create_upload_buffer(quad_mesh_data.data(), quad_mesh_data.size() * sizeof(kl::Vertex));
+    const kl::dx12::Resource cube_vb = gpu.create_upload_buffer(cube_mesh_data.data(), cube_mesh_data.size() * sizeof(kl::Vertex));
+    const kl::dx12::Resource monke_vb = gpu.create_upload_buffer(monke_mesh_data.data(), monke_mesh_data.size() * sizeof(kl::Vertex));
+
     const kl::dx12::Resource quad_blas = gpu.create_triangle_blas(quad_vb);
-    const kl::dx12::Resource cube_blas = gpu.create_triangle_blas(cube_vb, cube_ib);
+    const kl::dx12::Resource cube_blas = gpu.create_triangle_blas(cube_vb);
+    const kl::dx12::Resource monke_blas = gpu.create_triangle_blas(monke_vb);
 
     // Scene setup
     constexpr UINT INSTANCE_COUNT = 3;
@@ -76,13 +68,21 @@ int examples::hello_world_ext_12_main()
     D3D12_RAYTRACING_INSTANCE_DESC* instance_data = nullptr;
     instances->Map(0, nullptr, reinterpret_cast<void**>(&instance_data));
 
-    for (UINT i = 0; i < INSTANCE_COUNT; i++) {
-        instance_data[i] = {
-            .InstanceID = i,
-            .InstanceMask = 1,
-            .AccelerationStructure = (i ? quad_blas : cube_blas)->GetGPUVirtualAddress(),
-        };
-    }
+    instance_data[0] = {
+        .InstanceID = 0,
+        .InstanceMask = 1,
+        .AccelerationStructure = monke_blas->GetGPUVirtualAddress(),
+    };
+    instance_data[1] = {
+        .InstanceID = 1,
+        .InstanceMask = 1,
+        .AccelerationStructure = cube_blas->GetGPUVirtualAddress(),
+    };
+    instance_data[2] = {
+        .InstanceID = 2,
+        .InstanceMask = 1,
+        .AccelerationStructure = quad_blas->GetGPUVirtualAddress(),
+    };
 
     // TLAS
     UINT64 update_scratch_size = 0;

@@ -321,30 +321,23 @@ kl::dx12::AccelerationStructure kl::GPU12::create_blas(const D3D12_RAYTRACING_GE
 	return create_acceleration_structure(inputs, update_scratch_size);
 }
 
-kl::dx12::AccelerationStructure kl::GPU12::create_triangle_blas(const dx12::Resource& vertex_buffer, const dx12::Resource& index_buffer)
+kl::dx12::AccelerationStructure kl::GPU12::create_triangle_blas(const dx12::Resource& vertex_buffer, const dx12::Resource& index_buffer, const UINT vertex_stride, const UINT index_stride)
 {
-	static constexpr int index_stride = sizeof(uint16_t);
-	static constexpr int vertex_stride = sizeof(float) * 3;
-
-	const DXGI_FORMAT index_format = index_buffer ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_UNKNOWN;
-	const DXGI_FORMAT vertex_format = DXGI_FORMAT_R32G32B32_FLOAT;
-
 	const UINT index_count = (UINT) (index_buffer ? index_buffer->GetDesc().Width / index_stride : 0);
 	const UINT vertex_count = (UINT) (vertex_buffer->GetDesc().Width / vertex_stride);
-
 	const D3D12_RAYTRACING_GEOMETRY_DESC geometry_descriptor{
 		.Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES,
 		.Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE,
 		.Triangles{
 			.Transform3x4 = 0,
-			.IndexFormat = index_format,
-			.VertexFormat = vertex_format,
+			.IndexFormat = index_buffer ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_UNKNOWN,
+			.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT,
 			.IndexCount = index_count,
 			.VertexCount = vertex_count,
 			.IndexBuffer = index_buffer ? index_buffer->GetGPUVirtualAddress() : 0,
 			.VertexBuffer{
 				.StartAddress = vertex_buffer->GetGPUVirtualAddress(),
-				.StrideInBytes = vertex_stride,
+				.StrideInBytes = (UINT64) vertex_stride,
 			},
 		},
 	};
