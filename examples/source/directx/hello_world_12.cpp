@@ -25,19 +25,26 @@ float4 p_shader(const VS_OUT data) : SV_Target
 }
 )";
 
-/* NOTE: KL_DX12 is in an early dev stage, don't expect many features */
-
 int examples::hello_world_12_main()
 {
+	// Window setup
 	kl::Window window{ "Hello World! (D3D12)", { 1600, 900 } };
-	window.set_resizeable(false);
-
 	kl::GPU12 gpu{ static_cast<HWND>(window), kl::IS_DEBUG };
+
 	auto& queue = gpu.queue;
 	auto& commands = gpu.commands;
 	auto& fence = gpu.fence;
 
-	// Vertex data
+	// Window resize setup
+	window.on_resize.emplace_back([&](const kl::Int2 new_size)
+	{
+		if (new_size.x > 0 && new_size.y > 0) {
+			gpu.resize(new_size);
+		}
+	});
+	window.maximize();
+
+	// Mesh setup
 	const kl::Vertex vertices[3] = {
 		kl::Vertex{ kl::Float3{ -0.5f, -0.5f, 0.0f }, {}, kl::Float3{ kl::colors::RED } },
 		kl::Vertex{ kl::Float3{  0.0f,  0.5f, 0.0f }, {}, kl::Float3{ kl::colors::GREEN } },
@@ -45,7 +52,7 @@ int examples::hello_world_12_main()
 	};
 	const std::pair vertex_buffer = gpu.create_vertex_buffer(vertices, (UINT) std::size(vertices));
 
-	// Pipeline
+	// Pipeline setup
 	const kl::dx12::RootSignature root_signature = gpu.create_root_signature();
 	const kl::dx12::PipelineState pipeline_state = gpu.create_default_rasterization_pipeline(root_signature, SHADER_SOURCE);
 
@@ -55,9 +62,9 @@ int examples::hello_world_12_main()
 		const kl::dx12::Resource back_buffer = gpu.get_back_buffer(back_buffer_index);
 		const kl::dx12::DescriptorHandle render_target = gpu.get_render_target(back_buffer_index);
 
-		commands.reset();
-		commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		gpu.reset();
 
+		commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 		commands.set_render_target(&render_target, nullptr);
 		commands.clear_target_view(render_target, kl::Color(30, 30, 30));
 
@@ -70,15 +77,12 @@ int examples::hello_world_12_main()
 		commands.set_vertex_buffer(vertex_buffer.second);
 		commands.set_primitive_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		commands.draw((UINT) std::size(vertices));
-
 		commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-		commands.close();
 
-		queue.execute(commands.list);
-		fence.signal_and_wait(queue.queue);
+		gpu.execute_and_wait();
 		gpu.swap_buffers(true);
 	}
 
-	fence.signal_and_wait(queue.queue);
+	gpu.wait();
 	return 0;
 }

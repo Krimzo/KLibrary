@@ -21,8 +21,8 @@ static void client()
     kl::Socket client(1709);
     client.connect();
 
-    kl::Float3 result = {};
-    client.receive(result);
+    kl::Float3 result{};
+    client.receive(&result);
     print("Received: ", result);
 }
 

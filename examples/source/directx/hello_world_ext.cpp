@@ -46,7 +46,7 @@ int examples::hello_world_ext_main()
 {
     // Window setup
     kl::Window window = { "Hello World! (D3D11 Extended)", { 1600, 900 } };
-    kl::GPU gpu = { static_cast<HWND>(window) };
+    kl::GPU gpu = { static_cast<HWND>(window), kl::IS_DEBUG };
 
     // Window resize setup
     window.on_resize.emplace_back([&](const kl::Int2 new_size)

@@ -1,47 +1,129 @@
-struct RayPayload
+struct Payload
 {
-    float4 color;
+    float3 color;
+    bool allow_reflection;
+    bool missed;
 };
 
-cbuffer GLOBAL_CB : register(b0)
-{
-    float4x4 INVERSE_CAMERA;
-    float3 CAMERA_ORIGIN;
-};
+RaytracingAccelerationStructure SCENE : register(t0);
+RWTexture2D<float4> RENDER_TARGET : register(u0);
 
-RaytracingAccelerationStructure SCENE : register(t0, space0);
-RWTexture2D<float4> OUTPUT_TEXTURE : register(u0);
+static const float3 CAMERA = float3(0.0f, 1.5f, -7.0f);
+static const float3 SUN = float3(0.0f, 200.0f, 0.0f);
+static const float3 SKY_TOP = float3(0.24f, 0.44f, 0.72f);
+static const float3 SKY_BOTTOM = float3(0.75f, 0.86f, 0.93f);
 
-// Ray generation shader
+void hit_cube(inout Payload payload, float2 uv);
+void hit_mirror(inout Payload payload, float2 uv);
+void hit_floor(inout Payload payload, float2 uv);
+
 [shader("raygeneration")]
-void ray_gen_shader()
+void ray_generation_shader()
 {
-    const float2 screen_coords = (float2) DispatchRaysIndex() / (float2) DispatchRaysDimensions();
-    const float2 ndc = screen_coords * 2.0f - 1.0f;
-    float4 ray_direction = mul(float4(ndc, 1.0f, 1.0f), INVERSE_CAMERA);
-    ray_direction /= ray_direction.w;
+    const uint2 index = DispatchRaysIndex().xy;
+    const float2 size = DispatchRaysDimensions().xy;
+
+    float2 uv = index / size;
+    float3 target = float3((uv.x * 2.0f - 1.0f) * 1.8f * (size.x / size.y), (1.0f - uv.y) * 4.0f - 2.0f + CAMERA.y, 0.0f);
 
     RayDesc ray;
-    ray.Origin = CAMERA_ORIGIN;
-    ray.Direction = ray_direction.xyz;
-    ray.TMin = 0.01f;
-    ray.TMax = 50.0f;
-    
-    RayPayload payload = { float4(0.0f, 0.0f, 0.0f, 1.0f) };
-    TraceRay(SCENE, RAY_FLAG_NONE, ~0, 0, 1, 0, ray, payload);
-    OUTPUT_TEXTURE[DispatchRaysIndex().xy] = payload.color;
+    ray.Origin = CAMERA;
+    ray.Direction = target - CAMERA;
+    ray.TMin = 0.001f;
+    ray.TMax = 1000.0f;
+
+    Payload payload;
+    payload.allow_reflection = true;
+    payload.missed = false;
+
+    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, ray, payload);
+    RENDER_TARGET[index] = float4(payload.color, 1.0f);
 }
 
-// Closest hit shader
-[shader("closesthit")]
-void closest_hit_shader(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes _)
-{
-    payload.color = float4(1.0f, 0.75f, 0.35f, 1.0f);
-}
-
-// Miss shader
 [shader("miss")]
-void miss_shader(inout RayPayload payload)
+void miss_shader(inout Payload payload)
 {
-    payload.color = float4(0.1f, 0.1f, 0.1f, 1.0f);
+    float slope = normalize(WorldRayDirection()).y;
+    float t = saturate(slope * 5.0f + 0.5f);
+    payload.color = lerp(SKY_BOTTOM, SKY_TOP, t);
+    payload.missed = true;
+}
+
+[shader("closesthit")]
+void closest_hit_shader(inout Payload payload, BuiltInTriangleIntersectionAttributes attrib)
+{
+    switch (InstanceID()) {
+    case 0:
+        hit_cube(payload, attrib.barycentrics);
+        break;
+        
+    case 1:
+        hit_mirror(payload, attrib.barycentrics);
+        break;
+        
+    case 2:
+        hit_floor(payload, attrib.barycentrics);
+        break;
+        
+    default:
+        payload.color = float3(1.0f, 0.0f, 1.0f);
+        break;
+    }
+}
+
+void hit_cube(inout Payload payload, float2 uv)
+{
+    const uint triangle_index = PrimitiveIndex() / 2;
+    const float3 normal = (triangle_index.xxx % 3 == uint3(0, 1, 2)) * (triangle_index < 3 ? -1 : 1);
+    const float3 world_normal = normalize(mul(normal, (float3x3) ObjectToWorld4x3()));
+
+    float3 color = abs(normal) / 3.0f + 0.5f;
+    if (uv.x < 0.03f || uv.y < 0.03f) {
+        color = 0.25f.xxx;
+    }
+    color *= saturate(dot(world_normal, normalize(SUN))) + 0.33f;
+    payload.color = color;
+}
+
+void hit_mirror(inout Payload payload, float2 uv)
+{
+    if (!payload.allow_reflection) {
+        return;
+    }
+
+    const float3 position = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
+    const float3 normal = normalize(mul(float3(0.0f, 1.0f, 0.0f), (float3x3) ObjectToWorld4x3()));
+    const float3 reflected = reflect(normalize(WorldRayDirection()), normal);
+
+    RayDesc mirrorRay;
+    mirrorRay.Origin = position;
+    mirrorRay.Direction = reflected;
+    mirrorRay.TMin = 0.001f;
+    mirrorRay.TMax = 1000.0f;
+
+    payload.allow_reflection=false;
+    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, mirrorRay, payload);
+}
+
+void hit_floor(inout Payload payload, float2 uv)
+{
+    const float3 position = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
+
+    const bool2 pattern = frac(position.xz) > 0.5f;
+    payload.color = pattern.x ^ pattern.y ? 0.6f.xxx : 0.4f.xxx;
+
+    RayDesc shadow_ray;
+    shadow_ray.Origin = position;
+    shadow_ray.Direction = SUN - position;
+    shadow_ray.TMin = 0.001f;
+    shadow_ray.TMax = 1.0f;
+    
+    Payload shadow;
+    shadow.allow_reflection = false;
+    shadow.missed = false;
+    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, shadow_ray, shadow);
+
+    if (!shadow.missed) {
+        payload.color *= 0.5f;
+    }
 }
