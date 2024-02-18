@@ -1,7 +1,7 @@
 struct Payload
 {
     float3 color;
-    bool missed;
+    float missed;
 };
 
 RaytracingAccelerationStructure SCENE : register(t0);

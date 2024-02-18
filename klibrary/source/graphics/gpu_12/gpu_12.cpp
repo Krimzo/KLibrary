@@ -323,8 +323,8 @@ kl::dx12::AccelerationStructure kl::GPU12::create_blas(const D3D12_RAYTRACING_GE
 
 kl::dx12::AccelerationStructure kl::GPU12::create_triangle_blas(const dx12::Resource& vertex_buffer, const dx12::Resource& index_buffer, const UINT vertex_stride, const UINT index_stride)
 {
-	const UINT index_count = (UINT) (index_buffer ? index_buffer->GetDesc().Width / index_stride : 0);
 	const UINT vertex_count = (UINT) (vertex_buffer->GetDesc().Width / vertex_stride);
+	const UINT index_count = (UINT) (index_buffer ? index_buffer->GetDesc().Width / index_stride : 0);
 	const D3D12_RAYTRACING_GEOMETRY_DESC geometry_descriptor{
 		.Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES,
 		.Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE,
@@ -403,7 +403,7 @@ kl::dx12::StateObject kl::GPU12::create_default_raytracing_pipeline(const std::v
 		},
 	};
 	const D3D12_HIT_GROUP_DESC hit_group{
-		.HitGroupExport = L"HitGroup",
+		.HitGroupExport = L"hit_group",
 		.Type = D3D12_HIT_GROUP_TYPE_TRIANGLES,
 		.ClosestHitShaderImport = L"closest_hit_shader",
 	};
