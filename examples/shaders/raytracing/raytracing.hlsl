@@ -1,19 +1,19 @@
 struct Payload
 {
+    bool missed;
     float3 color;
-    float missed;
 };
 
-RaytracingAccelerationStructure SCENE : register(t0);
 RWTexture2D<float4> RENDER_TARGET : register(u0);
+RaytracingAccelerationStructure SCENE : register(t0);
 
 static const float3 CAMERA = float3(0.0f, 1.5f, -7.0f);
 static const float3 SUN = float3(0.0f, 200.0f, 0.0f);
 static const float3 SKY_TOP = float3(0.24f, 0.44f, 0.72f);
 static const float3 SKY_BOTTOM = float3(0.75f, 0.86f, 0.93f);
 
+void hit_monke(inout Payload payload, float2 uv);
 void hit_cube(inout Payload payload, float2 uv);
-void hit_mirror(inout Payload payload, float2 uv);
 void hit_floor(inout Payload payload, float2 uv);
 
 [shader("raygeneration")]
@@ -52,11 +52,11 @@ void closest_hit_shader(inout Payload payload, BuiltInTriangleIntersectionAttrib
 {
     switch (InstanceID()) {
     case 0:
-        hit_cube(payload, attrib.barycentrics);
+        hit_monke(payload, attrib.barycentrics);
         break;
         
     case 1:
-        hit_mirror(payload, attrib.barycentrics);
+        hit_cube(payload, attrib.barycentrics);
         break;
         
     case 2:
@@ -69,7 +69,7 @@ void closest_hit_shader(inout Payload payload, BuiltInTriangleIntersectionAttrib
     }
 }
 
-void hit_cube(inout Payload payload, float2 uv)
+void hit_monke(inout Payload payload, float2 uv)
 {
     const uint triangle_index = PrimitiveIndex() / 2;
     const float3 normal = (triangle_index.xxx % 3 == uint3(0, 1, 2)) * (triangle_index < 3 ? -1 : 1);
@@ -83,19 +83,18 @@ void hit_cube(inout Payload payload, float2 uv)
     payload.color = color;
 }
 
-void hit_mirror(inout Payload payload, float2 uv)
+void hit_cube(inout Payload payload, float2 uv)
 {
     const float3 position = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
     const float3 normal = normalize(mul(float3(0.0f, 1.0f, 0.0f), (float3x3) ObjectToWorld4x3()));
     const float3 reflected = reflect(normalize(WorldRayDirection()), normal);
 
-    RayDesc mirror_ray;
-    mirror_ray.Origin = position;
-    mirror_ray.Direction = reflected;
-    mirror_ray.TMin = 0.001f;
-    mirror_ray.TMax = 1000.0f;
-
-    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, mirror_ray, payload);
+    RayDesc ray;
+    ray.Origin = position;
+    ray.Direction = reflected;
+    ray.TMin = 0.001f;
+    ray.TMax = 1000.0f;
+    TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, ray, payload);
 }
 
 void hit_floor(inout Payload payload, float2 uv)

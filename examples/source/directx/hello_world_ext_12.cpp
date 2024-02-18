@@ -92,23 +92,23 @@ int examples::hello_world_ext_12_main()
     const kl::dx12::Resource tlas_update_scratch = gpu.create_commited_resource(update_scratch_size, D3D12_RESOURCE_STATE_COMMON);
 
     // Root signature setup
-    const D3D12_ROOT_PARAMETER root_parameter0{
-        .ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV,
-        .Descriptor{
-            .ShaderRegister = 0,
-            .RegisterSpace = 0,
-        },
-    };
     const D3D12_DESCRIPTOR_RANGE uav_range{
         .RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV,
         .NumDescriptors = 1,
     };
-    const D3D12_ROOT_PARAMETER root_parameter1{
+    const D3D12_ROOT_PARAMETER root_parameter0{
         .ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE,
         .DescriptorTable{
             .NumDescriptorRanges = 1,
             .pDescriptorRanges = &uav_range,
         },
+    };
+    const D3D12_ROOT_PARAMETER root_parameter1{
+       .ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV,
+       .Descriptor{
+           .ShaderRegister = 0,
+           .RegisterSpace = 0,
+       },
     };
     const kl::dx12::RootSignature root_signature = gpu.create_root_signature({ root_parameter0, root_parameter1 }, {}, D3D12_ROOT_SIGNATURE_FLAG_NONE);
 
@@ -186,8 +186,8 @@ int examples::hello_world_ext_12_main()
         // Bind pipeline
         gpu.commands.list->SetPipelineState1(pipeline_state.Get());
         gpu.commands.list->SetComputeRootSignature(root_signature.Get());
-        gpu.commands.list->SetComputeRootShaderResourceView(0, tlas->GetGPUVirtualAddress());
-        gpu.commands.list->SetComputeRootDescriptorTable(1, uav_heap->GetGPUDescriptorHandleForHeapStart());
+        gpu.commands.list->SetComputeRootDescriptorTable(0, uav_heap->GetGPUDescriptorHandleForHeapStart());
+        gpu.commands.list->SetComputeRootShaderResourceView(1, tlas->GetGPUVirtualAddress());
         ID3D12DescriptorHeap* uav_heaps[1] = { uav_heap.Get() };
         gpu.commands.list->SetDescriptorHeaps(1, uav_heaps);
 
