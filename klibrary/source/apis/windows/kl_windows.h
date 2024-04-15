@@ -24,6 +24,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <wininet.h>
+#include <dwmapi.h>
 #include <conio.h>
 
 #pragma comment(lib, "kernel32.lib")
@@ -40,6 +41,7 @@
 #pragma comment(lib, "odbc32.lib")
 #pragma comment(lib, "odbccp32.lib")
 #pragma comment(lib, "wininet.lib")
+#pragma comment(lib, "dwmapi.lib")
 
 namespace kl {
 	/*

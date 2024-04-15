@@ -23,14 +23,14 @@ float2 calculate_uv(const float2 position)
 
 float2 square_complex(const float2 a)
 {
-    return float2(a.x * a.x - a.y * a.y, 2 * a.x * a.y);
+    return float2(a.x * a.x - a.y * a.y, 2.0f * a.x * a.y);
 }
 
 float mandel_iterate(const float2 position)
 {
     float2 num = position;
     for (int i = 1; i <= state_info.w; i++) {
-        if (length(num) > 2) {
+        if (length(num) > 2.0f) {
             return i / state_info.w;
         }
         num = position + square_complex(num);

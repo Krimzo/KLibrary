@@ -6,9 +6,12 @@
 namespace kl {
     class Timer
     {
-        time_t m_delta_start;
-        time_t m_delta_end;
-        time_t m_elapsed_start;
+        uint64_t m_delta_start;
+        uint64_t m_delta_end;
+        uint64_t m_elapsed_start;
+
+        float m_old_elapsed = 0.0f;
+        bool m_is_paused = false;
 
     public:
         Timer();
@@ -20,5 +23,9 @@ namespace kl {
 
         void reset_elapsed();
         float elapsed() const;
+
+        bool is_paused() const;
+        void pause();
+        void resume();
     };
 }

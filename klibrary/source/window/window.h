@@ -47,10 +47,10 @@ namespace kl {
         virtual ~Window();
 
         Window(const Window&) = delete;
-        Window(const Window&&) = delete;
+        Window(Window&&) = delete;
 
         void operator=(const Window&) = delete;
-        void operator=(const Window&&) = delete;
+        void operator=(Window&&) = delete;
 
         // Methods
         operator HWND() const;
@@ -63,9 +63,17 @@ namespace kl {
         bool is_resizeable() const;
         void set_resizeable(bool enabled);
 
+        int style() const;
+        void add_style(int style);
+        void remove_style(int style);
+
         void maximize() const;
         void minimize() const;
         void restore() const;
+
+        bool is_maximized() const;
+        bool is_minimized() const;
+        bool is_restored() const;
 
         bool in_fullscreen() const;
         void set_fullscreen(bool enabled);
@@ -91,6 +99,7 @@ namespace kl {
         void draw_pixel_data(const Color* data, const Int2& size, const Int2& position = {}) const;
         void draw_image(const Image& image, const Int2& position = {}) const;
 
+        void set_dark_mode(bool enabled) const;
         void notify() const;
     };
 }
