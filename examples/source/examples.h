@@ -23,6 +23,7 @@ namespace examples {
     int mandelbrot_main();
     int plane_playground_main();
     int raytracing_main();
+    int text_drawing_main();
 
     // Math
     int imaginary_numbers_main();
