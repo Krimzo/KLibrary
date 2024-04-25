@@ -1,7 +1,35 @@
 #include "klibrary.h"
 
 
-// Init
+// Address
+kl::Address::Address()
+    : sockaddr_in()
+{
+    sin_family = AF_INET;
+}
+
+std::string kl::Address::address() const
+{
+    char buffer[INET_ADDRSTRLEN + 1] = {};
+    return ::inet_ntop(AF_INET, &sin_addr, buffer, INET_ADDRSTRLEN);
+}
+
+int kl::Address::set_address(const std::string_view& address)
+{
+    return ::inet_pton(AF_INET, address.data(), &sin_addr);
+}
+
+int kl::Address::port() const
+{
+    return (int) ::ntohs(sin_port);
+}
+
+void kl::Address::set_port(int port)
+{
+    sin_port = ::htons((u_short) port);
+}
+
+// Socket
 namespace kl_ignored {
     [[maybe_unused]] static const int DONT_CARE = []()
     {
@@ -21,7 +49,6 @@ kl::Socket::Socket(const bool udp)
     m_socket = ::socket(AF_INET,
         udp ? SOCK_DGRAM : SOCK_STREAM,
         udp ? IPPROTO_UDP : IPPROTO_TCP);
-    m_address.sin_family = AF_INET;
     m_address.sin_addr.s_addr = INADDR_ANY;
     verify(m_socket != INVALID_SOCKET, "Failed to create socket");
 }
@@ -44,23 +71,22 @@ kl::Socket::operator bool() const
 
 std::string kl::Socket::address() const
 {
-    char buffer[INET_ADDRSTRLEN + 1] = {};
-    return ::inet_ntop(AF_INET, &m_address.sin_addr, buffer, INET_ADDRSTRLEN);
+    return m_address.address();
 }
 
 int kl::Socket::set_address(const std::string_view& address)
 {
-    return ::inet_pton(AF_INET, address.data(), &m_address.sin_addr);
+    return m_address.set_address(address);
 }
 
 int kl::Socket::port() const
 {
-    return (int) ::ntohs(m_address.sin_port);
+    return m_address.port();
 }
 
 void kl::Socket::set_port(const int port)
 {
-    m_address.sin_port = ::htons((u_short) port);
+    m_address.set_port(port);
 }
 
 // Connection

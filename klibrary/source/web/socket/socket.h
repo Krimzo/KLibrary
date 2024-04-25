@@ -4,7 +4,16 @@
 
 
 namespace kl {
-    using Address = sockaddr_in;
+    struct Address : public sockaddr_in
+    {
+        Address();
+        
+        std::string address() const;
+        int set_address(const std::string_view& address);
+
+        int port() const;
+        void set_port(int port);
+    };
 }
 
 namespace kl {
