@@ -3,10 +3,12 @@
 
 static void server()
 {
-    kl::Socket server(1709);
+    kl::Socket server{ false };
+    server.set_port(1709);
+    server.bind();
     server.listen(1);
 
-    kl::Socket client{};
+    kl::Socket client{ false };
     server.accept(&client);
 
     if (client.send<kl::Float3>({ 1.0f, 2.0f, 3.0f })) {
@@ -18,7 +20,9 @@ static void client()
 {
     kl::time::wait(0.25f);
 
-    kl::Socket client(1709);
+    kl::Socket client{ false };
+    client.set_port(1709);
+    client.set_address("127.0.0.1");
     client.connect();
 
     kl::Float3 result{};
