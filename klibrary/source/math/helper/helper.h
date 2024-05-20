@@ -36,19 +36,19 @@ namespace kl {
     template<typename T>
     constexpr T asin_deg(T value)
     {
-        return (T) std::asin(value) * TO_DEGREES;
+        return T(std::asin(value) * TO_DEGREES);
     }
 
     template<typename T>
     constexpr T acos_deg(T value)
     {
-        return (T) std::acos(value) * TO_DEGREES;
+        return T(std::acos(value) * TO_DEGREES);
     }
 
     template<typename T>
     constexpr T atan_deg(T value)
     {
-        return (T) std::atan(value) * TO_DEGREES;
+        return T(std::atan(value) * TO_DEGREES);
     }
 
     // Wrap

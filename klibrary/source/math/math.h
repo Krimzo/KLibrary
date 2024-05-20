@@ -134,7 +134,7 @@ namespace kl {
         T result = {};
         if (full) {
             result = std::atan2(first.x * second.y - first.y * second.x, first.x * second.x + first.y * second.y);
-            result += PI;
+            result += (T) PI;
         }
         else {
             result = std::acos(dot(first, second));
@@ -487,10 +487,10 @@ namespace kl {
 
         const Vector3<T> result = {
             std::atan2(sin_r_cos_p, cos_r_cos_p),
-            std::abs(sin_p) >= T(1) ? std::copysign(PI * T(0.5), sin_p) : std::asin(sin_p),
+            std::abs(sin_p) >= T(1) ? (T) std::copysign(PI * T(0.5), sin_p) : (T) std::asin(sin_p),
             std::atan2(sin_y_cos_p, cos_y_cos_p),
         };
-        return result * TO_DEGREES;
+        return result * (T) TO_DEGREES;
     }
 
     template<typename T>
