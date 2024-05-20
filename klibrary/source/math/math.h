@@ -55,6 +55,9 @@ namespace kl {
     Quaternion to_quaternion(const Float3& euler);
     Float3 to_euler(const Quaternion& quaternion);
 
+    Quaternion to_quaternion(const Float3& original, const Float3& target);
+    Quaternion to_euler(const Float3& original, const Float3& target);
+
     // Complex
     Complex abs(const Complex& num);
     Complex normalize(const Complex& num);

@@ -111,7 +111,20 @@ kl::Float3 kl::to_euler(const Quaternion& quaternion)
         (::abs(sin_p) >= 1.0f) ? copysign(PI * 0.5f, sin_p) : asin(sin_p),
         atan2(sin_y_cos_p, cos_y_cos_p),
     };
-    return (result * TO_DEGREES);
+    return result * TO_DEGREES;
+}
+
+kl::Quaternion kl::to_quaternion(const Float3& original, const Float3& target)
+{
+    const Float3 axis = normalize(cross(original, target));
+    const float angl = angle(original, target);
+    return Quaternion{ axis, angl };
+}
+
+kl::Quaternion kl::to_euler(const Float3& original, const Float3& target)
+{
+    const Quaternion quat = to_quaternion(original, target);
+    return to_euler(quat);
 }
 
 // Complex
