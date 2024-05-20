@@ -26,6 +26,7 @@ namespace examples {
     int text_drawing_main();
 
     // Math
+    int math_tests_main();
     int imaginary_numbers_main();
 
     // Utility

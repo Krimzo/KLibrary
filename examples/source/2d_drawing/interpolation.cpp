@@ -23,7 +23,7 @@ int examples::interpolation_main()
         kl::colors::GREEN,
     };
 
-    kl::Triangle triangles[2] = {
+    kl::Triangle<float> triangles[2] = {
         kl::Triangle {
             kl::Vertex(kl::Float3(positions[0], 0.5f)),
             kl::Vertex(kl::Float3(positions[1], 0.5f)),
@@ -52,15 +52,15 @@ int examples::interpolation_main()
             };
 
             kl::Color pixel = {};
-            if (kl::Triangle::is_in_triangle(weights[0])) {
-                pixel.r = (byte) kl::Triangle::interpolate(weights[0], { (float) colors[0].r, (float) colors[1].r, (float) colors[2].r });
-                pixel.g = (byte) kl::Triangle::interpolate(weights[0], { (float) colors[0].g, (float) colors[1].g, (float) colors[2].g });
-                pixel.b = (byte) kl::Triangle::interpolate(weights[0], { (float) colors[0].b, (float) colors[1].b, (float) colors[2].b });
+            if (kl::Triangle<float>::is_in_triangle(weights[0])) {
+                pixel.r = (byte) kl::Triangle<float>::interpolate(weights[0], { (float) colors[0].r, (float) colors[1].r, (float) colors[2].r });
+                pixel.g = (byte) kl::Triangle<float>::interpolate(weights[0], { (float) colors[0].g, (float) colors[1].g, (float) colors[2].g });
+                pixel.b = (byte) kl::Triangle<float>::interpolate(weights[0], { (float) colors[0].b, (float) colors[1].b, (float) colors[2].b });
             }
-            else if (kl::Triangle::is_in_triangle(weights[1])) {
-                pixel.r = (byte) kl::Triangle::interpolate(weights[1], { (float) colors[0].r, (float) colors[3].r, (float) colors[2].r });
-                pixel.g = (byte) kl::Triangle::interpolate(weights[1], { (float) colors[0].g, (float) colors[3].g, (float) colors[2].g });
-                pixel.b = (byte) kl::Triangle::interpolate(weights[1], { (float) colors[0].b, (float) colors[3].b, (float) colors[2].b });
+            else if (kl::Triangle<float>::is_in_triangle(weights[1])) {
+                pixel.r = (byte) kl::Triangle<float>::interpolate(weights[1], { (float) colors[0].r, (float) colors[3].r, (float) colors[2].r });
+                pixel.g = (byte) kl::Triangle<float>::interpolate(weights[1], { (float) colors[0].g, (float) colors[3].g, (float) colors[2].g });
+                pixel.b = (byte) kl::Triangle<float>::interpolate(weights[1], { (float) colors[0].b, (float) colors[3].b, (float) colors[2].b });
             }
             else {
                 pixel = kl::colors::GRAY;
