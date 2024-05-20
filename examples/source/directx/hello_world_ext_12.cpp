@@ -53,9 +53,9 @@ int examples::hello_world_ext_12_main()
     const std::vector cube_mesh_data = kl::parse_obj_file("meshes/cube.obj");
     const std::vector monke_mesh_data = kl::parse_obj_file("meshes/monke.obj");
 
-    const kl::dx12::Resource quad_vb = gpu.create_upload_buffer(quad_mesh_data.data(), (UINT) quad_mesh_data.size() * sizeof(kl::Vertex));
-    const kl::dx12::Resource cube_vb = gpu.create_upload_buffer(cube_mesh_data.data(), (UINT) cube_mesh_data.size() * sizeof(kl::Vertex));
-    const kl::dx12::Resource monke_vb = gpu.create_upload_buffer(monke_mesh_data.data(), (UINT) monke_mesh_data.size() * sizeof(kl::Vertex));
+    const kl::dx12::Resource quad_vb = gpu.create_upload_buffer(quad_mesh_data.data(), (UINT) quad_mesh_data.size() * sizeof(kl::Vertex<float>));
+    const kl::dx12::Resource cube_vb = gpu.create_upload_buffer(cube_mesh_data.data(), (UINT) cube_mesh_data.size() * sizeof(kl::Vertex<float>));
+    const kl::dx12::Resource monke_vb = gpu.create_upload_buffer(monke_mesh_data.data(), (UINT) monke_mesh_data.size() * sizeof(kl::Vertex<float>));
 
     const kl::dx12::Resource quad_blas = gpu.create_triangle_blas(quad_vb);
     const kl::dx12::Resource cube_blas = gpu.create_triangle_blas(cube_vb);
@@ -155,11 +155,11 @@ int examples::hello_world_ext_12_main()
             D3D12_RAYTRACING_INSTANCE_DESC* instance_data = nullptr;
             instances->Map(0, nullptr, reinterpret_cast<void**>(&instance_data)) >> kl::verify_result;
             kl::Float4x4 cube = kl::Float4x4::translation({ -1.5f, 2.0f, 2.0f });
-            cube *= kl::Float4x4::rotation(kl::Float3(elapsed_t / 2.0f, elapsed_t / 3.0f, elapsed_t / 5.0f) * kl::TO_DEGREES);
+            cube *= kl::Float4x4::rotation(kl::Float3(elapsed_t / 2.0f, elapsed_t / 3.0f, elapsed_t / 5.0f) * (float) kl::TO_DEGREES);
             memcpy(&instance_data[0].Transform, &cube, sizeof(float) * 12);
 
             kl::Float4x4 mirror = kl::Float4x4::translation({ 2.0f, 2.0f, 2.0f });
-            mirror *= kl::Float4x4::rotation(kl::Float3(-1.8f, std::sin(elapsed_t) / 8.0f + 1.0f, 0.0f) * kl::TO_DEGREES);
+            mirror *= kl::Float4x4::rotation(kl::Float3(-1.8f, std::sin(elapsed_t) / 8.0f + 1.0f, 0.0f) * (float) kl::TO_DEGREES);
             memcpy(&instance_data[1].Transform, &mirror, sizeof(float) * 12);
 
             kl::Float4x4 floor = kl::Float4x4::translation({ 0.0f, 0.0f, 2.0f });

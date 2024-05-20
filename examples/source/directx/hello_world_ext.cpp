@@ -67,7 +67,7 @@ int examples::hello_world_ext_main()
     });
 
     // Mesh setup
-    const std::vector<kl::Vertex> vertices = {
+    const std::vector<kl::Vertex<float>> vertices = {
         { { -0.5f, -0.5f, 0.5f }, {}, kl::colors::RED },
         { { -0.5f,  0.5f, 0.5f }, {}, kl::colors::GREEN },
         { {  0.5f, -0.5f, 0.5f }, {}, kl::colors::BLUE },
