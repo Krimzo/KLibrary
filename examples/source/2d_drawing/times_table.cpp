@@ -10,7 +10,7 @@ int examples::times_table_main()
     const kl::Color circle_color = kl::colors::CONSOLE;
     kl::Color point_color = kl::random::gen_color();
     kl::Color line_color = kl::random::gen_color();
-
+    
     auto window = kl::Window("Times Table", { 900, 900 });
     kl::Image frame = { window.size() };
 

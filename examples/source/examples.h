@@ -29,6 +29,10 @@ namespace examples {
     int math_tests_main();
     int imaginary_numbers_main();
 
+    // OTS
+    int ots_examples_main();
+    int ots_tests_main();
+
     // Utility
     int async_test_main();
     int dynamic_linking_main();
