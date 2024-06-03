@@ -156,6 +156,13 @@ namespace kl {
             return static_cast<T>(0);
         }
 
+        template<typename T>
+        bool is() const
+        {
+            return static_cast<bool>(
+                dynamic_cast<T*>(m_instance));
+        }
+
         // Compare
         bool operator==(const Object& other) const
         {
