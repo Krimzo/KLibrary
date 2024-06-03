@@ -65,8 +65,8 @@ int examples::safety_test_main()
 
 void object_test()
 {
-    SafeObject<Someone> first_obj = new Someone("First");
-    SafeObject<SomeBase> second_obj = new Someone("Second");
+    Object<Someone> first_obj = new Someone("First");
+    Object<SomeBase> second_obj = new Someone("Second");
 
     if (first_obj) {
         first_obj->talk();
@@ -77,7 +77,7 @@ void object_test()
 		second_obj->talk();
 	}
 
-    SafeObject<Someone> third_obj = second_obj.as<Someone>();
+    Object<Someone> third_obj = second_obj.as<Someone>();
     if (third_obj) {
         third_obj->talk();
     }
