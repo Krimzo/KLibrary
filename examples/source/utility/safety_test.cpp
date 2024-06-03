@@ -3,36 +3,53 @@
 using namespace kl;
 
 
-// Test class
-class Person
+class SomeBase
+{
+public:
+	SomeBase() = default;
+	virtual ~SomeBase() = default;
+
+    virtual void talk() const
+    {
+		print("I am SomeBase");
+    }
+};
+
+static std::ostream& operator<<(std::ostream& stream, const SomeBase& base)
+{
+    stream << "SomeBase()";
+    return stream;
+}
+
+class Someone : public SomeBase
 {
 public:
     const std::string name;
 
-    Person()
+    Someone()
         : name("Unknown")
     {}
 
-    Person(const std::string& name)
+    Someone(const std::string& name)
         : name(name)
     {
-        print(colors::CYAN, "Person ", name, " created.", colors::CONSOLE);
+        print(colors::CYAN, "Someone ", name, " created.", colors::CONSOLE);
     }
 
-    virtual ~Person()
+    virtual ~Someone()
     {
-        print(colors::ORANGE, "Person ", name, " destroyed.", colors::CONSOLE);
+        print(colors::ORANGE, "Someone ", name, " destroyed.", colors::CONSOLE);
     }
 
-    void talk() const
+    void talk() const override
     {
         print("I am ", name);
     }
 };
 
-std::ostream& operator<<(std::ostream& stream, const Person& person)
+static std::ostream& operator<<(std::ostream& stream, const Someone& someone)
 {
-    stream << "Person(" << person.name << ")";
+    stream << "Someone(" << someone.name << ")";
     return stream;
 }
 
@@ -48,30 +65,40 @@ int examples::safety_test_main()
 
 void object_test()
 {
-    Object<Person> first_object = new Person("First");
-    Object<Person> second_object = new Person("Second");
+    SafeObject<Someone> first_obj = new Someone("First");
+    SafeObject<SomeBase> second_obj = new Someone("Second");
 
-    second_object = first_object;
+    if (first_obj) {
+        first_obj->talk();
+    }
 
-    if (first_object) first_object->talk();
-    if (second_object) second_object->talk();
+    second_obj = first_obj;
+    if (second_obj) {
+		second_obj->talk();
+	}
 
-    print(first_object);  // (0x000002AC6CFB17D0{2}: Person(First))
-    print(second_object); // (0x000002AC6CFB17D0{2}: Person(First))
+    SafeObject<Someone> third_obj = second_obj.as<Someone>();
+    if (third_obj) {
+        third_obj->talk();
+    }
+    
+    print(first_obj);  // (0x000002AC6CFB17D0{3}: Someone(First))
+    print(second_obj); // (0x000002AC6CFB17D0{3}: SomeBase())
+    print(third_obj);  // (0x000002AC6CFB17D0{3}: Someone(First))
 }
 
 void array_test()
 {
     Array<int> first_array = { 10 };
-    for (uint64_t i = 0; i < first_array.size(); i++) {
+    for (size_t i = 0; i < first_array.size(); i++) {
         first_array[i] = (int) (i * 2);
     }
 
     Array<float> second_array = { first_array.size() };
-    for (uint64_t i = 0; i < second_array.size(); i++) {
-        second_array[i] = (float) (i * i);
+    for (size_t i = 0; i < second_array.size(); i++) {
+        second_array[i] = (float) (first_array[i] * first_array[i]);
     }
 
     print(first_array);  // (0x0000020EFEA41A50{1}: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18])
-    print(second_array); // (0x0000020EFEA416D0{1}: [0, 1, 4, 9, 16, 25, 36, 49, 64, 81])
+    print(second_array); // (0x0000020EFEA416D0{1}: [0, 4, 16, 36, 64, 100, 144, 196, 256, 324])
 }
