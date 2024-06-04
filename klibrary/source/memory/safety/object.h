@@ -21,12 +21,13 @@ namespace kl {
             }
         }
 
-        inline uint32_t decrease_count() const
+        template<typename T = uint32_t>
+        inline T decrease_count() const
         {
             if (m_count) {
-                return --(*m_count);
+                return static_cast<T>(--(*m_count));
             }
-            return -1;
+            return static_cast<T>(-1);
         }
 
         inline void allocate()
