@@ -5,13 +5,13 @@
 namespace kl_ignore {
     [[maybe_unused]] static const int DONT_CARE = []
     {
-        std::srand(static_cast<uint32_t>(std::time(nullptr)));
+        std::srand(std::random_device{}());
         return 0;
     }();
 }
 
 namespace kl {
-    static thread_local std::mt19937 ENGINE{ static_cast<uint32_t>(std::time(nullptr)) };
+    static thread_local std::mt19937 ENGINE{ std::random_device{}() };
 }
 
 // Byte
@@ -184,7 +184,7 @@ std::string kl::random::gen_string(const int length, const bool upper)
     std::string result;
     result.resize(length);
     for (auto& value : result) {
-		value = gen_char(upper);
+        value = gen_char(upper);
     }
     return result;
 }
