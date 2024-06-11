@@ -28,12 +28,11 @@ int examples::compute_shaders1_main()
     gpu.dispatch_compute_shader(data_count, 1, 1);
 
     // Copy from GPU to CPU
-    gpu.read_from_resource(example_data, buffer, (data_count * sizeof(TestStruct)));
+    gpu.read_from_buffer(example_data, buffer, data_count * sizeof(TestStruct));
 
     // Print values
     for (auto& [position] : example_data) {
         print(position);
     }
-    kl::get();
     return 0;
 }
