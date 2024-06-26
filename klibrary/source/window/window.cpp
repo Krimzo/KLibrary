@@ -275,6 +275,21 @@ kl::Int2 kl::Window::frame_center() const
     return (size() / 2);
 }
 
+float kl::Window::dpi() const
+{
+    return (float) GetDpiForWindow(m_window);
+}
+
+float kl::Window::pixels_to_dips(const float value) const
+{
+    return (value * 96.0f) / dpi();
+}
+
+float kl::Window::dips_to_pixels(const float value) const
+{
+    return (value * dpi()) / 96.0f;
+}
+
 void kl::Window::set_title(const std::string_view& data) const
 {
     SetWindowTextA(m_window, data.data());
