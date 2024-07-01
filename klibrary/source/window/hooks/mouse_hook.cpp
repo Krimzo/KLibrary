@@ -59,7 +59,7 @@ LRESULT CALLBACK kl::MouseHook::LowLevelMouseProc(_In_ int nCode, _In_ WPARAM wP
         case WM_MOUSEMOVE:
         {
             auto mouse_struct = reinterpret_cast<const MSLLHOOKSTRUCT*>(lParam);
-            const kl::Int2 pos{ (int) mouse_struct->pt.x, (int) mouse_struct->pt.y };
+            const Int2 pos{ (int) mouse_struct->pt.x, (int) mouse_struct->pt.y };
             m_self->m_position = pos;
             for (const auto& func : m_self->on_move) {
                 func(pos);
