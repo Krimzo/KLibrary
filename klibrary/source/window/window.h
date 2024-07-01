@@ -5,6 +5,10 @@
 #include "window/input/keyboard.h"
 #include "window/input/mouse.h"
 
+// Hooks
+#include "window/hooks/keyboard_hook.h"
+#include "window/hooks/mouse_hook.h"
+
 // Draw
 #include "window/draw/frame_buffer.h"
 

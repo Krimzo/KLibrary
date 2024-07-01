@@ -419,10 +419,22 @@ void kl::Window::handle_message(const MSG& message)
 
         // Mouse
     case WM_MOUSEMOVE:
-        mouse.m_position = { GET_X_LPARAM(message.lParam), GET_Y_LPARAM(message.lParam) };
+    {
+        const Int2 pos{ (int) GET_X_LPARAM(message.lParam), (int) GET_Y_LPARAM(message.lParam) };
+        mouse.m_position = pos;
+        for (const auto& func : mouse.on_move) {
+			func(pos);
+        }
+    }
         break;
     case WM_MOUSEWHEEL:
-        mouse.m_scroll += GET_WHEEL_DELTA_WPARAM(message.wParam) / 120;
+    {
+        const int delta = (int) (GET_WHEEL_DELTA_WPARAM(message.wParam) / WHEEL_DELTA);
+        mouse.m_scroll += delta;
+		for (const auto& func : mouse.on_scroll) {
+			func(delta);
+		}
+    }
         break;
     }
     DispatchMessageA(&message);
