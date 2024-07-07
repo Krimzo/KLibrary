@@ -29,6 +29,11 @@ namespace examples {
     int math_tests_main();
     int imaginary_numbers_main();
 
+    // Media
+    int audio_processing_main();
+    int video_reading_main(int argc, const char** argv);
+    int video_writing_main();
+
     // OTS
     int ots_examples_main();
     int ots_tests_main();
@@ -41,8 +46,4 @@ namespace examples {
     int hashing_main();
     int safety_test_main();
     int sockets_main();
-
-    // Video
-    int video_reading_main(int argc, const char** argv);
-    int video_writing_main();
 }

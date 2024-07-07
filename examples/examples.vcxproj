@@ -103,6 +103,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="source\media\audio_processing.cpp" />
+    <ClCompile Include="source\media\video_reading.cpp" />
+    <ClCompile Include="source\media\video_writing.cpp" />
     <ClCompile Include="source\ots\ots_examples.cpp" />
     <ClCompile Include="source\ots\ots_tests.cpp" />
     <ClCompile Include="source\_main.cpp" />
@@ -115,8 +118,6 @@
     <ClCompile Include="source\utility\hashing.cpp" />
     <ClCompile Include="source\utility\safety_test.cpp" />
     <ClCompile Include="source\utility\sockets.cpp" />
-    <ClCompile Include="source\video\video_reading.cpp" />
-    <ClCompile Include="source\video\video_writing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\examples.h" />

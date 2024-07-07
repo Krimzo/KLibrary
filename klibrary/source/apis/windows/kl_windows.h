@@ -16,6 +16,7 @@
 #include <mfplay.h>
 #include <mfreadwrite.h>
 #include <propvarutil.h>
+#include <mmsystem.h>
 
 #pragma comment(lib, "mf.lib")
 #pragma comment(lib, "mfplay.lib")
@@ -23,6 +24,7 @@
 #pragma comment(lib, "mfuuid.lib")
 #pragma comment(lib, "mfreadwrite.lib")
 #pragma comment(lib, "propsys.lib")
+#pragma comment(lib, "winmm.lib")
 
 // Windows
 #include <windows.h>
