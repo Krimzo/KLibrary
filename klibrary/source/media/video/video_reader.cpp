@@ -96,7 +96,7 @@ kl::VideoReader::VideoReader(const std::string& filepath)
     m_frame_count = (int) (duration_seconds() * m_fps);
 }
 
-size_t kl::VideoReader::byte_size() const
+uint64_t kl::VideoReader::byte_size() const
 {
     return m_byte_size;
 }
