@@ -6,6 +6,7 @@
 
 // Audio
 #include "media/audio/audio.h"
+#include "media/audio/audio_device.h"
 
 // Video
 #include "media/video/video_reader.h"

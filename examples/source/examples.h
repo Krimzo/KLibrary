@@ -30,6 +30,7 @@ namespace examples {
     int imaginary_numbers_main();
 
     // Media
+    int audio_playing_main();
     int audio_processing_main();
     int video_reading_main(int argc, const char** argv);
     int video_writing_main();

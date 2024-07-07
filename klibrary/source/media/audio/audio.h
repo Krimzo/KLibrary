@@ -31,6 +31,10 @@ namespace kl {
         void increase_volume(float amount);
 		void decrease_volume(float amount);
 
+        // Helper
+        float sample_time(int at_index) const;
+        int sample_index(float at_time) const;
+
         // Decoding
         bool load_from_memory(const byte* data, uint64_t byte_size);
         bool load_from_vector(const std::vector<byte>& buffer);

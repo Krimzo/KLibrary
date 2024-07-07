@@ -33,6 +33,17 @@ void kl::Audio::decrease_volume(const float amount)
 		sample *= inv_amount;
 }
 
+// Helper
+float kl::Audio::sample_time(const int at_index) const
+{
+	return at_index / (float) sample_rate;
+}
+
+int kl::Audio::sample_index(const float at_time) const
+{
+	return (int) (at_time * sample_rate);
+}
+
 // Decoding
 bool kl::Audio::load_from_memory(const byte* data, const uint64_t byte_size)
 {
@@ -166,36 +177,28 @@ bool kl::Audio::save_to_vector(std::vector<byte>* buffer, const AudioType type) 
 	input_type->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, sample_rate * sizeof(float));
 	writer->SetInputMediaType(0, input_type.Get(), nullptr) >> verify_result;
 
-	ComPtr<IMFMediaBuffer> media_buffer;
-	hr = MFCreateMemoryBuffer(sample_rate * sizeof(float), &media_buffer);
-	if (FAILED(hr)) {
-		return false;
-	}
-	media_buffer->SetCurrentLength(sample_rate * sizeof(float));
-	
-	ComPtr<IMFSample> media_sample;
-	hr = MFCreateSample(&media_sample);
-	if (FAILED(hr)) {
-		return false;
-	}
-	media_sample->AddBuffer(media_buffer.Get());
-
 	writer->BeginWriting() >> verify_result;
 	for (int i = 0; i < (int) size();) {
 		const int sample_size = std::min(sample_rate, (int) size() - i);
+		const int sample_byte_size = sample_size * sizeof(float);
 
-		float* out_buffer = nullptr;
-		media_buffer->Lock((BYTE**) &out_buffer, nullptr, nullptr) >> verify_result;
-		memcpy(out_buffer, data() + i, sample_size * sizeof(float));
+		ComPtr<IMFMediaBuffer> media_buffer;
+		MFCreateMemoryBuffer(sample_byte_size, &media_buffer) >> verify_result;
+		media_buffer->SetCurrentLength(sample_byte_size) >> verify_result;
+
+		ComPtr<IMFSample> media_sample;
+		MFCreateSample(&media_sample) >> verify_result;
+		media_sample->AddBuffer(media_buffer.Get()) >> verify_result;
+
+		BYTE* out_buffer = nullptr;
+		media_buffer->Lock(&out_buffer, nullptr, nullptr) >> verify_result;
+		memcpy(out_buffer, data() + i, sample_byte_size);
 		media_buffer->Unlock() >> verify_result;
 
-		if (FAILED(media_sample->SetSampleTime((10'000'000LL * sample_size) / sample_rate))) {
-			break;
-		}
-		if (FAILED(writer->WriteSample(0, media_sample.Get()))) {
-			break;
-		}
-		i += sample_rate;
+		media_sample->SetSampleDuration((sample_size * 10'000'000LL) / sample_rate) >> verify_result;
+		media_sample->SetSampleTime((i * 10'000'000LL) / sample_rate) >> verify_result;
+		writer->WriteSample(0, media_sample.Get()) >> verify_result;
+		i += sample_size;
 	}
 	writer->Finalize() >> verify_result;
 
