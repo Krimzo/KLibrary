@@ -10,7 +10,12 @@ kl::Audio::Audio(const std::string_view& path)
 }
 
 // Alter
-float kl::Audio::duration() const
+uint64_t kl::Audio::duration_100ns() const
+{
+	return (size() * 10'000'000) / sample_rate;
+}
+
+float kl::Audio::duration_seconds() const
 {
 	return size() / (float) sample_rate;
 }

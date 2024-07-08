@@ -132,13 +132,13 @@ bool kl::VideoReader::next_frame(Image& out) const
     // Read sample
     DWORD flags = NULL;
     LONGLONG time_stamp = 0;
-    ComPtr<IMFSample> sample = nullptr;
+    ComPtr<IMFSample> sample;
     if (FAILED(m_reader->ReadSample(MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, nullptr, &flags, &time_stamp, &sample)) || !sample) {
         return false;
     }
 
     // Convert to array
-    ComPtr<IMFMediaBuffer> media_buffer = nullptr;
+    ComPtr<IMFMediaBuffer> media_buffer;
     if (FAILED(sample->ConvertToContiguousBuffer(&media_buffer)) || !media_buffer) {
         return false;
     }
@@ -159,7 +159,6 @@ bool kl::VideoReader::next_frame(Image& out) const
         frame_target[i].b = frame_source[i].b;
     }
 
-    // Cleanup
     media_buffer->Unlock() >> verify_result;
     return true;
 }

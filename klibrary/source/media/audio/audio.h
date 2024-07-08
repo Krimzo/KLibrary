@@ -25,7 +25,8 @@ namespace kl {
         Audio(const std::string_view& path);
 
         // Alter
-        float duration() const;
+        uint64_t duration_100ns() const;
+        float duration_seconds() const;
         void set_duration(float duration);
 
         void increase_volume(float amount);
