@@ -39,7 +39,7 @@ int examples::video_reading_main(const int argc, const char** argv)
 
     while (true) {
         for (size_t i = 0; i < ascii_frames.size(); i++) {
-            timer.reset();
+            timer.reset_elapsed();
             kl::console::dump(ascii_frames[i]);
             kl::console::set_title(kl::format(i + 1, "/", ascii_frames.size()));
             while (timer.elapsed() < to_wait);

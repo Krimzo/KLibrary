@@ -43,7 +43,7 @@ int examples::interpolation_main()
 
     int frame_index = 0;
     while (window.process(false)) {
-        timer.reset();
+        timer.reset_elapsed();
 
         for (int x = frame_index - frame.height(), y = 0; y < frame.height(); x++, y++) {
             kl::Float3 weights[2] = {
