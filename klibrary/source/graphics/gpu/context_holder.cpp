@@ -169,30 +169,26 @@ void kl::ContextHolder::read_from_texture(void* cpu_buffer, const dx::Texture& g
     BYTE* out_ptr = reinterpret_cast<BYTE*>(cpu_buffer);
     const BYTE* in_ptr = reinterpret_cast<const BYTE*>(mapped_subresource.pData);
     for (int y = 0; y < size.y; y++) {
-        for (int x = 0; x < size.x; x++) {
-            BYTE* out_addr = out_ptr + (x * element_size) + (y * size.x * element_size);
-            const BYTE* in_addr = in_ptr + (x * element_size) + (y * mapped_subresource.RowPitch);
-            memcpy(out_addr, in_addr, element_size);
-        }
+        BYTE* out_addr = out_ptr + (y * size.x * element_size);
+        const BYTE* in_addr = in_ptr + (y * mapped_subresource.RowPitch);
+        memcpy(out_addr, in_addr, (size_t) size.x * element_size);
     }
     m_context->Unmap(gpu_buffer.Get(), 0);
 }
 
-void kl::ContextHolder::write_to_texture(const dx::Texture& gpu_buffer, const void* cpu_buffer, const kl::Int2& size, UINT element_size, bool discard) const
+void kl::ContextHolder::write_to_texture(const dx::Texture& gpu_buffer, const void* cpu_buffer, const Int2& size, UINT element_size, bool discard) const
 {
-	if (!gpu_buffer || !cpu_buffer) {
-		return;
-	}
+    if (!gpu_buffer || !cpu_buffer) {
+        return;
+    }
     dx::MappedSubresourceDescriptor mapped_subresource{};
     m_context->Map(gpu_buffer.Get(), 0, discard ? D3D11_MAP_WRITE_DISCARD : D3D11_MAP_WRITE, NULL, &mapped_subresource) >> verify_result;
     BYTE* out_ptr = reinterpret_cast<BYTE*>(mapped_subresource.pData);
     const BYTE* in_ptr = reinterpret_cast<const BYTE*>(cpu_buffer);
     for (int y = 0; y < size.y; y++) {
-        for (int x = 0; x < size.x; x++) {
-            BYTE* out_addr = out_ptr + (x * element_size) + (y * mapped_subresource.RowPitch);
-            const BYTE* in_addr = in_ptr + (x * element_size) + (y * size.x * element_size);
-            memcpy(out_addr, in_addr, element_size);
-        }
+        BYTE* out_addr = out_ptr + (y * mapped_subresource.RowPitch);
+        const BYTE* in_addr = in_ptr + (y * size.x * element_size);
+        memcpy(out_addr, in_addr, (size_t) size.x * element_size);
     }
     m_context->Unmap(gpu_buffer.Get(), 0);
 }
@@ -342,6 +338,16 @@ void kl::ContextHolder::bind_target_depth_views(const std::initializer_list<ID3D
 void kl::ContextHolder::unbind_target_depth_views() const
 {
     m_context->OMSetRenderTargets(0, nullptr, nullptr);
+}
+
+void kl::ContextHolder::bind_shader_view_for_vertex_shader(const dx::ShaderView& view, UINT slot) const
+{
+    m_context->VSSetShaderResources(slot, 1, view.GetAddressOf());
+}
+
+void kl::ContextHolder::unbind_shader_view_for_vertex_shader(UINT slot) const
+{
+    bind_shader_view_for_vertex_shader(nullptr, slot);
 }
 
 void kl::ContextHolder::bind_shader_view_for_pixel_shader(const dx::ShaderView& view, const UINT slot) const
