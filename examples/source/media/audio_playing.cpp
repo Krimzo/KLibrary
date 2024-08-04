@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-int examples::audio_playing_main()
+int examples::audio_playing_main(const int argc, const char** argv)
 {
 	kl::AudioDevice device{ 0 };
 	kl::Audio audio{ "media/chicken.wav" };

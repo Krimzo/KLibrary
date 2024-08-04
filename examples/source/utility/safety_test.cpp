@@ -56,7 +56,7 @@ static std::ostream& operator<<(std::ostream& stream, const Someone& someone)
 void object_test();
 void array_test();
 
-int examples::safety_test_main()
+int examples::safety_test_main(const int argc, const char** argv)
 {
     object_test();
     array_test();
@@ -65,8 +65,8 @@ int examples::safety_test_main()
 
 void object_test()
 {
-    Object<Someone> first_obj = new Someone("First");
-    Object<SomeBase> second_obj = new Someone("Second");
+    Ref<Someone> first_obj = new Someone("First");
+    Ref<SomeBase> second_obj = new Someone("Second");
 
     if (first_obj) {
         first_obj->talk();
@@ -77,7 +77,7 @@ void object_test()
 		second_obj->talk();
 	}
 
-    Object<Someone> third_obj = second_obj.as<Someone>();
+    Ref<Someone> third_obj = second_obj.as<Someone>();
     if (third_obj) {
         third_obj->talk();
     }

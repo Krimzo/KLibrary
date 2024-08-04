@@ -91,10 +91,10 @@ static void console_read()
     }
 }
 
-int examples::mandelbrot_main()
+int examples::mandelbrot_main(const int argc, const char** argv)
 {
     kl::Window window = { "Mandelbrot", { 1600, 900 } };
-    kl::GPU gpu = { static_cast<HWND>(window) };
+    kl::GPU gpu = { HWND(window) };
     kl::Timer timer = {};
 
     window.on_resize.emplace_back([&](const kl::Int2 size)

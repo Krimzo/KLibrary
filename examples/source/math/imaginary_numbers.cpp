@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-int examples::imaginary_numbers_main()
+int examples::imaginary_numbers_main(const int argc, const char** argv)
 {
     // Complex
     kl::Complex<float> position_2d{ 1, 1 };
@@ -14,6 +14,5 @@ int examples::imaginary_numbers_main()
     kl::Quaternion<float> rotator_3d_inv = kl::inverse(rotator_3d);
     kl::print(rotator_3d * position_3d * rotator_3d_inv);
 
-    kl::get();
     return 0;
 }

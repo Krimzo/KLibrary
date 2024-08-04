@@ -18,7 +18,7 @@ namespace kl {
 namespace kl {
     class GPU : public DeviceHolder, public ContextHolder, public ShaderCompiler, public TextRaster
     {
-        dx::Chain m_chain = nullptr;
+        dx::Chain m_chain;
         dx::Texture m_depth_textures[GPU_BUFFER_COUNT] = {};
         dx::TargetView m_target_views[GPU_BUFFER_COUNT] = {};
         dx::DepthView m_depth_views[GPU_BUFFER_COUNT] = {};
@@ -27,15 +27,9 @@ namespace kl {
         const GPUCreationType creation_type = GPUCreationType::NONE;
 
         // Creation
-        GPU(bool debug = false, bool single_threaded = true);
-        GPU(HWND window, bool debug = false, bool single_threaded = true);
+        GPU(bool debug = false, bool single_threaded = true, bool video_support = false);
+        GPU(HWND window, bool debug = false, bool single_threaded = true, bool video_support = false);
         virtual ~GPU();
-
-        GPU(const GPU&) = delete;
-        GPU(GPU&&) = delete;
-
-        void operator=(const GPU&) = delete;
-        void operator=(GPU&&) = delete;
 
         // Get
         dx::Device device() const;

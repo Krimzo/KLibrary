@@ -5,46 +5,46 @@
 
 namespace examples {
     // 2D Drawing
-    int data_line_main();
-    int interpolation_main();
-    int tic_tac_main();
-    int times_table_main();
-    int trajectories_main();
-    int visual_sort_main();
+    int data_line_main(int argc, const char** argv);
+    int interpolation_main(int argc, const char** argv);
+    int tic_tac_main(int argc, const char** argv);
+    int times_table_main(int argc, const char** argv);
+    int trajectories_main(int argc, const char** argv);
+    int visual_sort_main(int argc, const char** argv);
 
     // DirectX
-    int compute_shaders1_main();
-    int compute_shaders2_main();
-    int geometry_shaders_main();
-    int hello_world_main();
-    int hello_world_ext_main();
-    int hello_world_12_main();
-    int hello_world_ext_12_main();
-    int mandelbrot_main();
-    int plane_playground_main();
-    int raytracing_main();
-    int text_drawing_main();
+    int compute_shaders1_main(int argc, const char** argv);
+    int compute_shaders2_main(int argc, const char** argv);
+    int geometry_shaders_main(int argc, const char** argv);
+    int hello_world_main(int argc, const char** argv);
+    int hello_world_ext_main(int argc, const char** argv);
+    int hello_world_12_main(int argc, const char** argv);
+    int hello_world_ext_12_main(int argc, const char** argv);
+    int mandelbrot_main(int argc, const char** argv);
+    int plane_playground_main(int argc, const char** argv);
+    int raytracing_main(int argc, const char** argv);
+    int text_drawing_main(int argc, const char** argv);
 
     // Math
-    int math_tests_main();
-    int imaginary_numbers_main();
+    int math_tests_main(int argc, const char** argv);
+    int imaginary_numbers_main(int argc, const char** argv);
 
     // Media
-    int audio_playing_main();
-    int audio_processing_main();
+    int audio_playing_main(int argc, const char** argv);
+    int audio_processing_main(int argc, const char** argv);
     int video_reading_main(int argc, const char** argv);
-    int video_writing_main();
+    int video_writing_main(int argc, const char** argv);
 
     // OTS
-    int ots_examples_main();
-    int ots_tests_main();
+    int ots_examples_main(int argc, const char** argv);
+    int ots_tests_main(int argc, const char** argv);
 
     // Utility
-    int async_test_main();
-    int dynamic_linking_main();
-    int encryption_main();
-    int fast_output_main();
-    int hashing_main();
-    int safety_test_main();
-    int sockets_main();
+    int async_test_main(int argc, const char** argv);
+    int dynamic_linking_main(int argc, const char** argv);
+    int encryption_main(int argc, const char** argv);
+    int fast_output_main(int argc, const char** argv);
+    int hashing_main(int argc, const char** argv);
+    int safety_test_main(int argc, const char** argv);
+    int sockets_main(int argc, const char** argv);
 }

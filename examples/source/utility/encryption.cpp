@@ -1,7 +1,7 @@
 ﻿#include "examples.h"
 
 
-int examples::encryption_main()
+int examples::encryption_main(const int argc, const char** argv)
 {
     const kl::Encryptor encryptor;
     kl::print(encryptor);

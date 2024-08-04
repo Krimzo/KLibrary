@@ -21,7 +21,7 @@ static std::vector<Stick> generate_sticks(const int count, const int min_value_i
     }
 
     for (auto& [value, color] : sticks) {
-        const byte gray_value = (byte) (kl::wrap((float) value, (float) stored_min_value, (float) stored_max_value) * 255.0f);
+        const byte gray_value = (byte) (kl::unlerp((float) value, (float) stored_min_value, (float) stored_max_value) * 255.0f);
         color = { gray_value, gray_value, gray_value };
     }
 
@@ -35,7 +35,7 @@ static void draw_sticks(kl::Image& frame, const std::vector<Stick>& sticks)
     }
 }
 
-int examples::visual_sort_main()
+int examples::visual_sort_main(const int argc, const char** argv)
 {
     kl::Window window = { "Visual Sort", { 1600, 900 } };
     kl::Image frame = { window.size() };

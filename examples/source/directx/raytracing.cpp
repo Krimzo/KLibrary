@@ -3,7 +3,7 @@
 
 static constexpr int SPHERE_COUNT = 10;
 
-int examples::raytracing_main()
+int examples::raytracing_main(const int argc, const char** argv)
 {
     struct ColoredSphere
     {
@@ -25,7 +25,7 @@ int examples::raytracing_main()
     kl::Camera camera = {};
 
     kl::Window window = { "Raytracing", { 1600, 900 } };
-    kl::GPU gpu = { static_cast<HWND>(window) };
+    kl::GPU gpu = { HWND(window) };
 
     // Heap alloc because of stack size warnings
     PSData& ps_data = *new PSData; // You saw nothing :)

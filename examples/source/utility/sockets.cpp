@@ -7,7 +7,7 @@ void client_tcp();
 void server_udp();
 void client_udp();
 
-int examples::sockets_main()
+int examples::sockets_main(const int argc, const char** argv)
 {
     std::vector<std::thread> threads{};
     if (true) {

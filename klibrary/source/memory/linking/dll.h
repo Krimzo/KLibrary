@@ -6,26 +6,15 @@
 
 
 namespace kl {
-    class DLL
+    class DLL : NoCopy
     {
     public:
         template<typename Return, typename... Args>
         using Function = Return(__stdcall*)(Args...);
 
-    private:
-        std::string m_path = "";
-        HMODULE m_module = nullptr;
-
-    public:
         DLL();
         DLL(const std::string& path);
-        virtual ~DLL();
-
-        DLL(const DLL&) = delete;
-        DLL(DLL&&) = delete;
-
-        void operator=(const DLL&) = delete;
-        void operator=(DLL&&) = delete;
+        ~DLL();
 
         operator bool() const;
 
@@ -42,5 +31,9 @@ namespace kl {
             auto function_address = GetProcAddress(m_module, function_name.c_str());
             return (Function<Return, Args...>) function_address;
         }
+
+    private:
+        std::string m_path;
+        HMODULE m_module = nullptr;
     };
 }

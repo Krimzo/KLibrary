@@ -147,7 +147,7 @@ static BoardInfo find_best(const std::vector<int>& board, const bool playersTurn
     return min_info;
 }
 
-int examples::tic_tac_main()
+int examples::tic_tac_main(const int argc, const char** argv)
 {
     std::vector<int> board(SIZES.x * SIZES.x);
     bool players_turn = kl::random::gen_bool();

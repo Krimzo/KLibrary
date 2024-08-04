@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-int examples::text_drawing_main()
+int examples::text_drawing_main(const int argc, const char** argv)
 {
 	kl::Window window{ "Text Drawing", { 1600, 900 } };
 	kl::GPU gpu{ window };

@@ -1,9 +1,9 @@
 #include "examples.h"
 
 
-/* HELPER SOURFCE: https://landelare.github.io/2023/02/18/dxr-tutorial.html (thanks to the author) */
+/* HELPER SOURCE: https://landelare.github.io/2023/02/18/dxr-tutorial.html (thanks to the author) */
 
-int examples::hello_world_ext_12_main()
+int examples::hello_world_ext_12_main(const int argc, const char** argv)
 {
     // Window setup
     kl::Window window{ "Tracing", { 1600, 900 } };
@@ -20,8 +20,8 @@ int examples::hello_world_ext_12_main()
             return;
         }
 
-        render_target.Reset();
-        uav_heap.Reset();
+        render_target = {};
+        uav_heap = {};
         gpu.resize(size);
         
         const D3D12_RESOURCE_DESC target_descriptor{
@@ -39,12 +39,12 @@ int examples::hello_world_ext_12_main()
         };
         render_target = gpu.create_commited_resource(&target_descriptor, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-        const D3D12_UNORDERED_ACCESS_VIEW_DESC uav_descriptor{
+        constexpr D3D12_UNORDERED_ACCESS_VIEW_DESC uav_descriptor{
             .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
             .ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D,
         };
         uav_heap = gpu.create_descriptor_heap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
-        gpu.device()->CreateUnorderedAccessView(render_target.Get(), nullptr, &uav_descriptor, uav_heap->GetCPUDescriptorHandleForHeapStart());
+        gpu.device()->CreateUnorderedAccessView(render_target.get(), nullptr, &uav_descriptor, uav_heap->GetCPUDescriptorHandleForHeapStart());
     });
     window.maximize();
 
@@ -184,11 +184,11 @@ int examples::hello_world_ext_12_main()
         gpu.commands.list->BuildRaytracingAccelerationStructure(&acceleration_descriptor, 0, nullptr);
 
         // Bind pipeline
-        gpu.commands.list->SetPipelineState1(pipeline_state.Get());
-        gpu.commands.list->SetComputeRootSignature(root_signature.Get());
+        gpu.commands.list->SetPipelineState1(pipeline_state.get());
+        gpu.commands.list->SetComputeRootSignature(root_signature.get());
         gpu.commands.list->SetComputeRootDescriptorTable(0, uav_heap->GetGPUDescriptorHandleForHeapStart());
         gpu.commands.list->SetComputeRootShaderResourceView(1, tlas->GetGPUVirtualAddress());
-        ID3D12DescriptorHeap* uav_heaps[1] = { uav_heap.Get() };
+        ID3D12DescriptorHeap* uav_heaps[1] = { uav_heap.get() };
         gpu.commands.list->SetDescriptorHeaps(1, uav_heaps);
 
         // Dispatch rays

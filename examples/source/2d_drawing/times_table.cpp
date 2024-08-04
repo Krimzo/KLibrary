@@ -5,7 +5,7 @@ static constexpr int n = 200;
 static constexpr float increment = 0.15f;
 static float m = 0.0f;
 
-int examples::times_table_main()
+int examples::times_table_main(const int argc, const char** argv)
 {
     const kl::Color circle_color = kl::colors::CONSOLE;
     kl::Color point_color = kl::random::gen_color();
@@ -39,8 +39,8 @@ int examples::times_table_main()
         std::vector<kl::Int2> circle_points(n);
         for (int i = 0; i < int(circle_points.size()); i++) {
             circle_points[i] = {
-                (int) (kl::cos_deg(point_angle * i + 180.0f) * circle_radius + frame.width() * 0.5f),
-                (int) (kl::sin_deg(point_angle * i + 180.0f) * circle_radius + frame.height() * 0.5f),
+                (int) (kl::cos_d(point_angle * i + 180.0f) * circle_radius + frame.width() * 0.5f),
+                (int) (kl::sin_d(point_angle * i + 180.0f) * circle_radius + frame.height() * 0.5f),
             };
         }
 

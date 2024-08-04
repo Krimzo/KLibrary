@@ -31,7 +31,7 @@ static void draw_objects(kl::Image& frame, std::vector<SceneObject>& objects)
         const int start_position_index = (int) (position_history.size() * 0.75f);
         for (int i = start_position_index; i < (int) position_history.size() - 1; i++) {
             frame.draw_line(kl::Int2(position_history[i]), kl::Int2(position_history[i + 1]),
-                kl::Color(60, 60, 60).mix(color, kl::wrap((float) i, (float) start_position_index, (float) position_history.size())));
+                kl::Color(60, 60, 60).mix(color, kl::unlerp((float) i, (float) start_position_index, (float) position_history.size())));
         }
         frame.draw_circle(kl::Int2(position), radius, color, true);
         frame.draw_circle(kl::Int2(position), radius, { 30, 30, 30 });
@@ -102,7 +102,7 @@ static void process_objects(std::vector<SceneObject>& objects, const kl::Timer& 
     }
 }
 
-int examples::trajectories_main()
+int examples::trajectories_main(const int argc, const char** argv)
 {
     kl::Window window = { "Trajectories", { 1600, 900 } };
     kl::Image frame = { window.size() };

@@ -22,7 +22,7 @@ static std::vector<Stick> generate_sticks(const int count, const int min_value_i
     }
 
     for (auto& [value, color] : sticks) {
-        const byte gray_value = (byte) (kl::wrap((float) value, (float) stored_min_value, (float) stored_max_value) * 255.0f);
+        const byte gray_value = (byte) (kl::unlerp((float) value, (float) stored_min_value, (float) stored_max_value) * 255.0f);
         color = { gray_value, gray_value, gray_value };
     }
     return sticks;
@@ -38,9 +38,9 @@ static void draw_sticks(kl::Image& frame, const std::vector<Stick>& sticks)
 
 static const std::string OUTPUT_VIDEO_PATH = "./media/generated_video.mp4";
 
-int examples::video_writing_main()
+int examples::video_writing_main(const int argc, const char** argv)
 {
-    kl::VideoWriter video_writer{ OUTPUT_VIDEO_PATH, MFVideoFormat_H264, { 1920, 1080 }, 60, 80'000'000, 0 };
+    kl::VideoWriter video_writer{ OUTPUT_VIDEO_PATH, kl::VideoType::h264(), { 1920, 1080 }, 60, 80'000'000, 0 };
 
     kl::Image frame = { video_writer.frame_size() };
     std::vector<Stick> sticks = generate_sticks(frame.width(), 1, frame.height());

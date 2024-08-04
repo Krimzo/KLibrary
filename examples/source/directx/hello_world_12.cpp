@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-static const char* SHADER_SOURCE =
+static constexpr const char* SHADER_SOURCE =
 R"(
 struct VS_OUT
 {
@@ -25,11 +25,11 @@ float4 p_shader(const VS_OUT data) : SV_Target
 }
 )";
 
-int examples::hello_world_12_main()
+int examples::hello_world_12_main(const int argc, const char** argv)
 {
 	// Window setup
 	kl::Window window{ "Hello World! (D3D12)", { 1600, 900 } };
-	kl::GPU12 gpu{ static_cast<HWND>(window), kl::IS_DEBUG };
+	kl::GPU12 gpu{ HWND(window), kl::IS_DEBUG };
 
 	auto& queue = gpu.queue;
 	auto& commands = gpu.commands;

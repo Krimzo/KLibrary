@@ -1,10 +1,12 @@
 #pragma once
 
 #include "media/image/image.h"
+#include "graphics/gpu/gpu.h"
+#include "memory/safety/ref.h"
 
 
 namespace kl {
-    class VideoReader
+    class VideoReader : NoCopy
     {
         uint64_t m_byte_size = 0;
         int64_t m_duration = 0;
@@ -15,16 +17,11 @@ namespace kl {
         int m_frame_count = 0;
         float m_fps = 0.0f;
 
-        ComPtr<IMFSourceReader> m_reader = nullptr;
+        ComRef<IMFSourceReader> m_reader;
+        Ref<GPU> m_gpu = nullptr;
 
     public:
-        VideoReader(const std::string& filepath);
-
-        VideoReader(const VideoReader&) = delete;
-        VideoReader(VideoReader&&) = delete;
-
-        void operator=(const VideoReader&) = delete;
-        void operator=(VideoReader&&) = delete;
+        VideoReader(const std::string& filepath, const Int2& output_size = {}, bool use_gpu = true);
 
         uint64_t byte_size() const;
 
@@ -33,9 +30,9 @@ namespace kl {
 
         Int2 frame_size() const;
         int frame_count() const;
-
         float fps() const;
-        bool next_frame(Image& out) const;
-        bool get_frame(float time, Image& out) const;
+
+        bool seek(float time) const;
+        bool read_frame(Image& out, int* out_index = nullptr) const;
     };
 }

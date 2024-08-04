@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-int examples::audio_processing_main()
+int examples::audio_processing_main(const int argc, const char** argv)
 {
 	kl::Audio chicken_wav;
 	chicken_wav.load_from_file("./media/chicken.wav");

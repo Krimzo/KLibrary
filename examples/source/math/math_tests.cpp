@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-int examples::math_tests_main()
+int examples::math_tests_main(const int argc, const char** argv)
 {
 	const kl::Float3 a = { -1.0f, 0.3f, 2.1f };
 	const kl::Float3 b = { 3.14f, 2.0f, -5.0f };

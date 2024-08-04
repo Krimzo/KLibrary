@@ -49,7 +49,7 @@ static void async_test()
 
 /* NOTE: Use Release mode for proper results. */
 
-int examples::async_test_main()
+int examples::async_test_main(const int argc, const char** argv)
 {
 	static const size_t randomIndex = rand() % data.size();
 	kl::print("Random index: ", randomIndex, "\n");
@@ -66,6 +66,5 @@ int examples::async_test_main()
 	kl::print("kl::async::loop time: ", time_it(async_test));
 	kl::print("kl::async::loop data[", randomIndex, "] = ", data[randomIndex], "\n");
 
-	kl::get();
 	return 0;
 }

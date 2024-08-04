@@ -22,6 +22,7 @@ namespace kl {
         int sample_rate = 0;
 
         Audio();
+        Audio(int sample_rate);
         Audio(const std::string_view& path);
 
         // Alter
@@ -33,8 +34,12 @@ namespace kl {
 		void decrease_volume(float amount);
 
         // Helper
-        float sample_time(int at_index) const;
-        int sample_index(float at_time) const;
+        float index_to_time(int at_index) const;
+        int time_to_index(float at_time) const;
+
+        // Read
+        float sample_at_index(int index) const;
+        float sample_at_time(float time) const;
 
         // Decoding
         bool load_from_memory(const byte* data, uint64_t byte_size);
@@ -44,8 +49,5 @@ namespace kl {
         // Encoding
         bool save_to_vector(std::vector<byte>* buffer, AudioType type) const;
         bool save_to_file(const std::string_view& filepath, AudioType type) const;
-
-        // Get
-        bool get_audio(float time, float duration, Audio& out) const;
     };
 }

@@ -1,11 +1,11 @@
 #include "examples.h"
 
 
-int examples::geometry_shaders_main()
+int examples::geometry_shaders_main(const int argc, const char** argv)
 {
     /* ----- SETUP ----- */
     kl::Window window = { "Geometry Test", { 1600, 900 } };
-    kl::GPU gpu = { static_cast<HWND>(window) };
+    kl::GPU gpu = { HWND(window) };
 
     kl::Timer timer = {};
     kl::Camera camera = {};
@@ -42,19 +42,19 @@ int examples::geometry_shaders_main()
     gpu.bind_geometry_shader(geometry_shader);
 
     // Mesh
-    kl::Object cube_mesh = new kl::Mesh(&gpu);
-    kl::Object sphere_mesh = new kl::Mesh(&gpu);
-    kl::Object monke_mesh = new kl::Mesh(&gpu);
+    kl::Ref cube_mesh = new kl::Mesh(&gpu);
+    kl::Ref sphere_mesh = new kl::Mesh(&gpu);
+    kl::Ref monke_mesh = new kl::Mesh(&gpu);
     cube_mesh->graphics_buffer = gpu.create_vertex_buffer("meshes/cube.obj");
     sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/sphere.obj");
     monke_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/monke.obj");
 
     // Material
-    kl::Object default_material = new kl::Material();
+    kl::Ref default_material = new kl::Material();
     default_material->color = kl::colors::ORANGE;
 
     // Entity
-    kl::Object main_entity = new kl::Entity();
+    kl::Ref main_entity = new kl::Entity();
     main_entity->angular.y = -36.0f;
     main_entity->mesh = monke_mesh;
     main_entity->material = default_material;

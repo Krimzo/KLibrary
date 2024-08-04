@@ -7,7 +7,7 @@
 
 
 namespace kl {
-	class GPU12 : public ShaderCompiler
+	class GPU12 : NoCopy, public ShaderCompiler
 	{
 	public:
 		static constexpr UINT BACK_BUFFER_COUNT = 2;
@@ -37,12 +37,6 @@ namespace kl {
 		GPU12Fence fence{};
 
 		GPU12(HWND window, bool debug = false);
-
-		GPU12(const GPU12&) = delete;
-		GPU12(GPU12&&) = delete;
-
-		void operator=(const GPU12&) = delete;
-		void operator=(GPU12&&) = delete;
 
 		dx12::Device device() const;
 		dx12::SwapChain chain() const;
@@ -132,7 +126,7 @@ namespace kl {
 		dx12::AccelerationStructure create_acceleration_structure(const dx12::AccelerationInputs& inputs, UINT64* update_scratch_size = nullptr);
 		dx12::AccelerationStructure create_tlas(const dx12::Resource& instances, UINT instance_count, UINT64* update_scratch_size = nullptr);
 		dx12::AccelerationStructure create_blas(const D3D12_RAYTRACING_GEOMETRY_DESC* geometry_descriptor, UINT64* update_scratch_size = nullptr);
-		dx12::AccelerationStructure create_triangle_blas(const dx12::Resource& vertex_buffer, const dx12::Resource& index_buffer = nullptr, UINT vertex_stride = sizeof(kl::Vertex<float>), UINT index_stride = sizeof(uint16_t));
+		dx12::AccelerationStructure create_triangle_blas(const dx12::Resource& vertex_buffer, const dx12::Resource& index_buffer = {}, UINT vertex_stride = sizeof(kl::Vertex<float>), UINT index_stride = sizeof(uint16_t));
 
 		void dispatch_rays(D3D12_GPU_VIRTUAL_ADDRESS shader_address, UINT width, UINT height);
 

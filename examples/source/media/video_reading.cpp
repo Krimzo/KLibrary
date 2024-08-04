@@ -12,7 +12,7 @@ int examples::video_reading_main(const int argc, const char** argv)
         std::getline(std::cin, filepath);
     }
 
-    auto video_reader = kl::VideoReader(filepath);
+    kl::VideoReader video_reader{ filepath };
 
     kl::console::clear();
     kl::print<false>("Resize the console and press enter..");
@@ -22,18 +22,18 @@ int examples::video_reading_main(const int argc, const char** argv)
     kl::console::set_cursor_enabled(false);
 
     const int frame_count = video_reader.frame_count();
-    std::vector<std::string> ascii_frames = {};
+    std::vector<std::string> ascii_frames;
     ascii_frames.reserve(frame_count);
 
     kl::console::clear();
-    kl::Image video_frame = {};
-    while (video_reader.next_frame(video_frame)) {
+    kl::Image video_frame;
+    while (video_reader.read_frame(video_frame)) {
         ascii_frames.push_back(video_frame.as_ascii(console_size));
         kl::console::move_cursor({});
         kl::print<false>("Processed: ", ascii_frames.size(), "/", frame_count);
     }
 
-    kl::Timer timer = {};
+    kl::Timer timer;
     kl::console::clear();
     const float to_wait = 1.0f / video_reader.fps();
 

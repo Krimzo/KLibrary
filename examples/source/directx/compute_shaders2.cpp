@@ -1,10 +1,10 @@
 #include "examples.h"
 
 
-int examples::compute_shaders2_main()
+int examples::compute_shaders2_main(const int argc, const char** argv)
 {
     kl::Window window = { "Compute shaders 2", { 1600, 900 } };
-    kl::GPU gpu = { static_cast<HWND>(window) };
+    kl::GPU gpu = { HWND(window) };
     kl::Timer timer = {};
 
     window.set_resizeable(false);

@@ -33,7 +33,7 @@ struct Person : public ts::MapSerializable
 	}
 };
 
-int examples::ots_tests_main()
+int examples::ots_tests_main(const int argc, const char** argv)
 {
 	const auto test = [](const ts::DataContainer& container, const std::string& expected)
 	{

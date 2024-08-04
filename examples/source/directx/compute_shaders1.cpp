@@ -1,14 +1,14 @@
 #include "examples.h"
 
 
-int examples::compute_shaders1_main()
+int examples::compute_shaders1_main(const int argc, const char** argv)
 {
     struct TestStruct
     {
         kl::Float3 position;
     };
 
-    kl::GPU gpu = {};
+    kl::GPU gpu;
 
     // CPU buffer
     static constexpr int data_count = 10;

@@ -52,7 +52,7 @@ struct SecondData : public ts::MapSerializable
     }
 };
 
-int examples::ots_examples_main()
+int examples::ots_examples_main(const int argc, const char** argv)
 {
     // From string
     SecondData second_data{};
@@ -69,7 +69,7 @@ int examples::ots_examples_main()
     kl::print(second_data.to_string()); // SecondData(some_id_1, FirstData(some_id_0, 16), 0.5)
 
     // To string
-    kl::Object container = second_data.to_container();
+    kl::Ref container = second_data.to_container();
     kl::print(container->to_string()); // { id: "some_id_1", first_data: { id: "some_id_0", value: 16 }, chance: 0.500000 }
     return 0;
 }

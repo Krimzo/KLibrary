@@ -1,21 +1,21 @@
 #include "examples.h"
 
 
-static kl::Timer TIMER = {};
-static kl::Camera CAMERA = {};
+static kl::Timer TIMER;
+static kl::Camera CAMERA;
 
 static kl::Float3 SUN_DIRECTION = { 1, -1, 0 };
 
-static kl::RenderShaders PLANE_SHADERS = {};
-static kl::dx::GeometryShader PLANE_GEOMETRY_SHADER = nullptr;
+static kl::RenderShaders PLANE_SHADERS;
+static kl::dx::GeometryShader PLANE_GEOMETRY_SHADER;
 
 void setup_input(kl::Window& window, kl::GPU& gpu);
 void camera_movement(kl::Window& window);
 
-int examples::plane_playground_main()
+int examples::plane_playground_main(const int argc, const char** argv)
 {
     kl::Window window = { "Plane Playground", { 1600, 900 } };
-    kl::GPU gpu = { static_cast<HWND>(window) };
+    kl::GPU gpu = { HWND(window) };
 
     setup_input(window, gpu);
 
