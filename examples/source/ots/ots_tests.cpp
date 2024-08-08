@@ -17,8 +17,8 @@ struct Person : public ts::MapSerializable
 
 	void to_map(ts::MapContainer& map) const override
 	{
-		map["name"] = ts::LiteralContainer::load_string(name);
-		map["age"] = ts::LiteralContainer::load_float(age);
+		map["name"] = ts::LiteralContainer::make_string(name);
+		map["age"] = ts::LiteralContainer::make_float(age);
 	}
 
 	void from_map(const ts::MapContainer& map) override
@@ -37,7 +37,7 @@ int examples::ots_tests_main(const int argc, const char** argv)
 {
 	const auto test = [](const ts::DataContainer& container, const std::string& expected)
 	{
-		const std::string result = container.to_string();
+		const std::string result = container.to_string(-1);
 		kl::assert(result == expected, "Expected: ", expected, ", but got: ", result);
 		kl::print("Test passed: ", result);
 	};
@@ -64,7 +64,7 @@ int examples::ots_tests_main(const int argc, const char** argv)
 	ts::MapContainer map_container{ "{ name: \"Krimzo\", age: 22.0 }" };
 	Person person{};
 	person.from_container(map_container);
-	test(map_container, person.to_container()->to_string());
+	test(map_container, person.to_container()->to_string(-1));
 
 	kl::print("All tests passed!");
 	return 0;

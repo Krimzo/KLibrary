@@ -10,8 +10,8 @@ struct FirstData : public ts::MapSerializable
 
     void to_map(ts::MapContainer& map) const override
     {
-        map["id"] = ts::LiteralContainer::load_string(id);
-        map["value"] = ts::LiteralContainer::load_int(value);
+        map["id"] = ts::LiteralContainer::make_string(id);
+        map["value"] = ts::LiteralContainer::make_int(value);
     }
 
     void from_map(const ts::MapContainer& map) override
@@ -34,9 +34,9 @@ struct SecondData : public ts::MapSerializable
 
     void to_map(ts::MapContainer& map) const override
     {
-        map["id"] = ts::LiteralContainer::load_string(id);
+        map["id"] = ts::LiteralContainer::make_string(id);
         map["first_data"] = first_data.to_container();
-        map["chance"] = ts::LiteralContainer::load_float(chance);
+        map["chance"] = ts::LiteralContainer::make_float(chance);
     }
 
     void from_map(const ts::MapContainer& map) override
@@ -54,22 +54,22 @@ struct SecondData : public ts::MapSerializable
 
 int examples::ots_examples_main(const int argc, const char** argv)
 {
-    // From string
+    // string -> object
     SecondData second_data{};
     second_data.from_container(ts::MapContainer(R"(
-        {
-            id: "some_id_1",
-            first_data: {
-                id: "some_id_0",
-                value: 16
-            },
-            chance: 0.5
-        }
+{
+    id: "some_id_1",
+    first_data: {
+        id: "some_id_0",
+        value: 16
+    },
+    chance: 0.5
+}
     )"));
-    kl::print(second_data.to_string()); // SecondData(some_id_1, FirstData(some_id_0, 16), 0.5)
+    kl::print(second_data.to_string());
 
-    // To string
+    // object -> string
     kl::Ref container = second_data.to_container();
-    kl::print(container->to_string()); // { id: "some_id_1", first_data: { id: "some_id_0", value: 16 }, chance: 0.500000 }
+    kl::print(container->to_string());
     return 0;
 }
