@@ -54,31 +54,6 @@ struct SecondData : public js::ObjectSerializable
 
 int examples::json_examples_main(const int argc, const char** argv)
 {
-    kl::print(js::Object(R"(
-{
-    "id": "some_id_1",
-    "first_data": {
-        "id": "some_id_0",
-        "value": 16
-    },
-    "chance": 0.5
-}
-    )").to_string(-1));
-
-    kl::print();
-
-    kl::print(js::Object(R"(
-{
-    "id": "some_id_1",
-    "first_data": {
-        "id": "some_id_0",
-        "value": 16
-    },
-    "chance": 0.5
-}
-    )").to_string(0));
-    return 0;
-
     // string -> object
     SecondData second_data{};
     second_data.from_container(js::Object(R"(

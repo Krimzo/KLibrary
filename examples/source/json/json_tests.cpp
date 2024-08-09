@@ -50,19 +50,19 @@ int examples::json_tests_main(const int argc, const char** argv)
 	test(js::Literal(""), "null");
 	test(js::Literal("null"), "null");
 	test(js::Literal("false"), "false");
-	test(js::Literal("5"), "5.000000");
+	test(js::Literal("5"), "5");
 	test(js::Literal("17.9"), "17.900000");
 	test(js::Literal(R"("some "string" in string")"), R"("some "string" in string")");
-	test(js::Literal("\"something random $not a comment$\""), "\"something random $not a comment$\"");
+	test(js::Literal(R"("something random $not a comment$")"), R"("something random $not a comment$")");
 
 	// objects
 	test(js::Object("{}"), "{}");
 	test(js::Object(R"({ " : some "key" : ": "some "string" in string" })"), R"({ " : some "key" : ": "some "string" in string" })");
-	test(js::Object(R"({"data": 16, "person": {"name": "Krimzo", "ages": [22,23]}})"), R"({ "data": 16.000000, "person": { "ages": [22.000000, 23.000000], "name": "Krimzo" } })");
+	test(js::Object(R"({"data": 16, "person": {"name": "Krimzo", "ages": [22,23]}})"), R"({ "data": 16, "person": { "ages": [22, 23], "name": "Krimzo" } })");
 
 	// arrays
 	test(js::Array("[]"), "[]");
-	test(js::Array(R"([1, 2, 3, [4, 5, {"number":6}, [7, 8, 9 ],], 10])"), R"([1.000000, 2.000000, 3.000000, [4.000000, 5.000000, { "number": 6.000000 }, [7.000000, 8.000000, 9.000000]], 10.000000])");
+	test(js::Array(R"([1, 2, 3, [4, 5, {"number":6}, [7, 8, 9 ],], 10])"), R"([1, 2, 3, [4, 5, { "number": 6 }, [7, 8, 9]], 10])");
 
 	// helpers
 	js::Object obj_container{ R"({ "name": "Krimzo", "age": 22.0})" };

@@ -52,7 +52,12 @@ std::string kl::json::Literal::to_string(const int depth) const
         return value.value() ? Standard::true_value : Standard::false_value;
     }
 	if (std::optional value = get_double()) {
-		return std::to_string(value.value());
+        const double flt_value = value.value();
+        const int64_t int_value = (int64_t) flt_value;
+        if (int_value == flt_value) {
+            return std::to_string(int_value);
+        }
+        return std::to_string(flt_value);
 	}
     if (std::optional value = get_string()) {
 		return format(Standard::string_literal, value.value(), Standard::string_literal);
