@@ -70,6 +70,6 @@ int examples::json_examples_main(const int argc, const char** argv)
 
     // object -> string
     kl::Ref container = second_data.to_container();
-    kl::print(container->to_string());
+    kl::print(container->decompile());
     return 0;
 }
