@@ -35,9 +35,9 @@ namespace examples {
     int video_reading_main(int argc, const char** argv);
     int video_writing_main(int argc, const char** argv);
 
-    // OTS
-    int ots_examples_main(int argc, const char** argv);
-    int ots_tests_main(int argc, const char** argv);
+    // JSON
+    int json_examples_main(int argc, const char** argv);
+    int json_tests_main(int argc, const char** argv);
 
     // Utility
     int async_test_main(int argc, const char** argv);

@@ -107,8 +107,8 @@
     <ClCompile Include="source\media\audio_processing.cpp" />
     <ClCompile Include="source\media\video_reading.cpp" />
     <ClCompile Include="source\media\video_writing.cpp" />
-    <ClCompile Include="source\ots\ots_examples.cpp" />
-    <ClCompile Include="source\ots\ots_tests.cpp" />
+    <ClCompile Include="source\json\json_examples.cpp" />
+    <ClCompile Include="source\json\json_tests.cpp" />
     <ClCompile Include="source\_main.cpp" />
     <ClCompile Include="source\math\imaginary_numbers.cpp" />
     <ClCompile Include="source\math\math_tests.cpp" />
