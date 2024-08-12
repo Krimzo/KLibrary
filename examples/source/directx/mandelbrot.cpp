@@ -107,7 +107,7 @@ int examples::mandelbrot_main(const int argc, const char** argv)
     window.maximize();
 
     // Start
-    const std::string shader_sources = kl::read_file_string("shaders/mandelbrot.hlsl");
+    const std::string shader_sources = kl::read_file("shaders/mandelbrot.hlsl");
     kl::RenderShaders shaders = gpu.create_render_shaders(shader_sources);
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
 

@@ -35,7 +35,7 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     window.keyboard.v.on_press.back()();
 
     // Shaders
-    std::string shader_sources = kl::read_file_string("shaders/geometry_test.hlsl");
+    std::string shader_sources = kl::read_file("shaders/geometry_test.hlsl");
     kl::RenderShaders default_shaders = gpu.create_render_shaders(shader_sources);
     kl::ShaderHolder geometry_shader = gpu.create_geometry_shader(shader_sources);
     gpu.bind_render_shaders(default_shaders);

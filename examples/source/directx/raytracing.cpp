@@ -71,7 +71,7 @@ int examples::raytracing_main(const int argc, const char** argv)
     // Start
     window.maximize();
 
-    const std::string shader_sources = kl::read_file_string("shaders/raytracing.hlsl");
+    const std::string shader_sources = kl::read_file("shaders/raytracing.hlsl");
     kl::RenderShaders shaders = gpu.create_render_shaders(shader_sources);
     gpu.bind_render_shaders(shaders);
 

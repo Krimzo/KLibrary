@@ -8,7 +8,7 @@ int examples::audio_processing_main(const int argc, const char** argv)
 
 	kl::Audio chicken_mp3;
 	chicken_mp3.sample_rate = 150'000;
-	auto mp3_data = kl::read_file("./media/chicken.mp3");
+	const std::string mp3_data = kl::read_file("./media/chicken.mp3");
 	chicken_mp3.load_from_memory(mp3_data.data(), mp3_data.size());
 
 	kl::print(chicken_wav.size(), " samples, ", chicken_wav.duration_seconds(), " seconds");

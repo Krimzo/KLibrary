@@ -18,7 +18,7 @@ int examples::compute_shaders2_main(const int argc, const char** argv)
     const kl::dx::AccessView access_view = gpu.create_access_view(render_texture, nullptr);
     const kl::dx::ShaderView shader_view = gpu.create_shader_view(render_texture, nullptr);
 
-    const std::string shader_sources = kl::read_file_string("shaders/compute_test2.hlsl");
+    const std::string shader_sources = kl::read_file("shaders/compute_test2.hlsl");
     const kl::RenderShaders render_shaders = gpu.create_render_shaders(shader_sources);
     kl::ShaderHolder compute_shader = gpu.create_compute_shader(shader_sources);
     gpu.bind_render_shaders(render_shaders);

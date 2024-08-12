@@ -113,7 +113,7 @@ int examples::hello_world_ext_12_main(const int argc, const char** argv)
     const kl::dx12::RootSignature root_signature = gpu.create_root_signature({ root_parameter0, root_parameter1 }, {}, D3D12_ROOT_SIGNATURE_FLAG_NONE);
 
     // Pipeline setup
-    const std::vector compiled_shader = kl::read_file("shaders/raytracing/raytracing.cso");
+    const std::string compiled_shader = kl::read_file("shaders/raytracing/raytracing.cso");
     const kl::dx12::StateObject pipeline_state = gpu.create_default_raytracing_pipeline(compiled_shader, root_signature);
 
     constexpr UINT64 SHADER_COUNT = 3;
