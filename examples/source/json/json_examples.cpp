@@ -10,8 +10,8 @@ struct FirstData : public js::ObjectSerializable
 
     void to_object(js::Object& object) const override
     {
-        object["id"] = js::Literal::make_string(id);
-        object["value"] = js::Literal::make_number(value);
+        object["id"] = js::make_string(id);
+        object["value"] = js::make_number(value);
     }
 
     void from_object(const js::Object& object) override
@@ -34,9 +34,9 @@ struct SecondData : public js::ObjectSerializable
 
     void to_object(js::Object& object) const override
     {
-        object["id"] = js::Literal::make_string(id);
+        object["id"] = js::make_string(id);
         object["first_data"] = first_data.to_container();
-        object["chance"] = js::Literal::make_number(chance);
+        object["chance"] = js::make_number(chance);
     }
 
     void from_object(const js::Object& object) override
@@ -69,7 +69,7 @@ int examples::json_examples_main(const int argc, const char** argv)
     kl::print(second_data.to_string());
 
     // object -> string
-    kl::Ref container = second_data.to_container();
+    kl::Wrap container = second_data.to_container();
     kl::print(container->decompile());
     return 0;
 }

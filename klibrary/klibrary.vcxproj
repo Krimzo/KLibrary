@@ -65,6 +65,7 @@
     <ClInclude Include="source\json\container\literal.h" />
     <ClInclude Include="source\json\json.h" />
     <ClInclude Include="source\json\language\standard.h" />
+    <ClInclude Include="source\memory\safety\wrap.h" />
     <ClInclude Include="source\render\components\collider.h" />
     <ClInclude Include="source\render\components\material.h" />
     <ClInclude Include="source\render\components\mesh.h" />

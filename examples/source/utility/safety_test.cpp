@@ -67,7 +67,7 @@ int examples::safety_test_main(const int argc, const char** argv)
         second_obj->talk();
     }
 
-    Ref<Someone> third_obj = second_obj.as<Someone>();
+    Ref third_obj = second_obj.as<Someone>();
     if (third_obj) {
         third_obj->talk();
     }

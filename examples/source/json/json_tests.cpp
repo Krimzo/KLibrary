@@ -17,8 +17,8 @@ struct Person : public js::ObjectSerializable
 
 	void to_object(js::Object& object) const override
 	{
-		object["name"] = js::Literal::make_string(name);
-		object["age"] = js::Literal::make_number(age);
+		object["name"] = js::make_string(name);
+		object["age"] = js::make_number(age);
 	}
 
 	void from_object(const js::Object& object) override
