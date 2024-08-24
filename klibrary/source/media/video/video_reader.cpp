@@ -78,7 +78,7 @@ static float video_fps(const ComRef<IMFSourceReader>& reader)
 }
 
 // Video reader
-kl::VideoReader::VideoReader(const std::string& filepath, const Int2& output_size, const bool use_gpu)
+kl::VideoReader::VideoReader(const std::string_view& filepath, const Int2& output_size, const bool use_gpu)
 {
     // Init
     ComRef<IMFAttributes> attributes;

@@ -1,7 +1,7 @@
 #include "klibrary.h"
 
 
-kl::VideoWriter::VideoWriter(const std::string& filepath, const VideoType& video_type, const Int2& frame_size, const int fps, const int video_bit_rate, const int audio_sample_rate)
+kl::VideoWriter::VideoWriter(const std::string_view& filepath, const VideoType& video_type, const Int2& frame_size, const int fps, const int video_bit_rate, const int audio_sample_rate)
     : m_width(frame_size.x)
     , m_height(frame_size.y)
     , m_fps(fps)
