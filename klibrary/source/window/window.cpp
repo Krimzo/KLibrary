@@ -57,7 +57,7 @@ kl::Window::~Window()
 
     // Clearing window
     DestroyWindow(m_window);
-    UnregisterClassA(m_name.c_str(), m_instance);
+    UnregisterClassA(m_name.data(), m_instance);
 
 	m_window = nullptr;
 }

@@ -377,7 +377,7 @@ kl::dx12::PipelineState kl::GPU12::create_default_rasterization_pipeline(const d
 	std::vector<dx12::InputLayout> input_layout{};
 	input_layout.reserve(input_layout_parts.size());
 	for (const auto& part : input_layout_parts) {
-		input_layout.emplace_back(part.first.c_str(), 0, part.second, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0);
+		input_layout.emplace_back(part.first.data(), 0, part.second, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0);
 	}
 
 	// Pipeline

@@ -57,7 +57,7 @@ namespace kl {
     {
         if (!value) {
             const std::string message = format(args...);
-            MessageBoxA(nullptr, message.c_str(), "Assertion failed!", MB_ICONERROR | MB_OK);
+            MessageBoxA(nullptr, message.data(), "Assertion failed!", MB_ICONERROR | MB_OK);
             exit(EXIT_FAILURE);
         }
     }

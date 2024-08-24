@@ -91,7 +91,7 @@ void kl::console::set_font(const Int2& size, const std::string_view& font_name)
     cfi.dwFontSize.Y = (SHORT) size.y;
     cfi.FontFamily = FF_DONTCARE;
     cfi.FontWeight = FW_NORMAL;
-    wcscpy_s(cfi.FaceName, convert_string(font_name).c_str());
+    wcscpy_s(cfi.FaceName, convert_string(font_name).data());
     SetCurrentConsoleFontEx(CONSOLE_HANDLE, false, &cfi);
 }
 
@@ -151,5 +151,5 @@ void kl::console::progress_bar(const std::string_view& message, int output_y, fl
     }
     move_cursor({ 0, output_y });
 
-    printf("%s] %3d%% ", stream.str().c_str(), (int) (percentage * 100.0f));
+    printf("%s] %3d%% ", stream.str().data(), (int) (percentage * 100.0f));
 }

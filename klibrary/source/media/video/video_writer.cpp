@@ -10,7 +10,7 @@ kl::VideoWriter::VideoWriter(const std::string_view& filepath, const VideoType& 
     , m_frame_duration(10'000'000 / m_fps)
 {
     const std::wstring converted_path = convert_string(filepath);
-    MFCreateSinkWriterFromURL(converted_path.c_str(), nullptr, nullptr, &m_writer) >> verify_result;
+    MFCreateSinkWriterFromURL(converted_path.data(), nullptr, nullptr, &m_writer) >> verify_result;
 
     // Video
     ComRef<IMFMediaType> video_out_type;

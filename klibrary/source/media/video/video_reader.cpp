@@ -101,7 +101,7 @@ kl::VideoReader::VideoReader(const std::string_view& filepath, const Int2& outpu
     }
 
     const std::wstring converted_path = convert_string(filepath);
-    MFCreateSourceReaderFromURL(converted_path.c_str(), attributes.get(), &m_reader) >> verify_result;
+    MFCreateSourceReaderFromURL(converted_path.data(), attributes.get(), &m_reader) >> verify_result;
     configure_reader(m_reader, output_size);
 
     // Getting info

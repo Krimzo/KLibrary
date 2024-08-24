@@ -29,7 +29,7 @@ void kl::DLL::load(const std::string_view& path)
 void kl::DLL::reload()
 {
     unload();
-    m_module = LoadLibraryA(m_path.c_str());
+    m_module = LoadLibraryA(m_path.data());
 }
 
 void kl::DLL::unload()
