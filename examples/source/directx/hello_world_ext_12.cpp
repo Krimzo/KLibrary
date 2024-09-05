@@ -155,11 +155,11 @@ int examples::hello_world_ext_12_main(const int argc, const char** argv)
             D3D12_RAYTRACING_INSTANCE_DESC* instance_data = nullptr;
             instances->Map(0, nullptr, reinterpret_cast<void**>(&instance_data)) >> kl::verify_result;
             kl::Float4x4 cube = kl::Float4x4::translation({ -1.5f, 2.0f, 2.0f });
-            cube *= kl::Float4x4::rotation(kl::Float3(elapsed_t / 2.0f, elapsed_t / 3.0f, elapsed_t / 5.0f) * (float) kl::TO_DEGREES);
+            cube *= kl::Float4x4::rotation(kl::Float3(elapsed_t / 2.0f, elapsed_t / 3.0f, elapsed_t / 5.0f) * kl::to_degrees());
             memcpy(&instance_data[0].Transform, &cube, sizeof(float) * 12);
 
             kl::Float4x4 mirror = kl::Float4x4::translation({ 2.0f, 2.0f, 2.0f });
-            mirror *= kl::Float4x4::rotation(kl::Float3(-1.8f, std::sin(elapsed_t) / 8.0f + 1.0f, 0.0f) * (float) kl::TO_DEGREES);
+            mirror *= kl::Float4x4::rotation(kl::Float3(-1.8f, std::sin(elapsed_t) / 8.0f + 1.0f, 0.0f) * kl::to_degrees());
             memcpy(&instance_data[1].Transform, &mirror, sizeof(float) * 12);
 
             kl::Float4x4 floor = kl::Float4x4::translation({ 0.0f, 0.0f, 2.0f });
