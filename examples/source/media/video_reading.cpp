@@ -16,7 +16,7 @@ int examples::video_reading_main(const int argc, const char** argv)
 
     kl::console::clear();
     kl::print<false>("Resize the console and press enter..");
-    kl::get();
+    std::cin.get();
 
     const kl::Int2 console_size = kl::console::size() - kl::Int2(0, 1);
     kl::console::set_cursor_enabled(false);
