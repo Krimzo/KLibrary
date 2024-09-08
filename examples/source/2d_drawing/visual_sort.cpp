@@ -56,7 +56,7 @@ int examples::visual_sort_main(const int argc, const char** argv)
         window.set_title("Finished!");
     }).detach();
 
-    while (window.process(false)) {
+    while (window.process()) {
         frame.fill(kl::colors::GRAY);
         draw_sticks(frame, sticks);
         window.draw_image(frame);

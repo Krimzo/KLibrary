@@ -44,11 +44,11 @@ float4 p_shader(const VS_OUT data) : SV_Target
 
 int examples::hello_world_ext_main(const int argc, const char** argv)
 {
-    // Window setup
+    // window setup
     kl::Window window = { "Hello World! (D3D11 Extended)", { 1600, 900 } };
     kl::GPU gpu = { HWND(window), kl::IS_DEBUG };
 
-    // Window resize setup
+    // window resize setup
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
@@ -58,15 +58,7 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
     });
     window.maximize();
 
-    // Fullscreen setup
-    window.keyboard.f11.on_press.emplace_back([&]
-    {
-        const bool new_state = !window.in_fullscreen();
-        window.set_fullscreen(new_state);
-        gpu.set_fullscreen(new_state);
-    });
-
-    // Mesh setup
+    // mesh setup
     const std::vector<kl::Vertex<float>> vertices = {
         { { -0.5f, -0.5f, 0.5f }, {}, kl::colors::RED },
         { { -0.5f,  0.5f, 0.5f }, {}, kl::colors::GREEN },
@@ -81,12 +73,12 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
     const kl::dx::Buffer vertex_buffer = gpu.create_vertex_buffer(vertices);
     const kl::dx::Buffer index_buffer = gpu.create_index_buffer(indices);
 
-    // Shader setup
+    // shader setup
     kl::RenderShaders shaders = gpu.create_render_shaders(SHADER_SOURCE);
     gpu.bind_render_shaders(shaders);
 
-    // CDS (Clear-Draw-Swap)
-    while (window.process(false)) {
+    // clear-draw-swap
+    while (window.process()) {
         struct PS_CB
         {
             kl::Float2 MOUSE_POSITION;

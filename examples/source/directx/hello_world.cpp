@@ -18,11 +18,11 @@ float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
 
 int examples::hello_world_main(const int argc, const char** argv)
 {
-    // Window setup
+    // window setup
     kl::Window window = { "Hello World! (D3D11)", { 1600, 900 } };
     kl::GPU gpu = { HWND(window), kl::IS_DEBUG };
 
-    // Window resize setup
+    // window resize setup
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
@@ -32,27 +32,19 @@ int examples::hello_world_main(const int argc, const char** argv)
     });
     window.maximize();
 
-    // Fullscreen setup
-    window.keyboard.f11.on_press.emplace_back([&]
-    {
-        const bool new_state = !window.in_fullscreen();
-        window.set_fullscreen(new_state);
-        gpu.set_fullscreen(new_state);
-    });
-
-    // Mesh setup
+    // mesh setup
     const kl::dx::Buffer triangle = gpu.create_vertex_buffer({
         { {  0.0f,  0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
     });
     
-    // Shader setup
+    // shader setup
     const kl::RenderShaders shaders = gpu.create_render_shaders(SHADER_SOURCE);
     gpu.bind_render_shaders(shaders);
 
-    // CDS (Clear-Draw-Swap)
-    while (window.process(false)) {
+    // clear-draw-swap
+    while (window.process()) {
         gpu.clear_internal(kl::Color(30, 30, 30));
         gpu.draw(triangle);
         gpu.swap_buffers(true);

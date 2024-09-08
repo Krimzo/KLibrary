@@ -104,12 +104,12 @@ static void process_objects(std::vector<SceneObject>& objects, const kl::Timer& 
 
 int examples::trajectories_main(const int argc, const char** argv)
 {
-    kl::Window window = { "Trajectories", { 1600, 900 } };
-    kl::Image frame = { window.size() };
-    kl::Timer timer = {};
+    kl::Window window{ "Trajectories", { 1600, 900 } };
+    kl::Image frame{ window.size() };
+    kl::Timer timer;
 
-    const kl::Float2 gravity = { 0, 98.1f };
-    std::vector<SceneObject> objects = {};
+    const kl::Float2 gravity{ 0, 98.1f };
+    std::vector<SceneObject> objects;
 
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
@@ -117,49 +117,45 @@ int examples::trajectories_main(const int argc, const char** argv)
     });
 
     bool object_being_added = false;
-    kl::Float2 object_add_position = {};
-    kl::Float2 object_second_position = {};
-    window.mouse.left.on_press.emplace_back([&]()
-    {
-        const kl::Int2 position = window.mouse.position();
-        if (position.x >= 0 && position.x < (int) window.width() && position.y > 0 && position.y < frame_lower_limit(frame)) {
-            object_add_position = kl::Float2(position);
-            object_being_added = true;
-        }
-    });
-    window.mouse.left.on_down.emplace_back([&]
-    {
-        object_second_position = window.mouse.position();
-    });
-    window.mouse.left.on_release.emplace_back([&]
-    {
-        if (object_being_added) {
-            SceneObject new_object = {};
-            new_object.position = object_second_position;
-            new_object.velocity = object_add_position - object_second_position;
-            objects.push_back(new_object);
-            object_being_added = false;
-        }
-    });
+    kl::Float2 object_add_position;
+    kl::Float2 object_second_position;
 
-    window.keyboard.r.on_press.emplace_back([&]
-    {
-        objects.clear();
-    });
-    window.keyboard.g.on_press.emplace_back([&]
-    {
-        for (int i = 0; i < 20; i++) {
-            SceneObject random_object = {};
-            random_object.position.x = kl::random::gen_float((float) frame.width());
-            random_object.position.y = kl::random::gen_float(frame_lower_limit(frame));
-            random_object.velocity = kl::random::gen_float2(-500.0f, 500.0f);
-            objects.push_back(random_object);
-        }
-    });
-
-    while (window.process(false)) {
+    while (window.process()) {
         timer.update_delta();
 
+        if (window.mouse.left.pressed()) {
+            const kl::Int2 position = window.mouse.position();
+            if (position.x >= 0 && position.x < (int) window.width() && position.y > 0 && position.y < frame_lower_limit(frame)) {
+                object_add_position = position;
+                object_second_position = position;
+                object_being_added = true;
+            }
+        }
+        if (window.mouse.left.released()) {
+            if (object_being_added) {
+                SceneObject new_object = {};
+                new_object.position = object_second_position;
+                new_object.velocity = object_add_position - object_second_position;
+                objects.push_back(new_object);
+                object_being_added = false;
+            }
+        }
+        if (window.mouse.left) {
+            object_second_position = window.mouse.position();
+        }
+        if (window.keyboard.g.pressed()) {
+            for (int i = 0; i < 20; i++) {
+                SceneObject random_object = {};
+                random_object.position.x = kl::random::gen_float((float) frame.width());
+                random_object.position.y = kl::random::gen_float(frame_lower_limit(frame));
+                random_object.velocity = kl::random::gen_float2(-500.0f, 500.0f);
+                objects.push_back(random_object);
+            }
+        }
+        if (window.keyboard.r.pressed()) {
+            objects.clear();
+        }
+        
         process_objects(objects, timer, frame, gravity);
 
         draw_background(frame);

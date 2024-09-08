@@ -88,27 +88,24 @@ int examples::data_line_main(const int argc, const char** argv)
     kl::Window window = { "Data Line", { 1600, 900 } };
     kl::Image frame = kl::Image(window.size());
 
-    std::vector<kl::Int2> data = {};
+    std::vector<kl::Int2> data;
     kl::Float2 line_equat(1.0f, 0.0f);
 
-    window.mouse.left.on_down.push_back([&]
-    {
-        static kl::Int2 last_data = {};
-        kl::Int2 new_data = window.mouse.position() * kl::Int2(1, -1);
-        new_data -= frame.size() / kl::Int2(2, -2);
-        if (new_data != last_data) {
-            data.push_back(new_data);
-            last_data = new_data;
-        }
-    });
-
-    window.keyboard.r.on_press.push_back([&]
-    {
-        data.clear();
-    });
-
-    while (window.process(false)) {
+    while (window.process()) {
         frame.fill(kl::colors::GRAY);
+
+        if (window.mouse.left) {
+            static kl::Int2 last_data;
+            kl::Int2 new_data = window.mouse.position() * kl::Int2(1, -1);
+            new_data -= frame.size() / kl::Int2(2, -2);
+            if (new_data != last_data) {
+                data.push_back(new_data);
+                last_data = new_data;
+            }
+        }
+        if (window.keyboard.r.pressed()) {
+            data.clear();
+        }
 
         draw_axis(frame);
         draw_data(frame, data);

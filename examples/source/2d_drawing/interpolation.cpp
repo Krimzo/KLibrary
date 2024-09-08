@@ -42,7 +42,7 @@ int examples::interpolation_main(const int argc, const char** argv)
     };
 
     int frame_index = 0;
-    while (window.process(false)) {
+    while (window.process()) {
         timer.reset_elapsed();
 
         for (int x = frame_index - frame.height(), y = 0; y < frame.height(); x++, y++) {

@@ -23,17 +23,6 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     });
     window.maximize();
 
-    window.keyboard.v.on_press.emplace_back([&]
-    {
-        static bool wireframe_bound = true;
-        static kl::dx::RasterState solid_raster = gpu.create_raster_state(false, false);
-        static kl::dx::RasterState wireframe_raster = gpu.create_raster_state(true, false);
-
-        gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
-        wireframe_bound = !wireframe_bound;
-    });
-    window.keyboard.v.on_press.back()();
-
     // Shaders
     std::string shader_sources = kl::read_file("shaders/geometry_test.hlsl");
     kl::RenderShaders default_shaders = gpu.create_render_shaders(shader_sources);
@@ -59,33 +48,35 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     main_entity->mesh = monke_mesh;
     main_entity->material = default_material;
 
-    // Input
-    window.keyboard.num1.on_press.emplace_back([&]
-    {
-        main_entity->mesh = cube_mesh;
-    });
-    window.keyboard.num2.on_press.emplace_back([&]
-    {
-        main_entity->mesh = sphere_mesh;
-    });
-    window.keyboard.num3.on_press.emplace_back([&]
-    {
-        main_entity->mesh = monke_mesh;
-    });
-
     float destroy_goal = 0.0f;
     float destroy_value = 0.0f;
-    window.keyboard.space.on_press.emplace_back([&]
-    {
-        destroy_goal = 1.5f;
-    });
-
     camera.origin = { -2.0f, 2.0f, -2.0f };
     camera.set_forward(camera.origin * -1.0f);
 
     /* ----- UPDATE ----- */
-    while (window.process(false)) {
+    while (window.process()) {
         timer.update_delta();
+
+        if (window.keyboard.v.pressed()) {
+            static bool wireframe_bound = true;
+            static kl::dx::RasterState solid_raster = gpu.create_raster_state(false, false);
+            static kl::dx::RasterState wireframe_raster = gpu.create_raster_state(true, false);
+
+            gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
+            wireframe_bound = !wireframe_bound;
+        }
+        if (window.keyboard.num1.pressed()) {
+            main_entity->mesh = cube_mesh;
+        }
+        if(window.keyboard.num2.pressed()) {
+			main_entity->mesh = sphere_mesh;
+        }
+        if (window.keyboard.num3.pressed()) {
+			main_entity->mesh = monke_mesh;
+        }
+        if (window.keyboard.space.pressed()) {
+            destroy_goal = 1.5f;
+        }
 
         main_entity->update_physics(timer.delta());
 

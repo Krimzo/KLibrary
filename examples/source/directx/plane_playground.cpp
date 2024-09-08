@@ -9,15 +9,22 @@ static kl::Float3 SUN_DIRECTION = { 1, -1, 0 };
 static kl::RenderShaders PLANE_SHADERS;
 static kl::dx::GeometryShader PLANE_GEOMETRY_SHADER;
 
-void setup_input(kl::Window& window, kl::GPU& gpu);
 void camera_movement(kl::Window& window);
 
 int examples::plane_playground_main(const int argc, const char** argv)
 {
-    kl::Window window = { "Plane Playground", { 1600, 900 } };
-    kl::GPU gpu = { HWND(window) };
+    kl::Window window{ "Plane Playground", { 1600, 900 } };
+    kl::GPU gpu{ HWND(window) };
 
-    setup_input(window, gpu);
+    window.on_resize.emplace_back([&](const kl::Int2 new_size)
+    {
+        if (new_size.x > 0 && new_size.y > 0) {
+            gpu.resize_internal(new_size);
+            gpu.set_viewport_size(new_size);
+            CAMERA.update_aspect_ratio(new_size);
+        }
+    });
+    window.maximize();
 
     const kl::dx::DepthState default_depth_state = gpu.create_depth_state(true, false, false);
     const kl::dx::DepthState disabled_depth_state = gpu.create_depth_state(false, false, false);
@@ -31,8 +38,35 @@ int examples::plane_playground_main(const int argc, const char** argv)
     CAMERA.origin = { -3.5f, 1.5f, -2.5f };
     CAMERA.set_forward(CAMERA.origin * -1.0f);
 
-    while (window.process(false)) {
+    int frame_id = 0;
+    while (window.process()) {
+        frame_id += 1;
         TIMER.update_delta();
+
+        if (frame_id == 1 || window.keyboard.v.pressed()) {
+            static bool wireframe_bound = true;
+            static kl::dx::RasterState solid_raster = gpu.create_raster_state(false, false, true);
+            static kl::dx::RasterState wireframe_raster = gpu.create_raster_state(true, false, true);
+
+            gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
+            wireframe_bound = !wireframe_bound;
+        }
+        if (frame_id == 1 || window.keyboard.r.pressed()) {
+            kl::console::clear();
+
+            const std::string shader_sources = kl::read_file("shaders/playground.hlsl");
+            const kl::RenderShaders temp_default_shaders = gpu.create_render_shaders(shader_sources);
+            const kl::ShaderHolder temp_geometry_shader = gpu.create_geometry_shader(shader_sources);
+
+            if (temp_default_shaders && temp_geometry_shader) {
+                PLANE_SHADERS = temp_default_shaders;
+                PLANE_GEOMETRY_SHADER = temp_geometry_shader;
+            }
+        }
+        if (window.mouse.left) {
+            const kl::Ray ray = { CAMERA.origin, kl::inverse(CAMERA.matrix()), window.mouse.norm_position() };
+            SUN_DIRECTION = -ray.direction();
+        }
 
         camera_movement(window);
 
@@ -61,16 +95,18 @@ int examples::plane_playground_main(const int argc, const char** argv)
         gpu.draw(screen_mesh);
 
         // Plane
-        gpu.bind_depth_state(default_depth_state);
+        if (!PLANE_SHADERS || !PLANE_GEOMETRY_SHADER)
+            continue;
 
+        gpu.bind_depth_state(default_depth_state);
         gpu.bind_render_shaders(PLANE_SHADERS);
         gpu.bind_geometry_shader(PLANE_GEOMETRY_SHADER);
 
         struct PlaneVSData
         {
-            kl::Float4x4 w_matrix = {};
-            kl::Float4x4 vp_matrix = {};
-            kl::Float4 time_data = {};
+            kl::Float4x4 w_matrix;
+            kl::Float4x4 vp_matrix;
+            kl::Float4 time_data;
         } plane_vs_data = {};
 
         plane_vs_data.w_matrix = {};
@@ -81,7 +117,7 @@ int examples::plane_playground_main(const int argc, const char** argv)
 
         struct PlanePSData
         {
-            kl::Float4 sun_direction = {};
+            kl::Float4 sun_direction;
         } plane_ps_data = {};
 
         plane_ps_data.sun_direction = { kl::normalize(SUN_DIRECTION), 0 };
@@ -91,51 +127,6 @@ int examples::plane_playground_main(const int argc, const char** argv)
         gpu.swap_buffers(true);
     }
     return 0;
-}
-
-void setup_input(kl::Window& window, kl::GPU& gpu)
-{
-    window.on_resize.emplace_back([&](const kl::Int2 new_size)
-    {
-        if (new_size.x > 0 && new_size.y > 0) {
-            gpu.resize_internal(new_size);
-            gpu.set_viewport_size(new_size);
-            CAMERA.update_aspect_ratio(new_size);
-        }
-    });
-    window.maximize();
-
-    window.keyboard.v.on_press.emplace_back([&]
-    {
-        static bool wireframe_bound = true;
-        static kl::dx::RasterState solid_raster = gpu.create_raster_state(false, false, true);
-        static kl::dx::RasterState wireframe_raster = gpu.create_raster_state(true, false, true);
-
-        gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
-        wireframe_bound = !wireframe_bound;
-    });
-    window.keyboard.v.on_press.back()();
-
-    window.keyboard.r.on_press.emplace_back([&]
-    {
-        kl::console::clear();
-
-        const std::string shader_sources = kl::read_file("shaders/playground.hlsl");
-        const kl::RenderShaders temp_default_shaders = gpu.create_render_shaders(shader_sources);
-        const kl::ShaderHolder temp_geometry_shader = gpu.create_geometry_shader(shader_sources);
-
-        if (temp_default_shaders && temp_geometry_shader) {
-            PLANE_SHADERS = temp_default_shaders;
-            PLANE_GEOMETRY_SHADER = temp_geometry_shader;
-        }
-    });
-    window.keyboard.r.on_press.back()();
-
-    window.mouse.left.on_down.emplace_back([&]
-    {
-        const kl::Ray ray = { CAMERA.origin, kl::inverse(CAMERA.matrix()), window.mouse.normalized_position() };
-        SUN_DIRECTION = -ray.direction();
-    });
 }
 
 void camera_movement(kl::Window& window)

@@ -21,14 +21,13 @@ int examples::times_table_main(const int argc, const char** argv)
         }
     });
 
-    window.keyboard.r.on_press.push_back([&]
-    {
-        point_color = kl::random::gen_color();
-        line_color = kl::random::gen_color();
-    });
-
-    while (window.process(false)) {
+    while (window.process()) {
         m += increment * kl::time::delta();
+
+        if (window.keyboard.r.pressed()) {
+            point_color = kl::random::gen_color();
+            line_color = kl::random::gen_color();
+        }
 
         frame.fill(kl::colors::GRAY);
 

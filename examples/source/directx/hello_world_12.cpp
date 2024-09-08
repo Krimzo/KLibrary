@@ -57,7 +57,7 @@ int examples::hello_world_12_main(const int argc, const char** argv)
 	const kl::dx12::PipelineState pipeline_state = gpu.create_default_rasterization_pipeline(root_signature, SHADER_SOURCE);
 
 	// Render loop
-	while (window.process(false)) {
+	while (window.process()) {
 		const UINT back_buffer_index = gpu.back_buffer_index();
 		const kl::dx12::Resource back_buffer = gpu.get_back_buffer(back_buffer_index);
 		const kl::dx12::DescriptorHandle render_target = gpu.get_render_target(back_buffer_index);

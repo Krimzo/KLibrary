@@ -162,7 +162,7 @@ int examples::tic_tac_main(const int argc, const char** argv)
 
     window.set_resizeable(false);
 
-    while (window.process(false)) {
+    while (window.process()) {
         if (const int eval = evaluate(board)) {
             window.set_title((eval == ID::PLAYER) ? "Player wins!" : "Engine wins!");
             while (window.process());

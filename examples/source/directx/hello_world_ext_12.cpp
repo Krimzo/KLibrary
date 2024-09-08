@@ -138,7 +138,7 @@ int examples::hello_world_ext_12_main(const int argc, const char** argv)
     }
 
     // Render loop
-    while (window.process(false)) {
+    while (window.process()) {
         // Prepare
         timer.update_delta();
         const float elapsed_t = timer.elapsed();

@@ -19,7 +19,7 @@ int examples::text_drawing_main(const int argc, const char** argv)
 	kl::TextFormat format = gpu.create_text_format(L"roboto", DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, 25.0f);
 	kl::assert(format, "failed to init text format");
 
-	while (window.process(false)) {
+	while (window.process()) {
 		gpu.clear_internal(kl::colors::GRAY);
 
 		gpu.text_data.resize(20);
