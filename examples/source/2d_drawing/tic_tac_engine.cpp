@@ -1,16 +1,15 @@
 #include "examples.h"
 
 
-enum ID
+enum ID : int32_t
 {
     PLAYER = -1,
     EMPTY = 0,
     ENGINE = 1
 };
 
-class BoardInfo
+struct BoardInfo
 {
-public:
     int eval = 0;
     int move = -1;
 };

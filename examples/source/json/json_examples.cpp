@@ -3,7 +3,7 @@
 namespace js = kl::json;
 
 
-struct FirstData : public js::ObjectSerializable
+struct FirstData : js::ObjectSerializable
 {
     std::string id;
     int value = 0;
@@ -26,7 +26,7 @@ struct FirstData : public js::ObjectSerializable
     }
 };
 
-struct SecondData : public js::ObjectSerializable
+struct SecondData : js::ObjectSerializable
 {
     std::string id;
     FirstData first_data = {};
@@ -54,7 +54,6 @@ struct SecondData : public js::ObjectSerializable
 
 int examples::json_examples_main(const int argc, const char** argv)
 {
-    // string -> object
     SecondData second_data{};
     second_data.from_container(js::Object(R"(
 {
@@ -68,7 +67,6 @@ int examples::json_examples_main(const int argc, const char** argv)
     )"));
     kl::print(second_data.to_string());
 
-    // object -> string
     kl::Wrap container = second_data.to_container();
     kl::print(container->decompile());
     return 0;

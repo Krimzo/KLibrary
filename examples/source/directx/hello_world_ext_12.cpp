@@ -1,8 +1,6 @@
 #include "examples.h"
 
 
-/* HELPER: https://landelare.github.io/2023/02/18/dxr-tutorial.html (thanks to the author) */
-
 int examples::hello_world_ext_12_main(const int argc, const char** argv)
 {
     kl::Window window{ "Tracing", { 1600, 900 } };

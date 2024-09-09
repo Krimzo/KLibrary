@@ -8,7 +8,6 @@ static kl::Color START_COLOR = kl::colors::ORANGE;
 
 static void input(const kl::Window& window, const float delta_time)
 {
-    // Keyboard
     if (window.keyboard.esc) {
         window.close();
     }
@@ -34,7 +33,6 @@ static void input(const kl::Window& window, const float delta_time)
         POSITION.x -= (1.0f / ZOOM) * delta_time;
     }
 
-    // Mouse
     const kl::Int2 frame_size = window.size();
     if (window.mouse.left) {
         ZOOM += ZOOM * delta_time;
@@ -55,12 +53,8 @@ static void input(const kl::Window& window, const float delta_time)
         POSITION -= (uv * (1.0f / ZOOM)) * delta_time;
     }
 
-    // Scroll
-    static int last_scroll = window.mouse.scroll();
-    const int current_scroll = window.mouse.scroll();
-    ITERATIONS += (current_scroll - last_scroll) * (window.keyboard.shift ? 10 : 1);
+    ITERATIONS += window.mouse.scroll() * (window.keyboard.shift ? 10 : 1);
     ITERATIONS = std::max(ITERATIONS, 0);
-    last_scroll = current_scroll;
 }
 
 static void console_read()
@@ -106,22 +100,17 @@ int examples::mandelbrot_main(const int argc, const char** argv)
     });
     window.maximize();
 
-    // Start
     const std::string shader_sources = kl::read_file("shaders/mandelbrot.hlsl");
     kl::RenderShaders shaders = gpu.create_render_shaders(shader_sources);
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
 
-    // Console
     std::thread(console_read).detach();
 
-    // Update
     while (window.process()) {
         timer.update_delta();
 
-        // Input
         input(window, timer.delta());
 
-        // Render
         gpu.clear_internal();
 
         struct PSData
@@ -140,7 +129,6 @@ int examples::mandelbrot_main(const int argc, const char** argv)
         gpu.draw(screen_mesh);
         gpu.swap_buffers(true);
 
-        // Info
         window.set_title(kl::format(
             "(Iterations: ", ITERATIONS, ") ",
             "(Zoom: ", std::fixed, std::setprecision(2), ZOOM, ") ",

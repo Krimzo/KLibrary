@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-static const std::string SHADER_SOURCE =
+static constexpr auto SHADER_SOURCE =
 R"(
 struct VS_OUT
 {
@@ -9,7 +9,6 @@ struct VS_OUT
     float3 color : VS_Color;
 };
 
-// Vertex shader
 VS_OUT v_shader(const float3 position : KL_Position, const float3 normal : KL_Normal)
 {
     VS_OUT data;
@@ -18,7 +17,6 @@ VS_OUT v_shader(const float3 position : KL_Position, const float3 normal : KL_No
     return data;
 }
 
-// Pixel shader
 /*
 NOTE:
 Direct3D cbuffers use special type of data packing.
@@ -44,11 +42,9 @@ float4 p_shader(const VS_OUT data) : SV_Target
 
 int examples::hello_world_ext_main(const int argc, const char** argv)
 {
-    // window setup
     kl::Window window = { "Hello World! (D3D11 Extended)", { 1600, 900 } };
     kl::GPU gpu = { HWND(window), kl::IS_DEBUG };
 
-    // window resize setup
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
@@ -56,9 +52,7 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
             gpu.set_viewport_size(new_size);
         }
     });
-    window.maximize();
 
-    // mesh setup
     const std::vector<kl::Vertex<float>> vertices = {
         { { -0.5f, -0.5f, 0.5f }, {}, kl::colors::RED },
         { { -0.5f,  0.5f, 0.5f }, {}, kl::colors::GREEN },
@@ -73,11 +67,9 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
     const kl::dx::Buffer vertex_buffer = gpu.create_vertex_buffer(vertices);
     const kl::dx::Buffer index_buffer = gpu.create_index_buffer(indices);
 
-    // shader setup
     kl::RenderShaders shaders = gpu.create_render_shaders(SHADER_SOURCE);
     gpu.bind_render_shaders(shaders);
 
-    // clear-draw-swap
     while (window.process()) {
         struct PS_CB
         {

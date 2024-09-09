@@ -1,9 +1,8 @@
 #include "examples.h"
 
 
-class Stick
+struct Stick
 {
-public:
     int value = 0;
     kl::Color color = {};
 };

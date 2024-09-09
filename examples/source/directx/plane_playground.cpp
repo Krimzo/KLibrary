@@ -72,7 +72,6 @@ int examples::plane_playground_main(const int argc, const char** argv)
 
         gpu.clear_internal();
 
-        // Sky
         gpu.bind_depth_state(disabled_depth_state);
 
         gpu.bind_render_shaders(sky_shaders);
@@ -94,7 +93,6 @@ int examples::plane_playground_main(const int argc, const char** argv)
 
         gpu.draw(screen_mesh);
 
-        // Plane
         if (!PLANE_SHADERS || !PLANE_GEOMETRY_SHADER)
             continue;
 

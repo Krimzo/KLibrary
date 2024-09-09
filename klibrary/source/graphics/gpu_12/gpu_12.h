@@ -17,9 +17,8 @@ namespace kl::dx12 {
 }
 
 namespace kl {
-	class GPU12 : NoCopy, public ShaderCompiler
+	struct GPU12 : NoCopy, ShaderCompiler
 	{
-	public:
 		static constexpr UINT BACK_BUFFER_COUNT = 2;
 
 		GPU12Queue queue{};

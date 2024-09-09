@@ -4,7 +4,6 @@
 
 
 namespace examples {
-    // 2D Drawing
     int data_line_main(int argc, const char** argv);
     int interpolation_main(int argc, const char** argv);
     int tic_tac_main(int argc, const char** argv);
@@ -12,7 +11,6 @@ namespace examples {
     int trajectories_main(int argc, const char** argv);
     int visual_sort_main(int argc, const char** argv);
 
-    // DirectX
     int compute_shaders1_main(int argc, const char** argv);
     int compute_shaders2_main(int argc, const char** argv);
     int geometry_shaders_main(int argc, const char** argv);
@@ -25,21 +23,17 @@ namespace examples {
     int raytracing_main(int argc, const char** argv);
     int text_drawing_main(int argc, const char** argv);
 
-    // Math
     int math_tests_main(int argc, const char** argv);
     int imaginary_numbers_main(int argc, const char** argv);
 
-    // Media
     int audio_playing_main(int argc, const char** argv);
     int audio_processing_main(int argc, const char** argv);
     int video_reading_main(int argc, const char** argv);
     int video_writing_main(int argc, const char** argv);
 
-    // JSON
     int json_examples_main(int argc, const char** argv);
     int json_tests_main(int argc, const char** argv);
 
-    // Utility
     int async_test_main(int argc, const char** argv);
     int dynamic_linking_main(int argc, const char** argv);
     int encryption_main(int argc, const char** argv);

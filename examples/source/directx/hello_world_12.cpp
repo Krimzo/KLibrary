@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-static constexpr const char* SHADER_SOURCE =
+static constexpr auto SHADER_SOURCE =
 R"(
 struct VS_OUT
 {
@@ -9,7 +9,6 @@ struct VS_OUT
 	float3 color : VS_Color;
 };
 
-// Vertex shader
 VS_OUT v_shader(const float3 position : KL_Position, const float3 color : KL_Normal)
 {
 	VS_OUT data;
@@ -18,7 +17,6 @@ VS_OUT v_shader(const float3 position : KL_Position, const float3 color : KL_Nor
     return data;
 }
 
-// Pixel shader
 float4 p_shader(const VS_OUT data) : SV_Target
 {
     return float4(data.color, 1.0f);
@@ -36,7 +34,6 @@ int examples::hello_world_12_main(const int argc, const char** argv)
 			gpu.resize(new_size);
 		}
 	});
-	window.maximize();
 
 	const kl::Vertex<float> vertices[3] = {
 		kl::Vertex{ kl::Float3{ -0.5f, -0.5f, 0.0f }, {}, kl::Float3{ kl::colors::RED } },

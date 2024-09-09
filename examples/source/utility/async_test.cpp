@@ -36,8 +36,6 @@ static void async_test()
 	});
 }
 
-/* NOTE: Use Release mode for proper results. */
-
 int examples::async_test_main(const int argc, const char** argv)
 {
 	static const size_t index = kl::random::gen_int((int) data.size());

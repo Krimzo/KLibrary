@@ -3,7 +3,6 @@
 
 int examples::geometry_shaders_main(const int argc, const char** argv)
 {
-    /* ----- SETUP ----- */
     kl::Window window = { "Geometry Test", { 1600, 900 } };
     kl::GPU gpu = { HWND(window) };
 
@@ -12,7 +11,6 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
 
     kl::Float3 sun_direction = { 1.0f, -1.0f, 0.0f };
 
-    // Window
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
         if (new_size.x > 0 && new_size.y > 0) {
@@ -23,14 +21,12 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     });
     window.maximize();
 
-    // Shaders
     std::string shader_sources = kl::read_file("shaders/geometry_test.hlsl");
     kl::RenderShaders default_shaders = gpu.create_render_shaders(shader_sources);
     kl::ShaderHolder geometry_shader = gpu.create_geometry_shader(shader_sources);
     gpu.bind_render_shaders(default_shaders);
     gpu.bind_geometry_shader(geometry_shader);
 
-    // Mesh
     kl::Ref cube_mesh = new kl::Mesh(&gpu);
     kl::Ref sphere_mesh = new kl::Mesh(&gpu);
     kl::Ref monke_mesh = new kl::Mesh(&gpu);
@@ -38,11 +34,9 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/sphere.obj");
     monke_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/monke.obj");
 
-    // Material
     kl::Ref default_material = new kl::Material();
     default_material->color = kl::colors::ORANGE;
 
-    // Entity
     kl::Ref main_entity = new kl::Entity();
     main_entity->angular.y = -36.0f;
     main_entity->mesh = monke_mesh;
@@ -53,7 +47,6 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     camera.origin = { -2.0f, 2.0f, -2.0f };
     camera.set_forward(camera.origin * -1.0f);
 
-    /* ----- UPDATE ----- */
     while (window.process()) {
         timer.update_delta();
 

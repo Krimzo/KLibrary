@@ -3,8 +3,6 @@
 
 static constexpr int N = 10000;
 
-/* NOTE: Use Release mode for proper results. */
-
 int examples::fast_output_main(const int argc, const char** argv)
 {
     float times[3] = {};

@@ -3,7 +3,7 @@
 namespace js = kl::json;
 
 
-struct Person : public js::ObjectSerializable
+struct Person : js::ObjectSerializable
 {
 	std::string name;
 	float age = 0.0f;
@@ -46,7 +46,6 @@ int examples::json_tests_main(const int argc, const char** argv)
 		kl::print("Test passed: ", result);
 	};
 
-	// objects
 	test(js::Literal(""), "null");
 	test(js::Literal("null"), "null");
 	test(js::Literal("false"), "false");
@@ -55,16 +54,13 @@ int examples::json_tests_main(const int argc, const char** argv)
 	test(js::Literal(R"("some \"string\" \\ in \t string")"), R"("some \"string\" \\ in \t string")");
 	test(js::Literal(R"("something random $not a comment$")"), R"("something random $not a comment$")");
 
-	// objects
 	test(js::Object("{}"), "{}");
 	test(js::Object(R"({ " : some \": key\" : ": "some \"string\" in string" })"), R"({ " : some \": key\" : ": "some \"string\" in string" })");
 	test(js::Object(R"({"data": 16, "person": {"name": "Krimzo", "ages": [22,23]}})"), R"({ "data": 16, "person": { "ages": [22, 23], "name": "Krimzo" } })");
 
-	// arrays
 	test(js::Array("[]"), "[]");
 	test(js::Array(R"([1, 2, 3, [4, 5, {"number":6}, [7, 8, 9 ],], 10])"), R"([1, 2, 3, [4, 5, { "number": 6 }, [7, 8, 9]], 10])");
 
-	// helpers
 	js::Object obj_container{ R"({ "name": "Krimzo", "age": 22.0})" };
 	Person person{};
 	person.from_container(obj_container);

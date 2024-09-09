@@ -1,50 +1,39 @@
 #pragma once
 
-// Streams
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <syncstream>
-
-// Storage
-#include <array>
-#include <vector>
-#include <list>
-#include <set>
-#include <map>
-#include <unordered_set>
-#include <unordered_map>
-#include <variant>
-#include <any>
-
-// Modern-1
-#include <memory>
-#include <random>
-#include <functional>
-#include <filesystem>
-#include <source_location>
-
-// Modern-2
-#include <type_traits>
 #include <algorithm>
-#include <iomanip>
-#include <format>
-#include <ranges>
-
-// Threading
-#include <thread>
-#include <mutex>
+#include <any>
+#include <array>
 #include <atomic>
-#include <execution>
-#include <future>
-
-// Old-C
-#include <ctime>
 #include <cstdint>
+#include <ctime>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <functional>
+#include <future>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <random>
+#include <ranges>
+#include <set>
+#include <source_location>
+#include <sstream>
+#include <syncstream>
+#include <thread>
+#include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
+#include <variant>
+#include <vector>
 
 
 namespace kl {
-	class NoCopy
+	struct NoCopy
 	{
 	protected:
 		NoCopy() = default;
@@ -55,7 +44,7 @@ namespace kl {
 }
 
 namespace kl {
-	class NoMove
+	struct NoMove
 	{
 	protected:
 		NoMove() = default;

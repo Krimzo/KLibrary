@@ -5,12 +5,10 @@
 
 
 namespace kl {
-    class ContextHolder : NoCopy
+    struct ContextHolder : NoCopy
     {
-    public:
-        ContextHolder();
+        ContextHolder() = default;
 
-        // Viewport
         void set_viewport_position(const Int2& position) const;
         Int2 viewport_position() const;
 
@@ -20,7 +18,6 @@ namespace kl {
         void set_viewport_min_max(const Float2& min_max) const;
         Float2 viewport_min_max() const;
 
-        // States
         void bind_raster_state(const dx::RasterState& state) const;
         void unbind_raster_state() const;
 
@@ -36,7 +33,6 @@ namespace kl {
         void bind_blend_state(const dx::BlendState& state, const float* factor = nullptr, UINT mask = 0xFFFFFFFF) const;
         void unbind_blend_state() const;
 
-        // Resources
         void copy_resource(const dx::Resource& destination, const dx::Resource& source) const;
         void copy_resource_region(const dx::Resource& destination, const dx::Resource& source, const kl::Int2& src_min, const kl::Int2& src_max, const kl::Int2& dst = { 0, 0 }) const;
 
@@ -49,7 +45,6 @@ namespace kl {
         UINT buffer_size(const dx::Buffer& buffer) const;
         Int2 texture_size(const dx::Texture& texture) const;
 
-        // Const buffers
         void bind_cb_for_vertex_shader(const dx::Buffer& buffer, UINT slot) const;
         void unbind_cb_for_vertex_shader(UINT slot) const;
 
@@ -68,19 +63,16 @@ namespace kl {
             write_to_resource(buffer, &object, sizeof(T));
         }
 
-        // Vertex buffers
         UINT vertex_buffer_size(const dx::Buffer& buffer, UINT stride) const;
 
         void bind_vertex_buffer(const dx::Buffer& buffer, UINT slot, UINT offset, UINT stride) const;
         void unbind_vertex_buffer(UINT slot) const;
 
-        // Index buffers
         UINT index_buffer_size(const dx::Buffer& buffer) const;
 
         void bind_index_buffer(const dx::Buffer& buffer, UINT offset) const;
         void unbind_index_buffer(UINT slot) const;
 
-        // Draw
         void set_draw_type(D3D_PRIMITIVE_TOPOLOGY draw_type) const;
 
         void draw(UINT vertex_count, UINT start_index) const;
@@ -89,7 +81,6 @@ namespace kl {
         void draw_indexed(UINT index_count, UINT start_index, INT base_vertex) const;
         void draw_indexed(const dx::Buffer& vertex_buffer, const dx::Buffer& index_buffer, D3D_PRIMITIVE_TOPOLOGY draw_type = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, UINT stride = sizeof(Vertex<float>)) const;
 
-        // Views
         void clear_target_view(const dx::TargetView& view, const Float4& color = {}) const;
         void clear_depth_view(const dx::DepthView& view, float depth = 1.0f, UINT8 stencil = 0xFF) const;
 
@@ -109,7 +100,6 @@ namespace kl {
         void bind_access_view_for_compute_shader(const dx::AccessView& view, UINT slot, const UINT* initial_counts = nullptr) const;
         void unbind_access_view_for_compute_shader(UINT slot) const;
 
-        // Shaders
         void bind_input_layout(const dx::InputLayout& input_layout) const;
         void unbind_input_layout() const;
 

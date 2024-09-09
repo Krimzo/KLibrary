@@ -3,9 +3,8 @@
 using namespace kl;
 
 
-class SomeBase
+struct SomeBase
 {
-public:
 	SomeBase() = default;
 	virtual ~SomeBase() = default;
 
@@ -21,9 +20,8 @@ static std::ostream& operator<<(std::ostream& stream, const SomeBase& base)
     return stream;
 }
 
-class Someone : public SomeBase
+struct Someone : SomeBase
 {
-public:
     const std::string name;
 
     Someone()
@@ -72,8 +70,8 @@ int examples::safety_test_main(const int argc, const char** argv)
         third_obj->talk();
     }
 
-    print(first_obj);  // (0x000002AC6CFB17D0{3}: Someone(First))
-    print(second_obj); // (0x000002AC6CFB17D0{3}: SomeBase())
-    print(third_obj);  // (0x000002AC6CFB17D0{3}: Someone(First))
+    print(first_obj);
+    print(second_obj);
+    print(third_obj);
     return 0;
 }

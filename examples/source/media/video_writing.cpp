@@ -1,10 +1,8 @@
 #include "examples.h"
 
 
-/* VISUAL SORT */
-class Stick
+struct Stick
 {
-public:
     int value = 0;
     kl::Color color = {};
 };
@@ -34,7 +32,6 @@ static void draw_sticks(kl::Image& frame, const std::vector<Stick>& sticks)
         frame.draw_line({ i, frame.height() - 1 }, { i, frame.height() - 1 - sticks[i].value }, sticks[i].color);
     }
 }
-/* ----------- */
 
 static const std::string OUTPUT_VIDEO_PATH = "./media/generated_video.mp4";
 

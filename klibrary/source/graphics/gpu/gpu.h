@@ -7,7 +7,7 @@
 
 
 namespace kl {
-    enum class GPUCreationType
+    enum struct GPUCreationType : int32_t
     {
         NONE = 0,
         RENDER,
@@ -16,17 +16,14 @@ namespace kl {
 }
 
 namespace kl {
-    class GPU : public DeviceHolder, public ContextHolder, public ShaderCompiler, public TextRaster
+    struct GPU : DeviceHolder, ContextHolder, ShaderCompiler, TextRaster
     {
-    public:
         const GPUCreationType creation_type = GPUCreationType::NONE;
 
-        // Creation
         GPU(bool debug = false, bool single_threaded = true, bool video_support = false);
         GPU(HWND window, bool debug = false, bool single_threaded = true, bool video_support = false);
         virtual ~GPU();
 
-        // Get
         dx::Device device() const;
         dx::Context context() const;
         dx::Chain chain() const;
@@ -43,12 +40,10 @@ namespace kl {
         dx::TargetView back_target_view() const;
         dx::DepthView back_depth_view() const;
 
-        // Chain
         void swap_buffers(bool v_sync) const;
         void set_fullscreen(bool enabled) const;
         bool in_fullscreen() const;
 
-        // Internal buffers
         void clear_internal_color(const Float4& color = {}) const;
         void clear_internal_depth(float depth = 1.0f, UINT8 stencil = 0xFF) const;
         void clear_internal(const Float4& color = {}) const;
@@ -58,7 +53,6 @@ namespace kl {
 
         void bind_internal_views() const;
 
-        // Shader helper
         ShaderHolder<dx::VertexShader> create_vertex_shader(const std::string_view& shader_source) const;
         ShaderHolder<dx::GeometryShader> create_geometry_shader(const std::string_view& shader_source) const;
         ShaderHolder<dx::PixelShader> create_pixel_shader(const std::string_view& shader_source) const;
@@ -66,7 +60,6 @@ namespace kl {
 
         RenderShaders create_render_shaders(const std::string_view& shader_sources, const std::vector<dx::LayoutDescriptor>& descriptors = {}) const;
 
-        // Text
         void draw_text() const;
 
     private:

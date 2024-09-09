@@ -4,9 +4,8 @@
 
 
 namespace kl {
-	class GPU12Commands
+	struct GPU12Commands
 	{
-	public:
 		dx12::CommandAllocator allocator{};
 		dx12::CommandList list{};
 

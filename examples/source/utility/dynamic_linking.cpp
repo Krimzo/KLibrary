@@ -1,7 +1,7 @@
 #include "examples.h"
 
 
-/* Source of dll_test_1.dll
+/* dll_test_1.dll source
 #include <iostream>
 #include <windows.h>
 

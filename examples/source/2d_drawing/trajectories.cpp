@@ -1,9 +1,8 @@
 #include "examples.h"
 
 
-class SceneObject
+struct SceneObject
 {
-public:
     float radius = kl::random::gen_float(10.0f, 20.0f);
     kl::Float2 position = {};
     kl::Float2 velocity = {};

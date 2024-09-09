@@ -4,9 +4,8 @@
 
 
 namespace kl {
-    class CompiledShader
+    struct CompiledShader
     {
-    public:
         dx::DataBlob data;
         dx::DataBlob error;
         
