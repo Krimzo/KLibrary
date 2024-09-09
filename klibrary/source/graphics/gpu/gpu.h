@@ -18,11 +18,6 @@ namespace kl {
 namespace kl {
     class GPU : public DeviceHolder, public ContextHolder, public ShaderCompiler, public TextRaster
     {
-        dx::Chain m_chain;
-        dx::Texture m_depth_textures[GPU_BUFFER_COUNT] = {};
-        dx::TargetView m_target_views[GPU_BUFFER_COUNT] = {};
-        dx::DepthView m_depth_views[GPU_BUFFER_COUNT] = {};
-
     public:
         const GPUCreationType creation_type = GPUCreationType::NONE;
 
@@ -73,5 +68,11 @@ namespace kl {
 
         // Text
         void draw_text() const;
+
+    private:
+        dx::Chain m_chain;
+        dx::Texture m_depth_textures[GPU_BUFFER_COUNT] = {};
+        dx::TargetView m_target_views[GPU_BUFFER_COUNT] = {};
+        dx::DepthView m_depth_views[GPU_BUFFER_COUNT] = {};
     };
 }

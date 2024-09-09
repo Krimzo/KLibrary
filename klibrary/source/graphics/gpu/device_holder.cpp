@@ -395,7 +395,7 @@ kl::dx::InputLayout kl::DeviceHolder::create_input_layout(const CompiledShader& 
     const UINT descriptors_count = (!descriptors.empty()) ? ((UINT) descriptors.size()) : ((UINT) std::size(default_layout_descriptors));
 
     dx::InputLayout layout;
-    m_device->CreateInputLayout(descriptors_ptr, descriptors_count, compiled_shader.data_val(), compiled_shader.data_size(), &layout);
+    m_device->CreateInputLayout(descriptors_ptr, descriptors_count, compiled_shader.data_ptr(), compiled_shader.data_size(), &layout);
     verify(layout, "Failed to create input layout");
     return layout;
 }
@@ -403,7 +403,7 @@ kl::dx::InputLayout kl::DeviceHolder::create_input_layout(const CompiledShader& 
 kl::dx::VertexShader kl::DeviceHolder::create_vertex_shader(const CompiledShader& compiled_shader) const
 {
     dx::VertexShader shader;
-    m_device->CreateVertexShader(compiled_shader.data_val(), compiled_shader.data_size(), nullptr, &shader);
+    m_device->CreateVertexShader(compiled_shader.data_ptr(), compiled_shader.data_size(), nullptr, &shader);
     verify(shader, "Failed to create vertex shader");
     return shader;
 }
@@ -411,7 +411,7 @@ kl::dx::VertexShader kl::DeviceHolder::create_vertex_shader(const CompiledShader
 kl::dx::GeometryShader kl::DeviceHolder::create_geometry_shader(const CompiledShader& compiled_shader) const
 {
     dx::GeometryShader shader;
-    m_device->CreateGeometryShader(compiled_shader.data_val(), compiled_shader.data_size(), nullptr, &shader);
+    m_device->CreateGeometryShader(compiled_shader.data_ptr(), compiled_shader.data_size(), nullptr, &shader);
     verify(shader, "Failed to create geometry shader");
     return shader;
 }
@@ -419,7 +419,7 @@ kl::dx::GeometryShader kl::DeviceHolder::create_geometry_shader(const CompiledSh
 kl::dx::PixelShader kl::DeviceHolder::create_pixel_shader(const CompiledShader& compiled_shader) const
 {
     dx::PixelShader shader;
-    m_device->CreatePixelShader(compiled_shader.data_val(), compiled_shader.data_size(), nullptr, &shader);
+    m_device->CreatePixelShader(compiled_shader.data_ptr(), compiled_shader.data_size(), nullptr, &shader);
     verify(shader, "Failed to create pixel shader");
     return shader;
 }
@@ -427,7 +427,7 @@ kl::dx::PixelShader kl::DeviceHolder::create_pixel_shader(const CompiledShader& 
 kl::dx::ComputeShader kl::DeviceHolder::create_compute_shader(const CompiledShader& compiled_shader) const
 {
     dx::ComputeShader shader;
-    m_device->CreateComputeShader(compiled_shader.data_val(), compiled_shader.data_size(), nullptr, &shader);
+    m_device->CreateComputeShader(compiled_shader.data_ptr(), compiled_shader.data_size(), nullptr, &shader);
     verify(shader, "Failed to create compute shader");
     return shader;
 }

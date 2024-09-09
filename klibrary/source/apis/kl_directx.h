@@ -1,10 +1,7 @@
 #pragma once
 
-// Other
-#include "apis/windows/kl_windows.h"
-#include "apis/external/kl_dx12.h"
+#include "apis/kl_windows.h"
 
-// DirectX
 #include <wrl.h>
 #include <gdiplus.h>
 #include <dxgi1_6.h>
@@ -209,7 +206,7 @@ namespace kl::dx {
 
 namespace kl::dx12 {
     // Main device
-    using Device = ComRef<ID3D12Device8>;
+    using Device = ComRef<ID3D12Device5>;
 
     // Context commands
     using CommandQueue = ComRef<ID3D12CommandQueue>;
@@ -218,26 +215,26 @@ namespace kl::dx12 {
     using Fence = ComRef<ID3D12Fence>;
 
     // Swapchain
-    using DXGIFactory = ComRef<IDXGIFactory4>;
-    using SwapChain = ComRef<IDXGISwapChain4>;
+    using DXGIFactory = ComRef<IDXGIFactory2>;
+    using SwapChain = ComRef<IDXGISwapChain3>;
 
     // Resources
     using DescriptorHeap = ComRef<ID3D12DescriptorHeap>;
-    using DescriptorHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE;
+    using DescriptorHandle = D3D12_CPU_DESCRIPTOR_HANDLE;
     using Resource = ComRef<ID3D12Resource>;
     using VertexBuffer = D3D12_VERTEX_BUFFER_VIEW;
 
     // Pipeline stuff
     using Blob = ComRef<ID3DBlob>;
-    using ShaderByteCode = CD3DX12_SHADER_BYTECODE;
+    using ShaderByteCode = D3D12_SHADER_BYTECODE;
     using InputLayout = D3D12_INPUT_ELEMENT_DESC;
     using RootSignature = ComRef<ID3D12RootSignature>;
     using PipelineState = ComRef<ID3D12PipelineState>;
     using StateObject = ComRef<ID3D12StateObject>;
 
     // Clippers
-    using Scissors = CD3DX12_RECT;
-    using Viewport = CD3DX12_VIEWPORT;
+    using Scissors = D3D12_RECT;
+    using Viewport = D3D12_VIEWPORT;
 
     // Raytracing
     using AccelerationInputs = D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS;

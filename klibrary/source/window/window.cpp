@@ -5,6 +5,8 @@
 kl::Window::Window(const std::string_view& name, const Int2& size)
     : m_name(name)
 {
+    SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+
     // Instance
     m_instance = GetModuleHandleA(nullptr);
 

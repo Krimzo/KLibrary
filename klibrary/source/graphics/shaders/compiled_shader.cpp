@@ -6,7 +6,7 @@ kl::CompiledShader::operator bool() const
     return (data && !error);
 }
 
-const void* kl::CompiledShader::data_val() const
+const void* kl::CompiledShader::data_ptr() const
 {
     return data ? (const void*) data->GetBufferPointer() : nullptr;
 }

@@ -170,7 +170,7 @@ kl::dx::DepthView kl::GPU::back_depth_view() const
 void kl::GPU::swap_buffers(const bool v_sync) const
 {
     const UINT interval = v_sync ? 1 : 0;
-    const UINT flags = (!v_sync && !in_fullscreen()) ? DXGI_PRESENT_ALLOW_TEARING : NULL;
+    const UINT flags = (v_sync || in_fullscreen()) ? NULL : DXGI_PRESENT_ALLOW_TEARING;
     m_chain->Present(interval, flags) >> verify_result;
     bind_internal_views();
 }

@@ -7,9 +7,6 @@
 namespace kl {
     class ContextHolder : NoCopy
     {
-    protected:
-        dx::Context m_context;
-
     public:
         ContextHolder();
 
@@ -133,5 +130,8 @@ namespace kl {
 
         void dispatch_compute_shader(UINT x, UINT y, UINT z) const;
         void execute_compute_shader(const dx::ComputeShader& shader, UINT x, UINT y, UINT z) const;
+
+    protected:
+        dx::Context m_context;
     };
 }

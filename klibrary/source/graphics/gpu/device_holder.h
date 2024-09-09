@@ -7,9 +7,6 @@
 namespace kl {
     class DeviceHolder : NoCopy
     {
-    protected:
-        dx::Device m_device;
-
     public:
         DeviceHolder();
 
@@ -64,5 +61,8 @@ namespace kl {
         dx::GeometryShader create_geometry_shader(const CompiledShader& compiled_shader) const;
         dx::PixelShader create_pixel_shader(const CompiledShader& compiled_shader) const;
         dx::ComputeShader create_compute_shader(const CompiledShader& compiled_shader) const;
+
+    protected:
+        dx::Device m_device;
     };
 }
