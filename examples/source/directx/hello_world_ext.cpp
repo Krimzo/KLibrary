@@ -9,7 +9,10 @@ struct VS_OUT
     float3 color : VS_Color;
 };
 
-VS_OUT v_shader(const float3 position : KL_Position, const float3 normal : KL_Normal)
+float4 HIGHLIGHT_COLOR;
+float2 MOUSE_POSITION;
+
+VS_OUT v_shader(float3 position : KL_Position, float3 normal : KL_Normal)
 {
     VS_OUT data;
     data.position = float4(position, 1.0f);
@@ -17,25 +20,10 @@ VS_OUT v_shader(const float3 position : KL_Position, const float3 normal : KL_No
     return data;
 }
 
-/*
-NOTE:
-Direct3D cbuffers use special type of data packing.
-In short, all cbuffers will be packed into a byte size that is a multiple of 16.
-It is preferred to use float4 or float4x4 since each already have a size that is a multiple of 16.
-Refer to: https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules
-*/
-
-cbuffer PS_CB : register(b0)
+float4 p_shader(VS_OUT data) : SV_Target0
 {
-    float2 MOUSE_POSITION;
-    float3 HIGHLIGHT_COLOR;
-};
-
-float4 p_shader(const VS_OUT data) : SV_Target
-{
-    if (length(MOUSE_POSITION - data.position.xy) < 50.0f) {
-        return float4(HIGHLIGHT_COLOR, 1.0f);
-    }
+    if (length(MOUSE_POSITION - data.position.xy) < 50.0f)
+        return HIGHLIGHT_COLOR;
     return float4(data.color, 1.0f);
 }
 )";
@@ -71,16 +59,15 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
     gpu.bind_render_shaders(shaders);
 
     while (window.process()) {
-        struct PS_CB
+        struct alignas(16) CB
         {
+            kl::Float4 HIGHLIGHT_COLOR;
             kl::Float2 MOUSE_POSITION;
-            alignas(16) kl::Float3 HIGHLIGHT_COLOR;
-        };
-		const PS_CB ps_cb{
-            .MOUSE_POSITION = window.mouse.position(),
-			.HIGHLIGHT_COLOR = (kl::Float3) kl::colors::GRAY,
-        };
-        shaders.pixel_shader.update_cbuffer(ps_cb);
+        } cb = {};
+
+        cb.HIGHLIGHT_COLOR = kl::colors::GRAY;
+        cb.MOUSE_POSITION = window.mouse.position();
+        shaders.upload(cb);
         
         gpu.clear_internal(kl::colors::GRAY);
         gpu.draw_indexed(vertex_buffer, index_buffer);

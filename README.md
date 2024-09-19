@@ -8,12 +8,12 @@ Goal is to *simplify* use of C++, Win32 and DirectX.
 
 static constexpr auto SHADER_SOURCE =
 R"(
-float4 v_shader(const float3 position : KL_Position) : SV_Position
+float4 v_shader(float3 position : KL_Position) : SV_Position
 {
     return float4(position, 1.0f);
 }
 
-float4 p_shader(const float4 screen_position : SV_Position) : SV_Target
+float4 p_shader(float4 position : SV_Position) : SV_Target0
 {
     return float4(1.0f, 0.75f, 0.35f, 1.0f);
 }

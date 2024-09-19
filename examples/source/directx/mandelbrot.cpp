@@ -113,17 +113,18 @@ int examples::mandelbrot_main(const int argc, const char** argv)
 
         gpu.clear_internal();
 
-        struct PSData
+        struct alignas(16) CB
         {
-            kl::Float4 state_info;
-            kl::Float4 frame_size;
-            kl::Float4 start_color;
-        } ps_data = {};
+            kl::Float4 STATE_INFO;
+            kl::Float4 FRAME_SIZE;
+            kl::Float4 START_COLOR;
+        } cb = {};
 
-        ps_data.state_info = { POSITION, ZOOM, (float) ITERATIONS };
-        ps_data.frame_size = { window.size(), {} };
-        ps_data.start_color = START_COLOR;
-        shaders.pixel_shader.update_cbuffer(ps_data);
+        cb.STATE_INFO = { POSITION, ZOOM, (float) ITERATIONS };
+        cb.FRAME_SIZE = { window.size(), {} };
+        cb.START_COLOR = START_COLOR;
+
+        shaders.upload(cb);
         gpu.bind_render_shaders(shaders);
 
         gpu.draw(screen_mesh);

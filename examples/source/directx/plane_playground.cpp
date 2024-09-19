@@ -60,10 +60,10 @@ int examples::plane_playground_main(const int argc, const char** argv)
 
             if (temp_default_shaders && temp_geometry_shader) {
                 PLANE_SHADERS = temp_default_shaders;
-                PLANE_GEOMETRY_SHADER = temp_geometry_shader;
+                PLANE_GEOMETRY_SHADER = temp_geometry_shader.shader;
             }
         }
-        if (window.mouse.left) {
+        if (window.mouse.btn4) {
             const kl::Ray ray = { CAMERA.origin, kl::inverse(CAMERA.matrix()), window.mouse.norm_position() };
             SUN_DIRECTION = -ray.direction();
         }
@@ -73,24 +73,21 @@ int examples::plane_playground_main(const int argc, const char** argv)
         gpu.clear_internal();
 
         gpu.bind_depth_state(disabled_depth_state);
-
         gpu.bind_render_shaders(sky_shaders);
         gpu.unbind_geometry_shader();
 
-        struct SkyPSData
+        struct alignas(16) SKY_CB
         {
-            kl::Float4 frame_size = {};
-            kl::Float4x4 inverse_camera = {};
-            kl::Float4 camera_position = {};
-            kl::Float4 sun_direction = {};
-        } sky_ps_data = {};
+            kl::Float4x4 INVERSE_CAMERA;
+            kl::Float4 FRAME_SIZE;
+            kl::Float4 SUN_DIRECTION;
+        } sky_cb = {};
 
-        sky_ps_data.frame_size = { kl::Float2(window.size()), {} };
-        sky_ps_data.camera_position = { CAMERA.origin, 0.0f };
-        sky_ps_data.inverse_camera = kl::inverse(CAMERA.matrix());
-        sky_ps_data.sun_direction = { kl::normalize(SUN_DIRECTION), 0.0f };
-        sky_shaders.pixel_shader.update_cbuffer(sky_ps_data);
+        sky_cb.INVERSE_CAMERA = kl::inverse(CAMERA.matrix());
+        sky_cb.FRAME_SIZE = { kl::Float2(window.size()), {} };
+        sky_cb.SUN_DIRECTION = { kl::normalize(SUN_DIRECTION), 0.0f };
 
+        sky_shaders.upload(sky_cb);
         gpu.draw(screen_mesh);
 
         if (!PLANE_SHADERS || !PLANE_GEOMETRY_SHADER)
@@ -100,28 +97,22 @@ int examples::plane_playground_main(const int argc, const char** argv)
         gpu.bind_render_shaders(PLANE_SHADERS);
         gpu.bind_geometry_shader(PLANE_GEOMETRY_SHADER);
 
-        struct PlaneVSData
+        struct alignas(16) PLANE_CB
         {
-            kl::Float4x4 w_matrix;
-            kl::Float4x4 vp_matrix;
-            kl::Float4 time_data;
-        } plane_vs_data = {};
+            kl::Float4x4 W;
+            kl::Float4x4 VP;
+            kl::Float4 TIME_DATA;
+            kl::Float4 SUN_DIRECTION;
+        } plane_cb = {};
 
-        plane_vs_data.w_matrix = {};
-        plane_vs_data.vp_matrix = CAMERA.matrix();
-        plane_vs_data.time_data.x = TIMER.elapsed();
-        plane_vs_data.time_data.y = TIMER.delta();
-        PLANE_SHADERS.vertex_shader.update_cbuffer(plane_vs_data);
+        plane_cb.W = {};
+        plane_cb.VP = CAMERA.matrix();
+        plane_cb.TIME_DATA = { TIMER.elapsed(), TIMER.delta(), 0.0f, 0.0f };
+        plane_cb.SUN_DIRECTION = { kl::normalize(SUN_DIRECTION), 0.0f };
 
-        struct PlanePSData
-        {
-            kl::Float4 sun_direction;
-        } plane_ps_data = {};
-
-        plane_ps_data.sun_direction = { kl::normalize(SUN_DIRECTION), 0 };
-        PLANE_SHADERS.pixel_shader.update_cbuffer(plane_ps_data);
-
+        PLANE_SHADERS.upload(plane_cb);
         gpu.draw(plane_mesh);
+
         gpu.swap_buffers(true);
     }
     return 0;
@@ -133,12 +124,10 @@ void camera_movement(kl::Window& window)
 
     if (window.mouse.right) {
         const kl::Int2 frame_center = window.frame_center();
-
         if (camera_rotating) {
             CAMERA.rotate(kl::Float2(window.mouse.position()), kl::Float2(frame_center));
         }
         window.mouse.set_position(frame_center);
-
         window.mouse.set_hidden(true);
         camera_rotating = true;
     }

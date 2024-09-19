@@ -5,11 +5,8 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
 {
     kl::Window window = { "Geometry Test", { 1600, 900 } };
     kl::GPU gpu = { HWND(window) };
-
-    kl::Timer timer = {};
-    kl::Camera camera = {};
-
-    kl::Float3 sun_direction = { 1.0f, -1.0f, 0.0f };
+    kl::Timer timer;
+    kl::Camera camera;
 
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
@@ -25,7 +22,7 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     kl::RenderShaders default_shaders = gpu.create_render_shaders(shader_sources);
     kl::ShaderHolder geometry_shader = gpu.create_geometry_shader(shader_sources);
     gpu.bind_render_shaders(default_shaders);
-    gpu.bind_geometry_shader(geometry_shader);
+    gpu.bind_geometry_shader(geometry_shader.shader);
 
     kl::Ref cube_mesh = new kl::Mesh(&gpu);
     kl::Ref sphere_mesh = new kl::Mesh(&gpu);
@@ -47,6 +44,8 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     camera.origin = { -2.0f, 2.0f, -2.0f };
     camera.set_forward(camera.origin * -1.0f);
 
+    const kl::Float3 sun_direction = kl::normalize(kl::Float3{ 1.0f, -1.0f, 0.0f });
+
     while (window.process()) {
         timer.update_delta();
 
@@ -54,7 +53,6 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
             static bool wireframe_bound = true;
             static kl::dx::RasterState solid_raster = gpu.create_raster_state(false, false);
             static kl::dx::RasterState wireframe_raster = gpu.create_raster_state(true, false);
-
             gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
             wireframe_bound = !wireframe_bound;
         }
@@ -81,33 +79,25 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
             destroy_value -= timer.delta() * 0.25f;
         }
 
-        sun_direction = kl::normalize(sun_direction);
-
         gpu.clear_internal(kl::colors::GRAY);
 
-        struct VSData
-        {
-            kl::Float4x4 w_matrix;
-            kl::Float4x4 vp_matrix;
-            kl::Float4 misc_data;
-        } vs_data = {};
-
-        vs_data.vp_matrix = camera.matrix();
-        vs_data.w_matrix = main_entity->matrix();
-        vs_data.misc_data.x = std::max(destroy_value, 0.0f);
-        default_shaders.vertex_shader.update_cbuffer(vs_data);
-
-        struct PSData
-        {
-            kl::Float4 object_color;
-            kl::Float4 sun_direction;
-        } ps_data = {};
-
-        ps_data.sun_direction = { sun_direction.x, sun_direction.y, sun_direction.z, 0.0f };
-        ps_data.object_color = main_entity->material->color;
-        default_shaders.pixel_shader.update_cbuffer(ps_data);
-
         if (main_entity->mesh) {
+            struct alignas(16) CB
+            {
+                kl::Float4x4 W;
+                kl::Float4x4 VP;
+                kl::Float4 MISC_DATA;
+                kl::Float4 OBJECT_COLOR;
+                kl::Float4 SUN_DIRECTION;
+            } cb = {};
+
+            cb.W = main_entity->matrix();
+            cb.VP = camera.matrix();
+            cb.MISC_DATA.x = kl::max(destroy_value, 0.0f);
+            cb.OBJECT_COLOR = main_entity->material->color;
+            cb.SUN_DIRECTION = { sun_direction.x, sun_direction.y, sun_direction.z, 0.0f };
+
+            default_shaders.upload(cb);
             gpu.draw(main_entity->mesh->graphics_buffer);
         }
 

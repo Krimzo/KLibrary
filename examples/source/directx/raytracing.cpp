@@ -3,31 +3,19 @@
 
 static constexpr int SPHERE_COUNT = 10;
 
+struct Sphere
+{
+    kl::Float3 center;
+    float radius = 0.0f;
+    kl::Float4 color;
+};
+
 int examples::raytracing_main(const int argc, const char** argv)
 {
-    struct ColoredSphere
-    {
-        kl::Float3 center;
-        float radius = 0.0f;
-        kl::Float4 color;
-    };
-
-    struct PSData
-    {
-        kl::Float4 frame_size;
-        kl::Float4x4 inverse_camera;
-        kl::Float4 camera_position;
-        kl::Float4 sun_direction;
-        ColoredSphere spheres[SPHERE_COUNT] = {};
-    };
-
-    kl::Timer timer;
-    kl::Camera camera;
-
     kl::Window window = { "Raytracing", { 1600, 900 } };
     kl::GPU gpu = { HWND(window) };
-
-    kl::Ref<PSData> ps_data = new PSData;
+    kl::Timer timer;
+    kl::Camera camera;
 
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
@@ -37,7 +25,6 @@ int examples::raytracing_main(const int argc, const char** argv)
             camera.update_aspect_ratio(new_size);
         }
     });
-
     window.maximize();
 
     const std::string shader_sources = kl::read_file("shaders/raytracing.hlsl");
@@ -45,15 +32,25 @@ int examples::raytracing_main(const int argc, const char** argv)
     gpu.bind_render_shaders(shaders);
 
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
-
     camera.origin.y = 5.0f;
-    ps_data->sun_direction = { kl::normalize(kl::Float3(-1.0f, -1.0f, 0.0f)), 0.0f };
 
-    for (auto& sphere : ps_data->spheres) {
-        sphere = ColoredSphere{
+    struct alignas(16) CB
+    {
+        Sphere SPHERES[SPHERE_COUNT];
+        kl::Float4x4 INVERSE_CAMERA;
+        kl::Float4 FRAME_SIZE;
+        kl::Float4 CAMERA_POSITION;
+        kl::Float4 SUN_DIRECTION;
+    };
+    kl::Ref<CB> cb = new CB();
+
+    cb->SUN_DIRECTION = { kl::normalize(kl::Float3(-1.0f, -1.0f, 0.0f)), 0.0f };
+
+    for (auto& sphere : cb->SPHERES) {
+        sphere = Sphere{
             kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
             kl::random::gen_float(2.75f) + 0.25f,
-            (kl::Float4) kl::random::gen_color(),
+            kl::random::gen_color(),
         };
     }
 
@@ -62,12 +59,12 @@ int examples::raytracing_main(const int argc, const char** argv)
 
         for (int i = 0; i < SPHERE_COUNT; i++) {
             const float oscillation = (std::sin(timer.elapsed() + i) + 1.0f) * 0.5f;
-            ps_data->spheres[i].center.y = (oscillation * (i + 1.0f)) + ps_data->spheres[i].radius;
+            cb->SPHERES[i].center.y = (oscillation * (i + 1.0f)) + cb->SPHERES[i].radius;
         }
         
         if (window.keyboard.num1.pressed()) {
-            for (auto& sphere : ps_data->spheres) {
-                sphere = ColoredSphere{
+            for (auto& sphere : cb->SPHERES) {
+                sphere = Sphere{
                     kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
                     kl::random::gen_float(2.75f) + 0.25f,
                     kl::random::gen_color(),
@@ -75,18 +72,18 @@ int examples::raytracing_main(const int argc, const char** argv)
             }
         }
         if (window.keyboard.num2.pressed()) {
-            for (auto& [center, radius, color] : ps_data->spheres) {
+            for (auto& [center, radius, color] : cb->SPHERES) {
                 color = kl::random::gen_color();
             }
         }
         if (window.keyboard.num3.pressed()) {
-            for (auto& [center, radius, color] : ps_data->spheres) {
+            for (auto& [center, radius, color] : cb->SPHERES) {
                 color = kl::random::gen_color(true);
             }
         }
         if (window.mouse.btn4) {
             const kl::Ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.norm_position() };
-            ps_data->sun_direction = { ray.direction() * -1.0f, 0.0f };
+            cb->SUN_DIRECTION = { ray.direction() * -1.0f, 0.0f };
         }
 
         static bool camera_rotating = false;
@@ -134,11 +131,11 @@ int examples::raytracing_main(const int argc, const char** argv)
 
         gpu.clear_internal();
 
-        ps_data->frame_size = { window.size(), {} };
-        ps_data->inverse_camera = kl::inverse(camera.matrix());
-        ps_data->camera_position = { camera.origin, {} };
-        shaders.pixel_shader.update_cbuffer<PSData>(*ps_data);
+        cb->FRAME_SIZE = { window.size(), {} };
+        cb->INVERSE_CAMERA = kl::inverse(camera.matrix());
+        cb->CAMERA_POSITION = { camera.origin, {} };
 
+        shaders.upload<CB>(*cb);
         gpu.draw(screen_mesh);
 
         gpu.swap_buffers(true);

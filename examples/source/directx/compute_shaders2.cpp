@@ -22,7 +22,7 @@ int examples::compute_shaders2_main(const int argc, const char** argv)
     const kl::RenderShaders render_shaders = gpu.create_render_shaders(shader_sources);
     kl::ShaderHolder compute_shader = gpu.create_compute_shader(shader_sources);
     gpu.bind_render_shaders(render_shaders);
-    gpu.bind_compute_shader(compute_shader);
+    gpu.bind_compute_shader(compute_shader.shader);
 
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
 
@@ -33,14 +33,14 @@ int examples::compute_shaders2_main(const int argc, const char** argv)
         gpu.unbind_shader_view_for_pixel_shader(0);
         gpu.clear_target_view(target_view, kl::colors::GRAY);
 
-        struct CSData
+        struct alignas(16) CB
         {
-            kl::Float4 misc_data;
-        } cs_data = {};
+            kl::Float4 MISC_DATA;
+        } cb = {};
 
-        cs_data.misc_data.x = (float) window.mouse.position().x;
-        cs_data.misc_data.y = (float) window.mouse.position().y;
-        compute_shader.update_cbuffer(cs_data);
+        cb.MISC_DATA.x = (float) window.mouse.position().x;
+        cb.MISC_DATA.y = (float) window.mouse.position().y;
+        compute_shader.upload(cb);
 
         gpu.unbind_shader_view_for_pixel_shader(0);
         gpu.bind_access_view_for_compute_shader(access_view, 0);
