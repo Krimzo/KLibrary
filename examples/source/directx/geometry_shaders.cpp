@@ -41,8 +41,8 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
 
     float destroy_goal = 0.0f;
     float destroy_value = 0.0f;
-    camera.origin = { -2.0f, 2.0f, -2.0f };
-    camera.set_forward(camera.origin * -1.0f);
+    camera.position = { -2.0f, 2.0f, -2.0f };
+    camera.set_forward(camera.position * -1.0f);
 
     const kl::Float3 sun_direction = kl::normalize(kl::Float3{ 1.0f, -1.0f, 0.0f });
 

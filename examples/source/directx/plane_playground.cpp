@@ -35,8 +35,8 @@ int examples::plane_playground_main(const int argc, const char** argv)
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
     const kl::dx::Buffer plane_mesh = gpu.create_plane_mesh(10.0f, 1000);
 
-    CAMERA.origin = { -3.5f, 1.5f, -2.5f };
-    CAMERA.set_forward(CAMERA.origin * -1.0f);
+    CAMERA.position = { -3.5f, 1.5f, -2.5f };
+    CAMERA.set_forward(CAMERA.position * -1.0f);
 
     int frame_id = 0;
     while (window.process()) {
@@ -64,7 +64,11 @@ int examples::plane_playground_main(const int argc, const char** argv)
             }
         }
         if (window.mouse.btn4) {
-            const kl::Ray ray = { CAMERA.origin, kl::inverse(CAMERA.matrix()), window.mouse.norm_position() };
+            const kl::Ray ray{
+                CAMERA.position,
+                kl::inverse(CAMERA.matrix()),
+                window.mouse.norm_position(),
+            };
             SUN_DIRECTION = -ray.direction();
         }
 

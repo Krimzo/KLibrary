@@ -32,7 +32,7 @@ int examples::raytracing_main(const int argc, const char** argv)
     gpu.bind_render_shaders(shaders);
 
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
-    camera.origin.y = 5.0f;
+    camera.position.y = 5.0f;
 
     struct alignas(16) CB
     {
@@ -82,8 +82,12 @@ int examples::raytracing_main(const int argc, const char** argv)
             }
         }
         if (window.mouse.btn4) {
-            const kl::Ray ray = { camera.origin, kl::inverse(camera.matrix()), window.mouse.norm_position() };
-            cb->SUN_DIRECTION = { ray.direction() * -1.0f, 0.0f };
+            const kl::Ray ray{
+                camera.position,
+                kl::inverse(camera.matrix()),
+                window.mouse.norm_position(),
+            };
+            cb->SUN_DIRECTION = { -ray.direction(), 0.0f };
         }
 
         static bool camera_rotating = false;
@@ -133,7 +137,7 @@ int examples::raytracing_main(const int argc, const char** argv)
 
         cb->FRAME_SIZE = { window.size(), {} };
         cb->INVERSE_CAMERA = kl::inverse(camera.matrix());
-        cb->CAMERA_POSITION = { camera.origin, {} };
+        cb->CAMERA_POSITION = { camera.position, {} };
 
         shaders.upload<CB>(*cb);
         gpu.draw(screen_mesh);
