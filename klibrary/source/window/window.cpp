@@ -158,6 +158,11 @@ bool kl::Window::is_restored() const
     return placement.showCmd == SW_RESTORE;
 }
 
+bool kl::Window::is_focused() const
+{
+    return GetForegroundWindow() == m_window;
+}
+
 bool kl::Window::in_fullscreen() const
 {
     return m_in_fullscreen;

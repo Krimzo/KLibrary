@@ -97,9 +97,8 @@ kl::GPU::GPU(const HWND window, const bool debug, const bool single_threaded, co
 
 kl::GPU::~GPU()
 {
-    if (m_chain) {
-        m_chain->SetFullscreenState(false, nullptr);
-    }
+    if (m_chain)
+        set_fullscreen(false);
 }
 
 kl::dx::Device kl::GPU::device() const

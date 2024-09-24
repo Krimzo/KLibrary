@@ -24,9 +24,9 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     gpu.bind_render_shaders(default_shaders);
     gpu.bind_geometry_shader(geometry_shader.shader);
 
-    kl::Ref cube_mesh = new kl::Mesh(&gpu);
-    kl::Ref sphere_mesh = new kl::Mesh(&gpu);
-    kl::Ref monke_mesh = new kl::Mesh(&gpu);
+    kl::Ref cube_mesh = new kl::Mesh(gpu);
+    kl::Ref sphere_mesh = new kl::Mesh(gpu);
+    kl::Ref monke_mesh = new kl::Mesh(gpu);
     cube_mesh->graphics_buffer = gpu.create_vertex_buffer("meshes/cube.obj");
     sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/sphere.obj");
     monke_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/monke.obj");

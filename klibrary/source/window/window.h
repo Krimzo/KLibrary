@@ -47,6 +47,7 @@ namespace kl {
         bool is_maximized() const;
         bool is_minimized() const;
         bool is_restored() const;
+        bool is_focused() const;
 
         bool in_fullscreen() const;
         void set_fullscreen(bool enabled);
