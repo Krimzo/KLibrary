@@ -11,7 +11,7 @@ int examples::compute_shaders1_main(const int argc, const char** argv)
     static constexpr int DATA_SIZE = 10;
     TestStruct data[DATA_SIZE] = {};
 
-    kl::GPU gpu;
+    kl::GPU gpu{ nullptr };
     const kl::dx::Buffer buffer = gpu.create_structured_buffer(data, DATA_SIZE, sizeof(TestStruct), true, true);
     const kl::dx::AccessView access_view = gpu.create_access_view(buffer, nullptr);
     const std::string shader_source = kl::read_file("shaders/compute_test1.hlsl");

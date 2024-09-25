@@ -3,9 +3,9 @@
 
 int examples::compute_shaders2_main(const int argc, const char** argv)
 {
-    kl::Window window = { "Compute shaders 2", { 1600, 900 } };
-    kl::GPU gpu = { HWND(window) };
-    kl::Timer timer = {};
+    kl::Window window{ "Compute shaders 2" };
+    kl::GPU gpu{ window };
+    kl::Timer timer;
 
     window.set_resizeable(false);
     gpu.resize_to_window(window);

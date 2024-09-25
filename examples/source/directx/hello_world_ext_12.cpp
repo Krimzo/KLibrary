@@ -3,9 +3,9 @@
 
 int examples::hello_world_ext_12_main(const int argc, const char** argv)
 {
-    kl::Window window{ "Tracing", { 1600, 900 } };
-    kl::GPU12 gpu{ (HWND) window, kl::IS_DEBUG };
-    kl::Timer timer{};
+    kl::Window window{ "Hardware Raytracing" };
+    kl::GPU12 gpu{ window };
+    kl::Timer timer;
 
     kl::dx12::DescriptorHeap uav_heap{};
     kl::dx12::Resource ray_target{};

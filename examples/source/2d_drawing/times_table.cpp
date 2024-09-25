@@ -11,8 +11,11 @@ int examples::times_table_main(const int argc, const char** argv)
     kl::Color point_color = kl::random::gen_color();
     kl::Color line_color = kl::random::gen_color();
     
-    auto window = kl::Window("Times Table", { 900, 900 });
-    kl::Image frame = { window.size() };
+    kl::Window window{ "Times Table" };
+    kl::Image frame;
+
+    window.resize({ 900, 900 });
+    frame.resize(window.size());
 
     window.on_resize.push_back([&](const kl::Int2& size)
     {

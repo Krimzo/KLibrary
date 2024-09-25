@@ -5,9 +5,12 @@ static constexpr float fps_limit = 165.0f;
 
 int examples::interpolation_main(const int argc, const char** argv)
 {
-    auto window = kl::Window("Interpolation", { 900, 900 });
-    kl::Image frame = kl::Image(window.size());
+    kl::Window window{ "Interpolation" };
+    kl::Image frame;
     kl::Timer timer;
+
+    window.resize({ 900, 900 });
+    frame.resize(window.size());
 
     const kl::Float2 positions[4] = {
         {                           50.0f,   (frame.height() - 1.0f) / 3.0f },

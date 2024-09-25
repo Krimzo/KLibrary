@@ -13,8 +13,8 @@ void camera_movement(kl::Window& window);
 
 int examples::plane_playground_main(const int argc, const char** argv)
 {
-    kl::Window window{ "Plane Playground", { 1600, 900 } };
-    kl::GPU gpu{ HWND(window) };
+    kl::Window window{ "Plane Playground" };
+    kl::GPU gpu{ window };
 
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {

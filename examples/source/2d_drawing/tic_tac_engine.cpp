@@ -14,7 +14,7 @@ struct BoardInfo
     int move = -1;
 };
 
-static const kl::Int2 SIZES = { 3, 901 };
+static constexpr kl::Int2 SIZES = { 3, 901 };
 static const kl::Color PLAYER_COLOR = kl::colors::ORANGE;
 static const kl::Color ENGINE_COLOR = kl::colors::GREEN;
 
@@ -156,8 +156,11 @@ int examples::tic_tac_main(const int argc, const char** argv)
     const int line_offset = square_size / 10;
     const int circle_offset = square_size / 2;
 
-    kl::Window window = { "Tic Engine", { SIZES.y, SIZES.y } };
-    kl::Image frame = { window.size() };
+    kl::Window window{ "Tic Engine" };
+    kl::Image frame;
+
+    window.resize({ SIZES.y, SIZES.y });
+    frame.resize(window.size());
 
     window.set_resizeable(false);
 

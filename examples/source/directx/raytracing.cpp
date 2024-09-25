@@ -12,8 +12,8 @@ struct Sphere
 
 int examples::raytracing_main(const int argc, const char** argv)
 {
-    kl::Window window = { "Raytracing", { 1600, 900 } };
-    kl::GPU gpu = { HWND(window) };
+    kl::Window window{ "Raytracing" };
+    kl::GPU gpu{ window };
     kl::Timer timer;
     kl::Camera camera;
 

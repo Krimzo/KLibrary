@@ -36,8 +36,8 @@ static void draw_sticks(kl::Image& frame, const std::vector<Stick>& sticks)
 
 int examples::visual_sort_main(const int argc, const char** argv)
 {
-    kl::Window window = { "Visual Sort", { 1600, 900 } };
-    kl::Image frame = { window.size() };
+    kl::Window window{ "Visual Sort" };
+    kl::Image frame{ window.size() };
 
     std::vector<Stick> sticks = generate_sticks(frame.width(), 1, frame.height());
 

@@ -23,7 +23,7 @@ namespace kl {
         std::vector<std::function<void(Int2)>> on_resize;
 		std::vector<std::function<void(Int2)>> on_move;
 
-        Window(const std::string_view& name, const Int2& size);
+        Window(const std::string_view& name);
         virtual ~Window();
 
         operator HWND() const;

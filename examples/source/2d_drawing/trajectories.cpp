@@ -103,7 +103,7 @@ static void process_objects(std::vector<SceneObject>& objects, const kl::Timer& 
 
 int examples::trajectories_main(const int argc, const char** argv)
 {
-    kl::Window window{ "Trajectories", { 1600, 900 } };
+    kl::Window window{ "Trajectories" };
     kl::Image frame{ window.size() };
     kl::Timer timer;
 

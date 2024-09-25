@@ -3,7 +3,7 @@
 
 int examples::text_drawing_main(const int argc, const char** argv)
 {
-	kl::Window window{ "Text Drawing", { 1600, 900 } };
+	kl::Window window{ "Text Drawing" };
 	kl::GPU gpu{ window };
 
 	window.on_resize.emplace_back([&](kl::Int2 size)

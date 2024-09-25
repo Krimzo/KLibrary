@@ -30,8 +30,8 @@ float4 p_shader(VS_OUT data) : SV_Target0
 
 int examples::hello_world_ext_main(const int argc, const char** argv)
 {
-    kl::Window window = { "Hello World! (D3D11 Extended)", { 1600, 900 } };
-    kl::GPU gpu = { HWND(window), kl::IS_DEBUG };
+    kl::Window window{ "Hello World! (D3D11 Extended)" };
+    kl::GPU gpu{ window };
 
     window.on_resize.emplace_back([&](const kl::Int2 new_size)
     {
