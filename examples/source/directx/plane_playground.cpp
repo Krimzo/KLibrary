@@ -54,9 +54,9 @@ int examples::plane_playground_main(const int argc, const char** argv)
         if (frame_id == 1 || window.keyboard.r.pressed()) {
             kl::console::clear();
 
-            const std::string shader_sources = kl::read_file("shaders/playground.hlsl");
-            const kl::RenderShaders temp_default_shaders = gpu.create_render_shaders(shader_sources);
-            const kl::ShaderHolder temp_geometry_shader = gpu.create_geometry_shader(shader_sources);
+            std::string shader_sources = kl::read_file("shaders/playground.hlsl");
+            kl::RenderShaders temp_default_shaders = gpu.create_render_shaders(shader_sources);
+            kl::GeometryShader temp_geometry_shader = gpu.create_geometry_shader(shader_sources);
 
             if (temp_default_shaders && temp_geometry_shader) {
                 PLANE_SHADERS = temp_default_shaders;

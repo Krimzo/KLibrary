@@ -20,7 +20,7 @@ int examples::compute_shaders2_main(const int argc, const char** argv)
 
     const std::string shader_sources = kl::read_file("shaders/compute_test2.hlsl");
     const kl::RenderShaders render_shaders = gpu.create_render_shaders(shader_sources);
-    kl::ShaderHolder compute_shader = gpu.create_compute_shader(shader_sources);
+    kl::ComputeShader compute_shader = gpu.create_compute_shader(shader_sources);
     gpu.bind_render_shaders(render_shaders);
     gpu.bind_compute_shader(compute_shader.shader);
 
