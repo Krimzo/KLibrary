@@ -28,11 +28,9 @@ int examples::hello_world_12_main(const int argc, const char** argv)
 	kl::Window window{ "Hello World! (D3D12)" };
 	kl::GPU12 gpu{ window };
 
-	window.on_resize.emplace_back([&](const kl::Int2 new_size)
+	window.on_resize.emplace_back([&](kl::Int2 size)
 	{
-		if (new_size.x > 0 && new_size.y > 0) {
-			gpu.resize(new_size);
-		}
+		gpu.resize(size);
 	});
 
 	const kl::Vertex<float> vertices[3] = {
@@ -54,7 +52,7 @@ int examples::hello_world_12_main(const int argc, const char** argv)
 		{
 			gpu.commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 			gpu.commands.set_render_target(&render_target, nullptr);
-			gpu.commands.clear_target_view(render_target, kl::Color(30, 30, 30));
+			gpu.commands.clear_target_view(render_target, kl::RGB(30, 30, 30));
 
 			gpu.commands.set_scissors(kl::dx12::Scissors{ 0, 0, LONG_MAX, LONG_MAX });
 			gpu.commands.set_viewport(kl::dx12::Viewport{ 0.0f, 0.0f, (float) window.width(), (float) window.height(), 0.0f, 1.0f });

@@ -16,13 +16,11 @@ int examples::plane_playground_main(const int argc, const char** argv)
     kl::Window window{ "Plane Playground" };
     kl::GPU gpu{ window };
 
-    window.on_resize.emplace_back([&](const kl::Int2 new_size)
+    window.on_resize.emplace_back([&](kl::Int2 size)
     {
-        if (new_size.x > 0 && new_size.y > 0) {
-            gpu.resize_internal(new_size);
-            gpu.set_viewport_size(new_size);
-            CAMERA.update_aspect_ratio(new_size);
-        }
+        gpu.resize_internal(size);
+        gpu.set_viewport_size(size);
+        CAMERA.update_aspect_ratio(size);
     });
     window.maximize();
 

@@ -4,7 +4,7 @@
 static int ITERATIONS = 64;
 static float ZOOM = 1.0f;
 static kl::Float2 POSITION = { -0.5f, 0.0f };
-static kl::Color START_COLOR = kl::colors::ORANGE;
+static kl::RGB START_COLOR = kl::colors::ORANGE;
 
 static void input(const kl::Window& window, const float delta_time)
 {
@@ -68,10 +68,10 @@ static void console_read()
             return line;
         }(), ' '); parts.size() >= 3) {
             try {
-                kl::Color result_color = {};
-                result_color.r = (uint8_t) std::stoi(parts[0]);
-                result_color.g = (uint8_t) std::stoi(parts[1]);
-                result_color.b = (uint8_t) std::stoi(parts[2]);
+                kl::RGB result_color;
+                result_color.r = (byte) kl::parse_int(parts[0]).value_or(0);
+                result_color.g = (byte) kl::parse_int(parts[1]).value_or(0);
+                result_color.b = (byte) kl::parse_int(parts[2]).value_or(0);
                 START_COLOR = result_color;
                 print(START_COLOR, "Color updated!");
             }
@@ -91,12 +91,10 @@ int examples::mandelbrot_main(const int argc, const char** argv)
     kl::GPU gpu{ window };
     kl::Timer timer;
 
-    window.on_resize.emplace_back([&](const kl::Int2 size)
+    window.on_resize.emplace_back([&](kl::Int2 size)
     {
-        if (size.x > 0 && size.y > 0) {
-            gpu.resize_internal(size);
-            gpu.set_viewport_size(size);
-        }
+        gpu.resize_internal(size);
+        gpu.set_viewport_size(size);
     });
     window.maximize();
 

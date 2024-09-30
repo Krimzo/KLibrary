@@ -19,7 +19,7 @@ int examples::interpolation_main(const int argc, const char** argv)
         { (frame.width() - 1.0f) * 0.667f,                            50.0f },
     };
 
-    const kl::Color colors[4] = {
+    const kl::RGB colors[4] = {
         kl::colors::RED,
         kl::colors::WHITE,
         kl::colors::BLUE,
@@ -54,7 +54,7 @@ int examples::interpolation_main(const int argc, const char** argv)
                 triangles[1].weights(constants[1], { (float) x, (float) y }),
             };
 
-            kl::Color pixel;
+            kl::RGB pixel;
             if (kl::Triangle<>::is_in_triangle(weights[0])) {
                 pixel.r = (byte) kl::Triangle<>::interpolate(weights[0], { (float) colors[0].r, (float) colors[1].r, (float) colors[2].r });
                 pixel.g = (byte) kl::Triangle<>::interpolate(weights[0], { (float) colors[0].g, (float) colors[1].g, (float) colors[2].g });
@@ -73,10 +73,10 @@ int examples::interpolation_main(const int argc, const char** argv)
                 frame[write_position] = pixel;
             }
             if (kl::Int2 write_position = { x + 1, y }; frame.in_bounds(write_position)) {
-                frame[write_position] = kl::random::gen_color();
+                frame[write_position] = kl::random::gen_rgb();
             }
             if (kl::Int2 write_position = { x + 2, y }; frame.in_bounds(write_position)) {
-                frame[write_position] = kl::random::gen_color();
+                frame[write_position] = kl::random::gen_rgb();
             }
         }
 

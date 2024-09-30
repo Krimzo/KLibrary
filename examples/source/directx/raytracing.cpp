@@ -17,13 +17,11 @@ int examples::raytracing_main(const int argc, const char** argv)
     kl::Timer timer;
     kl::Camera camera;
 
-    window.on_resize.emplace_back([&](const kl::Int2 new_size)
+    window.on_resize.emplace_back([&](kl::Int2 size)
     {
-        if (new_size.x > 0 && new_size.y > 0) {
-            gpu.resize_internal(new_size);
-            gpu.set_viewport_size(new_size);
-            camera.update_aspect_ratio(new_size);
-        }
+        gpu.resize_internal(size);
+        gpu.set_viewport_size(size);
+        camera.update_aspect_ratio(size);
     });
     window.maximize();
 
@@ -50,7 +48,7 @@ int examples::raytracing_main(const int argc, const char** argv)
         sphere = Sphere{
             kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
             kl::random::gen_float(2.75f) + 0.25f,
-            kl::random::gen_color(),
+            kl::random::gen_rgb(),
         };
     }
 
@@ -67,18 +65,18 @@ int examples::raytracing_main(const int argc, const char** argv)
                 sphere = Sphere{
                     kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
                     kl::random::gen_float(2.75f) + 0.25f,
-                    kl::random::gen_color(),
+                    kl::random::gen_rgb(),
                 };
             }
         }
         if (window.keyboard.num2.pressed()) {
             for (auto& [center, radius, color] : cb->SPHERES) {
-                color = kl::random::gen_color();
+                color = kl::random::gen_rgb();
             }
         }
         if (window.keyboard.num3.pressed()) {
             for (auto& [center, radius, color] : cb->SPHERES) {
-                color = kl::random::gen_color(true);
+                color = kl::random::gen_rgb(true);
             }
         }
         if (window.mouse.btn4) {

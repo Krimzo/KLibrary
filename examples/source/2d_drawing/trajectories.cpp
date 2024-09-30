@@ -6,7 +6,7 @@ struct SceneObject
     float radius = kl::random::gen_float(10.0f, 20.0f);
     kl::Float2 position = {};
     kl::Float2 velocity = {};
-    kl::Color color = kl::random::gen_color();
+    kl::RGB color = kl::random::gen_rgb();
     std::vector<kl::Float2> position_history = {};
 };
 
@@ -30,7 +30,7 @@ static void draw_objects(kl::Image& frame, std::vector<SceneObject>& objects)
         const int start_position_index = (int) (position_history.size() * 0.75f);
         for (int i = start_position_index; i < (int) position_history.size() - 1; i++) {
             frame.draw_line(kl::Int2(position_history[i]), kl::Int2(position_history[i + 1]),
-                kl::Color(60, 60, 60).mix(color, kl::unlerp((float) i, (float) start_position_index, (float) position_history.size())));
+                kl::RGB(60, 60, 60).mix(color, kl::unlerp((float) i, (float) start_position_index, (float) position_history.size())));
         }
         frame.draw_circle(kl::Int2(position), radius, color, true);
         frame.draw_circle(kl::Int2(position), radius, { 30, 30, 30 });
@@ -47,7 +47,7 @@ static void draw_interface(kl::Image& frame, const bool draw_arrow, kl::Float2 a
     }
 }
 
-static void process_objects(std::vector<SceneObject>& objects, const kl::Timer& timer, const kl::Image& frame, const kl::Float2& gravity)
+static void process_objects(std::vector<SceneObject>& objects, const kl::Timer& timer, const kl::Image& frame, kl::Float2 gravity)
 {
     static constexpr float energy_retain = 0.8f;
 
@@ -110,9 +110,9 @@ int examples::trajectories_main(const int argc, const char** argv)
     const kl::Float2 gravity{ 0, 98.1f };
     std::vector<SceneObject> objects;
 
-    window.on_resize.emplace_back([&](const kl::Int2 new_size)
+    window.on_resize.emplace_back([&](kl::Int2 size)
     {
-        frame.resize(new_size);
+        frame.resize(size);
     });
 
     bool object_being_added = false;

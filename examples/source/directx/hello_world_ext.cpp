@@ -33,12 +33,10 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
     kl::Window window{ "Hello World! (D3D11 Extended)" };
     kl::GPU gpu{ window };
 
-    window.on_resize.emplace_back([&](const kl::Int2 new_size)
+    window.on_resize.emplace_back([&](kl::Int2 size)
     {
-        if (new_size.x > 0 && new_size.y > 0) {
-            gpu.resize_internal(new_size);
-            gpu.set_viewport_size(new_size);
-        }
+        gpu.resize_internal(size);
+        gpu.set_viewport_size(size);
     });
 
     const std::vector<kl::Vertex<float>> vertices = {

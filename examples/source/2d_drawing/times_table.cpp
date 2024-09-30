@@ -7,9 +7,9 @@ static float m = 0.0f;
 
 int examples::times_table_main(const int argc, const char** argv)
 {
-    const kl::Color circle_color = kl::colors::CONSOLE;
-    kl::Color point_color = kl::random::gen_color();
-    kl::Color line_color = kl::random::gen_color();
+    const kl::RGB circle_color = kl::colors::CONSOLE;
+    kl::RGB point_color = kl::random::gen_rgb();
+    kl::RGB line_color = kl::random::gen_rgb();
     
     kl::Window window{ "Times Table" };
     kl::Image frame;
@@ -17,19 +17,17 @@ int examples::times_table_main(const int argc, const char** argv)
     window.resize({ 900, 900 });
     frame.resize(window.size());
 
-    window.on_resize.push_back([&](const kl::Int2& size)
+    window.on_resize.push_back([&](kl::Int2 size)
     {
-        if (size.x > 0 && size.y > 0) {
-            frame.resize(size);
-        }
+        frame.resize(size);
     });
 
     while (window.process()) {
         m += increment * kl::time::delta();
 
         if (window.keyboard.r.pressed()) {
-            point_color = kl::random::gen_color();
-            line_color = kl::random::gen_color();
+            point_color = kl::random::gen_rgb();
+            line_color = kl::random::gen_rgb();
         }
 
         frame.fill(kl::colors::GRAY);

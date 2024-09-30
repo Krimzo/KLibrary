@@ -8,8 +8,6 @@ int examples::text_drawing_main(const int argc, const char** argv)
 
 	window.on_resize.emplace_back([&](kl::Int2 size)
 	{
-		if (size.x <= 0 || size.y <= 0)
-			return;
 		gpu.resize_internal(size);
 		gpu.set_viewport_size(size);
 	});

@@ -24,12 +24,10 @@ int main()
     kl::Window window{ "Hello World! (D3D11)" };
     kl::GPU gpu{ window };
 
-    window.on_resize.emplace_back([&](const kl::Int2 new_size)
+    window.on_resize.emplace_back([&](kl::Int2 size)
     {
-        if (new_size.x > 0 && new_size.y > 0) {
-            gpu.resize_internal(new_size);
-            gpu.set_viewport_size(new_size);
-        }
+        gpu.resize_internal(size);
+        gpu.set_viewport_size(size);
     });
 
     const kl::dx::Buffer triangle = gpu.create_vertex_buffer({
@@ -42,7 +40,7 @@ int main()
     gpu.bind_render_shaders(shaders);
 
     while (window.process()) {
-        gpu.clear_internal(kl::Color{ 30, 30, 30 });
+        gpu.clear_internal(kl::RGB{ 30, 30, 30 });
         gpu.draw(triangle);
         gpu.swap_buffers(true);
     }

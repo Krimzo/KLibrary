@@ -15,8 +15,8 @@ struct BoardInfo
 };
 
 static constexpr kl::Int2 SIZES = { 3, 901 };
-static const kl::Color PLAYER_COLOR = kl::colors::ORANGE;
-static const kl::Color ENGINE_COLOR = kl::colors::GREEN;
+static const kl::RGB PLAYER_COLOR = kl::colors::ORANGE;
+static const kl::RGB ENGINE_COLOR = kl::colors::GREEN;
 
 static bool has_empty(const std::vector<int>& board)
 {

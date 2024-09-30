@@ -10,12 +10,8 @@ int examples::hello_world_ext_12_main(const int argc, const char** argv)
     kl::dx12::DescriptorHeap uav_heap{};
     kl::dx12::Resource ray_target{};
     
-    window.on_resize.emplace_back([&](const kl::Int2 size)
+    window.on_resize.emplace_back([&](kl::Int2 size)
     {
-        if (size.x < 1 || size.y < 1) {
-            return;
-        }
-    
         ray_target = {};
         uav_heap = {};
         gpu.resize(size);

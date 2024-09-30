@@ -1,13 +1,13 @@
 #include "examples.h"
 
 
-static void draw_axis(kl::Image& frame, const kl::Color& color = { 75, 75, 75 })
+static void draw_axis(kl::Image& frame, kl::RGB color = { 75, 75, 75 })
 {
     frame.draw_line(kl::Int2(0, frame.height() / 2), { frame.width(), frame.height() / 2 }, color);
     frame.draw_line(kl::Int2(frame.width() / 2, 0), { frame.width() / 2, frame.height() }, color);
 }
 
-static void draw_data(kl::Image& frame, const std::vector<kl::Int2>& data, const kl::Color& color = kl::colors::ORANGE)
+static void draw_data(kl::Image& frame, const std::vector<kl::Int2>& data, kl::RGB color = kl::colors::ORANGE)
 {
     const kl::Int2 half_size = frame.size() / 2;
     for (auto& val : data) {
@@ -18,7 +18,7 @@ static void draw_data(kl::Image& frame, const std::vector<kl::Int2>& data, const
     }
 }
 
-static void draw_line(kl::Image& frame, const kl::Float2& equat, const kl::Color& color = kl::colors::SKY)
+static void draw_line(kl::Image& frame, kl::Float2 equat, kl::RGB color = kl::colors::SKY)
 {
     const kl::Int2 half_size = frame.size() / 2;
     const kl::Int2 pos1 = kl::Int2(-half_size.x, (int) (-half_size.x * equat.x + equat.y)) * kl::Int2(1, -1) + half_size;
@@ -26,7 +26,7 @@ static void draw_line(kl::Image& frame, const kl::Float2& equat, const kl::Color
     frame.draw_line(pos1, pos2, color);
 }
 
-static float calculate_offsets(const std::vector<kl::Int2>& data, const kl::Float2& line_equat)
+static float calculate_offsets(const std::vector<kl::Int2>& data, kl::Float2 line_equat)
 {
     float sum = 0.0f;
     for (auto& val : data) {
@@ -35,7 +35,7 @@ static float calculate_offsets(const std::vector<kl::Int2>& data, const kl::Floa
     return sum;
 }
 
-static void draw_offset(kl::Image& frame, const std::vector<kl::Int2>& data, const kl::Float2& lineEquat, const kl::Color& color = kl::colors::YELLOW)
+static void draw_offset(kl::Image& frame, const std::vector<kl::Int2>& data, kl::Float2 lineEquat, kl::RGB color = kl::colors::YELLOW)
 {
     if (!data.empty()) {
         static size_t data_index = 0;

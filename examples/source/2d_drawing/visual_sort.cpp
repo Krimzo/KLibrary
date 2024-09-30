@@ -4,7 +4,7 @@
 struct Stick
 {
     int value = 0;
-    kl::Color color = {};
+    kl::RGB color;
 };
 
 static std::vector<Stick> generate_sticks(const int count, const int min_value_incl, const int max_value_excl)
