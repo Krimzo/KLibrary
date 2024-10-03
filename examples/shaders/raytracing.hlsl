@@ -6,13 +6,6 @@ struct VS_OUT
     float4 position : SV_Position;
 };
 
-struct Sphere
-{
-    float3 center;
-    float radius;
-    float4 color;
-};
-
 struct Plane
 {
     float3 position;
@@ -20,43 +13,59 @@ struct Plane
     float3 color;
 };
 
+struct Sphere
+{
+    float3 position;
+    float radius;
+    float4 color;
+    
+    bool contains(float3 pnt)
+    {
+        return length(pnt - position) <= radius;
+    }
+};
+
 struct Ray
 {
     float3 origin;
     float3 direction;
-	
-    bool intersect_sphere(Sphere sphere, out float3 out_inter)
+    
+    bool intersect_plane(Plane plane, out float3 out_inter)
     {
-        float3 center_ray = sphere.center - origin;
-        float cd_dot = dot(center_ray, direction);
-        if (cd_dot < 0.0f)
+        const float denom = dot(plane.normal, direction);
+        if (abs(denom) <= 0.0001f)
             return false;
-		
-        float cc_dot = dot(center_ray, center_ray) - cd_dot * cd_dot;
-        float rr = sphere.radius * sphere.radius;
-        if (cc_dot > rr)
+
+        const float t = dot(plane.position - origin, plane.normal) / denom;
+        if (t < 0.0f)
             return false;
-		
-        float thc = sqrt(rr - cc_dot);
-        float dis0 = cd_dot - thc;
-        float dis1 = cd_dot + thc;
-        out_inter = origin + direction * (dis0 >= 0.0f ? dis0 : dis1);
+
+        out_inter = origin + direction * t;
         return true;
     }
 	
-    bool intersect_plane(Plane plane, out float3 out_inter)
+    bool intersect_sphere(Sphere sphere, out float3 out_inter)
     {
-        float denom = dot(normalize(plane.normal), direction);
-        if (abs(denom) > 0.0001f)
-        {
-            float t = dot(plane.position - origin, plane.normal) / denom;
-            if (t >= 0.0f)
-            {
-                out_inter = origin + direction * t;
-                return true;
-            }
+        if (sphere.contains(origin)) {
+            out_inter = origin;
+            return true;
         }
-        return false;
+
+        const float3 center_ray = sphere.position - origin;
+        const float cd_dot = dot(center_ray, direction);
+        if (cd_dot < 0.0f)
+            return false;
+
+        const float cc_dot = dot(center_ray, center_ray) - cd_dot * cd_dot;
+        const float rr = sphere.radius * sphere.radius;
+        if (cc_dot > rr)
+            return false;
+
+        const float thc = sqrt(rr - cc_dot);
+        const float dis0 = cd_dot - thc;
+        const float dis1 = cd_dot + thc;
+        out_inter = origin + direction * (dis0 < 0.0f ? dis1 : dis0);
+        return true;
     }
 };
 
@@ -136,7 +145,7 @@ float3 trace_ray(Ray ray)
     }
     else if (intersected_sphere_id > -1)
     {
-        float3 intersect_normal = normalize(intersect_point - SPHERES[intersected_sphere_id].center);
+        float3 intersect_normal = normalize(intersect_point - SPHERES[intersected_sphere_id].position);
         float sun_intensity = saturate(dot(-SUN_DIRECTION.xyz, intersect_normal));
         pixel = SPHERES[intersected_sphere_id].color.xyz * sun_intensity * !sphere_point_in_shadow(XZ_PLANE, intersect_point, intersected_sphere_id);
     }
