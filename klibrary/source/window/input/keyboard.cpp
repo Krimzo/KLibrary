@@ -11,45 +11,11 @@ void kl::Keyboard::_reload()
 void kl::Keyboard::_update(const WPARAM type, const bool new_state)
 {
     char type_char = (char) MapVirtualKeyA(UINT(type), MAPVK_VK_TO_CHAR);
-    if (type_char == 0) {
-        _update_virtual(type, new_state);
-    }
-    else {
+    if (type_char != 0) {
         _update_char(type_char, new_state);
     }
-}
-
-void kl::Keyboard::_update_virtual(const WPARAM type, const bool new_state)
-{
-    switch (type)
-    {
-    case VK_ESCAPE: esc._update(new_state); break;
-    case VK_CAPITAL: caps._update(new_state); break;
-    case VK_SHIFT: shift._update(new_state); break;
-    case VK_CONTROL: ctrl._update(new_state); break;
-    case VK_MENU: alt._update(new_state); break;
-    case VK_INSERT: insert._update(new_state); break;
-    case VK_DELETE: delet._update(new_state); break;
-	case VK_HOME: home._update(new_state); break;
-	case VK_END: end._update(new_state); break;
-	case VK_PRIOR: pageup._update(new_state); break;
-	case VK_NEXT: pagedown._update(new_state); break;
-    case VK_UP: up._update(new_state); break;
-    case VK_LEFT: left._update(new_state); break;
-    case VK_DOWN: down._update(new_state); break;
-    case VK_RIGHT: right._update(new_state); break;
-    case VK_F1: f1._update(new_state); break;
-    case VK_F2: f2._update(new_state); break;
-    case VK_F3: f3._update(new_state); break;
-    case VK_F4: f4._update(new_state); break;
-    case VK_F5: f5._update(new_state); break;
-    case VK_F6: f6._update(new_state); break;
-    case VK_F7: f7._update(new_state); break;
-    case VK_F8: f8._update(new_state); break;
-    case VK_F9: f9._update(new_state); break;
-    case VK_F10: f10._update(new_state); break;
-    case VK_F11: f11._update(new_state); break;
-    case VK_F12: f12._update(new_state); break;
+    else {
+        _update_virtual(type, new_state);
     }
 }
 
@@ -110,5 +76,39 @@ void kl::Keyboard::_update_char(const char type, const bool new_state)
     case ' ': space._update(new_state); break;
     case '\r': enter._update(new_state); break;
     case '\b': backspace._update(new_state); break;
+    case '\x1b': esc._update(new_state); break;
+    }
+}
+
+void kl::Keyboard::_update_virtual(const WPARAM type, const bool new_state)
+{
+    switch (type)
+    {
+    case VK_CAPITAL: caps._update(new_state); break;
+    case VK_SHIFT: shift._update(new_state); break;
+    case VK_CONTROL: ctrl._update(new_state); break;
+    case VK_MENU: alt._update(new_state); break;
+    case VK_INSERT: insert._update(new_state); break;
+    case VK_DELETE: delet._update(new_state); break;
+    case VK_HOME: home._update(new_state); break;
+    case VK_END: end._update(new_state); break;
+    case VK_PRIOR: pageup._update(new_state); break;
+    case VK_NEXT: pagedown._update(new_state); break;
+    case VK_UP: up._update(new_state); break;
+    case VK_LEFT: left._update(new_state); break;
+    case VK_DOWN: down._update(new_state); break;
+    case VK_RIGHT: right._update(new_state); break;
+    case VK_F1: f1._update(new_state); break;
+    case VK_F2: f2._update(new_state); break;
+    case VK_F3: f3._update(new_state); break;
+    case VK_F4: f4._update(new_state); break;
+    case VK_F5: f5._update(new_state); break;
+    case VK_F6: f6._update(new_state); break;
+    case VK_F7: f7._update(new_state); break;
+    case VK_F8: f8._update(new_state); break;
+    case VK_F9: f9._update(new_state); break;
+    case VK_F10: f10._update(new_state); break;
+    case VK_F11: f11._update(new_state); break;
+    case VK_F12: f12._update(new_state); break;
     }
 }

@@ -64,8 +64,8 @@ namespace kl {
                 Key space;
                 Key enter;
                 Key backspace;
-
                 Key esc;
+
                 Key caps;
                 Key shift;
                 Key ctrl;
@@ -101,7 +101,7 @@ namespace kl {
         void _update(WPARAM type, bool new_state);
 
     private:
-        void _update_virtual(WPARAM type, bool new_state);
         void _update_char(char type, bool new_state);
+        void _update_virtual(WPARAM type, bool new_state);
     };
 }
