@@ -1,5 +1,11 @@
 #define SPHERE_COUNT 10
 
+struct VS_OUT
+{
+    float2 ndc : VS_NDC;
+    float4 position : SV_Position;
+};
+
 struct Sphere
 {
     float3 center;
@@ -61,10 +67,9 @@ static const float3 SUN_COLOR = { 0.98f, 0.9f, 0.76f };
 static const float2 SUN_SIZE = { 0.75f, 1.55f };
 
 Sphere SPHERES[SPHERE_COUNT];
-float4x4 INVERSE_CAMERA;
-float4 FRAME_SIZE;
-float4 CAMERA_POSITION;
-float4 SUN_DIRECTION;
+float4x4 INV_CAM;
+float3 CAMERA_POSITION;
+float3 SUN_DIRECTION;
 
 bool sphere_point_in_shadow(Plane plane, float3 sphere_point, int sphere_index)
 {
@@ -140,26 +145,29 @@ float3 trace_ray(Ray ray)
         float sky_mix_value = (dot(-ray.direction, float3(0.0f, 1.0f, 0.0f)) + 1.0f) * 0.5f;
         pixel = lerp(SKY_TOP, SKY_BOTTOM, sky_mix_value);
         pixel *= saturate(dot(-SUN_DIRECTION.xyz, float3(0.0f, 1.0f, 0.0f)));
-		
         float sun_angle = degrees(acos(dot(ray.direction, -SUN_DIRECTION.xyz)));
         pixel = lerp(SUN_COLOR, pixel, smoothstep(SUN_SIZE.x, SUN_SIZE.y, sun_angle));
     }
     return pixel;
 }
 
-float4 v_shader(float3 position : KL_Position) : SV_Position
+VS_OUT v_shader(float3 position : KL_Position)
 {
-    return float4(position, 1.0f);
+    VS_OUT data;
+    data.ndc = position.xy;
+    data.position = float4(position, 1.0f);
+    return data;
 }
 
-float4 p_shader(float4 position : SV_Position) : SV_Target0
+float4 p_shader(VS_OUT data) : SV_Target0
 {
-    float2 ndc = float2(position.x, FRAME_SIZE.y - position.y) / FRAME_SIZE.xy;
-    ndc = ndc * 2.0f - 1.0f;
-	
-    float4 ray_direction = mul(float4(ndc, 1.0f, 1.0f), INVERSE_CAMERA);
-    ray_direction /= ray_direction.w;
-
-    Ray ray = { CAMERA_POSITION.xyz, normalize(ray_direction.xyz) };
-    return float4(trace_ray(ray), 1.0f);
+    float4 pixel_world = mul(float4(data.ndc, 1.0f, 1.0f), INV_CAM);
+    pixel_world /= pixel_world.w;
+    
+    Ray ray;
+    ray.origin = CAMERA_POSITION;
+    ray.direction = normalize(pixel_world.xyz - ray.origin);
+    
+    float3 color = trace_ray(ray);
+    return float4(color, 1.0f);
 }

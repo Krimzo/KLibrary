@@ -36,32 +36,29 @@ int examples::raytracing_main(const int argc, const char** argv)
     {
         Sphere SPHERES[SPHERE_COUNT];
         kl::Float4x4 INVERSE_CAMERA;
-        kl::Float4 FRAME_SIZE;
-        kl::Float4 CAMERA_POSITION;
-        kl::Float4 SUN_DIRECTION;
-    };
-    kl::Ref<CB> cb = new CB();
+        kl::Float3 CAMERA_POSITION;
+        alignas(16) kl::Float3 SUN_DIRECTION;
+    } cb = {};
 
-    cb->SUN_DIRECTION = { kl::normalize(kl::Float3(-1.0f, -1.0f, 0.0f)), 0.0f };
-
-    for (auto& sphere : cb->SPHERES) {
+    for (auto& sphere : cb.SPHERES) {
         sphere = Sphere{
             kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
             kl::random::gen_float(2.75f) + 0.25f,
             kl::random::gen_rgb(),
         };
     }
+    cb.SUN_DIRECTION = kl::normalize(kl::Float3(-1.0f, -1.0f, 0.0f));
 
     while (window.process()) {
         timer.update_delta();
 
         for (int i = 0; i < SPHERE_COUNT; i++) {
             const float oscillation = (std::sin(timer.elapsed() + i) + 1.0f) * 0.5f;
-            cb->SPHERES[i].center.y = (oscillation * (i + 1.0f)) + cb->SPHERES[i].radius;
+            cb.SPHERES[i].center.y = (oscillation * (i + 1.0f)) + cb.SPHERES[i].radius;
         }
         
         if (window.keyboard.one.pressed()) {
-            for (auto& sphere : cb->SPHERES) {
+            for (auto& sphere : cb.SPHERES) {
                 sphere = Sphere{
                     kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
                     kl::random::gen_float(2.75f) + 0.25f,
@@ -70,12 +67,12 @@ int examples::raytracing_main(const int argc, const char** argv)
             }
         }
         if (window.keyboard.two.pressed()) {
-            for (auto& [center, radius, color] : cb->SPHERES) {
+            for (auto& [center, radius, color] : cb.SPHERES) {
                 color = kl::random::gen_rgb();
             }
         }
         if (window.keyboard.three.pressed()) {
-            for (auto& [center, radius, color] : cb->SPHERES) {
+            for (auto& [center, radius, color] : cb.SPHERES) {
                 color = kl::random::gen_rgb(true);
             }
         }
@@ -85,7 +82,7 @@ int examples::raytracing_main(const int argc, const char** argv)
                 kl::inverse(camera.matrix()),
                 window.mouse.norm_position(),
             };
-            cb->SUN_DIRECTION = { -ray.direction(), 0.0f };
+            cb.SUN_DIRECTION = -ray.direction();
         }
 
         static bool camera_rotating = false;
@@ -133,11 +130,10 @@ int examples::raytracing_main(const int argc, const char** argv)
 
         gpu.clear_internal();
 
-        cb->FRAME_SIZE = { window.size(), {} };
-        cb->INVERSE_CAMERA = kl::inverse(camera.matrix());
-        cb->CAMERA_POSITION = { camera.position, {} };
+        cb.INVERSE_CAMERA = kl::inverse(camera.matrix());
+        cb.CAMERA_POSITION = camera.position;
 
-        shaders.upload<CB>(*cb);
+        shaders.upload(cb);
         gpu.draw(screen_mesh);
 
         gpu.swap_buffers(true);
