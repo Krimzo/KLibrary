@@ -60,7 +60,7 @@ int examples::raytracing_main(const int argc, const char** argv)
             cb->SPHERES[i].center.y = (oscillation * (i + 1.0f)) + cb->SPHERES[i].radius;
         }
         
-        if (window.keyboard.num1.pressed()) {
+        if (window.keyboard.one.pressed()) {
             for (auto& sphere : cb->SPHERES) {
                 sphere = Sphere{
                     kl::random::gen_float3(40.0f) - kl::Float3(20.0f, 20.0f, 20.0f),
@@ -69,12 +69,12 @@ int examples::raytracing_main(const int argc, const char** argv)
                 };
             }
         }
-        if (window.keyboard.num2.pressed()) {
+        if (window.keyboard.two.pressed()) {
             for (auto& [center, radius, color] : cb->SPHERES) {
                 color = kl::random::gen_rgb();
             }
         }
-        if (window.keyboard.num3.pressed()) {
+        if (window.keyboard.three.pressed()) {
             for (auto& [center, radius, color] : cb->SPHERES) {
                 color = kl::random::gen_rgb(true);
             }

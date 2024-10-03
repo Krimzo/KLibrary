@@ -54,13 +54,13 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
             gpu.bind_raster_state(wireframe_bound ? solid_raster : wireframe_raster);
             wireframe_bound = !wireframe_bound;
         }
-        if (window.keyboard.num1.pressed()) {
+        if (window.keyboard.one.pressed()) {
             main_entity->mesh = cube_mesh;
         }
-        if(window.keyboard.num2.pressed()) {
+        if(window.keyboard.two.pressed()) {
 			main_entity->mesh = sphere_mesh;
         }
-        if (window.keyboard.num3.pressed()) {
+        if (window.keyboard.three.pressed()) {
 			main_entity->mesh = monke_mesh;
         }
         if (window.keyboard.space.pressed()) {
