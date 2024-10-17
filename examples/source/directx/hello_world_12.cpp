@@ -33,10 +33,10 @@ int examples::hello_world_12_main(const int argc, const char** argv)
 		gpu.resize(size);
 	});
 
-	const kl::Vertex<float> vertices[3] = {
-		kl::Vertex{ kl::Float3{ -0.5f, -0.5f, 0.0f }, {}, kl::Float3{ kl::colors::RED } },
-		kl::Vertex{ kl::Float3{  0.0f,  0.5f, 0.0f }, {}, kl::Float3{ kl::colors::GREEN } },
-		kl::Vertex{ kl::Float3{  0.5f, -0.5f, 0.0f }, {}, kl::Float3{ kl::colors::BLUE } },
+	const kl::Vertex vertices[3] = {
+		kl::Vertex{ kl::Float3{ -0.5f, -0.5f, 0.0f }, kl::Float3{ kl::colors::RED }, {} },
+		kl::Vertex{ kl::Float3{  0.0f,  0.5f, 0.0f }, kl::Float3{ kl::colors::GREEN }, {} },
+		kl::Vertex{ kl::Float3{  0.5f, -0.5f, 0.0f }, kl::Float3{ kl::colors::BLUE }, {} },
 	};
 	const std::pair vertex_buffer = gpu.create_vertex_buffer(vertices, (UINT) std::size(vertices));
 

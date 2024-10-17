@@ -6,7 +6,7 @@ static kl::Camera CAMERA;
 
 static kl::Float3 SUN_DIRECTION = { 1, -1, 0 };
 
-static kl::RenderShaders PLANE_SHADERS;
+static kl::Shaders PLANE_SHADERS;
 static kl::dx::GeometryShader PLANE_GEOMETRY_SHADER;
 
 void camera_movement(kl::Window& window);
@@ -28,7 +28,7 @@ int examples::plane_playground_main(const int argc, const char** argv)
     const kl::dx::DepthState disabled_depth_state = gpu.create_depth_state(false, false, false);
     
     const std::string sky_shaders_source = kl::read_file("shaders/sky.hlsl");
-    kl::RenderShaders sky_shaders = gpu.create_render_shaders(sky_shaders_source);
+    kl::Shaders sky_shaders = gpu.create_shaders(sky_shaders_source);
 
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
     const kl::dx::Buffer plane_mesh = gpu.create_plane_mesh(10.0f, 1000);
@@ -53,7 +53,7 @@ int examples::plane_playground_main(const int argc, const char** argv)
             kl::console::clear();
 
             std::string shader_sources = kl::read_file("shaders/playground.hlsl");
-            kl::RenderShaders temp_default_shaders = gpu.create_render_shaders(shader_sources);
+            kl::Shaders temp_default_shaders = gpu.create_shaders(shader_sources);
             kl::GeometryShader temp_geometry_shader = gpu.create_geometry_shader(shader_sources);
 
             if (temp_default_shaders && temp_geometry_shader) {
@@ -75,7 +75,7 @@ int examples::plane_playground_main(const int argc, const char** argv)
         gpu.clear_internal();
 
         gpu.bind_depth_state(disabled_depth_state);
-        gpu.bind_render_shaders(sky_shaders);
+        gpu.bind_shaders(sky_shaders);
         gpu.unbind_geometry_shader();
 
         struct alignas(16) SKY_CB
@@ -96,7 +96,7 @@ int examples::plane_playground_main(const int argc, const char** argv)
             continue;
 
         gpu.bind_depth_state(default_depth_state);
-        gpu.bind_render_shaders(PLANE_SHADERS);
+        gpu.bind_shaders(PLANE_SHADERS);
         gpu.bind_geometry_shader(PLANE_GEOMETRY_SHADER);
 
         struct alignas(16) PLANE_CB

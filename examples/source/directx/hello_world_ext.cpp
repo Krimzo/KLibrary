@@ -39,11 +39,11 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
         gpu.set_viewport_size(size);
     });
 
-    const std::vector<kl::Vertex<float>> vertices = {
-        { { -0.5f, -0.5f, 0.5f }, {}, kl::colors::RED },
-        { { -0.5f,  0.5f, 0.5f }, {}, kl::colors::GREEN },
-        { {  0.5f, -0.5f, 0.5f }, {}, kl::colors::BLUE },
-        { {  0.5f,  0.5f, 0.5f }, {}, kl::colors::WHITE },
+    const std::vector<kl::Vertex> vertices = {
+        { { -0.5f, -0.5f, 0.5f }, kl::colors::RED, {} },
+        { { -0.5f,  0.5f, 0.5f }, kl::colors::GREEN, {} },
+        { {  0.5f, -0.5f, 0.5f }, kl::colors::BLUE, {} },
+        { {  0.5f,  0.5f, 0.5f }, kl::colors::WHITE, {} },
     };
     const std::vector<uint32_t> indices = {
         0, 1, 3,
@@ -53,8 +53,8 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
     const kl::dx::Buffer vertex_buffer = gpu.create_vertex_buffer(vertices);
     const kl::dx::Buffer index_buffer = gpu.create_index_buffer(indices);
 
-    kl::RenderShaders shaders = gpu.create_render_shaders(SHADER_SOURCE);
-    gpu.bind_render_shaders(shaders);
+    kl::Shaders shaders = gpu.create_shaders(SHADER_SOURCE);
+    gpu.bind_shaders(shaders);
 
     while (window.process()) {
         struct alignas(16) CB

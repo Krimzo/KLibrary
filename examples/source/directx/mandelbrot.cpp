@@ -98,9 +98,9 @@ int examples::mandelbrot_main(const int argc, const char** argv)
     });
     window.maximize();
 
-    const std::string shader_sources = kl::read_file("shaders/mandelbrot.hlsl");
-    kl::RenderShaders shaders = gpu.create_render_shaders(shader_sources);
-    const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
+    std::string shader_sources = kl::read_file("shaders/mandelbrot.hlsl");
+    kl::Shaders shaders = gpu.create_shaders(shader_sources);
+    kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
 
     std::thread(console_read).detach();
 
@@ -123,7 +123,7 @@ int examples::mandelbrot_main(const int argc, const char** argv)
         cb.START_COLOR = START_COLOR;
 
         shaders.upload(cb);
-        gpu.bind_render_shaders(shaders);
+        gpu.bind_shaders(shaders);
 
         gpu.draw(screen_mesh);
         gpu.swap_buffers(true);

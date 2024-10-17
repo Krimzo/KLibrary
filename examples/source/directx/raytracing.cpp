@@ -26,8 +26,8 @@ int examples::raytracing_main(const int argc, const char** argv)
     window.maximize();
 
     const std::string shader_sources = kl::read_file("shaders/raytracing.hlsl");
-    kl::RenderShaders shaders = gpu.create_render_shaders(shader_sources);
-    gpu.bind_render_shaders(shaders);
+    kl::Shaders shaders = gpu.create_shaders(shader_sources);
+    gpu.bind_shaders(shaders);
 
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
     camera.position.y = 5.0f;

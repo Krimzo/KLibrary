@@ -1,6 +1,6 @@
 struct VS_OUT
 {
-    float4 screen : SV_Position;
+    float4 position : SV_Position;
     float3 world : VS_World;
     float3 normal : VS_Normal;
     float3 color : VS_Color;
@@ -41,7 +41,7 @@ VS_OUT v_shader(float3 position : KL_Position)
     VS_OUT data;
     alter_position(position);
     data.world = mul(float4(position, 1.0f), W).xyz;
-    data.screen = mul(float4(data.world, 1.0f), VP);
+    data.position = mul(float4(data.world, 1.0f), VP);
     data.normal = 0.0f;
     data.color = 1.0f;
     return data;

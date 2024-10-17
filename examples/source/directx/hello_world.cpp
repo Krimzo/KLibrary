@@ -25,14 +25,14 @@ int examples::hello_world_main(const int argc, const char** argv)
         gpu.set_viewport_size(size);
     });
 
-    const kl::dx::Buffer triangle = gpu.create_vertex_buffer({
+    kl::dx::Buffer triangle = gpu.create_vertex_buffer({
         { {  0.0f,  0.5f, 0.5f } },
         { {  0.5f, -0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
     });
     
-    const kl::RenderShaders shaders = gpu.create_render_shaders(SHADER_SOURCE);
-    gpu.bind_render_shaders(shaders);
+    kl::Shaders shaders = gpu.create_shaders(SHADER_SOURCE);
+    gpu.bind_shaders(shaders);
 
     while (window.process()) {
         gpu.clear_internal(kl::RGB{ 30, 30, 30 });

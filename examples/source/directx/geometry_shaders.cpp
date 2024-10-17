@@ -17,17 +17,17 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     window.maximize();
 
     std::string shader_sources = kl::read_file("shaders/geometry_test.hlsl");
-    kl::RenderShaders default_shaders = gpu.create_render_shaders(shader_sources);
+    kl::Shaders default_shaders = gpu.create_shaders(shader_sources);
     kl::GeometryShader geometry_shader = gpu.create_geometry_shader(shader_sources);
-    gpu.bind_render_shaders(default_shaders);
+    gpu.bind_shaders(default_shaders);
     gpu.bind_geometry_shader(geometry_shader.shader);
 
     kl::Ref cube_mesh = new kl::Mesh(gpu);
     kl::Ref sphere_mesh = new kl::Mesh(gpu);
     kl::Ref monke_mesh = new kl::Mesh(gpu);
-    cube_mesh->graphics_buffer = gpu.create_vertex_buffer("meshes/cube.obj");
-    sphere_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/sphere.obj");
-    monke_mesh->graphics_buffer =gpu.create_vertex_buffer("meshes/monke.obj");
+    cube_mesh->buffer = gpu.create_vertex_buffer("meshes/cube.obj");
+    sphere_mesh->buffer =gpu.create_vertex_buffer("meshes/sphere.obj");
+    monke_mesh->buffer =gpu.create_vertex_buffer("meshes/monke.obj");
 
     kl::Ref default_material = new kl::Material();
     default_material->color = kl::colors::ORANGE;
@@ -96,7 +96,7 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
             cb.SUN_DIRECTION = { sun_direction.x, sun_direction.y, sun_direction.z, 0.0f };
 
             default_shaders.upload(cb);
-            gpu.draw(main_entity->mesh->graphics_buffer);
+            gpu.draw(main_entity->mesh->buffer);
         }
 
         gpu.swap_buffers(true);

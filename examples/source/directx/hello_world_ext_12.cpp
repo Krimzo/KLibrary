@@ -44,13 +44,13 @@ int examples::hello_world_ext_12_main(const int argc, const char** argv)
     const std::vector cube_mesh_data = kl::parse_obj_file("meshes/cube.obj");
     const std::vector monke_mesh_data = kl::parse_obj_file("meshes/monke.obj");
     
-    const kl::dx12::Resource quad_vb = gpu.create_buffer(quad_mesh_data.data(), (UINT) quad_mesh_data.size() * sizeof(kl::Vertex<float>), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-    const kl::dx12::Resource cube_vb = gpu.create_buffer(cube_mesh_data.data(), (UINT) cube_mesh_data.size() * sizeof(kl::Vertex<float>), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-    const kl::dx12::Resource monke_vb = gpu.create_buffer(monke_mesh_data.data(), (UINT) monke_mesh_data.size() * sizeof(kl::Vertex<float>), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+    const kl::dx12::Resource quad_vb = gpu.create_buffer(quad_mesh_data.data(), (UINT) quad_mesh_data.size() * sizeof(kl::Vertex), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+    const kl::dx12::Resource cube_vb = gpu.create_buffer(cube_mesh_data.data(), (UINT) cube_mesh_data.size() * sizeof(kl::Vertex), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+    const kl::dx12::Resource monke_vb = gpu.create_buffer(monke_mesh_data.data(), (UINT) monke_mesh_data.size() * sizeof(kl::Vertex), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
-    const kl::dx12::AccelerationStructure quad_blas = gpu.create_triangle_blas(quad_vb, sizeof(kl::Vertex<float>));
-    const kl::dx12::AccelerationStructure cube_blas = gpu.create_triangle_blas(cube_vb, sizeof(kl::Vertex<float>));
-    const kl::dx12::AccelerationStructure monke_blas = gpu.create_triangle_blas(monke_vb, sizeof(kl::Vertex<float>));
+    const kl::dx12::AccelerationStructure quad_blas = gpu.create_triangle_blas(quad_vb, sizeof(kl::Vertex));
+    const kl::dx12::AccelerationStructure cube_blas = gpu.create_triangle_blas(cube_vb, sizeof(kl::Vertex));
+    const kl::dx12::AccelerationStructure monke_blas = gpu.create_triangle_blas(monke_vb, sizeof(kl::Vertex));
     
     D3D12_RAYTRACING_INSTANCE_DESC instance_data[3] = {};
     instance_data[0] = {
