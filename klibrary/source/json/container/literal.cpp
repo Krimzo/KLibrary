@@ -12,32 +12,34 @@ kl::json::Literal::Literal(const std::string_view& data)
 
 bool kl::json::Literal::compile(std::vector<Token>::const_iterator first, std::vector<Token>::const_iterator last)
 {
-    if (first == last) {
+    if (first == last)
         return false;
-    }
-    const auto& token = *first;
-    if (token.type == TokenType::VAL_NULL) {
-        put_null();
-        return true;
-    }
-    if (token.type == TokenType::VAL_FALSE) {
+
+    switch (first->type)
+    {
+    case TokenType::VAL_NULL:
+		put_null();
+		return true;
+
+	case TokenType::VAL_FALSE:
 		put_bool(false);
-        return true;
-    }
-    if (token.type == TokenType::VAL_TRUE) {
+		return true;
+
+	case TokenType::VAL_TRUE:
 		put_bool(true);
-        return true;
-    }
-    if (token.type == TokenType::LIT_NUMBER) {
-        if (auto opt = parse_float(token.value)) {
-            put_number(opt.value());
-            return true;
-        }
-    }
-    if (token.type == TokenType::LIT_STRING) {
-		put_string(token.value);
-        return true;
-    }
+		return true;
+
+	case TokenType::LIT_NUMBER:
+		if (auto opt = parse_float(first->value)) {
+			put_number(opt.value());
+			return true;
+		}
+        break;
+
+	case TokenType::LIT_STRING:
+		put_string(first->value);
+		return true;
+	}
     return false;
 }
 

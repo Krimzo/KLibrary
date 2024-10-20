@@ -43,8 +43,7 @@ bool kl::json::Object::compile(std::vector<Token>::const_iterator first, std::ve
             depth += 1;
         }
         else if (it->type == TokenType::OBJECT_END || it->type == TokenType::ARRAY_END) {
-            depth -= 1;
-            if (depth <= 0)
+            if (--depth == 0)
                 break;
         }
     }
@@ -53,9 +52,8 @@ bool kl::json::Object::compile(std::vector<Token>::const_iterator first, std::ve
 
 std::string kl::json::Object::decompile(const int depth) const
 {
-    if (empty()) {
+    if (empty())
         return format(Standard::object_start, Standard::object_end);
-    }
 
     size_t counter = 0;
     std::stringstream stream;
