@@ -16,25 +16,25 @@ bool kl::json::Literal::compile(std::vector<Token>::const_iterator first, std::v
         return false;
     }
     const auto& token = *first;
-    if (token.type == TokenType::_NULL) {
+    if (token.type == TokenType::VAL_NULL) {
         put_null();
         return true;
     }
-    if (token.type == TokenType::_FALSE) {
+    if (token.type == TokenType::VAL_FALSE) {
 		put_bool(false);
         return true;
     }
-    if (token.type == TokenType::_TRUE) {
+    if (token.type == TokenType::VAL_TRUE) {
 		put_bool(true);
         return true;
     }
-    if (token.type == TokenType::_NUMBER) {
+    if (token.type == TokenType::LIT_NUMBER) {
         if (auto opt = parse_float(token.value)) {
             put_number(opt.value());
             return true;
         }
     }
-    if (token.type == TokenType::_STRING) {
+    if (token.type == TokenType::LIT_STRING) {
 		put_string(token.value);
         return true;
     }
@@ -44,7 +44,7 @@ bool kl::json::Literal::compile(std::vector<Token>::const_iterator first, std::v
 std::string kl::json::Literal::decompile(const int depth) const
 {
     if (auto opt = get_bool()) {
-        return opt.value() ? Standard::true_value : Standard::false_value;
+        return std::string{ opt.value() ? Standard::true_val : Standard::false_val };
     }
 	if (auto opt = get_double()) {
         const double flt_value = opt.value();
@@ -56,9 +56,9 @@ std::string kl::json::Literal::decompile(const int depth) const
 	}
     if (auto opt = get_string()) {
         Lexer::from_escaping(opt.value());
-		return format(Standard::string_literal, opt.value(), Standard::string_literal);
+		return format(Standard::string, opt.value(), Standard::string);
     }
-    return Standard::null_value;
+    return std::string{ Standard::null_val };
 }
 
 void kl::json::Literal::put_null()
