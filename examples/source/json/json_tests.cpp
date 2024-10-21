@@ -50,7 +50,7 @@ int examples::json_tests_main(const int argc, const char** argv)
 	test(js::Literal("null"), "null");
 	test(js::Literal("false"), "false");
 	test(js::Literal("5"), "5");
-	test(js::Literal("17.9"), "17.900000");
+	test(js::Literal("17.9"), "17.9");
 	test(js::Literal(R"("some \"string\" \\ in \t string")"), R"("some \"string\" \\ in \t string")");
 	test(js::Literal(R"("something random $not a comment$")"), R"("something random $not a comment$")");
 
