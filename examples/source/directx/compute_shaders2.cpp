@@ -27,7 +27,7 @@ int examples::compute_shaders2_main(const int argc, const char** argv)
     const kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
 
     while (window.process()) {
-        timer.update_delta();
+        timer.update();
 
         gpu.unbind_shader_view_for_compute_shader(0);
         gpu.unbind_shader_view_for_pixel_shader(0);

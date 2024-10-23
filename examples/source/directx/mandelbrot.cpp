@@ -105,7 +105,7 @@ int examples::mandelbrot_main(const int argc, const char** argv)
     std::thread(console_read).detach();
 
     while (window.process()) {
-        timer.update_delta();
+        timer.update();
 
         input(window, timer.delta());
 

@@ -120,7 +120,7 @@ int examples::trajectories_main(const int argc, const char** argv)
     kl::Float2 object_second_position;
 
     while (window.process()) {
-        timer.update_delta();
+        timer.update();
 
         if (window.mouse.left.pressed()) {
             const kl::Int2 position = window.mouse.position();

@@ -45,7 +45,7 @@ int examples::geometry_shaders_main(const int argc, const char** argv)
     const kl::Float3 sun_direction = kl::normalize(kl::Float3{ 1.0f, -1.0f, 0.0f });
 
     while (window.process()) {
-        timer.update_delta();
+        timer.update();
 
         if (window.keyboard.v.pressed()) {
             static bool wireframe_bound = true;

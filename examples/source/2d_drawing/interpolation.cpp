@@ -7,7 +7,6 @@ int examples::interpolation_main(const int argc, const char** argv)
 {
     kl::Window window{ "Interpolation" };
     kl::Image frame;
-    kl::Timer timer;
 
     window.resize({ 900, 900 });
     frame.resize(window.size());
@@ -46,7 +45,7 @@ int examples::interpolation_main(const int argc, const char** argv)
 
     int frame_index = 0;
     while (window.process()) {
-        timer.reset_elapsed();
+        const auto start_time = kl::time::now();
 
         for (int x = frame_index - frame.height(), y = 0; y < frame.height(); x++, y++) {
             const kl::Float3 weights[2] = {
@@ -82,7 +81,7 @@ int examples::interpolation_main(const int argc, const char** argv)
 
         window.draw_image(frame);
         window.set_title(kl::format((int) ((100.0f * frame_index) / (frame.width() + frame.height() - 1.0f)), "%"));
-        kl::time::wait((1.0f / fps_limit) - timer.elapsed());
+        kl::time::wait((1.0f / fps_limit) - kl::time::elapsed(start_time));
 
         if (++frame_index == frame.width() + frame.height()) {
             window.set_title("Finished!");

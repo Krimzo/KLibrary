@@ -39,7 +39,7 @@ int examples::plane_playground_main(const int argc, const char** argv)
     int frame_id = 0;
     while (window.process()) {
         frame_id += 1;
-        TIMER.update_delta();
+        TIMER.update();
 
         if (frame_id == 1 || window.keyboard.v.pressed()) {
             static bool wireframe_bound = true;

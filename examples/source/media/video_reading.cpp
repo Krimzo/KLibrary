@@ -33,16 +33,14 @@ int examples::video_reading_main(const int argc, const char** argv)
         kl::print<false>("Processed: ", ascii_frames.size(), "/", frame_count);
     }
 
-    kl::Timer timer;
     kl::console::clear();
     const float to_wait = 1.0f / video_reader.fps();
-
     while (true) {
         for (size_t i = 0; i < ascii_frames.size(); i++) {
-            timer.reset_elapsed();
+            const auto start_time = kl::time::now();
             kl::console::dump(ascii_frames[i]);
             kl::console::set_title(kl::format(i + 1, "/", ascii_frames.size()));
-            while (timer.elapsed() < to_wait);
+            while (kl::time::elapsed(start_time) < to_wait);
         }
     }
     return 0;

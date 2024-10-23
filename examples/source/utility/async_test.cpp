@@ -10,11 +10,11 @@ static void clear_data()
 	}
 }
 
-static float time_it(const std::function<void()>& func)
+static float time_it(const auto& func)
 {
-	kl::Timer timer{};
+	auto start_time = kl::time::now();
 	func();
-	return timer.elapsed();
+	return kl::time::elapsed(start_time);
 }
 
 static float compute_function(size_t value)

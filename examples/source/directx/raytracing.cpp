@@ -50,7 +50,7 @@ int examples::raytracing_main(const int argc, const char** argv)
     cb.SUN_DIRECTION = kl::normalize(kl::Float3(-1.0f, -1.0f, 0.0f));
 
     while (window.process()) {
-        timer.update_delta();
+        timer.update();
 
         for (int i = 0; i < SPHERE_COUNT; i++) {
             const float oscillation = (std::sin(timer.elapsed() + i) + 1.0f) * 0.5f;

@@ -113,7 +113,7 @@ int examples::hello_world_ext_12_main(const int argc, const char** argv)
     const kl::dx12::Resource shader_ids = gpu.create_upload_buffer(shader_id_buffer, sizeof(shader_id_buffer));
 
     while (window.process()) {
-        timer.update_delta();
+        timer.update();
         
         if (window.keyboard.esc) {
             window.close();
