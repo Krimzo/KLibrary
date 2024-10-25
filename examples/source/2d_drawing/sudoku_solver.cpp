@@ -3,23 +3,24 @@
 
 enum SudokuPiece : uint16_t
 {
-	ZERO = 0b0000000000000000,
-	ONE = 0b0000000000000001,
-	TWO = 0b0000000000000010,
+	ZERO  = 0b0000000000000000,
+	ONE   = 0b0000000000000001,
+	TWO   = 0b0000000000000010,
 	THREE = 0b0000000000000100,
-	FOUR = 0b0000000000001000,
-	FIVE = 0b0000000000010000,
-	SIX = 0b0000000000100000,
+	FOUR  = 0b0000000000001000,
+	FIVE  = 0b0000000000010000,
+	SIX   = 0b0000000000100000,
 	SEVEN = 0b0000000001000000,
 	EIGHT = 0b0000000010000000,
-	NINE = 0b0000000100000000,
+	NINE  = 0b0000000100000000,
 
 	_ALL = ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE,
 };
 
 static constexpr SudokuPiece convert_char(char value)
 {
-	switch (value) {
+	switch (value)
+	{
 	case '1': return ONE;
 	case '2': return TWO;
 	case '3': return THREE;
@@ -35,16 +36,17 @@ static constexpr SudokuPiece convert_char(char value)
 
 static constexpr char convert_piece(SudokuPiece value)
 {
-	switch (value) {
-	case ONE: return '1';
-	case TWO: return '2';
+	switch (value)
+	{
+	case   ONE: return '1';
+	case   TWO: return '2';
 	case THREE: return '3';
-	case FOUR: return '4';
-	case FIVE: return '5';
-	case SIX: return '6';
+	case  FOUR: return '4';
+	case  FIVE: return '5';
+	case   SIX: return '6';
 	case SEVEN: return '7';
 	case EIGHT: return '8';
-	case NINE: return '9';
+	case  NINE: return '9';
 	}
 	return '0';
 }
