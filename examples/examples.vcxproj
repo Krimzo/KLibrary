@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClCompile Include="source\2d_drawing\data_line.cpp" />
     <ClCompile Include="source\2d_drawing\interpolation.cpp" />
+    <ClCompile Include="source\2d_drawing\sudoku_solver.cpp" />
     <ClCompile Include="source\2d_drawing\tic_tac_engine.cpp" />
     <ClCompile Include="source\2d_drawing\times_table.cpp" />
     <ClCompile Include="source\2d_drawing\trajectories.cpp" />

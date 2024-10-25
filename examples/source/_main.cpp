@@ -3,5 +3,6 @@
 
 int main(const int argc, const char** argv)
 {
-    return examples::hello_world_main(argc, argv);
+    using namespace examples;
+    return hello_world_main(argc, argv);
 }

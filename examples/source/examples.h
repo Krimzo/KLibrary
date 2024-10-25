@@ -10,6 +10,7 @@ namespace examples {
     int times_table_main(int argc, const char** argv);
     int trajectories_main(int argc, const char** argv);
     int visual_sort_main(int argc, const char** argv);
+    int sudoku_solver_main(int argc, const char** argv);
 
     int compute_shaders1_main(int argc, const char** argv);
     int compute_shaders2_main(int argc, const char** argv);
