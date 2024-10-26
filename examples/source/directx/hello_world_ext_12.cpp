@@ -131,26 +131,26 @@ int examples::hello_world_ext_12_main(const int argc, const char** argv)
         memcpy(&instance_data[2].Transform, &floor, sizeof(float) * 12);
         gpu.copy(instances, instance_data, sizeof(instance_data));
 
-        gpu.execute([&]
+        gpu.execute([&](auto& commands)
         {
-            gpu.commands.update_tlas(tlas, tlas_update_scratch, instances);
+            commands.update_tlas(tlas, tlas_update_scratch, instances);
 
-            gpu.commands.list->SetPipelineState1(pipeline_state.get());
-            gpu.commands.list->SetComputeRootSignature(root_signature.get());
-            gpu.commands.list->SetComputeRootDescriptorTable(0, uav_heap->GetGPUDescriptorHandleForHeapStart());
-            gpu.commands.list->SetComputeRootShaderResourceView(1, tlas->GetGPUVirtualAddress());
+            commands.list->SetPipelineState1(pipeline_state.get());
+            commands.list->SetComputeRootSignature(root_signature.get());
+            commands.list->SetComputeRootDescriptorTable(0, uav_heap->GetGPUDescriptorHandleForHeapStart());
+            commands.list->SetComputeRootShaderResourceView(1, tlas->GetGPUVirtualAddress());
             ID3D12DescriptorHeap* uav_heaps[1] = { uav_heap.get() };
-            gpu.commands.list->SetDescriptorHeaps(1, uav_heaps);
+            commands.list->SetDescriptorHeaps(1, uav_heaps);
 
             const D3D12_RESOURCE_DESC target_descriptor = ray_target->GetDesc();
-            gpu.commands.dispatch_rays(shader_ids->GetGPUVirtualAddress(), (UINT) target_descriptor.Width, (UINT) target_descriptor.Height);
+            commands.dispatch_rays(shader_ids->GetGPUVirtualAddress(), (UINT) target_descriptor.Width, (UINT) target_descriptor.Height);
 
             auto back_buffer = gpu.get_back_buffer(gpu.back_buffer_index());
-            gpu.commands.transition_resource(ray_target, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_SOURCE);
-            gpu.commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_DEST);
-            gpu.commands.copy(back_buffer, ray_target);
-            gpu.commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT);
-            gpu.commands.transition_resource(ray_target, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+            commands.transition_resource(ray_target, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_SOURCE);
+            commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_DEST);
+            commands.copy(back_buffer, ray_target);
+            commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT);
+            commands.transition_resource(ray_target, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
         });
         
         gpu.swap_buffers(true);

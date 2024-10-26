@@ -48,22 +48,22 @@ int examples::hello_world_12_main(const int argc, const char** argv)
 		const kl::dx12::Resource back_buffer = gpu.get_back_buffer(back_buffer_index);
 		const kl::dx12::DescriptorHandle render_target = gpu.get_render_target(back_buffer_index);
 
-		gpu.execute([&]
+		gpu.execute([&](auto& commands)
 		{
-			gpu.commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-			gpu.commands.set_render_target(&render_target, nullptr);
-			gpu.commands.clear_target_view(render_target, kl::RGB(30, 30, 30));
+			commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+			commands.set_render_target(&render_target, nullptr);
+			commands.clear_target_view(render_target, kl::RGB(30, 30, 30));
 
-			gpu.commands.set_scissors(kl::dx12::Scissors{ 0, 0, LONG_MAX, LONG_MAX });
-			gpu.commands.set_viewport(kl::dx12::Viewport{ 0.0f, 0.0f, (float) window.width(), (float) window.height(), 0.0f, 1.0f });
+			commands.set_scissors(kl::dx12::Scissors{ 0, 0, LONG_MAX, LONG_MAX });
+			commands.set_viewport(kl::dx12::Viewport{ 0.0f, 0.0f, (float) window.width(), (float) window.height(), 0.0f, 1.0f });
 
-			gpu.commands.set_root_signature(root_signature);
-			gpu.commands.set_pipeline_state(pipeline_state);
+			commands.set_root_signature(root_signature);
+			commands.set_pipeline_state(pipeline_state);
 
-			gpu.commands.set_vertex_buffer(vertex_buffer.second);
-			gpu.commands.set_primitive_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			gpu.commands.draw((UINT) std::size(vertices));
-			gpu.commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+			commands.set_vertex_buffer(vertex_buffer.second);
+			commands.set_primitive_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			commands.draw((UINT) std::size(vertices));
+			commands.transition_resource(back_buffer, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 		});
 
 		gpu.swap_buffers(true);
