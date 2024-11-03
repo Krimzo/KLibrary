@@ -4,11 +4,11 @@
 int examples::compute_shaders2_main(const int argc, const char** argv)
 {
     kl::Window window{ "Compute shaders 2" };
-    kl::GPU gpu{ window };
+    kl::GPU gpu{ window.ptr() };
     kl::Timer timer;
 
     window.set_resizeable(false);
-    gpu.resize_to_window(window);
+    gpu.resize_to_window(window.ptr());
 
     const kl::dx::DepthState depth_state = gpu.create_depth_state(false, false, false);
     gpu.bind_depth_state(depth_state);

@@ -257,7 +257,7 @@ static constexpr std::optional<Sudoku> solve(Sudoku sudoku, Sudoku& displayer, i
 struct SudokuApp
 {
 	kl::Window window{ "Sudoku Solver" };
-	kl::GPU gpu{ window };
+	kl::GPU gpu{ window.ptr() };
 
 	SudokuApp()
 	{

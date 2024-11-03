@@ -4,7 +4,7 @@
 int examples::text_drawing_main(const int argc, const char** argv)
 {
 	kl::Window window{ "Text Drawing" };
-	kl::GPU gpu{ window };
+	kl::GPU gpu{ window.ptr() };
 
 	window.on_resize.emplace_back([&](kl::Int2 size)
 	{

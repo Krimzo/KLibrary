@@ -26,7 +26,7 @@ float4 p_shader(const VS_OUT data) : SV_Target
 int examples::hello_world_12_main(const int argc, const char** argv)
 {
 	kl::Window window{ "Hello World! (D3D12)" };
-	kl::GPU12 gpu{ window };
+	kl::GPU12 gpu{ window.ptr() };
 
 	window.on_resize.emplace_back([&](kl::Int2 size)
 	{

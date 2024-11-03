@@ -4,7 +4,7 @@
 int examples::hello_world_ext_12_main(const int argc, const char** argv)
 {
     kl::Window window{ "Hardware Raytracing" };
-    kl::GPU12 gpu{ window };
+    kl::GPU12 gpu{ window.ptr() };
     kl::Timer timer;
 
     kl::dx12::DescriptorHeap uav_heap{};

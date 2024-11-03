@@ -4,7 +4,7 @@
 int examples::geometry_shaders_main(const int argc, const char** argv)
 {
     kl::Window window{ "Geometry Test" };
-    kl::GPU gpu{ window };
+    kl::GPU gpu{ window.ptr() };
     kl::Timer timer;
     kl::Camera camera;
 

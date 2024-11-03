@@ -31,7 +31,7 @@ float4 p_shader(VS_OUT data) : SV_Target0
 int examples::hello_world_ext_main(const int argc, const char** argv)
 {
     kl::Window window{ "Hello World! (D3D11 Extended)" };
-    kl::GPU gpu{ window };
+    kl::GPU gpu{ window.ptr() };
 
     window.on_resize.emplace_back([&](kl::Int2 size)
     {
