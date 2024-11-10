@@ -28,35 +28,36 @@ float4 p_shader(VS_OUT data) : SV_Target0
 }
 )";
 
-int examples::hello_world_ext_main(const int argc, const char** argv)
+int examples::hello_world_ext_main( int argc, char** argv )
 {
     kl::Window window{ "Hello World! (D3D11 Extended)" };
     kl::GPU gpu{ window.ptr() };
 
-    window.on_resize.emplace_back([&](kl::Int2 size)
+    window.on_resize.emplace_back( [&]( kl::Int2 size )
     {
-        gpu.resize_internal(size);
-        gpu.set_viewport_size(size);
-    });
+        gpu.resize_internal( size );
+        gpu.set_viewport_size( size );
+    } );
 
-    const std::vector<kl::Vertex> vertices = {
+    std::vector<kl::Vertex> vertices = {
         { { -0.5f, -0.5f, 0.5f }, kl::colors::RED, {} },
-        { { -0.5f,  0.5f, 0.5f }, kl::colors::GREEN, {} },
-        { {  0.5f, -0.5f, 0.5f }, kl::colors::BLUE, {} },
-        { {  0.5f,  0.5f, 0.5f }, kl::colors::WHITE, {} },
+        { { -0.5f, 0.5f, 0.5f }, kl::colors::GREEN, {} },
+        { { 0.5f, -0.5f, 0.5f }, kl::colors::BLUE, {} },
+        { { 0.5f, 0.5f, 0.5f }, kl::colors::WHITE, {} },
     };
-    const std::vector<uint32_t> indices = {
+    std::vector<uint32_t> indices = {
         0, 1, 3,
         0, 2, 3,
     };
 
-    const kl::dx::Buffer vertex_buffer = gpu.create_vertex_buffer(vertices);
-    const kl::dx::Buffer index_buffer = gpu.create_index_buffer(indices);
+    kl::dx::Buffer vertex_buffer = gpu.create_vertex_buffer( vertices );
+    kl::dx::Buffer index_buffer = gpu.create_index_buffer( indices );
 
-    kl::Shaders shaders = gpu.create_shaders(SHADER_SOURCE);
-    gpu.bind_shaders(shaders);
+    kl::Shaders shaders = gpu.create_shaders( SHADER_SOURCE );
+    gpu.bind_shaders( shaders );
 
-    while (window.process()) {
+    while ( window.process() )
+    {
         struct alignas(16) CB
         {
             kl::Float4 HIGHLIGHT_COLOR;
@@ -65,11 +66,11 @@ int examples::hello_world_ext_main(const int argc, const char** argv)
 
         cb.HIGHLIGHT_COLOR = kl::colors::GRAY;
         cb.MOUSE_POSITION = window.mouse.position();
-        shaders.upload(cb);
-        
-        gpu.clear_internal(kl::colors::GRAY);
-        gpu.draw_indexed(vertex_buffer, index_buffer);
-        gpu.swap_buffers(true);
+        shaders.upload( cb );
+
+        gpu.clear_internal( kl::colors::GRAY );
+        gpu.draw_indexed( vertex_buffer, index_buffer );
+        gpu.swap_buffers( true );
     }
     return 0;
 }

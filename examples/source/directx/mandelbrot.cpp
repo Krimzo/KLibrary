@@ -6,35 +6,44 @@ static float ZOOM = 1.0f;
 static kl::Float2 POSITION = { -0.5f, 0.0f };
 static kl::RGB START_COLOR = kl::colors::ORANGE;
 
-static void input(const kl::Window& window, const float delta_time)
+static void input( kl::Window const& window, float delta_time )
 {
-    if (window.keyboard.esc) {
+    if ( window.keyboard.esc )
+    {
         window.close();
     }
-    if (window.keyboard.r) {
-        if (window.keyboard.shift) {
+    if ( window.keyboard.r )
+    {
+        if ( window.keyboard.shift )
+        {
             ITERATIONS = 64;
         }
-        else {
+        else
+        {
             POSITION = { -0.5, 0.0f };
             ZOOM = 1.0f;
         }
     }
-    if (window.keyboard.w) {
+    if ( window.keyboard.w )
+    {
         POSITION.y -= (1.0f / ZOOM) * delta_time;
     }
-    if (window.keyboard.s) {
+    if ( window.keyboard.s )
+    {
         POSITION.y += (1.0f / ZOOM) * delta_time;
     }
-    if (window.keyboard.d) {
+    if ( window.keyboard.d )
+    {
         POSITION.x += (1.0f / ZOOM) * delta_time;
     }
-    if (window.keyboard.a) {
+    if ( window.keyboard.a )
+    {
         POSITION.x -= (1.0f / ZOOM) * delta_time;
     }
 
-    const kl::Int2 frame_size = window.size();
-    if (window.mouse.left) {
+    kl::Int2 frame_size = window.size();
+    if ( window.mouse.left )
+    {
         ZOOM += ZOOM * delta_time;
         kl::Float2 uv = {
             window.mouse.position().x / (float) frame_size.x * 2.0f - 1.0f,
@@ -43,7 +52,8 @@ static void input(const kl::Window& window, const float delta_time)
         uv *= (float) frame_size.x / (float) frame_size.y;
         POSITION += (uv * (1.0f / ZOOM)) * delta_time;
     }
-    if (window.mouse.right) {
+    if ( window.mouse.right )
+    {
         ZOOM -= ZOOM * delta_time;
         kl::Float2 uv = {
             window.mouse.position().x / (float) frame_size.x * 2.0f - 1.0f,
@@ -54,60 +64,67 @@ static void input(const kl::Window& window, const float delta_time)
     }
 
     ITERATIONS += window.mouse.scroll() * (window.keyboard.shift ? 10 : 1);
-    ITERATIONS = std::max(ITERATIONS, 0);
+    ITERATIONS = std::max( ITERATIONS, 0 );
 }
 
 static void console_read()
 {
-    while (true) {
-        kl::print<false>(kl::colors::CONSOLE, "Color = ");
-        if (std::vector<std::string> parts = kl::split_string([]
+    while ( true )
+    {
+        kl::print<false>( kl::colors::CONSOLE, "Color = " );
+        auto parts = kl::split_string( []
         {
             std::string line;
-            std::getline(std::cin, line);
+            std::getline( std::cin, line );
             return line;
-        }(), ' '); parts.size() >= 3) {
-            try {
+        }(), ' ' );
+        if ( parts.size() >= 3 )
+        {
+            try
+            {
                 kl::RGB result_color;
-                result_color.r = (byte) kl::parse_int(parts[0]).value_or(0);
-                result_color.g = (byte) kl::parse_int(parts[1]).value_or(0);
-                result_color.b = (byte) kl::parse_int(parts[2]).value_or(0);
+                result_color.r = (byte) kl::parse_int( parts[0] ).value_or( 0 );
+                result_color.g = (byte) kl::parse_int( parts[1] ).value_or( 0 );
+                result_color.b = (byte) kl::parse_int( parts[2] ).value_or( 0 );
                 START_COLOR = result_color;
-                print(START_COLOR, "Color updated!");
+                print( START_COLOR, "Color updated!" );
             }
-            catch (std::exception&) {
-                kl::print(kl::colors::RED, "Bad input");
+            catch ( std::exception const& )
+            {
+                kl::print( kl::colors::RED, "Bad input" );
             }
         }
-        else {
-            kl::print(kl::colors::ORANGE, "Not enough data");
+        else
+        {
+            kl::print( kl::colors::ORANGE, "Not enough data" );
         }
     }
 }
 
-int examples::mandelbrot_main(const int argc, const char** argv)
+int examples::mandelbrot_main( int argc, char** argv )
 {
     kl::Window window{ "Mandelbrot" };
     kl::GPU gpu{ window.ptr() };
     kl::Timer timer;
 
-    window.on_resize.emplace_back([&](kl::Int2 size)
+    window.on_resize.emplace_back( [&]( kl::Int2 size )
     {
-        gpu.resize_internal(size);
-        gpu.set_viewport_size(size);
-    });
+        gpu.resize_internal( size );
+        gpu.set_viewport_size( size );
+    } );
     window.maximize();
 
-    std::string shader_sources = kl::read_file("shaders/mandelbrot.hlsl");
-    kl::Shaders shaders = gpu.create_shaders(shader_sources);
+    std::string shader_sources = kl::read_file( "shaders/mandelbrot.hlsl" );
+    kl::Shaders shaders = gpu.create_shaders( shader_sources );
     kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
 
-    std::thread(console_read).detach();
+    std::thread( console_read ).detach();
 
-    while (window.process()) {
+    while ( window.process() )
+    {
         timer.update();
 
-        input(window, timer.delta());
+        input( window, timer.delta() );
 
         gpu.clear_internal();
 
@@ -122,17 +139,17 @@ int examples::mandelbrot_main(const int argc, const char** argv)
         cb.FRAME_SIZE = { window.size(), {} };
         cb.START_COLOR = START_COLOR;
 
-        shaders.upload(cb);
-        gpu.bind_shaders(shaders);
+        shaders.upload( cb );
+        gpu.bind_shaders( shaders );
 
-        gpu.draw(screen_mesh);
-        gpu.swap_buffers(true);
+        gpu.draw( screen_mesh );
+        gpu.swap_buffers( true );
 
-        window.set_title(kl::format(
+        window.set_title( kl::format(
             "(Iterations: ", ITERATIONS, ") ",
-            "(Zoom: ", std::fixed, std::setprecision(2), ZOOM, ") ",
+            "(Zoom: ", std::fixed, std::setprecision( 2 ), ZOOM, ") ",
             "(Position: ", POSITION, ")"
-        ));
+        ) );
     }
     return 0;
 }
