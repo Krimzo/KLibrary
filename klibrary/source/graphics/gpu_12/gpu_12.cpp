@@ -230,7 +230,7 @@ kl::dx12::Resource kl::GPU12::create_buffer( void const* data, UINT byte_size, D
 {
     dx12::Resource buffer = create_commited_resource( byte_size, D3D12_RESOURCE_STATE_COMMON );
     dx12::Resource upload_buffer = create_upload_buffer( data, byte_size );
-    execute( [&]( auto const& commands )
+    execute( [&]( auto& commands )
     {
         commands.transition_resource( buffer, D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_DEST );
         commands.copy( buffer, upload_buffer );
@@ -292,7 +292,7 @@ kl::dx12::AccelerationStructure kl::GPU12::create_acceleration_structure( dx12::
         .Inputs = inputs,
         .ScratchAccelerationStructureData = scratch->GetGPUVirtualAddress(),
     };
-    execute( [&]( auto const& commands )
+    execute( [&]( auto& commands )
     {
         commands.transition_resource( scratch, D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_UNORDERED_ACCESS );
         commands.list->BuildRaytracingAccelerationStructure( &acceleration_descriptor, 0, nullptr );
@@ -354,7 +354,7 @@ kl::dx12::PipelineState kl::GPU12::create_default_rasterization_pipeline( dx12::
 
     std::vector<dx12::InputLayout> input_layout{};
     input_layout.reserve( input_layout_parts.size() );
-    for ( auto const& [name, format] : input_layout_parts )
+    for ( auto& [name, format] : input_layout_parts )
         input_layout.emplace_back( name.data(), 0, format, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 );
 
     struct RasterPipeline

@@ -130,7 +130,7 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
         memcpy( &instance_data[2].Transform, &floor, sizeof( float ) * 12 );
         gpu.copy( instances, instance_data, sizeof( instance_data ) );
 
-        gpu.execute( [&]( auto const& commands )
+        gpu.execute( [&]( auto& commands )
         {
             commands.update_tlas( tlas, tlas_update_scratch, instances );
 

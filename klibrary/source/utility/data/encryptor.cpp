@@ -29,7 +29,7 @@ void kl::Encryptor::run_pass( void* data, uint64_t byte_size ) const
 
 bool kl::Encryptor::key_size_exists( uint64_t size ) const
 {
-    for ( auto const& key : keys )
+    for ( auto& key : keys )
     {
         if ( key.size() == size )
             return true;

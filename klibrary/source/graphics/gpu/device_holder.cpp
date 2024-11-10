@@ -288,7 +288,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh( float size )
     };
 
     std::vector<Triangle> triangles;
-    for ( auto const& triangle : face )
+    for ( auto& triangle : face )
     {
         triangles.push_back( mul_tr( triangle, Float3{ size } ) );
         triangles.push_back( rotate_tr( triangles.back(), { 1.0f, 0.0f, 0.0f }, 90.0f ) );
@@ -318,9 +318,9 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
     };
     static constexpr auto subdivide_single = []( Triangle const& triangle, std::vector<Triangle>& triangles )
     {
-        auto const& a = triangle.a;
-        auto const& b = triangle.b;
-        auto const& c = triangle.c;
+        auto& a = triangle.a;
+        auto& b = triangle.b;
+        auto& c = triangle.c;
         Float3 ab = normalize( (triangle.a.position + triangle.b.position) * 0.5f );
         Float3 bc = normalize( (triangle.b.position + triangle.c.position) * 0.5f );
         Float3 ca = normalize( (triangle.c.position + triangle.a.position) * 0.5f );
@@ -332,13 +332,13 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
     static constexpr auto subdivide_multiple = []( std::vector<Triangle> const& triangles ) -> std::vector<Triangle>
     {
         std::vector<Triangle> result;
-        for ( auto const& triangle : triangles )
+        for ( auto& triangle : triangles )
             subdivide_single( triangle, result );
         return result;
     };
 
     std::vector<Triangle> triangles;
-    for ( auto const& index : indices )
+    for ( auto& index : indices )
         triangles.emplace_back( vertices[index.z], vertices[index.y], vertices[index.x] );
     for ( int i = 0; i < complexity; i++ )
         triangles = subdivide_multiple( triangles );

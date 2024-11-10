@@ -10,7 +10,7 @@ static void draw_axis( kl::Image& frame, kl::RGB color = { 75, 75, 75 } )
 static void draw_data( kl::Image& frame, std::vector<kl::Int2> const& data, kl::RGB color = kl::colors::ORANGE )
 {
     kl::Int2 half_size = frame.size() / 2;
-    for ( auto const& val : data )
+    for ( auto& val : data )
     {
         kl::Int2 write_position = val * kl::Int2( 1, -1 ) + half_size;
         if ( frame.in_bounds( write_position ) )
@@ -29,7 +29,7 @@ static void draw_line( kl::Image& frame, kl::Float2 equat, kl::RGB color = kl::c
 static float calculate_offsets( std::vector<kl::Int2> const& data, kl::Float2 line_equat )
 {
     float sum = 0.0f;
-    for ( auto const& val : data )
+    for ( auto& val : data )
         sum += abs( val.y - (val.x * line_equat.x + line_equat.y) );
     return sum;
 }

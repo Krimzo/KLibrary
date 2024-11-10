@@ -86,7 +86,7 @@ kl::Float4x4 kl::DirectionalLight::matrix( Float4x4 const& inv_cam_mat ) const
     Float2 min_xy{ std::numeric_limits<float>::infinity() };
     Float2 max_xy{ -std::numeric_limits<float>::infinity() };
     float min_z = std::numeric_limits<float>::infinity();
-    for ( auto const& corner : frustum_corners )
+    for ( auto& corner : frustum_corners )
     {
         min_xy.x = min( min_xy.x, corner.x );
         min_xy.y = min( min_xy.y, corner.y );
@@ -111,7 +111,7 @@ kl::Float4x4 kl::DirectionalLight::matrix( Float4x4 const& inv_cam_mat ) const
         corner = light_view_matrix * corner;
 
     Float3 max_xyz{ -std::numeric_limits<float>::infinity() };
-    for ( auto const& corner : frustum_corners )
+    for ( auto& corner : frustum_corners )
     {
         max_xyz.x = max( max_xyz.x, corner.x );
         max_xyz.y = max( max_xyz.y, corner.y );

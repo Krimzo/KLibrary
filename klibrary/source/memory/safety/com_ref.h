@@ -5,7 +5,8 @@
 
 namespace kl
 {
-constexpr void const* _addr( auto const& obj )
+template<typename T>
+constexpr void const* _addr( T const& obj )
 {
     return &reinterpret_cast<byte const&>(obj);
 }

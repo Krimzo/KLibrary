@@ -9,7 +9,8 @@ static void clear_data()
         value = 0.0f;
 }
 
-static float time_it( auto const& func )
+template<typename F>
+static float time_it( F const& func )
 {
     auto start_time = kl::time::now();
     func();

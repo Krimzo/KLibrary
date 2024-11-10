@@ -83,7 +83,7 @@ std::vector<std::string> kl::list_files( std::string_view const& path, bool recu
     std::vector<std::string> files;
     if ( recursive )
     {
-        for ( auto const& entry : std::filesystem::recursive_directory_iterator( path ) )
+        for ( auto& entry : std::filesystem::recursive_directory_iterator( path ) )
         {
             if ( !entry.is_directory() )
             {
@@ -93,7 +93,7 @@ std::vector<std::string> kl::list_files( std::string_view const& path, bool recu
     }
     else
     {
-        for ( auto const& entry : std::filesystem::directory_iterator( path ) )
+        for ( auto& entry : std::filesystem::directory_iterator( path ) )
         {
             if ( !entry.is_directory() )
             {
@@ -206,10 +206,9 @@ std::vector<kl::Vertex> kl::parse_obj_file( std::string_view const& filepath, bo
 std::optional<std::string> kl::choose_file( bool save, std::vector<std::pair<std::string_view, std::string_view>> const& filters, int* out_index )
 {
     std::stringstream filter_buffer;
-    for ( auto const& filter : filters )
-    {
+    for ( auto& filter : filters )
         filter_buffer << filter.first << " (*" << filter.second << ")" << '\0' << '*' << filter.second << '\0';
-    }
+
     std::string filter_data = filter_buffer.str();
 
     char file_buffer[512] = {};

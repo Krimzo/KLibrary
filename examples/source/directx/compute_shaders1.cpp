@@ -22,7 +22,7 @@ int examples::compute_shaders1_main( int argc, char** argv )
     gpu.dispatch_compute_shader( DATA_SIZE, 1, 1 );
     gpu.read_from_buffer( data, buffer, DATA_SIZE * sizeof( TestStruct ) );
 
-    for ( auto const& object : data )
+    for ( auto& object : data )
     {
         print( object.position );
     }

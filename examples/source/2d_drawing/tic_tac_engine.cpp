@@ -20,7 +20,7 @@ static kl::RGB ENGINE_COLOR = kl::colors::GREEN;
 
 static bool has_empty( std::vector<int> const& board )
 {
-    for ( auto const& piece : board )
+    for ( auto& piece : board )
     {
         if ( piece == ID::EMPTY )
             return true;

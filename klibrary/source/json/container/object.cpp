@@ -70,7 +70,7 @@ std::string kl::json::Object::decompile( int depth ) const
         std::string map_depth( depth * 2, ' ' );
         std::string content_depth( (depth + 1) * 2, ' ' );
         stream << Standard::object_start << '\n';
-        for ( auto const& [key, value] : *this )
+        for ( auto& [key, value] : *this )
         {
             std::string name = key;
             Lexer::from_escaping( name );
@@ -86,7 +86,7 @@ std::string kl::json::Object::decompile( int depth ) const
     else
     {
         stream << Standard::object_start << ' ';
-        for ( auto const& [key, value] : *this )
+        for ( auto& [key, value] : *this )
         {
             std::string name = key;
             Lexer::from_escaping( name );

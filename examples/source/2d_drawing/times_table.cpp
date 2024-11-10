@@ -47,7 +47,7 @@ int examples::times_table_main( int argc, char** argv )
             };
         }
 
-        for ( auto const& point : circle_points )
+        for ( auto& point : circle_points )
             frame.draw_circle( point, 3.0f, point_color, true );
 
         for ( int i = 0; i < int( circle_points.size() ); i++ )

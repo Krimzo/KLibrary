@@ -315,7 +315,7 @@ LRESULT CALLBACK kl::Window::window_procedure( HWND window_handle, UINT message,
         Int2 size = { LOWORD( l_param ), HIWORD( l_param ) };
         if ( size.x > 0 && size.y > 0 )
         {
-            for ( auto const& callback : on_resize )
+            for ( auto& callback : on_resize )
                 callback( size );
         }
     }
@@ -324,7 +324,7 @@ LRESULT CALLBACK kl::Window::window_procedure( HWND window_handle, UINT message,
     case WM_MOVE:
     {
         Int2 position = { LOWORD( l_param ), HIWORD( l_param ) };
-        for ( auto const& callback : on_move )
+        for ( auto& callback : on_move )
             callback( position );
     }
     break;
@@ -339,7 +339,7 @@ void kl::Window::handle_message( MSG const& message )
     if ( ImGui_ImplWin32_WndProcHandler( message.hwnd, message.message, message.wParam, message.lParam ) )
     {
         return;
-}
+    }
 #endif
 
     switch ( message.message )

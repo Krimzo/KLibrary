@@ -40,7 +40,7 @@ struct Ray_T
         return m_direction;
     }
 
-    constexpr bool intersect_plane( Plane_T<T> const& plane, Vector3<T> const* out_intersection ) const
+    constexpr bool intersect_plane( Plane_T<T> const& plane, Vector3<T>* out_intersection ) const
     {
         T denom = dot( plane.normal(), m_direction );
         if ( abs( denom ) <= T( 0.0001 ) )
@@ -52,15 +52,17 @@ struct Ray_T
 
         if ( out_intersection )
             *out_intersection = origin + m_direction * t;
+
         return true;
     }
 
-    constexpr bool intersect_sphere( Sphere_T<T> const& sphere, Vector3<T> const* out_intersection ) const
+    constexpr bool intersect_sphere( Sphere_T<T> const& sphere, Vector3<T>* out_intersection ) const
     {
         if ( sphere.contains( origin ) )
         {
             if ( out_intersection )
                 *out_intersection = origin;
+
             return true;
         }
 
@@ -79,15 +81,17 @@ struct Ray_T
         T dis1 = cd_dot + thc;
         if ( out_intersection )
             *out_intersection = origin + m_direction * (dis0 < T( 0 ) ? dis1 : dis0);
+
         return true;
     }
 
-    constexpr bool intersect_aabb( AABB_T<T> const& aabb, Vector3<T> const* out_intersection ) const
+    constexpr bool intersect_aabb( AABB_T<T> const& aabb, Vector3<T>* out_intersection ) const
     {
         if ( aabb.contains( origin ) )
         {
             if ( out_intersection )
                 *out_intersection = origin;
+
             return true;
         }
 
@@ -103,10 +107,11 @@ struct Ray_T
 
         if ( out_intersection )
             *out_intersection = origin + m_direction * t_min_max;
+
         return true;
     }
 
-    constexpr bool intersect_triangle( Triangle_T<T> const& triangle, Vector3<T> const* out_intersection ) const
+    constexpr bool intersect_triangle( Triangle_T<T> const& triangle, Vector3<T>* out_intersection ) const
     {
         Vector3<T> edge1 = triangle.b.position - triangle.a.position;
         Vector3<T> edge2 = triangle.c.position - triangle.a.position;
@@ -129,6 +134,7 @@ struct Ray_T
 
         if ( out_intersection )
             *out_intersection = origin + m_direction * t;
+
         return true;
     }
 

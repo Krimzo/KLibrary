@@ -27,13 +27,13 @@ kl::TextFormat kl::TextRaster::create_text_format(
 
 void kl::TextRaster::draw_text( UINT target_index ) const
 {
-    auto const& target = m_d2d1_targets[target_index];
+    auto& target = m_d2d1_targets[target_index];
     ComRef<ID2D1SolidColorBrush> brush;
     D2D1_SIZE_F target_size = target->GetSize();
     D2D1_RECT_F layout_rect{};
 
     target->BeginDraw();
-    for ( auto const& text : text_data )
+    for ( auto& text : text_data )
     {
         layout_rect.left = text.position.x;
         layout_rect.right = layout_rect.left + (text.rect_size.x > 0.0f ? text.rect_size.x : target_size.width);

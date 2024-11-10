@@ -49,7 +49,7 @@ int examples::hello_world_12_main( int argc, char** argv )
         kl::dx12::Resource back_buffer = gpu.get_back_buffer( back_buffer_index );
         kl::dx12::DescriptorHandle render_target = gpu.get_render_target( back_buffer_index );
 
-        gpu.execute( [&]( auto const& commands )
+        gpu.execute( [&]( auto& commands )
         {
             commands.transition_resource( back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET );
             commands.set_render_target( &render_target, nullptr );
