@@ -3,12 +3,14 @@
 
 int examples::hello_world_ext_12_main( int argc, char** argv )
 {
+    namespace dx12 = kl::dx12;
+
     kl::Window window{ "Hardware Raytracing" };
     kl::GPU12 gpu{ window.ptr() };
     kl::Timer timer;
 
-    kl::dx12::DescriptorHeap uav_heap{};
-    kl::dx12::Resource ray_target{};
+    dx12::DescriptorHeap uav_heap{};
+    dx12::Resource ray_target{};
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
     {
@@ -44,13 +46,13 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
     std::vector cube_mesh_data = kl::parse_obj_file( "meshes/cube.obj" );
     std::vector monke_mesh_data = kl::parse_obj_file( "meshes/monke.obj" );
 
-    kl::dx12::Resource quad_vb = gpu.create_buffer( quad_mesh_data.data(), (UINT) quad_mesh_data.size() * sizeof( kl::Vertex ), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE );
-    kl::dx12::Resource cube_vb = gpu.create_buffer( cube_mesh_data.data(), (UINT) cube_mesh_data.size() * sizeof( kl::Vertex ), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE );
-    kl::dx12::Resource monke_vb = gpu.create_buffer( monke_mesh_data.data(), (UINT) monke_mesh_data.size() * sizeof( kl::Vertex ), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE );
+    dx12::Resource quad_vb = gpu.create_buffer( quad_mesh_data.data(), (UINT) quad_mesh_data.size() * sizeof( kl::Vertex ), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE );
+    dx12::Resource cube_vb = gpu.create_buffer( cube_mesh_data.data(), (UINT) cube_mesh_data.size() * sizeof( kl::Vertex ), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE );
+    dx12::Resource monke_vb = gpu.create_buffer( monke_mesh_data.data(), (UINT) monke_mesh_data.size() * sizeof( kl::Vertex ), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE );
 
-    kl::dx12::AccelerationStructure quad_blas = gpu.create_triangle_blas( quad_vb, sizeof( kl::Vertex ) );
-    kl::dx12::AccelerationStructure cube_blas = gpu.create_triangle_blas( cube_vb, sizeof( kl::Vertex ) );
-    kl::dx12::AccelerationStructure monke_blas = gpu.create_triangle_blas( monke_vb, sizeof( kl::Vertex ) );
+    dx12::AccelerationStructure quad_blas = gpu.create_triangle_blas( quad_vb, sizeof( kl::Vertex ) );
+    dx12::AccelerationStructure cube_blas = gpu.create_triangle_blas( cube_vb, sizeof( kl::Vertex ) );
+    dx12::AccelerationStructure monke_blas = gpu.create_triangle_blas( monke_vb, sizeof( kl::Vertex ) );
 
     D3D12_RAYTRACING_INSTANCE_DESC instance_data[3] = {};
     instance_data[0] = {
@@ -70,14 +72,14 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
     };
 
     kl::Float4x4 default_mat{};
-    memcpy( &instance_data[0].Transform, &default_mat, sizeof( float ) * 12 );
-    memcpy( &instance_data[1].Transform, &default_mat, sizeof( float ) * 12 );
-    memcpy( &instance_data[2].Transform, &default_mat, sizeof( float ) * 12 );
-    kl::dx12::Resource instances = gpu.create_upload_buffer( instance_data, sizeof( instance_data ) );
+    kl::copy<float>( &instance_data[0].Transform, &default_mat, 12 );
+    kl::copy<float>( &instance_data[1].Transform, &default_mat, 12 );
+    kl::copy<float>( &instance_data[2].Transform, &default_mat, 12 );
+    dx12::Resource instances = gpu.create_upload_buffer( instance_data, sizeof( instance_data ) );
 
     UINT64 update_scratch_size = 0;
-    kl::dx12::AccelerationStructure tlas = gpu.create_tlas( instances, &update_scratch_size );
-    kl::dx12::Resource tlas_update_scratch = gpu.create_commited_resource( update_scratch_size,
+    dx12::AccelerationStructure tlas = gpu.create_tlas( instances, &update_scratch_size );
+    dx12::Resource tlas_update_scratch = gpu.create_commited_resource( update_scratch_size,
         D3D12_RESOURCE_STATE_COMMON, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS );
 
     D3D12_DESCRIPTOR_RANGE uav_range{
@@ -98,19 +100,19 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
             .RegisterSpace = 0,
     },
     };
-    kl::dx12::RootSignature root_signature = gpu.create_root_signature( { root_parameter0, root_parameter1 }, {}, D3D12_ROOT_SIGNATURE_FLAG_NONE );
+    dx12::RootSignature root_signature = gpu.create_root_signature( { root_parameter0, root_parameter1 }, {}, D3D12_ROOT_SIGNATURE_FLAG_NONE );
 
     std::string compiled_shader = kl::read_file( "shaders/raytracing/raytracing.cso" );
-    kl::dx12::StateObject pipeline_state = gpu.create_default_raytracing_pipeline( compiled_shader, root_signature );
+    dx12::StateObject pipeline_state = gpu.create_default_raytracing_pipeline( compiled_shader, root_signature );
 
-    kl::dx12::ObjectProperties pipeline_properties{};
+    dx12::ObjectProperties pipeline_properties{};
     pipeline_state.as( pipeline_properties );
 
     byte shader_id_buffer[D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT * 3] = {};
-    memcpy( shader_id_buffer + D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT * 0, pipeline_properties->GetShaderIdentifier( L"ray_generation_shader" ), D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES );
-    memcpy( shader_id_buffer + D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT * 1, pipeline_properties->GetShaderIdentifier( L"miss_shader" ), D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES );
-    memcpy( shader_id_buffer + D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT * 2, pipeline_properties->GetShaderIdentifier( L"hit_group" ), D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES );
-    kl::dx12::Resource shader_ids = gpu.create_upload_buffer( shader_id_buffer, sizeof( shader_id_buffer ) );
+    kl::copy<byte>( shader_id_buffer + D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT * 0, pipeline_properties->GetShaderIdentifier( L"rt_g_shader" ), D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES );
+    kl::copy<byte>( shader_id_buffer + D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT * 1, pipeline_properties->GetShaderIdentifier( L"rt_m_shader" ), D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES );
+    kl::copy<byte>( shader_id_buffer + D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT * 2, pipeline_properties->GetShaderIdentifier( L"rt_hit_group" ), D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES );
+    dx12::Resource shader_ids = gpu.create_upload_buffer( shader_id_buffer, sizeof( shader_id_buffer ) );
 
     while ( window.process() )
     {
@@ -121,25 +123,26 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
         float elapsed_t = timer.elapsed();
         kl::Float4x4 cube = kl::Float4x4::translation( { -1.5f, 2.0f, 2.0f } );
         cube *= kl::Float4x4::rotation( kl::Float3( elapsed_t / 2.0f, elapsed_t / 3.0f, elapsed_t / 5.0f ) * kl::to_degrees() );
-        memcpy( &instance_data[0].Transform, &cube, sizeof( float ) * 12 );
+        kl::copy<float>( &instance_data[0].Transform, &cube, 12 );
         kl::Float4x4 mirror = kl::Float4x4::translation( { 2.0f, 2.0f, 2.0f } );
         mirror *= kl::Float4x4::rotation( kl::Float3( -1.8f, std::sin( elapsed_t ) / 8.0f + 1.0f, 0.0f ) * kl::to_degrees() );
-        memcpy( &instance_data[1].Transform, &mirror, sizeof( float ) * 12 );
+        kl::copy<float>( &instance_data[1].Transform, &mirror, 12 );
         kl::Float4x4 floor = kl::Float4x4::translation( { 0.0f, 0.0f, 2.0f } );
         floor *= kl::Float4x4::scaling( { 5.0f, 5.0f, 5.0f } );
-        memcpy( &instance_data[2].Transform, &floor, sizeof( float ) * 12 );
+        kl::copy<float>( &instance_data[2].Transform, &floor, 12 );
         gpu.copy( instances, instance_data, sizeof( instance_data ) );
 
-        gpu.execute( [&]( auto& commands )
+        gpu.execute( [&]( kl::GPU12Commands& commands )
         {
             commands.update_tlas( tlas, tlas_update_scratch, instances );
 
             commands.list->SetPipelineState1( pipeline_state.get() );
             commands.list->SetComputeRootSignature( root_signature.get() );
-            commands.list->SetComputeRootDescriptorTable( 0, uav_heap->GetGPUDescriptorHandleForHeapStart() );
-            commands.list->SetComputeRootShaderResourceView( 1, tlas->GetGPUVirtualAddress() );
+
             ID3D12DescriptorHeap* uav_heaps[1] = { uav_heap.get() };
             commands.list->SetDescriptorHeaps( 1, uav_heaps );
+            commands.list->SetComputeRootDescriptorTable( 0, uav_heap->GetGPUDescriptorHandleForHeapStart() );
+            commands.list->SetComputeRootShaderResourceView( 1, tlas->GetGPUVirtualAddress() );
 
             D3D12_RESOURCE_DESC target_descriptor = ray_target->GetDesc();
             commands.dispatch_rays( shader_ids->GetGPUVirtualAddress(), (UINT) target_descriptor.Width, (UINT) target_descriptor.Height );
