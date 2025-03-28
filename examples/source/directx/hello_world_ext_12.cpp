@@ -28,8 +28,8 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
             .SampleDesc{
                 .Count = 1,
                 .Quality = 0,
-        },
-        .Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
+            },
+            .Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
         };
         ray_target = gpu.create_commited_resource( &target_descriptor, D3D12_RESOURCE_STATE_UNORDERED_ACCESS );
 
@@ -91,14 +91,14 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
         .DescriptorTable{
             .NumDescriptorRanges = 1,
             .pDescriptorRanges = &uav_range,
-    },
+        },
     };
     D3D12_ROOT_PARAMETER root_parameter1{
         .ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV,
         .Descriptor{
             .ShaderRegister = 0,
             .RegisterSpace = 0,
-    },
+        },
     };
     dx12::RootSignature root_signature = gpu.create_root_signature( { root_parameter0, root_parameter1 }, {}, D3D12_ROOT_SIGNATURE_FLAG_NONE );
 
