@@ -83,7 +83,7 @@ struct Index
         return value / 9;
     }
 
-    static friend std::ostream& operator<<( std::ostream& stream, Index const& index )
+    friend std::ostream& operator<<( std::ostream& stream, Index const& index )
     {
         return stream << "(" << index.x() << ", " << index.y() << ")";
     }

@@ -26,8 +26,8 @@ int examples::hello_world_main( int argc, char** argv )
     } );
 
     kl::dx::Buffer triangle = gpu.create_vertex_buffer( {
-        { { 0.0f, 0.5f, 0.5f } },
-        { { 0.5f, -0.5f, 0.5f } },
+        { {  0.0f,  0.5f, 0.5f } },
+        { {  0.5f, -0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
         } );
 
