@@ -79,7 +79,7 @@ std::vector<std::string> list_files( std::string_view const& path, bool recursiv
 std::vector<std::wstring> wlist_files( std::wstring_view const& path, bool recursive = false );
 
 std::string read_file_string( std::string_view const& filepath );
-std::wstring wread_file_string( std::wstring_view const& filepath );
+std::string wread_file_string( std::wstring_view const& filepath );
 
 bool write_file_string( std::string_view const& filepath, std::string_view const& data );
 bool wwrite_file_string( std::wstring_view const& filepath, std::wstring_view const& data );

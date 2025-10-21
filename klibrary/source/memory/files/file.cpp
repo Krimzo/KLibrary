@@ -142,13 +142,13 @@ std::string kl::read_file_string( std::string_view const& filepath )
     return result;
 }
 
-std::wstring kl::wread_file_string( std::wstring_view const& filepath )
+std::string kl::wread_file_string( std::wstring_view const& filepath )
 {
     File file{ filepath, false };
     if ( !file )
         return {};
 
-    std::wstring result;
+    std::string result;
     file.unwind();
     result.resize( file.tell() );
     file.rewind();
