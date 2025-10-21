@@ -18,9 +18,9 @@ int examples::times_table_main( int argc, char** argv )
     frame.resize( window.size() );
 
     window.on_resize.push_back( [&]( kl::Int2 size )
-    {
-        frame.resize( size );
-    } );
+        {
+            frame.resize( size );
+        } );
 
     while ( window.process() )
     {
@@ -42,8 +42,8 @@ int examples::times_table_main( int argc, char** argv )
         for ( int i = 0; i < int( circle_points.size() ); i++ )
         {
             circle_points[i] = {
-                (int) (kl::cos_d( point_angle * i + 180.0f ) * circle_radius + frame.width() * 0.5f),
-                (int) (kl::sin_d( point_angle * i + 180.0f ) * circle_radius + frame.height() * 0.5f),
+                (int) ( kl::cos_d( point_angle * i + 180.0f ) * circle_radius + frame.width() * 0.5f ),
+                (int) ( kl::sin_d( point_angle * i + 180.0f ) * circle_radius + frame.height() * 0.5f ),
             };
         }
 

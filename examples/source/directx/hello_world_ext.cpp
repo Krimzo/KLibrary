@@ -34,10 +34,10 @@ int examples::hello_world_ext_main( int argc, char** argv )
     kl::GPU gpu{ window.ptr() };
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        gpu.resize_internal( size );
-        gpu.set_viewport_size( size );
-    } );
+        {
+            gpu.resize_internal( size );
+            gpu.set_viewport_size( size );
+        } );
 
     std::vector<kl::Vertex> vertices = {
         { { -0.5f, -0.5f, 0.5f }, kl::colors::RED, {} },
@@ -58,7 +58,7 @@ int examples::hello_world_ext_main( int argc, char** argv )
 
     while ( window.process() )
     {
-        struct alignas(16) CB
+        struct alignas( 16 ) CB
         {
             kl::Float4 HIGHLIGHT_COLOR;
             kl::Float2 MOUSE_POSITION;

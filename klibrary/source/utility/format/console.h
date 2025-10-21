@@ -34,10 +34,10 @@ void progress_bar( std::string_view const& message, int output_y, float percenta
 namespace kl
 {
 inline std::function<void( std::string_view const& )> VERIFICATION_LOGGER = []( std::string_view const& message )
-{
-    console::set_enabled( true );
-    print( colors::ORANGE, "Failed to verify: ", message, colors::CONSOLE );
-};
+    {
+        console::set_enabled( true );
+        print( colors::ORANGE, "Failed to verify: ", message, colors::CONSOLE );
+    };
 
 template<typename... Args>
 constexpr bool verify( bool value, Args&&... args )

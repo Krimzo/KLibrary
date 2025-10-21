@@ -15,7 +15,7 @@ kl::Date::Date()
 
     namespace ch = std::chrono;
     auto time_since_epoch = ch::system_clock::now().time_since_epoch();
-    milisecond = int( ch::duration_cast<ch::milliseconds>(time_since_epoch).count() % 1000 );
+    milisecond = int( ch::duration_cast<ch::milliseconds>( time_since_epoch ).count() % 1000 );
 }
 
 std::ostream& kl::operator<<( std::ostream& stream, Date const& obj )

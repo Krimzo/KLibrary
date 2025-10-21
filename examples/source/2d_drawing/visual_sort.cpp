@@ -22,7 +22,7 @@ static std::vector<Stick> generate_sticks( int count, int min_value_incl, int ma
 
     for ( auto& [value, color] : sticks )
     {
-        byte gray_value = (byte) (kl::unlerp( (float) value, (float) stored_min_value, (float) stored_max_value ) * 255.0f);
+        byte gray_value = (byte) ( kl::unlerp( (float) value, (float) stored_min_value, (float) stored_max_value ) * 255.0f );
         color = { gray_value, gray_value, gray_value };
     }
     return sticks;
@@ -42,19 +42,19 @@ int examples::visual_sort_main( int argc, char** argv )
     std::vector<Stick> sticks = generate_sticks( frame.width(), 1, frame.height() );
 
     std::thread( [&]
-    {
-        window.set_title( "Sorting..." );
-        for ( size_t i = 0; i < sticks.size() - 1; i++ )
         {
-            for ( size_t j = i + 1; j < sticks.size(); j++ )
+            window.set_title( "Sorting..." );
+            for ( size_t i = 0; i < sticks.size() - 1; i++ )
             {
-                if ( sticks[j].value < sticks[i].value )
-                    std::swap( sticks[i], sticks[j] );
-                kl::time::wait( 0.000005f );
+                for ( size_t j = i + 1; j < sticks.size(); j++ )
+                {
+                    if ( sticks[j].value < sticks[i].value )
+                        std::swap( sticks[i], sticks[j] );
+                    kl::time::wait( 0.000005f );
+                }
             }
-        }
-        window.set_title( "Finished!" );
-    } ).detach();
+            window.set_title( "Finished!" );
+        } ).detach();
 
     while ( window.process() )
     {

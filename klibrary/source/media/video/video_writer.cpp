@@ -2,12 +2,12 @@
 
 
 static int _media_init = []
-{
-    constexpr DWORD init_args = COINIT_MULTITHREADED | COINIT_SPEED_OVER_MEMORY;
-    CoInitializeEx( nullptr, init_args ) >> kl::verify_result;
-    MFStartup( MF_VERSION ) >> kl::verify_result;
-    return 0;
-}();
+    {
+        constexpr DWORD init_args = COINIT_MULTITHREADED | COINIT_SPEED_OVER_MEMORY;
+        CoInitializeEx( nullptr, init_args ) >> kl::verify_result;
+        MFStartup( MF_VERSION ) >> kl::verify_result;
+        return 0;
+    }( );
 
 kl::VideoWriter::VideoWriter( std::string_view const& filepath, VideoType const& video_type, Int2 frame_size, int fps, int video_bit_rate, int audio_sample_rate )
     : m_width( frame_size.x )
@@ -89,7 +89,7 @@ int kl::VideoWriter::video_bit_rate() const
 
 int kl::VideoWriter::frame_count() const
 {
-    return (int) (m_video_time / m_frame_duration);
+    return (int) ( m_video_time / m_frame_duration );
 }
 
 bool kl::VideoWriter::add_frame( Image const& frame )
@@ -113,7 +113,7 @@ bool kl::VideoWriter::add_frame( Image const& frame )
     RGB const* in_buffer = frame.ptr();
     media_buffer->Lock( (BYTE**) &out_buffer, nullptr, nullptr ) >> verify_result;
     for ( uint32_t y = 0; y < m_height; y++ )
-        copy<byte>( out_buffer + (m_height - 1 - y) * m_width, in_buffer + y * m_width, frame_byte_width );
+        copy<byte>( out_buffer + ( m_height - 1 - y ) * m_width, in_buffer + y * m_width, frame_byte_width );
 
     media_buffer->Unlock() >> verify_result;
 

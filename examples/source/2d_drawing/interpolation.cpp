@@ -12,10 +12,10 @@ int examples::interpolation_main( int argc, char** argv )
     frame.resize( window.size() );
 
     kl::Float2 positions[4] = {
-        { 50.0f, (frame.height() - 1.0f) / 3.0f },
-        { (frame.width() - 1.0f) / 3.0f, frame.height() - 51.0f },
-        { frame.width() - 51.0f, (frame.height() - 1.0f) * 0.667f },
-        { (frame.width() - 1.0f) * 0.667f, 50.0f },
+        { 50.0f, ( frame.height() - 1.0f ) / 3.0f },
+        { ( frame.width() - 1.0f ) / 3.0f, frame.height() - 51.0f },
+        { frame.width() - 51.0f, ( frame.height() - 1.0f ) * 0.667f },
+        { ( frame.width() - 1.0f ) * 0.667f, 50.0f },
     };
 
     kl::RGB colors[4] = {
@@ -82,8 +82,8 @@ int examples::interpolation_main( int argc, char** argv )
         }
 
         window.draw_image( frame );
-        window.set_title( kl::format( int( (100.0f * frame_index) / (frame.width() + frame.height() - 1.0f) ), "%" ) );
-        kl::time::wait( (1.0f / fps_limit) - kl::time::elapsed( start_time ) );
+        window.set_title( kl::format( int( ( 100.0f * frame_index ) / ( frame.width() + frame.height() - 1.0f ) ), "%" ) );
+        kl::time::wait( ( 1.0f / fps_limit ) - kl::time::elapsed( start_time ) );
 
         if ( ++frame_index == frame.width() + frame.height() )
         {

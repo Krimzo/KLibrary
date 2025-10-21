@@ -2,13 +2,13 @@
 
 
 static HANDLE _console_init = []
-{
-    HANDLE temp_handle = GetStdHandle( STD_OUTPUT_HANDLE );
-    DWORD console_mode{};
-    GetConsoleMode( temp_handle, &console_mode );
-    SetConsoleMode( temp_handle, console_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING );
-    return temp_handle;
-}();
+    {
+        HANDLE temp_handle = GetStdHandle( STD_OUTPUT_HANDLE );
+        DWORD console_mode{};
+        GetConsoleMode( temp_handle, &console_mode );
+        SetConsoleMode( temp_handle, console_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING );
+        return temp_handle;
+    }( );
 
 void kl::console::set_enabled( bool state )
 {
@@ -78,7 +78,7 @@ kl::Int2 kl::console::size()
 
 void kl::console::set_size( Int2 size )
 {
-    SMALL_RECT rect = { 0, 0, (SHORT) (size.x - 1), (SHORT) (size.y - 1) };
+    SMALL_RECT rect = { 0, 0, (SHORT) ( size.x - 1 ), (SHORT) ( size.y - 1 ) };
     SetConsoleWindowInfo( _console_init, true, &rect );
 }
 
@@ -115,7 +115,7 @@ void kl::console::wait( char to_wait_for, bool echo )
             print( "Press '", (int) to_wait_for, "' to continue..." );
         }
     }
-    for ( char c = 0; (c = (char) _getch()) != to_wait_for;)
+    for ( char c = 0; ( c = (char) _getch() ) != to_wait_for;)
     {
         print( (int) c );
     }
@@ -141,7 +141,7 @@ void kl::console::progress_bar( std::string_view const& message, int output_y, f
     percentage = clamp( percentage, 0.0f, 1.0f );
 
     int bar_length = int( width() - message.length() - 12 );
-    int finish_length = (int) float( bar_length * percentage );
+    int finish_length = ( int ) float( bar_length * percentage );
     int empty_length = bar_length - finish_length;
 
     std::stringstream stream = {};

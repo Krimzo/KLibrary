@@ -22,7 +22,7 @@ static std::vector<Stick> generate_sticks( int count, int min_value_incl, int ma
 
     for ( auto& [value, color] : sticks )
     {
-        byte gray_value = (byte) (kl::unlerp( (float) value, (float) stored_min_value, (float) stored_max_value ) * 255.0f);
+        byte gray_value = (byte) ( kl::unlerp( (float) value, (float) stored_min_value, (float) stored_max_value ) * 255.0f );
         color = { gray_value, gray_value, gray_value };
     }
     return sticks;
@@ -53,7 +53,7 @@ int examples::video_writing_main( int argc, char** argv )
         frame.fill( kl::colors::GRAY );
         draw_sticks( frame, sticks );
         video_writer.add_frame( frame );
-        kl::print( "[", (i * 100.0f) / (sticks.size() - 2.0f), "%]" );
+        kl::print( "[", ( i * 100.0f ) / ( sticks.size() - 2.0f ), "%]" );
     }
 
     video_writer.finalize();

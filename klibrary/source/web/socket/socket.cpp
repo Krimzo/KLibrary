@@ -2,12 +2,12 @@
 
 
 static int _socket_init = []
-{
-    WSADATA wsa_data{};
-    int result = ::WSAStartup( MAKEWORD( 2, 2 ), &wsa_data );
-    kl::assert( result == 0, "Failed to initialize WSA" );
-    return result;
-}();
+    {
+        WSADATA wsa_data{};
+        int result = ::WSAStartup( MAKEWORD( 2, 2 ), &wsa_data );
+        kl::assert( result == 0, "Failed to initialize WSA" );
+        return result;
+    }( );
 
 kl::Address::Address()
     : sockaddr_in()
@@ -28,7 +28,7 @@ int kl::Address::set_address( std::string_view const& address )
 
 int kl::Address::port() const
 {
-    return (int) ::ntohs( sin_port );
+    return ( int ) ::ntohs( sin_port );
 }
 
 void kl::Address::set_port( int port )
@@ -128,7 +128,7 @@ int kl::Socket::exhaust( std::vector<byte>& output, int buffer_size ) const
 {
     std::vector<byte> receiver_buffer( buffer_size );
     int total_received = 0;
-    for ( int received; (received = receive( receiver_buffer.data(), buffer_size )) > 0;)
+    for ( int received; ( received = receive( receiver_buffer.data(), buffer_size ) ) > 0;)
     {
         output.insert( output.end(), receiver_buffer.begin(), receiver_buffer.begin() + received );
         total_received += received;

@@ -25,7 +25,8 @@ struct VideoType
 private:
     VideoType( GUID type, int profile )
         : m_type( type ), m_profile( profile )
-    {}
+    {
+    }
 
     GUID m_type = {};
     int m_profile = 0;

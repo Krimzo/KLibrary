@@ -2,11 +2,11 @@
 
 
 static thread_local std::mt19937 _random_init = []
-{
-    std::random_device device{};
-    std::srand( device() );
-    return std::mt19937{ device() };
-}();
+    {
+        std::random_device device{};
+        std::srand( device() );
+        return std::mt19937{ device() };
+    }( );
 
 bool kl::random::gen_bool()
 {
@@ -30,7 +30,7 @@ kl::RGB kl::random::gen_rgb( bool gray )
 
 int kl::random::gen_int( int start_inclusive, int end_exclusive )
 {
-    return start_inclusive + (_random_init() % (end_exclusive - start_inclusive));
+    return start_inclusive + ( _random_init() % ( end_exclusive - start_inclusive ) );
 }
 
 int kl::random::gen_int( int end_exclusive )

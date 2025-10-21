@@ -9,11 +9,13 @@ struct Person : js::ObjectSerializable
     float age = 0.0f;
 
     Person()
-    {}
+    {
+    }
 
     Person( std::string const& name, float age )
         : name( name ), age( age )
-    {}
+    {
+    }
 
     void to_object( js::Object& object ) override
     {
@@ -36,16 +38,16 @@ struct Person : js::ObjectSerializable
 int examples::json_tests_main( int argc, char** argv )
 {
     auto test = []( js::Container const& container, std::string const& expected )
-    {
-        std::string result = container.decompile( -1 );
-        if ( result != expected )
         {
-            kl::print( "expected: ", expected );
-            kl::print( " but got: ", result );
-            exit( 1 );
-        }
-        kl::print( "Test passed: ", result );
-    };
+            std::string result = container.decompile( -1 );
+            if ( result != expected )
+            {
+                kl::print( "expected: ", expected );
+                kl::print( " but got: ", result );
+                exit( 1 );
+            }
+            kl::print( "Test passed: ", result );
+        };
 
     test( js::Literal( "" ), "null" );
     test( js::Literal( "null" ), "null" );

@@ -68,7 +68,7 @@ static int evaluate( std::vector<int> const& board )
 
     sum = 0;
     for ( int i = 0; i < SIZES.x; i++ )
-        sum += board[i * SIZES.x + (SIZES.x - 1 - i)];
+        sum += board[i * SIZES.x + ( SIZES.x - 1 - i )];
 
     if ( sum == ID::PLAYER * SIZES.x )
         return ID::PLAYER;
@@ -159,7 +159,7 @@ int examples::tic_tac_main( int argc, char** argv )
     {
         if ( int eval = evaluate( board ) )
         {
-            window.set_title( (eval == ID::PLAYER) ? "Player wins!" : "Engine wins!" );
+            window.set_title( ( eval == ID::PLAYER ) ? "Player wins!" : "Engine wins!" );
             while ( window.process() );
             break;
         }
@@ -217,9 +217,9 @@ int examples::tic_tac_main( int argc, char** argv )
                     if ( pos_id == ID::PLAYER )
                     {
                         frame.draw_line( pos * square_size + kl::Int2( line_offset ),
-                            (pos + kl::Int2( 1, 1 )) * square_size - kl::Int2( line_offset ), PLAYER_COLOR );
-                        frame.draw_line( (pos + kl::Int2( 0, 1 )) * square_size + kl::Int2( line_offset, -line_offset ),
-                            (pos + kl::Int2( 1, 0 )) * square_size + kl::Int2( -line_offset, line_offset ), PLAYER_COLOR );
+                            ( pos + kl::Int2( 1, 1 ) ) * square_size - kl::Int2( line_offset ), PLAYER_COLOR );
+                        frame.draw_line( ( pos + kl::Int2( 0, 1 ) ) * square_size + kl::Int2( line_offset, -line_offset ),
+                            ( pos + kl::Int2( 1, 0 ) ) * square_size + kl::Int2( -line_offset, line_offset ), PLAYER_COLOR );
                     }
                     else if ( pos_id == ID::ENGINE )
                     {
@@ -232,9 +232,9 @@ int examples::tic_tac_main( int argc, char** argv )
                     if ( pos_id == ID::ENGINE )
                     {
                         frame.draw_line( pos * square_size + kl::Int2( line_offset ),
-                            (pos + kl::Int2( 1, 1 )) * square_size - kl::Int2( line_offset ), ENGINE_COLOR );
-                        frame.draw_line( (pos + kl::Int2( 0, 1 )) * square_size + kl::Int2( line_offset, -line_offset ),
-                            (pos + kl::Int2( 1, 0 )) * square_size + kl::Int2( -line_offset, line_offset ), ENGINE_COLOR );
+                            ( pos + kl::Int2( 1, 1 ) ) * square_size - kl::Int2( line_offset ), ENGINE_COLOR );
+                        frame.draw_line( ( pos + kl::Int2( 0, 1 ) ) * square_size + kl::Int2( line_offset, -line_offset ),
+                            ( pos + kl::Int2( 1, 0 ) ) * square_size + kl::Int2( -line_offset, line_offset ), ENGINE_COLOR );
                     }
                     else if ( pos_id == ID::PLAYER )
                     {

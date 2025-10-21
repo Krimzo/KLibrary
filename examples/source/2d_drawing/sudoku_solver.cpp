@@ -57,11 +57,13 @@ struct Index
 
     constexpr Index( int value )
         : value( value )
-    {}
+    {
+    }
 
     constexpr Index( int x, int y )
         : value( x + y * 9 )
-    {}
+    {
+    }
 
     constexpr operator int() const
     {
@@ -94,7 +96,8 @@ struct Possible : std::vector<SudokuPiece>
     std::bitset<9> data;
 
     constexpr Possible()
-    {}
+    {
+    }
 
     constexpr void insert( SudokuPiece piece )
     {
@@ -116,7 +119,8 @@ struct Sudoku
     bool defaults[81] = {};
 
     constexpr Sudoku()
-    {}
+    {
+    }
 
     constexpr Sudoku( std::string_view const& board_data )
     {
@@ -149,8 +153,8 @@ struct Sudoku
             uint16_t col = 0;
             for ( int j = 0; j < 9; j++ )
             {
-                row |= (*this)[{ i, j }];
-                col |= (*this)[{ j, i }];
+                row |= ( *this )[{ i, j }];
+                col |= ( *this )[{ j, i }];
             }
             if ( row != _ALL || col != _ALL )
                 return false;
@@ -158,15 +162,15 @@ struct Sudoku
         for ( int i : { 0, 3, 6, 27, 30, 33, 54, 57, 60 } )
         {
             uint16_t block =
-                (*this)[i + 0] |
-                (*this)[i + 1] |
-                (*this)[i + 2] |
-                (*this)[i + 9] |
-                (*this)[i + 10] |
-                (*this)[i + 11] |
-                (*this)[i + 18] |
-                (*this)[i + 19] |
-                (*this)[i + 20];
+                ( *this )[i + 0] |
+                ( *this )[i + 1] |
+                ( *this )[i + 2] |
+                ( *this )[i + 9] |
+                ( *this )[i + 10] |
+                ( *this )[i + 11] |
+                ( *this )[i + 18] |
+                ( *this )[i + 19] |
+                ( *this )[i + 20];
             if ( block != _ALL )
                 return false;
         }
@@ -183,7 +187,7 @@ struct Sudoku
             bool found_same = false;
             for ( int i = 0; i < 9; i++ )
             {
-                if ( p & (*this)[{ i, y }] || p & (*this)[{ x, i }] )
+                if ( p & ( *this )[{ i, y }] || p & ( *this )[{ x, i }] )
                 {
                     found_same = true;
                     break;
@@ -192,17 +196,17 @@ struct Sudoku
             if ( found_same )
                 continue;
 
-            int sqr_index = Index{ (x / 3) * 3, (y / 3) * 3 };
+            int sqr_index = Index{ ( x / 3 ) * 3, ( y / 3 ) * 3 };
             found_same =
-                p & (*this)[sqr_index + 0] ||
-                p & (*this)[sqr_index + 1] ||
-                p & (*this)[sqr_index + 2] ||
-                p & (*this)[sqr_index + 9] ||
-                p & (*this)[sqr_index + 10] ||
-                p & (*this)[sqr_index + 11] ||
-                p & (*this)[sqr_index + 18] ||
-                p & (*this)[sqr_index + 19] ||
-                p & (*this)[sqr_index + 20];
+                p & ( *this )[sqr_index + 0] ||
+                p & ( *this )[sqr_index + 1] ||
+                p & ( *this )[sqr_index + 2] ||
+                p & ( *this )[sqr_index + 9] ||
+                p & ( *this )[sqr_index + 10] ||
+                p & ( *this )[sqr_index + 11] ||
+                p & ( *this )[sqr_index + 18] ||
+                p & ( *this )[sqr_index + 19] ||
+                p & ( *this )[sqr_index + 20];
             if ( found_same )
                 continue;
 
@@ -277,10 +281,10 @@ struct SudokuApp
     {
         window.set_dark_mode( true );
         window.on_resize.emplace_back( [&]( kl::Int2 size )
-        {
-            gpu.resize_internal( size );
-            gpu.set_viewport_size( size );
-        } );
+            {
+                gpu.resize_internal( size );
+                gpu.set_viewport_size( size );
+            } );
         window.resize( { 800, 800 } );
 
         gpu.bind_blend_state( gpu.create_blend_state( true ) );
@@ -312,7 +316,7 @@ float4 p_shader(VS_DATA data) : SV_Target
         std::vector<kl::Vertex> vertex_data;
         for ( int i = 0; i < 4; i++ )
         {
-            float coord = -1 + i * (2.0f / 3.0f);
+            float coord = -1 + i * ( 2.0f / 3.0f );
             for ( float j : { -1.0f, 1.0f } )
                 vertex_data.emplace_back( kl::Float3{ coord, j, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.9f } );
             for ( float j : { -1.0f, 1.0f } )
@@ -320,7 +324,7 @@ float4 p_shader(VS_DATA data) : SV_Target
         }
         for ( int i = 0; i < 10; i++ )
         {
-            float coord = -1 + i * (2.0f / 9.0f);
+            float coord = -1 + i * ( 2.0f / 9.0f );
             for ( float j : { -1.0f, 1.0f } )
                 vertex_data.emplace_back( kl::Float3{ coord, j, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.3f } );
             for ( float j : { -1.0f, 1.0f } )
@@ -340,7 +344,7 @@ float4 p_shader(VS_DATA data) : SV_Target
 
     void reload( Sudoku const& sudoku )
     {
-        float font_size = (window.height() / 9.0f);
+        float font_size = ( window.height() / 9.0f );
         kl::Float2 rect_size = window.size() / 9;
 
         float font_dips = window.pixels_to_dips( font_size );
@@ -357,7 +361,7 @@ float4 p_shader(VS_DATA data) : SV_Target
             kl::Text text;
             text.format = format;
             text.color = sudoku.defaults[i] ? kl::colors::CYAN : kl::colors::WHEAT;
-            text.position = { rect_size.x * (i % 9), rect_size.y * (i / 9) };
+            text.position = { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) };
             text.rect_size = rect_size;
             text.data = std::wstring( 1, convert_piece( sudoku.board[i] ) );
             gpu.text_data.push_back( text );
@@ -408,13 +412,13 @@ int examples::sudoku_solver_main( int argc, char** argv )
         "000""305""000"
     };
     std::thread thread{ [&sudoku]
-    {
-        SudokuApp app;
-        while ( app.update() )
         {
-            app.reload( sudoku );
-        }
-    } };
+            SudokuApp app;
+            while ( app.update() )
+            {
+                app.reload( sudoku );
+            }
+        } };
 
     if ( auto solved_opt = solve( sudoku, sudoku ) )
     {

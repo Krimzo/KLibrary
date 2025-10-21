@@ -20,14 +20,14 @@ int examples::hello_world_main( int argc, char** argv )
     kl::GPU gpu{ window.ptr() };
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        gpu.resize_internal( size );
-        gpu.set_viewport_size( size );
-    } );
+        {
+            gpu.resize_internal( size );
+            gpu.set_viewport_size( size );
+        } );
 
     kl::dx::Buffer triangle = gpu.create_vertex_buffer( {
-        { {  0.0f,  0.5f, 0.5f } },
-        { {  0.5f, -0.5f, 0.5f } },
+        { { 0.0f, 0.5f, 0.5f } },
+        { { 0.5f, -0.5f, 0.5f } },
         { { -0.5f, -0.5f, 0.5f } },
         } );
 

@@ -28,7 +28,7 @@ static void draw_objects( kl::Image& frame, std::vector<SceneObject>& objects )
     for ( auto& [radius, position, velocity, color, position_history] : objects )
     {
         position_history.push_back( position );
-        int start_position_index = (int) (position_history.size() * 0.75f);
+        int start_position_index = (int) ( position_history.size() * 0.75f );
         for ( int i = start_position_index; i < (int) position_history.size() - 1; i++ )
         {
             frame.draw_line( kl::Int2( position_history[i] ), kl::Int2( position_history[i + 1] ),
@@ -126,9 +126,9 @@ int examples::trajectories_main( int argc, char** argv )
     std::vector<SceneObject> objects;
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        frame.resize( size );
-    } );
+        {
+            frame.resize( size );
+        } );
 
     bool object_being_added = false;
     kl::Float2 object_add_position;

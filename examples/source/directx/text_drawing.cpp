@@ -7,10 +7,10 @@ int examples::text_drawing_main( int argc, char** argv )
     kl::GPU gpu{ window.ptr() };
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        gpu.resize_internal( size );
-        gpu.set_viewport_size( size );
-    } );
+        {
+            gpu.resize_internal( size );
+            gpu.set_viewport_size( size );
+        } );
     window.set_dark_mode( true );
     window.maximize();
 
@@ -26,7 +26,7 @@ int examples::text_drawing_main( int argc, char** argv )
         {
             auto& text = gpu.text_data[i];
             text.format = format;
-            text.position = { window.size().x * 0.5f, (i + 1) * 50.0f };
+            text.position = { window.size().x * 0.5f, ( i + 1 ) * 50.0f };
             text.data = kl::convert_string( kl::format( i, "^2 = ", i * i ) );
         }
 

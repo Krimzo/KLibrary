@@ -21,8 +21,8 @@ static void draw_data( kl::Image& frame, std::vector<kl::Int2> const& data, kl::
 static void draw_line( kl::Image& frame, kl::Float2 equat, kl::RGB color = kl::colors::SKY )
 {
     kl::Int2 half_size = frame.size() / 2;
-    kl::Int2 pos1 = kl::Int2( -half_size.x, (int) (-half_size.x * equat.x + equat.y) ) * kl::Int2( 1, -1 ) + half_size;
-    kl::Int2 pos2 = kl::Int2( half_size.x, (int) (half_size.x * equat.x + equat.y) ) * kl::Int2( 1, -1 ) + half_size;
+    kl::Int2 pos1 = kl::Int2( -half_size.x, (int) ( -half_size.x * equat.x + equat.y ) ) * kl::Int2( 1, -1 ) + half_size;
+    kl::Int2 pos2 = kl::Int2( half_size.x, (int) ( half_size.x * equat.x + equat.y ) ) * kl::Int2( 1, -1 ) + half_size;
     frame.draw_line( pos1, pos2, color );
 }
 
@@ -30,7 +30,7 @@ static float calculate_offsets( std::vector<kl::Int2> const& data, kl::Float2 li
 {
     float sum = 0.0f;
     for ( auto& val : data )
-        sum += abs( val.y - (val.x * line_equat.x + line_equat.y) );
+        sum += abs( val.y - ( val.x * line_equat.x + line_equat.y ) );
     return sum;
 }
 
@@ -40,10 +40,10 @@ static void draw_offset( kl::Image& frame, std::vector<kl::Int2> const& data, kl
     {
         static size_t data_index = 0;
 
-        data_index = (data_index + 1) % data.size();
+        data_index = ( data_index + 1 ) % data.size();
         kl::Int2 half_size = frame.size() / 2;
         kl::Int2 pos1 = kl::Int2( data[data_index].x, data[data_index].y ) * kl::Int2( 1, -1 ) + half_size;
-        kl::Int2 pos2 = kl::Int2( data[data_index].x, (int) (data[data_index].x * lineEquat.x + lineEquat.y) ) * kl::Int2( 1, -1 ) + half_size;
+        kl::Int2 pos2 = kl::Int2( data[data_index].x, (int) ( data[data_index].x * lineEquat.x + lineEquat.y ) ) * kl::Int2( 1, -1 ) + half_size;
         frame.draw_line( pos1, pos2, color );
     }
 }

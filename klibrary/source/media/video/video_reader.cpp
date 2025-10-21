@@ -168,11 +168,11 @@ bool kl::VideoReader::read_frame( Image& out, int* out_index ) const
     RGB* frame_target = out.ptr();
 
     kl::async_for( 0, out.width() * out.height(), [&]( int i )
-    {
-        frame_target[i].r = frame_source[i].r;
-        frame_target[i].g = frame_source[i].g;
-        frame_target[i].b = frame_source[i].b;
-    } );
+        {
+            frame_target[i].r = frame_source[i].r;
+            frame_target[i].g = frame_source[i].g;
+            frame_target[i].b = frame_source[i].b;
+        } );
 
     if ( out_index )
         *out_index = int( time_stamp * 1e-7 * m_fps );

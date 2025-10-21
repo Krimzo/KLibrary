@@ -26,7 +26,8 @@ struct Someone : SomeBase
 
     Someone()
         : name( "Unknown" )
-    {}
+    {
+    }
 
     Someone( std::string const& name )
         : name( name )

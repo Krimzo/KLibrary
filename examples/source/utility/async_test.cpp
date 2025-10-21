@@ -31,9 +31,9 @@ static void for_test()
 static void async_test()
 {
     kl::async_for<int>( 0, (int) data.size(), [&]( int i )
-    {
-        data[i] = compute_function( i );
-    } );
+        {
+            data[i] = compute_function( i );
+        } );
 }
 
 int examples::async_test_main( int argc, char** argv )

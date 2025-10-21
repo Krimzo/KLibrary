@@ -59,7 +59,8 @@ struct ResultGrabber
 
     ResultGrabber( HRESULT result, std::source_location location = std::source_location::current() ) noexcept
         : result( result ), location( location )
-    {}
+    {
+    }
 };
 
 inline std::string get_error_description( HRESULT h_result )
@@ -68,7 +69,7 @@ inline std::string get_error_description( HRESULT h_result )
     FormatMessageA(
         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         nullptr, h_result, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
-        reinterpret_cast<LPSTR>(&description_buffer), 0, nullptr
+        reinterpret_cast<LPSTR>( &description_buffer ), 0, nullptr
     );
 
     std::string description{};
