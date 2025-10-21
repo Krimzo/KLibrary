@@ -122,7 +122,20 @@ std::ostream& kl::operator<<( std::ostream& stream, RGB col )
     return stream;
 }
 
+std::wostream& kl::operator<<( std::wostream& stream, RGB col )
+{
+    stream << "\033[38;2;" << int( col.r ) << ";" << int( col.g ) << ";" << int( col.b ) << "m";
+    return stream;
+}
+
 std::ostream& kl::operator<<( std::ostream& stream, YUV const& col )
+{
+    stream << std::setprecision( 2 );
+    stream << '(' << col.y << ", " << col.u << ", " << col.v << ')';
+    return stream;
+}
+
+std::wostream& kl::operator<<( std::wostream& stream, YUV const& col )
 {
     stream << std::setprecision( 2 );
     stream << '(' << col.y << ", " << col.u << ", " << col.v << ')';

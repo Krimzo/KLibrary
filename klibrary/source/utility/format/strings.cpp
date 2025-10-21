@@ -5,7 +5,7 @@ std::wstring kl::convert_string( std::string_view const& source )
 {
     std::wstring result;
     result.resize( MultiByteToWideChar( CP_UTF8, 0, source.data(), (int) source.size(), nullptr, 0 ) );
-    MultiByteToWideChar( CP_UTF8, 0, source.data(), (int) source.size(), result.data(), result.size() );
+    MultiByteToWideChar( CP_UTF8, 0, source.data(), (int) source.size(), result.data(), (int) result.size() );
     return result;
 }
 
@@ -13,7 +13,7 @@ std::string kl::convert_string( std::wstring_view const& source )
 {
     std::string result;
     result.resize( WideCharToMultiByte( CP_UTF8, 0, source.data(), (int) source.size(), nullptr, 0, nullptr, nullptr ) );
-    WideCharToMultiByte( CP_UTF8, 0, source.data(), (int) source.size(), result.data(), result.size(), nullptr, nullptr );
+    WideCharToMultiByte( CP_UTF8, 0, source.data(), (int) source.size(), result.data(), (int) result.size(), nullptr, nullptr );
     return result;
 }
 

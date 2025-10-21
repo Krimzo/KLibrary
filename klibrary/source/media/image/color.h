@@ -63,7 +63,9 @@ struct YUV
 namespace kl
 {
 std::ostream& operator<<( std::ostream& stream, RGB col );
+std::wostream& operator<<( std::wostream& stream, RGB col );
 std::ostream& operator<<( std::ostream& stream, YUV const& col );
+std::wostream& operator<<( std::wostream& stream, YUV const& col );
 }
 
 namespace kl::colors
