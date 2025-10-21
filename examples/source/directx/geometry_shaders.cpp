@@ -9,14 +9,14 @@ int examples::geometry_shaders_main( int argc, char** argv )
     kl::Camera camera;
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        gpu.resize_internal( size );
-        gpu.set_viewport_size( size );
-        camera.update_aspect_ratio( size );
-    } );
+        {
+            gpu.resize_internal( size );
+            gpu.set_viewport_size( size );
+            camera.update_aspect_ratio( size );
+        } );
     window.maximize();
 
-    std::string shader_sources = kl::read_file( "shaders/geometry_test.hlsl" );
+    std::string shader_sources = kl::read_file_string( "shaders/geometry_test.hlsl" );
     kl::Shaders default_shaders = gpu.create_shaders( shader_sources );
     kl::GeometryShader geometry_shader = gpu.create_geometry_shader( shader_sources );
     gpu.bind_shaders( default_shaders );
@@ -89,7 +89,7 @@ int examples::geometry_shaders_main( int argc, char** argv )
 
         if ( main_entity->mesh )
         {
-            struct alignas(16) CB
+            struct alignas( 16 ) CB
             {
                 kl::Float4x4 W;
                 kl::Float4x4 VP;

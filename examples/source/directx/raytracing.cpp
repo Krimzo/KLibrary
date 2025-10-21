@@ -18,26 +18,26 @@ int examples::raytracing_main( int argc, char** argv )
     kl::Camera camera;
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        gpu.resize_internal( size );
-        gpu.set_viewport_size( size );
-        camera.update_aspect_ratio( size );
-    } );
+        {
+            gpu.resize_internal( size );
+            gpu.set_viewport_size( size );
+            camera.update_aspect_ratio( size );
+        } );
     window.maximize();
 
-    std::string shader_sources = kl::read_file( "shaders/raytracing.hlsl" );
+    std::string shader_sources = kl::read_file_string( "shaders/raytracing.hlsl" );
     kl::Shaders shaders = gpu.create_shaders( shader_sources );
     gpu.bind_shaders( shaders );
 
     kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
     camera.position.y = 5.0f;
 
-    struct alignas(16) CB
+    struct alignas( 16 ) CB
     {
         Sphere SPHERES[SPHERE_COUNT];
         kl::Float4x4 INVERSE_CAMERA;
         kl::Float3 CAMERA_POSITION;
-        alignas(16) kl::Float3 SUN_DIRECTION;
+        alignas( 16 ) kl::Float3 SUN_DIRECTION;
     } cb = {};
 
     for ( auto& sphere : cb.SPHERES )
@@ -56,8 +56,8 @@ int examples::raytracing_main( int argc, char** argv )
 
         for ( int i = 0; i < SPHERE_COUNT; i++ )
         {
-            float oscillation = (std::sin( timer.elapsed() + i ) + 1.0f) * 0.5f;
-            cb.SPHERES[i].center.y = (oscillation * (i + 1.0f)) + cb.SPHERES[i].radius;
+            float oscillation = ( std::sin( timer.elapsed() + i ) + 1.0f ) * 0.5f;
+            cb.SPHERES[i].center.y = ( oscillation * ( i + 1.0f ) ) + cb.SPHERES[i].radius;
         }
 
         if ( window.keyboard.one.pressed() )

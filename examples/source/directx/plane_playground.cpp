@@ -17,17 +17,17 @@ int examples::plane_playground_main( int argc, char** argv )
     kl::GPU gpu{ window.ptr() };
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        gpu.resize_internal( size );
-        gpu.set_viewport_size( size );
-        CAMERA.update_aspect_ratio( size );
-    } );
+        {
+            gpu.resize_internal( size );
+            gpu.set_viewport_size( size );
+            CAMERA.update_aspect_ratio( size );
+        } );
     window.maximize();
 
     kl::dx::DepthState default_depth_state = gpu.create_depth_state( true, false, false );
     kl::dx::DepthState disabled_depth_state = gpu.create_depth_state( false, false, false );
 
-    std::string sky_shaders_source = kl::read_file( "shaders/sky.hlsl" );
+    std::string sky_shaders_source = kl::read_file_string( "shaders/sky.hlsl" );
     kl::Shaders sky_shaders = gpu.create_shaders( sky_shaders_source );
 
     kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
@@ -55,7 +55,7 @@ int examples::plane_playground_main( int argc, char** argv )
         {
             kl::console::clear();
 
-            std::string shader_sources = kl::read_file( "shaders/playground.hlsl" );
+            std::string shader_sources = kl::read_file_string( "shaders/playground.hlsl" );
             kl::Shaders temp_default_shaders = gpu.create_shaders( shader_sources );
             kl::GeometryShader temp_geometry_shader = gpu.create_geometry_shader( shader_sources );
 
@@ -83,7 +83,7 @@ int examples::plane_playground_main( int argc, char** argv )
         gpu.bind_shaders( sky_shaders );
         gpu.unbind_geometry_shader();
 
-        struct alignas(16) SKY_CB
+        struct alignas( 16 ) SKY_CB
         {
             kl::Float4x4 INVERSE_CAMERA;
             kl::Float4 FRAME_SIZE;
@@ -104,7 +104,7 @@ int examples::plane_playground_main( int argc, char** argv )
         gpu.bind_shaders( PLANE_SHADERS );
         gpu.bind_geometry_shader( PLANE_GEOMETRY_SHADER );
 
-        struct alignas(16) PLANE_CB
+        struct alignas( 16 ) PLANE_CB
         {
             kl::Float4x4 W;
             kl::Float4x4 VP;

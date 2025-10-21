@@ -13,33 +13,33 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
     dx12::Resource ray_target{};
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        ray_target = {};
-        uav_heap = {};
-        gpu.resize( size );
+        {
+            ray_target = {};
+            uav_heap = {};
+            gpu.resize( size );
 
-        D3D12_RESOURCE_DESC target_descriptor{
-            .Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D,
-            .Width = (UINT) size.x,
-            .Height = (UINT) size.y,
-            .DepthOrArraySize = 1,
-            .MipLevels = 1,
-            .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
-            .SampleDesc{
-                .Count = 1,
-                .Quality = 0,
+            D3D12_RESOURCE_DESC target_descriptor{
+                .Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D,
+                .Width = (UINT) size.x,
+                .Height = (UINT) size.y,
+                .DepthOrArraySize = 1,
+                .MipLevels = 1,
+                .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+                .SampleDesc{
+                    .Count = 1,
+                    .Quality = 0,
             },
             .Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-        };
-        ray_target = gpu.create_commited_resource( &target_descriptor, D3D12_RESOURCE_STATE_UNORDERED_ACCESS );
+            };
+            ray_target = gpu.create_commited_resource( &target_descriptor, D3D12_RESOURCE_STATE_UNORDERED_ACCESS );
 
-        D3D12_UNORDERED_ACCESS_VIEW_DESC uav_descriptor{
-            .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
-            .ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D,
-        };
-        uav_heap = gpu.create_descriptor_heap( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE );
-        gpu.device()->CreateUnorderedAccessView( ray_target.get(), nullptr, &uav_descriptor, uav_heap->GetCPUDescriptorHandleForHeapStart() );
-    } );
+            D3D12_UNORDERED_ACCESS_VIEW_DESC uav_descriptor{
+                .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+                .ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D,
+            };
+            uav_heap = gpu.create_descriptor_heap( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE );
+            gpu.device()->CreateUnorderedAccessView( ray_target.get(), nullptr, &uav_descriptor, uav_heap->GetCPUDescriptorHandleForHeapStart() );
+        } );
     window.maximize();
 
     std::vector quad_mesh_data = kl::parse_obj_file( "meshes/quad.obj" );
@@ -91,18 +91,18 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
         .DescriptorTable{
             .NumDescriptorRanges = 1,
             .pDescriptorRanges = &uav_range,
-        },
+    },
     };
     D3D12_ROOT_PARAMETER root_parameter1{
         .ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV,
         .Descriptor{
             .ShaderRegister = 0,
             .RegisterSpace = 0,
-        },
+    },
     };
     dx12::RootSignature root_signature = gpu.create_root_signature( { root_parameter0, root_parameter1 }, {}, D3D12_ROOT_SIGNATURE_FLAG_NONE );
 
-    std::string compiled_shader = kl::read_file( "shaders/raytracing/raytracing.cso" );
+    std::string compiled_shader = kl::read_file_string( "shaders/raytracing/raytracing.cso" );
     dx12::StateObject pipeline_state = gpu.create_default_raytracing_pipeline( compiled_shader, root_signature );
 
     dx12::ObjectProperties pipeline_properties{};
@@ -133,27 +133,27 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
         gpu.copy( instances, instance_data, sizeof( instance_data ) );
 
         gpu.execute( [&]( kl::GPU12Commands& commands )
-        {
-            commands.update_tlas( tlas, tlas_update_scratch, instances );
+            {
+                commands.update_tlas( tlas, tlas_update_scratch, instances );
 
-            commands.list->SetPipelineState1( pipeline_state.get() );
-            commands.list->SetComputeRootSignature( root_signature.get() );
+                commands.list->SetPipelineState1( pipeline_state.get() );
+                commands.list->SetComputeRootSignature( root_signature.get() );
 
-            ID3D12DescriptorHeap* uav_heaps[1] = { uav_heap.get() };
-            commands.list->SetDescriptorHeaps( 1, uav_heaps );
-            commands.list->SetComputeRootDescriptorTable( 0, uav_heap->GetGPUDescriptorHandleForHeapStart() );
-            commands.list->SetComputeRootShaderResourceView( 1, tlas->GetGPUVirtualAddress() );
+                ID3D12DescriptorHeap* uav_heaps[1] = { uav_heap.get() };
+                commands.list->SetDescriptorHeaps( 1, uav_heaps );
+                commands.list->SetComputeRootDescriptorTable( 0, uav_heap->GetGPUDescriptorHandleForHeapStart() );
+                commands.list->SetComputeRootShaderResourceView( 1, tlas->GetGPUVirtualAddress() );
 
-            D3D12_RESOURCE_DESC target_descriptor = ray_target->GetDesc();
-            commands.dispatch_rays( shader_ids->GetGPUVirtualAddress(), (UINT) target_descriptor.Width, (UINT) target_descriptor.Height );
+                D3D12_RESOURCE_DESC target_descriptor = ray_target->GetDesc();
+                commands.dispatch_rays( shader_ids->GetGPUVirtualAddress(), (UINT) target_descriptor.Width, (UINT) target_descriptor.Height );
 
-            auto back_buffer = gpu.get_back_buffer( gpu.back_buffer_index() );
-            commands.transition_resource( ray_target, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_SOURCE );
-            commands.transition_resource( back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_DEST );
-            commands.copy( back_buffer, ray_target );
-            commands.transition_resource( back_buffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT );
-            commands.transition_resource( ray_target, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS );
-        } );
+                auto back_buffer = gpu.get_back_buffer( gpu.back_buffer_index() );
+                commands.transition_resource( ray_target, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_SOURCE );
+                commands.transition_resource( back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_DEST );
+                commands.copy( back_buffer, ray_target );
+                commands.transition_resource( back_buffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT );
+                commands.transition_resource( ray_target, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS );
+            } );
 
         gpu.swap_buffers( true );
     }

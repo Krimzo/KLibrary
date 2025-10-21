@@ -21,23 +21,19 @@ std::wstring kl::convert_string( std::string_view const& data )
     return temp;
 }
 
-std::vector<std::string> kl::split_string( std::string_view const& data, char delimiter )
+std::vector<std::string> kl::split_string( std::string_view const& data, std::string_view const& delimiter )
 {
-    std::istringstream stream{ data.data() };
     std::vector<std::string> parts;
-    for ( std::string part; std::getline( stream, part, delimiter );)
-        parts.push_back( part );
-
+    for ( auto const& part : std::views::split( data, delimiter ) )
+        parts.emplace_back( part.begin(), part.end() );
     return parts;
 }
 
-std::vector<std::wstring> kl::split_string( std::wstring_view const& data, wchar_t delimiter )
+std::vector<std::wstring> kl::split_string( std::wstring_view const& data, std::wstring_view const& delimiter )
 {
-    std::wistringstream stream{ data.data() };
     std::vector<std::wstring> parts;
-    for ( std::wstring part; std::getline( stream, part, delimiter );)
-        parts.push_back( part );
-
+    for ( auto const& part : std::views::split( data, delimiter ) )
+        parts.emplace_back( part.begin(), part.end() );
     return parts;
 }
 
@@ -47,7 +43,7 @@ void kl::replace_all( std::string& str, std::string_view const& from, std::strin
         return;
 
     size_t index = 0;
-    while ( (index = str.find( from, index )) != -1 )
+    while ( ( index = str.find( from, index ) ) != -1 )
     {
         str.replace( index, from.length(), to );
         index += to.length();
@@ -60,7 +56,7 @@ void kl::replace_all( std::wstring& str, std::wstring_view const& from, std::wst
         return;
 
     size_t index = 0;
-    while ( (index = str.find( from, index )) != -1 )
+    while ( ( index = str.find( from, index ) ) != -1 )
     {
         str.replace( index, from.length(), to );
         index += to.length();

@@ -26,19 +26,19 @@ static void input( kl::Window const& window, float delta_time )
     }
     if ( window.keyboard.w )
     {
-        POSITION.y -= (1.0f / ZOOM) * delta_time;
+        POSITION.y -= ( 1.0f / ZOOM ) * delta_time;
     }
     if ( window.keyboard.s )
     {
-        POSITION.y += (1.0f / ZOOM) * delta_time;
+        POSITION.y += ( 1.0f / ZOOM ) * delta_time;
     }
     if ( window.keyboard.d )
     {
-        POSITION.x += (1.0f / ZOOM) * delta_time;
+        POSITION.x += ( 1.0f / ZOOM ) * delta_time;
     }
     if ( window.keyboard.a )
     {
-        POSITION.x -= (1.0f / ZOOM) * delta_time;
+        POSITION.x -= ( 1.0f / ZOOM ) * delta_time;
     }
 
     kl::Int2 frame_size = window.size();
@@ -50,7 +50,7 @@ static void input( kl::Window const& window, float delta_time )
             window.mouse.position().y / (float) frame_size.y * 2.0f - 1.0f,
         };
         uv *= (float) frame_size.x / (float) frame_size.y;
-        POSITION += (uv * (1.0f / ZOOM)) * delta_time;
+        POSITION += ( uv * ( 1.0f / ZOOM ) ) * delta_time;
     }
     if ( window.mouse.right )
     {
@@ -60,10 +60,10 @@ static void input( kl::Window const& window, float delta_time )
             window.mouse.position().y / (float) frame_size.y * 2.0f - 1.0f,
         };
         uv *= (float) frame_size.x / (float) frame_size.y;
-        POSITION -= (uv * (1.0f / ZOOM)) * delta_time;
+        POSITION -= ( uv * ( 1.0f / ZOOM ) ) * delta_time;
     }
 
-    ITERATIONS += window.mouse.scroll() * (window.keyboard.shift ? 10 : 1);
+    ITERATIONS += window.mouse.scroll() * ( window.keyboard.shift ? 10 : 1 );
     ITERATIONS = std::max( ITERATIONS, 0 );
 }
 
@@ -73,11 +73,11 @@ static void console_read()
     {
         kl::print<false>( kl::colors::CONSOLE, "Color = " );
         auto parts = kl::split_string( []
-        {
-            std::string line;
-            std::getline( std::cin, line );
-            return line;
-        }(), ' ' );
+            {
+                std::string line;
+                std::getline( std::cin, line );
+                return line;
+            }( ), " " );
         if ( parts.size() >= 3 )
         {
             try
@@ -108,13 +108,13 @@ int examples::mandelbrot_main( int argc, char** argv )
     kl::Timer timer;
 
     window.on_resize.emplace_back( [&]( kl::Int2 size )
-    {
-        gpu.resize_internal( size );
-        gpu.set_viewport_size( size );
-    } );
+        {
+            gpu.resize_internal( size );
+            gpu.set_viewport_size( size );
+        } );
     window.maximize();
 
-    std::string shader_sources = kl::read_file( "shaders/mandelbrot.hlsl" );
+    std::string shader_sources = kl::read_file_string( "shaders/mandelbrot.hlsl" );
     kl::Shaders shaders = gpu.create_shaders( shader_sources );
     kl::dx::Buffer screen_mesh = gpu.create_screen_mesh();
 
@@ -128,7 +128,7 @@ int examples::mandelbrot_main( int argc, char** argv )
 
         gpu.clear_internal();
 
-        struct alignas(16) CB
+        struct alignas( 16 ) CB
         {
             kl::Float4 STATE_INFO;
             kl::Float4 FRAME_SIZE;

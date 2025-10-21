@@ -18,7 +18,7 @@ int examples::compute_shaders2_main( int argc, char** argv )
     kl::dx::AccessView access_view = gpu.create_access_view( render_texture, nullptr );
     kl::dx::ShaderView shader_view = gpu.create_shader_view( render_texture, nullptr );
 
-    std::string shader_sources = kl::read_file( "shaders/compute_test2.hlsl" );
+    std::string shader_sources = kl::read_file_string( "shaders/compute_test2.hlsl" );
     kl::Shaders shaders = gpu.create_shaders( shader_sources );
     kl::ComputeShader compute_shader = gpu.create_compute_shader( shader_sources );
     gpu.bind_shaders( shaders );
@@ -34,7 +34,7 @@ int examples::compute_shaders2_main( int argc, char** argv )
         gpu.unbind_shader_view_for_pixel_shader( 0 );
         gpu.clear_target_view( target_view, kl::colors::GRAY );
 
-        struct alignas(16) CB
+        struct alignas( 16 ) CB
         {
             kl::Float4 MISC_DATA;
         } cb = {};
@@ -45,7 +45,7 @@ int examples::compute_shaders2_main( int argc, char** argv )
 
         gpu.unbind_shader_view_for_pixel_shader( 0 );
         gpu.bind_access_view_for_compute_shader( access_view, 0 );
-        gpu.dispatch_compute_shader( (window.width() / 32) + 1, (window.height() / 32) + 1, 1 );
+        gpu.dispatch_compute_shader( ( window.width() / 32 ) + 1, ( window.height() / 32 ) + 1, 1 );
 
         gpu.unbind_access_view_for_compute_shader( 0 );
         gpu.bind_shader_view_for_pixel_shader( shader_view, 0 );
