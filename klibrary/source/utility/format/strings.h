@@ -14,6 +14,7 @@ struct string_hash : std::hash<std::string_view>
 namespace kl
 {
 std::wstring convert_string( std::string_view const& data );
+std::string convert_string( std::wstring_view const& data );
 
 std::vector<std::string> split_string( std::string_view const& data, std::string_view const& delimiter );
 std::vector<std::wstring> split_string( std::wstring_view const& data, std::wstring_view const& delimiter );

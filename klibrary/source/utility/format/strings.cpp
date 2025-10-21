@@ -1,13 +1,20 @@
 #include "klibrary.h"
 
 
-std::wstring kl::convert_string( std::string_view const& data )
+std::wstring kl::convert_string( std::string_view const& source )
 {
-    std::wstring temp;
-    temp.resize( data.size() );
-    for ( size_t i = 0; i < data.size(); i++ )
-        temp[i] = wchar_t( data[i] );
-    return temp;
+    std::wstring result;
+    result.resize( MultiByteToWideChar( CP_UTF8, 0, source.data(), (int) source.size(), nullptr, 0 ) );
+    MultiByteToWideChar( CP_UTF8, 0, source.data(), (int) source.size(), result.data(), result.size() );
+    return result;
+}
+
+std::string kl::convert_string( std::wstring_view const& source )
+{
+    std::string result;
+    result.resize( WideCharToMultiByte( CP_UTF8, 0, source.data(), (int) source.size(), nullptr, 0, nullptr, nullptr ) );
+    WideCharToMultiByte( CP_UTF8, 0, source.data(), (int) source.size(), result.data(), result.size(), nullptr, nullptr );
+    return result;
 }
 
 std::vector<std::string> kl::split_string( std::string_view const& data, std::string_view const& delimiter )

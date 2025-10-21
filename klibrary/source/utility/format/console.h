@@ -21,7 +21,8 @@ Int2 size();
 void set_size( Int2 size );
 
 void set_title( std::string_view const& text );
-void set_font( Int2 size, std::string_view const& font_name = "Consolas" );
+void set_title( std::wstring_view const& text );
+void set_font( Int2 size, std::wstring_view const& font_name = L"Consolas" );
 
 char read();
 void wait( char to_wait_for, bool echo = false );

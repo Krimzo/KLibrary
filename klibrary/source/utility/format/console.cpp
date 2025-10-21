@@ -64,11 +64,6 @@ void kl::console::set_height( int height )
     set_size( { width(), height } );
 }
 
-void kl::console::set_title( std::string_view const& text )
-{
-    SetConsoleTitleA( text.data() );
-}
-
 kl::Int2 kl::console::size()
 {
     CONSOLE_SCREEN_BUFFER_INFO info = {};
@@ -82,7 +77,17 @@ void kl::console::set_size( Int2 size )
     SetConsoleWindowInfo( _console_init, true, &rect );
 }
 
-void kl::console::set_font( Int2 size, std::string_view const& font_name )
+void kl::console::set_title( std::string_view const& text )
+{
+    SetConsoleTitleA( text.data() );
+}
+
+void kl::console::set_title( std::wstring_view const& text )
+{
+    SetConsoleTitleW( text.data() );
+}
+
+void kl::console::set_font( Int2 size, std::wstring_view const& font_name )
 {
     CONSOLE_FONT_INFOEX cfi = {};
     cfi.cbSize = sizeof( CONSOLE_FONT_INFOEX );
@@ -90,7 +95,7 @@ void kl::console::set_font( Int2 size, std::string_view const& font_name )
     cfi.dwFontSize.Y = (SHORT) size.y;
     cfi.FontFamily = FF_DONTCARE;
     cfi.FontWeight = FW_NORMAL;
-    wcscpy_s( cfi.FaceName, convert_string( font_name ).data() );
+    wcscpy_s( cfi.FaceName, font_name.data() );
     SetCurrentConsoleFontEx( _console_init, false, &cfi );
 }
 
