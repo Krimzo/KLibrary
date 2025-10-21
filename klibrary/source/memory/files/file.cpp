@@ -106,7 +106,7 @@ std::vector<std::string> kl::list_files( std::string_view const& path, bool recu
     return files;
 }
 
-std::vector<std::wstring> kl::wlist_files( std::wstring_view const& path, bool recursive )
+std::vector<std::wstring> kl::list_files( std::wstring_view const& path, bool recursive )
 {
     std::vector<std::wstring> files;
     if ( recursive )
@@ -142,7 +142,7 @@ std::string kl::read_file_string( std::string_view const& filepath )
     return result;
 }
 
-std::string kl::wread_file_string( std::wstring_view const& filepath )
+std::string kl::read_file_string( std::wstring_view const& filepath )
 {
     File file{ filepath, false };
     if ( !file )
@@ -166,13 +166,13 @@ bool kl::write_file_string( std::string_view const& filepath, std::string_view c
     return true;
 }
 
-bool kl::wwrite_file_string( std::wstring_view const& filepath, std::wstring_view const& data )
+bool kl::write_file_string( std::wstring_view const& filepath, std::string_view const& data )
 {
     File file{ filepath, true };
     if ( !file )
         return false;
 
-    file.write<wchar_t>( data.data(), data.size() );
+    file.write<char>( data.data(), data.size() );
     return true;
 }
 

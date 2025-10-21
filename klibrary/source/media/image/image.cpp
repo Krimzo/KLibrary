@@ -9,10 +9,6 @@ static int _image_init = []
         return 0;
     }( );
 
-kl::Image::Image()
-{
-}
-
 kl::Image::Image( Int2 size )
     : m_size( size )
 {
@@ -20,6 +16,11 @@ kl::Image::Image( Int2 size )
 }
 
 kl::Image::Image( std::string_view const& filepath )
+{
+    load_from_file( filepath );
+}
+
+kl::Image::Image( std::wstring_view const& filepath )
 {
     load_from_file( filepath );
 }
@@ -370,6 +371,11 @@ bool kl::Image::load_from_file( std::string_view const& filepath )
     return load_from_buffer( read_file_string( filepath ) );
 }
 
+bool kl::Image::load_from_file( std::wstring_view const& filepath )
+{
+    return load_from_buffer( read_file_string( filepath ) );
+}
+
 bool kl::Image::save_to_buffer( std::string& buffer, ImageType type ) const
 {
     static constexpr CLSID bmp_encoder_clsid = {
@@ -426,26 +432,14 @@ bool kl::Image::save_to_buffer( std::string& buffer, ImageType type ) const
 
 bool kl::Image::save_to_file( std::string_view const& filepath, ImageType type ) const
 {
-    if ( type == ImageType::TXT )
-    {
-        std::ofstream file( filepath.data() );
-        if ( !file )
-        {
-            return false;
-        }
+    std::string buffer;
+    if ( save_to_buffer( buffer, type ) )
+        return write_file_string( filepath, buffer );
+    return false;
+}
 
-        for ( int y = 0; y < m_size.y; y++ )
-        {
-            for ( int x = 0; x < m_size.x; x++ )
-            {
-                RGB pixel = m_pixels[(size_t) y * m_size.x + x];
-                write( file, x, " ", y, " => ", (int) pixel.r, " ", (int) pixel.g, " ", (int) pixel.b );
-            }
-        }
-        file.close();
-        return true;
-    }
-
+bool kl::Image::save_to_file( std::wstring_view const& filepath, ImageType type ) const
+{
     std::string buffer;
     if ( save_to_buffer( buffer, type ) )
         return write_file_string( filepath, buffer );

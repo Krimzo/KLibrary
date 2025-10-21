@@ -76,13 +76,13 @@ std::string file_extension( std::string_view const& filepath );
 std::wstring wfile_extension( std::wstring_view const& filepath );
 
 std::vector<std::string> list_files( std::string_view const& path, bool recursive = false );
-std::vector<std::wstring> wlist_files( std::wstring_view const& path, bool recursive = false );
+std::vector<std::wstring> list_files( std::wstring_view const& path, bool recursive = false );
 
 std::string read_file_string( std::string_view const& filepath );
-std::string wread_file_string( std::wstring_view const& filepath );
+std::string read_file_string( std::wstring_view const& filepath );
 
 bool write_file_string( std::string_view const& filepath, std::string_view const& data );
-bool wwrite_file_string( std::wstring_view const& filepath, std::wstring_view const& data );
+bool write_file_string( std::wstring_view const& filepath, std::string_view const& data );
 
 std::optional<std::string> choose_file( bool save, std::vector<std::pair<std::string_view, std::string_view>> const& filters = { { "All Files", ".*" } }, int* out_index = nullptr );
 std::optional<std::wstring> wchoose_file( bool save, std::vector<std::pair<std::wstring_view, std::wstring_view>> const& filters = { { L"All Files", L".*" } }, int* out_index = nullptr );

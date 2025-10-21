@@ -10,6 +10,11 @@ static int _media_init = []
     }( );
 
 kl::VideoWriter::VideoWriter( std::string_view const& filepath, VideoType const& video_type, Int2 frame_size, int fps, int video_bit_rate, int audio_sample_rate )
+    : VideoWriter( convert_string( filepath ), video_type, frame_size, fps, video_bit_rate, audio_sample_rate )
+{
+}
+
+kl::VideoWriter::VideoWriter( std::wstring_view const& filepath, VideoType const& video_type, Int2 frame_size, int fps, int video_bit_rate, int audio_sample_rate )
     : m_width( frame_size.x )
     , m_height( frame_size.y )
     , m_fps( fps )
@@ -17,8 +22,7 @@ kl::VideoWriter::VideoWriter( std::string_view const& filepath, VideoType const&
     , m_sample_rate( audio_sample_rate )
     , m_frame_duration( 10'000'000 / m_fps )
 {
-    std::wstring converted_path = convert_string( filepath );
-    MFCreateSinkWriterFromURL( converted_path.data(), nullptr, nullptr, &m_writer ) >> verify_result;
+    MFCreateSinkWriterFromURL( filepath.data(), nullptr, nullptr, &m_writer ) >> verify_result;
 
     ComRef<IMFMediaType> video_out_type;
     MFCreateMediaType( &video_out_type ) >> verify_result;

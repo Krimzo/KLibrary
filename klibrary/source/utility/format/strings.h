@@ -13,7 +13,6 @@ struct string_hash : std::hash<std::string_view>
 
 namespace kl
 {
-std::string convert_string( std::wstring_view const& data );
 std::wstring convert_string( std::string_view const& data );
 
 std::vector<std::string> split_string( std::string_view const& data, std::string_view const& delimiter );
@@ -84,7 +83,7 @@ std::string format( Args&&... args )
 }
 
 template <bool NewLine = true, typename... Args>
-void wwrite( std::wostream& w_stream, Args&&... args )
+void write( std::wostream& w_stream, Args&&... args )
 {
     std::wosyncstream w_synced_stream( w_stream );
     ( w_synced_stream << ... << args );
@@ -95,14 +94,14 @@ void wwrite( std::wostream& w_stream, Args&&... args )
 template <bool NewLine = true, typename... Args>
 void wprint( Args&&... args )
 {
-    wwrite<NewLine>( std::wcout, args... );
+    write<NewLine>( std::wcout, args... );
 }
 
 template <typename... Args>
 std::wstring wformat( Args&&... args )
 {
     std::wstringstream w_stream;
-    wwrite<false>( w_stream, args... );
+    write<false>( w_stream, args... );
     return w_stream.str();
 }
 }

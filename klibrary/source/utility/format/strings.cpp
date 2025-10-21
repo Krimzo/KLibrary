@@ -1,23 +1,12 @@
 #include "klibrary.h"
 
 
-std::string kl::convert_string( std::wstring_view const& data )
-{
-    std::string temp;
-    temp.resize( data.size() );
-    for ( size_t i = 0; i < data.size(); i++ )
-        temp[i] = char( data[i] );
-
-    return temp;
-}
-
 std::wstring kl::convert_string( std::string_view const& data )
 {
     std::wstring temp;
     temp.resize( data.size() );
     for ( size_t i = 0; i < data.size(); i++ )
         temp[i] = wchar_t( data[i] );
-
     return temp;
 }
 

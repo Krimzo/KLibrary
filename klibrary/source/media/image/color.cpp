@@ -1,10 +1,6 @@
 #include "klibrary.h"
 
 
-kl::RGB::RGB()
-{
-}
-
 kl::RGB::RGB( byte r, byte g, byte b, byte a )
     : b( b ), g( g ), r( r ), a( a )
 {
@@ -77,10 +73,6 @@ kl::RGB kl::RGB::inverted() const
 char kl::RGB::ascii() const
 {
     return YUV( *this ).ascii();
-}
-
-kl::YUV::YUV()
-{
 }
 
 kl::YUV::YUV( float y, float u, float v )

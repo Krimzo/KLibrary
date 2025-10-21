@@ -1,16 +1,17 @@
 #include "klibrary.h"
 
 
-kl::Audio::Audio()
-{
-}
-
 kl::Audio::Audio( int sample_rate )
     : sample_rate( sample_rate )
 {
 }
 
 kl::Audio::Audio( std::string_view const& path )
+{
+    load_from_file( path );
+}
+
+kl::Audio::Audio( std::wstring_view const& path )
 {
     load_from_file( path );
 }
@@ -150,6 +151,11 @@ bool kl::Audio::load_from_file( std::string_view const& filepath )
     return load_from_buffer( read_file_string( filepath ) );
 }
 
+bool kl::Audio::load_from_file( std::wstring_view const& filepath )
+{
+    return load_from_buffer( read_file_string( filepath ) );
+}
+
 bool kl::Audio::save_to_buffer( std::string& buffer, AudioType type ) const
 {
     HRESULT hr = 0;
@@ -232,6 +238,14 @@ bool kl::Audio::save_to_buffer( std::string& buffer, AudioType type ) const
 }
 
 bool kl::Audio::save_to_file( std::string_view const& filepath, AudioType type ) const
+{
+    std::string buffer;
+    if ( save_to_buffer( buffer, type ) )
+        return write_file_string( filepath, buffer );
+    return false;
+}
+
+bool kl::Audio::save_to_file( std::wstring_view const& filepath, AudioType type ) const
 {
     std::string buffer;
     if ( save_to_buffer( buffer, type ) )
