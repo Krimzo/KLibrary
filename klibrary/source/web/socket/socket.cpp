@@ -36,102 +36,115 @@ void kl::Address::set_port( int port )
     sin_port = ::htons( (u_short) port );
 }
 
-std::string kl::Socket::SELF = "127.0.0.1";
-
-kl::Socket::Socket( bool udp )
+kl::TCPSocket::TCPSocket()
 {
-    m_socket = ::socket( AF_INET,
-        udp ? SOCK_DGRAM : SOCK_STREAM,
-        udp ? IPPROTO_UDP : IPPROTO_TCP );
-    m_address.sin_addr.s_addr = INADDR_ANY;
-    verify( m_socket != INVALID_SOCKET, "Failed to create socket" );
+    open();
 }
 
-kl::Socket::~Socket()
+kl::TCPSocket::~TCPSocket() noexcept
 {
-    ::closesocket( m_socket );
+    close();
 }
 
-kl::Socket::ID kl::Socket::id() const
+kl::TCPSocket::operator bool() const
 {
-    return m_socket;
+    return socket != INVALID_SOCKET;
 }
 
-kl::Socket::operator bool() const
+void kl::TCPSocket::open()
 {
-    return m_socket != INVALID_SOCKET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    socket = ::socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
 }
 
-std::string kl::Socket::address() const
+void kl::TCPSocket::close()
 {
-    return m_address.address();
+    ::closesocket( socket );
+    socket = INVALID_SOCKET;
 }
 
-int kl::Socket::set_address( std::string_view const& address )
+int kl::TCPSocket::server_bind()
 {
-    return m_address.set_address( address );
+    return ::bind( socket, (sockaddr*) &address, sizeof( Address ) );
 }
 
-int kl::Socket::port() const
+int kl::TCPSocket::server_listen( int queue_size )
 {
-    return m_address.port();
+    return ::listen( socket, queue_size );
 }
 
-void kl::Socket::set_port( int port )
+void kl::TCPSocket::server_accept( TCPSocket& out_client )
 {
-    m_address.set_port( port );
+    int _ = sizeof( Address );
+    out_client.socket = ::accept( socket, (sockaddr*) &address, &_ );
 }
 
-int kl::Socket::bind()
+int kl::TCPSocket::client_connect()
 {
-    return ::bind( m_socket, (sockaddr*) &m_address, sizeof( Address ) );
+    return ::connect( socket, (sockaddr*) &address, sizeof( Address ) );
 }
 
-int kl::Socket::listen( int queue_size )
+int kl::TCPSocket::send( void const* data, int byte_size ) const
 {
-    return ::listen( m_socket, queue_size );
+    return ::send( socket, (char const*) data, byte_size, NULL );
 }
 
-void kl::Socket::accept( Socket& socket )
+int kl::TCPSocket::receive( void* buff, int byte_size ) const
 {
-    int address_length = sizeof( Address );
-    socket.m_socket = ::accept( m_socket, (sockaddr*) &m_address, &address_length );
+    return ::recv( socket, (char*) buff, byte_size, NULL );
 }
 
-int kl::Socket::connect()
+uint64_t kl::TCPSocket::exhaust( std::vector<byte>& output, int buffer_size ) const
 {
-    return ::connect( m_socket, (sockaddr*) &m_address, sizeof( Address ) );
-}
-
-int kl::Socket::send( void const* data, int byte_size ) const
-{
-    return ::send( m_socket, (char const*) data, byte_size, NULL );
-}
-
-int kl::Socket::receive( void* buff, int byte_size ) const
-{
-    return ::recv( m_socket, (char*) buff, byte_size, NULL );
-}
-
-int kl::Socket::send_to( void const* data, int byte_size, Address const& address ) const
-{
-    return ::sendto( m_socket, (char const*) data, byte_size, NULL, (sockaddr const*) &address, sizeof( Address ) );
-}
-
-int kl::Socket::receive_from( void* buff, int byte_size, Address* address ) const
-{
-    int address_length = sizeof( Address );
-    return ::recvfrom( m_socket, (char*) buff, byte_size, NULL, (sockaddr*) address, &address_length );
-}
-
-int kl::Socket::exhaust( std::vector<byte>& output, int buffer_size ) const
-{
+    uint64_t total_received = 0;
     std::vector<byte> receiver_buffer( buffer_size );
-    int total_received = 0;
     for ( int received; ( received = receive( receiver_buffer.data(), buffer_size ) ) > 0;)
     {
         output.insert( output.end(), receiver_buffer.begin(), receiver_buffer.begin() + received );
         total_received += received;
     }
     return total_received;
+}
+
+kl::UDPSocket::UDPSocket()
+{
+    open();
+}
+
+kl::UDPSocket::~UDPSocket()
+{
+    close();
+}
+
+kl::UDPSocket::operator bool() const
+{
+    return socket != INVALID_SOCKET;
+}
+
+void kl::UDPSocket::open()
+{
+    address.sin_addr.s_addr = INADDR_ANY;
+    socket = ::socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
+}
+
+void kl::UDPSocket::close()
+{
+    ::closesocket( socket );
+    socket = INVALID_SOCKET;
+}
+
+int kl::UDPSocket::server_bind()
+{
+    return ::bind( socket, (sockaddr*) &address, sizeof( Address ) );
+}
+
+int kl::UDPSocket::send( void const* data, int byte_size, Address const& address ) const
+{
+    return ::sendto( socket, (char const*) data, byte_size, NULL, (sockaddr const*) &address, sizeof( Address ) );
+}
+
+int kl::UDPSocket::receive( void* buff, int byte_size, Address& address ) const
+{
+    int address_length = sizeof( Address );
+    return ::recvfrom( socket, (char*) buff, byte_size, NULL, (sockaddr*) &address, &address_length );
 }
