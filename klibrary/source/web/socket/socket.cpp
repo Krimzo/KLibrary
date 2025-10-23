@@ -84,6 +84,19 @@ int kl::TCPSocket::client_connect()
     return ::connect( socket, (sockaddr*) &address, sizeof( Address ) );
 }
 
+void kl::TCPSocket::set_blocking( bool enabled )
+{
+    u_long mode = enabled ? 0 : 1;
+    ::ioctlsocket( socket, FIONBIO, &mode );
+}
+
+int kl::TCPSocket::available() const
+{
+    u_long available = 0;
+    ::ioctlsocket( socket, FIONREAD, &available );
+    return (int) available;
+}
+
 int kl::TCPSocket::send( void const* data, int byte_size ) const
 {
     return ::send( socket, (char const*) data, byte_size, NULL );
@@ -94,12 +107,17 @@ int kl::TCPSocket::receive( void* buff, int byte_size ) const
     return ::recv( socket, (char*) buff, byte_size, NULL );
 }
 
-uint64_t kl::TCPSocket::exhaust( std::vector<byte>& output, int buffer_size ) const
+int64_t kl::TCPSocket::receive_all( std::vector<byte>& output, int buffer_size ) const
 {
-    uint64_t total_received = 0;
+    int64_t total_received = 0;
     std::vector<byte> receiver_buffer( buffer_size );
-    for ( int received; ( received = receive( receiver_buffer.data(), buffer_size ) ) > 0;)
+    while ( available() > 0 )
     {
+        const int received = receive( receiver_buffer.data(), buffer_size );
+        if ( received < 0 )
+            return received;
+        if ( received == 0 )
+            break;
         output.insert( output.end(), receiver_buffer.begin(), receiver_buffer.begin() + received );
         total_received += received;
     }
@@ -136,6 +154,19 @@ void kl::UDPSocket::close()
 int kl::UDPSocket::server_bind()
 {
     return ::bind( socket, (sockaddr*) &address, sizeof( Address ) );
+}
+
+void kl::UDPSocket::set_blocking( bool enabled )
+{
+    u_long mode = enabled ? 0 : 1;
+    ::ioctlsocket( socket, FIONBIO, &mode );
+}
+
+int kl::UDPSocket::available() const
+{
+    u_long available = 0;
+    ::ioctlsocket( socket, FIONREAD, &available );
+    return (int) available;
 }
 
 int kl::UDPSocket::send( void const* data, int byte_size, Address const& address ) const

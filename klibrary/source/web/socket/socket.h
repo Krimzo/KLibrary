@@ -40,9 +40,13 @@ struct TCPSocket : NoCopy
     int server_listen( int queue_size );
     void server_accept( TCPSocket& out_client );
     int client_connect();
+
+    void set_blocking( bool enabled );
+    int available() const;
+
     int send( void const* data, int byte_size ) const;
     int receive( void* buff, int byte_size ) const;
-    uint64_t exhaust( std::vector<byte>& output, int buffer_size = 16384 ) const;
+    int64_t receive_all( std::vector<byte>& output, int buffer_size = 16384 ) const;
 
     template <typename T>
     bool send( T const& obj ) const
@@ -83,6 +87,10 @@ struct UDPSocket : NoCopy
     void close();
 
     int server_bind();
+
+    void set_blocking( bool enabled );
+    int available() const;
+
     int send( void const* data, int byte_size, Address const& address ) const;
     int receive( void* buff, int byte_size, Address& out_address ) const;
 
