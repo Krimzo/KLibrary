@@ -81,3 +81,11 @@ namespace kl
 {
 Image take_screenshot();
 }
+
+namespace kl
+{
+struct ImageInit
+{
+    static const int _init;
+};
+}

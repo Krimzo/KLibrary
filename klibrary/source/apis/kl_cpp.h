@@ -6,6 +6,7 @@
 #include <atomic>
 #include <bitset>
 #include <cstdint>
+#include <cstdlib>
 #include <ctime>
 #include <execution>
 #include <filesystem>

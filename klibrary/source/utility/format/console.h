@@ -59,3 +59,11 @@ constexpr void assert( bool value, Args&&... args )
     }
 }
 }
+
+namespace kl
+{
+struct ConsoleInit
+{
+    static const HANDLE _init;
+};
+}

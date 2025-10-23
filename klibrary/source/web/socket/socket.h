@@ -117,3 +117,11 @@ struct UDPSocket : NoCopy
     }
 };
 }
+
+namespace kl
+{
+struct SocketInit
+{
+    static const int _init;
+};
+}

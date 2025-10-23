@@ -42,5 +42,7 @@ int encryption_main( int argc, char** argv );
 int fast_output_main( int argc, char** argv );
 int hashing_main( int argc, char** argv );
 int safety_test_main( int argc, char** argv );
+
 int sockets_main( int argc, char** argv );
+int http_file_server( int argc, char** argv );
 }

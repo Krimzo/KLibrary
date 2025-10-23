@@ -112,6 +112,7 @@
     <ClCompile Include="source\media\video_writing.cpp" />
     <ClCompile Include="source\json\json_examples.cpp" />
     <ClCompile Include="source\json\json_tests.cpp" />
+    <ClCompile Include="source\web\http_file_server.cpp" />
     <ClCompile Include="source\_main.cpp" />
     <ClCompile Include="source\math\imaginary_numbers.cpp" />
     <ClCompile Include="source\math\math_tests.cpp" />
@@ -121,7 +122,7 @@
     <ClCompile Include="source\utility\fast_output.cpp" />
     <ClCompile Include="source\utility\hashing.cpp" />
     <ClCompile Include="source\utility\safety_test.cpp" />
-    <ClCompile Include="source\utility\sockets.cpp" />
+    <ClCompile Include="source\web\sockets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\examples.h" />

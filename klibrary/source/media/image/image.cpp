@@ -1,12 +1,12 @@
 #include "klibrary.h"
 
 
-static int _image_init = []
+const int kl::ImageInit::_init = []() -> int
     {
         ULONG_PTR token = NULL;
         Gdiplus::GdiplusStartupInput startup_input = {};
         kl::assert( !GdiplusStartup( &token, &startup_input, nullptr ), "Failed to init GDIPlus" );
-        return 0;
+        return {};
     }( );
 
 kl::Image::Image( Int2 size )

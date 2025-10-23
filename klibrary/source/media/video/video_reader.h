@@ -38,3 +38,11 @@ private:
     Ref<VideoGPU> m_gpu;
 };
 }
+
+namespace kl
+{
+struct VideoInit
+{
+    static const int _init;
+};
+}

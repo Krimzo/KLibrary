@@ -5,6 +5,12 @@
 
 namespace kl
 {
+struct ByteRange
+{
+    std::optional<int64_t> start_incl;
+    std::optional<int64_t> end_incl;
+};
+
 struct File : NoCopy
 {
     File() = default;
@@ -78,8 +84,8 @@ std::wstring wfile_extension( std::wstring_view const& filepath );
 std::vector<std::string> list_files( std::string_view const& path, bool recursive = false );
 std::vector<std::wstring> list_files( std::wstring_view const& path, bool recursive = false );
 
-std::string read_file_string( std::string_view const& filepath );
-std::string read_file_string( std::wstring_view const& filepath );
+std::string read_file_string( std::string_view const& filepath, ByteRange const& byte_range = {} );
+std::string read_file_string( std::wstring_view const& filepath, ByteRange const& byte_range = {} );
 
 bool write_file_string( std::string_view const& filepath, std::string_view const& data );
 bool write_file_string( std::wstring_view const& filepath, std::string_view const& data );

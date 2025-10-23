@@ -3,6 +3,14 @@
 
 using kl::ComRef;
 
+const int kl::VideoInit::_init = []() -> int
+    {
+        constexpr DWORD init_args = COINIT_MULTITHREADED | COINIT_SPEED_OVER_MEMORY;
+        CoInitializeEx( nullptr, init_args ) >> kl::verify_result;
+        MFStartup( MF_VERSION ) >> kl::verify_result;
+        return {};
+    }( );
+
 static void configure_reader( ComRef<IMFSourceReader> const& reader, kl::Int2 size )
 {
     ComRef<IMFMediaType> media_type;

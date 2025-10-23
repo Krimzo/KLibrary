@@ -1,12 +1,12 @@
 #include "klibrary.h"
 
 
-static int _socket_init = []
+const int kl::SocketInit::_init = []() -> int
     {
         WSADATA wsa_data{};
         int result = ::WSAStartup( MAKEWORD( 2, 2 ), &wsa_data );
         kl::assert( result == 0, "Failed to initialize WSA" );
-        return result;
+        return {};
     }( );
 
 kl::Address::Address()
@@ -111,7 +111,7 @@ int64_t kl::TCPSocket::receive_all( std::vector<byte>& output, int buffer_size )
 {
     int64_t total_received = 0;
     std::vector<byte> receiver_buffer( buffer_size );
-    while ( available() > 0 )
+    while ( true )
     {
         const int received = receive( receiver_buffer.data(), buffer_size );
         if ( received < 0 )
@@ -120,6 +120,8 @@ int64_t kl::TCPSocket::receive_all( std::vector<byte>& output, int buffer_size )
             break;
         output.insert( output.end(), receiver_buffer.begin(), receiver_buffer.begin() + received );
         total_received += received;
+        if ( available() <= 0 )
+            break;
     }
     return total_received;
 }

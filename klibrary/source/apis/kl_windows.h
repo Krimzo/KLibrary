@@ -27,6 +27,7 @@
 #pragma comment(lib, "mfreadwrite.lib")
 #pragma comment(lib, "propsys.lib")
 #pragma comment(lib, "ole32.lib")
+#pragma comment(lib, "urlmon.lib")
 #pragma comment(lib, "avrt.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "kernel32.lib")

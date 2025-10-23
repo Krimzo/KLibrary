@@ -128,30 +128,44 @@ std::vector<std::wstring> kl::list_files( std::wstring_view const& path, bool re
     return files;
 }
 
-std::string kl::read_file_string( std::string_view const& filepath )
+std::string kl::read_file_string( std::string_view const& filepath, ByteRange const& byte_range )
 {
     File file{ filepath, false };
     if ( !file )
         return {};
 
-    std::string result;
     file.unwind();
-    result.resize( file.tell() );
-    file.rewind();
+    const int64_t file_size = (int64_t) file.tell();
+    if ( file_size <= 0 )
+        return {};
+
+    const int64_t first_byte = clamp( byte_range.start_incl.value_or( 0 ), 0ll, file_size - 1 );
+    const int64_t last_byte = clamp( byte_range.end_incl.value_or( file_size - 1 ), 0ll, file_size - 1 );
+
+    std::string result;
+    result.resize( max( last_byte - first_byte + 1, 0ll ) );
+    file.seek( first_byte );
     file.read( result.data(), result.size() );
     return result;
 }
 
-std::string kl::read_file_string( std::wstring_view const& filepath )
+std::string kl::read_file_string( std::wstring_view const& filepath, ByteRange const& byte_range )
 {
     File file{ filepath, false };
     if ( !file )
         return {};
 
-    std::string result;
     file.unwind();
-    result.resize( file.tell() );
-    file.rewind();
+    const int64_t file_size = (int64_t) file.tell();
+    if ( file_size <= 0 )
+        return {};
+
+    const int64_t first_byte = clamp( byte_range.start_incl.value_or( 0 ), 0ll, file_size - 1 );
+    const int64_t last_byte = clamp( byte_range.end_incl.value_or( file_size - 1 ), 0ll, file_size - 1 );
+
+    std::string result;
+    result.resize( max( last_byte - first_byte + 1, 0ll ) );
+    file.seek( first_byte );
     file.read( result.data(), result.size() );
     return result;
 }
