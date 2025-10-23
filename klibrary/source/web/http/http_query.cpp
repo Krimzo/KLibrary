@@ -1,6 +1,25 @@
 #include "klibrary.h"
 
 
+kl::HttpQuery::HttpQuery( std::string_view const& full_path )
+{
+    const size_t index = full_path.find( '?' );
+    if ( index == -1 )
+    {
+        path = full_path;
+        return;
+    }
+
+    path = full_path.substr( 0, index );
+    const std::string_view data = full_path.substr( index + 1 );
+    for ( auto& part : kl::split_string( data, "&" ) )
+    {
+        const size_t index = part.find( '=' );
+        const std::string key = decode_url_string( part.substr( 0, index ) );
+        ( *this )[key] = ( index != -1 ) ? decode_url_string( part.substr( index + 1 ) ) : "";
+    }
+}
+
 std::string kl::encode_url_string( std::string_view const& data )
 {
     std::stringstream escaped;
@@ -49,23 +68,4 @@ std::string kl::decode_url_string( std::string_view const& data )
         }
     }
     return result;
-}
-
-kl::HttpQuerry::HttpQuerry( std::string_view const& full_path )
-{
-    const size_t index = full_path.find( '?' );
-    if ( index == -1 )
-    {
-        path = full_path;
-        return;
-    }
-
-    path = full_path.substr( 0, index );
-    const std::string_view data = full_path.substr( index + 1 );
-    for ( auto& part : kl::split_string( data, "&" ) )
-    {
-        const size_t index = part.find( '=' );
-        const std::string key = decode_url_string( part.substr( 0, index ) );
-        ( *this )[key] = ( index != -1 ) ? decode_url_string( part.substr( index + 1 ) ) : "";
-    }
 }

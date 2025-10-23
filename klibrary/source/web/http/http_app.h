@@ -7,13 +7,13 @@ namespace kl
 {
 struct HttpApp : private HttpServer
 {
-    using ExactRoute = std::function<void( HttpRequest const&, HttpQuerry const&, HttpResponse& )>;
-    using StartingRoute = std::function<void( HttpRequest const&, HttpQuerry const&, std::string_view const&, HttpResponse& )>;
-    using DefaultRoute = std::function<void( HttpRequest const&, HttpQuerry const&, HttpResponse& )>;
+    using ExactRoute = std::function<void( HttpRequest const&, HttpQuery const&, HttpResponse& )>;
+    using StartingRoute = std::function<void( HttpRequest const&, HttpQuery const&, std::string_view const&, HttpResponse& )>;
+    using DefaultRoute = std::function<void( HttpRequest const&, HttpQuery const&, HttpResponse& )>;
 
     std::map<std::string, ExactRoute> exact_routes;
     std::map<std::string, StartingRoute> starting_routes;
-    DefaultRoute default_route = []( HttpRequest const& request, HttpQuerry const& querry, HttpResponse& response )
+    DefaultRoute default_route = []( HttpRequest const& request, HttpQuery const& query, HttpResponse& response )
         {
             response.status_code = HttpStatusCode::NOT_FOUND;
             response.load_text( "Does not exist." );

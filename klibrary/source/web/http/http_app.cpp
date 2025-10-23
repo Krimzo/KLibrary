@@ -14,19 +14,19 @@ void kl::HttpApp::start( int port )
 
 kl::HttpResponse kl::HttpApp::handle_request( HttpRequest const& request ) const
 {
-    const HttpQuerry querry{ request.full_path };
+    const HttpQuery query{ request.full_path };
     HttpResponse response;
-    if ( auto* opt_route = find_exact_route( querry.path ) )
+    if ( auto* opt_route = find_exact_route( query.path ) )
     {
-        ( *opt_route )( request, querry, response );
+        ( *opt_route )( request, query, response );
     }
-    else if ( auto opt_route = find_starting_route( querry.path ) )
+    else if ( auto opt_route = find_starting_route( query.path ) )
     {
-        opt_route->second( request, querry, querry.path.substr( opt_route->first.size() ), response );
+        opt_route->second( request, query, query.path.substr( opt_route->first.size() ), response );
     }
     else
     {
-        default_route( request, querry, response );
+        default_route( request, query, response );
     }
     return response;
 }

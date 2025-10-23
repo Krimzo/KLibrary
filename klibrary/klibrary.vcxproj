@@ -85,7 +85,7 @@
     <ClInclude Include="source\utility\utility.h" />
     <ClInclude Include="source\web\html\html.h" />
     <ClInclude Include="source\web\http\http_app.h" />
-    <ClInclude Include="source\web\http\http_querry.h" />
+    <ClInclude Include="source\web\http\http_query.h" />
     <ClInclude Include="source\web\http\http_request.h" />
     <ClInclude Include="source\web\http\http_response.h" />
     <ClInclude Include="source\web\http\http_server.h" />
@@ -142,7 +142,7 @@
     <ClCompile Include="source\utility\hash\sha256.cpp" />
     <ClCompile Include="source\web\html\html.cpp" />
     <ClCompile Include="source\web\http\http_app.cpp" />
-    <ClCompile Include="source\web\http\http_querry.cpp" />
+    <ClCompile Include="source\web\http\http_query.cpp" />
     <ClCompile Include="source\web\http\http_request.cpp" />
     <ClCompile Include="source\web\http\http_response.cpp" />
     <ClCompile Include="source\web\http\http_server.cpp" />

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "web/http/http_querry.h"
+#include "web/http/http_query.h"
 #include "web/html/html.h"
 
 

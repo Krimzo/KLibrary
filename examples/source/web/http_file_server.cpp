@@ -10,50 +10,50 @@ struct MyFileServer : kl::HttpApp
     MyFileServer( const std::string root )
         : root( root )
     {
-        default_route = []( kl::HttpRequest const& request, kl::HttpQuerry const& querry, kl::HttpResponse& response )
+        default_route = []( kl::HttpRequest const& request, kl::HttpQuery const& query, kl::HttpResponse& response )
             {
                 response.status_code = kl::HttpStatusCode::NOT_FOUND;
                 response.load_text( "Does not exist." );
                 kl::print( "Requsted not supported: ", request.full_path );
             };
 
-        exact_routes["/"] = []( kl::HttpRequest const& request, kl::HttpQuerry const& querry, kl::HttpResponse& response )
+        exact_routes["/"] = []( kl::HttpRequest const& request, kl::HttpQuery const& query, kl::HttpResponse& response )
             {
                 response.status_code = kl::HttpStatusCode::FOUND;
                 response.headers["Location"] = "/explore";
             };
 
-        exact_routes["/index.css"] = []( kl::HttpRequest const& request, kl::HttpQuerry const& querry, kl::HttpResponse& response )
+        exact_routes["/index.css"] = []( kl::HttpRequest const& request, kl::HttpQuery const& query, kl::HttpResponse& response )
             {
                 response.content_type = kl::HttpContentType::CSS;
                 response.content = kl::read_file_string( "dist/index.css" );
             };
 
-        starting_routes["/explore"] = [this]( kl::HttpRequest const& request, kl::HttpQuerry const& querry, std::string_view const& path, kl::HttpResponse& response )
+        starting_routes["/explore"] = [this]( kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view const& path, kl::HttpResponse& response )
             {
                 const fs::path fs_path = fs::absolute( this->root + "/" + kl::decode_url_string( path ) );
                 if ( !fs::exists( fs_path ) )
                 {
-                    handle_non_existent( request, querry, path, response, fs_path );
+                    handle_non_existent( request, query, path, response, fs_path );
                 }
                 else if ( fs::is_directory( fs_path ) )
                 {
-                    handle_view_folder( request, querry, path, response, fs_path );
+                    handle_view_folder( request, query, path, response, fs_path );
                 }
                 else
                 {
-                    handle_view_file( request, querry, path, response, fs_path );
+                    handle_view_file( request, query, path, response, fs_path );
                 }
             };
     }
 
 private:
-    void handle_non_existent( kl::HttpRequest const& request, kl::HttpQuerry const& querry, std::string_view const& path, kl::HttpResponse& response, fs::path const& fs_path )
+    void handle_non_existent( kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view const& path, kl::HttpResponse& response, fs::path const& fs_path )
     {
         response.load( "Does not exist: ", path );
     }
 
-    void handle_view_folder( kl::HttpRequest const& request, kl::HttpQuerry const& querry, std::string_view const& path, kl::HttpResponse& response, fs::path const& fs_path )
+    void handle_view_folder( kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view const& path, kl::HttpResponse& response, fs::path const& fs_path )
     {
         const kl::Html folder_item_template = kl::Html::from_file( "dist/folder_item.html" );
         const kl::Html file_item_template = kl::Html::from_file( "dist/file_item.html" );
@@ -100,9 +100,9 @@ private:
         response.load_html( folder_content_template );
     }
 
-    void handle_view_file( kl::HttpRequest const& request, kl::HttpQuerry const& querry, std::string_view const& path, kl::HttpResponse& response, fs::path const& fs_path )
+    void handle_view_file( kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view const& path, kl::HttpResponse& response, fs::path const& fs_path )
     {
-        if ( querry.contains( "thumbnail" ) && kl::probe_content_type( path ).value_or( {} ).starts_with( "video" ) )
+        if ( query.contains( "thumbnail" ) && kl::probe_content_type( path ).value_or( {} ).starts_with( "video" ) )
         {
             response.content_type = kl::HttpContentType::JPEG;
             response.content = read_video_frame( fs_path.generic_string() );
