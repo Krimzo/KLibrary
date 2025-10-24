@@ -1,6 +1,13 @@
 ## About
-General purpose library focused on 3D graphics.  
-Goal is to *simplify* use of C++, Win32 and DirectX.  
+General purpose Win/C++ library. 
+
+Key Feature Areas:  
+- Graphics & GPU: Abstractions for DirectX 11/DirectX 12 and shader management.  
+- Math: 3D mathematics including vectors, matrices, triangles and raytracing primitives.  
+- Media: Support for handling audio, images, and video.  
+- Utility: Modules for asynchronous operations, data formatting, hashing, and memory safety.  
+- Window Management: Simplifies window creation, input handling, and system hooks.  
+- Web & Data: Includes functionality for HTTP, sockets, and JSON parsing.  
 
 ## Hello Triangle
 ```cpp
@@ -48,14 +55,13 @@ int main()
 }
 ```
 
-## Win32 Examples
+## Examples
 ### Visualising sorting algorithms  
 ![](examples/screens/visual_sort.png)
 
 ### Visualising times table  
 ![](examples/screens/times_table.png)
 
-## DirectX Examples
 ### Usage of geometry shaders  
 ![](examples/screens/geometry_shaders.png)
 
