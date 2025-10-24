@@ -20,9 +20,9 @@ void kl::HttpResponse::load_raw( void const* ptr, uint64_t byte_size )
     std::memcpy( content.data(), ptr, byte_size );
 }
 
-void kl::HttpResponse::load_file( std::filesystem::path const& path, std::optional<ByteRange> const& byte_range )
+void kl::HttpResponse::load_file( fs::path const& path, std::optional<ByteRange> const& byte_range )
 {
-    const auto filesize = std::filesystem::file_size( path );
+    const auto filesize = fs::file_size( path );
     if ( filesize <= 0 )
         return;
 
@@ -59,7 +59,7 @@ std::string kl::HttpResponse::compile() const
     return result;
 }
 
-std::optional<std::string> kl::probe_content_type( std::filesystem::path const& path )
+std::optional<std::string> kl::probe_content_type( fs::path const& path )
 {
     LPWSTR mime_out = nullptr;
     if ( FAILED( FindMimeFromData( NULL, path.filename().generic_wstring().data(), NULL, 0, NULL, FMFD_URLASFILENAME, &mime_out, 0x0 ) ) )

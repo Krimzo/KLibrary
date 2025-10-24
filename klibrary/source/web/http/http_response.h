@@ -126,7 +126,7 @@ struct HttpResponse
     void load_text( std::string_view const& text );
     void load_html( Html const& html );
     void load_raw( void const* ptr, uint64_t byte_size );
-    void load_file( std::filesystem::path const& path, std::optional<ByteRange> const& byte_range );
+    void load_file( fs::path const& path, std::optional<ByteRange> const& byte_range );
 
     template<typename... Args>
     void load( Args&&... args )
@@ -137,5 +137,5 @@ struct HttpResponse
     std::string compile() const;
 };
 
-std::optional<std::string> probe_content_type( std::filesystem::path const& path );
+std::optional<std::string> probe_content_type( fs::path const& path );
 }

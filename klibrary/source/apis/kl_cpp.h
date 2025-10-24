@@ -36,6 +36,12 @@
 
 namespace kl
 {
+namespace fs = std::filesystem;
+namespace ch = std::chrono;
+}
+
+namespace kl
+{
 struct NoCopy
 {
 protected:

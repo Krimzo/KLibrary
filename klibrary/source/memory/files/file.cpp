@@ -76,12 +76,12 @@ uint64_t kl::File::tell() const
 
 std::string kl::file_extension( std::string_view const& filepath )
 {
-    return std::filesystem::path( filepath ).extension().string();
+    return fs::path( filepath ).extension().string();
 }
 
 std::wstring kl::wfile_extension( std::wstring_view const& filepath )
 {
-    return std::filesystem::path( filepath ).extension().wstring();
+    return fs::path( filepath ).extension().wstring();
 }
 
 std::vector<std::string> kl::list_files( std::string_view const& path, bool recursive )
@@ -89,18 +89,18 @@ std::vector<std::string> kl::list_files( std::string_view const& path, bool recu
     std::vector<std::string> files;
     if ( recursive )
     {
-        for ( auto const& entry : std::filesystem::recursive_directory_iterator( path ) )
+        for ( auto const& entry : fs::recursive_directory_iterator( path ) )
         {
             if ( !entry.is_directory() )
-                files.emplace_back( std::filesystem::absolute( entry ).generic_string() );
+                files.emplace_back( fs::absolute( entry ).generic_string() );
         }
     }
     else
     {
-        for ( auto const& entry : std::filesystem::directory_iterator( path ) )
+        for ( auto const& entry : fs::directory_iterator( path ) )
         {
             if ( !entry.is_directory() )
-                files.emplace_back( std::filesystem::absolute( entry ).generic_string() );
+                files.emplace_back( fs::absolute( entry ).generic_string() );
         }
     }
     return files;
@@ -111,18 +111,18 @@ std::vector<std::wstring> kl::list_files( std::wstring_view const& path, bool re
     std::vector<std::wstring> files;
     if ( recursive )
     {
-        for ( auto const& entry : std::filesystem::recursive_directory_iterator( path ) )
+        for ( auto const& entry : fs::recursive_directory_iterator( path ) )
         {
             if ( !entry.is_directory() )
-                files.emplace_back( std::filesystem::absolute( entry ).generic_wstring() );
+                files.emplace_back( fs::absolute( entry ).generic_wstring() );
         }
     }
     else
     {
-        for ( auto const& entry : std::filesystem::directory_iterator( path ) )
+        for ( auto const& entry : fs::directory_iterator( path ) )
         {
             if ( !entry.is_directory() )
-                files.emplace_back( std::filesystem::absolute( entry ).generic_wstring() );
+                files.emplace_back( fs::absolute( entry ).generic_wstring() );
         }
     }
     return files;
