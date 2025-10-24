@@ -5,7 +5,7 @@ const int kl::ImageInit::_init = []() -> int
     {
         ULONG_PTR token = NULL;
         Gdiplus::GdiplusStartupInput startup_input = {};
-        kl::assert( !GdiplusStartup( &token, &startup_input, nullptr ), "Failed to init GDIPlus" );
+        kl::assert( GdiplusStartup( &token, &startup_input, nullptr ) == Gdiplus::Status::Ok, "Failed to init GDIPlus" );
         return {};
     }( );
 

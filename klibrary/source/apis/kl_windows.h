@@ -92,7 +92,7 @@ inline void operator>>( ResultGrabber const& grabber, VerifyResult const& token 
             grabber.location.line()
         );
         MessageBoxA( nullptr, message.data(), "Assertion failed!", MB_ICONERROR | MB_OK );
-        abort();
+        std::abort();
     }
 }
 

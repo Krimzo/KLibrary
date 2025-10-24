@@ -4,8 +4,7 @@
 const int kl::SocketInit::_init = []() -> int
     {
         WSADATA wsa_data{};
-        int result = ::WSAStartup( MAKEWORD( 2, 2 ), &wsa_data );
-        kl::assert( result == 0, "Failed to initialize WSA" );
+        kl::assert( ::WSAStartup( MAKEWORD( 2, 2 ), &wsa_data ) == 0, "Failed to initialize WSA" );
         return {};
     }( );
 

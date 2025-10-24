@@ -244,10 +244,10 @@ std::optional<std::wstring> kl::wchoose_file( bool save, std::vector<std::pair<s
     return result;
 }
 
-std::vector<kl::Vertex> kl::parse_obj_file( std::string_view const& filepath, bool flip_z )
+std::vector<kl::Vertex> kl::parse_obj_file( fs::path const& filepath, bool flip_z )
 {
-    std::ifstream file{ filepath.data() };
-    if ( !verify( file.is_open(), "Failed to open file \"", filepath, "\"" ) )
+    std::ifstream file{ filepath };
+    if ( !verify( file.is_open(), "Failed to open file ", filepath ) )
         return {};
 
     std::vector<Float3> position_data;
