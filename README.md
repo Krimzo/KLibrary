@@ -57,14 +57,14 @@ int main()
 ```
 
 ## Examples
-### Visualising sorting algorithms  
+### Visualising Sorting Algorithms  
 ![](examples/screens/visual_sort.png)
 
-### Visualising times table  
+### Visualising Times Tables  
 ![](examples/screens/times_table.png)
 
-### Usage of geometry shaders  
+### Usage of Geometry Shaders  
 ![](examples/screens/geometry_shaders.png)
 
-### Rendering the Mandelbrot set  
+### Rendering the Mandelbrot Set  
 ![](examples/screens/mandelbrot.png)
