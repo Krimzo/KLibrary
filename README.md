@@ -2,7 +2,7 @@
 General purpose library focused on 3D graphics.  
 Goal is to *simplify* use of C++, Win32 and DirectX.  
 
-## D3D11 Triangle Hello World
+## Hello Triangle
 ```cpp
 #include "klibrary.h"
 
