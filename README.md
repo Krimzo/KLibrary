@@ -1,7 +1,8 @@
 ## About
-General purpose Win/C++ library. 
+General purpose Win/C++ library.  
+Goal is to *simplify* use of C++, Win32 and DirectX.
 
-Key Feature Areas:  
+## Features
 - Graphics & GPU: Abstractions for DirectX 11/DirectX 12 and shader management.  
 - Math: 3D mathematics including vectors, matrices, triangles and raytracing primitives.  
 - Media: Support for handling audio, images, and video.  
