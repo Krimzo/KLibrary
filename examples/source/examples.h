@@ -32,6 +32,7 @@ int audio_playing_main( int argc, char** argv );
 int audio_processing_main( int argc, char** argv );
 int video_reading_main( int argc, char** argv );
 int video_writing_main( int argc, char** argv );
+int animation_test_main( int argc, char** argv );
 
 int json_examples_main( int argc, char** argv );
 int json_tests_main( int argc, char** argv );
