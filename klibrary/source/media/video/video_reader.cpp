@@ -131,8 +131,7 @@ int64_t kl::VideoReader::duration_100ns() const
 
 float kl::VideoReader::duration_seconds() const
 {
-    static constexpr float diver = 1.0f / 1e7f;
-    return m_duration * diver;
+    return float( m_duration / 1e7 );
 }
 
 kl::Int2 kl::VideoReader::frame_size() const

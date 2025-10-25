@@ -18,7 +18,7 @@ kl::GPU::GPU( HWND window, bool debug, bool video_support )
         GetClientRect( window, &client_area );
         DXGI_SWAP_CHAIN_DESC chain_descriptor{};
         chain_descriptor.BufferCount = GPU_BUFFER_COUNT;
-        chain_descriptor.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        chain_descriptor.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
         chain_descriptor.BufferDesc.Width = client_area.right - client_area.left;
         chain_descriptor.BufferDesc.Height = client_area.bottom - client_area.top;
         chain_descriptor.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;

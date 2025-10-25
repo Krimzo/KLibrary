@@ -75,7 +75,7 @@ kl::dx12::SwapChain kl::GPU12::create_swap_chain( HWND window, dx12::CommandQueu
     DXGI_SWAP_CHAIN_DESC1 descriptor{
         .Width = UINT( window_client_area.right - window_client_area.left ),
         .Height = UINT( window_client_area.bottom - window_client_area.top ),
-        .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+        .Format = DXGI_FORMAT_B8G8R8A8_UNORM,
         .Stereo = false,
         .SampleDesc = {
             .Count = 1,
@@ -383,7 +383,7 @@ kl::dx12::PipelineState kl::GPU12::create_default_rasterization_pipeline( dx12::
             .BytecodeLength = pixel_shader.data_size(),
     },
     .render_target_formats = D3D12_RT_FORMAT_ARRAY{
-            .RTFormats = DXGI_FORMAT_R8G8B8A8_UNORM,
+            .RTFormats = DXGI_FORMAT_B8G8R8A8_UNORM,
             .NumRenderTargets = 1,
     },
     };

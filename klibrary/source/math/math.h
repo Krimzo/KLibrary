@@ -591,21 +591,39 @@ constexpr Matrix4x4<T> transpose( Matrix4x4<T> const& mat )
 namespace kl
 {
 template<typename T>
-constexpr Vector2<T> calc_ndc( Vector2<T> const& position, Vector2<T> const& frame_size )
+constexpr Vector2<T> to_ndc( Vector2<T> const& position, Vector2<T> const& size )
 {
-    Vector2<T> result = {
-        position.x / frame_size.x,
-        ( frame_size.y - position.y ) / frame_size.y,
+    const Vector2<T> result = {
+        position.x / size.x,
+        ( size.y - position.y ) / size.y,
     };
     return result * T( 2 ) - Vector2<T>( T( 1 ) );
 }
 
 template<typename T>
-constexpr Vector2<T> calc_ndc_ar( Vector2<T> const& position, Vector2<T> const& size )
+constexpr Vector2<T> from_ndc( Vector2<T> const& position, Vector2<T> const& size )
 {
-    Vector2<T> result = calc_ndc( position, size );
+    const Vector2<T> result = ( position + Vector2<T>( T( 1 ) ) ) / T( 2 );
+    return {
+        result.x * size.x,
+        size.y - result.y * size.y,
+    };
+}
+
+template<typename T>
+constexpr Vector2<T> to_ndc_ar( Vector2<T> const& position, Vector2<T> const& size )
+{
+    Vector2<T> result = to_ndc( position, size );
     result.x *= size.x / size.y;
     return result;
+}
+
+template<typename T>
+constexpr Vector2<T> from_ndc_ar( Vector2<T> const& position, Vector2<T> const& size )
+{
+    Vector2<T> result = position;
+    result.x *= size.y / size.x;
+    return from_ndc( result, size );
 }
 
 template<typename T>

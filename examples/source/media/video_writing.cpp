@@ -38,7 +38,7 @@ static std::string OUTPUT_VIDEO_PATH = "./media/generated_video.mp4";
 
 int examples::video_writing_main( int argc, char** argv )
 {
-    kl::VideoWriter video_writer{ OUTPUT_VIDEO_PATH, kl::VideoType::h264(), { 1920, 1080 }, 60, 80'000'000, 0 };
+    kl::VideoWriter video_writer{ OUTPUT_VIDEO_PATH, kl::VideoType::h264(), { 1920, 1080 }, 60, 5.0f, 0 };
 
     kl::Image frame = { video_writer.frame_size() };
     std::vector<Stick> sticks = generate_sticks( frame.width(), 1, frame.height() );

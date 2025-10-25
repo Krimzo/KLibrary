@@ -570,7 +570,7 @@ kl::dx::Texture kl::DeviceHolder::create_target_texture( Int2 size ) const
     dx::TextureDescriptor descriptor{};
     descriptor.Usage = D3D11_USAGE_DEFAULT;
     descriptor.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-    descriptor.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    descriptor.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
     descriptor.Width = (UINT) size.x;
     descriptor.Height = (UINT) size.y;
     descriptor.ArraySize = 1;
