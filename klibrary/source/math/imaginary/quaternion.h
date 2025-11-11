@@ -140,8 +140,20 @@ namespace kl
 template<typename T>
 std::ostream& operator<<( std::ostream& stream, Quaternion_T<T> const& quat )
 {
+    const auto load_part = [&]( T const& part ) -> std::ostream&
+        {
+            if ( part < T( 0 ) )
+                stream << " - " << ( -part );
+            else
+                stream << " + " << part;
+            return stream;
+        };
+
     stream << std::setprecision( 2 );
-    stream << "(" << quat.w << " + " << quat.x << "i + " << quat.y << "j + " << quat.z << "k)";
+    stream << "(" << quat.w;
+    load_part( quat.x ) << "i";
+    load_part( quat.y ) << "j";
+    load_part( quat.z ) << "k)";
     return stream;
 }
 }
