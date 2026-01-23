@@ -67,19 +67,22 @@ kl::dx::ShaderView kl::DirectionalLight::shader_view( UINT cascade_index ) const
 kl::Float4x4 kl::DirectionalLight::matrix( Float4x4 const& inv_cam_mat ) const
 {
     Float4 frustum_corners[8] = {
-        inv_cam_mat * Float4( -1, -1, 0, 1 ),
-        inv_cam_mat * Float4( 1, -1, 0, 1 ),
-        inv_cam_mat * Float4( -1, 1, 0, 1 ),
-        inv_cam_mat * Float4( 1, 1, 0, 1 ),
-        inv_cam_mat * Float4( -1, -1, 1, 1 ),
-        inv_cam_mat * Float4( 1, -1, 1, 1 ),
-        inv_cam_mat * Float4( -1, 1, 1, 1 ),
-        inv_cam_mat * Float4( 1, 1, 1, 1 ),
+        { -1, -1, 0, 1 },
+        { 1, -1, 0, 1 },
+        { -1, 1, 0, 1 },
+        { 1, 1, 0, 1 },
+        { -1, -1, 1, 1 },
+        { 1, -1, 1, 1 },
+        { -1, 1, 1, 1 },
+        { 1, 1, 1, 1 },
     };
     for ( auto& corner : frustum_corners )
-        corner *= ( 1.0f / corner.w );
+    {
+        corner = inv_cam_mat * corner;
+        corner *= 1.0f / corner.w;
+    }
 
-    Float4x4 temp_light_view_matrix = Float4x4::look_to( {}, m_direction, { 0, 1, 0 } );
+    const Float4x4 temp_light_view_matrix = Float4x4::look_to( {}, m_direction, { 0, 1, 0 } );
     for ( auto& corner : frustum_corners )
         corner = temp_light_view_matrix * corner;
 
@@ -100,12 +103,12 @@ kl::Float4x4 kl::DirectionalLight::matrix( Float4x4 const& inv_cam_mat ) const
         min_z,
     };
 
-    Float4x4 temp_light_view_matrix_inverse = inverse( temp_light_view_matrix );
+    const Float4x4 temp_light_view_matrix_inverse = inverse( temp_light_view_matrix );
     for ( auto& corner : frustum_corners )
         corner = temp_light_view_matrix_inverse * corner;
     light_position = ( temp_light_view_matrix_inverse * Float4( light_position, 1.0f ) ).xyz();
 
-    Float4x4 light_view_matrix = Float4x4::look_to( light_position, m_direction, { 0, 1, 0 } );
+    const Float4x4 light_view_matrix = Float4x4::look_to( light_position, m_direction, { 0, 1, 0 } );
     for ( auto& corner : frustum_corners )
         corner = light_view_matrix * corner;
 
@@ -113,13 +116,13 @@ kl::Float4x4 kl::DirectionalLight::matrix( Float4x4 const& inv_cam_mat ) const
     min_z = std::numeric_limits<float>::infinity();
     for ( auto& corner : frustum_corners )
     {
-        max_xyz.x = max( max_xyz.x, corner.x );
-        max_xyz.y = max( max_xyz.y, corner.y );
+        max_xyz.x = max( max_xyz.x, abs( corner.x ) );
+        max_xyz.y = max( max_xyz.y, abs( corner.y ) );
         max_xyz.z = max( max_xyz.z, corner.z );
         min_z = min( min_z, corner.z );
     }
 
-    Float4x4 light_projection_matrix = Float4x4::orthographic(
+    const Float4x4 light_projection_matrix = Float4x4::orthographic(
         max_xyz.x * 2.0f,
         max_xyz.y * 2.0f,
         min_z, max_xyz.z );

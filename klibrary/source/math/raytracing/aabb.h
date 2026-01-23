@@ -53,7 +53,7 @@ namespace kl
 template<typename T>
 std::ostream& operator<<( std::ostream& stream, AABB_T<T> const& aabb )
 {
-    stream << "{" << aabb.position << ", " << aabb.size << "}";
+    stream << "{" << aabb.center << ", " << aabb.half_size << "}";
     return stream;
 }
 }
