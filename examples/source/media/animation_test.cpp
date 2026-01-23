@@ -51,7 +51,7 @@ struct State
                 triangle.c = kl::Vertex{ { triangle.a.x - b, triangle.a.y, 0.0f }, FIRST_COLOR, {} };
                 triangle.b = kl::Vertex{ { triangle.c.x, triangle.c.y + a, 0.0f }, FIRST_COLOR, {} };
 
-                gpu.text_data = {
+                gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"a" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"b" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"c" },
@@ -70,7 +70,7 @@ struct State
                 triangle.c.position.xy() = { triangle.a.x - kl::lerp( time_perc, b, a * b ), triangle.a.y };
                 triangle.b.position.xy() = { triangle.c.x, triangle.c.y + kl::lerp( time_perc, a, a * a ) };
 
-                gpu.text_data = {
+                gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "a * ", time_perc, "a" ) },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "b * ", time_perc, "a" ) },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "c * ", time_perc, "a" ) },
@@ -86,7 +86,7 @@ struct State
                 triangle.c = kl::Vertex{ { triangle.a.x - b, triangle.a.y, 0.0f }, SECOND_COLOR, {} };
                 triangle.b = kl::Vertex{ { triangle.c.x, triangle.c.y + a, 0.0f }, SECOND_COLOR, {} };
 
-                gpu.text_data = {
+                gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
@@ -115,7 +115,7 @@ struct State
                 triangle.b.position.xy() += kl::Float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
                 triangle.c.position.xy() += kl::Float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
 
-                gpu.text_data = {
+                gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
@@ -134,7 +134,7 @@ struct State
                 triangle.c = kl::Vertex{ { triangle.a.x - b, triangle.a.y, 0.0f }, THIRD_COLOR, {} };
                 triangle.b = kl::Vertex{ { triangle.c.x, triangle.c.y + a, 0.0f }, THIRD_COLOR, {} };
 
-                gpu.text_data = {
+                gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
@@ -159,7 +159,7 @@ struct State
                 const kl::Float2 reflect_c = triangle.a.position.xy() + kl::reflect( triangle.a.position.xy() - triangle.c.position.xy(), triangle.b.position.xy() - triangle.a.position.xy() );
                 triangle.c.position.xy() = kl::lerp( time_perc, triangle.c.position.xy(), reflect_c );
 
-                gpu.text_data = {
+                gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
@@ -195,7 +195,7 @@ struct State
                 triangle.c.y += kl::lerp( time_perc, 0.0f, c * c );
 
                 const kl::Float2 last_tr_bias = { 0.0f, 25.0f };
-                gpu.text_data = {
+                gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
@@ -213,7 +213,7 @@ struct State
         parts.emplace_back( 5.0f, [this]( float time_perc )
             {
                 const kl::Float2 last_tr_bias = { 0.0f, 25.0f };
-                gpu.text_data = {
+                gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
@@ -261,7 +261,7 @@ struct State
             DWRITE_FONT_STYLE_NORMAL,
             35.0f );
 
-        staging_texture = gpu.create_staging_texture( gpu.target_buffer( gpu.back_index() ) );
+        staging_texture = gpu.create_staging_texture( gpu.target_texture( gpu.back_index() ) );
     }
 
     bool update( kl::VideoWriter& writer, kl::Image& frame )
@@ -281,7 +281,7 @@ struct State
         gpu.clear_internal( kl::RGB{ 30, 30, 30 } );
         gpu.write_to_buffer( buffer, triangles, sizeof( triangles ) );
         gpu.draw( buffer );
-        gpu.draw_text();
+        gpu.draw_text_batch();
 
         load_frame( writer, frame );
 
@@ -326,8 +326,8 @@ private:
 
     void load_frame( kl::VideoWriter& writer, kl::Image& frame )
     {
-        kl::dx::Texture back_buffer = gpu.target_buffer( gpu.back_index() );
-        gpu.copy_resource( staging_texture, back_buffer );
+        kl::dx::Texture back_tex = gpu.target_texture( gpu.back_index() );
+        gpu.copy_resource( staging_texture, back_tex );
         gpu.read_from_texture( frame.ptr(), staging_texture, frame.size(), sizeof( kl::RGB ) );
         writer.add_frame( frame );
     }

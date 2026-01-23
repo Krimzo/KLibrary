@@ -337,7 +337,7 @@ float4 p_shader(VS_DATA data) : SV_Target
     {
         gpu.clear_internal( kl::colors::GRAY );
         gpu.draw( m_mesh, D3D_PRIMITIVE_TOPOLOGY_LINELIST );
-        gpu.draw_text();
+        gpu.draw_text_batch();
         gpu.swap_buffers( true );
         return window.process();
     }
@@ -352,7 +352,7 @@ float4 p_shader(VS_DATA data) : SV_Target
         format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
         format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER );
 
-        gpu.text_data.clear();
+        gpu.text_batch.clear();
         for ( int i = 0; i < 81; i++ )
         {
             if ( sudoku.board[i] == ZERO )
@@ -361,10 +361,12 @@ float4 p_shader(VS_DATA data) : SV_Target
             kl::Text text;
             text.format = format;
             text.color = sudoku.defaults[i] ? kl::colors::CYAN : kl::colors::WHEAT;
-            text.position = { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) };
-            text.rect_size = rect_size;
+            text.position = kl::to_ndc<float>( { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) }, window.size() );
+            text.rect_size = kl::to_ndc<float>( rect_size, window.size() );
             text.data = std::wstring( 1, convert_piece( sudoku.board[i] ) );
-            gpu.text_data.push_back( text );
+            text.hor_center = true;
+            text.ver_center = true;
+            gpu.text_batch.push_back( text );
         }
     }
 
