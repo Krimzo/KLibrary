@@ -86,7 +86,7 @@ int examples::raytracing_main( int argc, char** argv )
             kl::Ray ray{
                 camera.position,
                 kl::inverse( camera.matrix() ),
-                window.mouse.norm_position(),
+                window.mouse.ndc_pos(),
             };
             cb.SUN_DIRECTION = -ray.direction();
         }

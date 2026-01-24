@@ -70,7 +70,7 @@ int examples::plane_playground_main( int argc, char** argv )
             kl::Ray ray{
                 CAMERA.position,
                 kl::inverse( CAMERA.matrix() ),
-                window.mouse.norm_position(),
+                window.mouse.ndc_pos(),
             };
             SUN_DIRECTION = -ray.direction();
         }
