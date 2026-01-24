@@ -362,7 +362,7 @@ float4 p_shader(VS_DATA data) : SV_Target
             text.format = format;
             text.color = sudoku.defaults[i] ? kl::colors::CYAN : kl::colors::WHEAT;
             text.position = kl::to_ndc<float>( { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) }, window.size() );
-            text.rect_size = kl::to_ndc<float>( rect_size, window.size() );
+            text.rect_size = rect_size / window.size() * 2.0f;
             text.data = std::wstring( 1, convert_piece( sudoku.board[i] ) );
             text.hor_center = true;
             text.ver_center = true;
