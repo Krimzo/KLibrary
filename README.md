@@ -56,6 +56,8 @@ int main()
 }
 ```
 
+![](screen.png)
+
 ## Examples
 ### Visualising Sorting Algorithms  
 ![](examples/screens/visual_sort.png)
