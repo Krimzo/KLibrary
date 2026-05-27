@@ -59,14 +59,14 @@ int main()
 ![](screen.png)
 
 ## Examples
-### Visualising Sorting Algorithms  
+### [Visualising Sorting Algorithms](examples/source/2d_drawing/visual_sort.cpp)
 ![](examples/screens/visual_sort.png)
 
-### Visualising Times Tables  
+### [Visualising Times Tables](examples/source/2d_drawing/times_table.cpp)
 ![](examples/screens/times_table.png)
 
-### Usage of Geometry Shaders  
+### [Usage of Geometry Shaders](examples/source/directx/geometry_shaders.cpp)
 ![](examples/screens/geometry_shaders.png)
 
-### Rendering the Mandelbrot Set  
+### [Rendering the Mandelbrot Set](examples/source/directx/mandelbrot.cpp)
 ![](examples/screens/mandelbrot.png)
