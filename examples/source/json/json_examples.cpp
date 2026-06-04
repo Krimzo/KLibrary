@@ -10,8 +10,8 @@ struct FirstData : js::ObjectSerializable
 
     void to_object( js::Object& object ) override
     {
-        object["id"] = js::make_string( id );
-        object["value"] = js::make_number( value );
+        object["id"] = js::string( id );
+        object["value"] = js::number( value );
     }
 
     void from_object( js::Object const& object ) override
@@ -34,9 +34,9 @@ struct SecondData : js::ObjectSerializable
 
     void to_object( js::Object& object ) override
     {
-        object["id"] = js::make_string( id );
+        object["id"] = js::string( id );
         object["first_data"] = first_data.to_container();
-        object["chance"] = js::make_number( chance );
+        object["chance"] = js::number( chance );
     }
 
     void from_object( js::Object const& object ) override
