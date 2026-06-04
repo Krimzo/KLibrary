@@ -17,19 +17,18 @@ int examples::text_drawing_main( int argc, char** argv )
     kl::TextFormat format = gpu.create_text_format( L"roboto", DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, 25.0f );
     kl::assert( format, "failed to init text format" );
 
+    gpu.text_batch.resize( 20 );
+    for ( int i = 0; i < (int) gpu.text_batch.size(); i++ )
+    {
+        auto& text = gpu.text_batch[i];
+        text.format = format;
+        text.position = kl::to_ndc<float>( { window.size().x * 0.5f, ( i + 1 ) * 50.0f }, window.size() );
+        text.data = kl::convert_string( kl::format( i, "^2 = ", i * i ) );
+    }
+
     while ( window.process() )
     {
         gpu.clear_internal( kl::colors::GRAY );
-
-        gpu.text_batch.resize( 20 );
-        for ( int i = 0; i < (int) gpu.text_batch.size(); i++ )
-        {
-            auto& text = gpu.text_batch[i];
-            text.format = format;
-            text.position = kl::to_ndc<float>( { window.size().x * 0.5f, ( i + 1 ) * 50.0f }, window.size() );
-            text.data = kl::convert_string( kl::format( i, "^2 = ", i * i ) );
-        }
-
         gpu.draw_text_batch();
         gpu.swap_buffers( true );
     }

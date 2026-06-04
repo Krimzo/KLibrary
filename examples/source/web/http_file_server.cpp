@@ -124,6 +124,6 @@ private:
 
 int examples::http_file_server( int argc, char** argv )
 {
-    MyFileServer{ "vault" }.start( 80 );
+    MyFileServer{ "server_storage" }.start( 80 );
     return 0;
 }
