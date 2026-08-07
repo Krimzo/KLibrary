@@ -261,6 +261,24 @@ std::optional<std::wstring> kl::wchoose_dir( std::wstring_view const& title )
     DWORD opts{};
     file_open_dialog->GetOptions( &opts );
     file_open_dialog->SetOptions( opts | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM );
+
+    ComRef<IShellItem> current_folder;
+    if ( SUCCEEDED( file_open_dialog->GetFolder( &current_folder ) ) )
+    {
+        PWSTR current_folder_str = nullptr;
+        if ( SUCCEEDED( current_folder->GetDisplayName( SIGDN_FILESYSPATH, &current_folder_str ) ) )
+        {
+            const fs::path current_folder_path{ current_folder_str };
+            if ( current_folder_path.has_parent_path() )
+            {
+                ComRef<IShellItem> parent_folder_item;
+                if ( SUCCEEDED( SHCreateItemFromParsingName( current_folder_path.parent_path().c_str(), nullptr, IID_PPV_ARGS( &parent_folder_item ) ) ) )
+                    file_open_dialog->SetFolder( parent_folder_item.get() );
+            }
+            CoTaskMemFree( current_folder_str );
+        }
+    }
+
     if ( FAILED( file_open_dialog->Show( GetConsoleWindow() ) ) )
         return std::nullopt;
 
