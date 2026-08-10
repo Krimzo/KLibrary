@@ -15,7 +15,7 @@ int examples::text_drawing_main( int argc, char** argv )
     window.maximize();
 
     kl::TextFormat format = gpu.create_text_format( L"roboto", DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, 25.0f );
-    kl::assert( format, "failed to init text format" );
+    assert( format && "failed to init text format" );
 
     std::wstringstream message;
     for ( int i = 0; i < 20; i++ )

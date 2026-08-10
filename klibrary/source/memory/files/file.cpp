@@ -298,7 +298,7 @@ std::optional<std::wstring> kl::wchoose_dir( std::wstring_view const& title )
 std::vector<kl::Vertex> kl::parse_obj_file( fs::path const& filepath, bool flip_z )
 {
     std::ifstream file{ filepath };
-    if ( !verify( file.is_open(), "Failed to open file ", filepath ) )
+    if ( !file.is_open() )
         return {};
 
     std::vector<Float3> position_data;

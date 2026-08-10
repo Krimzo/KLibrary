@@ -5,9 +5,6 @@
 #include "apis/kl_directx.h"
 #include "apis/kl_imgui.h"
 
-#undef min
-#undef max
-#undef assert
 #undef VOID
 #undef INFINITY
 #undef RGB

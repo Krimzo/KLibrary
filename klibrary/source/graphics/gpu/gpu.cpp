@@ -26,8 +26,6 @@ kl::GPU::GPU( HWND window, bool debug, bool video_support )
     ) >> verify_result;
     temp_device.as( m_device ) >> verify_result;
     temp_context.as( m_context ) >> verify_result;
-    assert( m_device, "Failed to create device" );
-    assert( m_context, "Failed to create device context" );
 
     if ( !window )
         return;
@@ -64,7 +62,6 @@ kl::GPU::GPU( HWND window, bool debug, bool video_support )
         &temp_chain
     ) >> verify_result;
     temp_chain.as( m_chain ) >> verify_result;
-    assert( m_chain, "Failed to create swapchain" );
 
     bind_raster_state( create_raster_state( false, false ) );
     set_viewport_min_max( { 0.0f, 1.0f } );
@@ -94,7 +91,7 @@ UINT kl::GPU::back_index() const
 kl::dx::Texture kl::GPU::target_texture( UINT index ) const
 {
     dx::Texture buffer;
-    m_chain->GetBuffer( index, IID_PPV_ARGS( &buffer ) ) >> verify_result;
+    m_chain->GetBuffer( index, IID_PPV_ARGS( &buffer ) );
     return buffer;
 }
 
@@ -226,7 +223,7 @@ void kl::GPU::resize_to_window( HWND window )
 {
     RECT window_client_area{};
     GetClientRect( window, &window_client_area );
-    Int2 area_size = {
+    const Int2 area_size = {
         window_client_area.right - window_client_area.left,
         window_client_area.bottom - window_client_area.top,
     };

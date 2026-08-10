@@ -266,13 +266,7 @@ kl::dx12::RootSignature kl::GPU12::create_root_signature( std::initializer_list<
     };
     dx12::Blob signature_blob{};
     dx12::Blob error_blob{};
-    HRESULT result = D3D12SerializeRootSignature( &descriptor, D3D_ROOT_SIGNATURE_VERSION_1, &signature_blob, &error_blob );
-    if ( FAILED( result ) )
-    {
-        if ( char const* error_msg = (char*) error_blob->GetBufferPointer() )
-            verify( false, error_msg );
-        result >> verify_result;
-    }
+    D3D12SerializeRootSignature( &descriptor, D3D_ROOT_SIGNATURE_VERSION_1, &signature_blob, &error_blob ) >> verify_result;
     dx12::RootSignature root_signature{};
     m_device->CreateRootSignature( NULL, signature_blob->GetBufferPointer(), signature_blob->GetBufferSize(), IID_PPV_ARGS( &root_signature ) ) >> verify_result;
     return root_signature;

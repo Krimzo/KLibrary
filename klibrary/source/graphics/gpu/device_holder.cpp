@@ -4,8 +4,7 @@
 kl::dx::RasterState kl::DeviceHolder::create_raster_state( dx::RasterStateDescriptor const* descriptor ) const
 {
     dx::RasterState state;
-    long result = m_device->CreateRasterizerState( descriptor, &state );
-    verify( state, "Failed to create rasterizer state. Result: 0x", std::hex, result );
+    m_device->CreateRasterizerState( descriptor, &state );
     return state;
 }
 
@@ -23,8 +22,7 @@ kl::dx::RasterState kl::DeviceHolder::create_raster_state( bool wireframe, bool 
 kl::dx::DepthState kl::DeviceHolder::create_depth_state( dx::DepthStateDescriptor const* descriptor ) const
 {
     dx::DepthState state;
-    long result = m_device->CreateDepthStencilState( descriptor, &state );
-    verify( state, "Failed to create depth stencil state. Result: 0x", std::hex, result );
+    m_device->CreateDepthStencilState( descriptor, &state );
     return state;
 }
 
@@ -72,8 +70,7 @@ kl::dx::DepthState kl::DeviceHolder::create_depth_state( bool depth, bool stenci
 kl::dx::SamplerState kl::DeviceHolder::create_sampler_state( dx::SamplerStateDescriptor const* descriptor ) const
 {
     dx::SamplerState state;
-    long result = m_device->CreateSamplerState( descriptor, &state );
-    verify( state, "Failed to create sampler state. Result: 0x", std::hex, result );
+    m_device->CreateSamplerState( descriptor, &state );
     return state;
 }
 
@@ -90,8 +87,7 @@ kl::dx::SamplerState kl::DeviceHolder::create_sampler_state( bool linear, bool m
 kl::dx::BlendState kl::DeviceHolder::create_blend_state( dx::BlendStateDescriptor const* descriptor ) const
 {
     dx::BlendState state;
-    long result = m_device->CreateBlendState( descriptor, &state );
-    verify( state, "Failed to create blend state. Result: 0x", std::hex, result );
+    m_device->CreateBlendState( descriptor, &state );
     return state;
 }
 
@@ -112,8 +108,7 @@ kl::dx::BlendState kl::DeviceHolder::create_blend_state( bool transparency ) con
 kl::dx::Buffer kl::DeviceHolder::create_buffer( dx::BufferDescriptor const* descriptor, dx::SubresourceDescriptor const* subresource_data ) const
 {
     dx::Buffer buffer;
-    long result = m_device->CreateBuffer( descriptor, subresource_data, &buffer );
-    verify( buffer, "Failed to create gpu buffer. Result: 0x", std::hex, result );
+    m_device->CreateBuffer( descriptor, subresource_data, &buffer );
     return buffer;
 }
 
@@ -161,7 +156,7 @@ kl::dx::Buffer kl::DeviceHolder::create_index_buffer( std::vector<uint32_t> cons
 
 kl::dx::Buffer kl::DeviceHolder::create_const_buffer( UINT byte_size ) const
 {
-    if ( !verify( byte_size % 16 == 0, "Constant buffer size has to be a multiple of 16" ) )
+    if ( byte_size % 16 != 0 )
         return {};
     dx::BufferDescriptor descriptor{};
     descriptor.ByteWidth = byte_size;
@@ -213,7 +208,8 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_screen_mesh()
 
 std::vector<kl::Triangle> kl::DeviceHolder::generate_plane_mesh( float size, int complexity )
 {
-    assert( complexity >= 2, "Plane complexity must be at least 2" );
+    if ( complexity < 2 )
+        return {};
     std::vector<Triangle> triangles;
     triangles.reserve( size_t( complexity - 1 ) * size_t( complexity - 1 ) * 2 );
     float incr = size / ( complexity - 1 );
@@ -494,8 +490,7 @@ kl::dx::Buffer kl::DeviceHolder::create_capsule_mesh( float radius, float height
 kl::dx::Texture kl::DeviceHolder::create_texture( dx::TextureDescriptor const* descriptor, dx::SubresourceDescriptor const* subresource_data ) const
 {
     dx::Texture texture;
-    long result = m_device->CreateTexture2D( descriptor, subresource_data, &texture );
-    verify( texture, "Failed to create texture. Result: 0x", std::hex, result );
+    m_device->CreateTexture2D( descriptor, subresource_data, &texture );
     return texture;
 }
 
@@ -520,11 +515,11 @@ kl::dx::Texture kl::DeviceHolder::create_texture( Image const& image, bool has_u
 
 kl::dx::Texture kl::DeviceHolder::create_cube_texture( Image const& right, Image const& left, Image const& top, Image const& bottom, Image const& front, Image const& back ) const
 {
-    if ( !verify( right.size() == left.size()
-        && right.size() == top.size()
-        && right.size() == bottom.size()
-        && right.size() == front.size()
-        && right.size() == back.size(), "Sizes of the 6 given images do not match" ) )
+    if ( right.size() != left.size()
+        || right.size() != top.size()
+        || right.size() != bottom.size()
+        || right.size() != front.size()
+        || right.size() != back.size() )
         return {};
 
     dx::TextureDescriptor descriptor{};
@@ -582,32 +577,28 @@ kl::dx::Texture kl::DeviceHolder::create_target_texture( Int2 size ) const
 kl::dx::TargetView kl::DeviceHolder::create_target_view( dx::Resource const& resource, dx::TargetViewDescriptor  const* descriptor ) const
 {
     dx::TargetView view;
-    long result = m_device->CreateRenderTargetView( resource.get(), descriptor, &view );
-    verify( view, "Failed to create render target view. Result: 0x", std::hex, result );
+    m_device->CreateRenderTargetView( resource.get(), descriptor, &view );
     return view;
 }
 
 kl::dx::DepthView kl::DeviceHolder::create_depth_view( dx::Resource const& resource, dx::DepthViewDescriptor  const* descriptor ) const
 {
     dx::DepthView view;
-    long result = m_device->CreateDepthStencilView( resource.get(), descriptor, &view );
-    verify( view, "Failed to create depth view. Result: 0x", std::hex, result );
+    m_device->CreateDepthStencilView( resource.get(), descriptor, &view );
     return view;
 }
 
 kl::dx::ShaderView kl::DeviceHolder::create_shader_view( dx::Resource const& resource, dx::ShaderViewDescriptor  const* descriptor ) const
 {
     dx::ShaderView view;
-    long result = m_device->CreateShaderResourceView( resource.get(), descriptor, &view );
-    verify( view, "Failed to create shader view. Result: 0x", std::hex, result );
+    m_device->CreateShaderResourceView( resource.get(), descriptor, &view );
     return view;
 }
 
 kl::dx::AccessView kl::DeviceHolder::create_access_view( dx::Resource const& resource, dx::AccessViewDescriptor  const* descriptor ) const
 {
     dx::AccessView view;
-    long result = m_device->CreateUnorderedAccessView( resource.get(), descriptor, &view );
-    verify( view, "Failed to create unordered access view. Result: 0x", std::hex, result );
+    m_device->CreateUnorderedAccessView( resource.get(), descriptor, &view );
     return view;
 }
 
@@ -622,7 +613,6 @@ kl::dx::InputLayout kl::DeviceHolder::create_input_layout( CompiledShader const&
     UINT descriptors_count = !descriptors.empty() ? (UINT) descriptors.size() : (UINT) std::size( default_layout_descriptors );
     dx::InputLayout layout;
     m_device->CreateInputLayout( descriptors_ptr, descriptors_count, compiled_shader.data_ptr(), compiled_shader.data_size(), &layout );
-    verify( layout, "Failed to create input layout" );
     return layout;
 }
 
@@ -630,7 +620,6 @@ kl::dx::VertexShader kl::DeviceHolder::create_vertex_shader( CompiledShader cons
 {
     dx::VertexShader shader;
     m_device->CreateVertexShader( compiled_shader.data_ptr(), compiled_shader.data_size(), nullptr, &shader );
-    verify( shader, "Failed to create vertex shader" );
     return shader;
 }
 
@@ -638,7 +627,6 @@ kl::dx::GeometryShader kl::DeviceHolder::create_geometry_shader( CompiledShader 
 {
     dx::GeometryShader shader;
     m_device->CreateGeometryShader( compiled_shader.data_ptr(), compiled_shader.data_size(), nullptr, &shader );
-    verify( shader, "Failed to create geometry shader" );
     return shader;
 }
 
@@ -646,7 +634,6 @@ kl::dx::PixelShader kl::DeviceHolder::create_pixel_shader( CompiledShader const&
 {
     dx::PixelShader shader;
     m_device->CreatePixelShader( compiled_shader.data_ptr(), compiled_shader.data_size(), nullptr, &shader );
-    verify( shader, "Failed to create pixel shader" );
     return shader;
 }
 
@@ -654,6 +641,5 @@ kl::dx::ComputeShader kl::DeviceHolder::create_compute_shader( CompiledShader co
 {
     dx::ComputeShader shader;
     m_device->CreateComputeShader( compiled_shader.data_ptr(), compiled_shader.data_size(), nullptr, &shader );
-    verify( shader, "Failed to create compute shader" );
     return shader;
 }

@@ -21,7 +21,7 @@ DLL_EXPORT( void ) script_update( int index )
 int examples::dynamic_linking_main( int argc, char** argv )
 {
     kl::DLL loaded_dll = kl::DLL( "dlls/dll_test_1.dll" );
-    if ( !verify( loaded_dll, "Failed to load dll" ) )
+    if ( !loaded_dll )
         return 1;
 
     kl::DLL::Function<void> script_start = loaded_dll.read_function<void>( "script_start" );
