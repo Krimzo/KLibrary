@@ -132,8 +132,8 @@ kl::dx::DepthView kl::GPU::back_depth_view() const
 
 void kl::GPU::swap_buffers( bool v_sync ) const
 {
-    UINT interval = v_sync ? 1 : 0;
-    UINT flags = ( v_sync || fullscreened() ) ? NULL : DXGI_PRESENT_ALLOW_TEARING;
+    const UINT interval = v_sync ? 1 : 0;
+    const UINT flags = ( v_sync || fullscreened() ) ? NULL : DXGI_PRESENT_ALLOW_TEARING;
     m_chain->Present( interval, flags ) >> verify_result;
     bind_internal_views();
 }
@@ -236,42 +236,42 @@ void kl::GPU::bind_internal_views() const
     bind_target_depth_view( back_target_view(), back_depth_view() );
 }
 
-kl::VertexShader kl::GPU::create_vertex_shader( std::string_view const& shader_source ) const
+kl::VertexShader kl::GPU::create_vertex_shader( std::string_view const& shader_source, std::string* out_error ) const
 {
-    CompiledShader compiled_shader = compile_vertex_shader( shader_source );
+    CompiledShader compiled_shader = compile_vertex_shader( shader_source, out_error );
     VertexShader holder{ this };
     holder.shader = DeviceHolder::create_vertex_shader( compiled_shader );
     return holder;
 }
 
-kl::PixelShader kl::GPU::create_pixel_shader( std::string_view const& shader_source ) const
+kl::PixelShader kl::GPU::create_pixel_shader( std::string_view const& shader_source, std::string* out_error ) const
 {
-    CompiledShader compiled_shader = compile_pixel_shader( shader_source );
+    CompiledShader compiled_shader = compile_pixel_shader( shader_source, out_error );
     PixelShader holder{ this };
     holder.shader = DeviceHolder::create_pixel_shader( compiled_shader );
     return holder;
 }
 
-kl::GeometryShader kl::GPU::create_geometry_shader( std::string_view const& shader_source ) const
+kl::GeometryShader kl::GPU::create_geometry_shader( std::string_view const& shader_source, std::string* out_error ) const
 {
-    CompiledShader compiled_shader = compile_geometry_shader( shader_source );
+    CompiledShader compiled_shader = compile_geometry_shader( shader_source, out_error );
     GeometryShader holder{ this };
     holder.shader = DeviceHolder::create_geometry_shader( compiled_shader );
     return holder;
 }
 
-kl::ComputeShader kl::GPU::create_compute_shader( std::string_view const& shader_source ) const
+kl::ComputeShader kl::GPU::create_compute_shader( std::string_view const& shader_source, std::string* out_error ) const
 {
-    CompiledShader compiled_shader = compile_compute_shader( shader_source );
+    CompiledShader compiled_shader = compile_compute_shader( shader_source, out_error );
     ComputeShader holder{ this };
     holder.shader = DeviceHolder::create_compute_shader( compiled_shader );
     return holder;
 }
 
-kl::Shaders kl::GPU::create_shaders( std::string_view const& shader_sources, std::vector<dx::LayoutDescriptor> const& descriptors ) const
+kl::Shaders kl::GPU::create_shaders( std::string_view const& shader_sources, std::initializer_list<dx::LayoutDescriptor> const& descriptors, std::string* out_vs_error, std::string* out_ps_error ) const
 {
-    CompiledShader compiled_vertex_shader = compile_vertex_shader( shader_sources );
-    CompiledShader compiled_pixel_shader = compile_pixel_shader( shader_sources );
+    CompiledShader compiled_vertex_shader = compile_vertex_shader( shader_sources, out_vs_error );
+    CompiledShader compiled_pixel_shader = compile_pixel_shader( shader_sources, out_ps_error );
     Shaders shaders{ this };
     shaders.input_layout = create_input_layout( compiled_vertex_shader, descriptors );
     shaders.vertex_shader = DeviceHolder::create_vertex_shader( compiled_vertex_shader );

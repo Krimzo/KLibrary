@@ -1,11 +1,6 @@
 #include "klibrary.h"
 
 
-kl::CompiledShader::operator bool() const
-{
-    return data && !error;
-}
-
 void const* kl::CompiledShader::data_ptr() const
 {
     return data ? (void*) data->GetBufferPointer() : nullptr;
@@ -16,7 +11,7 @@ SIZE_T kl::CompiledShader::data_size() const
     return data ? data->GetBufferSize() : 0;
 }
 
-char const* kl::CompiledShader::error_val() const
+char const* kl::CompiledShader::error_ptr() const
 {
     return error ? (char*) error->GetBufferPointer() : nullptr;
 }
@@ -32,8 +27,9 @@ kl::CompiledShader kl::ShaderCompiler::compile( std::string_view const& name, st
     CompiledShader compiled_shader{};
     D3DCompile( source.data(), source.size(), nullptr, nullptr, nullptr, name.data(), version.data(),
         flags, NULL, &compiled_shader.data, &compiled_shader.error );
-    if ( out_error && !compiled_shader )
-        *out_error = compiled_shader.error_val();
+    char const* error = compiled_shader.error_ptr();
+    if ( error && out_error )
+        *out_error = error;
     return compiled_shader;
 }
 

@@ -5,8 +5,6 @@
 #include "apis/kl_directx.h"
 #include "apis/kl_imgui.h"
 
-#undef VOID
-#undef INFINITY
 #undef RGB
 
 namespace kl

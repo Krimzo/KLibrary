@@ -212,7 +212,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_plane_mesh( float size, int
         return {};
     std::vector<Triangle> triangles;
     triangles.reserve( size_t( complexity - 1 ) * size_t( complexity - 1 ) * 2 );
-    float incr = size / ( complexity - 1 );
+    const float incr = size / ( complexity - 1 );
     for ( int x = 0; x < complexity - 1; x++ )
     {
         for ( int z = 0; z < complexity - 1; z++ )
@@ -284,7 +284,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh( float size )
         };
 
     std::vector<Triangle> triangles;
-    for ( auto& triangle : face )
+    for ( Triangle const& triangle : face )
     {
         triangles.push_back( mul_tr( triangle, Float3{ size } ) );
         triangles.push_back( rotate_tr( triangles.back(), { 1.0f, 0.0f, 0.0f }, 90.0f ) );
@@ -334,7 +334,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
         };
 
     std::vector<Triangle> triangles;
-    for ( auto& index : indices )
+    for ( Int3 const& index : indices )
         triangles.emplace_back( vertices[index.z], vertices[index.y], vertices[index.x] );
     for ( int i = 0; i < complexity; i++ )
         triangles = subdivide_multiple( triangles );
@@ -366,7 +366,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
 
 std::vector<kl::Triangle> kl::DeviceHolder::generate_capsule_mesh( float radius, float height, int sectors, int rings )
 {
-    auto gen_hem = [&]
+    const auto gen_hem = [&]
         {
             std::vector<Triangle> triangles;
             float half_height = height * 0.5f;
@@ -401,7 +401,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_capsule_mesh( float radius,
             }
             return triangles;
         };
-    auto gen_cyl = [&]
+    const auto gen_cyl = [&]
         {
             std::vector<Triangle> triangles;
             float half_height = height * 0.5f;
@@ -427,17 +427,17 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_capsule_mesh( float radius,
             return triangles;
         };
 
-    auto top_hem = gen_hem();
+    std::vector<Triangle> top_hem = gen_hem();
     std::for_each( std::execution::par, top_hem.begin(), top_hem.end(), []( Triangle& triangle )
         {
             std::swap( triangle.a, triangle.c );
         } );
-    auto cylinder = gen_cyl();
+    std::vector<Triangle> cylinder = gen_cyl();
     std::for_each( std::execution::par, cylinder.begin(), cylinder.end(), []( Triangle& triangle )
         {
             std::swap( triangle.a, triangle.c );
         } );
-    auto bottom_hem = gen_hem();
+    std::vector<Triangle> bottom_hem = gen_hem();
     std::for_each( std::execution::par, bottom_hem.begin(), bottom_hem.end(), []( Triangle& triangle )
         {
             triangle.a.position.y *= -1.0f;
@@ -602,7 +602,7 @@ kl::dx::AccessView kl::DeviceHolder::create_access_view( dx::Resource const& res
     return view;
 }
 
-kl::dx::InputLayout kl::DeviceHolder::create_input_layout( CompiledShader const& compiled_shader, std::vector<dx::LayoutDescriptor> const& descriptors ) const
+kl::dx::InputLayout kl::DeviceHolder::create_input_layout( CompiledShader const& compiled_shader, std::initializer_list<dx::LayoutDescriptor> const& descriptors ) const
 {
     static constexpr dx::LayoutDescriptor default_layout_descriptors[3] = {
         { "KL_Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -610,7 +610,7 @@ kl::dx::InputLayout kl::DeviceHolder::create_input_layout( CompiledShader const&
         { "KL_UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
     dx::LayoutDescriptor const* descriptors_ptr = !descriptors.empty() ? descriptors.data() : default_layout_descriptors;
-    UINT descriptors_count = !descriptors.empty() ? (UINT) descriptors.size() : (UINT) std::size( default_layout_descriptors );
+    const UINT descriptors_count = !descriptors.empty() ? (UINT) descriptors.size() : (UINT) std::size( default_layout_descriptors );
     dx::InputLayout layout;
     m_device->CreateInputLayout( descriptors_ptr, descriptors_count, compiled_shader.data_ptr(), compiled_shader.data_size(), &layout );
     return layout;
