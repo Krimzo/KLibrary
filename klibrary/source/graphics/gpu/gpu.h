@@ -10,14 +10,8 @@ namespace kl
 {
 struct GPU : DeviceHolder, ContextHolder, ShaderCompiler, TextRaster
 {
-    inline GPU( HWND window )
-        : GPU( window, IS_DEBUG, false )
-    {}
-
-    virtual ~GPU() noexcept
-    {
-        set_fullscreen( false );
-    }
+    GPU( HWND window, bool debug = IS_DEBUG, bool has_unordered_access = false, bool video_support = false );
+    virtual ~GPU() noexcept;
 
     dx::Device device() const;
     dx::Context context() const;
@@ -58,9 +52,6 @@ struct GPU : DeviceHolder, ContextHolder, ShaderCompiler, TextRaster
     void draw_text_batch() const;
     void draw_text_direct( Text const& text ) const;
 
-protected:
-    GPU( HWND window, bool debug, bool video_support );
-
 private:
     dx::Chain m_chain;
     dx::Texture m_depth_textures[GPU_BUFFER_COUNT];
@@ -74,7 +65,7 @@ namespace kl
 struct VideoGPU : GPU
 {
     inline VideoGPU()
-        : GPU( nullptr, IS_DEBUG, true )
+        : GPU( nullptr, IS_DEBUG, false, true )
     {}
 };
 }

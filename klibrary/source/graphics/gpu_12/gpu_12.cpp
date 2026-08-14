@@ -83,7 +83,7 @@ kl::dx12::SwapChain kl::GPU12::create_swap_chain( HWND window, dx12::CommandQueu
     },
     .BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
     .BufferCount = GPU_BUFFER_COUNT,
-    .Scaling = DXGI_SCALING_STRETCH,
+    .Scaling = DXGI_SCALING_NONE,
     .SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD,
     .AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED,
     .Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING,

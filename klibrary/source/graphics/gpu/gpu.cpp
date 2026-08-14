@@ -1,7 +1,7 @@
 #include "klibrary.h"
 
 
-kl::GPU::GPU( HWND window, bool debug, bool video_support )
+kl::GPU::GPU( HWND window, bool debug, bool has_unordered_access, bool video_support )
 {
     UINT creation_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
     if ( debug )
@@ -47,7 +47,8 @@ kl::GPU::GPU( HWND window, bool debug, bool video_support )
     chain_descriptor.Width = client_area.right - client_area.left;
     chain_descriptor.Height = client_area.bottom - client_area.top;
     chain_descriptor.Scaling = DXGI_SCALING_NONE;
-    chain_descriptor.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    chain_descriptor.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT
+        | ( has_unordered_access ? DXGI_USAGE_UNORDERED_ACCESS : NULL );
     chain_descriptor.SampleDesc.Count = 1;
     chain_descriptor.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     chain_descriptor.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
@@ -66,6 +67,11 @@ kl::GPU::GPU( HWND window, bool debug, bool video_support )
     bind_raster_state( create_raster_state( false, false ) );
     set_viewport_min_max( { 0.0f, 1.0f } );
     resize_to_window( window );
+}
+
+kl::GPU::~GPU() noexcept
+{
+    set_fullscreen( false );
 }
 
 kl::dx::Device kl::GPU::device() const
@@ -173,47 +179,48 @@ void kl::GPU::clear_internal( Float4 const& color, float depth, UINT8 stencil ) 
 
 void kl::GPU::resize_internal( Int2 size, DXGI_FORMAT depth_format )
 {
-    unbind_target_depth_views();
-    for ( auto& view : m_target_views )
-        view = {};
-    for ( auto& view : m_depth_views )
-        view = {};
     for ( auto& target : m_d2d1_targets )
         target = {};
-    m_chain->ResizeBuffers( 0, 0, 0, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING ) >> verify_result;
+    for ( auto& view : m_depth_views )
+        view = {};
+    for ( auto& texture : m_depth_textures )
+        texture = {};
+    for ( auto& view : m_target_views )
+        view = {};
+
+    unbind_target_depth_views();
+    m_chain->ResizeBuffers( 0,
+        size.x, size.y,
+        DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING ) >> verify_result;
+
+    dx::TextureDescriptor depth_tex_desc{};
+    depth_tex_desc.Width = (UINT) size.x;
+    depth_tex_desc.Height = (UINT) size.y;
+    depth_tex_desc.MipLevels = 1;
+    depth_tex_desc.ArraySize = 1;
+    depth_tex_desc.Format = depth_format;
+    depth_tex_desc.SampleDesc.Count = 1;
+    depth_tex_desc.Usage = D3D11_USAGE_DEFAULT;
+    depth_tex_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
     for ( int i = 0; i < GPU_BUFFER_COUNT; i++ )
     {
         const UINT back_index = this->back_index();
 
-        const dx::Texture texture = target_texture( back_index );
-        m_target_views[back_index] = create_target_view( texture, nullptr );
+        const dx::Texture target_tex = target_texture( back_index );
+        m_target_views[back_index] = create_target_view( target_tex, nullptr );
+
+        m_depth_textures[back_index] = create_texture( &depth_tex_desc, nullptr );
+        m_depth_views[back_index] = create_depth_view( m_depth_textures[back_index], nullptr );
 
         ComRef<IDXGISurface> surface{};
-        texture->QueryInterface( IID_PPV_ARGS( &surface ) ) >> verify_result;
-
+        target_tex->QueryInterface( IID_PPV_ARGS( &surface ) ) >> verify_result;
         const D2D1_RENDER_TARGET_PROPERTIES target_properties = D2D1::RenderTargetProperties(
             D2D1_RENDER_TARGET_TYPE_DEFAULT,
-            D2D1::PixelFormat( DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED )
-        );
+            D2D1::PixelFormat( DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED ) );
         m_d2d1_factory->CreateDxgiSurfaceRenderTarget( surface.get(), target_properties, &m_d2d1_targets[back_index] ) >> verify_result;
 
         m_chain->Present( 0, NULL ) >> verify_result;
-    }
-
-    dx::TextureDescriptor descriptor{};
-    descriptor.Width = (UINT) size.x;
-    descriptor.Height = (UINT) size.y;
-    descriptor.MipLevels = 1;
-    descriptor.ArraySize = 1;
-    descriptor.Format = depth_format;
-    descriptor.SampleDesc.Count = 1;
-    descriptor.Usage = D3D11_USAGE_DEFAULT;
-    descriptor.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    for ( int i = 0; i < GPU_BUFFER_COUNT; i++ )
-    {
-        m_depth_textures[i] = create_texture( &descriptor, nullptr );
-        m_depth_views[i] = create_depth_view( m_depth_textures[i], nullptr );
     }
 
     bind_internal_views();
