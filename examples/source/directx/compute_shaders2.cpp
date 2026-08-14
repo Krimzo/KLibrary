@@ -30,26 +30,23 @@ int examples::compute_shaders2_main( int argc, char** argv )
     {
         timer.update();
 
-        gpu.unbind_shader_view_for_compute_shader( 0 );
-        gpu.unbind_shader_view_for_pixel_shader( 0 );
-        gpu.clear_target_view( target_view, kl::colors::GRAY );
-
         struct alignas( 16 ) CB
         {
             kl::Float4 MISC_DATA;
         } cb = {};
 
-        cb.MISC_DATA.x = (float) window.mouse.position().x;
-        cb.MISC_DATA.y = (float) window.mouse.position().y;
+        cb.MISC_DATA.xy() = window.mouse.position();
         compute_shader.upload( cb );
 
-        gpu.unbind_shader_view_for_pixel_shader( 0 );
-        gpu.bind_access_view_for_compute_shader( access_view, 0 );
-        gpu.dispatch_compute_shader( ( window.width() / 32 ) + 1, ( window.height() / 32 ) + 1, 1 );
+        gpu.clear_target_view( target_view, kl::colors::GRAY );
 
+        gpu.bind_access_view_for_compute_shader( access_view, 0 );
+        gpu.dispatch_compute_shader( kl::ceildiv<32>( window.width() ), kl::ceildiv<32>( window.height() ) );
         gpu.unbind_access_view_for_compute_shader( 0 );
+
         gpu.bind_shader_view_for_pixel_shader( shader_view, 0 );
         gpu.draw( screen_mesh );
+        gpu.unbind_shader_view_for_pixel_shader( 0 );
 
         gpu.swap_buffers( true );
     }

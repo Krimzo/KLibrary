@@ -122,8 +122,8 @@ struct ContextHolder : NoCopy
     void bind_shaders( Shaders const& shaders ) const;
     void unbind_shaders() const;
 
-    void dispatch_compute_shader( UINT x, UINT y, UINT z ) const;
-    void execute_compute_shader( dx::ComputeShader const& shader, UINT x, UINT y, UINT z ) const;
+    void dispatch_compute_shader( UINT groups_x, UINT groups_y = 1, UINT groups_z = 1 ) const;
+    void execute_compute_shader( dx::ComputeShader const& shader, UINT groups_x, UINT groups_y = 1, UINT groups_z = 1 ) const;
 
 protected:
     dx::Context m_context;

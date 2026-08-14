@@ -442,13 +442,13 @@ void kl::ContextHolder::unbind_shaders() const
     unbind_pixel_shader();
 }
 
-void kl::ContextHolder::dispatch_compute_shader( UINT x, UINT y, UINT z ) const
+void kl::ContextHolder::dispatch_compute_shader( UINT groups_x, UINT groups_y, UINT groups_z ) const
 {
-    m_context->Dispatch( x, y, z );
+    m_context->Dispatch( groups_x, groups_y, groups_z );
 }
 
-void kl::ContextHolder::execute_compute_shader( dx::ComputeShader const& shader, UINT x, UINT y, UINT z ) const
+void kl::ContextHolder::execute_compute_shader( dx::ComputeShader const& shader, UINT groups_x, UINT groups_y, UINT groups_z ) const
 {
-    bind_compute_shader( shader );
-    dispatch_compute_shader( x, y, z );
+    m_context->CSSetShader( shader.get(), nullptr, 0 );
+    m_context->Dispatch( groups_x, groups_y, groups_z );
 }

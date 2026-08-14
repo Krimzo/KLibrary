@@ -87,6 +87,13 @@ constexpr T unlerp( T value, T lower, T upper ) noexcept
         value = clamp( value, T( 0 ), T( 1 ) );
     return value;
 }
+
+template<int64_t N, typename T>
+    requires std::is_integral_v<T>
+constexpr T ceildiv( T value ) noexcept
+{
+    return ( value + T( N ) - T( 1 ) ) / T( N );
+}
 }
 
 namespace kl
