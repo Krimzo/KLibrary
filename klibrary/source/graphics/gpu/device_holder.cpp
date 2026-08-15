@@ -332,6 +332,13 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
                 subdivide_single( triangle, result );
             return result;
         };
+    static constexpr auto calc_uv = []( Float3 const& n ) -> Float2
+        {
+            return {
+                0.5f + std::atan2( n.z, n.x ) / ( 2.0f * kl::pi() ),
+                0.5f - std::asin( n.y ) / kl::pi(),
+            };
+        };
 
     std::vector<Triangle> triangles;
     for ( Int3 const& index : indices )
@@ -360,6 +367,9 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
             triangle.a.position = a_norm * radius;
             triangle.b.position = b_norm * radius;
             triangle.c.position = c_norm * radius;
+            triangle.a.uv = calc_uv( a_norm );
+            triangle.b.uv = calc_uv( b_norm );
+            triangle.c.uv = calc_uv( c_norm );
         } );
     return triangles;
 }
