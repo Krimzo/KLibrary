@@ -39,13 +39,13 @@ struct DeviceHolder : NoCopy
     static std::vector<Triangle> generate_screen_mesh();
     static std::vector<Triangle> generate_plane_mesh( float size, int complexity );
     static std::vector<Triangle> generate_cube_mesh( float size );
-    static std::vector<Triangle> generate_sphere_mesh( float radius, int complexity, bool smooth );
+    static std::vector<Triangle> generate_sphere_mesh( float radius, int h_slices, int v_slices, bool smooth );
     static std::vector<Triangle> generate_capsule_mesh( float radius, float height, int sectors, int rings );
 
     dx::Buffer create_screen_mesh() const;
     dx::Buffer create_plane_mesh( float size, int complexity ) const;
     dx::Buffer create_cube_mesh( float size ) const;
-    dx::Buffer create_sphere_mesh( float radius, int complexity, bool smooth ) const;
+    dx::Buffer create_sphere_mesh( float radius, int h_slices, int v_slices, bool smooth ) const;
     dx::Buffer create_capsule_mesh( float radius, float height, int sectors, int rings ) const;
 
     dx::Texture create_texture( dx::TextureDescriptor const* descriptor, dx::SubresourceDescriptor const* subresource_data ) const;

@@ -296,61 +296,13 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh( float size )
     return triangles;
 }
 
-std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, int complexity, bool smooth )
+std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, int h_slices, int v_slices, bool smooth )
 {
-    static constexpr float X = 0.525731112119133606f;
-    static constexpr float Z = 0.850650808352039932f;
-    static constexpr float N = 0.0f;
-    static constexpr Float3 vertices[12] = {
-        { -X, N, Z }, { X, N, Z }, { -X, N, -Z }, { X, N, -Z },
-        { N, Z, X }, { N, Z, -X }, { N, -Z, X }, { N, -Z, -X },
-        { Z, X, N }, { -Z, X, N }, { Z, -X, N }, { -Z, -X, N },
-    };
-    static constexpr Int3 indices[20] = {
-        { 0, 4, 1 }, { 0, 9, 4 }, { 9, 5, 4 }, { 4, 5, 8 }, { 4, 8, 1 },
-        { 8, 10, 1 }, { 8, 3, 10 }, { 5, 3, 8 }, { 5, 2, 3 }, { 2, 7, 3 },
-        { 7, 10, 3 }, { 7, 6, 10 }, { 7, 11, 6 }, { 11, 0, 6 }, { 0, 1, 6 },
-        { 6, 1, 10 }, { 9, 0, 11 }, { 9, 11, 2 }, { 9, 2, 5 }, { 7, 2, 11 },
-    };
-    static constexpr auto subdivide_single = []( Triangle const& triangle, std::vector<Triangle>& triangles )
+    const auto update_normal = [&]( Triangle& triangle ) -> Triangle&
         {
-            auto& a = triangle.a;
-            auto& b = triangle.b;
-            auto& c = triangle.c;
-            Float3 ab = normalize( ( triangle.a.position + triangle.b.position ) * 0.5f );
-            Float3 bc = normalize( ( triangle.b.position + triangle.c.position ) * 0.5f );
-            Float3 ca = normalize( ( triangle.c.position + triangle.a.position ) * 0.5f );
-            triangles.emplace_back( a, ab, ca );
-            triangles.emplace_back( ab, b, bc );
-            triangles.emplace_back( ca, bc, c );
-            triangles.emplace_back( ab, bc, ca );
-        };
-    static constexpr auto subdivide_multiple = []( std::vector<Triangle> const& triangles ) -> std::vector<Triangle>
-        {
-            std::vector<Triangle> result;
-            for ( auto& triangle : triangles )
-                subdivide_single( triangle, result );
-            return result;
-        };
-    static constexpr auto calc_uv = []( Float3 const& n ) -> Float2
-        {
-            return {
-                0.5f + std::atan2( n.z, n.x ) / ( 2.0f * kl::pi() ),
-                0.5f - std::asin( n.y ) / kl::pi(),
-            };
-        };
-
-    std::vector<Triangle> triangles;
-    for ( Int3 const& index : indices )
-        triangles.emplace_back( vertices[index.z], vertices[index.y], vertices[index.x] );
-    for ( int i = 0; i < complexity; i++ )
-        triangles = subdivide_multiple( triangles );
-
-    std::for_each( std::execution::par, triangles.begin(), triangles.end(), [radius, smooth]( Triangle& triangle )
-        {
-            Float3 a_norm = normalize( triangle.a.position );
-            Float3 b_norm = normalize( triangle.b.position );
-            Float3 c_norm = normalize( triangle.c.position );
+            const Float3 a_norm = normalize( triangle.a.position );
+            const Float3 b_norm = normalize( triangle.b.position );
+            const Float3 c_norm = normalize( triangle.c.position );
             if ( smooth )
             {
                 triangle.a.normal = a_norm;
@@ -364,13 +316,34 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
                 triangle.b.normal = normal;
                 triangle.c.normal = normal;
             }
-            triangle.a.position = a_norm * radius;
-            triangle.b.position = b_norm * radius;
-            triangle.c.position = c_norm * radius;
-            triangle.a.uv = calc_uv( a_norm );
-            triangle.b.uv = calc_uv( b_norm );
-            triangle.c.uv = calc_uv( c_norm );
-        } );
+            return triangle;
+        };
+    std::vector<Triangle> triangles;
+    const Float3 up = { 0.0f, radius, 0.0f };
+    for ( int x = 0; x < v_slices; x++ )
+    {
+        for ( int y = 0; y < h_slices; y++ )
+        {
+            const Float3 tl = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 0 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 0 ) );
+            const Float3 tr = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 0 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 1 ) );
+            const Float3 bl = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 1 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 0 ) );
+            const Float3 br = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 1 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 1 ) );
+            if ( y > 0 )
+            {
+                auto& triangle = update_normal( triangles.emplace_back( tl, tr, bl ) );
+                triangle.a.uv = { ( x + 0.0f ) / v_slices, ( y + 0.0f ) / h_slices };
+                triangle.b.uv = { ( x + 1.0f ) / v_slices, ( y + 0.0f ) / h_slices };
+                triangle.c.uv = { ( x + 0.0f ) / v_slices, ( y + 1.0f ) / h_slices };
+            }
+            if ( y < h_slices - 1 )
+            {
+                auto& triangle = update_normal( triangles.emplace_back( bl, tr, br ) );
+                triangle.a.uv = { ( x + 0.0f ) / v_slices, ( y + 1.0f ) / h_slices };
+                triangle.b.uv = { ( x + 1.0f ) / v_slices, ( y + 0.0f ) / h_slices };
+                triangle.c.uv = { ( x + 1.0f ) / v_slices, ( y + 1.0f ) / h_slices };
+            }
+        }
+    }
     return triangles;
 }
 
@@ -487,9 +460,9 @@ kl::dx::Buffer kl::DeviceHolder::create_cube_mesh( float size ) const
     return create_vertex_buffer( generate_cube_mesh( size ) );
 }
 
-kl::dx::Buffer kl::DeviceHolder::create_sphere_mesh( float radius, int complexity, bool smooth ) const
+kl::dx::Buffer kl::DeviceHolder::create_sphere_mesh( float radius, int h_slices, int v_slices, bool smooth ) const
 {
-    return create_vertex_buffer( generate_sphere_mesh( radius, complexity, smooth ) );
+    return create_vertex_buffer( generate_sphere_mesh( radius, h_slices, v_slices, smooth ) );
 }
 
 kl::dx::Buffer kl::DeviceHolder::create_capsule_mesh( float radius, float height, int sectors, int rings ) const
