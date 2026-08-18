@@ -15,8 +15,7 @@ struct Ray_T
     union { Vector3<T> origin; struct { T x, y, z; }; };
 
     constexpr Ray_T()
-    {
-    }
+    {}
 
     constexpr Ray_T( Vector3<T> const& origin, Vector3<T> const& direction )
         : origin( origin )
@@ -27,7 +26,7 @@ struct Ray_T
     constexpr Ray_T( Vector3<T> const& cam_pos, Matrix4x4<T> const& inv_cam, Vector2<T> const& ndc )
         : origin( cam_pos )
     {
-        Vector4<T> ndc_pos = inv_cam * Vector4<T>( ndc, T( 1 ), T( 1 ) );
+        const Vector4<T> ndc_pos = inv_cam * Vector4<T>( ndc, T( 1 ), T( 1 ) );
         set_direction( ndc_pos.xyz() / ndc_pos.w - cam_pos );
     }
 
@@ -41,59 +40,45 @@ struct Ray_T
         return m_direction;
     }
 
-    constexpr bool intersect_plane( Plane_T<T> const& plane, Vector3<T>* out_intersection ) const
+    constexpr std::optional<Vector3<T>> intersect_plane( Plane_T<T> const& plane ) const
     {
-        T denom = dot( plane.normal(), m_direction );
+        const T denom = dot( plane.normal(), m_direction );
         if ( abs( denom ) <= T( 0.0001 ) )
-            return false;
+            return std::nullopt;
 
-        T t = dot( plane.position - origin, plane.normal() ) / denom;
+        const T t = dot( plane.position - origin, plane.normal() ) / denom;
         if ( t < T( 0 ) )
-            return false;
+            return std::nullopt;
 
-        if ( out_intersection )
-            *out_intersection = origin + m_direction * t;
-
-        return true;
+        return origin + m_direction * t;
     }
 
-    constexpr bool intersect_sphere( Sphere_T<T> const& sphere, Vector3<T>* out_intersection ) const
+    constexpr std::optional<Vector3<T>> intersect_sphere( Sphere_T<T> const& sphere ) const
     {
         if ( sphere.contains( origin ) )
-        {
-            if ( out_intersection )
-                *out_intersection = origin;
+            return origin;
 
-            return true;
-        }
-
-        Vector3<T> center_ray = sphere.position - origin;
-        T cd_dot = dot( center_ray, m_direction );
+        const Vector3<T> center_ray = sphere.position - origin;
+        const T cd_dot = dot( center_ray, m_direction );
         if ( cd_dot < T( 0 ) )
-            return false;
+            return std::nullopt;
 
-        T cc_dot = dot( center_ray, center_ray ) - cd_dot * cd_dot;
-        T rr = sphere.radius * sphere.radius;
+        const T cc_dot = dot( center_ray, center_ray ) - cd_dot * cd_dot;
+        const T rr = sphere.radius * sphere.radius;
         if ( cc_dot > rr )
-            return false;
+            return std::nullopt;
 
-        T thc = sqrt( rr - cc_dot );
-        T dis0 = cd_dot - thc;
-        T dis1 = cd_dot + thc;
-        if ( out_intersection )
-            *out_intersection = origin + m_direction * ( dis0 < T( 0 ) ? dis1 : dis0 );
-
-        return true;
+        const T thc = sqrt( rr - cc_dot );
+        const T dis0 = cd_dot - thc;
+        const T dis1 = cd_dot + thc;
+        return origin + m_direction * ( dis0 < T( 0 ) ? dis1 : dis0 );
     }
 
-    constexpr bool intersect_aabb( AABB_T<T> const& aabb, Vector3<T>* out_intersection ) const
+    constexpr std::optional<Vector3<T>> intersect_aabb( AABB_T<T> const& aabb ) const
     {
         if ( aabb.contains( origin ) )
-        {
-            if ( out_intersection )
-                *out_intersection = origin;
-            return true;
-        }
+            return origin;
+
         const Vector3<T> inv_ray = Vector3<T>{ T( 1 ) } / m_direction;
         const Vector3<T> t1 = ( aabb.min_point() - origin ) * inv_ray;
         const Vector3<T> t2 = ( aabb.max_point() - origin ) * inv_ray;
@@ -102,37 +87,33 @@ struct Ray_T
         const T t_min_max = std::max( { t_min.x, t_min.y, t_min.z } );
         const T t_max_min = std::min( { t_max.x, t_max.y, t_max.z } );
         if ( t_max_min < T( 0 ) || t_min_max > t_max_min )
-            return false;
-        if ( out_intersection )
-            *out_intersection = origin + m_direction * t_min_max;
-        return true;
+            return std::nullopt;
+
+        return origin + m_direction * t_min_max;
     }
 
-    constexpr bool intersect_triangle( Triangle_T<T> const& triangle, Vector3<T>* out_intersection ) const
+    constexpr std::optional<Vector3<T>> intersect_triangle( Triangle_T<T> const& triangle ) const
     {
-        Vector3<T> edge1 = triangle.b.position - triangle.a.position;
-        Vector3<T> edge2 = triangle.c.position - triangle.a.position;
+        const Vector3<T> edge1 = triangle.b.position - triangle.a.position;
+        const Vector3<T> edge2 = triangle.c.position - triangle.a.position;
 
-        Vector3<T> h = cross( m_direction, edge2 );
-        Vector3<T> s = origin - triangle.a.position;
-        T f = T( 1 ) / dot( edge1, h );
-        T u = dot( s, h ) * f;
+        const Vector3<T> h = cross( m_direction, edge2 );
+        const Vector3<T> s = origin - triangle.a.position;
+        const T f = T( 1 ) / dot( edge1, h );
+        const T u = dot( s, h ) * f;
         if ( u < T( 0 ) || u > T( 1 ) )
-            return false;
+            return std::nullopt;
 
-        Vector3<T> q = cross( s, edge1 );
-        T v = dot( m_direction, q ) * f;
+        const Vector3<T> q = cross( s, edge1 );
+        const T v = dot( m_direction, q ) * f;
         if ( v < T( 0 ) || ( u + v ) > T( 1 ) )
-            return false;
+            return std::nullopt;
 
-        T t = dot( edge2, q ) * f;
+        const T t = dot( edge2, q ) * f;
         if ( t <= T( 0 ) )
-            return false;
+            return std::nullopt;
 
-        if ( out_intersection )
-            *out_intersection = origin + m_direction * t;
-
-        return true;
+        return origin + m_direction * t;
     }
 
 private:
