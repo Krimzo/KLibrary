@@ -3,7 +3,7 @@
 #include "math/raytracing/plane.h"
 #include "math/raytracing/sphere.h"
 #include "math/raytracing/aabb.h"
-#include "math/triangle/triangle.h"
+#include "math/poly/triangle.h"
 #include "math/matrix/matrix4x4.h"
 
 

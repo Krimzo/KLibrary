@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/triangle/vertex.h"
+#include "math/poly/vertex.h"
 
 
 namespace kl
@@ -13,13 +13,11 @@ struct Triangle_T
     Vertex_T<T> c;
 
     constexpr Triangle_T()
-    {
-    }
+    {}
 
     constexpr Triangle_T( Vertex_T<T> const& a, Vertex_T<T> const& b, Vertex_T<T> const& c )
         : a( a ), b( b ), c( c )
-    {
-    }
+    {}
 
     constexpr Vector3<T> normal() const
     {
