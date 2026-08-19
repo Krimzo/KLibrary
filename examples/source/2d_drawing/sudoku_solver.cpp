@@ -408,13 +408,11 @@ int examples::sudoku_solver_main( int argc, char** argv )
         "000""090""010"
         "000""305""000"
     };
-    std::thread thread{ [&sudoku]
+    std::jthread thread{ [&sudoku]
         {
             SudokuApp app;
             while ( app.update() )
-            {
                 app.reload( sudoku );
-            }
         } };
 
     if ( auto solved_opt = solve( sudoku, sudoku ) )
@@ -427,10 +425,5 @@ int examples::sudoku_solver_main( int argc, char** argv )
         kl::print( "No solution found" );
     }
 
-    if ( thread.joinable() )
-    {
-        thread.join();
-    }
     return 0;
 }
-
