@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/matrix/matrix3x3.h"
+#include "math/imaginary/quaternion.h"
 
 
 namespace kl
@@ -203,6 +204,35 @@ struct Matrix4x4
         z_rot[5] = z_cos;
 
         return z_rot * y_rot * x_rot;
+    }
+
+    static constexpr Matrix4x4<T> rotation( Quaternion_T<T> const& quat )
+    {
+        const Quaternion_T<T> nquat = normalize( quat );
+
+        const T ii = nquat.i * nquat.i;
+        const T jj = nquat.j * nquat.j;
+        const T kk = nquat.k * nquat.k;
+        const T ir = nquat.i * nquat.r;
+        const T jr = nquat.j * nquat.r;
+        const T kr = nquat.k * nquat.r;
+        const T ij = nquat.i * nquat.j;
+        const T ik = nquat.i * nquat.k;
+        const T jk = nquat.j * nquat.k;
+
+        Matrix4x4<T> result;
+
+        result( 0, 0 ) = T( 1 ) - T( 2 ) * ( jj + kk );
+        result( 0, 1 ) = T( 2 ) * ( ij + kr );
+        result( 0, 2 ) = T( 2 ) * ( ik - jr );
+        result( 1, 0 ) = T( 2 ) * ( ij - kr );
+        result( 1, 1 ) = T( 1 ) - T( 2 ) * ( ii + kk );
+        result( 1, 2 ) = T( 2 ) * ( jk + ir );
+        result( 2, 0 ) = T( 2 ) * ( ik + jr );
+        result( 2, 1 ) = T( 2 ) * ( jk - ir );
+        result( 2, 2 ) = T( 1 ) - T( 2 ) * ( ii + jj );
+
+        return result;
     }
 
     static constexpr Matrix4x4<T> translation( Vector3<T> const& translation )
