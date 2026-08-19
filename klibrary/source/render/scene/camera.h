@@ -26,6 +26,9 @@ struct Camera
     void update_aspect_ratio( Int2 size );
     Ray ray() const;
 
+    void set_h_fov( float fov );
+    void set_v_fov( float fov );
+
     void set_forward( Float3 const& dir );
     void set_up( Float3 const& dir );
 

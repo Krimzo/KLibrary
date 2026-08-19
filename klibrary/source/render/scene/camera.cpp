@@ -11,6 +11,16 @@ kl::Ray kl::Camera::ray() const
     return { position, m_forward };
 }
 
+void kl::Camera::set_h_fov( float fov )
+{
+    field_of_view = fov;
+}
+
+void kl::Camera::set_v_fov( float fov )
+{
+    field_of_view = 2.0f * atan_d( tan_d( fov * 0.5f ) * aspect_ratio );
+}
+
 void kl::Camera::set_forward( Float3 const& dir )
 {
     m_forward = normalize( dir );
