@@ -8,7 +8,7 @@ void kl::Entity::update_physics( float delta_t )
     rotation += angular * delta_t;
 }
 
-kl::Float4x4 kl::Entity::matrix() const
+kl::float4x4 kl::Entity::matrix() const
 {
-    return Float4x4::translation( position ) * Float4x4::rotation( rotation ) * Float4x4::scaling( scale );
+    return float4x4::translation( position ) * float4x4::rotation( rotation ) * float4x4::scaling( scale );
 }

@@ -4,7 +4,7 @@
 static kl::Timer TIMER;
 static kl::Camera CAMERA;
 
-static kl::Float3 SUN_DIRECTION = { 1, -1, 0 };
+static float3 SUN_DIRECTION = { 1, -1, 0 };
 
 static kl::Shaders PLANE_SHADERS;
 static kl::dx::GeometryShader PLANE_GEOMETRY_SHADER;
@@ -16,7 +16,7 @@ int examples::plane_playground_main( int argc, char** argv )
     kl::Window window{ "Plane Playground" };
     kl::GPU gpu{ window.ptr() };
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             gpu.resize_internal( size );
             gpu.set_viewport_size( size );
@@ -85,13 +85,13 @@ int examples::plane_playground_main( int argc, char** argv )
 
         struct alignas( 16 ) SKY_CB
         {
-            kl::Float4x4 INVERSE_CAMERA;
-            kl::Float4 FRAME_SIZE;
-            kl::Float4 SUN_DIRECTION;
+            float4x4 INVERSE_CAMERA;
+            float4 FRAME_SIZE;
+            float4 SUN_DIRECTION;
         } sky_cb = {};
 
         sky_cb.INVERSE_CAMERA = kl::inverse( CAMERA.matrix() );
-        sky_cb.FRAME_SIZE = { kl::Float2( window.size() ), {} };
+        sky_cb.FRAME_SIZE = { float2( window.size() ), {} };
         sky_cb.SUN_DIRECTION = { kl::normalize( SUN_DIRECTION ), 0.0f };
 
         sky_shaders.upload( sky_cb );
@@ -106,10 +106,10 @@ int examples::plane_playground_main( int argc, char** argv )
 
         struct alignas( 16 ) PLANE_CB
         {
-            kl::Float4x4 W;
-            kl::Float4x4 VP;
-            kl::Float4 TIME_DATA;
-            kl::Float4 SUN_DIRECTION;
+            float4x4 W;
+            float4x4 VP;
+            float4 TIME_DATA;
+            float4 SUN_DIRECTION;
         } plane_cb = {};
 
         plane_cb.W = {};
@@ -131,9 +131,9 @@ void camera_movement( kl::Window& window )
 
     if ( window.mouse.right )
     {
-        kl::Int2 frame_center = window.frame_center();
+        int2 frame_center = window.frame_center();
         if ( camera_rotating )
-            CAMERA.rotate( kl::Float2( window.mouse.position() ), kl::Float2( frame_center ) );
+            CAMERA.rotate( float2( window.mouse.position() ), float2( frame_center ) );
 
         window.mouse.set_position( frame_center );
         window.mouse.set_hidden( true );

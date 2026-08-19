@@ -27,7 +27,7 @@ struct Texture
     void create_access_view( dx::AccessViewDescriptor const* descriptor = nullptr );
 
     bool is_cube() const;
-    Int2 resolution() const;
+    int2 resolution() const;
 
 private:
     GPU const& m_gpu;

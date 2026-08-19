@@ -11,7 +11,7 @@ void server_tcp()
     kl::TCPSocket client;
     server.server_accept( client );
 
-    client.send<kl::Float3>( { 1.1f, 2.2f, 3.3f } );
+    client.send<float3>( { 1.1f, 2.2f, 3.3f } );
     kl::print( "TCP data sent!" );
 }
 
@@ -24,7 +24,7 @@ void client_tcp()
     client.address.set_address( "127.0.0.1" );
     client.client_connect();
 
-    if ( auto opt_result = client.receive<kl::Float3>() )
+    if ( auto opt_result = client.receive<float3>() )
         kl::print( "TCP data received: ", *opt_result );
 }
 
@@ -38,7 +38,7 @@ void server_udp()
     kl::Address address{};
     server.receive( recieve_data, address );
 
-    kl::Float3 send_data{ 5.0f, 1.0f, 2.0f };
+    float3 send_data{ 5.0f, 1.0f, 2.0f };
     server.send( send_data, address );
     kl::print( "UDP data sent!" );
 }
@@ -56,7 +56,7 @@ void client_udp()
     client.send( send_data, host_address );
 
     kl::Address rec_address;
-    if ( auto opt_result = client.receive<kl::Float3>( rec_address ) )
+    if ( auto opt_result = client.receive<float3>( rec_address ) )
         kl::print( "UDP data received: ", *opt_result, " from ", rec_address.address(), ":", rec_address.port() );
 }
 

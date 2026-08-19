@@ -14,48 +14,39 @@ struct Vector4
     T w = {};
 
     constexpr Vector4()
-    {
-    }
+    {}
 
     explicit constexpr Vector4( T value )
         : x( value ), y( value ), z( value ), w( value )
-    {
-    }
+    {}
 
     constexpr Vector4( T x, T y, T z, T w )
         : x( x ), y( y ), z( z ), w( w )
-    {
-    }
+    {}
 
     constexpr Vector4( Vector2<T> const& vec, T z, T w )
         : x( vec.x ), y( vec.y ), z( z ), w( w )
-    {
-    }
+    {}
 
     constexpr Vector4( T x, Vector2<T> const& vec, T w )
         : x( x ), y( vec.x ), z( vec.y ), w( w )
-    {
-    }
+    {}
 
     constexpr Vector4( T x, T y, Vector2<T> const& vec )
         : x( x ), y( y ), z( vec.x ), w( vec.y )
-    {
-    }
+    {}
 
     constexpr Vector4( Vector2<T> const& vec1, Vector2<T> const& vec2 )
         : x( vec1.x ), y( vec1.y ), z( vec2.x ), w( vec2.y )
-    {
-    }
+    {}
 
     constexpr Vector4( Vector3<T> const& vec, T w )
         : x( vec.x ), y( vec.y ), z( vec.z ), w( w )
-    {
-    }
+    {}
 
     constexpr Vector4( T x, Vector3<T> const& vec )
         : x( x ), y( vec.x ), z( vec.y ), w( vec.z )
-    {
-    }
+    {}
 
     constexpr T& operator[]( int index )
     {
@@ -240,10 +231,10 @@ struct Vector4
 
 namespace kl
 {
-using Int4 = Vector4<int32_t>;
-using UInt4 = Vector4<uint32_t>;
-using Float4 = Vector4<float>;
-using Double4 = Vector4<double>;
+using int4 = Vector4<int32_t>;
+using uint4 = Vector4<uint32_t>;
+using float4 = Vector4<float>;
+using double4 = Vector4<double>;
 }
 
 namespace kl

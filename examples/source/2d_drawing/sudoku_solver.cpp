@@ -57,20 +57,18 @@ struct Index
 
     constexpr Index( int value )
         : value( value )
-    {
-    }
+    {}
 
     constexpr Index( int x, int y )
         : value( x + y * 9 )
-    {
-    }
+    {}
 
     constexpr operator int() const
     {
         return value;
     }
 
-    constexpr operator kl::Int2() const
+    constexpr operator int2() const
     {
         return { x(), y() };
     }
@@ -96,8 +94,7 @@ struct Possible : std::vector<SudokuPiece>
     std::bitset<9> data;
 
     constexpr Possible()
-    {
-    }
+    {}
 
     constexpr void insert( SudokuPiece piece )
     {
@@ -119,8 +116,7 @@ struct Sudoku
     bool defaults[81] = {};
 
     constexpr Sudoku()
-    {
-    }
+    {}
 
     constexpr Sudoku( std::string_view const& board_data )
     {
@@ -280,7 +276,7 @@ struct SudokuApp
     SudokuApp()
     {
         window.set_dark_mode( true );
-        window.on_resize.emplace_back( [&]( kl::Int2 size )
+        window.on_resize.emplace_back( [&]( int2 size )
             {
                 gpu.resize_internal( size );
                 gpu.set_viewport_size( size );
@@ -318,17 +314,17 @@ float4 p_shader(VS_DATA data) : SV_Target
         {
             float coord = -1 + i * ( 2.0f / 3.0f );
             for ( float j : { -1.0f, 1.0f } )
-                vertex_data.emplace_back( kl::Float3{ coord, j, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.9f } );
+                vertex_data.emplace_back( float3{ coord, j, 0.0f }, float3{ kl::colors::WHITE }, float2{ 0.9f } );
             for ( float j : { -1.0f, 1.0f } )
-                vertex_data.emplace_back( kl::Float3{ j, coord, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.9f } );
+                vertex_data.emplace_back( float3{ j, coord, 0.0f }, float3{ kl::colors::WHITE }, float2{ 0.9f } );
         }
         for ( int i = 0; i < 10; i++ )
         {
             float coord = -1 + i * ( 2.0f / 9.0f );
             for ( float j : { -1.0f, 1.0f } )
-                vertex_data.emplace_back( kl::Float3{ coord, j, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.3f } );
+                vertex_data.emplace_back( float3{ coord, j, 0.0f }, float3{ kl::colors::WHITE }, float2{ 0.3f } );
             for ( float j : { -1.0f, 1.0f } )
-                vertex_data.emplace_back( kl::Float3{ j, coord, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.3f } );
+                vertex_data.emplace_back( float3{ j, coord, 0.0f }, float3{ kl::colors::WHITE }, float2{ 0.3f } );
         }
         m_mesh = gpu.create_vertex_buffer( vertex_data );
     }
@@ -337,36 +333,35 @@ float4 p_shader(VS_DATA data) : SV_Target
     {
         gpu.clear_internal( kl::colors::GRAY );
         gpu.draw( m_mesh, D3D_PRIMITIVE_TOPOLOGY_LINELIST );
-        gpu.draw_text_batch();
+        gpu.draw_raster_batch();
         gpu.swap_buffers( true );
         return window.process();
     }
 
     void reload( Sudoku const& sudoku )
     {
-        float font_size = ( window.height() / 9.0f );
-        kl::Float2 rect_size = window.size() / 9;
+        const float font_size = ( window.height() / 9.0f );
+        const float2 rect_size = window.size() / 9;
+        const float2 small_square_size = rect_size / window.size() * 2.0f;
 
-        float font_dips = window.pixels_to_dips( font_size );
-        kl::TextFormat format = gpu.create_text_format( L"JetBrains Mono NL", DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, font_dips );
-        format->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_CENTER );
-        format->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER );
+        const float font_dips = window.pixels_to_dips( font_size );
+        const kl::TextFormat format = gpu.create_text_format( L"JetBrains Mono NL", DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, font_dips );
 
-        gpu.text_batch.clear();
+        gpu.raster_batch.clear();
         for ( int i = 0; i < 81; i++ )
         {
             if ( sudoku.board[i] == ZERO )
                 continue;
 
-            kl::Text text;
-            text.format = format;
-            text.color = sudoku.defaults[i] ? kl::colors::CYAN : kl::colors::WHEAT;
-            text.position = kl::to_ndc<float>( { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) }, window.size() );
-            text.rect_size = rect_size / window.size() * 2.0f;
-            text.data = std::wstring( 1, convert_piece( sudoku.board[i] ) );
-            text.hor_center = true;
-            text.ver_center = true;
-            gpu.text_batch.push_back( text );
+            kl::Ref<kl::RasterText> text = new kl::RasterText();
+            text->format = format;
+            text->color = sudoku.defaults[i] ? kl::colors::CYAN : kl::colors::WHEAT;
+            text->box_top_left = kl::to_ndc<float>( { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) }, window.size() );
+            text->box_bottom_right = text->box_top_left + float2{ small_square_size.x, -small_square_size.y };
+            text->data = std::wstring( 1, convert_piece( sudoku.board[i] ) );
+            text->h_align = kl::HAlign::DWRITE_TEXT_ALIGNMENT_CENTER;
+            text->v_align = kl::VAlign::DWRITE_PARAGRAPH_ALIGNMENT_CENTER;
+            gpu.raster_batch.push_back( text );
         }
     }
 
@@ -376,7 +371,7 @@ private:
 
 float display_wait_time()
 {
-    return 0.0025f;
+    return 0.001f;
 }
 
 int examples::sudoku_solver_main( int argc, char** argv )
@@ -413,13 +408,11 @@ int examples::sudoku_solver_main( int argc, char** argv )
         "000""090""010"
         "000""305""000"
     };
-    std::thread thread{ [&sudoku]
+    std::jthread thread{ [&sudoku]
         {
             SudokuApp app;
             while ( app.update() )
-            {
                 app.reload( sudoku );
-            }
         } };
 
     if ( auto solved_opt = solve( sudoku, sudoku ) )
@@ -432,10 +425,5 @@ int examples::sudoku_solver_main( int argc, char** argv )
         kl::print( "No solution found" );
     }
 
-    if ( thread.joinable() )
-    {
-        thread.join();
-    }
     return 0;
 }
-

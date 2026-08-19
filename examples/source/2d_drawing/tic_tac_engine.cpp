@@ -14,7 +14,7 @@ struct BoardInfo
     int move = -1;
 };
 
-static constexpr kl::Int2 SIZES = { 3, 901 };
+static constexpr int2 SIZES = { 3, 901 };
 static kl::RGB PLAYER_COLOR = kl::colors::ORANGE;
 static kl::RGB ENGINE_COLOR = kl::colors::GREEN;
 
@@ -178,7 +178,7 @@ int examples::tic_tac_main( int argc, char** argv )
             {
                 if ( !was_down )
                 {
-                    kl::Int2 pos = window.mouse.position() / square_size;
+                    int2 pos = window.mouse.position() / square_size;
                     if ( int index = pos.y * SIZES.x + pos.x; board[index] == ID::EMPTY )
                     {
                         board[index] = ID::PLAYER;
@@ -200,13 +200,13 @@ int examples::tic_tac_main( int argc, char** argv )
 
         frame.fill( kl::colors::GRAY );
 
-        for ( kl::Int2 pos; pos.y < SIZES.y; pos.y += square_size )
+        for ( int2 pos; pos.y < SIZES.y; pos.y += square_size )
         {
             for ( pos.x = 0; pos.x < SIZES.y; pos.x += square_size )
-                frame.draw_rectangle( pos, pos + kl::Int2( square_size ), kl::colors::WHITE );
+                frame.draw_rectangle( pos, pos + int2( square_size ), kl::colors::WHITE );
         }
 
-        for ( kl::Int2 pos; pos.y < SIZES.x; pos.y++ )
+        for ( int2 pos; pos.y < SIZES.x; pos.y++ )
         {
             for ( pos.x = 0; pos.x < SIZES.x; pos.x++ )
             {
@@ -216,30 +216,30 @@ int examples::tic_tac_main( int argc, char** argv )
                 {
                     if ( pos_id == ID::PLAYER )
                     {
-                        frame.draw_line( pos * square_size + kl::Int2( line_offset ),
-                            ( pos + kl::Int2( 1, 1 ) ) * square_size - kl::Int2( line_offset ), PLAYER_COLOR );
-                        frame.draw_line( ( pos + kl::Int2( 0, 1 ) ) * square_size + kl::Int2( line_offset, -line_offset ),
-                            ( pos + kl::Int2( 1, 0 ) ) * square_size + kl::Int2( -line_offset, line_offset ), PLAYER_COLOR );
+                        frame.draw_line( pos * square_size + int2( line_offset ),
+                            ( pos + int2( 1, 1 ) ) * square_size - int2( line_offset ), PLAYER_COLOR );
+                        frame.draw_line( ( pos + int2( 0, 1 ) ) * square_size + int2( line_offset, -line_offset ),
+                            ( pos + int2( 1, 0 ) ) * square_size + int2( -line_offset, line_offset ), PLAYER_COLOR );
                     }
                     else if ( pos_id == ID::ENGINE )
                     {
-                        frame.draw_circle( pos * square_size + kl::Int2( circle_offset ),
-                            pos * square_size + kl::Int2( circle_offset, line_offset ), ENGINE_COLOR );
+                        frame.draw_circle( pos * square_size + int2( circle_offset ),
+                            pos * square_size + int2( circle_offset, line_offset ), ENGINE_COLOR );
                     }
                 }
                 else
                 {
                     if ( pos_id == ID::ENGINE )
                     {
-                        frame.draw_line( pos * square_size + kl::Int2( line_offset ),
-                            ( pos + kl::Int2( 1, 1 ) ) * square_size - kl::Int2( line_offset ), ENGINE_COLOR );
-                        frame.draw_line( ( pos + kl::Int2( 0, 1 ) ) * square_size + kl::Int2( line_offset, -line_offset ),
-                            ( pos + kl::Int2( 1, 0 ) ) * square_size + kl::Int2( -line_offset, line_offset ), ENGINE_COLOR );
+                        frame.draw_line( pos * square_size + int2( line_offset ),
+                            ( pos + int2( 1, 1 ) ) * square_size - int2( line_offset ), ENGINE_COLOR );
+                        frame.draw_line( ( pos + int2( 0, 1 ) ) * square_size + int2( line_offset, -line_offset ),
+                            ( pos + int2( 1, 0 ) ) * square_size + int2( -line_offset, line_offset ), ENGINE_COLOR );
                     }
                     else if ( pos_id == ID::PLAYER )
                     {
-                        frame.draw_circle( pos * square_size + kl::Int2( circle_offset ),
-                            pos * square_size + kl::Int2( circle_offset, line_offset ), PLAYER_COLOR );
+                        frame.draw_circle( pos * square_size + int2( circle_offset ),
+                            pos * square_size + int2( circle_offset, line_offset ), PLAYER_COLOR );
                     }
                 }
             }

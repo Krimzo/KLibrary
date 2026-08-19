@@ -51,8 +51,8 @@ struct DeviceHolder : NoCopy
     dx::Texture create_texture( dx::TextureDescriptor const* descriptor, dx::SubresourceDescriptor const* subresource_data ) const;
     dx::Texture create_texture( Image const& image, bool has_unordered_access = false, bool is_target = false ) const;
     dx::Texture create_cube_texture( Image const& right, Image const& left, Image const& top, Image const& bottom, Image const& front, Image const& back ) const;
-    dx::Texture create_staging_texture( dx::Texture const& texture, Int2 size = {} ) const;
-    dx::Texture create_target_texture( Int2 size ) const;
+    dx::Texture create_staging_texture( dx::Texture const& texture, int2 size = {} ) const;
+    dx::Texture create_target_texture( int2 size ) const;
 
     dx::TargetView create_target_view( dx::Resource const& resource, dx::TargetViewDescriptor const* descriptor ) const;
     dx::DepthView create_depth_view( dx::Resource const& resource, dx::DepthViewDescriptor const* descriptor ) const;

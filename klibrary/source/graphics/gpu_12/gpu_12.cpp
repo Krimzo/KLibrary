@@ -155,7 +155,7 @@ void kl::GPU12::await()
     m_fence.signal_and_wait( m_queue.queue );
 }
 
-void kl::GPU12::resize( Int2 size )
+void kl::GPU12::resize( int2 size )
 {
     await();
     for ( auto& back_buffer : m_back_buffers )

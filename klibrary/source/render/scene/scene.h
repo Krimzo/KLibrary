@@ -16,7 +16,7 @@ struct Scene
     Ref<AmbientLight> main_ambient_light = nullptr;
     Ref<DirectionalLight> main_directional_light = nullptr;
 
-    Float3 gravity = { 0.0f, -9.81f, 0.0f };
+    float3 gravity = { 0.0f, -9.81f, 0.0f };
 
     void update_physics( float delta_t );
 };

@@ -19,28 +19,23 @@ struct Vector3
     T z = {};
 
     constexpr Vector3()
-    {
-    }
+    {}
 
     explicit constexpr Vector3( T value )
         : x( value ), y( value ), z( value )
-    {
-    }
+    {}
 
     constexpr Vector3( T x, T y, T z )
         : x( x ), y( y ), z( z )
-    {
-    }
+    {}
 
     constexpr Vector3( Vector2<T> const& vec, T z )
         : x( vec.x ), y( vec.y ), z( z )
-    {
-    }
+    {}
 
     constexpr Vector3( T x, Vector2<T> const& vec )
         : x( x ), y( vec.x ), z( vec.y )
-    {
-    }
+    {}
 
     constexpr T& operator[]( int index )
     {
@@ -205,10 +200,10 @@ struct Vector3
 
 namespace kl
 {
-using Int3 = Vector3<int32_t>;
-using UInt3 = Vector3<uint32_t>;
-using Float3 = Vector3<float>;
-using Double3 = Vector3<double>;
+using int3 = Vector3<int32_t>;
+using uint3 = Vector3<uint32_t>;
+using float3 = Vector3<float>;
+using double3 = Vector3<double>;
 }
 
 namespace kl

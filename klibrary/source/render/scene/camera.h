@@ -9,7 +9,7 @@ namespace kl
 {
 struct Camera
 {
-    Float3 position;
+    float3 position;
 
     float aspect_ratio = 1.7778f;
     float field_of_view = 90.0f;
@@ -23,18 +23,18 @@ struct Camera
     RGB background;
     Ref<Texture> skybox;
 
-    void update_aspect_ratio( Int2 size );
+    void update_aspect_ratio( int2 size );
     Ray ray() const;
 
     void set_h_fov( float fov );
     void set_v_fov( float fov );
 
-    void set_forward( Float3 const& dir );
-    void set_up( Float3 const& dir );
+    void set_forward( float3 const& dir );
+    void set_up( float3 const& dir );
 
-    Float3 forward() const;
-    Float3 right() const;
-    Float3 up() const;
+    float3 forward() const;
+    float3 right() const;
+    float3 up() const;
 
     void move_forward( float delta_time );
     void move_back( float delta_time );
@@ -43,14 +43,14 @@ struct Camera
     void move_up( float delta_time );
     void move_down( float delta_time );
 
-    void rotate( Float2 mouse_pos, Float2 frame_center, float vertical_angle_limit = 85.0f );
+    void rotate( float2 mouse_pos, float2 frame_center, float vertical_angle_limit = 85.0f );
 
-    Float4x4 view_matrix() const;
-    Float4x4 projection_matrix() const;
-    Float4x4 matrix() const;
+    float4x4 view_matrix() const;
+    float4x4 projection_matrix() const;
+    float4x4 matrix() const;
 
 private:
-    Float3 m_forward = { 0.0f, 0.0f, 1.0f };
-    Float3 m_up = { 0.0f, 1.0f, 0.0f };
+    float3 m_forward = { 0.0f, 0.0f, 1.0f };
+    float3 m_up = { 0.0f, 1.0f, 0.0f };
 };
 }

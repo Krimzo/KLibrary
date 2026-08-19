@@ -39,7 +39,7 @@ void kl::console::set_cursor_enabled( bool state )
     SetConsoleCursorInfo( ConsoleInit::_init, &cursor_info );
 }
 
-void kl::console::move_cursor( Int2 position )
+void kl::console::move_cursor( int2 position )
 {
     SetConsoleCursorPosition( ConsoleInit::_init, { (SHORT) position.x, (SHORT) position.y } );
 }
@@ -64,14 +64,14 @@ void kl::console::set_height( int height )
     set_size( { width(), height } );
 }
 
-kl::Int2 kl::console::size()
+kl::int2 kl::console::size()
 {
     CONSOLE_SCREEN_BUFFER_INFO info = {};
     GetConsoleScreenBufferInfo( ConsoleInit::_init, &info );
     return { info.srWindow.Right - info.srWindow.Left + 1, info.srWindow.Bottom - info.srWindow.Top + 1 };
 }
 
-void kl::console::set_size( Int2 size )
+void kl::console::set_size( int2 size )
 {
     SMALL_RECT rect = { 0, 0, (SHORT) ( size.x - 1 ), (SHORT) ( size.y - 1 ) };
     SetConsoleWindowInfo( ConsoleInit::_init, true, &rect );
@@ -87,7 +87,7 @@ void kl::console::set_title( std::wstring_view const& text )
     SetConsoleTitleW( text.data() );
 }
 
-void kl::console::set_font( Int2 size, std::wstring_view const& font_name )
+void kl::console::set_font( int2 size, std::wstring_view const& font_name )
 {
     CONSOLE_FONT_INFOEX cfi = {};
     cfi.cbSize = sizeof( CONSOLE_FONT_INFOEX );
@@ -135,7 +135,7 @@ char kl::console::wait_for_any( bool echo )
     return (char) _getch();
 }
 
-void kl::console::dump( std::string_view const& data, Int2 location )
+void kl::console::dump( std::string_view const& data, int2 location )
 {
     DWORD ignored = 0;
     WriteConsoleOutputCharacterA( ConsoleInit::_init, data.data(), (DWORD) data.length(),

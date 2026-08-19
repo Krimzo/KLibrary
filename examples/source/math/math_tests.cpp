@@ -3,8 +3,8 @@
 
 int examples::math_tests_main( int argc, char** argv )
 {
-    kl::Float3 a = { -1.0f, 0.3f, 2.1f };
-    kl::Float3 b = { 3.14f, 2.0f, -5.0f };
+    float3 a = { -1.0f, 0.3f, 2.1f };
+    float3 b = { 3.14f, 2.0f, -5.0f };
 
     kl::print( "a = ", a );
     kl::print( "b = ", b );

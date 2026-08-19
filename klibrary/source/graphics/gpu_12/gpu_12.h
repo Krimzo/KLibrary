@@ -45,7 +45,7 @@ struct GPU12 : NoCopy, ShaderCompiler
     void execute( std::function<void( GPU12Commands& )> const& func );
     void await();
 
-    void resize( Int2 size );
+    void resize( int2 size );
     dx12::Resource get_back_buffer( UINT index ) const;
     dx12::DescriptorHandle get_render_target( UINT index ) const;
     void swap_buffers( bool v_sync ) const;

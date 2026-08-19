@@ -12,18 +12,15 @@ struct Complex_T
     T i = {};
 
     constexpr Complex_T()
-    {
-    }
+    {}
 
     constexpr Complex_T( T r, T i )
         : r( r ), i( i )
-    {
-    }
+    {}
 
     explicit constexpr Complex_T( T angle )
         : r( cos_d( angle ) ), i( sin_d( angle ) )
-    {
-    }
+    {}
 
     constexpr T const& operator[]( int index )
     {
@@ -112,6 +109,8 @@ namespace kl
 {
 using Complex = Complex_T<float>;
 using ComplexD = Complex_T<double>;
+using cmplx = Complex;
+using cmplxd = ComplexD;
 }
 
 namespace kl

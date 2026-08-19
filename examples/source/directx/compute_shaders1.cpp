@@ -3,7 +3,7 @@
 
 struct TestStruct
 {
-    kl::Float3 position;
+    float3 position;
 };
 
 int examples::compute_shaders1_main( int argc, char** argv )

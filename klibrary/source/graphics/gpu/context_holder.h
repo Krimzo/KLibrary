@@ -10,14 +10,14 @@ struct ContextHolder : NoCopy
 {
     ContextHolder() = default;
 
-    void set_viewport_position( Int2 position ) const;
-    Int2 viewport_position() const;
+    void set_viewport_position( int2 position ) const;
+    int2 viewport_position() const;
 
-    void set_viewport_size( Int2 size ) const;
-    Int2 viewport_size() const;
+    void set_viewport_size( int2 size ) const;
+    int2 viewport_size() const;
 
-    void set_viewport_min_max( Float2 min_max ) const;
-    Float2 viewport_min_max() const;
+    void set_viewport_min_max( float2 min_max ) const;
+    float2 viewport_min_max() const;
 
     void bind_raster_state( dx::RasterState const& state ) const;
     void unbind_raster_state() const;
@@ -35,7 +35,7 @@ struct ContextHolder : NoCopy
     void unbind_blend_state() const;
 
     void copy_resource( dx::Resource const& destination, dx::Resource const& source ) const;
-    void copy_resource_region( dx::Resource const& destination, dx::Resource const& source, Int2 src_min, Int2 src_max, Int2 dst = { 0, 0 } ) const;
+    void copy_resource_region( dx::Resource const& destination, dx::Resource const& source, int2 src_min, int2 src_max, int2 dst = { 0, 0 } ) const;
 
     void map_read_resource( dx::Resource const& resource, std::function<void( byte*, uint32_t )> const& func ) const;
     void map_write_resource( dx::Resource const& resource, std::function<void( byte*, uint32_t )> const& func, bool discard = true ) const;
@@ -43,11 +43,11 @@ struct ContextHolder : NoCopy
     void read_from_buffer( void* cpu_buffer, dx::Buffer const& gpu_buffer, SIZE_T byte_size ) const;
     void write_to_buffer( dx::Buffer const& gpu_buffer, void const* cpu_buffer, SIZE_T byte_size, bool discard = true ) const;
 
-    void read_from_texture( void* cpu_buffer, dx::Texture const& gpu_buffer, Int2 cpu_size, UINT element_size ) const;
-    void write_to_texture( dx::Texture const& gpu_buffer, void const* cpu_buffer, Int2 cpu_size, UINT element_size, bool discard = true ) const;
+    void read_from_texture( void* cpu_buffer, dx::Texture const& gpu_buffer, int2 cpu_size, UINT element_size ) const;
+    void write_to_texture( dx::Texture const& gpu_buffer, void const* cpu_buffer, int2 cpu_size, UINT element_size, bool discard = true ) const;
 
     UINT buffer_size( dx::Buffer const& buffer ) const;
-    Int2 texture_size( dx::Texture const& texture ) const;
+    int2 texture_size( dx::Texture const& texture ) const;
 
     void bind_cb_for_vertex_shader( dx::Buffer const& buffer, UINT slot ) const;
     void unbind_cb_for_vertex_shader( UINT slot ) const;
@@ -85,7 +85,7 @@ struct ContextHolder : NoCopy
     void draw_indexed( UINT index_count, UINT start_index, INT base_vertex ) const;
     void draw_indexed( dx::Buffer const& vertex_buffer, dx::Buffer const& index_buffer, D3D_PRIMITIVE_TOPOLOGY draw_type = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, UINT stride = sizeof( Vertex ) ) const;
 
-    void clear_target_view( dx::TargetView const& view, Float4 const& color = {} ) const;
+    void clear_target_view( dx::TargetView const& view, float4 const& color = {} ) const;
     void clear_depth_view( dx::DepthView const& view, float depth = 1.0f, UINT8 stencil = 0xFF ) const;
 
     void bind_target_depth_view( dx::TargetView const& target_view, dx::DepthView const& depth_view ) const;

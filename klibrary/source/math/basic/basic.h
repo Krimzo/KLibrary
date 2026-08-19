@@ -131,37 +131,9 @@ constexpr T sin( T angle_in_rad ) noexcept
 
 template<typename T>
     requires std::is_floating_point_v<T>
-constexpr T cos( T angle_in_rad ) noexcept
-{
-    return (T) std::cos( angle_in_rad );
-}
-
-template<typename T>
-    requires std::is_floating_point_v<T>
-constexpr T tan( T angle_in_rad ) noexcept
-{
-    return (T) std::tan( angle_in_rad );
-}
-
-template<typename T>
-    requires std::is_floating_point_v<T>
 constexpr T asin( T value ) noexcept
 {
     return (T) std::asin( value );
-}
-
-template<typename T>
-    requires std::is_floating_point_v<T>
-constexpr T acos( T value ) noexcept
-{
-    return (T) std::acos( value );
-}
-
-template<typename T>
-    requires std::is_floating_point_v<T>
-constexpr T atan( T value ) noexcept
-{
-    return (T) std::atan( value );
 }
 
 template<typename T>
@@ -173,23 +145,30 @@ constexpr T sin_d( T angle_in_deg ) noexcept
 
 template<typename T>
     requires std::is_floating_point_v<T>
-constexpr T cos_d( T angle_in_deg ) noexcept
-{
-    return cos( angle_in_deg * to_radians<T>() );
-}
-
-template<typename T>
-    requires std::is_floating_point_v<T>
-constexpr T tan_d( T angle_in_deg ) noexcept
-{
-    return tan( angle_in_deg * to_radians<T>() );
-}
-
-template<typename T>
-    requires std::is_floating_point_v<T>
 constexpr T asin_d( T value ) noexcept
 {
     return asin( value ) * to_degrees<T>();
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T cos( T angle_in_rad ) noexcept
+{
+    return (T) std::cos( angle_in_rad );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T acos( T value ) noexcept
+{
+    return (T) std::acos( value );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T cos_d( T angle_in_deg ) noexcept
+{
+    return cos( angle_in_deg * to_radians<T>() );
 }
 
 template<typename T>
@@ -201,8 +180,113 @@ constexpr T acos_d( T value ) noexcept
 
 template<typename T>
     requires std::is_floating_point_v<T>
+constexpr T tan( T angle_in_rad ) noexcept
+{
+    return (T) std::tan( angle_in_rad );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T atan( T value ) noexcept
+{
+    return (T) std::atan( value );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T tan_d( T angle_in_deg ) noexcept
+{
+    return tan( angle_in_deg * to_radians<T>() );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr T atan_d( T value ) noexcept
 {
     return atan( value ) * to_degrees<T>();
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T csc( T angle_in_rad ) noexcept
+{
+    return T( 1 ) / sin<T>( angle_in_rad );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T acsc( T value ) noexcept
+{
+    return asin<T>( T( 1 ) / value );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T csc_d( T angle_in_deg ) noexcept
+{
+    return csc( angle_in_deg * to_radians<T>() );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T acsc_d( T value ) noexcept
+{
+    return acsc( value ) * to_degrees<T>();
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T sec( T angle_in_rad ) noexcept
+{
+    return T( 1 ) / cos<T>( angle_in_rad );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T asec( T value ) noexcept
+{
+    return acos<T>( T( 1 ) / value );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T sec_d( T angle_in_deg ) noexcept
+{
+    return sec( angle_in_deg * to_radians<T>() );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T asec_d( T value ) noexcept
+{
+    return asec( value ) * to_degrees<T>();
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T cot( T angle_in_rad ) noexcept
+{
+    return T( 1 ) / tan<T>( angle_in_rad );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T acot( T value ) noexcept
+{
+    return atan<T>( T( 1 ) / value );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T cot_d( T angle_in_deg ) noexcept
+{
+    return cot( angle_in_deg * to_radians<T>() );
+}
+
+template<typename T>
+    requires std::is_floating_point_v<T>
+constexpr T acot_d( T value ) noexcept
+{
+    return acot( value ) * to_degrees<T>();
 }
 }

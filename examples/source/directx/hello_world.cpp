@@ -19,7 +19,7 @@ int examples::hello_world_main( int argc, char** argv )
     kl::Window window{ "Hello World! (D3D11)" };
     kl::GPU gpu{ window.ptr() };
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             gpu.resize_internal( size );
             gpu.set_viewport_size( size );

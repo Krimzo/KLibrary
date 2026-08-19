@@ -160,7 +160,7 @@ void kl::GPU::set_fullscreen( bool enabled ) const
     m_chain->SetFullscreenState( enabled, nullptr ) >> verify_result;
 }
 
-void kl::GPU::clear_internal_color( Float4 const& color ) const
+void kl::GPU::clear_internal_color( float4 const& color ) const
 {
     m_context->ClearRenderTargetView( back_target_view().get(), &color.x );
 }
@@ -171,13 +171,13 @@ void kl::GPU::clear_internal_depth( float depth, UINT8 stencil ) const
     m_context->ClearDepthStencilView( back_depth_view().get(), clear_type, depth, stencil );
 }
 
-void kl::GPU::clear_internal( Float4 const& color, float depth, UINT8 stencil ) const
+void kl::GPU::clear_internal( float4 const& color, float depth, UINT8 stencil ) const
 {
     clear_internal_color( color );
     clear_internal_depth( depth, stencil );
 }
 
-void kl::GPU::resize_internal( Int2 size, DXGI_FORMAT depth_format )
+void kl::GPU::resize_internal( int2 size, DXGI_FORMAT depth_format )
 {
     for ( auto& target : m_d2d1_targets )
         target = {};
@@ -230,7 +230,7 @@ void kl::GPU::resize_to_window( HWND window )
 {
     RECT window_client_area{};
     GetClientRect( window, &window_client_area );
-    const Int2 area_size = {
+    const int2 area_size = {
         window_client_area.right - window_client_area.left,
         window_client_area.bottom - window_client_area.top,
     };
@@ -286,12 +286,12 @@ kl::Shaders kl::GPU::create_shaders( std::string_view const& shader_sources, std
     return shaders;
 }
 
-void kl::GPU::draw_text_batch() const
+void kl::GPU::draw_raster_batch() const
 {
-    TextRaster::draw_text_batch( back_index() );
+    Raster::draw_raster_batch( back_index() );
 }
 
-void kl::GPU::draw_text_direct( Text const& text ) const
+void kl::GPU::draw_raster_direct( RasterItem const& raster_item ) const
 {
-    TextRaster::draw_text_direct( back_index(), text );
+    Raster::draw_raster_direct( back_index(), raster_item );
 }

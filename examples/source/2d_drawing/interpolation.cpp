@@ -11,7 +11,7 @@ int examples::interpolation_main( int argc, char** argv )
     window.resize( { 900, 900 } );
     frame.resize( window.size() );
 
-    kl::Float2 positions[4] = {
+    float2 positions[4] = {
         { 50.0f, ( frame.height() - 1.0f ) / 3.0f },
         { ( frame.width() - 1.0f ) / 3.0f, frame.height() - 51.0f },
         { frame.width() - 51.0f, ( frame.height() - 1.0f ) * 0.667f },
@@ -27,18 +27,18 @@ int examples::interpolation_main( int argc, char** argv )
 
     kl::Triangle triangles[2] = {
         {
-            kl::Float3{ positions[0], 0.5f },
-            kl::Float3{ positions[1], 0.5f },
-            kl::Float3{ positions[2], 0.5f },
+            float3{ positions[0], 0.5f },
+            float3{ positions[1], 0.5f },
+            float3{ positions[2], 0.5f },
         },
         {
-            kl::Float3{ positions[0], 0.5f },
-            kl::Float3{ positions[3], 0.5f },
-            kl::Float3{ positions[2], 0.5f },
+            float3{ positions[0], 0.5f },
+            float3{ positions[3], 0.5f },
+            float3{ positions[2], 0.5f },
         },
     };
 
-    kl::Float4 constants[2] = {
+    float4 constants[2] = {
         triangles[0].constants(),
         triangles[1].constants(),
     };
@@ -50,7 +50,7 @@ int examples::interpolation_main( int argc, char** argv )
 
         for ( int x = frame_index - frame.height(), y = 0; y < frame.height(); x++, y++ )
         {
-            kl::Float3 weights[2] = {
+            float3 weights[2] = {
                 triangles[0].weights( constants[0], { (float) x, (float) y } ),
                 triangles[1].weights( constants[1], { (float) x, (float) y } ),
             };
@@ -73,11 +73,11 @@ int examples::interpolation_main( int argc, char** argv )
                 pixel = kl::colors::GRAY;
             }
 
-            if ( kl::Int2 write_position = { x + 0, y }; frame.in_bounds( write_position ) )
+            if ( int2 write_position = { x + 0, y }; frame.in_bounds( write_position ) )
                 frame[write_position] = pixel;
-            if ( kl::Int2 write_position = { x + 1, y }; frame.in_bounds( write_position ) )
+            if ( int2 write_position = { x + 1, y }; frame.in_bounds( write_position ) )
                 frame[write_position] = kl::random::gen_rgb();
-            if ( kl::Int2 write_position = { x + 2, y }; frame.in_bounds( write_position ) )
+            if ( int2 write_position = { x + 2, y }; frame.in_bounds( write_position ) )
                 frame[write_position] = kl::random::gen_rgb();
         }
 

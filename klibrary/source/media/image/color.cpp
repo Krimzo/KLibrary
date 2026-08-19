@@ -18,14 +18,14 @@ kl::RGB::operator kl::YUV() const
     };
 }
 
-kl::RGB::operator kl::Float3() const
+kl::RGB::operator kl::float3() const
 {
-    return Float3{ float( r ), float( g ), float( b ) } * to_float_rgb();
+    return float3{ float( r ), float( g ), float( b ) } * to_float_rgb();
 }
 
-kl::RGB::operator kl::Float4() const
+kl::RGB::operator kl::float4() const
 {
-    return Float4{ float( r ), float( g ), float( b ), float( a ) } * to_float_rgb();
+    return float4{ float( r ), float( g ), float( b ), float( a ) } * to_float_rgb();
 }
 
 bool kl::RGB::operator==( RGB other ) const

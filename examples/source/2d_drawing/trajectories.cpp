@@ -4,10 +4,10 @@
 struct SceneObject
 {
     float radius = kl::random::gen_float( 10.0f, 20.0f );
-    kl::Float2 position = {};
-    kl::Float2 velocity = {};
+    float2 position = {};
+    float2 velocity = {};
     kl::RGB color = kl::random::gen_rgb();
-    std::vector<kl::Float2> position_history = {};
+    std::vector<float2> position_history = {};
 };
 
 static float frame_lower_limit( kl::Image const& frame )
@@ -31,27 +31,27 @@ static void draw_objects( kl::Image& frame, std::vector<SceneObject>& objects )
         int start_position_index = (int) ( position_history.size() * 0.75f );
         for ( int i = start_position_index; i < (int) position_history.size() - 1; i++ )
         {
-            frame.draw_line( kl::Int2( position_history[i] ), kl::Int2( position_history[i + 1] ),
+            frame.draw_line( int2( position_history[i] ), int2( position_history[i + 1] ),
                 kl::RGB( 60, 60, 60 ).mix( color, kl::unlerp( (float) i, (float) start_position_index, (float) position_history.size() ) ) );
         }
-        frame.draw_circle( kl::Int2( position ), radius, color, true );
-        frame.draw_circle( kl::Int2( position ), radius, { 30, 30, 30 } );
+        frame.draw_circle( int2( position ), radius, color, true );
+        frame.draw_circle( int2( position ), radius, { 30, 30, 30 } );
     }
 }
 
-static void draw_interface( kl::Image& frame, bool draw_arrow, kl::Float2 arrow_start, kl::Float2 arrow_end )
+static void draw_interface( kl::Image& frame, bool draw_arrow, float2 arrow_start, float2 arrow_end )
 {
     if ( !draw_arrow )
         return;
 
     for ( int i = -1; i <= 1; i++ )
     {
-        kl::Float2 adder = { (float) i, (float) i };
-        frame.draw_line( kl::Int2( arrow_start + adder ), kl::Int2( arrow_end + adder ), kl::colors::SKY );
+        float2 adder = { (float) i, (float) i };
+        frame.draw_line( int2( arrow_start + adder ), int2( arrow_end + adder ), kl::colors::SKY );
     }
 }
 
-static void process_objects( std::vector<SceneObject>& objects, kl::Timer const& timer, kl::Image const& frame, kl::Float2 gravity )
+static void process_objects( std::vector<SceneObject>& objects, kl::Timer const& timer, kl::Image const& frame, float2 gravity )
 {
     static constexpr float energy_retain = 0.8f;
 
@@ -64,12 +64,12 @@ static void process_objects( std::vector<SceneObject>& objects, kl::Timer const&
     for ( int i = 0; i < (int) objects.size(); i++ )
     {
         int intersect_count = 0;
-        kl::Float2 velocity_sum, position_sum;
+        float2 velocity_sum, position_sum;
         for ( int j = 0; j < (int) objects.size(); j++ )
         {
             if ( i != j )
             {
-                kl::Float2 positions_vector = objects[i].position - objects[j].position;
+                float2 positions_vector = objects[i].position - objects[j].position;
                 float radius_sum = objects[i].radius + objects[j].radius;
                 if ( positions_vector.length() < radius_sum )
                 {
@@ -122,17 +122,17 @@ int examples::trajectories_main( int argc, char** argv )
     kl::Image frame{ window.size() };
     kl::Timer timer;
 
-    kl::Float2 gravity{ 0, 98.1f };
+    float2 gravity{ 0, 98.1f };
     std::vector<SceneObject> objects;
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             frame.resize( size );
         } );
 
     bool object_being_added = false;
-    kl::Float2 object_add_position;
-    kl::Float2 object_second_position;
+    float2 object_add_position;
+    float2 object_second_position;
 
     while ( window.process() )
     {
@@ -140,7 +140,7 @@ int examples::trajectories_main( int argc, char** argv )
 
         if ( window.mouse.left.pressed() )
         {
-            kl::Int2 position = window.mouse.position();
+            int2 position = window.mouse.position();
             if ( position.x >= 0 && position.x < (int) window.width() && position.y > 0 && position.y < frame_lower_limit( frame ) )
             {
                 object_add_position = position;
