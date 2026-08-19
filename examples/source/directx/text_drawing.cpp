@@ -22,18 +22,19 @@ int examples::text_drawing_main( int argc, char** argv )
     for ( int i = 0; i < 20; i++ )
         message << i << "^2 = " << i * i << '\n';
 
-    auto& text = gpu.text_batch.emplace_back();
-    text.format = format;
-    text.box_top_left = { -1.0f, 1.0f };
-    text.box_bottom_right = { 1.0f, -1.0f };
-    text.h_align = kl::HAlign::DWRITE_TEXT_ALIGNMENT_CENTER;
-    text.v_align = kl::VAlign::DWRITE_PARAGRAPH_ALIGNMENT_CENTER;
-    text.data = message.str();
+    kl::Ref<kl::RasterText> text = new kl::RasterText();
+    text->format = format;
+    text->box_top_left = { -1.0f, 1.0f };
+    text->box_bottom_right = { 1.0f, -1.0f };
+    text->h_align = kl::HAlign::DWRITE_TEXT_ALIGNMENT_CENTER;
+    text->v_align = kl::VAlign::DWRITE_PARAGRAPH_ALIGNMENT_CENTER;
+    text->data = message.str();
+    gpu.raster_batch.push_back( text );
 
     while ( window.process() )
     {
         gpu.clear_internal( kl::colors::GRAY );
-        gpu.draw_text_batch();
+        gpu.draw_raster_batch();
         gpu.swap_buffers( true );
     }
     return 0;

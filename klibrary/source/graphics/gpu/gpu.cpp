@@ -286,12 +286,12 @@ kl::Shaders kl::GPU::create_shaders( std::string_view const& shader_sources, std
     return shaders;
 }
 
-void kl::GPU::draw_text_batch() const
+void kl::GPU::draw_raster_batch() const
 {
-    TextRaster::draw_text_batch( back_index() );
+    Raster::draw_raster_batch( back_index() );
 }
 
-void kl::GPU::draw_text_direct( Text const& text ) const
+void kl::GPU::draw_raster_direct( RasterItem const& raster_item ) const
 {
-    TextRaster::draw_text_direct( back_index(), text );
+    Raster::draw_raster_direct( back_index(), raster_item );
 }

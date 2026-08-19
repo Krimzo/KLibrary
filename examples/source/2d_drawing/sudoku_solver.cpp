@@ -333,7 +333,7 @@ float4 p_shader(VS_DATA data) : SV_Target
     {
         gpu.clear_internal( kl::colors::GRAY );
         gpu.draw( m_mesh, D3D_PRIMITIVE_TOPOLOGY_LINELIST );
-        gpu.draw_text_batch();
+        gpu.draw_raster_batch();
         gpu.swap_buffers( true );
         return window.process();
     }
@@ -347,21 +347,21 @@ float4 p_shader(VS_DATA data) : SV_Target
         const float font_dips = window.pixels_to_dips( font_size );
         const kl::TextFormat format = gpu.create_text_format( L"JetBrains Mono NL", DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, font_dips );
 
-        gpu.text_batch.clear();
+        gpu.raster_batch.clear();
         for ( int i = 0; i < 81; i++ )
         {
             if ( sudoku.board[i] == ZERO )
                 continue;
 
-            kl::Text text;
-            text.format = format;
-            text.color = sudoku.defaults[i] ? kl::colors::CYAN : kl::colors::WHEAT;
-            text.box_top_left = kl::to_ndc<float>( { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) }, window.size() );
-            text.box_bottom_right = text.box_top_left + float2{ small_square_size.x, -small_square_size.y };
-            text.data = std::wstring( 1, convert_piece( sudoku.board[i] ) );
-            text.h_align = kl::HAlign::DWRITE_TEXT_ALIGNMENT_CENTER;
-            text.v_align = kl::VAlign::DWRITE_PARAGRAPH_ALIGNMENT_CENTER;
-            gpu.text_batch.push_back( text );
+            kl::Ref<kl::RasterText> text = new kl::RasterText();
+            text->format = format;
+            text->color = sudoku.defaults[i] ? kl::colors::CYAN : kl::colors::WHEAT;
+            text->box_top_left = kl::to_ndc<float>( { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) }, window.size() );
+            text->box_bottom_right = text->box_top_left + float2{ small_square_size.x, -small_square_size.y };
+            text->data = std::wstring( 1, convert_piece( sudoku.board[i] ) );
+            text->h_align = kl::HAlign::DWRITE_TEXT_ALIGNMENT_CENTER;
+            text->v_align = kl::VAlign::DWRITE_PARAGRAPH_ALIGNMENT_CENTER;
+            gpu.raster_batch.push_back( text );
         }
     }
 

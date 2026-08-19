@@ -26,7 +26,7 @@
     <ClInclude Include="source\graphics\graphics.h" />
     <ClInclude Include="source\graphics\shaders\shaders.h" />
     <ClInclude Include="source\graphics\shaders\shader_compiler.h" />
-    <ClInclude Include="source\graphics\text\text_raster.h" />
+    <ClInclude Include="source\graphics\raster\raster.h" />
     <ClInclude Include="source\json\container\array.h" />
     <ClInclude Include="source\json\container\container.h" />
     <ClInclude Include="source\json\container\literal.h" />
@@ -109,7 +109,7 @@
     <ClCompile Include="source\graphics\gpu_12\gpu_12_queue.cpp" />
     <ClCompile Include="source\graphics\shaders\shaders.cpp" />
     <ClCompile Include="source\graphics\shaders\shader_compiler.cpp" />
-    <ClCompile Include="source\graphics\text\text_raster.cpp" />
+    <ClCompile Include="source\graphics\raster\raster.cpp" />
     <ClCompile Include="source\json\container\array.cpp" />
     <ClCompile Include="source\json\container\literal.cpp" />
     <ClCompile Include="source\json\container\object.cpp" />

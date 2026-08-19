@@ -24,6 +24,7 @@ int mandelbrot_main( int argc, char** argv );
 int plane_playground_main( int argc, char** argv );
 int raytracing_main( int argc, char** argv );
 int text_drawing_main( int argc, char** argv );
+int raster_example_main( int argc, char** argv );
 
 int math_tests_main( int argc, char** argv );
 int imaginary_numbers_main( int argc, char** argv );

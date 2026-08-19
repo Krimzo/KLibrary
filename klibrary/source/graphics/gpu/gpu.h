@@ -2,13 +2,13 @@
 
 #include "graphics/gpu/device_holder.h"
 #include "graphics/gpu/context_holder.h"
-#include "graphics/text/text_raster.h"
+#include "graphics/raster/raster.h"
 #include "graphics/shaders/shader_compiler.h"
 
 
 namespace kl
 {
-struct GPU : DeviceHolder, ContextHolder, ShaderCompiler, TextRaster
+struct GPU : DeviceHolder, ContextHolder, ShaderCompiler, Raster
 {
     GPU( HWND window, bool debug = IS_DEBUG, bool has_unordered_access = false, bool video_support = false );
     virtual ~GPU() noexcept;
@@ -49,8 +49,8 @@ struct GPU : DeviceHolder, ContextHolder, ShaderCompiler, TextRaster
     ComputeShader create_compute_shader( std::string_view const& shader_source, std::string* out_error = nullptr ) const;
     Shaders create_shaders( std::string_view const& shader_sources, std::initializer_list<dx::LayoutDescriptor> const& descriptors = {}, std::string* out_vs_error = nullptr, std::string* out_ps_error = nullptr ) const;
 
-    void draw_text_batch() const;
-    void draw_text_direct( Text const& text ) const;
+    void draw_raster_batch() const;
+    void draw_raster_direct( RasterItem const& raster_item ) const;
 
 private:
     dx::Chain m_chain;

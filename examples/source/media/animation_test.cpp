@@ -51,11 +51,11 @@ struct State
                 triangle.c = kl::Vertex{ { triangle.a.x - b, triangle.a.y, 0.0f }, FIRST_COLOR, {} };
                 triangle.b = kl::Vertex{ { triangle.c.x, triangle.c.y + a, 0.0f }, FIRST_COLOR, {} };
 
-                gpu.text_batch = {
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"a" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"b" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"c" },
-                    kl::Text{ info_text_format, kl::colors::WHITE, { -0.75f, 0.0f }, {}, L"Create triangle 1." },
+                gpu.raster_batch = {
+                    new kl::RasterText{ labels_text_format, "a", FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "b", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "c", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ info_text_format, "Create triangle 1.", kl::colors::WHITE, { -0.75f, 0.0f } },
                 };
             } );
 
@@ -70,11 +70,11 @@ struct State
                 triangle.c.position.xy() = { triangle.a.x - kl::lerp( time_perc, b, a * b ), triangle.a.y };
                 triangle.b.position.xy() = { triangle.c.x, triangle.c.y + kl::lerp( time_perc, a, a * a ) };
 
-                gpu.text_batch = {
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "a * ", time_perc, "a" ) },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "b * ", time_perc, "a" ) },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "c * ", time_perc, "a" ) },
-                    kl::Text{ info_text_format, kl::colors::WHITE, { -0.75f, 0.0f }, {}, L"Scale triangle 1 by a." },
+                gpu.raster_batch = {
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "a * ", time_perc, "a" ), FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "b * ", time_perc, "a" ), FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "c * ", time_perc, "a" ), FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ info_text_format, "Scale triangle 1 by a.", kl::colors::WHITE, { -0.75f, 0.0f } },
                 };
             } );
 
@@ -86,14 +86,14 @@ struct State
                 triangle.c = kl::Vertex{ { triangle.a.x - b, triangle.a.y, 0.0f }, SECOND_COLOR, {} };
                 triangle.b = kl::Vertex{ { triangle.c.x, triangle.c.y + a, 0.0f }, SECOND_COLOR, {} };
 
-                gpu.text_batch = {
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"a" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"b" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ), {}, L"c" },
-                    kl::Text{ info_text_format, kl::colors::WHITE, { -0.75f, 0.0f }, {}, L"Create triangle 2." },
+                gpu.raster_batch = {
+                    new kl::RasterText{ labels_text_format, "aa", FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ba", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ca", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "a", SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "b", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "c", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ info_text_format, "Create triangle 2.", kl::colors::WHITE, { -0.75f, 0.0f } },
                 };
             } );
 
@@ -115,14 +115,14 @@ struct State
                 triangle.b.position.xy() += float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
                 triangle.c.position.xy() += float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
 
-                gpu.text_batch = {
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "a * ", time_perc, "b" ) },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "b * ", time_perc, "b" ) },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "c * ", time_perc, "b" ) },
-                    kl::Text{ info_text_format, kl::colors::WHITE, { -0.75f, 0.0f }, {}, L"Rotate, move and scale\ntriangle 2 by b." },
+                gpu.raster_batch = {
+                    new kl::RasterText{ labels_text_format, "aa", FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ba", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ca", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "a * ", time_perc, "b" ), SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "b * ", time_perc, "b" ), SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "c * ", time_perc, "b" ), SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ info_text_format, "Rotate, move and scale\ntriangle 2 by b.", kl::colors::WHITE, { -0.75f, 0.0f } },
                 };
             } );
 
@@ -134,17 +134,17 @@ struct State
                 triangle.c = kl::Vertex{ { triangle.a.x - b, triangle.a.y, 0.0f }, THIRD_COLOR, {} };
                 triangle.b = kl::Vertex{ { triangle.c.x, triangle.c.y + a, 0.0f }, THIRD_COLOR, {} };
 
-                gpu.text_batch = {
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"ab" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"bb" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ), {}, L"cb" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( ( triangles[2].b.position.xy() + triangles[2].c.position.xy() ) * 0.5f ), {}, L"a" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].c.position.xy() ) * 0.5f ), {}, L"b" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].b.position.xy() ) * 0.5f ), {}, L"c" },
-                    kl::Text{ info_text_format, kl::colors::WHITE, { -0.75f, 0.0f }, {}, L"Create triangle 3." },
+                gpu.raster_batch = {
+                    new kl::RasterText{ labels_text_format, "aa", FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ba", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ca", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ab", SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "bb", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "cb", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "a", THIRD_COLOR, scale_ndc( ( triangles[2].b.position.xy() + triangles[2].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "b", THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "c", THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ info_text_format, "Create triangle 3.", kl::colors::WHITE, { -0.75f, 0.0f } },
                 };
             } );
 
@@ -159,17 +159,17 @@ struct State
                 const float2 reflect_c = triangle.a.position.xy() + kl::reflect( triangle.a.position.xy() - triangle.c.position.xy(), triangle.b.position.xy() - triangle.a.position.xy() );
                 triangle.c.position.xy() = kl::lerp( time_perc, triangle.c.position.xy(), reflect_c );
 
-                gpu.text_batch = {
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"ab" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"bb" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ), {}, L"cb" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( ( triangles[2].b.position.xy() + triangles[2].c.position.xy() ) * 0.5f ), {}, L"a" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].c.position.xy() ) * 0.5f ), {}, L"b" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].b.position.xy() ) * 0.5f ), {}, L"c" },
-                    kl::Text{ info_text_format, kl::colors::WHITE, { -0.75f, 0.0f }, {}, L"Reflect triangle 3." },
+                gpu.raster_batch = {
+                    new kl::RasterText{ labels_text_format, "aa", FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ba", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ca", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ab", SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "bb", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "cb", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "a", THIRD_COLOR, scale_ndc( ( triangles[2].b.position.xy() + triangles[2].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "b", THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "c", THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ info_text_format, "Reflect triangle 3.", kl::colors::WHITE, { -0.75f, 0.0f } },
                 };
             } );
 
@@ -195,17 +195,17 @@ struct State
                 triangle.c.y += kl::lerp( time_perc, 0.0f, c * c );
 
                 const float2 last_tr_bias = { 0.0f, 25.0f };
-                gpu.text_batch = {
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"ab" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"bb" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ), {}, L"cb" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( last_tr_bias + ( triangles[2].b.position.xy() + triangles[2].c.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "a * ", time_perc, "c" ) },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( last_tr_bias + ( triangles[2].a.position.xy() + triangles[2].c.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "b * ", time_perc, "c" ) },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].b.position.xy() ) * 0.5f ), {}, kl::wformat( std::fixed, std::setprecision( 2 ), "c * ", time_perc, "c" ) },
-                    kl::Text{ info_text_format, kl::colors::WHITE, { -0.75f, 0.0f }, {}, L"Rotate, move and scale\ntriangle 3 by c." },
+                gpu.raster_batch = {
+                    new kl::RasterText{ labels_text_format, "aa", FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ba", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ca", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ab", SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "bb", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "cb", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "a * ", time_perc, "c" ), THIRD_COLOR, scale_ndc( last_tr_bias + ( triangles[2].b.position.xy() + triangles[2].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "b * ", time_perc, "c" ), THIRD_COLOR, scale_ndc( last_tr_bias + ( triangles[2].a.position.xy() + triangles[2].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, kl::wformat( std::fixed, std::setprecision( 2 ), "c * ", time_perc, "c" ), THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ info_text_format, "Rotate, move and scale\ntriangle 3 by c.", kl::colors::WHITE, { -0.75f, 0.0f } },
                 };
             } );
 
@@ -213,17 +213,17 @@ struct State
         parts.emplace_back( 5.0f, [this]( float time_perc )
             {
                 const float2 last_tr_bias = { 0.0f, 25.0f };
-                gpu.text_batch = {
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
-                    kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ), {}, L"ca" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"ab" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ), {}, L"bb" },
-                    kl::Text{ labels_text_format, SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ), {}, L"cb" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( last_tr_bias + ( triangles[2].b.position.xy() + triangles[2].c.position.xy() ) * 0.5f ), {}, L"ac" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( last_tr_bias + ( triangles[2].a.position.xy() + triangles[2].c.position.xy() ) * 0.5f ), {}, L"bc" },
-                    kl::Text{ labels_text_format, THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].b.position.xy() ) * 0.5f ), {}, L"cc" },
-                    kl::Text{ info_text_format, kl::colors::WHITE, { -0.75f, 0.0f }, {}, L"Proof: aa + bb = cc" },
+                gpu.raster_batch = {
+                    new kl::RasterText{ labels_text_format, "aa", FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ba", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ca", FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ab", SECOND_COLOR, scale_ndc( ( triangles[1].b.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "bb", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "cb", SECOND_COLOR, scale_ndc( ( triangles[1].a.position.xy() + triangles[1].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "ac", THIRD_COLOR, scale_ndc( last_tr_bias + ( triangles[2].b.position.xy() + triangles[2].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "bc", THIRD_COLOR, scale_ndc( last_tr_bias + ( triangles[2].a.position.xy() + triangles[2].c.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ labels_text_format, "cc", THIRD_COLOR, scale_ndc( ( triangles[2].a.position.xy() + triangles[2].b.position.xy() ) * 0.5f ) },
+                    new kl::RasterText{ info_text_format, "Proof: aa + bb = cc", kl::colors::WHITE, { -0.75f, 0.0f } },
                 };
             } );
 
@@ -281,7 +281,7 @@ struct State
         gpu.clear_internal( kl::RGB{ 30, 30, 30 } );
         gpu.write_to_buffer( buffer, triangles, sizeof( triangles ) );
         gpu.draw( buffer );
-        gpu.draw_text_batch();
+        gpu.draw_raster_batch();
 
         load_frame( writer, frame );
 
