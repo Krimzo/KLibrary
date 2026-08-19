@@ -6,7 +6,7 @@ int examples::text_drawing_main( int argc, char** argv )
     kl::Window window{ "Text Drawing" };
     kl::GPU gpu{ window.ptr() };
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             gpu.resize_internal( size );
             gpu.set_viewport_size( size );

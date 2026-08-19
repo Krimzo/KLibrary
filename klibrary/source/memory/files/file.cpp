@@ -301,9 +301,9 @@ std::vector<kl::Vertex> kl::parse_obj_file( fs::path const& filepath, bool flip_
     if ( !file.is_open() )
         return {};
 
-    std::vector<Float3> position_data;
-    std::vector<Float3> normal_data;
-    std::vector<Float2> uv_data;
+    std::vector<float3> position_data;
+    std::vector<float3> normal_data;
+    std::vector<float2> uv_data;
     std::vector<Vertex> vertex_data;
 
     float z_flip = flip_z ? -1.0f : 1.0f;
@@ -313,7 +313,7 @@ std::vector<kl::Vertex> kl::parse_obj_file( fs::path const& filepath, bool flip_
 
         if ( parts.size() == 4 && parts.front() == "v" )
         {
-            Float3 position{};
+            float3 position{};
             position.x = (float) parse_float( parts[1] ).value_or( 0.0 );
             position.y = (float) parse_float( parts[2] ).value_or( 0.0 );
             position.z = (float) parse_float( parts[3] ).value_or( 0.0 ) * z_flip;
@@ -323,7 +323,7 @@ std::vector<kl::Vertex> kl::parse_obj_file( fs::path const& filepath, bool flip_
 
         if ( parts.size() == 4 && parts.front() == "vn" )
         {
-            Float3 normal{};
+            float3 normal{};
             normal.x = (float) parse_float( parts[1] ).value_or( 0.0 );
             normal.y = (float) parse_float( parts[2] ).value_or( 0.0 );
             normal.z = (float) parse_float( parts[3] ).value_or( 0.0 ) * z_flip;
@@ -333,7 +333,7 @@ std::vector<kl::Vertex> kl::parse_obj_file( fs::path const& filepath, bool flip_
 
         if ( parts.size() == 3 && parts.front() == "vt" )
         {
-            Float2 uv{};
+            float2 uv{};
             uv.x = (float) parse_float( parts[1] ).value_or( 0.0 );
             uv.y = (float) parse_float( parts[2] ).value_or( 0.0 );
             uv_data.push_back( uv );

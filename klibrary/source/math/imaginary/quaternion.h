@@ -14,18 +14,15 @@ struct Quaternion_T
     T k = {};
 
     constexpr Quaternion_T()
-    {
-    }
+    {}
 
     constexpr Quaternion_T( T x, T y, T z )
         : i( x ), j( y ), k( z )
-    {
-    }
+    {}
 
     constexpr Quaternion_T( T r, T i, T j, T k )
         : r( r ), i( i ), j( j ), k( k )
-    {
-    }
+    {}
 
     explicit constexpr Quaternion_T( Vector3<T> const& axis, T angle )
         : r( (T) cos_d( angle * 0.5 ) )
@@ -133,6 +130,8 @@ namespace kl
 {
 using Quaternion = Quaternion_T<float>;
 using QuaternionD = Quaternion_T<double>;
+using quat = Quaternion;
+using quatd = QuaternionD;
 }
 
 namespace kl

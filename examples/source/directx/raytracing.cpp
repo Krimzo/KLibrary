@@ -5,9 +5,9 @@ static constexpr int SPHERE_COUNT = 10;
 
 struct Sphere
 {
-    kl::Float3 center;
+    float3 center;
     float radius = 0.0f;
-    kl::Float4 color;
+    float4 color;
 };
 
 int examples::raytracing_main( int argc, char** argv )
@@ -17,7 +17,7 @@ int examples::raytracing_main( int argc, char** argv )
     kl::Timer timer;
     kl::Camera camera;
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             gpu.resize_internal( size );
             gpu.set_viewport_size( size );
@@ -35,20 +35,20 @@ int examples::raytracing_main( int argc, char** argv )
     struct alignas( 16 ) CB
     {
         Sphere SPHERES[SPHERE_COUNT];
-        kl::Float4x4 INVERSE_CAMERA;
-        kl::Float3 CAMERA_POSITION;
-        alignas( 16 ) kl::Float3 SUN_DIRECTION;
+        float4x4 INVERSE_CAMERA;
+        float3 CAMERA_POSITION;
+        alignas( 16 ) float3 SUN_DIRECTION;
     } cb = {};
 
     for ( auto& sphere : cb.SPHERES )
     {
         sphere = Sphere{
-            kl::random::gen_float3( 40.0f ) - kl::Float3( 20.0f, 20.0f, 20.0f ),
+            kl::random::gen_float3( 40.0f ) - float3( 20.0f, 20.0f, 20.0f ),
             kl::random::gen_float( 2.75f ) + 0.25f,
             kl::random::gen_rgb(),
         };
     }
-    cb.SUN_DIRECTION = kl::normalize( kl::Float3( -1.0f, -1.0f, 0.0f ) );
+    cb.SUN_DIRECTION = kl::normalize( float3( -1.0f, -1.0f, 0.0f ) );
 
     while ( window.process() )
     {
@@ -65,7 +65,7 @@ int examples::raytracing_main( int argc, char** argv )
             for ( auto& sphere : cb.SPHERES )
             {
                 sphere = Sphere{
-                    kl::random::gen_float3( 40.0f ) - kl::Float3( 20.0f, 20.0f, 20.0f ),
+                    kl::random::gen_float3( 40.0f ) - float3( 20.0f, 20.0f, 20.0f ),
                     kl::random::gen_float( 2.75f ) + 0.25f,
                     kl::random::gen_rgb(),
                 };
@@ -94,7 +94,7 @@ int examples::raytracing_main( int argc, char** argv )
         static bool camera_rotating = false;
         if ( window.mouse.right )
         {
-            kl::Int2 frame_center = window.frame_center();
+            int2 frame_center = window.frame_center();
 
             if ( camera_rotating )
                 camera.rotate( window.mouse.position(), frame_center );

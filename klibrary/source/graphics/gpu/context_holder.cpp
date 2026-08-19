@@ -1,7 +1,7 @@
 #include "klibrary.h"
 
 
-void kl::ContextHolder::set_viewport_position( Int2 position ) const
+void kl::ContextHolder::set_viewport_position( int2 position ) const
 {
     UINT number_of_vps = 1;
     D3D11_VIEWPORT viewport{};
@@ -11,7 +11,7 @@ void kl::ContextHolder::set_viewport_position( Int2 position ) const
     m_context->RSSetViewports( 1, &viewport );
 }
 
-kl::Int2 kl::ContextHolder::viewport_position() const
+kl::int2 kl::ContextHolder::viewport_position() const
 {
     UINT number_of_vps = 1;
     D3D11_VIEWPORT viewport{};
@@ -22,7 +22,7 @@ kl::Int2 kl::ContextHolder::viewport_position() const
     };
 }
 
-void kl::ContextHolder::set_viewport_size( Int2 size ) const
+void kl::ContextHolder::set_viewport_size( int2 size ) const
 {
     UINT number_of_vps = 1;
     D3D11_VIEWPORT viewport{};
@@ -32,7 +32,7 @@ void kl::ContextHolder::set_viewport_size( Int2 size ) const
     m_context->RSSetViewports( 1, &viewport );
 }
 
-kl::Int2 kl::ContextHolder::viewport_size() const
+kl::int2 kl::ContextHolder::viewport_size() const
 {
     UINT number_of_vps = 1;
     D3D11_VIEWPORT viewport{};
@@ -40,7 +40,7 @@ kl::Int2 kl::ContextHolder::viewport_size() const
     return { int( viewport.Width ), int( viewport.Height ) };
 }
 
-void kl::ContextHolder::set_viewport_min_max( Float2 min_max ) const
+void kl::ContextHolder::set_viewport_min_max( float2 min_max ) const
 {
     UINT number_of_vps = 1;
     D3D11_VIEWPORT viewport{};
@@ -50,7 +50,7 @@ void kl::ContextHolder::set_viewport_min_max( Float2 min_max ) const
     m_context->RSSetViewports( 1, &viewport );
 }
 
-kl::Float2 kl::ContextHolder::viewport_min_max() const
+kl::float2 kl::ContextHolder::viewport_min_max() const
 {
     UINT number_of_vps = 1;
     D3D11_VIEWPORT viewport{};
@@ -113,7 +113,7 @@ void kl::ContextHolder::copy_resource( dx::Resource const& destination, dx::Reso
     m_context->CopyResource( destination.get(), source.get() );
 }
 
-void kl::ContextHolder::copy_resource_region( dx::Resource const& destination, dx::Resource const& source, Int2 src_min, Int2 src_max, Int2 dst ) const
+void kl::ContextHolder::copy_resource_region( dx::Resource const& destination, dx::Resource const& source, int2 src_min, int2 src_max, int2 dst ) const
 {
     D3D11_BOX source_box{};
     source_box.left = src_min.x;
@@ -157,13 +157,13 @@ void kl::ContextHolder::write_to_buffer( dx::Buffer const& gpu_buffer, void cons
     m_context->Unmap( gpu_buffer.get(), 0 );
 }
 
-void kl::ContextHolder::read_from_texture( void* cpu_buffer, dx::Texture const& gpu_buffer, Int2 cpu_size, UINT element_size ) const
+void kl::ContextHolder::read_from_texture( void* cpu_buffer, dx::Texture const& gpu_buffer, int2 cpu_size, UINT element_size ) const
 {
     dx::MappedSubresourceDescriptor mapped_subresource{};
     m_context->Map( gpu_buffer.get(), 0, D3D11_MAP_READ, NULL, &mapped_subresource ) >> verify_result;
     BYTE* out_ptr = (BYTE*) cpu_buffer;
     BYTE const* in_ptr = (BYTE*) mapped_subresource.pData;
-    const Int2 min_size = min( texture_size( gpu_buffer ), cpu_size );
+    const int2 min_size = min( texture_size( gpu_buffer ), cpu_size );
     for ( int y = 0; y < min_size.y; y++ )
     {
         BYTE* out_addr = out_ptr + ( y * cpu_size.x * element_size );
@@ -173,13 +173,13 @@ void kl::ContextHolder::read_from_texture( void* cpu_buffer, dx::Texture const& 
     m_context->Unmap( gpu_buffer.get(), 0 );
 }
 
-void kl::ContextHolder::write_to_texture( dx::Texture const& gpu_buffer, void const* cpu_buffer, Int2 cpu_size, UINT element_size, bool discard ) const
+void kl::ContextHolder::write_to_texture( dx::Texture const& gpu_buffer, void const* cpu_buffer, int2 cpu_size, UINT element_size, bool discard ) const
 {
     dx::MappedSubresourceDescriptor mapped_subresource{};
     m_context->Map( gpu_buffer.get(), 0, discard ? D3D11_MAP_WRITE_DISCARD : D3D11_MAP_WRITE, NULL, &mapped_subresource ) >> verify_result;
     BYTE* out_ptr = (BYTE*) mapped_subresource.pData;
     BYTE const* in_ptr = (BYTE*) cpu_buffer;
-    const Int2 min_size = min( texture_size( gpu_buffer ), cpu_size );
+    const int2 min_size = min( texture_size( gpu_buffer ), cpu_size );
     for ( int y = 0; y < min_size.y; y++ )
     {
         BYTE* out_addr = out_ptr + ( y * mapped_subresource.RowPitch );
@@ -199,7 +199,7 @@ UINT kl::ContextHolder::buffer_size( dx::Buffer const& buffer ) const
     return descriptor.ByteWidth;
 }
 
-kl::Int2 kl::ContextHolder::texture_size( dx::Texture const& texture ) const
+kl::int2 kl::ContextHolder::texture_size( dx::Texture const& texture ) const
 {
     if ( !texture )
         return {};
@@ -312,7 +312,7 @@ void kl::ContextHolder::draw_indexed( dx::Buffer const& vertex_buffer, dx::Buffe
     draw_indexed( index_buffer_size( index_buffer ), 0, 0 );
 }
 
-void kl::ContextHolder::clear_target_view( dx::TargetView const& view, Float4 const& color ) const
+void kl::ContextHolder::clear_target_view( dx::TargetView const& view, float4 const& color ) const
 {
     m_context->ClearRenderTargetView( view.get(), &color.x );
 }

@@ -8,19 +8,19 @@ namespace kl
 {
 struct Entity
 {
-    Float3 scale{ 1.0f };
-    Float3 rotation;
-    Float3 position;
+    float3 scale{ 1.0f };
+    float3 rotation;
+    float3 position;
 
-    Float3 acceleration;
-    Float3 velocity;
-    Float3 angular;
+    float3 acceleration;
+    float3 velocity;
+    float3 angular;
 
     Ref<Mesh> mesh;
     Ref<Material> material;
 
     void update_physics( float delta_t );
 
-    Float4x4 matrix() const;
+    float4x4 matrix() const;
 };
 }

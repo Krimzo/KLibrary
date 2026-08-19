@@ -34,11 +34,11 @@ struct GPU : DeviceHolder, ContextHolder, ShaderCompiler, TextRaster
     bool fullscreened() const;
     void set_fullscreen( bool enabled ) const;
 
-    void clear_internal_color( Float4 const& color = {} ) const;
+    void clear_internal_color( float4 const& color = {} ) const;
     void clear_internal_depth( float depth = 1.0f, UINT8 stencil = 0xFF ) const;
-    void clear_internal( Float4 const& color = {}, float depth = 1.0f, UINT8 stencil = 0xFF ) const;
+    void clear_internal( float4 const& color = {}, float depth = 1.0f, UINT8 stencil = 0xFF ) const;
 
-    void resize_internal( Int2 size, DXGI_FORMAT depth_format = DXGI_FORMAT_D32_FLOAT );
+    void resize_internal( int2 size, DXGI_FORMAT depth_format = DXGI_FORMAT_D32_FLOAT );
     void resize_to_window( HWND window );
 
     void bind_internal_views() const;

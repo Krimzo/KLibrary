@@ -23,8 +23,8 @@ kl::Window::Window( std::string_view const& name )
 
     RECT size_buffer = { 0, 0, 1600, 900 };
     AdjustWindowRect( &size_buffer, WS_OVERLAPPEDWINDOW, false );
-    const Int2 new_size = { size_buffer.right - size_buffer.left, size_buffer.bottom - size_buffer.top };
-    const Int2 new_position = SCREEN_SIZE / 2 - new_size / 2;
+    const int2 new_size = { size_buffer.right - size_buffer.left, size_buffer.bottom - size_buffer.top };
+    const int2 new_position = SCREEN_SIZE / 2 - new_size / 2;
 
     m_window = CreateWindowExA( NULL, name.data(), name.data(), WS_OVERLAPPEDWINDOW, new_position.x, new_position.y, new_size.x, new_size.y, nullptr, nullptr, m_instance, nullptr );
     assert( m_window && "Failed to create window" );
@@ -169,14 +169,14 @@ bool kl::Window::restored() const
     return placement.showCmd == SW_RESTORE;
 }
 
-kl::Int2 kl::Window::position() const
+kl::int2 kl::Window::position() const
 {
     RECT rect{};
     GetWindowRect( m_window, &rect );
     return { rect.left, rect.top };
 }
 
-void kl::Window::set_position( Int2 position ) const
+void kl::Window::set_position( int2 position ) const
 {
     if ( fullscreened() )
         return;
@@ -204,18 +204,18 @@ void kl::Window::set_height( int height ) const
     resize( { width(), height } );
 }
 
-kl::Int2 kl::Window::size() const
+kl::int2 kl::Window::size() const
 {
     RECT rect{};
     GetClientRect( m_window, &rect );
     return { rect.right - rect.left, rect.bottom - rect.top };
 }
 
-void kl::Window::resize( Int2 size ) const
+void kl::Window::resize( int2 size ) const
 {
     if ( fullscreened() )
         return;
-    const Int2 pos = position();
+    const int2 pos = position();
     RECT rect{ pos.x, pos.y, pos.x + size.x, pos.y + size.y };
     AdjustWindowRect( &rect, style(), false );
     SetWindowPos( m_window, nullptr, 0, 0,
@@ -224,11 +224,11 @@ void kl::Window::resize( Int2 size ) const
 
 float kl::Window::aspect_ratio() const
 {
-    Int2 win_size = size();
+    int2 win_size = size();
     return (float) win_size.x / (float) win_size.y;
 }
 
-kl::Int2 kl::Window::frame_center() const
+kl::int2 kl::Window::frame_center() const
 {
     return size() / 2;
 }
@@ -264,7 +264,7 @@ bool kl::Window::set_icon( std::string_view const& filepath ) const
     return true;
 }
 
-void kl::Window::draw_pixel_data( RGB const* data, Int2 size, Int2 position ) const
+void kl::Window::draw_pixel_data( RGB const* data, int2 size, int2 position ) const
 {
     BITMAPINFO bitmap_info{};
     bitmap_info.bmiHeader.biSize = sizeof( BITMAPINFOHEADER );
@@ -281,7 +281,7 @@ void kl::Window::draw_pixel_data( RGB const* data, Int2 size, Int2 position ) co
         data, &bitmap_info, DIB_RGB_COLORS, SRCCOPY );
 }
 
-void kl::Window::draw_image( Image const& image, Int2 position ) const
+void kl::Window::draw_image( Image const& image, int2 position ) const
 {
     draw_pixel_data( image.ptr(), image.size(), position );
 }
@@ -310,7 +310,7 @@ LRESULT CALLBACK kl::Window::window_procedure( HWND window_handle, UINT message,
     {
     case WM_SIZE:
     {
-        const Int2 size = { LOWORD( l_param ), HIWORD( l_param ) };
+        const int2 size = { LOWORD( l_param ), HIWORD( l_param ) };
         if ( size.x > 0 && size.y > 0 )
         {
             for ( auto& callback : on_resize )
@@ -321,7 +321,7 @@ LRESULT CALLBACK kl::Window::window_procedure( HWND window_handle, UINT message,
 
     case WM_MOVE:
     {
-        const Int2 position = { LOWORD( l_param ), HIWORD( l_param ) };
+        const int2 position = { LOWORD( l_param ), HIWORD( l_param ) };
         for ( auto& callback : on_move )
             callback( position );
     }

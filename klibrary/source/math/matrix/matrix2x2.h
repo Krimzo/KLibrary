@@ -14,8 +14,7 @@ struct Matrix2x2
     };
 
     constexpr Matrix2x2()
-    {
-    }
+    {}
 
     constexpr T& operator[]( int index )
     {
@@ -174,10 +173,10 @@ struct Matrix2x2
 
 namespace kl
 {
-using Int2x2 = Matrix2x2<int32_t>;
-using UInt2x2 = Matrix2x2<uint32_t>;
-using Float2x2 = Matrix2x2<float>;
-using Double2x2 = Matrix2x2<double>;
+using int2x2 = Matrix2x2<int32_t>;
+using uint2x2 = Matrix2x2<uint32_t>;
+using float2x2 = Matrix2x2<float>;
+using double2x2 = Matrix2x2<double>;
 }
 
 namespace kl

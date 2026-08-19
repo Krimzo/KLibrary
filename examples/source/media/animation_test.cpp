@@ -41,7 +41,7 @@ struct State
     static inline const kl::RGB SECOND_COLOR = { 133, 251, 43 };
     static inline const kl::RGB THIRD_COLOR = { 43, 142, 251 };
 
-    State( const kl::Int2 frame_size )
+    State( const int2 frame_size )
     {
         // create 1
         parts.emplace_back( 3.0f, [this]( float time_perc )
@@ -111,9 +111,9 @@ struct State
                 triangle.c.position.xy() = kl::rotate( triangle.c.position.xy() - triangle.a.position.xy(), -kl::lerp( time_perc, 0.0f, 90.0f ) ) + triangle.a.position.xy();
                 triangle.b.position.xy() = kl::rotate( triangle.b.position.xy() - triangle.a.position.xy(), -kl::lerp( time_perc, 0.0f, 90.0f ) ) + triangle.a.position.xy();
 
-                triangle.a.position.xy() += kl::Float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
-                triangle.b.position.xy() += kl::Float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
-                triangle.c.position.xy() += kl::Float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
+                triangle.a.position.xy() += float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
+                triangle.b.position.xy() += float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
+                triangle.c.position.xy() += float2{ -kl::lerp( time_perc, 0.0f, ab ), kl::lerp( time_perc, 0.0f, a * a ) };
 
                 gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
@@ -156,7 +156,7 @@ struct State
                 triangle.c = kl::Vertex{ { triangle.a.x - b, triangle.a.y, 0.0f }, THIRD_COLOR, {} };
                 triangle.b = kl::Vertex{ { triangle.c.x, triangle.c.y + a, 0.0f }, THIRD_COLOR, {} };
 
-                const kl::Float2 reflect_c = triangle.a.position.xy() + kl::reflect( triangle.a.position.xy() - triangle.c.position.xy(), triangle.b.position.xy() - triangle.a.position.xy() );
+                const float2 reflect_c = triangle.a.position.xy() + kl::reflect( triangle.a.position.xy() - triangle.c.position.xy(), triangle.b.position.xy() - triangle.a.position.xy() );
                 triangle.c.position.xy() = kl::lerp( time_perc, triangle.c.position.xy(), reflect_c );
 
                 gpu.text_batch = {
@@ -181,7 +181,7 @@ struct State
                 triangle.c = kl::Vertex{ { triangle.a.x - b, triangle.a.y, 0.0f }, THIRD_COLOR, {} };
                 triangle.b = kl::Vertex{ { triangle.c.x, triangle.c.y + a, 0.0f }, THIRD_COLOR, {} };
 
-                const kl::Float2 reflect_c = triangle.a.position.xy() + kl::reflect( triangle.a.position.xy() - triangle.c.position.xy(), triangle.b.position.xy() - triangle.a.position.xy() );
+                const float2 reflect_c = triangle.a.position.xy() + kl::reflect( triangle.a.position.xy() - triangle.c.position.xy(), triangle.b.position.xy() - triangle.a.position.xy() );
                 triangle.c.position.xy() = reflect_c;
 
                 triangle.c.position.xy() = triangle.a.position.xy() + ( ( triangle.c.position.xy() - triangle.a.position.xy() ) * kl::lerp( time_perc, 1.0f, c ) );
@@ -194,7 +194,7 @@ struct State
                 triangle.b.y += kl::lerp( time_perc, 0.0f, c * c );
                 triangle.c.y += kl::lerp( time_perc, 0.0f, c * c );
 
-                const kl::Float2 last_tr_bias = { 0.0f, 25.0f };
+                const float2 last_tr_bias = { 0.0f, 25.0f };
                 gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
@@ -212,7 +212,7 @@ struct State
         // proof
         parts.emplace_back( 5.0f, [this]( float time_perc )
             {
-                const kl::Float2 last_tr_bias = { 0.0f, 25.0f };
+                const float2 last_tr_bias = { 0.0f, 25.0f };
                 gpu.text_batch = {
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].b.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"aa" },
                     kl::Text{ labels_text_format, FIRST_COLOR, scale_ndc( ( triangles[0].a.position.xy() + triangles[0].c.position.xy() ) * 0.5f ), {}, L"ba" },
@@ -227,7 +227,7 @@ struct State
                 };
             } );
 
-        window.on_resize.emplace_back( [&]( kl::Int2 size )
+        window.on_resize.emplace_back( [&]( int2 size )
             {
                 gpu.resize_internal( size );
                 gpu.set_viewport_size( size );
@@ -272,7 +272,7 @@ struct State
 
         struct alignas( 16 ) CB
         {
-            kl::Float2 SCREEN_SIZE;
+            float2 SCREEN_SIZE;
         } cb = {};
 
         cb.SCREEN_SIZE = window.size();
@@ -332,7 +332,7 @@ private:
         writer.add_frame( frame );
     }
 
-    kl::Float2 scale_ndc( kl::Float2 pos ) const
+    float2 scale_ndc( float2 pos ) const
     {
         return pos / ( window.size() / 2 );
     }

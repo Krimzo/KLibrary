@@ -15,8 +15,7 @@ struct Matrix3x3
     };
 
     constexpr Matrix3x3()
-    {
-    }
+    {}
 
     constexpr T& operator[]( int index )
     {
@@ -187,10 +186,10 @@ struct Matrix3x3
 
 namespace kl
 {
-using Int3x3 = Matrix3x3<int32_t>;
-using UInt3x3 = Matrix3x3<uint32_t>;
-using Float3x3 = Matrix3x3<float>;
-using Double3x3 = Matrix3x3<double>;
+using int3x3 = Matrix3x3<int32_t>;
+using uint3x3 = Matrix3x3<uint32_t>;
+using float3x3 = Matrix3x3<float>;
+using double3x3 = Matrix3x3<double>;
 }
 
 namespace kl

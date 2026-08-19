@@ -21,11 +21,11 @@ struct Mouse
         };
     };
 
-    void set_position( Int2 position );
-    Int2 position() const;
+    void set_position( int2 position );
+    int2 position() const;
 
-    Float2 ndc_pos() const;
-    Float2 ndc_pos_ar() const;
+    float2 ndc_pos() const;
+    float2 ndc_pos_ar() const;
 
     int scroll() const;
 
@@ -37,12 +37,12 @@ struct Mouse
 
     void _set_window( HWND window );
     void _update_scroll( int scroll );
-    void _update_position( Int2 position );
+    void _update_position( int2 position );
 
 private:
     bool m_hidden = false;
     int16_t m_scroll = 0;
-    Int2 m_position = {};
+    int2 m_position = {};
     HWND m_window = nullptr;
 };
 }

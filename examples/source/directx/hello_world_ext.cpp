@@ -33,7 +33,7 @@ int examples::hello_world_ext_main( int argc, char** argv )
     kl::Window window{ "Hello World! (D3D11 Extended)" };
     kl::GPU gpu{ window.ptr() };
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             gpu.resize_internal( size );
             gpu.set_viewport_size( size );
@@ -45,7 +45,7 @@ int examples::hello_world_ext_main( int argc, char** argv )
         { { 0.5f, -0.5f, 0.5f }, kl::colors::BLUE, {} },
         { { 0.5f, 0.5f, 0.5f }, kl::colors::WHITE, {} },
     };
-    std::vector<uint32_t> indices = {
+    std::vector<uint> indices = {
         0, 1, 3,
         0, 2, 3,
     };
@@ -60,8 +60,8 @@ int examples::hello_world_ext_main( int argc, char** argv )
     {
         struct alignas( 16 ) CB
         {
-            kl::Float4 HIGHLIGHT_COLOR;
-            kl::Float2 MOUSE_POSITION;
+            float4 HIGHLIGHT_COLOR;
+            float2 MOUSE_POSITION;
         } cb = {};
 
         cb.HIGHLIGHT_COLOR = kl::colors::GRAY;

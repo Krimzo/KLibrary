@@ -9,7 +9,7 @@
 
 namespace kl
 {
-inline const Int2 SCREEN_SIZE = {
+inline const int2 SCREEN_SIZE = {
     GetSystemMetrics( SM_CXSCREEN ),
     GetSystemMetrics( SM_CYSCREEN ),
 };
@@ -22,8 +22,8 @@ struct Window : NoCopy
     Keyboard keyboard;
     Mouse mouse;
 
-    std::vector<std::function<void( Int2 )>> on_resize;
-    std::vector<std::function<void( Int2 )>> on_move;
+    std::vector<std::function<void( int2 )>> on_resize;
+    std::vector<std::function<void( int2 )>> on_move;
 
     Window( std::string_view const& name );
     ~Window();
@@ -54,8 +54,8 @@ struct Window : NoCopy
     bool minimized() const;
     bool restored() const;
 
-    Int2 position() const;
-    void set_position( Int2 position ) const;
+    int2 position() const;
+    void set_position( int2 position ) const;
 
     int width() const;
     void set_width( int width ) const;
@@ -63,11 +63,11 @@ struct Window : NoCopy
     int height() const;
     void set_height( int height ) const;
 
-    Int2 size() const;
-    void resize( Int2 size ) const;
+    int2 size() const;
+    void resize( int2 size ) const;
 
     float aspect_ratio() const;
-    Int2 frame_center() const;
+    int2 frame_center() const;
 
     float dpi() const;
     float pixels_to_dips( float value ) const;
@@ -76,8 +76,8 @@ struct Window : NoCopy
     void set_title( std::string_view const& data ) const;
     bool set_icon( std::string_view const& filepath ) const;
 
-    void draw_pixel_data( RGB const* data, Int2 size, Int2 position = {} ) const;
-    void draw_image( Image const& image, Int2 position = {} ) const;
+    void draw_pixel_data( RGB const* data, int2 size, int2 position = {} ) const;
+    void draw_image( Image const& image, int2 position = {} ) const;
 
     void set_dark_mode( bool enabled ) const;
     void notify() const;

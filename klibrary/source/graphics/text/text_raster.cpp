@@ -30,7 +30,7 @@ kl::TextFormat kl::TextRaster::create_text_format(
 void kl::TextRaster::draw_text_batch( UINT target_index ) const
 {
     auto const& target = m_d2d1_targets[target_index];
-    const Float2 target_size = (Float2 const&) target->GetSize();
+    const float2 target_size = (float2 const&) target->GetSize();
     ComRef<ID2D1SolidColorBrush> brush;
     D2D1_RECT_F layout_rect{};
 
@@ -40,8 +40,8 @@ void kl::TextRaster::draw_text_batch( UINT target_index ) const
         if ( !text.format )
             continue;
 
-        const Float2 top_left_screen = from_ndc( text.box_top_left, target_size );
-        const Float2 bottom_right_screen = from_ndc( text.box_bottom_right, target_size );
+        const float2 top_left_screen = from_ndc( text.box_top_left, target_size );
+        const float2 bottom_right_screen = from_ndc( text.box_bottom_right, target_size );
 
         layout_rect.left = top_left_screen.x;
         layout_rect.top = top_left_screen.y;
@@ -76,10 +76,10 @@ void kl::TextRaster::draw_text_direct( UINT target_index, Text const& text ) con
         return;
 
     auto const& target = m_d2d1_targets[target_index];
-    const Float2 target_size = (Float2 const&) target->GetSize();
+    const float2 target_size = (float2 const&) target->GetSize();
 
-    const Float2 top_left_screen = from_ndc( text.box_top_left, target_size );
-    const Float2 bottom_right_screen = from_ndc( text.box_bottom_right, target_size );
+    const float2 top_left_screen = from_ndc( text.box_top_left, target_size );
+    const float2 bottom_right_screen = from_ndc( text.box_bottom_right, target_size );
 
     const D2D1_RECT_F layout_rect{
         .left = top_left_screen.x,

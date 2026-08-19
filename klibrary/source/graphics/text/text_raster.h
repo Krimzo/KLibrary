@@ -16,9 +16,9 @@ using VAlign = DWRITE_PARAGRAPH_ALIGNMENT;
 struct Text
 {
     TextFormat format;
-    kl::Float4 color{ 1.0f };
-    kl::Float2 box_top_left;
-    kl::Float2 box_bottom_right;
+    kl::float4 color{ 1.0f };
+    kl::float2 box_top_left;
+    kl::float2 box_bottom_right;
     std::wstring data;
     HAlign h_align = DWRITE_TEXT_ALIGNMENT_LEADING;
     VAlign v_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR;

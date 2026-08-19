@@ -11,7 +11,7 @@ const int kl::VideoInit::_init = []() -> int
         return {};
     }( );
 
-static void configure_reader( ComRef<IMFSourceReader> const& reader, kl::Int2 size )
+static void configure_reader( ComRef<IMFSourceReader> const& reader, kl::int2 size )
 {
     ComRef<IMFMediaType> media_type;
     reader->GetNativeMediaType( MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &media_type ) >> kl::verify_result;
@@ -54,14 +54,14 @@ static int64_t video_duration_100ns( ComRef<IMFSourceReader> const& reader )
     return duration;
 }
 
-static kl::Int2 video_frame_size( ComRef<IMFSourceReader> const& reader )
+static kl::int2 video_frame_size( ComRef<IMFSourceReader> const& reader )
 {
     ComRef<IMFMediaType> current_type;
     reader->GetCurrentMediaType( MF_SOURCE_READER_FIRST_VIDEO_STREAM, &current_type );
     if ( !current_type )
         return {};
 
-    kl::Int2 frame_size;
+    kl::int2 frame_size;
     MFGetAttributeSize( current_type.get(), MF_MT_FRAME_SIZE, (UINT32*) &frame_size.x, (UINT32*) &frame_size.y );
     return frame_size;
 }
@@ -79,11 +79,11 @@ static float video_fps( ComRef<IMFSourceReader> const& reader )
     return (float) attribute1 / (float) attribute2;
 }
 
-kl::VideoReader::VideoReader( std::string_view const& filepath, Int2 output_size, bool use_gpu )
+kl::VideoReader::VideoReader( std::string_view const& filepath, int2 output_size, bool use_gpu )
     : VideoReader( convert_string( filepath ), output_size, use_gpu )
 {}
 
-kl::VideoReader::VideoReader( std::wstring_view const& filepath, Int2 output_size, bool use_gpu )
+kl::VideoReader::VideoReader( std::wstring_view const& filepath, int2 output_size, bool use_gpu )
 {
     ComRef<IMFAttributes> attributes;
     MFCreateAttributes( &attributes, 0 ) >> verify_result;
@@ -133,7 +133,7 @@ float kl::VideoReader::duration_seconds() const
     return float( m_duration / 1e7 );
 }
 
-kl::Int2 kl::VideoReader::frame_size() const
+kl::int2 kl::VideoReader::frame_size() const
 {
     return m_frame_size;
 }

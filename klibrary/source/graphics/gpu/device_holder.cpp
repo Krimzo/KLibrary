@@ -217,10 +217,10 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_plane_mesh( float size, int
     {
         for ( int z = 0; z < complexity - 1; z++ )
         {
-            Float3 lb = { x * incr, 0.0f, z * incr };
-            Float3 lt = lb + Float3{ 0.0f, 0.0f, incr };
-            Float3 rb = lb + Float3{ incr, 0.0f, 0.0f };
-            Float3 rt = lb + Float3{ incr, 0.0f, incr };
+            float3 lb = { x * incr, 0.0f, z * incr };
+            float3 lt = lb + float3{ 0.0f, 0.0f, incr };
+            float3 rb = lb + float3{ incr, 0.0f, 0.0f };
+            float3 rt = lb + float3{ incr, 0.0f, incr };
             triangles.emplace_back(
                 Vertex{ lb, { 0.0f, 1.0f, 0.0f }, { float( x + 0 ) / ( complexity - 1 ), 1.0f - float( z + 0 ) / ( complexity - 1 ) } },
                 Vertex{ lt, { 0.0f, 1.0f, 0.0f }, { float( x + 0 ) / ( complexity - 1 ), 1.0f - float( z + 1 ) / ( complexity - 1 ) } },
@@ -250,7 +250,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh( float size )
         { { -0.5f, -0.5f, 0.5f }, { 0.0f, -1.0f, 0.0f }, { 0.0f, 1.0f } },
     },
     };
-    static constexpr auto mul_vr = []( Vertex const& vertex, Float3 const& other ) -> Vertex
+    static constexpr auto mul_vr = []( Vertex const& vertex, float3 const& other ) -> Vertex
         {
             Vertex result;
             result.position = vertex.position * other;
@@ -258,7 +258,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh( float size )
             result.uv = vertex.uv;
             return result;
         };
-    static constexpr auto rotate_vr = []( Vertex const& vertex, Float3 const& axis, float angle ) -> Vertex
+    static constexpr auto rotate_vr = []( Vertex const& vertex, float3 const& axis, float angle ) -> Vertex
         {
             Vertex result;
             result.position = rotate( vertex.position, axis, angle );
@@ -266,7 +266,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh( float size )
             result.uv = vertex.uv;
             return result;
         };
-    static constexpr auto mul_tr = []( Triangle const& triangle, Float3 const& other ) -> Triangle
+    static constexpr auto mul_tr = []( Triangle const& triangle, float3 const& other ) -> Triangle
         {
             Triangle result;
             result.a = mul_vr( triangle.a, other );
@@ -274,7 +274,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh( float size )
             result.c = mul_vr( triangle.c, other );
             return result;
         };
-    static constexpr auto rotate_tr = []( Triangle const& triangle, Float3 const& axis, float angle ) -> Triangle
+    static constexpr auto rotate_tr = []( Triangle const& triangle, float3 const& axis, float angle ) -> Triangle
         {
             Triangle result;
             result.a = rotate_vr( triangle.a, axis, angle );
@@ -286,7 +286,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh( float size )
     std::vector<Triangle> triangles;
     for ( Triangle const& triangle : face )
     {
-        triangles.push_back( mul_tr( triangle, Float3{ size } ) );
+        triangles.push_back( mul_tr( triangle, float3{ size } ) );
         triangles.push_back( rotate_tr( triangles.back(), { 1.0f, 0.0f, 0.0f }, 90.0f ) );
         triangles.push_back( rotate_tr( triangles.back(), { 0.0f, 1.0f, 0.0f }, 90.0f ) );
         triangles.push_back( rotate_tr( triangles.back(), { 0.0f, 1.0f, 0.0f }, 90.0f ) );
@@ -300,9 +300,9 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
 {
     const auto update_normal = [&]( Triangle& triangle ) -> Triangle&
         {
-            const Float3 a_norm = normalize( triangle.a.position );
-            const Float3 b_norm = normalize( triangle.b.position );
-            const Float3 c_norm = normalize( triangle.c.position );
+            const float3 a_norm = normalize( triangle.a.position );
+            const float3 b_norm = normalize( triangle.b.position );
+            const float3 c_norm = normalize( triangle.c.position );
             if ( smooth )
             {
                 triangle.a.normal = a_norm;
@@ -311,7 +311,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
             }
             else
             {
-                Float3 normal = triangle.normal();
+                float3 normal = triangle.normal();
                 triangle.a.normal = normal;
                 triangle.b.normal = normal;
                 triangle.c.normal = normal;
@@ -319,15 +319,15 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_sphere_mesh( float radius, 
             return triangle;
         };
     std::vector<Triangle> triangles;
-    const Float3 up = { 0.0f, radius, 0.0f };
+    const float3 up = { 0.0f, radius, 0.0f };
     for ( int x = 0; x < v_slices; x++ )
     {
         for ( int y = 0; y < h_slices; y++ )
         {
-            const Float3 tl = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 0 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 0 ) );
-            const Float3 tr = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 0 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 1 ) );
-            const Float3 bl = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 1 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 0 ) );
-            const Float3 br = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 1 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 1 ) );
+            const float3 tl = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 0 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 0 ) );
+            const float3 tr = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 0 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 1 ) );
+            const float3 bl = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 1 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 0 ) );
+            const float3 br = rotate( rotate( up, { 1.0f, 0.0f, 0.0f }, -180.0f / h_slices * ( y + 1 ) ), { 0.0f, 1.0f, 0.0f }, -360.0f / v_slices * ( x + 1 ) );
             if ( y > 0 )
             {
                 auto& triangle = update_normal( triangles.emplace_back( tl, tr, bl ) );
@@ -353,7 +353,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_capsule_mesh( float radius,
         {
             std::vector<Triangle> triangles;
             float half_height = height * 0.5f;
-            Float3 top_center = Float3{ 0.0f, half_height, 0.0f };
+            float3 top_center = float3{ 0.0f, half_height, 0.0f };
             for ( int i = 0; i < sectors; i++ )
             {
                 float first_phi = ( float( i ) / sectors ) * 2.0f * pi();
@@ -362,10 +362,10 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_capsule_mesh( float radius,
                 float second_phi = ( float( i + 1 ) / sectors ) * 2.0f * pi();
                 float second_x = cos( second_phi ) * radius;
                 float second_z = sin( second_phi ) * radius;
-                Float3 first = Float3{ first_x, half_height, first_z };
-                Float3 second = Float3{ second_x, half_height, second_z };
-                Float3 first_dir = Float3{ 0.0f, half_height + radius, 0.0f } - first;
-                Float3 second_dir = Float3{ 0.0f, half_height + radius, 0.0f } - second;
+                float3 first = float3{ first_x, half_height, first_z };
+                float3 second = float3{ second_x, half_height, second_z };
+                float3 first_dir = float3{ 0.0f, half_height + radius, 0.0f } - first;
+                float3 second_dir = float3{ 0.0f, half_height + radius, 0.0f } - second;
                 float first_len = first_dir.length();
                 float second_len = second_dir.length();
                 first_dir /= first_len;
@@ -374,10 +374,10 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_capsule_mesh( float radius,
                 second_len /= rings;
                 for ( int j = 0; j < rings; j++ )
                 {
-                    Float3 left_first = normalize( first + first_dir * first_len * float( j ) - top_center ) * radius + top_center;
-                    Float3 left_second = normalize( first + first_dir * first_len * float( j + 1 ) - top_center ) * radius + top_center;
-                    Float3 right_first = normalize( second + second_dir * second_len * float( j ) - top_center ) * radius + top_center;
-                    Float3 right_second = normalize( second + second_dir * second_len * float( j + 1 ) - top_center ) * radius + top_center;
+                    float3 left_first = normalize( first + first_dir * first_len * float( j ) - top_center ) * radius + top_center;
+                    float3 left_second = normalize( first + first_dir * first_len * float( j + 1 ) - top_center ) * radius + top_center;
+                    float3 right_first = normalize( second + second_dir * second_len * float( j ) - top_center ) * radius + top_center;
+                    float3 right_second = normalize( second + second_dir * second_len * float( j + 1 ) - top_center ) * radius + top_center;
                     triangles.emplace_back( left_first, left_second, right_second );
                     triangles.emplace_back( left_first, right_second, right_first );
                 }
@@ -397,14 +397,14 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_capsule_mesh( float radius,
                 float second_x = cos( second_phi ) * radius;
                 float second_z = sin( second_phi ) * radius;
                 triangles.emplace_back(
-                    Float3{ first_x, -half_height, first_z },
-                    Float3{ first_x, half_height, first_z },
-                    Float3{ second_x, half_height, second_z }
+                    float3{ first_x, -half_height, first_z },
+                    float3{ first_x, half_height, first_z },
+                    float3{ second_x, half_height, second_z }
                 );
                 triangles.emplace_back(
-                    Float3{ first_x, -half_height, first_z },
-                    Float3{ second_x, half_height, second_z },
-                    Float3{ second_x, -half_height, second_z }
+                    float3{ first_x, -half_height, first_z },
+                    float3{ second_x, half_height, second_z },
+                    float3{ second_x, -half_height, second_z }
                 );
             }
             return triangles;
@@ -437,7 +437,7 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_capsule_mesh( float radius,
             std::swap( triangle.a.x, triangle.a.y );
             std::swap( triangle.b.x, triangle.b.y );
             std::swap( triangle.c.x, triangle.c.y );
-            Float3 normal = triangle.normal();
+            float3 normal = triangle.normal();
             triangle.a.normal = normal;
             triangle.b.normal = normal;
             triangle.c.normal = normal;
@@ -527,7 +527,7 @@ kl::dx::Texture kl::DeviceHolder::create_cube_texture( Image const& right, Image
     return create_texture( &descriptor, data );
 }
 
-kl::dx::Texture kl::DeviceHolder::create_staging_texture( dx::Texture const& texture, Int2 size ) const
+kl::dx::Texture kl::DeviceHolder::create_staging_texture( dx::Texture const& texture, int2 size ) const
 {
     dx::TextureDescriptor descriptor{};
     texture->GetDesc( &descriptor );
@@ -543,7 +543,7 @@ kl::dx::Texture kl::DeviceHolder::create_staging_texture( dx::Texture const& tex
     return create_texture( &staging_descriptor, nullptr );
 }
 
-kl::dx::Texture kl::DeviceHolder::create_target_texture( Int2 size ) const
+kl::dx::Texture kl::DeviceHolder::create_target_texture( int2 size ) const
 {
     dx::TextureDescriptor descriptor{};
     descriptor.Usage = D3D11_USAGE_DEFAULT;

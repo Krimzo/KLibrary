@@ -17,7 +17,7 @@ int examples::times_table_main( int argc, char** argv )
     window.resize( { 900, 900 } );
     frame.resize( window.size() );
 
-    window.on_resize.push_back( [&]( kl::Int2 size )
+    window.on_resize.push_back( [&]( int2 size )
         {
             frame.resize( size );
         } );
@@ -38,7 +38,7 @@ int examples::times_table_main( int argc, char** argv )
         frame.draw_circle( frame.size() / 2, circle_radius, circle_color );
 
         static constexpr float point_angle = 360.0f / n;
-        std::vector<kl::Int2> circle_points( n );
+        std::vector<int2> circle_points( n );
         for ( int i = 0; i < int( circle_points.size() ); i++ )
         {
             circle_points[i] = {

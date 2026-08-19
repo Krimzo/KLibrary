@@ -689,3 +689,47 @@ constexpr Vector3<T> to_euler( Vector3<T> const& original, Vector3<T> const& tar
     return to_euler( to_quat( original, target ) );
 }
 }
+
+#ifndef KL_NOT_USING_VECTORS
+using int1 = int32_t;
+using kl::int2;
+using kl::int3;
+using kl::int4;
+using int1x1 = int1;
+using kl::int2x2;
+using kl::int3x3;
+using kl::int4x4;
+
+using uint = uint32_t;
+using uint1 = uint;
+using kl::uint2;
+using kl::uint3;
+using kl::uint4;
+using uint1x1 = uint1;
+using kl::uint2x2;
+using kl::uint3x3;
+using kl::uint4x4;
+
+using float1 = float;
+using kl::float2;
+using kl::float3;
+using kl::float4;
+using float1x1 = float1;
+using kl::float2x2;
+using kl::float3x3;
+using kl::float4x4;
+
+using double1 = double;
+using kl::double2;
+using kl::double3;
+using kl::double4;
+using double1x1 = double1;
+using kl::double2x2;
+using kl::double3x3;
+using kl::double4x4;
+
+using kl::cmplx;
+using kl::cmplxd;
+using kl::quat;
+using kl::quatd;
+#endif

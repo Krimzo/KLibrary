@@ -1,7 +1,7 @@
 #include "klibrary.h"
 
 
-void kl::Mouse::set_position( Int2 position )
+void kl::Mouse::set_position( int2 position )
 {
     m_position = position;
     POINT screen_position{ position.x, position.y };
@@ -9,27 +9,27 @@ void kl::Mouse::set_position( Int2 position )
     SetCursorPos( screen_position.x, screen_position.y );
 }
 
-kl::Int2 kl::Mouse::position() const
+kl::int2 kl::Mouse::position() const
 {
     return m_position;
 }
 
-kl::Float2 kl::Mouse::ndc_pos() const
+kl::float2 kl::Mouse::ndc_pos() const
 {
     RECT client_area{};
     GetClientRect( m_window, &client_area );
-    const Int2 frame_size{
+    const int2 frame_size{
         client_area.right - client_area.left,
         client_area.bottom - client_area.top,
     };
     return to_ndc<float>( m_position, frame_size );
 }
 
-kl::Float2 kl::Mouse::ndc_pos_ar() const
+kl::float2 kl::Mouse::ndc_pos_ar() const
 {
     RECT client_area{};
     GetClientRect( m_window, &client_area );
-    const Int2 frame_size{
+    const int2 frame_size{
         client_area.right - client_area.left,
         client_area.bottom - client_area.top,
     };
@@ -81,7 +81,7 @@ void kl::Mouse::_update_scroll( int scroll )
     m_scroll = (int16_t) scroll;
 }
 
-void kl::Mouse::_update_position( Int2 position )
+void kl::Mouse::_update_position( int2 position )
 {
     m_position = position;
 }

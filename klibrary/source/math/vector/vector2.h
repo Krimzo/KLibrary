@@ -19,18 +19,15 @@ struct Vector2
     T y = {};
 
     constexpr Vector2()
-    {
-    }
+    {}
 
     explicit constexpr Vector2( T value )
         : x( value ), y( value )
-    {
-    }
+    {}
 
     constexpr Vector2( T x, T y )
         : x( x ), y( y )
-    {
-    }
+    {}
 
     constexpr T& operator[]( int index )
     {
@@ -164,10 +161,10 @@ struct Vector2
 
 namespace kl
 {
-using Int2 = Vector2<int32_t>;
-using UInt2 = Vector2<uint32_t>;
-using Float2 = Vector2<float>;
-using Double2 = Vector2<double>;
+using int2 = Vector2<int32_t>;
+using uint2 = Vector2<uint32_t>;
+using float2 = Vector2<float>;
+using double2 = Vector2<double>;
 }
 
 namespace kl

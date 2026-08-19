@@ -20,7 +20,7 @@ int examples::video_reading_main( int argc, char** argv )
     kl::print<false>( "Resize the console and press enter.." );
     std::cin.get();
 
-    kl::Int2 console_size = kl::console::size() - kl::Int2( 0, 1 );
+    int2 console_size = kl::console::size() - int2( 0, 1 );
     kl::console::set_cursor_enabled( false );
 
     int frame_count = video_reader.frame_count();

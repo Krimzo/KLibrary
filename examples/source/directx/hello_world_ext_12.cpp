@@ -12,7 +12,7 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
     dx12::DescriptorHeap uav_heap{};
     dx12::Resource ray_target{};
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             ray_target = {};
             uav_heap = {};
@@ -71,7 +71,7 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
         .AccelerationStructure = quad_blas->GetGPUVirtualAddress(),
     };
 
-    kl::Float4x4 default_mat{};
+    float4x4 default_mat{};
     kl::copy<float>( &instance_data[0].Transform, &default_mat, 12 );
     kl::copy<float>( &instance_data[1].Transform, &default_mat, 12 );
     kl::copy<float>( &instance_data[2].Transform, &default_mat, 12 );
@@ -121,14 +121,14 @@ int examples::hello_world_ext_12_main( int argc, char** argv )
             window.close();
 
         float elapsed_t = timer.elapsed();
-        kl::Float4x4 cube = kl::Float4x4::translation( { -1.5f, 2.0f, 2.0f } );
-        cube *= kl::Float4x4::rotation( kl::Float3( elapsed_t / 2.0f, elapsed_t / 3.0f, elapsed_t / 5.0f ) * kl::to_degrees() );
+        float4x4 cube = float4x4::translation( { -1.5f, 2.0f, 2.0f } );
+        cube *= float4x4::rotation( float3( elapsed_t / 2.0f, elapsed_t / 3.0f, elapsed_t / 5.0f ) * kl::to_degrees() );
         kl::copy<float>( &instance_data[0].Transform, &cube, 12 );
-        kl::Float4x4 mirror = kl::Float4x4::translation( { 2.0f, 2.0f, 2.0f } );
-        mirror *= kl::Float4x4::rotation( kl::Float3( -1.8f, std::sin( elapsed_t ) / 8.0f + 1.0f, 0.0f ) * kl::to_degrees() );
+        float4x4 mirror = float4x4::translation( { 2.0f, 2.0f, 2.0f } );
+        mirror *= float4x4::rotation( float3( -1.8f, std::sin( elapsed_t ) / 8.0f + 1.0f, 0.0f ) * kl::to_degrees() );
         kl::copy<float>( &instance_data[1].Transform, &mirror, 12 );
-        kl::Float4x4 floor = kl::Float4x4::translation( { 0.0f, 0.0f, 2.0f } );
-        floor *= kl::Float4x4::scaling( { 5.0f, 5.0f, 5.0f } );
+        float4x4 floor = float4x4::translation( { 0.0f, 0.0f, 2.0f } );
+        floor *= float4x4::scaling( { 5.0f, 5.0f, 5.0f } );
         kl::copy<float>( &instance_data[2].Transform, &floor, 12 );
         gpu.copy( instances, instance_data, sizeof( instance_data ) );
 

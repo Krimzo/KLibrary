@@ -7,7 +7,7 @@ int examples::encryption_main( int argc, char** argv )
     kl::print( encryptor );
 
     std::string data_0 = "Hello, World!";
-    kl::Float4x4 data_1 = kl::Float4x4::scaling( { 1.0f, 2.0f, 3.0f } );
+    float4x4 data_1 = float4x4::scaling( { 1.0f, 2.0f, 3.0f } );
     kl::print<false>( kl::colors::SKY );
     kl::print( data_0 );
     kl::print( data_1 );

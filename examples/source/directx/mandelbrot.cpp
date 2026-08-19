@@ -3,7 +3,7 @@
 
 static int ITERATIONS = 64;
 static float ZOOM = 1.0f;
-static kl::Float2 POSITION = { -0.5f, 0.0f };
+static float2 POSITION = { -0.5f, 0.0f };
 static kl::RGB START_COLOR = kl::colors::ORANGE;
 
 static void input( kl::Window const& window, float delta_time )
@@ -41,11 +41,11 @@ static void input( kl::Window const& window, float delta_time )
         POSITION.x -= ( 1.0f / ZOOM ) * delta_time;
     }
 
-    kl::Int2 frame_size = window.size();
+    int2 frame_size = window.size();
     if ( window.mouse.left )
     {
         ZOOM += ZOOM * delta_time;
-        kl::Float2 uv = {
+        float2 uv = {
             window.mouse.position().x / (float) frame_size.x * 2.0f - 1.0f,
             window.mouse.position().y / (float) frame_size.y * 2.0f - 1.0f,
         };
@@ -55,7 +55,7 @@ static void input( kl::Window const& window, float delta_time )
     if ( window.mouse.right )
     {
         ZOOM -= ZOOM * delta_time;
-        kl::Float2 uv = {
+        float2 uv = {
             window.mouse.position().x / (float) frame_size.x * 2.0f - 1.0f,
             window.mouse.position().y / (float) frame_size.y * 2.0f - 1.0f,
         };
@@ -107,7 +107,7 @@ int examples::mandelbrot_main( int argc, char** argv )
     kl::GPU gpu{ window.ptr() };
     kl::Timer timer;
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             gpu.resize_internal( size );
             gpu.set_viewport_size( size );
@@ -130,9 +130,9 @@ int examples::mandelbrot_main( int argc, char** argv )
 
         struct alignas( 16 ) CB
         {
-            kl::Float4 STATE_INFO;
-            kl::Float4 FRAME_SIZE;
-            kl::Float4 START_COLOR;
+            float4 STATE_INFO;
+            float4 FRAME_SIZE;
+            float4 START_COLOR;
         } cb = {};
 
         cb.STATE_INFO = { POSITION, ZOOM, (float) ITERATIONS };

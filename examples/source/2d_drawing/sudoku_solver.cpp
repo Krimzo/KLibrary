@@ -68,7 +68,7 @@ struct Index
         return value;
     }
 
-    constexpr operator kl::Int2() const
+    constexpr operator int2() const
     {
         return { x(), y() };
     }
@@ -276,7 +276,7 @@ struct SudokuApp
     SudokuApp()
     {
         window.set_dark_mode( true );
-        window.on_resize.emplace_back( [&]( kl::Int2 size )
+        window.on_resize.emplace_back( [&]( int2 size )
             {
                 gpu.resize_internal( size );
                 gpu.set_viewport_size( size );
@@ -314,17 +314,17 @@ float4 p_shader(VS_DATA data) : SV_Target
         {
             float coord = -1 + i * ( 2.0f / 3.0f );
             for ( float j : { -1.0f, 1.0f } )
-                vertex_data.emplace_back( kl::Float3{ coord, j, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.9f } );
+                vertex_data.emplace_back( float3{ coord, j, 0.0f }, float3{ kl::colors::WHITE }, float2{ 0.9f } );
             for ( float j : { -1.0f, 1.0f } )
-                vertex_data.emplace_back( kl::Float3{ j, coord, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.9f } );
+                vertex_data.emplace_back( float3{ j, coord, 0.0f }, float3{ kl::colors::WHITE }, float2{ 0.9f } );
         }
         for ( int i = 0; i < 10; i++ )
         {
             float coord = -1 + i * ( 2.0f / 9.0f );
             for ( float j : { -1.0f, 1.0f } )
-                vertex_data.emplace_back( kl::Float3{ coord, j, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.3f } );
+                vertex_data.emplace_back( float3{ coord, j, 0.0f }, float3{ kl::colors::WHITE }, float2{ 0.3f } );
             for ( float j : { -1.0f, 1.0f } )
-                vertex_data.emplace_back( kl::Float3{ j, coord, 0.0f }, kl::Float3{ kl::colors::WHITE }, kl::Float2{ 0.3f } );
+                vertex_data.emplace_back( float3{ j, coord, 0.0f }, float3{ kl::colors::WHITE }, float2{ 0.3f } );
         }
         m_mesh = gpu.create_vertex_buffer( vertex_data );
     }
@@ -341,8 +341,8 @@ float4 p_shader(VS_DATA data) : SV_Target
     void reload( Sudoku const& sudoku )
     {
         const float font_size = ( window.height() / 9.0f );
-        const kl::Float2 rect_size = window.size() / 9;
-        const kl::Float2 small_square_size = rect_size / window.size() * 2.0f;
+        const float2 rect_size = window.size() / 9;
+        const float2 small_square_size = rect_size / window.size() * 2.0f;
 
         const float font_dips = window.pixels_to_dips( font_size );
         const kl::TextFormat format = gpu.create_text_format( L"JetBrains Mono NL", DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, font_dips );
@@ -357,7 +357,7 @@ float4 p_shader(VS_DATA data) : SV_Target
             text.format = format;
             text.color = sudoku.defaults[i] ? kl::colors::CYAN : kl::colors::WHEAT;
             text.box_top_left = kl::to_ndc<float>( { rect_size.x * ( i % 9 ), rect_size.y * ( i / 9 ) }, window.size() );
-            text.box_bottom_right = text.box_top_left + kl::Float2{ small_square_size.x, -small_square_size.y };
+            text.box_bottom_right = text.box_top_left + float2{ small_square_size.x, -small_square_size.y };
             text.data = std::wstring( 1, convert_piece( sudoku.board[i] ) );
             text.h_align = kl::HAlign::DWRITE_TEXT_ALIGNMENT_CENTER;
             text.v_align = kl::VAlign::DWRITE_PARAGRAPH_ALIGNMENT_CENTER;

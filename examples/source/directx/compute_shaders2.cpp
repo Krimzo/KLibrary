@@ -13,7 +13,7 @@ int examples::compute_shaders2_main( int argc, char** argv )
     kl::dx::DepthState depth_state = gpu.create_depth_state( false, false, false );
     gpu.bind_depth_state( depth_state );
 
-    kl::dx::Texture render_texture = gpu.create_texture( kl::Image{ kl::Int2{ 1600, 900 } }, true, true );
+    kl::dx::Texture render_texture = gpu.create_texture( kl::Image{ int2{ 1600, 900 } }, true, true );
     kl::dx::TargetView target_view = gpu.create_target_view( render_texture, nullptr );
     kl::dx::AccessView access_view = gpu.create_access_view( render_texture, nullptr );
     kl::dx::ShaderView shader_view = gpu.create_shader_view( render_texture, nullptr );
@@ -32,7 +32,7 @@ int examples::compute_shaders2_main( int argc, char** argv )
 
         struct alignas( 16 ) CB
         {
-            kl::Float4 MISC_DATA;
+            float4 MISC_DATA;
         } cb = {};
 
         cb.MISC_DATA.xy() = window.mouse.position();

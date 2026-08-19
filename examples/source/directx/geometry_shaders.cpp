@@ -8,7 +8,7 @@ int examples::geometry_shaders_main( int argc, char** argv )
     kl::Timer timer;
     kl::Camera camera;
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             gpu.resize_internal( size );
             gpu.set_viewport_size( size );
@@ -42,7 +42,7 @@ int examples::geometry_shaders_main( int argc, char** argv )
     camera.position = { -2.0f, 2.0f, -2.0f };
     camera.set_forward( camera.position * -1.0f );
 
-    kl::Float3 sun_direction = kl::normalize( kl::Float3{ 1.0f, -1.0f, 0.0f } );
+    float3 sun_direction = kl::normalize( float3{ 1.0f, -1.0f, 0.0f } );
 
     while ( window.process() )
     {
@@ -91,11 +91,11 @@ int examples::geometry_shaders_main( int argc, char** argv )
         {
             struct alignas( 16 ) CB
             {
-                kl::Float4x4 W;
-                kl::Float4x4 VP;
-                kl::Float4 MISC_DATA;
-                kl::Float4 OBJECT_COLOR;
-                kl::Float4 SUN_DIRECTION;
+                float4x4 W;
+                float4x4 VP;
+                float4 MISC_DATA;
+                float4 OBJECT_COLOR;
+                float4 SUN_DIRECTION;
             } cb = {};
 
             cb.W = main_entity->matrix();

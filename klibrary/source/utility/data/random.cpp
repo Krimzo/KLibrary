@@ -38,12 +38,12 @@ int kl::random::gen_int( int end_exclusive )
     return gen_int( 0, end_exclusive );
 }
 
-kl::Int2 kl::random::gen_int2( int start_inclusive, int end_exclusive )
+kl::int2 kl::random::gen_int2( int start_inclusive, int end_exclusive )
 {
     return { gen_int( start_inclusive, end_exclusive ), gen_int( start_inclusive, end_exclusive ) };
 }
 
-kl::Int2 kl::random::gen_int2( int end_exclusive )
+kl::int2 kl::random::gen_int2( int end_exclusive )
 {
     return { gen_int( end_exclusive ), gen_int( end_exclusive ) };
 }
@@ -63,94 +63,94 @@ float kl::random::gen_float()
     return float( RandomInit::_init() ) / std::numeric_limits<uint32_t>::max();
 }
 
-kl::Float2 kl::random::gen_float2( float start_inclusive, float end_inclusive )
+kl::float2 kl::random::gen_float2( float start_inclusive, float end_inclusive )
 {
     return { gen_float( start_inclusive, end_inclusive ), gen_float( start_inclusive, end_inclusive ) };
 }
 
-kl::Float2 kl::random::gen_float2( float end_inclusive )
+kl::float2 kl::random::gen_float2( float end_inclusive )
 {
     return { gen_float( end_inclusive ), gen_float( end_inclusive ) };
 }
 
-kl::Float2 kl::random::gen_float2()
+kl::float2 kl::random::gen_float2()
 {
     return { gen_float(), gen_float() };
 }
 
-kl::Float3 kl::random::gen_float3( float start_inclusive, float end_inclusive )
+kl::float3 kl::random::gen_float3( float start_inclusive, float end_inclusive )
 {
     return { gen_float( start_inclusive, end_inclusive ), gen_float( start_inclusive, end_inclusive ), gen_float( start_inclusive, end_inclusive ) };
 }
 
-kl::Float3 kl::random::gen_float3( float end_inclusive )
+kl::float3 kl::random::gen_float3( float end_inclusive )
 {
     return { gen_float( end_inclusive ), gen_float( end_inclusive ), gen_float( end_inclusive ) };
 }
 
-kl::Float3 kl::random::gen_float3()
+kl::float3 kl::random::gen_float3()
 {
     return { gen_float(), gen_float(), gen_float() };
 }
 
-kl::Float4 kl::random::gen_float4( float start_inclusive, float end_inclusive )
+kl::float4 kl::random::gen_float4( float start_inclusive, float end_inclusive )
 {
     return { gen_float( start_inclusive, end_inclusive ), gen_float( start_inclusive, end_inclusive ), gen_float( start_inclusive, end_inclusive ), gen_float( start_inclusive, end_inclusive ) };
 }
 
-kl::Float4 kl::random::gen_float4( float end_inclusive )
+kl::float4 kl::random::gen_float4( float end_inclusive )
 {
     return { gen_float( end_inclusive ), gen_float( end_inclusive ), gen_float( end_inclusive ), gen_float( end_inclusive ) };
 }
 
-kl::Float4 kl::random::gen_float4()
+kl::float4 kl::random::gen_float4()
 {
     return { gen_float(), gen_float(), gen_float(), gen_float() };
 }
 
-kl::Float3x3 kl::random::gen_float3x3( float start_inclusive, float end_inclusive )
+kl::float3x3 kl::random::gen_float3x3( float start_inclusive, float end_inclusive )
 {
-    Float3x3 result;
+    float3x3 result;
     for ( auto& value : result.data )
         value = gen_float( start_inclusive, end_inclusive );
     return result;
 }
 
-kl::Float3x3 kl::random::gen_float3x3( float end_inclusive )
+kl::float3x3 kl::random::gen_float3x3( float end_inclusive )
 {
-    Float3x3 result;
+    float3x3 result;
     for ( auto& value : result.data )
         value = gen_float( end_inclusive );
     return result;
 }
 
-kl::Float3x3 kl::random::gen_float3x3()
+kl::float3x3 kl::random::gen_float3x3()
 {
-    Float3x3 result;
+    float3x3 result;
     for ( auto& value : result.data )
         value = gen_float();
     return result;
 }
 
-kl::Float4x4 kl::random::gen_float4x4( float start_inclusive, float end_inclusive )
+kl::float4x4 kl::random::gen_float4x4( float start_inclusive, float end_inclusive )
 {
-    Float4x4 result;
+    float4x4 result;
     for ( auto& value : result.data )
         value = gen_float( start_inclusive, end_inclusive );
     return result;
 }
 
-kl::Float4x4 kl::random::gen_float4x4( float end_inclusive )
+kl::float4x4 kl::random::gen_float4x4( float end_inclusive )
 {
-    Float4x4 result;
+    float4x4 result;
     for ( auto& value : result.data )
         value = gen_float( end_inclusive );
     return result;
 }
 
-kl::Float4x4 kl::random::gen_float4x4()
+kl::float4x4 kl::random::gen_float4x4()
 {
-    Float4x4 result;
+    float4x4 result;
     for ( auto& value : result.data )
         value = gen_float();
     return result;

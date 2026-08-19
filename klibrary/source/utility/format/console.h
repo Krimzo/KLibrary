@@ -9,7 +9,7 @@ void set_enabled( bool state );
 void clear();
 
 void set_cursor_enabled( bool state );
-void move_cursor( Int2 position );
+void move_cursor( int2 position );
 
 int width();
 void set_width( int width );
@@ -17,18 +17,18 @@ void set_width( int width );
 int height();
 void set_height( int height );
 
-Int2 size();
-void set_size( Int2 size );
+int2 size();
+void set_size( int2 size );
 
 void set_title( std::string_view const& text );
 void set_title( std::wstring_view const& text );
-void set_font( Int2 size, std::wstring_view const& font_name = L"Consolas" );
+void set_font( int2 size, std::wstring_view const& font_name = L"Consolas" );
 
 char read();
 void wait( char to_wait_for, bool echo = false );
 char wait_for_any( bool echo = false );
 
-void dump( std::string_view const& data, Int2 location = {} );
+void dump( std::string_view const& data, int2 location = {} );
 void progress_bar( std::string_view const& message, int output_y, float percentage );
 }
 

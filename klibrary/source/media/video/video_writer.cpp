@@ -1,12 +1,12 @@
 #include "klibrary.h"
 
 
-kl::VideoWriter::VideoWriter( std::string_view const& filepath, VideoType const& video_type, Int2 frame_size, int fps, float video_mb_rate, int audio_sample_rate )
+kl::VideoWriter::VideoWriter( std::string_view const& filepath, VideoType const& video_type, int2 frame_size, int fps, float video_mb_rate, int audio_sample_rate )
     : VideoWriter( convert_string( filepath ), video_type, frame_size, fps, video_mb_rate, audio_sample_rate )
 {
 }
 
-kl::VideoWriter::VideoWriter( std::wstring_view const& filepath, VideoType const& video_type, Int2 frame_size, int fps, float video_mb_rate, int audio_sample_rate )
+kl::VideoWriter::VideoWriter( std::wstring_view const& filepath, VideoType const& video_type, int2 frame_size, int fps, float video_mb_rate, int audio_sample_rate )
     : m_width( frame_size.x )
     , m_height( frame_size.y )
     , m_fps( fps )
@@ -68,7 +68,7 @@ kl::VideoWriter::VideoWriter( std::wstring_view const& filepath, VideoType const
     m_writer->BeginWriting() >> verify_result;
 }
 
-kl::Int2 kl::VideoWriter::frame_size() const
+kl::int2 kl::VideoWriter::frame_size() const
 {
     return { (int) m_width, (int) m_height };
 }

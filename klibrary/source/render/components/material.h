@@ -13,7 +13,7 @@ struct Material
     float refraction_factor = 0.0f;
     float refraction_index = 1.0f;
 
-    Float4 color = colors::WHITE;
+    float4 color = colors::WHITE;
 
     Ref<Texture> color_map;
     Ref<Texture> normal_map;

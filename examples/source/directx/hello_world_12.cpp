@@ -28,15 +28,15 @@ int examples::hello_world_12_main( int argc, char** argv )
     kl::Window window{ "Hello World! (D3D12)" };
     kl::GPU12 gpu{ window.ptr() };
 
-    window.on_resize.emplace_back( [&]( kl::Int2 size )
+    window.on_resize.emplace_back( [&]( int2 size )
         {
             gpu.resize( size );
         } );
 
     kl::Vertex vertices[3] = {
-        kl::Vertex{ kl::Float3{ -0.5f, -0.5f, 0.0f }, kl::Float3{ kl::colors::RED }, {} },
-        kl::Vertex{ kl::Float3{ 0.0f, 0.5f, 0.0f }, kl::Float3{ kl::colors::GREEN }, {} },
-        kl::Vertex{ kl::Float3{ 0.5f, -0.5f, 0.0f }, kl::Float3{ kl::colors::BLUE }, {} },
+        kl::Vertex{ float3{ -0.5f, -0.5f, 0.0f }, float3{ kl::colors::RED }, {} },
+        kl::Vertex{ float3{ 0.0f, 0.5f, 0.0f }, float3{ kl::colors::GREEN }, {} },
+        kl::Vertex{ float3{ 0.5f, -0.5f, 0.0f }, float3{ kl::colors::BLUE }, {} },
     };
     std::pair vertex_buffer = gpu.create_vertex_buffer( vertices, (UINT) std::size( vertices ) );
 
