@@ -10,15 +10,18 @@ inline constexpr UINT GPU_BUFFER_COUNT = 2;
 
 namespace kl
 {
+using HAlign = DWRITE_TEXT_ALIGNMENT;
+using VAlign = DWRITE_PARAGRAPH_ALIGNMENT;
+
 struct Text
 {
     TextFormat format;
     kl::Float4 color{ 1.0f };
-    kl::Float2 position;
-    kl::Float2 rect_size;
+    kl::Float2 box_top_left;
+    kl::Float2 box_bottom_right;
     std::wstring data;
-    bool hor_center = false;
-    bool ver_center = false;
+    HAlign h_align = DWRITE_TEXT_ALIGNMENT_LEADING;
+    VAlign v_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR;
 };
 }
 

@@ -592,18 +592,21 @@ constexpr Matrix4x4<T> transpose( Matrix4x4<T> const& mat )
 namespace kl
 {
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr Vector2<T> to_ndc( Vector2<T> const& position, Vector2<T> const& size )
 {
-    return ( position / size * T( 2 ) - Vector2<T>( T( 1 ) ) ) * Vector2<T>( T( 1 ), T( -1 ) );
+    return ( position / ( size - Vector2<T>{ T( 1 ) } )* T( 2 ) - Vector2<T>( T( 1 ) ) )* Vector2<T>( T( 1 ), T( -1 ) );
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr Vector2<T> from_ndc( Vector2<T> const& position, Vector2<T> const& size )
 {
-    return ( Vector2<T>{ position.x, -position.y } + Vector2<T>( T( 1 ) ) ) / T( 2 ) * size;
+    return ( Vector2<T>{ position.x, -position.y } + Vector2<T>( T( 1 ) ) ) / T( 2 ) * ( size - Vector2<T>{ T( -1 ) } );
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr Vector2<T> to_ndc_ar( Vector2<T> const& position, Vector2<T> const& size )
 {
     Vector2<T> result = to_ndc( position, size );
@@ -612,6 +615,7 @@ constexpr Vector2<T> to_ndc_ar( Vector2<T> const& position, Vector2<T> const& si
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr Vector2<T> from_ndc_ar( Vector2<T> const& position, Vector2<T> const& size )
 {
     Vector2<T> fixed_pos = position;
@@ -620,18 +624,21 @@ constexpr Vector2<T> from_ndc_ar( Vector2<T> const& position, Vector2<T> const& 
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr T line_x( Vector2<T> const& a, Vector2<T> const& b, T y )
 {
     return T( ( ( y - a.y ) * ( b.x - a.x ) ) / ( b.y - a.y ) + a.x );
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr T line_y( Vector2<T> const& a, Vector2<T> const& b, T x )
 {
     return T( ( ( b.y - a.y ) * ( x - a.x ) ) / ( b.x - a.x ) + a.y );
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr Quaternion_T<T> to_quat( Vector3<T> const& euler )
 {
     T cr = cos_d( euler.x * T( 0.5 ) );
@@ -649,6 +656,7 @@ constexpr Quaternion_T<T> to_quat( Vector3<T> const& euler )
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr Vector3<T> to_euler( Quaternion_T<T> const& quat )
 {
     T       sin_p = T( +2 ) * ( quat.r * quat.j - quat.k * quat.i ) + T( 0 );
@@ -666,6 +674,7 @@ constexpr Vector3<T> to_euler( Quaternion_T<T> const& quat )
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr Quaternion_T<T> to_quat( Vector3<T> const& original, Vector3<T> const& target )
 {
     Vector3<T> axis = normalize( cross( original, target ) );
@@ -674,6 +683,7 @@ constexpr Quaternion_T<T> to_quat( Vector3<T> const& original, Vector3<T> const&
 }
 
 template<typename T>
+    requires std::is_floating_point_v<T>
 constexpr Vector3<T> to_euler( Vector3<T> const& original, Vector3<T> const& target )
 {
     return to_euler( to_quat( original, target ) );

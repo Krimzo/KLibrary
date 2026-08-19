@@ -35,21 +35,21 @@ void kl::TextRaster::draw_text_batch( UINT target_index ) const
     D2D1_RECT_F layout_rect{};
 
     target->BeginDraw();
-    for ( auto& text : text_batch )
+    for ( auto const& text : text_batch )
     {
         if ( !text.format )
             continue;
 
-        const Float2 position_screen = from_ndc( text.position, target_size );
-        const Float2 rect_size_screen = target_size * text.rect_size * 0.5f;
+        const Float2 top_left_screen = from_ndc( text.box_top_left, target_size );
+        const Float2 bottom_right_screen = from_ndc( text.box_bottom_right, target_size );
 
-        layout_rect.left = position_screen.x;
-        layout_rect.top = position_screen.y;
-        layout_rect.right = layout_rect.left + ( rect_size_screen.x >= 1.f ? rect_size_screen.x : ( target_size.x - layout_rect.left ) );
-        layout_rect.bottom = layout_rect.top + ( rect_size_screen.y >= 1.f ? rect_size_screen.y : ( target_size.y - layout_rect.top ) );
+        layout_rect.left = top_left_screen.x;
+        layout_rect.top = top_left_screen.y;
+        layout_rect.right = bottom_right_screen.x;
+        layout_rect.bottom = bottom_right_screen.y;
 
-        text.format->SetTextAlignment( text.hor_center ? DWRITE_TEXT_ALIGNMENT_CENTER : DWRITE_TEXT_ALIGNMENT_LEADING );
-        text.format->SetParagraphAlignment( text.ver_center ? DWRITE_PARAGRAPH_ALIGNMENT_CENTER : DWRITE_PARAGRAPH_ALIGNMENT_NEAR );
+        text.format->SetTextAlignment( text.h_align );
+        text.format->SetParagraphAlignment( text.v_align );
 
         target->CreateSolidColorBrush(
             D2D1_COLOR_F{
@@ -78,17 +78,18 @@ void kl::TextRaster::draw_text_direct( UINT target_index, Text const& text ) con
     auto const& target = m_d2d1_targets[target_index];
     const Float2 target_size = (Float2 const&) target->GetSize();
 
-    const Float2 position_screen = from_ndc( text.position, target_size );
-    const Float2 rect_size_screen = target_size * text.rect_size * 0.5f;
+    const Float2 top_left_screen = from_ndc( text.box_top_left, target_size );
+    const Float2 bottom_right_screen = from_ndc( text.box_bottom_right, target_size );
 
-    D2D1_RECT_F layout_rect{};
-    layout_rect.left = position_screen.x;
-    layout_rect.top = position_screen.y;
-    layout_rect.right = layout_rect.left + ( rect_size_screen.x >= 1.f ? rect_size_screen.x : ( target_size.x - layout_rect.left ) );
-    layout_rect.bottom = layout_rect.top + ( rect_size_screen.y >= 1.f ? rect_size_screen.y : ( target_size.y - layout_rect.top ) );
+    const D2D1_RECT_F layout_rect{
+        .left = top_left_screen.x,
+        .top = top_left_screen.y,
+        .right = bottom_right_screen.x,
+        .bottom = bottom_right_screen.y,
+    };
 
-    text.format->SetTextAlignment( text.hor_center ? DWRITE_TEXT_ALIGNMENT_CENTER : DWRITE_TEXT_ALIGNMENT_LEADING );
-    text.format->SetParagraphAlignment( text.ver_center ? DWRITE_PARAGRAPH_ALIGNMENT_CENTER : DWRITE_PARAGRAPH_ALIGNMENT_NEAR );
+    text.format->SetTextAlignment( text.h_align );
+    text.format->SetParagraphAlignment( text.v_align );
 
     target->BeginDraw();
 

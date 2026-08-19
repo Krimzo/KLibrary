@@ -24,10 +24,10 @@ int examples::text_drawing_main( int argc, char** argv )
 
     auto& text = gpu.text_batch.emplace_back();
     text.format = format;
-    text.position = { -1.0f, 1.0f };
-    text.rect_size = { 2.0f, 2.0f };
-    text.hor_center = true;
-    text.ver_center = true;
+    text.box_top_left = { -1.0f, 1.0f };
+    text.box_bottom_right = { 1.0f, -1.0f };
+    text.h_align = kl::HAlign::DWRITE_TEXT_ALIGNMENT_CENTER;
+    text.v_align = kl::VAlign::DWRITE_PARAGRAPH_ALIGNMENT_CENTER;
     text.data = message.str();
 
     while ( window.process() )
