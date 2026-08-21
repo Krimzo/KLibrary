@@ -1,5 +1,9 @@
 #pragma once
 
+#if defined(__has_include) && __has_include(<imgui.h>)
+#define KL_USING_IMGUI
+#endif
+
 #ifdef KL_USING_IMGUI
 
 #define IMGUI_DEFINE_MATH_OPERATORS
