@@ -190,7 +190,7 @@ bool kl::write_file_string( std::wstring_view const& filepath, std::string_view 
     return true;
 }
 
-std::optional<std::string> kl::choose_file( bool save, std::vector<std::pair<std::string_view, std::string_view>> const& filters, int* out_index )
+std::optional<std::string> kl::choose_file( bool save, std::string_view defaul, std::vector<std::pair<std::string_view, std::string_view>> const& filters, int* out_index )
 {
     std::stringstream filter_buffer;
     for ( auto const& filter : filters )
@@ -198,11 +198,13 @@ std::optional<std::string> kl::choose_file( bool save, std::vector<std::pair<std
     const std::string filter_data = filter_buffer.str();
 
     char file_buffer[512] = {};
+    copy<char>( file_buffer, defaul.data(), min( std::size( file_buffer ) - 1, defaul.size() ) );
+
     OPENFILENAMEA dialog_info = {};
     dialog_info.lStructSize = sizeof( dialog_info );
     dialog_info.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
     dialog_info.lpstrFile = file_buffer;
-    dialog_info.nMaxFile = sizeof( file_buffer ) - 1;
+    dialog_info.nMaxFile = (DWORD) std::size( file_buffer ) - 1;
     dialog_info.lpstrFilter = filter_data.data();
     dialog_info.nFilterIndex = 1;
 
@@ -217,7 +219,7 @@ std::optional<std::string> kl::choose_file( bool save, std::vector<std::pair<std
     return result;
 }
 
-std::optional<std::wstring> kl::wchoose_file( bool save, std::vector<std::pair<std::wstring_view, std::wstring_view>> const& filters, int* out_index )
+std::optional<std::wstring> kl::wchoose_file( bool save, std::wstring_view defaul, std::vector<std::pair<std::wstring_view, std::wstring_view>> const& filters, int* out_index )
 {
     std::wstringstream filter_buffer;
     for ( auto const& filter : filters )
@@ -225,11 +227,13 @@ std::optional<std::wstring> kl::wchoose_file( bool save, std::vector<std::pair<s
     const std::wstring filter_data = filter_buffer.str();
 
     wchar_t file_buffer[512] = {};
+    copy<wchar_t>( file_buffer, defaul.data(), min( std::size( file_buffer ) - 1, defaul.size() ) );
+
     OPENFILENAMEW dialog_info = {};
     dialog_info.lStructSize = sizeof( dialog_info );
     dialog_info.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
     dialog_info.lpstrFile = file_buffer;
-    dialog_info.nMaxFile = sizeof( file_buffer ) - 1;
+    dialog_info.nMaxFile = (DWORD) std::size( file_buffer ) - 1;
     dialog_info.lpstrFilter = filter_data.data();
     dialog_info.nFilterIndex = 1;
 
