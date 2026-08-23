@@ -22,6 +22,7 @@ struct Window : NoCopy
     Keyboard keyboard;
     Mouse mouse;
 
+    std::function<void( int2, std::vector<std::wstring> const& )> on_drag_drop = []( int2, std::vector<std::wstring> const& ) {};
     std::vector<std::function<void( int2 )>> on_resize;
     std::vector<std::function<void( int2 )>> on_move;
 

@@ -30,6 +30,7 @@ kl::Window::Window( std::string_view const& name )
     assert( m_window && "Failed to create window" );
     m_device_context = GetDC( m_window );
 
+    DragAcceptFiles( m_window, TRUE );
     SetWindowLongPtrA( m_window, GWLP_USERDATA, (LONG_PTR) this );
     ShowWindow( m_window, SW_SHOW );
     SetCursor( LoadCursorA( nullptr, (LPCSTR) IDC_ARROW ) );
@@ -324,6 +325,24 @@ LRESULT CALLBACK kl::Window::window_procedure( HWND window_handle, UINT message,
         const int2 position = { LOWORD( l_param ), HIWORD( l_param ) };
         for ( auto& callback : on_move )
             callback( position );
+    }
+    break;
+
+    case WM_DROPFILES:
+    {
+        const HDROP h_drop = (HDROP) w_param;
+        const UINT file_count = DragQueryFileW( h_drop, 0xFFFFFFFF, nullptr, 0 );
+        std::vector<std::wstring> paths;
+        for ( UINT i = 0; i < file_count; i++ )
+        {
+            wchar_t path[MAX_PATH] = {};
+            DragQueryFileW( h_drop, i, path, MAX_PATH );
+            paths.emplace_back( path );
+        }
+        POINT pt{};
+        DragQueryPoint( h_drop, &pt );
+        DragFinish( h_drop );
+        on_drag_drop( { (int) pt.x, (int) pt.y }, paths );
     }
     break;
 
