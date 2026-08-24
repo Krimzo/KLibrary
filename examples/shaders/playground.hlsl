@@ -27,8 +27,7 @@ float3 plane_to_sphere(float3 position, float half_plane_size)
     return float3(
         r * cos(coords.y) * cos(coords.x),
         r * cos(coords.y) * sin(coords.x),
-        r * sin(coords.y + PI)
-    );
+        r * sin(coords.y + PI));
 }
 
 void alter_position(inout float3 position)
@@ -47,8 +46,7 @@ VS_OUT v_shader(float3 position : KL_Position)
     return data;
 }
 
-[maxvertexcount(3)]
-void g_shader(triangle VS_OUT input_data[3], inout TriangleStream<VS_OUT> output_stream)
+[maxvertexcount(3)] void g_shader(triangle VS_OUT input_data[3], inout TriangleStream<VS_OUT> output_stream)
 {
     float3 ab = input_data[1].world - input_data[0].world;
     float3 ac = input_data[2].world - input_data[0].world;

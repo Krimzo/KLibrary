@@ -1,6 +1,5 @@
 #include "examples.h"
 
-
 enum ID : int32_t
 {
     PLAYER = -1,
@@ -14,133 +13,131 @@ struct BoardInfo
     int move = -1;
 };
 
-static constexpr int2 SIZES = { 3, 901 };
+static constexpr int2 SIZES = {3, 901};
 static kl::RGB PLAYER_COLOR = kl::colors::ORANGE;
 static kl::RGB ENGINE_COLOR = kl::colors::GREEN;
 
-static bool has_empty( std::vector<int> const& board )
+static bool has_empty(std::vector<int> const& board)
 {
-    for ( auto& piece : board )
-    {
-        if ( piece == ID::EMPTY )
+    for (auto& piece : board)
+        if (piece == ID::EMPTY)
             return true;
-    }
     return false;
 }
 
-static int evaluate( std::vector<int> const& board )
+static int evaluate(std::vector<int> const& board)
 {
-    for ( int y = 0; y < SIZES.x; y++ )
+    for (int y = 0; y < SIZES.x; y++)
     {
         int sum = 0;
-        for ( int x = 0; x < SIZES.x; x++ )
+        for (int x = 0; x < SIZES.x; x++)
             sum += board[y * SIZES.x + x];
 
-        if ( sum == ID::PLAYER * SIZES.x )
+        if (sum == ID::PLAYER * SIZES.x)
             return ID::PLAYER;
 
-        if ( sum == ID::ENGINE * SIZES.x )
+        if (sum == ID::ENGINE * SIZES.x)
             return ID::ENGINE;
     }
 
-    for ( int x = 0; x < SIZES.x; x++ )
+    for (int x = 0; x < SIZES.x; x++)
     {
         int sum = 0;
-        for ( int y = 0; y < SIZES.x; y++ )
+        for (int y = 0; y < SIZES.x; y++)
             sum += board[y * SIZES.x + x];
 
-        if ( sum == ID::PLAYER * SIZES.x )
+        if (sum == ID::PLAYER * SIZES.x)
             return ID::PLAYER;
 
-        if ( sum == ID::ENGINE * SIZES.x )
+        if (sum == ID::ENGINE * SIZES.x)
             return ID::ENGINE;
     }
 
     int sum = 0;
-    for ( int i = 0; i < SIZES.x; i++ )
+    for (int i = 0; i < SIZES.x; i++)
         sum += board[i * SIZES.x + i];
 
-    if ( sum == ID::PLAYER * SIZES.x )
+    if (sum == ID::PLAYER * SIZES.x)
         return ID::PLAYER;
 
-    if ( sum == ID::ENGINE * SIZES.x )
+    if (sum == ID::ENGINE * SIZES.x)
         return ID::ENGINE;
 
     sum = 0;
-    for ( int i = 0; i < SIZES.x; i++ )
-        sum += board[i * SIZES.x + ( SIZES.x - 1 - i )];
+    for (int i = 0; i < SIZES.x; i++)
+        sum += board[i * SIZES.x + (SIZES.x - 1 - i)];
 
-    if ( sum == ID::PLAYER * SIZES.x )
+    if (sum == ID::PLAYER * SIZES.x)
         return ID::PLAYER;
 
-    if ( sum == ID::ENGINE * SIZES.x )
+    if (sum == ID::ENGINE * SIZES.x)
         return ID::ENGINE;
 
     return ID::EMPTY;
 }
 
-static BoardInfo find_best( std::vector<int> const& board, bool playersTurn, int depth, int alpha, int beta )
+static BoardInfo find_best(std::vector<int> const& board, bool playersTurn, int depth, int alpha, int beta)
 {
-    if ( int current_eval = evaluate( board ); current_eval != ID::EMPTY || !has_empty( board ) )
-        return BoardInfo( current_eval, -1 );
+    if (int current_eval = evaluate(board); current_eval != ID::EMPTY || !has_empty(board))
+        return BoardInfo(current_eval, -1);
 
-    if ( !playersTurn )
+    if (!playersTurn)
     {
-        BoardInfo max_info( -1, -1 );
-        for ( int i = 0; i < (int) board.size(); i++ )
+        BoardInfo max_info(-1, -1);
+        for (int i = 0; i < (int)board.size(); i++)
         {
-            if ( board[i] == ID::EMPTY )
+            if (board[i] == ID::EMPTY)
             {
-                if ( max_info.move == -1 )
+                if (max_info.move == -1)
                     max_info.move = i;
 
                 std::vector<int> future_board = board;
                 future_board[i] = ID::ENGINE;
 
-                int future_eval = find_best( future_board, true, depth + 1, alpha, beta ).eval;
-                if ( future_eval > max_info.eval )
+                int future_eval = find_best(future_board, true, depth + 1, alpha, beta).eval;
+                if (future_eval > max_info.eval)
                 {
                     max_info.eval = future_eval;
                     max_info.move = i;
                 }
 
-                alpha = std::max( alpha, future_eval );
-                if ( beta <= alpha )
+                alpha = std::max(alpha, future_eval);
+                if (beta <= alpha)
                     break;
             }
         }
         return max_info;
     }
 
-    BoardInfo min_info( 1, -1 );
-    for ( int i = 0; i < (int) board.size(); i++ )
+    BoardInfo min_info(1, -1);
+    for (int i = 0; i < (int)board.size(); i++)
     {
-        if ( board[i] == ID::EMPTY )
+        if (board[i] == ID::EMPTY)
         {
-            if ( min_info.move == -1 )
+            if (min_info.move == -1)
                 min_info.move = i;
 
             std::vector<int> future_board = board;
             future_board[i] = ID::PLAYER;
 
-            int future_eval = find_best( future_board, false, depth + 1, alpha, beta ).eval;
-            if ( future_eval < min_info.eval )
+            int future_eval = find_best(future_board, false, depth + 1, alpha, beta).eval;
+            if (future_eval < min_info.eval)
             {
                 min_info.eval = future_eval;
                 min_info.move = i;
             }
 
-            beta = std::min( beta, future_eval );
-            if ( beta <= alpha )
+            beta = std::min(beta, future_eval);
+            if (beta <= alpha)
                 break;
         }
     }
     return min_info;
 }
 
-int examples::tic_tac_main( int argc, char** argv )
+int examples::tic_tac_main(int argc, char** argv)
 {
-    std::vector<int> board( SIZES.x * SIZES.x );
+    std::vector<int> board(SIZES.x * SIZES.x);
     bool players_turn = kl::random::gen_bool();
     bool player_was_first = players_turn;
 
@@ -148,38 +145,40 @@ int examples::tic_tac_main( int argc, char** argv )
     int line_offset = square_size / 10;
     int circle_offset = square_size / 2;
 
-    kl::Window window{ "Tic Engine" };
+    kl::Window window{"Tic Engine"};
     kl::Image frame;
 
-    window.resize( { SIZES.y, SIZES.y } );
-    frame.resize( window.size() );
-    window.set_resizeable( false );
+    window.resize({SIZES.y, SIZES.y});
+    frame.resize(window.size());
+    window.set_resizeable(false);
 
-    while ( window.process() )
+    while (window.process())
     {
-        if ( int eval = evaluate( board ) )
+        if (int eval = evaluate(board))
         {
-            window.set_title( ( eval == ID::PLAYER ) ? "Player wins!" : "Engine wins!" );
-            while ( window.process() );
+            window.set_title((eval == ID::PLAYER) ? "Player wins!" : "Engine wins!");
+            while (window.process())
+                ;
             break;
         }
 
-        if ( !has_empty( board ) )
+        if (!has_empty(board))
         {
-            window.set_title( "Draw!" );
-            while ( window.process() );
+            window.set_title("Draw!");
+            while (window.process())
+                ;
             break;
         }
 
-        if ( players_turn )
+        if (players_turn)
         {
             static bool was_down = false;
-            if ( window.mouse.left )
+            if (window.mouse.left)
             {
-                if ( !was_down )
+                if (!was_down)
                 {
                     int2 pos = window.mouse.position() / square_size;
-                    if ( int index = pos.y * SIZES.x + pos.x; board[index] == ID::EMPTY )
+                    if (int index = pos.y * SIZES.x + pos.x; board[index] == ID::EMPTY)
                     {
                         board[index] = ID::PLAYER;
                         players_turn = false;
@@ -194,58 +193,54 @@ int examples::tic_tac_main( int argc, char** argv )
         }
         else
         {
-            board[find_best( board, false, 0, ID::PLAYER, ID::ENGINE ).move] = ID::ENGINE;
+            board[find_best(board, false, 0, ID::PLAYER, ID::ENGINE).move] = ID::ENGINE;
             players_turn = true;
         }
 
-        frame.fill( kl::colors::GRAY );
+        frame.fill(kl::colors::GRAY);
 
-        for ( int2 pos; pos.y < SIZES.y; pos.y += square_size )
-        {
-            for ( pos.x = 0; pos.x < SIZES.y; pos.x += square_size )
-                frame.draw_rectangle( pos, pos + int2( square_size ), kl::colors::WHITE );
-        }
+        for (int2 pos; pos.y < SIZES.y; pos.y += square_size)
+            for (pos.x = 0; pos.x < SIZES.y; pos.x += square_size)
+                frame.draw_rectangle(pos, pos + int2(square_size), kl::colors::WHITE);
 
-        for ( int2 pos; pos.y < SIZES.x; pos.y++ )
+        for (int2 pos; pos.y < SIZES.x; pos.y++)
         {
-            for ( pos.x = 0; pos.x < SIZES.x; pos.x++ )
+            for (pos.x = 0; pos.x < SIZES.x; pos.x++)
             {
                 int pos_id = board[pos.y * SIZES.x + pos.x];
 
-                if ( player_was_first )
+                if (player_was_first)
                 {
-                    if ( pos_id == ID::PLAYER )
+                    if (pos_id == ID::PLAYER)
                     {
-                        frame.draw_line( pos * square_size + int2( line_offset ),
-                            ( pos + int2( 1, 1 ) ) * square_size - int2( line_offset ), PLAYER_COLOR );
-                        frame.draw_line( ( pos + int2( 0, 1 ) ) * square_size + int2( line_offset, -line_offset ),
-                            ( pos + int2( 1, 0 ) ) * square_size + int2( -line_offset, line_offset ), PLAYER_COLOR );
+                        frame.draw_line(pos * square_size + int2(line_offset),
+                                        (pos + int2(1, 1)) * square_size - int2(line_offset), PLAYER_COLOR);
+                        frame.draw_line((pos + int2(0, 1)) * square_size + int2(line_offset, -line_offset),
+                                        (pos + int2(1, 0)) * square_size + int2(-line_offset, line_offset),
+                                        PLAYER_COLOR);
                     }
-                    else if ( pos_id == ID::ENGINE )
+                    else if (pos_id == ID::ENGINE)
                     {
-                        frame.draw_circle( pos * square_size + int2( circle_offset ),
-                            pos * square_size + int2( circle_offset, line_offset ), ENGINE_COLOR );
+                        frame.draw_circle(pos * square_size + int2(circle_offset),
+                                          pos * square_size + int2(circle_offset, line_offset), ENGINE_COLOR);
                     }
                 }
-                else
+                else if (pos_id == ID::ENGINE)
                 {
-                    if ( pos_id == ID::ENGINE )
-                    {
-                        frame.draw_line( pos * square_size + int2( line_offset ),
-                            ( pos + int2( 1, 1 ) ) * square_size - int2( line_offset ), ENGINE_COLOR );
-                        frame.draw_line( ( pos + int2( 0, 1 ) ) * square_size + int2( line_offset, -line_offset ),
-                            ( pos + int2( 1, 0 ) ) * square_size + int2( -line_offset, line_offset ), ENGINE_COLOR );
-                    }
-                    else if ( pos_id == ID::PLAYER )
-                    {
-                        frame.draw_circle( pos * square_size + int2( circle_offset ),
-                            pos * square_size + int2( circle_offset, line_offset ), PLAYER_COLOR );
-                    }
+                    frame.draw_line(pos * square_size + int2(line_offset),
+                                    (pos + int2(1, 1)) * square_size - int2(line_offset), ENGINE_COLOR);
+                    frame.draw_line((pos + int2(0, 1)) * square_size + int2(line_offset, -line_offset),
+                                    (pos + int2(1, 0)) * square_size + int2(-line_offset, line_offset), ENGINE_COLOR);
+                }
+                else if (pos_id == ID::PLAYER)
+                {
+                    frame.draw_circle(pos * square_size + int2(circle_offset),
+                                      pos * square_size + int2(circle_offset, line_offset), PLAYER_COLOR);
                 }
             }
         }
 
-        window.draw_image( frame );
+        window.draw_image(frame);
     }
     return 0;
 }

@@ -17,8 +17,7 @@ void hit_monke(inout Payload payload, float2 uv);
 void hit_cube(inout Payload payload, float2 uv);
 void hit_floor(inout Payload payload, float2 uv);
 
-[shader("raygeneration")]
-void rt_g_shader()
+[shader("raygeneration")] void rt_g_shader()
 {
     uint2 index = DispatchRaysIndex().xy;
     float2 size = DispatchRaysDimensions().xy;
@@ -37,34 +36,32 @@ void rt_g_shader()
 
     TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, ray, payload);
     RENDER_TARGET[index] = float4(payload.color, 1.0f);
-}
+};
 
-[shader("miss")]
-void rt_m_shader(inout Payload payload)
+[shader("miss")] void rt_m_shader(inout Payload payload)
 {
     float slope = normalize(WorldRayDirection()).y;
     float t = saturate(slope * 5.0f + 0.5f);
     payload.color = lerp(SKY_BOTTOM, SKY_TOP, t);
     payload.missed = true;
-}
+};
 
-[shader("closesthit")]
-void rt_h_shader(inout Payload payload, BuiltInTriangleIntersectionAttributes attrib)
+[shader("closesthit")] void rt_h_shader(inout Payload payload, BuiltInTriangleIntersectionAttributes attrib)
 {
     switch (InstanceID())
     {
     case 0:
         hit_monke(payload, attrib.barycentrics);
         break;
-        
+
     case 1:
         hit_cube(payload, attrib.barycentrics);
         break;
-        
+
     case 2:
         hit_floor(payload, attrib.barycentrics);
         break;
-        
+
     default:
         payload.color = float3(1.0f, 0.0f, 1.0f);
         break;
@@ -75,12 +72,12 @@ void hit_monke(inout Payload payload, float2 uv)
 {
     uint triangle_index = PrimitiveIndex() / 2;
     float3 normal = (triangle_index.xxx % 3 == uint3(0, 1, 2)) * (triangle_index < 3 ? -1 : 1);
-    float3 world_normal = normalize(mul(normal, (float3x3) ObjectToWorld4x3()));
+    float3 world_normal = normalize(mul(normal, (float3x3)ObjectToWorld4x3()));
 
     float3 color = abs(normal) / 3.0f + 0.5f;
     if (uv.x < 0.03f || uv.y < 0.03f)
         color = 0.25f.xxx;
-    
+
     color *= saturate(dot(world_normal, normalize(SUN))) + 0.33f;
     payload.color = color;
 }
@@ -88,7 +85,7 @@ void hit_monke(inout Payload payload, float2 uv)
 void hit_cube(inout Payload payload, float2 uv)
 {
     float3 position = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
-    float3 normal = normalize(mul(float3(0.0f, 1.0f, 0.0f), (float3x3) ObjectToWorld4x3()));
+    float3 normal = normalize(mul(float3(0.0f, 1.0f, 0.0f), (float3x3)ObjectToWorld4x3()));
     float3 reflected = reflect(normalize(WorldRayDirection()), normal);
 
     RayDesc ray;
@@ -111,7 +108,7 @@ void hit_floor(inout Payload payload, float2 uv)
     shadow_ray.Direction = SUN - position;
     shadow_ray.TMin = 0.001f;
     shadow_ray.TMax = 1.0f;
-    
+
     Payload shadow_payload;
     shadow_payload.missed = false;
     TraceRay(SCENE, RAY_FLAG_NONE, 0xFF, 0, 0, 0, shadow_ray, shadow_payload);

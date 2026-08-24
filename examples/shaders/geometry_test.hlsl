@@ -20,8 +20,7 @@ VS_OUT v_shader(float3 position : KL_Position, float3 normal : KL_Normal)
     return data;
 }
 
-[maxvertexcount(3)]
-void g_shader(triangle VS_OUT input_data[3], inout TriangleStream<VS_OUT> output_stream)
+[maxvertexcount(3)] void g_shader(triangle VS_OUT input_data[3], inout TriangleStream<VS_OUT> output_stream)
 {
     for (int i = 0; i < 3; i++)
     {
