@@ -15,4 +15,4 @@ target_link_libraries(klibrary_examples PUBLIC klibrarylib)
 target_include_directories(klibrary_examples PUBLIC examples/source)
 
 set_target_properties(klibrary_examples PROPERTIES
-    DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples)

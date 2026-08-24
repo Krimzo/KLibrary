@@ -120,6 +120,6 @@ struct MyFileServer : kl::HttpApp
 
 int examples::http_file_server(int argc, char** argv)
 {
-    MyFileServer{"server_storage"}.start(80);
+    MyFileServer{"server"}.start(80);
     return 0;
 }
