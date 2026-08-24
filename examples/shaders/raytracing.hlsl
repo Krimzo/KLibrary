@@ -18,7 +18,7 @@ struct Sphere
     float3 position;
     float radius;
     float4 color;
-    
+
     bool contains(float3 pnt)
     {
         return length(pnt - position) <= radius;
@@ -29,7 +29,7 @@ struct Ray
 {
     float3 origin;
     float3 direction;
-    
+
     bool intersect_plane(Plane plane, out float3 out_inter)
     {
         const float denom = dot(plane.normal, direction);
@@ -43,10 +43,11 @@ struct Ray
         out_inter = origin + direction * t;
         return true;
     }
-	
+
     bool intersect_sphere(Sphere sphere, out float3 out_inter)
     {
-        if (sphere.contains(origin)) {
+        if (sphere.contains(origin))
+        {
             out_inter = origin;
             return true;
         }
@@ -69,11 +70,11 @@ struct Ray
     }
 };
 
-static const Plane XZ_PLANE = { float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(0.4f, 0.4f, 0.4f) };
-static const float3 SKY_TOP = { 0.62f, 0.77f, 0.88f };
-static const float3 SKY_BOTTOM = { 0.89f, 0.93f, 0.96f };
-static const float3 SUN_COLOR = { 0.98f, 0.9f, 0.76f };
-static const float2 SUN_SIZE = { 0.75f, 1.55f };
+static const Plane XZ_PLANE = {float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(0.4f, 0.4f, 0.4f)};
+static const float3 SKY_TOP = {0.62f, 0.77f, 0.88f};
+static const float3 SKY_BOTTOM = {0.89f, 0.93f, 0.96f};
+static const float3 SUN_COLOR = {0.98f, 0.9f, 0.76f};
+static const float2 SUN_SIZE = {0.75f, 1.55f};
 
 Sphere SPHERES[SPHERE_COUNT];
 float4x4 INV_CAM;
@@ -82,12 +83,12 @@ float3 SUN_DIRECTION;
 
 bool sphere_point_in_shadow(Plane plane, float3 sphere_point, int sphere_index)
 {
-    Ray light_ray = { sphere_point, -SUN_DIRECTION.xyz };
-    
+    Ray light_ray = {sphere_point, -SUN_DIRECTION.xyz};
+
     float3 ignore_out = 0;
     if (light_ray.intersect_plane(plane, ignore_out))
         return true;
-	
+
     for (int i = 0; i < SPHERE_COUNT; i++)
     {
         if (i != sphere_index && light_ray.intersect_sphere(SPHERES[i], ignore_out))
@@ -98,8 +99,8 @@ bool sphere_point_in_shadow(Plane plane, float3 sphere_point, int sphere_index)
 
 bool plane_point_in_shadow(float3 plane_point)
 {
-    Ray light_ray = { plane_point, -SUN_DIRECTION.xyz };
-	
+    Ray light_ray = {plane_point, -SUN_DIRECTION.xyz};
+
     float3 ignore_out = 0;
     for (int i = 0; i < SPHERE_COUNT; i++)
     {
@@ -122,7 +123,7 @@ float3 trace_ray(Ray ray)
         intersect_point = temp_intersect;
         intersected_sphere_id = -1;
     }
-	
+
     for (int i = 0; i < SPHERE_COUNT; i++)
     {
         if (ray.intersect_sphere(SPHERES[i], temp_intersect))
@@ -136,7 +137,7 @@ float3 trace_ray(Ray ray)
             }
         }
     }
-	
+
     float3 pixel;
     if (intersected_sphere_id == -1)
     {
@@ -172,11 +173,11 @@ float4 p_shader(VS_OUT data) : SV_Target0
 {
     float4 pixel_world = mul(float4(data.ndc, 1.0f, 1.0f), INV_CAM);
     pixel_world /= pixel_world.w;
-    
+
     Ray ray;
     ray.origin = CAMERA_POSITION;
     ray.direction = normalize(pixel_world.xyz - ray.origin);
-    
+
     float3 color = trace_ray(ray);
     return float4(color, 1.0f);
 }
