@@ -14,8 +14,7 @@ Goal is to *simplify* use of C++, Win32 and DirectX.
 ```cpp
 #include "klibrary.h"
 
-static constexpr auto SHADER_SOURCE =
-R"(
+static constexpr auto SHADER_SOURCE = R"(
 float4 v_shader(float3 position : KL_Position) : SV_Position
 {
     return float4(position, 1.0f);
@@ -27,31 +26,30 @@ float4 p_shader(float4 position : SV_Position) : SV_Target0
 }
 )";
 
-int main( int argc, char** argv )
+int main(int argc, char** argv)
 {
-    kl::Window window{ "Hello World! (D3D11)" };
-    kl::GPU gpu{ window.ptr() };
+    kl::Window window{"Hello World! (D3D11)"};
+    kl::GPU gpu{window.ptr()};
 
-    window.on_resize.emplace_back( [&]( int2 size )
-        {
-            gpu.resize_internal( size );
-            gpu.set_viewport_size( size );
-        } );
+    window.on_resize.emplace_back([&](int2 size) {
+        gpu.resize_internal(size);
+        gpu.set_viewport_size(size);
+    });
 
-    kl::dx::Buffer triangle = gpu.create_vertex_buffer( {
-        { { 0.0f, 0.5f, 0.5f } },
-        { { 0.5f, -0.5f, 0.5f } },
-        { { -0.5f, -0.5f, 0.5f } },
-        } );
+    kl::dx::Buffer triangle = gpu.create_vertex_buffer({
+        {{0.0f, 0.5f, 0.5f}},
+        {{0.5f, -0.5f, 0.5f}},
+        {{-0.5f, -0.5f, 0.5f}},
+    });
 
-    kl::Shaders shaders = gpu.create_shaders( SHADER_SOURCE );
-    gpu.bind_shaders( shaders );
+    kl::Shaders shaders = gpu.create_shaders(SHADER_SOURCE);
+    gpu.bind_shaders(shaders);
 
-    while ( window.process() )
+    while (window.process())
     {
-        gpu.clear_internal( kl::RGB{ 30, 30, 30 } );
-        gpu.draw( triangle );
-        gpu.swap_buffers( true );
+        gpu.clear_internal(kl::RGB{30, 30, 30});
+        gpu.draw(triangle);
+        gpu.swap_buffers(true);
     }
     return 0;
 }

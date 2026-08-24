@@ -1,7 +1,6 @@
 #include "examples.h"
 
-static constexpr auto SHADER_SOURCE =
-    R"(
+static constexpr auto SHADER_SOURCE = R"(
 float4 v_shader(float3 position : KL_Position) : SV_Position
 {
     return float4(position, 1.0f);
