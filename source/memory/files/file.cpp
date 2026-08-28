@@ -1,11 +1,11 @@
 #include "klibrary.h"
 
-kl::File::File(std::string_view const& filepath, bool write)
+kl::File::File(std::string_view filepath, bool write)
 {
     open(filepath, write);
 }
 
-kl::File::File(std::wstring_view const& filepath, bool write)
+kl::File::File(std::wstring_view filepath, bool write)
 {
     open(filepath, write);
 }
@@ -20,13 +20,13 @@ kl::File::operator bool() const
     return (bool)m_file;
 }
 
-void kl::File::open(std::string_view const& filepath, bool write)
+void kl::File::open(std::string_view filepath, bool write)
 {
     close();
     fopen_s(&m_file, filepath.data(), write ? "wb" : "rb");
 }
 
-void kl::File::open(std::wstring_view const& filepath, bool write)
+void kl::File::open(std::wstring_view filepath, bool write)
 {
     close();
     _wfopen_s(&m_file, filepath.data(), write ? L"wb" : L"rb");
@@ -73,17 +73,17 @@ uint64_t kl::File::tell() const
     return ftell(m_file);
 }
 
-std::string kl::file_extension(std::string_view const& filepath)
+std::string kl::file_extension(std::string_view filepath)
 {
     return fs::path(filepath).extension().string();
 }
 
-std::wstring kl::wfile_extension(std::wstring_view const& filepath)
+std::wstring kl::wfile_extension(std::wstring_view filepath)
 {
     return fs::path(filepath).extension().wstring();
 }
 
-std::vector<std::string> kl::list_files(std::string_view const& path, bool recursive)
+std::vector<std::string> kl::list_files(std::string_view path, bool recursive)
 {
     std::vector<std::string> files;
     if (recursive)
@@ -101,7 +101,7 @@ std::vector<std::string> kl::list_files(std::string_view const& path, bool recur
     return files;
 }
 
-std::vector<std::wstring> kl::list_files(std::wstring_view const& path, bool recursive)
+std::vector<std::wstring> kl::list_files(std::wstring_view path, bool recursive)
 {
     std::vector<std::wstring> files;
     if (recursive)
@@ -119,7 +119,7 @@ std::vector<std::wstring> kl::list_files(std::wstring_view const& path, bool rec
     return files;
 }
 
-std::string kl::read_file_string(std::string_view const& filepath, ByteRange const& byte_range)
+std::string kl::read_file_string(std::string_view filepath, ByteRange const& byte_range)
 {
     File file{filepath, false};
     if (!file)
@@ -140,7 +140,7 @@ std::string kl::read_file_string(std::string_view const& filepath, ByteRange con
     return result;
 }
 
-std::string kl::read_file_string(std::wstring_view const& filepath, ByteRange const& byte_range)
+std::string kl::read_file_string(std::wstring_view filepath, ByteRange const& byte_range)
 {
     File file{filepath, false};
     if (!file)
@@ -161,7 +161,7 @@ std::string kl::read_file_string(std::wstring_view const& filepath, ByteRange co
     return result;
 }
 
-bool kl::write_file_string(std::string_view const& filepath, std::string_view const& data)
+bool kl::write_file_string(std::string_view filepath, std::string_view data)
 {
     File file{filepath, true};
     if (!file)
@@ -171,7 +171,7 @@ bool kl::write_file_string(std::string_view const& filepath, std::string_view co
     return true;
 }
 
-bool kl::write_file_string(std::wstring_view const& filepath, std::string_view const& data)
+bool kl::write_file_string(std::wstring_view filepath, std::string_view data)
 {
     File file{filepath, true};
     if (!file)
@@ -243,7 +243,7 @@ std::optional<std::wstring> kl::wchoose_file(
     return result;
 }
 
-std::optional<std::string> kl::choose_dir(std::string_view const& title)
+std::optional<std::string> kl::choose_dir(std::string_view title)
 {
     if (auto opt_dir = wchoose_dir())
         return convert_string(*opt_dir);
@@ -251,7 +251,7 @@ std::optional<std::string> kl::choose_dir(std::string_view const& title)
         return std::nullopt;
 }
 
-std::optional<std::wstring> kl::wchoose_dir(std::wstring_view const& title)
+std::optional<std::wstring> kl::wchoose_dir(std::wstring_view title)
 {
     ComRef<IFileOpenDialog> file_open_dialog;
     if (FAILED(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&file_open_dialog))))

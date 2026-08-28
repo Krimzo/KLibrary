@@ -18,7 +18,7 @@ std::string kl::Address::address() const
     return ::inet_ntop(AF_INET, &sin_addr, buffer, INET_ADDRSTRLEN);
 }
 
-int kl::Address::set_address(std::string_view const& address)
+int kl::Address::set_address(std::string_view address)
 {
     return ::inet_pton(AF_INET, address.data(), &sin_addr);
 }

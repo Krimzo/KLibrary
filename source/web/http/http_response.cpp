@@ -1,6 +1,6 @@
 #include "klibrary.h"
 
-void kl::HttpResponse::load_text(std::string_view const& text)
+void kl::HttpResponse::load_text(std::string_view text)
 {
     content_type = HttpContentType::TEXT;
     content = text;

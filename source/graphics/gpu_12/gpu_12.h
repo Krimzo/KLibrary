@@ -108,7 +108,7 @@ struct GPU12 : NoCopy, ShaderCompiler
     dx12::AccelerationStructure create_tlas(dx12::Resource const& instances, UINT64* update_scratch_size = nullptr);
 
     dx12::PipelineState create_default_rasterization_pipeline(
-        kl::dx12::RootSignature const& root_signature, std::string_view const& shader_source,
+        kl::dx12::RootSignature const& root_signature, std::string_view shader_source,
         std::vector<std::pair<std::string, DXGI_FORMAT>> const& input_layout_parts =
             {
                 {"KL_Position", DXGI_FORMAT_R32G32B32_FLOAT},
@@ -118,7 +118,7 @@ struct GPU12 : NoCopy, ShaderCompiler
         D3D12_PRIMITIVE_TOPOLOGY_TYPE primitive_topology = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
         std::string* out_vs_error = nullptr, std::string* out_ps_error = nullptr) const;
 
-    dx12::StateObject create_default_raytracing_pipeline(std::string_view const& compiled_shaders,
+    dx12::StateObject create_default_raytracing_pipeline(std::string_view compiled_shaders,
                                                          dx12::RootSignature const& root_signature,
                                                          UINT max_recursion_depth = 5,
                                                          UINT max_attribute_size = sizeof(kl::Vertex),

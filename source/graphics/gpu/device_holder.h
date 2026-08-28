@@ -27,7 +27,7 @@ struct DeviceHolder : NoCopy
     dx::Buffer create_vertex_buffer(void const* data, UINT byte_size) const;
     dx::Buffer create_vertex_buffer(std::vector<Vertex> const& vertices) const;
     dx::Buffer create_vertex_buffer(std::vector<Triangle> const& triangles) const;
-    dx::Buffer create_vertex_buffer(std::string_view const& filepath, bool flip_z = true) const;
+    dx::Buffer create_vertex_buffer(std::string_view filepath, bool flip_z = true) const;
 
     dx::Buffer create_index_buffer(uint32_t const* data, UINT element_count) const;
     dx::Buffer create_index_buffer(std::vector<uint32_t> const& indices) const;

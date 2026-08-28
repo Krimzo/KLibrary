@@ -19,7 +19,7 @@ struct GPU12Commands
     void transition_resource(dx12::Resource const& resource, D3D12_RESOURCE_STATES from,
                              D3D12_RESOURCE_STATES to) const;
 
-    void clear_target_view(dx12::DescriptorHandle const& handle, float4 const& color) const;
+    void clear_target_view(dx12::DescriptorHandle const& handle, float4 color) const;
     void copy(dx12::Resource const& destination, dx12::Resource const& source) const;
 
     void set_root_signature(dx12::RootSignature const& root_signature) const;

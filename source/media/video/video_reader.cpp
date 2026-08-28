@@ -77,12 +77,12 @@ static float video_fps(ComRef<IMFSourceReader> const& reader)
     return (float)attribute1 / (float)attribute2;
 }
 
-kl::VideoReader::VideoReader(std::string_view const& filepath, int2 output_size, bool use_gpu)
+kl::VideoReader::VideoReader(std::string_view filepath, int2 output_size, bool use_gpu)
     : VideoReader(convert_string(filepath), output_size, use_gpu)
 {
 }
 
-kl::VideoReader::VideoReader(std::wstring_view const& filepath, int2 output_size, bool use_gpu)
+kl::VideoReader::VideoReader(std::wstring_view filepath, int2 output_size, bool use_gpu)
 {
     ComRef<IMFAttributes> attributes;
     MFCreateAttributes(&attributes, 0) >> verify_result;

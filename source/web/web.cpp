@@ -1,6 +1,6 @@
 #include "klibrary.h"
 
-std::optional<std::string> kl::download_website(std::string_view const& url, int buffer_size)
+std::optional<std::string> kl::download_website(std::string_view url, int buffer_size)
 {
     Internet connection = InternetOpenA("Browser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
     if (!connection)
@@ -19,9 +19,8 @@ std::optional<std::string> kl::download_website(std::string_view const& url, int
     return data;
 }
 
-int kl::send_http_request(std::string_view const& url, int port, std::string_view const& object,
-                          std::string_view const& verb, char const* headers, DWORD headers_size, void const* optional,
-                          DWORD optional_size)
+int kl::send_http_request(std::string_view url, int port, std::string_view object, std::string_view verb,
+                          char const* headers, DWORD headers_size, void const* optional, DWORD optional_size)
 {
     Internet browser = InternetOpenA("Browser", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, 0);
     if (!browser)

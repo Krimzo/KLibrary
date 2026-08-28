@@ -13,12 +13,12 @@ kl::Image::Image(int2 size) : m_size(size)
     m_pixels.resize((size_t)size.x * size.y);
 }
 
-kl::Image::Image(std::string_view const& filepath)
+kl::Image::Image(std::string_view filepath)
 {
     load_from_file(filepath);
 }
 
-kl::Image::Image(std::wstring_view const& filepath)
+kl::Image::Image(std::wstring_view filepath)
 {
     load_from_file(filepath);
 }
@@ -328,17 +328,17 @@ bool kl::Image::load_from_memory(void const* data, uint64_t byte_size)
     return true;
 }
 
-bool kl::Image::load_from_buffer(std::string_view const& buffer)
+bool kl::Image::load_from_buffer(std::string_view buffer)
 {
     return load_from_memory(buffer.data(), buffer.size());
 }
 
-bool kl::Image::load_from_file(std::string_view const& filepath)
+bool kl::Image::load_from_file(std::string_view filepath)
 {
     return load_from_buffer(read_file_string(filepath));
 }
 
-bool kl::Image::load_from_file(std::wstring_view const& filepath)
+bool kl::Image::load_from_file(std::wstring_view filepath)
 {
     return load_from_buffer(read_file_string(filepath));
 }
@@ -398,7 +398,7 @@ bool kl::Image::save_to_buffer(std::string& buffer, ImageType type) const
     return true;
 }
 
-bool kl::Image::save_to_file(std::string_view const& filepath, ImageType type) const
+bool kl::Image::save_to_file(std::string_view filepath, ImageType type) const
 {
     std::string buffer;
     if (save_to_buffer(buffer, type))
@@ -406,7 +406,7 @@ bool kl::Image::save_to_file(std::string_view const& filepath, ImageType type) c
     return false;
 }
 
-bool kl::Image::save_to_file(std::wstring_view const& filepath, ImageType type) const
+bool kl::Image::save_to_file(std::wstring_view filepath, ImageType type) const
 {
     std::string buffer;
     if (save_to_buffer(buffer, type))

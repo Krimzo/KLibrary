@@ -137,7 +137,7 @@ kl::Hash kl::hash(void const* data, uint64_t data_size)
     return finalize_context(context);
 }
 
-kl::Hash kl::hash_str(std::string_view const& data)
+kl::Hash kl::hash_str(std::string_view data)
 {
     return hash(data.data(), data.size());
 }

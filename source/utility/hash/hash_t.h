@@ -9,7 +9,7 @@ struct Hash
     uint8_t buffer[32] = {};
 
     Hash();
-    Hash(std::string_view const& hash);
+    Hash(std::string_view hash);
 
     uint8_t& operator[](size_t index);
     uint8_t const& operator[](size_t index) const;

@@ -363,7 +363,7 @@ kl::dx12::AccelerationStructure kl::GPU12::create_tlas(dx12::Resource const& ins
 }
 
 kl::dx12::PipelineState kl::GPU12::create_default_rasterization_pipeline(
-    dx12::RootSignature const& root_signature, std::string_view const& shader_source,
+    dx12::RootSignature const& root_signature, std::string_view shader_source,
     std::vector<std::pair<std::string, DXGI_FORMAT>> const& input_layout_parts,
     D3D12_PRIMITIVE_TOPOLOGY_TYPE primitive_topology, std::string* out_vs_error, std::string* out_ps_error) const
 {
@@ -415,7 +415,7 @@ kl::dx12::PipelineState kl::GPU12::create_default_rasterization_pipeline(
     return create_pipeline_state<RasterPipeline>(&pipeline);
 }
 
-kl::dx12::StateObject kl::GPU12::create_default_raytracing_pipeline(std::string_view const& compiled_shaders,
+kl::dx12::StateObject kl::GPU12::create_default_raytracing_pipeline(std::string_view compiled_shaders,
                                                                     dx12::RootSignature const& root_signature,
                                                                     UINT max_recursion_depth, UINT max_attribute_size,
                                                                     UINT max_payload_size) const

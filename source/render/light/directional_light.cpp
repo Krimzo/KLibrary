@@ -42,7 +42,7 @@ int kl::DirectionalLight::resolution() const
     return m_resolution;
 }
 
-void kl::DirectionalLight::set_direction(float3 const& direction)
+void kl::DirectionalLight::set_direction(float3 direction)
 {
     m_direction = normalize(direction);
 }

@@ -11,17 +11,16 @@ struct DLL : NoCopy
     template <typename Return, typename... Args> using Function = Return(__stdcall*)(Args...);
 
     DLL();
-    DLL(std::string_view const& path);
+    DLL(std::string_view path);
     ~DLL();
 
     operator bool() const;
 
-    void load(std::string_view const& path);
+    void load(std::string_view path);
     void reload();
     void unload();
 
-    template <typename Return, typename... Args>
-    Function<Return, Args...> read_function(std::string_view const& function_name)
+    template <typename Return, typename... Args> Function<Return, Args...> read_function(std::string_view function_name)
     {
         if (!m_module)
             return nullptr;

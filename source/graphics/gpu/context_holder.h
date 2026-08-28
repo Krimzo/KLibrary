@@ -90,7 +90,7 @@ struct ContextHolder : NoCopy
                       D3D_PRIMITIVE_TOPOLOGY draw_type = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
                       UINT stride = sizeof(Vertex)) const;
 
-    void clear_target_view(dx::TargetView const& view, float4 const& color = {}) const;
+    void clear_target_view(dx::TargetView const& view, float4 color = {}) const;
     void clear_depth_view(dx::DepthView const& view, float depth = 1.0f, UINT8 stencil = 0xFF) const;
 
     void bind_target_depth_view(dx::TargetView const& target_view, dx::DepthView const& depth_view) const;

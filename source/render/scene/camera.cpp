@@ -20,12 +20,12 @@ void kl::Camera::set_v_fov(float fov)
     field_of_view = 2.0f * atan_d(tan_d(fov * 0.5f) * aspect_ratio);
 }
 
-void kl::Camera::set_forward(float3 const& dir)
+void kl::Camera::set_forward(float3 dir)
 {
     m_forward = normalize(dir);
 }
 
-void kl::Camera::set_up(float3 const& dir)
+void kl::Camera::set_up(float3 dir)
 {
     m_up = normalize(dir);
 }

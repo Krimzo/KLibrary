@@ -39,7 +39,7 @@ void kl::GPU12Commands::transition_resource(dx12::Resource const& resource, D3D1
     list->ResourceBarrier(1, &barrier);
 }
 
-void kl::GPU12Commands::clear_target_view(dx12::DescriptorHandle const& handle, float4 const& color) const
+void kl::GPU12Commands::clear_target_view(dx12::DescriptorHandle const& handle, float4 color) const
 {
     list->ClearRenderTargetView(handle, &color.x, 0, nullptr);
 }

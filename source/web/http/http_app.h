@@ -7,8 +7,7 @@ namespace kl
 struct HttpApp : private HttpServer
 {
     using ExactRoute = std::function<void(HttpRequest const&, HttpQuery const&, HttpResponse&)>;
-    using StartingRoute =
-        std::function<void(HttpRequest const&, HttpQuery const&, std::string_view const&, HttpResponse&)>;
+    using StartingRoute = std::function<void(HttpRequest const&, HttpQuery const&, std::string_view, HttpResponse&)>;
     using DefaultRoute = std::function<void(HttpRequest const&, HttpQuery const&, HttpResponse&)>;
 
     std::map<std::string, ExactRoute> exact_routes;
@@ -26,6 +25,6 @@ struct HttpApp : private HttpServer
     HttpResponse handle_request(HttpRequest const& request) const;
 
     ExactRoute const* find_exact_route(std::string const& path) const;
-    std::optional<std::pair<std::string_view, StartingRoute>> find_starting_route(std::string_view const& path) const;
+    std::optional<std::pair<std::string_view, StartingRoute>> find_starting_route(std::string_view path) const;
 };
 } // namespace kl

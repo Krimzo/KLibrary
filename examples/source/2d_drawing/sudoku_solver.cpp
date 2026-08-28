@@ -137,7 +137,7 @@ struct Sudoku
     {
     }
 
-    constexpr Sudoku(std::string_view const& board_data)
+    constexpr Sudoku(std::string_view board_data)
     {
         if (board_data.size() != 81)
             throw std::exception("Board data size is not 81");

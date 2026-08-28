@@ -35,10 +35,10 @@ namespace kl
 {
 struct VideoWriter : NoCopy
 {
-    VideoWriter(std::string_view const& filepath, VideoType const& video_type, int2 frame_size, int fps,
-                float video_mb_rate, int audio_sample_rate);
-    VideoWriter(std::wstring_view const& filepath, VideoType const& video_type, int2 frame_size, int fps,
-                float video_mb_rate, int audio_sample_rate);
+    VideoWriter(std::string_view filepath, VideoType const& video_type, int2 frame_size, int fps, float video_mb_rate,
+                int audio_sample_rate);
+    VideoWriter(std::wstring_view filepath, VideoType const& video_type, int2 frame_size, int fps, float video_mb_rate,
+                int audio_sample_rate);
 
     int2 frame_size() const;
     int fps() const;

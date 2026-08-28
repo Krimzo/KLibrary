@@ -10,9 +10,9 @@ struct Html
 
     Html() = default;
 
-    void apply_var(std::string_view const& var_name, std::string_view const& var_value);
+    void apply_var(std::string_view var_name, std::string_view var_value);
 
-    static Html from_string(std::string_view const& str);
-    static Html from_file(std::string_view const& path);
+    static Html from_string(std::string_view str);
+    static Html from_file(std::string_view path);
 };
 } // namespace kl

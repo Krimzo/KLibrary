@@ -52,7 +52,7 @@ struct Container
         return std::nullopt;
     }
 
-    virtual void put_string(std::string_view const& value)
+    virtual void put_string(std::string_view value)
     {
     }
     virtual std::optional<std::string> get_string() const

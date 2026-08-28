@@ -19,7 +19,7 @@ struct DirectionalLight : NoCopy
     void set_resolution(int resolution);
     int resolution() const;
 
-    void set_direction(float3 const& direction);
+    void set_direction(float3 direction);
     float3 direction() const;
 
     dx::DepthView depth_view(UINT cascade_index) const;

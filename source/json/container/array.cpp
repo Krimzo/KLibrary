@@ -8,7 +8,7 @@ kl::json::Array::Array(std::initializer_list<ArrayStorage::value_type> const& it
 {
 }
 
-kl::json::Array::Array(std::string_view const& data)
+kl::json::Array::Array(std::string_view data)
 {
     auto tokens = Lexer::parse(data);
     compile(tokens.begin(), tokens.end());

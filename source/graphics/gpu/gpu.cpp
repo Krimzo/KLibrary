@@ -144,7 +144,7 @@ void kl::GPU::set_fullscreen(bool enabled) const
     m_chain->SetFullscreenState(enabled, nullptr) >> verify_result;
 }
 
-void kl::GPU::clear_internal_color(float4 const& color) const
+void kl::GPU::clear_internal_color(float4 color) const
 {
     m_context->ClearRenderTargetView(back_target_view().get(), &color.x);
 }
@@ -155,7 +155,7 @@ void kl::GPU::clear_internal_depth(float depth, UINT8 stencil) const
     m_context->ClearDepthStencilView(back_depth_view().get(), clear_type, depth, stencil);
 }
 
-void kl::GPU::clear_internal(float4 const& color, float depth, UINT8 stencil) const
+void kl::GPU::clear_internal(float4 color, float depth, UINT8 stencil) const
 {
     clear_internal_color(color);
     clear_internal_depth(depth, stencil);
@@ -225,7 +225,7 @@ void kl::GPU::bind_internal_views() const
     bind_target_depth_view(back_target_view(), back_depth_view());
 }
 
-kl::VertexShader kl::GPU::create_vertex_shader(std::string_view const& shader_source, std::string* out_error) const
+kl::VertexShader kl::GPU::create_vertex_shader(std::string_view shader_source, std::string* out_error) const
 {
     CompiledShader compiled_shader = compile_vertex_shader(shader_source, out_error);
     VertexShader holder{this};
@@ -233,7 +233,7 @@ kl::VertexShader kl::GPU::create_vertex_shader(std::string_view const& shader_so
     return holder;
 }
 
-kl::PixelShader kl::GPU::create_pixel_shader(std::string_view const& shader_source, std::string* out_error) const
+kl::PixelShader kl::GPU::create_pixel_shader(std::string_view shader_source, std::string* out_error) const
 {
     CompiledShader compiled_shader = compile_pixel_shader(shader_source, out_error);
     PixelShader holder{this};
@@ -241,7 +241,7 @@ kl::PixelShader kl::GPU::create_pixel_shader(std::string_view const& shader_sour
     return holder;
 }
 
-kl::GeometryShader kl::GPU::create_geometry_shader(std::string_view const& shader_source, std::string* out_error) const
+kl::GeometryShader kl::GPU::create_geometry_shader(std::string_view shader_source, std::string* out_error) const
 {
     CompiledShader compiled_shader = compile_geometry_shader(shader_source, out_error);
     GeometryShader holder{this};
@@ -249,7 +249,7 @@ kl::GeometryShader kl::GPU::create_geometry_shader(std::string_view const& shade
     return holder;
 }
 
-kl::ComputeShader kl::GPU::create_compute_shader(std::string_view const& shader_source, std::string* out_error) const
+kl::ComputeShader kl::GPU::create_compute_shader(std::string_view shader_source, std::string* out_error) const
 {
     CompiledShader compiled_shader = compile_compute_shader(shader_source, out_error);
     ComputeShader holder{this};
@@ -257,7 +257,7 @@ kl::ComputeShader kl::GPU::create_compute_shader(std::string_view const& shader_
     return holder;
 }
 
-kl::Shaders kl::GPU::create_shaders(std::string_view const& shader_sources,
+kl::Shaders kl::GPU::create_shaders(std::string_view shader_sources,
                                     std::initializer_list<dx::LayoutDescriptor> const& descriptors,
                                     std::string* out_vs_error, std::string* out_ps_error) const
 {

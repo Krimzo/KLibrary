@@ -13,14 +13,14 @@ struct ByteRange
 struct File : NoCopy
 {
     File() = default;
-    File(std::string_view const& filepath, bool write = false);
-    File(std::wstring_view const& filepath, bool write = false);
+    File(std::string_view filepath, bool write = false);
+    File(std::wstring_view filepath, bool write = false);
     ~File() noexcept;
 
     operator bool() const;
 
-    void open(std::string_view const& filepath, bool write);
-    void open(std::wstring_view const& filepath, bool write);
+    void open(std::string_view filepath, bool write);
+    void open(std::wstring_view filepath, bool write);
     void close();
 
     bool seek(int64_t position) const;
@@ -72,17 +72,17 @@ struct File : NoCopy
 
 namespace kl
 {
-std::string file_extension(std::string_view const& filepath);
-std::wstring wfile_extension(std::wstring_view const& filepath);
+std::string file_extension(std::string_view filepath);
+std::wstring wfile_extension(std::wstring_view filepath);
 
-std::vector<std::string> list_files(std::string_view const& path, bool recursive = false);
-std::vector<std::wstring> list_files(std::wstring_view const& path, bool recursive = false);
+std::vector<std::string> list_files(std::string_view path, bool recursive = false);
+std::vector<std::wstring> list_files(std::wstring_view path, bool recursive = false);
 
-std::string read_file_string(std::string_view const& filepath, ByteRange const& byte_range = {});
-std::string read_file_string(std::wstring_view const& filepath, ByteRange const& byte_range = {});
+std::string read_file_string(std::string_view filepath, ByteRange const& byte_range = {});
+std::string read_file_string(std::wstring_view filepath, ByteRange const& byte_range = {});
 
-bool write_file_string(std::string_view const& filepath, std::string_view const& data);
-bool write_file_string(std::wstring_view const& filepath, std::string_view const& data);
+bool write_file_string(std::string_view filepath, std::string_view data);
+bool write_file_string(std::wstring_view filepath, std::string_view data);
 
 std::optional<std::string> choose_file(
     bool save, std::string_view defaul = {},
@@ -93,8 +93,8 @@ std::optional<std::wstring> wchoose_file(
     std::vector<std::pair<std::wstring_view, std::wstring_view>> const& filters = {{L"All Files", L".*"}},
     int* out_index = nullptr);
 
-std::optional<std::string> choose_dir(std::string_view const& title = "Choose Directory");
-std::optional<std::wstring> wchoose_dir(std::wstring_view const& title = L"Choose Directory");
+std::optional<std::string> choose_dir(std::string_view title = "Choose Directory");
+std::optional<std::wstring> wchoose_dir(std::wstring_view title = L"Choose Directory");
 
 std::vector<Vertex> parse_obj_file(fs::path const& filepath, bool flip_z = true);
 } // namespace kl

@@ -26,7 +26,7 @@ struct MyFileServer : kl::HttpApp
         };
 
         starting_routes["/explore"] = [this](kl::HttpRequest const& request, kl::HttpQuery const& query,
-                                             std::string_view const& path, kl::HttpResponse& response) {
+                                             std::string_view path, kl::HttpResponse& response) {
             const fs::path fs_path = fs::absolute(this->root + "/" + kl::decode_url_string(path));
             if (!fs::exists(fs_path))
                 handle_non_existent(request, query, path, response, fs_path);
@@ -38,13 +38,13 @@ struct MyFileServer : kl::HttpApp
     }
 
   private:
-    void handle_non_existent(kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view const& path,
+    void handle_non_existent(kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view path,
                              kl::HttpResponse& response, fs::path const& fs_path)
     {
         response.load("Does not exist: ", path);
     }
 
-    void handle_view_folder(kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view const& path,
+    void handle_view_folder(kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view path,
                             kl::HttpResponse& response, fs::path const& fs_path)
     {
         const kl::Html folder_item_template = kl::Html::from_file("dist/folder_item.html");
@@ -95,7 +95,7 @@ struct MyFileServer : kl::HttpApp
         response.load_html(folder_content_template);
     }
 
-    void handle_view_file(kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view const& path,
+    void handle_view_file(kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view path,
                           kl::HttpResponse& response, fs::path const& fs_path)
     {
         if (query.contains("thumbnail") && kl::probe_content_type(path).value_or({}).starts_with("video"))
@@ -107,7 +107,7 @@ struct MyFileServer : kl::HttpApp
             response.load_file(fs_path, request.byte_range());
     }
 
-    std::string read_video_frame(std::string_view const& path)
+    std::string read_video_frame(std::string_view path)
     {
         kl::VideoReader reader{path};
         kl::Image frame;

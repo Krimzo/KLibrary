@@ -133,7 +133,7 @@ kl::dx::Buffer kl::DeviceHolder::create_vertex_buffer(std::vector<Triangle> cons
     return create_vertex_buffer(triangles.data(), UINT(triangles.size() * sizeof(Triangle)));
 }
 
-kl::dx::Buffer kl::DeviceHolder::create_vertex_buffer(std::string_view const& filepath, bool flip_z) const
+kl::dx::Buffer kl::DeviceHolder::create_vertex_buffer(std::string_view filepath, bool flip_z) const
 {
     return create_vertex_buffer(parse_obj_file(filepath, flip_z));
 }
@@ -251,28 +251,28 @@ std::vector<kl::Triangle> kl::DeviceHolder::generate_cube_mesh(float size)
             {{-0.5f, -0.5f, 0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}},
         },
     };
-    static constexpr auto mul_vr = [](Vertex const& vertex, float3 const& other) -> Vertex {
+    static constexpr auto mul_vr = [](Vertex const& vertex, float3 other) -> Vertex {
         Vertex result;
         result.position = vertex.position * other;
         result.normal = vertex.normal;
         result.uv = vertex.uv;
         return result;
     };
-    static constexpr auto rotate_vr = [](Vertex const& vertex, float3 const& axis, float angle) -> Vertex {
+    static constexpr auto rotate_vr = [](Vertex const& vertex, float3 axis, float angle) -> Vertex {
         Vertex result;
         result.position = rotate(vertex.position, axis, angle);
         result.normal = rotate(vertex.normal, axis, angle);
         result.uv = vertex.uv;
         return result;
     };
-    static constexpr auto mul_tr = [](Triangle const& triangle, float3 const& other) -> Triangle {
+    static constexpr auto mul_tr = [](Triangle const& triangle, float3 other) -> Triangle {
         Triangle result;
         result.a = mul_vr(triangle.a, other);
         result.b = mul_vr(triangle.b, other);
         result.c = mul_vr(triangle.c, other);
         return result;
     };
-    static constexpr auto rotate_tr = [](Triangle const& triangle, float3 const& axis, float angle) -> Triangle {
+    static constexpr auto rotate_tr = [](Triangle const& triangle, float3 axis, float angle) -> Triangle {
         Triangle result;
         result.a = rotate_vr(triangle.a, axis, angle);
         result.b = rotate_vr(triangle.b, axis, angle);

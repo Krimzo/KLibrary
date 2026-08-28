@@ -32,8 +32,7 @@ struct Internet : NoCopy, NoMove
 
 namespace kl
 {
-std::optional<std::string> download_website(std::string_view const& url, int buffer_size = 65536);
-int send_http_request(std::string_view const& url, int port, std::string_view const& object,
-                      std::string_view const& verb, char const* headers, DWORD headers_size, void const* optional,
-                      DWORD optional_size);
+std::optional<std::string> download_website(std::string_view url, int buffer_size = 65536);
+int send_http_request(std::string_view url, int port, std::string_view object, std::string_view verb,
+                      char const* headers, DWORD headers_size, void const* optional, DWORD optional_size);
 } // namespace kl

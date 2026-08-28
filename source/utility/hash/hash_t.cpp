@@ -4,7 +4,7 @@ kl::Hash::Hash()
 {
 }
 
-kl::Hash::Hash(std::string_view const& hash)
+kl::Hash::Hash(std::string_view hash)
 {
     if (hash.size() < 64)
         return;

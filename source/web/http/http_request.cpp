@@ -17,7 +17,7 @@ std::optional<kl::ByteRange> kl::HttpRequest::byte_range() const
     return range;
 }
 
-std::optional<kl::HttpRequest> kl::HttpRequest::from_string(std::string_view const& data)
+std::optional<kl::HttpRequest> kl::HttpRequest::from_string(std::string_view data)
 {
     std::vector lines = split_string(data, "\n");
     if (lines.empty())

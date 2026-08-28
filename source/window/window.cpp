@@ -1,6 +1,6 @@
 #include "klibrary.h"
 
-kl::Window::Window(std::string_view const& name) : m_name(name)
+kl::Window::Window(std::string_view name) : m_name(name)
 {
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     m_instance = GetModuleHandleA(nullptr);
@@ -242,12 +242,12 @@ float kl::Window::dips_to_pixels(float value) const
     return value * dpi() * (1.0f / 96.0f);
 }
 
-void kl::Window::set_title(std::string_view const& data) const
+void kl::Window::set_title(std::string_view data) const
 {
     SetWindowTextA(m_window, data.data());
 }
 
-bool kl::Window::set_icon(std::string_view const& filepath) const
+bool kl::Window::set_icon(std::string_view filepath) const
 {
     HICON loaded_icon = ExtractIconA(nullptr, filepath.data(), NULL);
     if (!loaded_icon)

@@ -26,7 +26,7 @@ struct Window : NoCopy
     std::vector<std::function<void(int2)>> on_resize;
     std::vector<std::function<void(int2)>> on_move;
 
-    Window(std::string_view const& name);
+    Window(std::string_view name);
     ~Window();
 
     HWND ptr() const;
@@ -74,8 +74,8 @@ struct Window : NoCopy
     float pixels_to_dips(float value) const;
     float dips_to_pixels(float value) const;
 
-    void set_title(std::string_view const& data) const;
-    bool set_icon(std::string_view const& filepath) const;
+    void set_title(std::string_view data) const;
+    bool set_icon(std::string_view filepath) const;
 
     void draw_pixel_data(RGB const* data, int2 size, int2 position = {}) const;
     void draw_image(Image const& image, int2 position = {}) const;

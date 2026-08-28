@@ -22,6 +22,6 @@ struct HttpRequest
 
     std::optional<ByteRange> byte_range() const;
 
-    static std::optional<HttpRequest> from_string(std::string_view const& data);
+    static std::optional<HttpRequest> from_string(std::string_view data);
 };
 } // namespace kl

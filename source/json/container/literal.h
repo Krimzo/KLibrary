@@ -7,7 +7,7 @@ namespace kl::json
 struct Literal : Container
 {
     Literal();
-    Literal(std::string_view const& data);
+    Literal(std::string_view data);
 
     bool compile(std::vector<Token>::const_iterator first, std::vector<Token>::const_iterator last) override;
     std::string decompile(int depth = 0) const override;
@@ -25,7 +25,7 @@ struct Literal : Container
     std::optional<int16_t> get_short() const override;
     std::optional<uint8_t> get_byte() const override;
 
-    void put_string(std::string_view const& value) override;
+    void put_string(std::string_view value) override;
     std::optional<std::string> get_string() const override;
 
   private:
@@ -63,7 +63,7 @@ inline Ref<Literal> number(double value)
     return result;
 }
 
-inline Ref<Literal> string(std::string_view const& value)
+inline Ref<Literal> string(std::string_view value)
 {
     Ref result = new Literal();
     result->put_string(value);

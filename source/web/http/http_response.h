@@ -127,7 +127,7 @@ struct HttpResponse
 
     HttpResponse() = default;
 
-    void load_text(std::string_view const& text);
+    void load_text(std::string_view text);
     void load_html(Html const& html);
     void load_raw(void const* ptr, uint64_t byte_size);
     void load_file(fs::path const& path, std::optional<ByteRange> const& byte_range);

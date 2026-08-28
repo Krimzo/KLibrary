@@ -74,17 +74,17 @@ void kl::console::set_size(int2 size)
     SetConsoleWindowInfo(ConsoleInit::_init, true, &rect);
 }
 
-void kl::console::set_title(std::string_view const& text)
+void kl::console::set_title(std::string_view text)
 {
     SetConsoleTitleA(text.data());
 }
 
-void kl::console::set_title(std::wstring_view const& text)
+void kl::console::set_title(std::wstring_view text)
 {
     SetConsoleTitleW(text.data());
 }
 
-void kl::console::set_font(int2 size, std::wstring_view const& font_name)
+void kl::console::set_font(int2 size, std::wstring_view font_name)
 {
     CONSOLE_FONT_INFOEX cfi = {};
     cfi.cbSize = sizeof(CONSOLE_FONT_INFOEX);
@@ -124,14 +124,14 @@ char kl::console::wait_for_any(bool echo)
     return (char)_getch();
 }
 
-void kl::console::dump(std::string_view const& data, int2 location)
+void kl::console::dump(std::string_view data, int2 location)
 {
     DWORD ignored = 0;
     WriteConsoleOutputCharacterA(ConsoleInit::_init, data.data(), (DWORD)data.length(),
                                  {(SHORT)location.x, (SHORT)location.y}, &ignored);
 }
 
-void kl::console::progress_bar(std::string_view const& message, int output_y, float percentage)
+void kl::console::progress_bar(std::string_view message, int output_y, float percentage)
 {
     percentage = clamp(percentage, 0.0f, 1.0f);
 

@@ -32,8 +32,8 @@ struct Audio : AudioStorage
 
     Audio() = default;
     Audio(int sample_rate);
-    Audio(std::string_view const& path);
-    Audio(std::wstring_view const& path);
+    Audio(std::string_view path);
+    Audio(std::wstring_view path);
 
     uint64_t duration_100ns() const;
     float duration_seconds() const;
@@ -48,12 +48,12 @@ struct Audio : AudioStorage
     AudioSample sample_at_time(float time) const;
 
     bool load_from_memory(void const* data, uint64_t byte_size);
-    bool load_from_buffer(std::string_view const& buffer);
-    bool load_from_file(std::string_view const& filepath);
-    bool load_from_file(std::wstring_view const& filepath);
+    bool load_from_buffer(std::string_view buffer);
+    bool load_from_file(std::string_view filepath);
+    bool load_from_file(std::wstring_view filepath);
 
     bool save_to_buffer(std::string& buffer, AudioType type) const;
-    bool save_to_file(std::string_view const& filepath, AudioType type) const;
-    bool save_to_file(std::wstring_view const& filepath, AudioType type) const;
+    bool save_to_file(std::string_view filepath, AudioType type) const;
+    bool save_to_file(std::wstring_view filepath, AudioType type) const;
 };
 } // namespace kl

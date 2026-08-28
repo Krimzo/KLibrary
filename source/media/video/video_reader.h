@@ -8,8 +8,8 @@ namespace kl
 {
 struct VideoReader : NoCopy
 {
-    VideoReader(std::string_view const& filepath, int2 output_size = {}, bool use_gpu = true);
-    VideoReader(std::wstring_view const& filepath, int2 output_size = {}, bool use_gpu = true);
+    VideoReader(std::string_view filepath, int2 output_size = {}, bool use_gpu = true);
+    VideoReader(std::wstring_view filepath, int2 output_size = {}, bool use_gpu = true);
 
     uint64_t byte_size() const;
 

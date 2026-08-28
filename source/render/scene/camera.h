@@ -28,8 +28,8 @@ struct Camera
     void set_h_fov(float fov);
     void set_v_fov(float fov);
 
-    void set_forward(float3 const& dir);
-    void set_up(float3 const& dir);
+    void set_forward(float3 dir);
+    void set_up(float3 dir);
 
     float3 forward() const;
     float3 right() const;

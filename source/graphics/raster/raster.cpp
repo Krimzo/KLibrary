@@ -1,14 +1,14 @@
 #include "klibrary.h"
 
-kl::RasterText::RasterText(TextFormat const& format, std::string_view const& data, float4 const& color, float2 tl,
-                           float2 br, HAlign h_align, VAlign v_align)
+kl::RasterText::RasterText(TextFormat const& format, std::string_view data, float4 color, float2 tl, float2 br,
+                           HAlign h_align, VAlign v_align)
     : format(format), data(convert_string(data)), color(color), box_top_left(tl), box_bottom_right(br),
       h_align(h_align), v_align(v_align)
 {
 }
 
-kl::RasterText::RasterText(TextFormat const& format, std::wstring_view const& data, float4 const& color, float2 tl,
-                           float2 br, HAlign h_align, VAlign v_align)
+kl::RasterText::RasterText(TextFormat const& format, std::wstring_view data, float4 color, float2 tl, float2 br,
+                           HAlign h_align, VAlign v_align)
     : format(format), data(data), color(color), box_top_left(tl), box_bottom_right(br), h_align(h_align),
       v_align(v_align)
 {
@@ -56,7 +56,7 @@ void kl::RasterLine::draw(ComRef<ID2D1RenderTarget> const& target, ComRef<ID2D1S
                      (D2D1_POINT_2F const&)from_ndc(end, target_size), brush.get(), stroke_width);
 }
 
-kl::RasterRectangle::RasterRectangle(float2 const& top_left, float2 const& bottom_right, float4 const& color, bool fill,
+kl::RasterRectangle::RasterRectangle(float2 const& top_left, float2 const& bottom_right, float4 color, bool fill,
                                      float2 const& corner_radius, float stroke_width)
     : top_left(top_left), bottom_right(bottom_right), color(color), fill(fill), corner_radius(corner_radius),
       stroke_width(stroke_width)
@@ -91,7 +91,7 @@ void kl::RasterRectangle::draw(ComRef<ID2D1RenderTarget> const& target, ComRef<I
         target->DrawRoundedRectangle(round_rect, brush.get(), stroke_width);
 }
 
-kl::RasterEllipse::RasterEllipse(float2 const& center, float2 const& radius, float4 const& color, bool fill,
+kl::RasterEllipse::RasterEllipse(float2 const& center, float2 const& radius, float4 color, bool fill,
                                  float stroke_width)
     : center(center), radius(radius), color(color), fill(fill), stroke_width(stroke_width)
 {
@@ -130,9 +130,9 @@ kl::Raster::Raster()
         verify_result;
 }
 
-kl::TextFormat kl::Raster::create_text_format(std::wstring_view const& font_family, DWRITE_FONT_WEIGHT font_weight,
+kl::TextFormat kl::Raster::create_text_format(std::wstring_view font_family, DWRITE_FONT_WEIGHT font_weight,
                                               DWRITE_FONT_STYLE font_style, float font_size,
-                                              std::wstring_view const& locale) const
+                                              std::wstring_view locale) const
 {
     if (font_size <= 0.0f)
         return {};

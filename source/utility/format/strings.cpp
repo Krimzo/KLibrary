@@ -1,6 +1,6 @@
 #include "klibrary.h"
 
-std::wstring kl::convert_string(std::string_view const& source)
+std::wstring kl::convert_string(std::string_view source)
 {
     std::wstring result;
     result.resize(MultiByteToWideChar(CP_UTF8, 0, source.data(), (int)source.size(), nullptr, 0));
@@ -8,7 +8,7 @@ std::wstring kl::convert_string(std::string_view const& source)
     return result;
 }
 
-std::string kl::convert_string(std::wstring_view const& source)
+std::string kl::convert_string(std::wstring_view source)
 {
     std::string result;
     result.resize(WideCharToMultiByte(CP_UTF8, 0, source.data(), (int)source.size(), nullptr, 0, nullptr, nullptr));
@@ -37,7 +37,7 @@ void kl::upper_string(std::wstring& data)
     std::transform(data.begin(), data.end(), data.begin(), [](wchar_t c) { return std::towupper(c); });
 }
 
-std::vector<std::string> kl::split_string(std::string_view const& data, std::string_view const& delimiter)
+std::vector<std::string> kl::split_string(std::string_view data, std::string_view delimiter)
 {
     std::vector<std::string> parts;
     for (auto const& part : std::views::split(data, delimiter))
@@ -45,7 +45,7 @@ std::vector<std::string> kl::split_string(std::string_view const& data, std::str
     return parts;
 }
 
-std::vector<std::wstring> kl::split_string(std::wstring_view const& data, std::wstring_view const& delimiter)
+std::vector<std::wstring> kl::split_string(std::wstring_view data, std::wstring_view delimiter)
 {
     std::vector<std::wstring> parts;
     for (auto const& part : std::views::split(data, delimiter))
@@ -53,7 +53,7 @@ std::vector<std::wstring> kl::split_string(std::wstring_view const& data, std::w
     return parts;
 }
 
-void kl::replace_all(std::string& str, std::string_view const& from, std::string_view const& to)
+void kl::replace_all(std::string& str, std::string_view from, std::string_view to)
 {
     if (str.empty() || from.empty())
         return;
@@ -66,7 +66,7 @@ void kl::replace_all(std::string& str, std::string_view const& from, std::string
     }
 }
 
-void kl::replace_all(std::wstring& str, std::wstring_view const& from, std::wstring_view const& to)
+void kl::replace_all(std::wstring& str, std::wstring_view from, std::wstring_view to)
 {
     if (str.empty() || from.empty())
         return;
@@ -79,7 +79,7 @@ void kl::replace_all(std::wstring& str, std::wstring_view const& from, std::wstr
     }
 }
 
-std::optional<int64_t> kl::parse_int(std::string_view const& data)
+std::optional<int64_t> kl::parse_int(std::string_view data)
 {
     if (data.empty())
         return std::nullopt;
@@ -92,7 +92,7 @@ std::optional<int64_t> kl::parse_int(std::string_view const& data)
     return {result};
 }
 
-std::optional<double> kl::parse_float(std::string_view const& data)
+std::optional<double> kl::parse_float(std::string_view data)
 {
     if (data.empty())
         return std::nullopt;

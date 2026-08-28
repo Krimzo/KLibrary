@@ -14,7 +14,7 @@ struct Address : sockaddr_in
     Address();
 
     std::string address() const;
-    int set_address(std::string_view const& address);
+    int set_address(std::string_view address);
 
     int port() const;
     void set_port(int port);

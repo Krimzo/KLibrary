@@ -323,7 +323,7 @@ void kl::ContextHolder::draw_indexed(dx::Buffer const& vertex_buffer, dx::Buffer
     draw_indexed(index_buffer_size(index_buffer), 0, 0);
 }
 
-void kl::ContextHolder::clear_target_view(dx::TargetView const& view, float4 const& color) const
+void kl::ContextHolder::clear_target_view(dx::TargetView const& view, float4 color) const
 {
     m_context->ClearRenderTargetView(view.get(), &color.x);
 }

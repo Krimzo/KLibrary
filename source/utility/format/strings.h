@@ -12,8 +12,8 @@ struct string_hash : std::hash<std::string_view>
 
 namespace kl
 {
-std::wstring convert_string(std::string_view const& data);
-std::string convert_string(std::wstring_view const& data);
+std::wstring convert_string(std::string_view data);
+std::string convert_string(std::wstring_view data);
 
 void lower_string(std::string& data);
 void lower_string(std::wstring& data);
@@ -21,14 +21,14 @@ void lower_string(std::wstring& data);
 void upper_string(std::string& data);
 void upper_string(std::wstring& data);
 
-std::vector<std::string> split_string(std::string_view const& data, std::string_view const& delimiter);
-std::vector<std::wstring> split_string(std::wstring_view const& data, std::wstring_view const& delimiter);
+std::vector<std::string> split_string(std::string_view data, std::string_view delimiter);
+std::vector<std::wstring> split_string(std::wstring_view data, std::wstring_view delimiter);
 
-void replace_all(std::string& str, std::string_view const& from, std::string_view const& to);
-void replace_all(std::wstring& str, std::wstring_view const& from, std::wstring_view const& to);
+void replace_all(std::string& str, std::string_view from, std::string_view to);
+void replace_all(std::wstring& str, std::wstring_view from, std::wstring_view to);
 
-std::optional<int64_t> parse_int(std::string_view const& data);
-std::optional<double> parse_float(std::string_view const& data);
+std::optional<int64_t> parse_int(std::string_view data);
+std::optional<double> parse_float(std::string_view data);
 } // namespace kl
 
 namespace kl

@@ -18,8 +18,8 @@ struct Image
 {
     Image() = default;
     Image(int2 size);
-    Image(std::string_view const& filepath);
-    Image(std::wstring_view const& filepath);
+    Image(std::string_view filepath);
+    Image(std::wstring_view filepath);
 
     RGB* ptr();
     RGB const* ptr() const;
@@ -62,13 +62,13 @@ struct Image
     void draw_image(int2 top_left, Image const& image, bool mix_alpha = true);
 
     bool load_from_memory(void const* data, uint64_t byte_size);
-    bool load_from_buffer(std::string_view const& buffer);
-    bool load_from_file(std::string_view const& filepath);
-    bool load_from_file(std::wstring_view const& filepath);
+    bool load_from_buffer(std::string_view buffer);
+    bool load_from_file(std::string_view filepath);
+    bool load_from_file(std::wstring_view filepath);
 
     bool save_to_buffer(std::string& buffer, ImageType type) const;
-    bool save_to_file(std::string_view const& filepath, ImageType type) const;
-    bool save_to_file(std::wstring_view const& filepath, ImageType type) const;
+    bool save_to_file(std::string_view filepath, ImageType type) const;
+    bool save_to_file(std::wstring_view filepath, ImageType type) const;
 
   private:
     std::vector<RGB> m_pixels;

@@ -1,6 +1,6 @@
 #include "klibrary.h"
 
-kl::HttpQuery::HttpQuery(std::string_view const& full_path)
+kl::HttpQuery::HttpQuery(std::string_view full_path)
 {
     const size_t index = full_path.find('?');
     if (index == -1)
@@ -19,7 +19,7 @@ kl::HttpQuery::HttpQuery(std::string_view const& full_path)
     }
 }
 
-std::string kl::encode_url_string(std::string_view const& data)
+std::string kl::encode_url_string(std::string_view data)
 {
     std::stringstream escaped;
     escaped.fill('0');
@@ -34,7 +34,7 @@ std::string kl::encode_url_string(std::string_view const& data)
     return escaped.str();
 }
 
-std::string kl::decode_url_string(std::string_view const& data)
+std::string kl::decode_url_string(std::string_view data)
 {
     std::string result;
     for (size_t i = 0; i < data.size(); i++)

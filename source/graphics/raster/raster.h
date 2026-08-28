@@ -30,12 +30,10 @@ struct RasterText : RasterItem
     VAlign v_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR;
 
     RasterText() = default;
-    RasterText(TextFormat const& format, std::string_view const& data, float4 const& color, float2 tl,
-               float2 br = {1.0f, -1.0f}, HAlign h_align = DWRITE_TEXT_ALIGNMENT_LEADING,
-               VAlign v_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-    RasterText(TextFormat const& format, std::wstring_view const& data, float4 const& color, float2 tl,
-               float2 br = {1.0f, -1.0f}, HAlign h_align = DWRITE_TEXT_ALIGNMENT_LEADING,
-               VAlign v_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+    RasterText(TextFormat const& format, std::string_view data, float4 color, float2 tl, float2 br = {1.0f, -1.0f},
+               HAlign h_align = DWRITE_TEXT_ALIGNMENT_LEADING, VAlign v_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+    RasterText(TextFormat const& format, std::wstring_view data, float4 color, float2 tl, float2 br = {1.0f, -1.0f},
+               HAlign h_align = DWRITE_TEXT_ALIGNMENT_LEADING, VAlign v_align = DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 
     void draw(ComRef<ID2D1RenderTarget> const& target, ComRef<ID2D1SolidColorBrush> const& brush) const override;
 };
@@ -63,7 +61,7 @@ struct RasterRectangle : RasterItem
     float stroke_width = 1.0f;
 
     RasterRectangle() = default;
-    RasterRectangle(float2 const& top_left, float2 const& bottom_right, float4 const& color, bool fill,
+    RasterRectangle(float2 const& top_left, float2 const& bottom_right, float4 color, bool fill,
                     float2 const& corner_radius = {}, float stroke_width = 1.0f);
 
     void draw(ComRef<ID2D1RenderTarget> const& target, ComRef<ID2D1SolidColorBrush> const& brush) const override;
@@ -78,8 +76,7 @@ struct RasterEllipse : RasterItem
     float stroke_width = 1.0f;
 
     RasterEllipse() = default;
-    RasterEllipse(float2 const& center, float2 const& radius, float4 const& color, bool fill,
-                  float stroke_width = 1.0f);
+    RasterEllipse(float2 const& center, float2 const& radius, float4 color, bool fill, float stroke_width = 1.0f);
 
     void draw(ComRef<ID2D1RenderTarget> const& target, ComRef<ID2D1SolidColorBrush> const& brush) const override;
 };
@@ -93,9 +90,9 @@ struct Raster : NoCopy
 
     Raster();
 
-    TextFormat create_text_format(std::wstring_view const& font_family, DWRITE_FONT_WEIGHT font_weight,
+    TextFormat create_text_format(std::wstring_view font_family, DWRITE_FONT_WEIGHT font_weight,
                                   DWRITE_FONT_STYLE font_style, float font_size,
-                                  std::wstring_view const& locale = L"en-us") const;
+                                  std::wstring_view locale = L"en-us") const;
 
     void draw_raster_batch(UINT target_index) const;
     void draw_raster_direct(UINT target_index, RasterItem const& raster_item) const;

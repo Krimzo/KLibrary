@@ -33,7 +33,7 @@ kl::HttpApp::ExactRoute const* kl::HttpApp::find_exact_route(std::string const& 
 }
 
 std::optional<std::pair<std::string_view, kl::HttpApp::StartingRoute>> kl::HttpApp::find_starting_route(
-    std::string_view const& path) const
+    std::string_view path) const
 {
     for (auto const& [key, value] : starting_routes)
         if (path.starts_with(key))

@@ -4,7 +4,7 @@ kl::json::Literal::Literal()
 {
 }
 
-kl::json::Literal::Literal(std::string_view const& data)
+kl::json::Literal::Literal(std::string_view data)
 {
     auto tokens = Lexer::parse(data);
     compile(tokens.begin(), tokens.end());
@@ -124,7 +124,7 @@ std::optional<uint8_t> kl::json::Literal::get_byte() const
     return std::nullopt;
 }
 
-void kl::json::Literal::put_string(std::string_view const& value)
+void kl::json::Literal::put_string(std::string_view value)
 {
     m_value.emplace<std::string>(value);
 }
