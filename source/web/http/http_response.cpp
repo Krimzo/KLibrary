@@ -62,8 +62,10 @@ std::string kl::HttpResponse::compile() const
 std::optional<std::string> kl::probe_content_type(fs::path const& path)
 {
     static constexpr std::pair<std::string_view, std::string_view> additional_types[] = {
-        {".mts", "video/mts"},
         {".avif", "image/avif"},
+        {".webp", "image/webp"},
+        {".mts", "video/mts"},
+        {".webm", "video/webm"},
     };
     std::string extension = path.extension().string();
     lower_string(extension);
@@ -71,10 +73,10 @@ std::optional<std::string> kl::probe_content_type(fs::path const& path)
         if (type.first == extension)
             return std::string{type.second};
     LPWSTR mime_out = nullptr;
-    if (FAILED(FindMimeFromData(NULL, path.filename().generic_wstring().data(), NULL, 0, NULL, FMFD_URLASFILENAME,
+    if (FAILED(FindMimeFromData(nullptr, path.filename().wstring().data(), nullptr, 0, nullptr, FMFD_URLASFILENAME,
                                 &mime_out, 0x0)))
         return std::nullopt;
-    std::wstring result(mime_out);
+    std::wstring result{mime_out};
     CoTaskMemFree(mime_out);
     return convert_string(result);
 }
