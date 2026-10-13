@@ -19,7 +19,7 @@ void kl::HttpResponse::load_raw(void const* ptr, uint64_t byte_size)
     std::memcpy(content.data(), ptr, byte_size);
 }
 
-void kl::HttpResponse::load_file(fs::path const& path, std::optional<ByteRange> const& byte_range)
+void kl::HttpResponse::load_file(std::wstring_view path, std::optional<ByteRange> const& byte_range)
 {
     const auto filesize = fs::file_size(path);
     if (filesize <= 0)
@@ -35,12 +35,12 @@ void kl::HttpResponse::load_file(fs::path const& path, std::optional<ByteRange> 
         headers["Content-Range"] = format("bytes ", byte_range->start_incl.value_or(0), "-",
                                           byte_range->end_incl.value_or(filesize - 1), "/", filesize);
         status_code = HttpStatusCode::PARTIAL_CONTENT;
-        content = read_file_string(path.generic_string(), *byte_range);
+        content = read_file_string(path, *byte_range);
     }
     else
     {
         status_code = HttpStatusCode::OK;
-        content = read_file_string(path.generic_string());
+        content = read_file_string(path);
     }
 }
 
@@ -59,22 +59,14 @@ std::string kl::HttpResponse::compile() const
     return result;
 }
 
-std::optional<std::string> kl::probe_content_type(fs::path const& path)
+std::optional<std::string> kl::probe_content_type(std::wstring_view path)
 {
-    static constexpr std::pair<std::string_view, std::string_view> additional_types[] = {
-        {".avif", "image/avif"},
-        {".webp", "image/webp"},
-        {".mts", "video/mts"},
-        {".webm", "video/webm"},
-    };
-    std::string extension = path.extension().string();
-    lower_string(extension);
-    for (auto& type : additional_types)
-        if (type.first == extension)
-            return std::string{type.second};
     LPWSTR mime_out = nullptr;
-    if (FAILED(FindMimeFromData(nullptr, path.filename().wstring().data(), nullptr, 0, nullptr, FMFD_URLASFILENAME,
-                                &mime_out, 0x0)))
+    File file{path};
+    byte buffer[256];
+    const DWORD read_count = (DWORD)file.read(buffer, std::size(buffer));
+    if (FAILED(FindMimeFromData(nullptr, path.data(), read_count > 0 ? buffer : nullptr, read_count, nullptr,
+                                FMFD_DEFAULT, &mime_out, NULL)))
         return std::nullopt;
     std::wstring result{mime_out};
     CoTaskMemFree(mime_out);
