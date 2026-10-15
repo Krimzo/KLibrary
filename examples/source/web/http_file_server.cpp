@@ -54,7 +54,7 @@ struct MyFileServer : kl::HttpApp
         std::stringstream item_grid_builder;
         for (auto& entry : fs::directory_iterator{fs_path})
         {
-            const std::optional opt_type = kl::probe_content_type(entry);
+            const std::optional opt_type = kl::probe_content_type(entry.path().wstring());
             const std::string encoded_path = fs::relative(entry, root).generic_string();
             const std::string file_name = fs::path{entry}.filename().generic_string();
             if (fs::is_directory(entry))
@@ -98,13 +98,14 @@ struct MyFileServer : kl::HttpApp
     void handle_view_file(kl::HttpRequest const& request, kl::HttpQuery const& query, std::string_view path,
                           kl::HttpResponse& response, fs::path const& fs_path)
     {
-        if (query.contains("thumbnail") && kl::probe_content_type(path).value_or({}).starts_with("video"))
+        if (query.contains("thumbnail") &&
+            kl::probe_content_type(kl::convert_string(path)).value_or({}).starts_with("video"))
         {
             response.content_type = kl::HttpContentType::JPEG;
             response.content = read_video_frame(fs_path.generic_string());
         }
         else
-            response.load_file(fs_path, request.byte_range());
+            response.load_file(fs_path.wstring(), request.byte_range());
     }
 
     std::string read_video_frame(std::string_view path)
