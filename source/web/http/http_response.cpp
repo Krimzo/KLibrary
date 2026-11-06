@@ -61,6 +61,18 @@ std::string kl::HttpResponse::compile() const
 
 std::optional<std::string> kl::probe_content_type(std::wstring_view path)
 {
+#define MAKE_EXTRA_TYPE(EXT, TYPE)                                                                                     \
+    {                                                                                                                  \
+        "."##EXT, ##TYPE "/"##EXT                                                                                      \
+    }
+    static constexpr std::pair<std::string_view, std::string_view> EXTRA_TYPES[] = {
+        MAKE_EXTRA_TYPE("ogg", "audio"),
+        MAKE_EXTRA_TYPE("mts", "video"),
+    };
+    const std::string extension = fs::path{path}.extension().string();
+    for (auto& type : EXTRA_TYPES)
+        if (extension == type.first)
+            return (std::string)type.second;
     LPWSTR mime_out = nullptr;
     File file{path};
     byte buffer[256];
